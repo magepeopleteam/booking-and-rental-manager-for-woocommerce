@@ -4031,12 +4031,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 
 .rbfw_muff_registration_wrapper {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    padding: 20px;
-    background-color: #fff;
-    overflow: hidden;
+    /* Visual chrome removed — form now uses the default template's
+       mp_default_theme > mp_right_section structure for identical styling */
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    background-color: transparent;
+    overflow: visible;
 }
 
 
@@ -11206,7 +11208,8 @@ i.fas.fa-minus {
    ====================================================== */
 
 /* Section heading label — info-banner style (indigo pill with icon) */
-.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading {
+.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw-single-right-heading {
     display: flex !important;
     align-items: center !important;
     justify-content: flex-start !important;
@@ -11225,13 +11228,15 @@ i.fas.fa-minus {
     line-height: 1.45 !important;
 }
 /* Disable CSS pseudo-element icon — icon is now an HTML <i> tag */
-.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading::before {
+.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading::before,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw-single-right-heading::before {
     content: none !important;
     display: none !important;
 }
 
 /* Left icon  <i class="rbfw-srh-icon"> */
-.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading i.rbfw-srh-icon {
+.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading i.rbfw-srh-icon,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw-single-right-heading i.rbfw-srh-icon {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11244,7 +11249,9 @@ i.fas.fa-minus {
 
 /* Check Availability button — enabled (both dates selected) */
 .mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn,
-.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn {
+.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container a.rbfw_chk_availability_btn,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw_chk_availability_btn {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11266,7 +11273,9 @@ i.fas.fa-minus {
     margin-top: 4px !important;
 }
 .mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn:hover,
-.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn:hover {
+.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn:hover,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container a.rbfw_chk_availability_btn:hover,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw_chk_availability_btn:hover {
     background: #0f172a !important;
     color: #ffffff !important;
     box-shadow: none !important;
@@ -11276,7 +11285,9 @@ i.fas.fa-minus {
 
 /* Check Availability button — disabled state (dates not yet selected) */
 .mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn.rbfw-avail-btn-disabled,
-.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn.rbfw-avail-btn-disabled {
+.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn.rbfw-avail-btn-disabled,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container a.rbfw_chk_availability_btn.rbfw-avail-btn-disabled,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw_chk_availability_btn.rbfw-avail-btn-disabled {
     background: #94a3b8 !important;
     color: #ffffff !important;
     opacity: 1 !important;
@@ -11296,7 +11307,8 @@ i.fas.fa-minus {
    ====================================================== */
 
 /* Outer card shell */
-.mp_default_theme .rbfw-checkin-checkout-card {
+.mp_default_theme .rbfw-checkin-checkout-card,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card {
     border: 1.5px solid #bfdbfe;
     border-radius: 14px;
     overflow: hidden;
@@ -11306,7 +11318,8 @@ i.fas.fa-minus {
 }
 
 /* Card header row — override the pill/banner style set above */
-.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading {
+.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -11325,19 +11338,20 @@ i.fas.fa-minus {
     margin-bottom: 0 !important;
     line-height: 1.2 !important;
 }
-/* Remove clock icon from ::before */
-.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::before {
+.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::before,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::before {
     content: none !important;
     display: none !important;
 }
-/* Disable ::after pseudo icon — calendar icon is now <i class="rbfw-srh-cal-icon"> in HTML */
-.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::after {
+.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::after,
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::after {
     content: none !important;
     display: none !important;
 }
 
 /* Right calendar icon  <i class="rbfw-srh-cal-icon"> */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-single-right-heading i.rbfw-srh-cal-icon {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-single-right-heading i.rbfw-srh-cal-icon,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-single-right-heading i.rbfw-srh-cal-icon {
     color: #3b82f6 !important;
     font-size: 15px !important;
     margin-left: auto !important;
@@ -11347,7 +11361,8 @@ i.fas.fa-minus {
 }
 
 /* Date pair body */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime {
     display: flex !important;
     align-items: stretch !important;
     padding: 0 !important;
@@ -11357,7 +11372,9 @@ i.fas.fa-minus {
 
 /* Each half */
 .mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .left.date,
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime .left.date,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime .right.date {
     flex: 1 !important;
     width: 50% !important;
     display: flex !important;
@@ -11368,12 +11385,14 @@ i.fas.fa-minus {
 }
 
 /* Vertical divider */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime .right.date {
     border-left: 1px solid #e5e7eb !important;
 }
 
 /* PICKUP / RETURN labels */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .left.date::before {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .left.date::before,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime .left.date::before {
     content: 'PICKUP' !important;
     font-family: inherit !important;
     display: block !important;
@@ -11383,7 +11402,8 @@ i.fas.fa-minus {
     color: #6b7280 !important;
     margin-bottom: 5px !important;
 }
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date::before {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date::before,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime .right.date::before {
     content: 'RETURN' !important;
     font-family: inherit !important;
     display: block !important;
@@ -11395,12 +11415,14 @@ i.fas.fa-minus {
 }
 
 /* Hide the per-field calendar icon spans */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime span.calendar {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime span.calendar,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime span.calendar {
     display: none !important;
 }
 
 /* Date text inputs */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input {
     border: none !important;
     background: transparent !important;
     padding: 0 !important;
@@ -11415,14 +11437,16 @@ i.fas.fa-minus {
     border-radius: 0 !important;
     line-height: 1.3 !important;
 }
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input::placeholder {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input::placeholder,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input::placeholder {
     color: #9ca3af !important;
     font-weight: 500 !important;
     font-size: 13px !important;
 }
 
 /* Clear (×) button — hidden by default, shown via JS class when date is set */
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-date-clear-btn {
     display: none !important;
     position: absolute !important;
     top: 8px !important;
@@ -11442,10 +11466,12 @@ i.fas.fa-minus {
     z-index: 2 !important;
     transition: background 0.15s, color 0.15s !important;
 }
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn.rbfw-date-clear-visible {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn.rbfw-date-clear-visible,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-date-clear-btn.rbfw-date-clear-visible {
     display: flex !important;
 }
-.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn:hover {
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn:hover,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-date-clear-btn:hover {
     background: #d1d5db !important;
     color: #111827 !important;
 }
@@ -11460,7 +11486,8 @@ i.fas.fa-minus {
    ====================================================== */
 
 /* Card container */
-.mp_default_theme .rbfw_resort_rt_price_table_container {
+.mp_default_theme .rbfw_resort_rt_price_table_container,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table_container {
     border: 1px solid #e2e8f0;
     border-radius: 14px;
     overflow: hidden;
@@ -11471,7 +11498,8 @@ i.fas.fa-minus {
 }
 
 /* "Select Room Type" card title */
-.mp_default_theme .rbfw-room-select-title {
+.mp_default_theme .rbfw-room-select-title,
+.rbfw_muff_registration_wrapper .rbfw-room-select-title {
     font-size: 15px;
     font-weight: 700;
     color: #111827;
@@ -11480,23 +11508,27 @@ i.fas.fa-minus {
 }
 
 /* Table resets */
-.mp_default_theme .rbfw_resort_rt_price_table {
+.mp_default_theme .rbfw_resort_rt_price_table,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table {
     width: 100% !important;
     border-collapse: collapse !important;
     margin: 0 !important;
 }
 
 /* Hide the legacy Image column */
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-img-hidden-col {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-img-hidden-col,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw-room-img-hidden-col {
     display: none !important;
 }
 
 /* Table header row */
-.mp_default_theme .rbfw_resort_rt_price_table thead tr {
+.mp_default_theme .rbfw_resort_rt_price_table thead tr,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table thead tr {
     background: #f8fafc !important;
     border-bottom: 1px solid #e2e8f0 !important;
 }
-.mp_default_theme .rbfw_resort_rt_price_table thead th {
+.mp_default_theme .rbfw_resort_rt_price_table thead th,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table thead th {
     font-size: 11px !important;
     font-weight: 600 !important;
     color: #94a3b8 !important;
@@ -11509,33 +11541,39 @@ i.fas.fa-minus {
 }
 
 /* Body rows */
-.mp_default_theme .rbfw_resort_rt_price_table tbody tr {
+.mp_default_theme .rbfw_resort_rt_price_table tbody tr,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table tbody tr {
     border-bottom: 1px solid #f1f5f9 !important;
     transition: background 0.12s;
 }
-.mp_default_theme .rbfw_resort_rt_price_table tbody tr:last-child {
+.mp_default_theme .rbfw_resort_rt_price_table tbody tr:last-child,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table tbody tr:last-child {
     border-bottom: none !important;
 }
-.mp_default_theme .rbfw_resort_rt_price_table tbody tr:hover {
+.mp_default_theme .rbfw_resort_rt_price_table tbody tr:hover,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table tbody tr:hover {
     background: #fafbfc !important;
 }
 
 /* All body cells */
-.mp_default_theme .rbfw_resort_rt_price_table tbody td {
+.mp_default_theme .rbfw_resort_rt_price_table tbody td,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table tbody td {
     padding: 12px 14px !important;
     vertical-align: middle !important;
     border: none !important;
 }
 
 /* Room-type cell — flex: thumbnail + name/desc */
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-type-name-cell {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-type-name-cell,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw-room-type-name-cell {
     display: flex !important;
     align-items: center !important;
     gap: 12px !important;
 }
 
 /* Thumbnail wrapper — fixed 40×40 */
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap {
     width: 40px !important;
     height: 40px !important;
     min-width: 40px !important;
@@ -11547,14 +11585,16 @@ i.fas.fa-minus {
     justify-content: center !important;
     flex-shrink: 0 !important;
 }
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap img {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap img,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     display: block !important;
 }
 /* Placeholder icon (no image) */
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-no-img {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-no-img,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw-room-no-img {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11565,11 +11605,13 @@ i.fas.fa-minus {
 }
 
 /* Room name + description column */
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-name-desc {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-name-desc,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw-room-name-desc {
     display: flex !important;
     flex-direction: column !important;
 }
-.mp_default_theme .rbfw_resort_rt_price_table .room_type_title {
+.mp_default_theme .rbfw_resort_rt_price_table .room_type_title,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .room_type_title {
     display: block !important;
     font-size: 14px !important;
     font-weight: 600 !important;
@@ -11577,7 +11619,8 @@ i.fas.fa-minus {
     margin-bottom: 2px !important;
     line-height: 1.3 !important;
 }
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_desc {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_desc,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_room_desc {
     display: block !important;
     font-size: 12px !important;
     color: #94a3b8 !important;
@@ -11588,14 +11631,16 @@ i.fas.fa-minus {
 }
 
 /* Price cell */
-.mp_default_theme .rbfw_resort_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount {
+.mp_default_theme .rbfw_resort_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount {
     font-size: 14px !important;
     font-weight: 700 !important;
     color: #111827 !important;
 }
 
 /* Qty stepper */
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_input {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_input,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_qty_input {
     display: inline-flex !important;
     align-items: center !important;
     border: 1.5px solid #e2e8f0 !important;
@@ -11604,7 +11649,9 @@ i.fas.fa-minus {
     background: #fff !important;
 }
 .mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_minus,
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_plus {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_plus,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_qty_minus,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_qty_plus {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11619,11 +11666,14 @@ i.fas.fa-minus {
     transition: background 0.14s !important;
 }
 .mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_minus:hover,
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_plus:hover {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_plus:hover,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_qty_minus:hover,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_qty_plus:hover {
     background: #f1f5f9 !important;
     color: #111827 !important;
 }
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_room_qty {
     width: 34px !important;
     height: 32px !important;
     text-align: center !important;
@@ -11640,7 +11690,9 @@ i.fas.fa-minus {
     -moz-appearance: textfield !important;
 }
 .mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-outer-spin-button,
-.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-inner-spin-button {
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-inner-spin-button,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-outer-spin-button,
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
     margin: 0 !important;
 }
@@ -11656,7 +11708,8 @@ i.fas.fa-minus {
    ====================================================== */
 
 /* Card container */
-.mp_default_theme .rbfw_resort_es_price_table {
+.mp_default_theme .rbfw_resort_es_price_table,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table {
     border: 1px solid #e2e8f0 !important;
     border-radius: 14px !important;
     overflow: hidden !important;
@@ -11667,23 +11720,27 @@ i.fas.fa-minus {
 }
 
 /* Table resets */
-.mp_default_theme .rbfw_resort_es_rt_price_table {
+.mp_default_theme .rbfw_resort_es_rt_price_table,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table {
     width: 100% !important;
     border-collapse: collapse !important;
     margin: 0 !important;
 }
 
 /* Hide the Image column */
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-img-hidden-col {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-img-hidden-col,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw-room-img-hidden-col {
     display: none !important;
 }
 
 /* Table header row */
-.mp_default_theme .rbfw_resort_es_rt_price_table thead tr {
+.mp_default_theme .rbfw_resort_es_rt_price_table thead tr,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table thead tr {
     background: #f8fafc !important;
     border-bottom: 1px solid #e2e8f0 !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table thead th {
+.mp_default_theme .rbfw_resort_es_rt_price_table thead th,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table thead th {
     font-size: 11px !important;
     font-weight: 600 !important;
     color: #94a3b8 !important;
@@ -11696,33 +11753,39 @@ i.fas.fa-minus {
 }
 
 /* Body rows */
-.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr {
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table tbody tr {
     border-bottom: 1px solid #f1f5f9 !important;
     transition: background 0.12s;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr:last-child {
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr:last-child,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table tbody tr:last-child {
     border-bottom: none !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr:hover {
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr:hover,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table tbody tr:hover {
     background: #fafbfc !important;
 }
 
 /* All body cells */
-.mp_default_theme .rbfw_resort_es_rt_price_table tbody td {
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody td,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table tbody td {
     padding: 12px 14px !important;
     vertical-align: middle !important;
     border: none !important;
 }
 
 /* Service name cell — flex: thumbnail + name/desc */
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-type-name-cell {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-type-name-cell,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw-room-type-name-cell {
     display: flex !important;
     align-items: center !important;
     gap: 12px !important;
 }
 
 /* Thumbnail wrapper */
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap {
     width: 40px !important;
     height: 40px !important;
     min-width: 40px !important;
@@ -11734,13 +11797,15 @@ i.fas.fa-minus {
     justify-content: center !important;
     flex-shrink: 0 !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap img {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap img,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap img {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     display: block !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-no-img {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-no-img,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw-room-no-img {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11751,11 +11816,13 @@ i.fas.fa-minus {
 }
 
 /* Service name + description */
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-name-desc {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-name-desc,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw-room-name-desc {
     display: flex !important;
     flex-direction: column !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table .room_type_title {
+.mp_default_theme .rbfw_resort_es_rt_price_table .room_type_title,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .room_type_title {
     display: block !important;
     font-size: 14px !important;
     font-weight: 600 !important;
@@ -11763,7 +11830,8 @@ i.fas.fa-minus {
     margin-bottom: 2px !important;
     line-height: 1.3 !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_room_desc {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_room_desc,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_room_desc {
     display: block !important;
     font-size: 12px !important;
     color: #94a3b8 !important;
@@ -11774,14 +11842,16 @@ i.fas.fa-minus {
 }
 
 /* Price cell */
-.mp_default_theme .rbfw_resort_es_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount {
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount {
     font-size: 14px !important;
     font-weight: 700 !important;
     color: #111827 !important;
 }
 
 /* Qty stepper */
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_input {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_input,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_qty_input {
     display: inline-flex !important;
     align-items: center !important;
     border: 1.5px solid #e2e8f0 !important;
@@ -11790,7 +11860,9 @@ i.fas.fa-minus {
     background: #fff !important;
 }
 .mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_minus,
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_plus {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_plus,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_qty_minus,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_qty_plus {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -11805,11 +11877,14 @@ i.fas.fa-minus {
     transition: background 0.14s !important;
 }
 .mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_minus:hover,
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_plus:hover {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_plus:hover,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_qty_minus:hover,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_qty_plus:hover {
     background: #f1f5f9 !important;
     color: #111827 !important;
 }
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort {
     width: 34px !important;
     height: 32px !important;
     text-align: center !important;
@@ -11826,7 +11901,9 @@ i.fas.fa-minus {
     -moz-appearance: textfield !important;
 }
 .mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-outer-spin-button,
-.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-inner-spin-button {
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-inner-spin-button,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-outer-spin-button,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-inner-spin-button {
     -webkit-appearance: none !important;
     margin: 0 !important;
 }
@@ -12117,5 +12194,51 @@ i.fas.fa-minus {
 .rbfw-costing ul li {
     font-size: 13px;
 }
+
+/* ======================================================
+   Muffin Template — Form Normalisation
+   Each muffin template now wraps the form in:
+     .mp_default_theme > .mp_right_section > .rbfw-booking-form
+   so all default-template form CSS applies automatically.
+   This block only overrides the small number of muffin-specific
+   rules that still bleed in from the outer wrapper.
+   ====================================================== */
+
+/* The outer muffin wrapper's form-specific overrides must not
+   win over the inner mp_default_theme structure */
+.rbfw_muff_registration_wrapper .rbfw-single-right-heading {
+    /* Let mp_default_theme rules take priority — reset muffin's uppercase/tiny override */
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    letter-spacing: inherit !important;
+    text-transform: inherit !important;
+    color: inherit !important;
+    padding: inherit !important;
+    margin: inherit !important;
+    border: inherit !important;
+    background: inherit !important;
+}
+
+/* Qty minus/plus — reset muffin-specific colour overrides */
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus,
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
+    background-color: inherit !important;
+    border: inherit !important;
+    border-radius: inherit !important;
+    color: inherit !important;
+}
+
+/* Resort wrapper: the data-type helps confirm the inner structure is in place */
+.rbfw_muff_registration_wrapper[data-type="resort"] {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+/* ======================================================
+   End Muffin Form Normalisation
+   ====================================================== */
 
 

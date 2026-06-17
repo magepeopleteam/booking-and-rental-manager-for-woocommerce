@@ -95,10 +95,11 @@
         </div>
     </div>
     <div class="rbfw_muff_row_slider_content">
-        <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_registration_wrapper rbfw_multi_items_right" id="rbfw_muff_booking_form">
+        <div class="rbfw_muff_content_col1 mp_default_theme" id="rbfw_muff_booking_form">
+            <div class="mp_right_section rbfw_multi_items_right">
+                <?php do_action('booking_form_header', $post_id); ?>
                 <div class="rbfw-booking-form">
-					<?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
+                    <?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
                 </div>
             </div>
         </div>

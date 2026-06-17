@@ -654,8 +654,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                                 <li class="subtotal">
                                     <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
-                                    <span class="price-figure" data-price="">
-                                    </span>
+                                    <span class="price-figure" data-price=""><?php echo wp_kses( wc_price(0), rbfw_allowed_html() ); ?></span>
                                 </li>
 
                                 <?php if($fee_management_cost_enable){ ?>
@@ -678,8 +677,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                                 <li class="total">
                                     <?php esc_html_e('Total Price','booking-and-rental-manager-for-woocommerce'); ?>
-                                    <span class="price-figure" data-price="">
-                                    </span>
+                                    <span class="price-figure" data-price=""><?php echo wp_kses( wc_price(0), rbfw_allowed_html() ); ?></span>
                                 </li>
 
                             </ul>

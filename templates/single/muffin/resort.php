@@ -92,9 +92,12 @@
         </div>
     </div>
     <div class="rbfw_muff_row_slider_content">
-        <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_registration_wrapper" id="rbfw_muff_booking_form">
-				<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
+        <div class="rbfw_muff_content_col1 mp_default_theme" id="rbfw_muff_booking_form">
+            <div class="mp_right_section">
+                <?php do_action('booking_form_header', $post_id); ?>
+                <div class="rbfw-booking-form">
+                    <?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
+                </div>
             </div>
         </div>
         <div class="rbfw_muff_content_col2">
