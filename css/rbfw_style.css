@@ -614,35 +614,62 @@ button.rbfw-book-now-btn:focus {
 
 .rbfw-duration {
     display: none;
-    padding: 10px;
-    background: #edf7ff;
-    border: 1px solid #41a6ff;
-    margin:10px;
-    margin-bottom:16px;
-    border-radius: 5px;
-    padding: 10px 20px;
+    margin-bottom: 14px;
 }
 
-.rbfw-duration .rbfw-single-right-heading{
-    margin:0;
-    display: flex;
-    justify-content: space-between;
+.item.rbfw-duration {
+    background: #E9EFFD;
+    padding: 5px 10px;
+    border-radius: 10px;
+    border: 1px solid #e1dcdc;
 }
+
+.rbfw-duration .rbfw-single-right-heading {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    background: #F2F3FF !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    font-weight: 500;
+    color: #374151;
+    border: 1px solid #d0d6e1 !important;
+}
+
+.rbfw-duration-left {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.rbfw-duration-icon {
+    color: #6983ab;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.rbfw-duration-label {
+    color: #6983ab;
+    font-weight: 500;
+    font-size: 14px;
+}
+
 .rbfw-duration .item-content {
-    font-weight: normal;
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+}
+
+.rbfw-duration .item-price {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
 }
 
 .rbfw-duration .rbfw-duration-date {
     display: none;
-    border-top: 1px solid rgba(65, 166, 255, 0.35);
-    margin-top: 0px;
-    padding-top: 0px;
-}
-
-.rbfw-duration .item-price {
-    border-radius: 5px;
-    font-weight: bold;
-    color:#41a6ff;
 }
 
 .mp_rbfw_ticket_form .rbfw_resourse_md{
@@ -11808,3 +11835,282 @@ i.fas.fa-minus {
 /* ======================================================
    End Resort — Additional Services Table
    ====================================================== */
+
+/* ======================================================
+   Date Range Picker Redesign (Multiple Day)
+   ====================================================== */
+.rbfw-drp-wrapper {
+    margin-bottom: 14px;
+}
+
+/* Row holds columns + arrow, aligns bottoms so arrow centers in the field boxes */
+.rbfw-drp-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* Each column: label on top, bordered field box below */
+.rbfw-drp-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* Label sits above the field */
+.rbfw-drp-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    padding-left: 2px;
+    white-space: nowrap;
+}
+
+/* The bordered input box */
+.rbfw-drp-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    background: #F2F3FF;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.rbfw-drp-field:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+
+.rbfw-drp-field:focus-within {
+    border-color: var(--rbfw_color_primary, #0d9488);
+    background: #f0fdf9;
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.08);
+}
+
+/* Arrow between the two date column groups — offset up to visually center in field */
+.rbfw-drp-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #94a3b8;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.rbfw-drp-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    color: #6983ab;
+    font-size: 15px;
+    border-radius: 7px;
+    line-height: 1;
+}
+
+.rbfw-drp-field input.rbfw-input,
+.rbfw-drp-field select.rbfw-select {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #1e293b !important;
+    box-shadow: none !important;
+    outline: none !important;
+    width: 100% !important;
+    line-height: 1.4 !important;
+    cursor: pointer !important;
+    height: auto !important;
+    margin: 0 !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    background-image: none !important;
+}
+
+.rbfw-drp-field input.rbfw-input::placeholder {
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+}
+
+.rbfw-drp-chevron {
+    color: #94a3b8;
+    font-size: 11px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 580px) {
+    .rbfw-drp-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+    .rbfw-drp-arrow {
+        display: none;
+    }
+}
+/* ======================================================
+   End Date Range Picker Redesign
+   ====================================================== */
+
+.multi-service-category-section .service-price-item td.rbfw_service_quantity {
+    display: table-cell !important;
+}
+
+/* ======================================================
+   Optional Add-ons / Service Items Redesign (Multiple Day)
+   ====================================================== */
+
+.multi-service-category-section {
+    margin-bottom: 14px;
+}
+
+.multi-service-category-section .servise-item {
+    margin-bottom: 10px;
+}
+
+/* Category heading */
+.multi-service-category-section .servise-item > .rbfw-single-right-heading {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    margin-bottom: 8px !important;
+    padding: 0 2px !important;
+    background: none !important;
+    border: none !important;
+    display: block !important;
+}
+
+/* Remove default borders/bg from item-content */
+.multi-service-category-section .item-content.rbfw-resource {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Allow flex on rows */
+.multi-service-category-section .rbfw_bikecarmd_es_table,
+.multi-service-category-section .rbfw_bikecarmd_es_table tbody {
+    display: block;
+    width: 100%;
+}
+
+/* Each row = card */
+.multi-service-category-section .service-price-item {
+    display: flex !important;
+    align-items: center;
+    background: #FAF8FF;
+    border: 1px solid #e8eaf0;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    padding: 10px 0px;
+}
+
+.multi-service-category-section .service-price-item td {
+    border: none !important;
+    background: none !important;
+    display: block;
+}
+
+/* Info column */
+.multi-service-category-section .service-price-item td:first-child {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 10px 10px 16px;
+}
+
+/* Qty column */
+.multi-service-category-section .service-price-item td.rbfw_service_quantity {
+    flex-shrink: 0;
+    padding: 10px 14px 10px 8px;
+    display: block !important;
+}
+
+/* Service name (first div inside info td) */
+.multi-service-category-section .service-price-item td:first-child > div:nth-of-type(1) {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 3px;
+}
+
+/* Price (second div inside info td) */
+.multi-service-category-section .service-price-item td:first-child > div:nth-of-type(2) {
+    display: inline;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* "One Time" / "Day Wise" */
+.multi-service-category-section .day-time-wise {
+    font-size: 11px;
+    font-weight: 500;
+    color: #f59e0b;
+    margin-left: 5px;
+}
+
+/* Quantity pill */
+.multi-service-category-section .rbfw_qty_input {
+    display: flex;
+    align-items: center;
+    background: #F2F3FF;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.multi-service-category-section .rbfw_qty_input a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 30px;
+    cursor: pointer;
+    color: #374151;
+    font-size: 10px;
+    transition: background 0.15s;
+}
+
+.multi-service-category-section .rbfw_qty_input a:hover {
+    background: #e2e8f0;
+}
+
+.multi-service-category-section .rbfw_service_qty {
+    width: 28px;
+    text-align: center;
+    border: none !important;
+    background: transparent !important;
+    font-weight: 600;
+    font-size: 13px;
+    color: #1e293b;
+    padding: 0 !important;
+    box-shadow: none !important;
+    -moz-appearance: textfield;
+}
+
+.multi-service-category-section .rbfw_service_qty::-webkit-outer-spin-button,
+.multi-service-category-section .rbfw_service_qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ======================================================
+   End Optional Add-ons Redesign
+   ====================================================== */
+
+

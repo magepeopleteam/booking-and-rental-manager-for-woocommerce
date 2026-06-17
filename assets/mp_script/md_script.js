@@ -1199,13 +1199,12 @@ function calculateTotalManagementPrice() {
 function calculateTotalSingleItem() {
     let service_price = 0;
 
-    // Loop through all checked services
+    // Loop through all checked services (toggle-based)
     jQuery('.rbfw_service_price_data:checked').each(function() {
         let price = parseFloat(jQuery(this).data('price')) || 0;
         let qtyInput = jQuery('input[name="' + jQuery(this).attr('name').replace('[main_cat_name]', '[quantity]') + '"]');
         let service_price_type = jQuery(this).data('service_price_type');
         let qty = parseInt(qtyInput.val()) || 1;
-
 
         if(service_price_type=='day_wise'){
             const rbfw_total_days = jQuery('#rbfw_total_days').val();
@@ -1213,7 +1212,21 @@ function calculateTotalSingleItem() {
         }else{
             service_price += price * qty;
         }
+    });
 
+    // Loop through qty-based services (Multiple Day — no checkbox)
+    jQuery('.multi-service-category-section .rbfw_service_qty').each(function() {
+        let qty = parseInt(jQuery(this).val()) || 0;
+        if (qty > 0) {
+            let price = parseFloat(jQuery(this).data('price')) || 0;
+            let service_price_type = jQuery(this).closest('tr').find('input[name*="[service_price_type]"]').val() || 'one_time';
+            if (service_price_type === 'day_wise') {
+                let rbfw_total_days = parseFloat(jQuery('#rbfw_total_days').val()) || 1;
+                service_price += price * qty * rbfw_total_days;
+            } else {
+                service_price += price * qty;
+            }
+        }
     });
 
 
