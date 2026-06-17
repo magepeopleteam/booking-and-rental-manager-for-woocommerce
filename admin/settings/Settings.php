@@ -183,6 +183,98 @@
 				<?php
 			}
 
+			public static function render_for_modern_editor( int $post_id ): void {
+				$qty_switch     = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ?: 'no';
+				$ship_enable    = get_post_meta( $post_id, 'shipping_enable', true ) ?: 'no';
+				if ( $ship_enable === 'off' ) $ship_enable = 'no';
+				$ship_class     = get_post_meta( $post_id, 'rent_shipping_class', true );
+				$svc_qty        = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ?: 'yes';
+				$ship_classes   = get_terms( 'product_shipping_class', [ 'hide_empty' => false ] );
+				$ship_classes   = is_wp_error( $ship_classes ) ? [] : $ship_classes;
+				?>
+				<input type="hidden" name="rbfw_has_frontend_settings" value="1">
+
+				<!-- Shortcode -->
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<p><?php esc_html_e( 'This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<code class="rbfw-me-shortcode-display">[rent-add-to-cart id='<?php echo esc_attr( $post_id ); ?>']</code>
+				</div>
+
+				<hr class="rbfw-me-divider">
+
+				<!-- Display item available quantity -->
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Display item available quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<p><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<label class="rbfw-me-toggle">
+						<input type="checkbox" name="rbfw_available_qty_info_switch" value="yes" <?php checked( $qty_switch, 'yes' ); ?> class="rbfw-me-toggle__input" />
+						<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+					</label>
+				</div>
+
+				<hr class="rbfw-me-divider">
+
+				<!-- Is shipping enable -->
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<p><?php esc_html_e( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<label class="rbfw-me-toggle">
+						<input type="checkbox" name="shipping_enable" value="yes" <?php checked( $ship_enable, 'yes' ); ?> class="rbfw-me-toggle__input rbfw-me-toggle--reveal" data-reveals=".rbfw-me-shipping-class-field" />
+						<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+					</label>
+				</div>
+
+				<?php if ( ! empty( $ship_classes ) ) : ?>
+				<div class="rbfw-me-shipping-class-field rbfw-me-field <?php echo $ship_enable === 'yes' ? '' : 'rbfw-me-hidden'; ?>">
+					<label class="rbfw-me-field__label"><?php esc_html_e( 'Select Shipping Class', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<select class="rbfw-me-select" name="rent_shipping_class">
+						<option value=""><?php esc_html_e( 'Select shipping class', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+						<?php foreach ( $ship_classes as $class ) : ?>
+							<option value="<?php echo esc_attr( $class->term_id ); ?>" <?php selected( $ship_class, $class->term_id ); ?>>
+								<?php echo esc_html( $class->name ); ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+				<?php endif; ?>
+
+				<hr class="rbfw-me-divider">
+
+				<!-- Enable Service Quantity Box -->
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<p><?php esc_html_e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<label class="rbfw-me-toggle">
+						<input type="checkbox" name="rbfw_enable_extra_service_qty" value="yes" <?php checked( $svc_qty, 'yes' ); ?> class="rbfw-me-toggle__input" />
+						<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+					</label>
+				</div>
+
+				<hr class="rbfw-me-divider">
+
+				<!-- Reset All Rental Orders -->
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Reset All Rental Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<p><?php esc_html_e( 'This will cancel all rental-related orders for this item. This action cannot be undone.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<button type="button" id="rbfw-reset-orders-btn" class="rbfw-me-btn rbfw-me-btn--secondary" data-item-id="<?php echo esc_attr( $post_id ); ?>">
+						<?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+				</div>
+				<div id="rbfw-reset-orders-result"></div>
+				<?php
+			}
+
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;

@@ -3769,9 +3769,11 @@ function rbfw_restore_inventory_on_cancel( $rbfw_order_id ) {
  */
 add_action( 'admin_enqueue_scripts', 'rbfw_enqueue_reset_orders_assets' );
 function rbfw_enqueue_reset_orders_assets( $hook ) {
-	// Only load on rbfw_item edit pages
+	// Only load on rbfw_item edit pages (classic and modern editor)
 	global $post_type;
-	if ( $post_type !== 'rbfw_item' || ( $hook !== 'post.php' && $hook !== 'post-new.php' ) ) {
+	$is_classic  = $post_type === 'rbfw_item' && ( $hook === 'post.php' || $hook === 'post-new.php' );
+	$is_modern   = $hook === 'rbfw_item_page_rbfw_modern_editor';
+	if ( ! $is_classic && ! $is_modern ) {
 		return;
 	}
 

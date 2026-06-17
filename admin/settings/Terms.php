@@ -22,6 +22,10 @@
 				add_action( 'wp_ajax_rbfw_term_delete_item', [ $this, 'term_delete_item' ] );
 
 				add_action( 'save_post', array( $this, 'settings_save' ), 99 );
+
+				add_action( 'wp_ajax_rbfw_me_term_save',   [ $this, 'me_term_save' ] );
+				add_action( 'wp_ajax_rbfw_me_term_update', [ $this, 'me_term_update' ] );
+				add_action( 'wp_ajax_rbfw_me_term_delete', [ $this, 'me_term_delete' ] );
 			}
 
 			public function custom_editor_enqueue() {
@@ -39,6 +43,156 @@
                     <i class="fa-solid fa-handcuffs"></i><?php esc_html_e( 'Terms', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </li>
 				<?php
+			}
+
+		public static function show_term_data_modern( int $post_id ): void {
+				$rbfw_term = get_post_meta( $post_id, 'mep_event_term', true );
+				if ( empty( $rbfw_term ) ) return;
+				foreach ( $rbfw_term as $key => $value ) {
+					$title    = $value['rbfw_term_title']    ?? '';
+					$url      = $value['rbfw_term_url']      ?? '';
+					$required = $value['rbfw_term_required'] ?? 'no';
+					?>
+					<div class="rbfw-me-faq-item" data-id="<?php echo esc_attr( $key ); ?>">
+						<div class="rbfw-me-faq-item__header">
+							<div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0;">
+								<strong class="rbfw-me-term-item__title"><?php echo esc_html( $title ); ?></strong>
+								<?php if ( $url ) : ?>
+									<span style="font-size:12px;color:#666;"><?php echo esc_html( $url ); ?></span>
+								<?php endif; ?>
+							</div>
+							<div class="rbfw-me-faq-item__actions">
+								<button type="button" class="rbfw-me-faq-btn rbfw-me-term-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-edit"></span>
+								</button>
+								<button type="button" class="rbfw-me-faq-btn rbfw-me-faq-btn--danger rbfw-me-term-delete" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-trash"></span>
+								</button>
+							</div>
+						</div>
+						<input type="hidden" class="rbfw-me-term-url-val" value="<?php echo esc_attr( $url ); ?>">
+						<input type="hidden" class="rbfw-me-term-req-val" value="<?php echo esc_attr( $required ); ?>">
+					</div>
+					<?php
+				}
+			}
+
+			public static function render_for_modern_editor( int $post_id ): void {
+				?>
+				<div class="rbfw-me-faq-items rbfw-me-term-items">
+					<?php self::show_term_data_modern( $post_id ); ?>
+				</div>
+				<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-term-add-btn" style="margin-top:8px;">
+					<span class="dashicons dashicons-plus-alt2"></span>
+					<?php esc_html_e( 'Add Term', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+				<input type="hidden" class="rbfw-me-term-post-id" value="<?php echo esc_attr( $post_id ); ?>">
+
+				<!-- Term Modal -->
+				<div class="rbfw-me-faq-modal" id="rbfw-me-term-modal">
+					<div class="rbfw-me-faq-modal__backdrop"></div>
+					<div class="rbfw-me-faq-modal__box">
+						<div class="rbfw-me-faq-modal__head">
+							<h3 id="rbfw-me-term-modal-title"><?php esc_html_e( 'Add Term', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+							<button type="button" class="rbfw-me-faq-modal__close">
+								<span class="dashicons dashicons-no-alt"></span>
+							</button>
+						</div>
+						<div class="rbfw-me-faq-modal__body">
+							<div id="rbfw-me-term-msg"></div>
+							<div class="rbfw-me-field rbfw-me-field--toggle-row">
+								<div class="rbfw-me-field__info">
+									<strong><?php esc_html_e( 'Required', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+								</div>
+								<label class="rbfw-me-toggle">
+									<input type="checkbox" id="rbfw-me-term-required-chk" class="rbfw-me-toggle__input" value="yes" />
+									<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+								</label>
+							</div>
+							<div class="rbfw-me-field" style="margin-top:12px;">
+								<label class="rbfw-me-field__label"><?php esc_html_e( 'Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<input class="rbfw-me-input" type="text" id="rbfw-me-term-title-input" placeholder="<?php esc_attr_e( 'Term title…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+							</div>
+							<div class="rbfw-me-field" style="margin-top:12px;">
+								<label class="rbfw-me-field__label"><?php esc_html_e( 'URL', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<input class="rbfw-me-input" type="url" id="rbfw-me-term-url-input" placeholder="https://…" />
+							</div>
+							<input type="hidden" id="rbfw-me-term-item-id" value="">
+						</div>
+						<div class="rbfw-me-faq-modal__foot">
+							<button type="button" id="rbfw-me-term-save-btn" class="rbfw-me-btn rbfw-me-btn--primary"><?php esc_html_e( 'Save', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							<button type="button" id="rbfw-me-term-update-btn" class="rbfw-me-btn rbfw-me-btn--primary rbfw-me-hidden"><?php esc_html_e( 'Update', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
+
+			public function me_term_save() {
+				if ( ! isset( $_POST['nonce'], $_POST['rbfw_term_postID'], $_POST['rbfw_term_title'] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				check_ajax_referer( 'rbfw_term_data_save_action', 'nonce' );
+				$post_id = absint( $_POST['rbfw_term_postID'] );
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				$rbfw_term   = get_post_meta( $post_id, 'mep_event_term', true );
+				$rbfw_term   = is_array( $rbfw_term ) ? $rbfw_term : [];
+				$rbfw_term[] = [
+					'rbfw_term_required' => sanitize_text_field( $_POST['rbfw_term_required'] ?? 'no' ),
+					'rbfw_term_title'    => sanitize_text_field( $_POST['rbfw_term_title'] ),
+					'rbfw_term_url'      => esc_url_raw( $_POST['rbfw_term_url'] ?? '' ),
+				];
+				update_post_meta( $post_id, 'mep_event_term', $rbfw_term );
+				ob_start();
+				self::show_term_data_modern( $post_id );
+				wp_send_json_success( [ 'html' => ob_get_clean() ] );
+			}
+
+			public function me_term_update() {
+				if ( ! isset( $_POST['nonce'], $_POST['rbfw_term_postID'], $_POST['rbfw_term_itemID'] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				check_ajax_referer( 'rbfw_term_data_update_action', 'nonce' );
+				$post_id = absint( $_POST['rbfw_term_postID'] );
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				$item_id   = absint( $_POST['rbfw_term_itemID'] );
+				$rbfw_term = get_post_meta( $post_id, 'mep_event_term', true );
+				$rbfw_term = is_array( $rbfw_term ) ? $rbfw_term : [];
+				if ( ! isset( $rbfw_term[ $item_id ] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Term not found.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				$rbfw_term[ $item_id ] = [
+					'rbfw_term_required' => sanitize_text_field( $_POST['rbfw_term_required'] ?? 'no' ),
+					'rbfw_term_title'    => sanitize_text_field( $_POST['rbfw_term_title']    ?? '' ),
+					'rbfw_term_url'      => esc_url_raw( $_POST['rbfw_term_url']              ?? '' ),
+				];
+				update_post_meta( $post_id, 'mep_event_term', $rbfw_term );
+				ob_start();
+				self::show_term_data_modern( $post_id );
+				wp_send_json_success( [ 'html' => ob_get_clean() ] );
+			}
+
+			public function me_term_delete() {
+				if ( ! isset( $_POST['nonce'], $_POST['rbfw_term_postID'], $_POST['itemId'] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				check_ajax_referer( 'rbfw_term_delete_item_action', 'nonce' );
+				$post_id = absint( $_POST['rbfw_term_postID'] );
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				$item_id   = absint( $_POST['itemId'] );
+				$rbfw_term = get_post_meta( $post_id, 'mep_event_term', true );
+				$rbfw_term = is_array( $rbfw_term ) ? $rbfw_term : [];
+				unset( $rbfw_term[ $item_id ] );
+				update_post_meta( $post_id, 'mep_event_term', array_values( $rbfw_term ) );
+				ob_start();
+				self::show_term_data_modern( $post_id );
+				wp_send_json_success( [ 'html' => ob_get_clean() ] );
 			}
 
 			public function term_tab_content( $post_id ) {

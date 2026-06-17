@@ -23,23 +23,53 @@
         initCategories();
         initFeatures();
         initTitleSync();
+        initRelatedPicker();
+        initFaq();
+        initTerm();
         initSave();
         initHashNav();
     });
 
-    /* ── Tabs ────────────────────────────────────────────────── */
+    /* ── Stepper ─────────────────────────────────────────────── */
     function initTabs() {
-        $wrap.on('click', '.rbfw-me-tab', function () {
-            var tab = $(this).data('tab');
-            $wrap.find('.rbfw-me-tab').removeClass('is-active').attr('aria-selected', 'false');
-            $(this).addClass('is-active').attr('aria-selected', 'true');
+        var $tabs = $wrap.find('.rbfw-me-tab');
+        var total = $tabs.length;
+
+        function goToStep(idx) {
+            if (idx < 0 || idx >= total) return;
+            $tabs.each(function (i) {
+                $(this)
+                    .toggleClass('is-active', i === idx)
+                    .toggleClass('is-done',   i < idx)
+                    .attr('aria-selected', i === idx ? 'true' : 'false');
+            });
+            var tabKey = $tabs.eq(idx).data('tab');
             $wrap.find('.rbfw-me-panel').removeClass('is-active');
-            $wrap.find('.rbfw-me-panel[data-panel="' + tab + '"]').addClass('is-active');
-            // Update hash
-            if (postId) {
-                history.replaceState(null, '', '#/rental/edit/' + postId + '/' + tab);
+            $wrap.find('.rbfw-me-panel[data-panel="' + tabKey + '"]').addClass('is-active');
+            $wrap.find('.rbfw-me-step-counter').text('Step ' + (idx + 1) + ' of ' + total);
+            $wrap.find('.rbfw-me-step-prev').prop('disabled', idx === 0);
+            var $next = $wrap.find('.rbfw-me-step-next');
+            if (idx === total - 1) {
+                $next.html('<span class="dashicons dashicons-yes"></span> Finish');
+            } else {
+                $next.html('Next <span class="dashicons dashicons-arrow-right-alt2"></span>');
             }
+            if (postId) {
+                history.replaceState(null, '', '#/rental/edit/' + postId + '/' + tabKey);
+            }
+        }
+
+        $wrap.on('click', '.rbfw-me-tab', function () {
+            goToStep($tabs.index(this));
         });
+        $wrap.on('click', '.rbfw-me-step-next', function () {
+            goToStep($tabs.index($tabs.filter('.is-active')) + 1);
+        });
+        $wrap.on('click', '.rbfw-me-step-prev', function () {
+            goToStep($tabs.index($tabs.filter('.is-active')) - 1);
+        });
+
+        goToStep($tabs.index($tabs.filter('.is-active')));
     }
 
     /* ── Restore tab from URL hash ───────────────────────────── */
@@ -401,6 +431,320 @@
             $items.append(html);
             if ($.fn.sortable) $items.sortable({ handle: '.sort' });
         });
+    }
+
+    /* ── FAQ Settings ───────────────────────────────────────── */
+    function initFaq() {
+        var ajaxUrl = cfg.ajax_url || '';
+        var nonces  = window.rbfw_ajax_admin || {};
+
+        /* Open modal – Add mode */
+        $wrap.on('click', '.rbfw-me-faq-add-btn', function () {
+            openFaqModal('add');
+        });
+
+        /* View toggle */
+        $wrap.on('click', '.rbfw-me-faq-view', function () {
+            $(this).closest('.rbfw-me-faq-item').find('.rbfw-me-faq-item__content').toggleClass('rbfw-me-hidden');
+        });
+
+        /* Open modal – Edit mode */
+        $wrap.on('click', '.rbfw-me-faq-edit', function () {
+            var $item   = $(this).closest('.rbfw-me-faq-item');
+            var id      = $item.data('id');
+            var title   = $item.find('.rbfw-me-faq-item__title').text().trim();
+            var content = $item.find('.rbfw-me-faq-item__content').html() || '';
+            openFaqModal('edit', id, title, content);
+        });
+
+        /* Delete */
+        $wrap.on('click', '.rbfw-me-faq-delete', function () {
+            if (!confirm('Are you sure you want to delete this FAQ?')) return;
+            var id     = $(this).closest('.rbfw-me-faq-item').data('id');
+            var postId = $wrap.find('.rbfw-me-faq-post-id').val();
+            $.post(ajaxUrl, {
+                action:           'rbfw_me_faq_delete',
+                rbfw_faq_postID:  postId,
+                itemId:           id,
+                nonce:            nonces.nonce_faq_delete_item
+            }, function (res) {
+                if (res.success) $wrap.find('.rbfw-me-faq-items').html(res.data.html);
+            });
+        });
+
+        /* Save */
+        $wrap.on('click', '#rbfw-me-faq-save', function () {
+            var postId  = $wrap.find('.rbfw-me-faq-post-id').val();
+            var title   = $('#rbfw-me-faq-title').val().trim();
+            var content = getFaqEditorContent();
+            if (!title) { showFaqMsg('error', 'Please enter a title.'); return; }
+            $.post(ajaxUrl, {
+                action:           'rbfw_me_faq_save',
+                rbfw_faq_title:   title,
+                rbfw_faq_content: content,
+                rbfw_faq_postID:  postId,
+                nonce:            nonces.nonce_faq_data_save
+            }, function (res) {
+                if (res.success) {
+                    $wrap.find('.rbfw-me-faq-items').html(res.data.html);
+                    closeFaqModal();
+                } else {
+                    showFaqMsg('error', res.data && res.data.message ? res.data.message : 'Error saving FAQ.');
+                }
+            });
+        });
+
+        /* Update */
+        $wrap.on('click', '#rbfw-me-faq-update', function () {
+            var postId  = $wrap.find('.rbfw-me-faq-post-id').val();
+            var itemId  = $('#rbfw-me-faq-item-id').val();
+            var title   = $('#rbfw-me-faq-title').val().trim();
+            var content = getFaqEditorContent();
+            if (!title) { showFaqMsg('error', 'Please enter a title.'); return; }
+            $.post(ajaxUrl, {
+                action:           'rbfw_me_faq_update',
+                rbfw_faq_title:   title,
+                rbfw_faq_content: content,
+                rbfw_faq_postID:  postId,
+                rbfw_faq_itemID:  itemId,
+                nonce:            nonces.nonce_faq_data_update
+            }, function (res) {
+                if (res.success) {
+                    $wrap.find('.rbfw-me-faq-items').html(res.data.html);
+                    closeFaqModal();
+                } else {
+                    showFaqMsg('error', res.data && res.data.message ? res.data.message : 'Error updating FAQ.');
+                }
+            });
+        });
+
+        /* Close modal */
+        $wrap.on('click', '.rbfw-me-faq-modal__close, .rbfw-me-faq-modal__backdrop', function () {
+            closeFaqModal();
+        });
+
+        function openFaqModal(mode, itemId, title, content) {
+            $('#rbfw-me-faq-title').val(title || '');
+            $('#rbfw-me-faq-item-id').val(itemId || '');
+            $('#rbfw-me-faq-msg').html('');
+            setFaqEditorContent(content || '');
+
+            if (mode === 'edit') {
+                $('#rbfw-me-faq-modal-title').text('Edit F.A.Q.');
+                $('#rbfw-me-faq-save').addClass('rbfw-me-hidden');
+                $('#rbfw-me-faq-update').removeClass('rbfw-me-hidden');
+            } else {
+                $('#rbfw-me-faq-modal-title').text('Add F.A.Q.');
+                $('#rbfw-me-faq-save').removeClass('rbfw-me-hidden');
+                $('#rbfw-me-faq-update').addClass('rbfw-me-hidden');
+            }
+            $('#rbfw-me-faq-modal').addClass('is-open');
+        }
+
+        function closeFaqModal() {
+            $('#rbfw-me-faq-modal').removeClass('is-open');
+        }
+
+        function getFaqEditorContent() {
+            if (typeof tinymce !== 'undefined' && tinymce.get('rbfw_me_faq_content')) {
+                return tinymce.get('rbfw_me_faq_content').getContent();
+            }
+            return $('#rbfw_me_faq_content').val();
+        }
+
+        function setFaqEditorContent(content) {
+            if (typeof tinymce !== 'undefined' && tinymce.get('rbfw_me_faq_content')) {
+                tinymce.get('rbfw_me_faq_content').setContent(content);
+            } else {
+                $('#rbfw_me_faq_content').val(content);
+            }
+        }
+
+        function showFaqMsg(type, msg) {
+            $('#rbfw-me-faq-msg').html('<span class="rbfw-me-' + type + '">' + msg + '</span>');
+        }
+    }
+
+    /* ── Term Settings ──────────────────────────────────────── */
+    function initTerm() {
+        var ajaxUrl = cfg.ajax_url || '';
+        var nonces  = window.rbfw_ajax_admin || {};
+
+        /* Open modal – Add mode */
+        $wrap.on('click', '.rbfw-me-term-add-btn', function () {
+            openTermModal('add');
+        });
+
+        /* Open modal – Edit mode */
+        $wrap.on('click', '.rbfw-me-term-edit', function () {
+            var $item = $(this).closest('.rbfw-me-faq-item');
+            var id    = $item.data('id');
+            var title = $item.find('.rbfw-me-term-item__title').text().trim();
+            var url   = $item.find('.rbfw-me-term-url-val').val();
+            var req   = $item.find('.rbfw-me-term-req-val').val();
+            openTermModal('edit', id, title, url, req);
+        });
+
+        /* Delete */
+        $wrap.on('click', '.rbfw-me-term-delete', function () {
+            if (!confirm('Are you sure you want to delete this term?')) return;
+            var id     = $(this).closest('.rbfw-me-faq-item').data('id');
+            var postId = $wrap.find('.rbfw-me-term-post-id').val();
+            $.post(ajaxUrl, {
+                action:           'rbfw_me_term_delete',
+                rbfw_term_postID: postId,
+                itemId:           id,
+                nonce:            nonces.nonce_term_delete_item
+            }, function (res) {
+                if (res.success) $wrap.find('.rbfw-me-term-items').html(res.data.html);
+            });
+        });
+
+        /* Save */
+        $wrap.on('click', '#rbfw-me-term-save-btn', function () {
+            var postId = $wrap.find('.rbfw-me-term-post-id').val();
+            var title  = $('#rbfw-me-term-title-input').val().trim();
+            var url    = $('#rbfw-me-term-url-input').val().trim();
+            var req    = $('#rbfw-me-term-required-chk').prop('checked') ? 'yes' : 'no';
+            if (!title) { $('#rbfw-me-term-msg').html('<span style="color:red">Please enter a title.</span>'); return; }
+            $.post(ajaxUrl, {
+                action:              'rbfw_me_term_save',
+                rbfw_term_title:     title,
+                rbfw_term_url:       url,
+                rbfw_term_required:  req,
+                rbfw_term_postID:    postId,
+                nonce:               nonces.nonce_term_data_save
+            }, function (res) {
+                if (res.success) {
+                    $wrap.find('.rbfw-me-term-items').html(res.data.html);
+                    closeTermModal();
+                }
+            });
+        });
+
+        /* Update */
+        $wrap.on('click', '#rbfw-me-term-update-btn', function () {
+            var postId = $wrap.find('.rbfw-me-term-post-id').val();
+            var itemId = $('#rbfw-me-term-item-id').val();
+            var title  = $('#rbfw-me-term-title-input').val().trim();
+            var url    = $('#rbfw-me-term-url-input').val().trim();
+            var req    = $('#rbfw-me-term-required-chk').prop('checked') ? 'yes' : 'no';
+            if (!title) { $('#rbfw-me-term-msg').html('<span style="color:red">Please enter a title.</span>'); return; }
+            $.post(ajaxUrl, {
+                action:              'rbfw_me_term_update',
+                rbfw_term_title:     title,
+                rbfw_term_url:       url,
+                rbfw_term_required:  req,
+                rbfw_term_postID:    postId,
+                rbfw_term_itemID:    itemId,
+                nonce:               nonces.nonce_term_data_update
+            }, function (res) {
+                if (res.success) {
+                    $wrap.find('.rbfw-me-term-items').html(res.data.html);
+                    closeTermModal();
+                }
+            });
+        });
+
+        /* Close modal */
+        $wrap.on('click', '.rbfw-me-faq-modal__close, .rbfw-me-faq-modal__backdrop', function () {
+            if ($(this).closest('#rbfw-me-term-modal').length) closeTermModal();
+        });
+
+        function openTermModal(mode, itemId, title, url, req) {
+            $('#rbfw-me-term-title-input').val(title || '');
+            $('#rbfw-me-term-url-input').val(url || '');
+            $('#rbfw-me-term-required-chk').prop('checked', req === 'yes');
+            $('#rbfw-me-term-item-id').val(itemId || '');
+            $('#rbfw-me-term-msg').html('');
+            if (mode === 'edit') {
+                $('#rbfw-me-term-modal-title').text('Edit Term');
+                $('#rbfw-me-term-save-btn').addClass('rbfw-me-hidden');
+                $('#rbfw-me-term-update-btn').removeClass('rbfw-me-hidden');
+            } else {
+                $('#rbfw-me-term-modal-title').text('Add Term');
+                $('#rbfw-me-term-save-btn').removeClass('rbfw-me-hidden');
+                $('#rbfw-me-term-update-btn').addClass('rbfw-me-hidden');
+            }
+            $('#rbfw-me-term-modal').addClass('is-open');
+        }
+
+        function closeTermModal() {
+            $('#rbfw-me-term-modal').removeClass('is-open');
+        }
+    }
+
+    /* ── Related Items Tag Picker ───────────────────────────── */
+    function initRelatedPicker() {
+        // Open dropdown on search focus
+        $wrap.on('focus', '.rbfw-me-tag-picker__search', function () {
+            var $picker = $(this).closest('.rbfw-me-tag-picker');
+            filterOptions($picker, $(this).val());
+            $picker.find('.rbfw-me-tag-picker__dropdown').removeClass('rbfw-me-hidden');
+        });
+
+        // Filter options as user types
+        $wrap.on('input', '.rbfw-me-tag-picker__search', function () {
+            filterOptions($(this).closest('.rbfw-me-tag-picker'), $(this).val());
+        });
+
+        // Click anywhere in field → focus search input
+        $wrap.on('click', '.rbfw-me-tag-picker__field', function (e) {
+            if (!$(e.target).closest('.rbfw-me-tag').length) {
+                $(this).find('.rbfw-me-tag-picker__search').trigger('focus');
+            }
+        });
+
+        // Select an option — use mousedown so it fires before blur
+        $wrap.on('mousedown', '.rbfw-me-tag-picker__option', function (e) {
+            e.preventDefault();
+            var $picker = $(this).closest('.rbfw-me-tag-picker');
+            var id      = $(this).data('id');
+            var title   = String($(this).data('title'));
+            $(this).addClass('is-selected');
+            var chip = '<div class="rbfw-me-tag" data-id="' + id + '">'
+                + '<span>' + escHtml(title) + '</span>'
+                + '<button type="button" class="rbfw-me-tag__remove" aria-label="Remove">'
+                + '<span class="dashicons dashicons-no-alt"></span>'
+                + '</button>'
+                + '<input type="hidden" name="rbfw_releted_rbfw[]" value="' + parseInt(id, 10) + '">'
+                + '</div>';
+            $picker.find('.rbfw-me-tag-picker__search').before(chip).val('');
+            filterOptions($picker, '');
+        });
+
+        // Remove a tag chip
+        $wrap.on('click', '.rbfw-me-tag__remove', function () {
+            var $tag    = $(this).closest('.rbfw-me-tag');
+            var id      = $tag.data('id');
+            var $picker = $tag.closest('.rbfw-me-tag-picker');
+            $picker.find('.rbfw-me-tag-picker__option[data-id="' + id + '"]').removeClass('is-selected');
+            $tag.remove();
+            filterOptions($picker, $picker.find('.rbfw-me-tag-picker__search').val());
+        });
+
+        // Close dropdown when clicking outside
+        $(document).on('mousedown.rbfw-picker', function (e) {
+            if (!$(e.target).closest('.rbfw-me-tag-picker').length) {
+                $wrap.find('.rbfw-me-tag-picker__dropdown').addClass('rbfw-me-hidden');
+            }
+        });
+
+        function filterOptions($picker, query) {
+            var q = (query || '').toLowerCase().trim();
+            var visible = 0;
+            $picker.find('.rbfw-me-tag-picker__option').each(function () {
+                if ($(this).hasClass('is-selected')) return;
+                var match = !q || String($(this).data('title')).toLowerCase().indexOf(q) !== -1;
+                $(this).toggle(match);
+                if (match) visible++;
+            });
+            $picker.find('.rbfw-me-tag-picker__no-results').toggleClass('rbfw-me-hidden', visible > 0);
+        }
+
+        function escHtml(str) {
+            return $('<div>').text(str).html();
+        }
     }
 
     /* ── Collect all form values ─────────────────────────────── */

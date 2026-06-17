@@ -429,6 +429,74 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 
+			/* FAQ enable toggle — canonical yes/no */
+			$faq_enable = ( isset( $_POST['rbfw_enable_faq_content'] ) && $_POST['rbfw_enable_faq_content'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_faq_content', $faq_enable );
+
+			/* Term Settings enable toggle */
+			$term_enable = ( isset( $_POST['rbfw_enable_term_content'] ) && $_POST['rbfw_enable_term_content'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_term_content', $term_enable );
+
+			/* Tax Settings enable toggle */
+			$tax_settings_enable = ( isset( $_POST['rbfw_enable_tax_settings'] ) && $_POST['rbfw_enable_tax_settings'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_tax_settings', $tax_settings_enable );
+
+			/* Related Items enable toggle */
+			$related_items_enable = ( isset( $_POST['rbfw_enable_related_items'] ) && $_POST['rbfw_enable_related_items'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_related_items', $related_items_enable );
+
+			/* Security Deposit */
+			$deposit_enable = ( isset( $_POST['rbfw_enable_security_deposit'] ) && $_POST['rbfw_enable_security_deposit'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_security_deposit', $deposit_enable );
+			$deposit_label  = isset( $_POST['rbfw_security_deposit_label'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_label'] ) ) : 'Security Deposit';
+			update_post_meta( $post_id, 'rbfw_security_deposit_label', $deposit_label );
+			$deposit_type   = ( isset( $_POST['rbfw_security_deposit_type'] ) && $_POST['rbfw_security_deposit_type'] === 'fixed_amount' ) ? 'fixed_amount' : 'percentage';
+			update_post_meta( $post_id, 'rbfw_security_deposit_type', $deposit_type );
+			$deposit_amount = isset( $_POST['rbfw_security_deposit_amount'] ) ? absint( $_POST['rbfw_security_deposit_amount'] ) : 0;
+			update_post_meta( $post_id, 'rbfw_security_deposit_amount', $deposit_amount );
+
+			/* Front-end Display Settings enable toggle */
+			$frontend_display_enable = ( isset( $_POST['rbfw_enable_frontend_display'] ) && $_POST['rbfw_enable_frontend_display'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_frontend_display', $frontend_display_enable );
+
+			/* Front-end Display Settings */
+			if ( isset( $_POST['rbfw_has_frontend_settings'] ) ) {
+				$qty_info = ( isset( $_POST['rbfw_available_qty_info_switch'] ) && $_POST['rbfw_available_qty_info_switch'] === 'yes' ) ? 'yes' : 'no';
+				update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $qty_info );
+
+				$shipping = ( isset( $_POST['shipping_enable'] ) && $_POST['shipping_enable'] === 'yes' ) ? 'yes' : 'no';
+				update_post_meta( $post_id, 'shipping_enable', $shipping );
+				$product_id = get_post_meta( $post_id, 'link_wc_product', true ) ?: $post_id;
+				update_post_meta( $product_id, '_virtual', $shipping === 'yes' ? 'no' : 'yes' );
+
+				$ship_class = isset( $_POST['rent_shipping_class'] ) ? absint( $_POST['rent_shipping_class'] ) : 0;
+				update_post_meta( $post_id, 'rent_shipping_class', $ship_class );
+				if ( $ship_class ) {
+					wp_set_object_terms( $product_id, [ $ship_class ], 'product_shipping_class' );
+				} else {
+					wp_set_object_terms( $product_id, [], 'product_shipping_class' );
+				}
+
+				$svc_qty = ( isset( $_POST['rbfw_enable_extra_service_qty'] ) && $_POST['rbfw_enable_extra_service_qty'] === 'yes' ) ? 'yes' : 'no';
+				update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $svc_qty );
+			}
+
+			/* Related items */
+			if ( isset( $_POST['rbfw_has_related_picker'] ) ) {
+				$related = isset( $_POST['rbfw_releted_rbfw'] ) && is_array( $_POST['rbfw_releted_rbfw'] )
+					? array_values( array_filter( array_map( 'absint', $_POST['rbfw_releted_rbfw'] ) ) )
+					: [];
+				update_post_meta( $post_id, 'rbfw_releted_rbfw', $related );
+			}
+
+			/* Tax */
+			if ( isset( $_POST['_tax_status'] ) ) {
+				update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
+			}
+			if ( isset( $_POST['_tax_class'] ) ) {
+				update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+			}
+
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
 				$cats = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) );
@@ -509,9 +577,6 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$tabs = [
 				[ 'key' => 'general',  'label' => __( 'General',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-home' ],
 				[ 'key' => 'pricing',  'label' => __( 'Pricing',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-money-alt' ],
-				[ 'key' => 'services', 'label' => __( 'Services', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-plus-alt' ],
-				[ 'key' => 'location',  'label' => __( 'Location',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-location' ],
-				[ 'key' => 'inventory', 'label' => __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-archive' ],
 				[ 'key' => 'advanced',  'label' => __( 'Advanced',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-settings' ],
 			];
 
@@ -545,9 +610,12 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_item_stock_quantity', 'stock_manage_on_return_date', 'rbfw_enable_variations',
 				'rbfw_enable_security_deposit', 'rbfw_security_deposit_type',
 				'rbfw_security_deposit_amount', 'rbfw_security_deposit_label',
-				'rbfw_enable_faq_content', 'rbfw_item_terms_conditions',
+				'rbfw_enable_faq_content', 'rbfw_enable_term_content', 'rbfw_item_terms_conditions',
 				'rbfw_enable_pick_point',
 				'rbfw_enable_additional_gallary',
+				'_tax_status', '_tax_class', 'rbfw_enable_tax_settings',
+				'rbfw_available_qty_info_switch', 'shipping_enable', 'rent_shipping_class',
+				'rbfw_enable_frontend_display', 'rbfw_enable_related_items',
 			];
 			$out = [];
 			foreach ( $keys as $k ) {

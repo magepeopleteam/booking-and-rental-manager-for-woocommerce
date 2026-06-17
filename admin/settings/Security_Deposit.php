@@ -98,6 +98,31 @@
             }
 
 
+		public static function render_for_modern_editor( int $post_id ): void {
+				$type   = get_post_meta( $post_id, 'rbfw_security_deposit_type',   true ) ?: 'percentage';
+				$amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ?: 0;
+				$label  = get_post_meta( $post_id, 'rbfw_security_deposit_label',  true ) ?: 'Security Deposit';
+				?>
+				<div class="rbfw-me-field">
+					<label class="rbfw-me-field__label"><?php esc_html_e( 'Security Deposit Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<input class="rbfw-me-input" type="text" name="rbfw_security_deposit_label" value="<?php echo esc_attr( $label ); ?>" placeholder="Security Deposit" />
+				</div>
+				<div class="rbfw-me-row">
+					<div class="rbfw-me-field">
+						<label class="rbfw-me-field__label"><?php esc_html_e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<select class="rbfw-me-select" name="rbfw_security_deposit_type">
+							<option value="percentage"   <?php selected( $type, 'percentage' ); ?>><?php esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+							<option value="fixed_amount" <?php selected( $type, 'fixed_amount' ); ?>><?php esc_html_e( 'Fixed Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+						</select>
+					</div>
+					<div class="rbfw-me-field">
+						<label class="rbfw-me-field__label"><?php esc_html_e( 'Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<input class="rbfw-me-input" type="number" min="0" name="rbfw_security_deposit_amount" value="<?php echo esc_attr( $amount ); ?>" placeholder="0" />
+					</div>
+				</div>
+				<?php
+			}
+
             public function add_tabs_content( $post_id ) {
 				?>
                 <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_security_deposit">
