@@ -1769,6 +1769,81 @@
     padding: 16px 20px !important;
 }
 
+/* ── Stock quantity + duration grouped card ─────────────────── */
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity {
+    border: 1px solid #c3d4f8 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin-bottom: 12px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    background: #f5f8ff !important;
+    border: none !important;
+    border-bottom: 1px solid #c3d4f8 !important;
+    border-radius: 0 !important;
+    padding: 14px 20px !important;
+    margin: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration:last-child {
+    border-bottom: none !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration > div:first-child {
+    flex: 1 !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration > div:first-child > label {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1e3a5f !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: default !important;
+    line-height: 1.4 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration > div:first-child > p {
+    font-size: 12px !important;
+    color: #2ea2cc !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1.4 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity .item_stock_quantity {
+    flex-shrink: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity .item_stock_quantity input[type="number"] {
+    width: 110px !important;
+    padding: 6px 10px !important;
+    border: 1px solid #8c8f94 !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    color: #2c3338 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    transition: border-color .15s, box-shadow .15s !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity .item_stock_quantity input[type="number"]:focus {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+    outline: none !important;
+}
+
 /* ── SD / pricing table sections ────────────────────────────── */
 
 /* Section card wrapper (overrides generic section padding/border rules) */
