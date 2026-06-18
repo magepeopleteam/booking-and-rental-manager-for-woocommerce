@@ -107,28 +107,20 @@
             }
         });
 
-        // Old-style toggles: value attribute stores current DB state ('on'/'off'),
-        // so it must be synced with the browser checked state on every click.
-        $wrap.on('click', '[name="manage_inventory_as_timely"]', function () {
-            var isTimely = this.checked;
-            $(this).val(isTimely ? 'on' : 'off');
-            // Direct DOM traversal: the stock-quantity section is the immediate next
-            // sibling of the toggle's <section>. This is guaranteed to find the right
-            // element regardless of $pricing scoping issues.
-            var $stockSection = $(this).closest('section').next('.rbfw_item_stock_quantity');
-            if (isTimely) {
-                $stockSection.removeClass('rbfw_hide').css('display', 'block');
-                $stockSection.find('.rbfw_item_quantiry_duration').css('display', '');
-            } else {
-                $stockSection.addClass('rbfw_hide').css('display', 'none');
-                $stockSection.find('.rbfw_item_quantiry_duration').css('display', 'none');
-            }
-            syncTimelyUI($wrap.find('.rbfw-me-pricing-classic-wrap'));
+        // Old-style toggle: value attribute stores DB state ('on'/'off'); sync it then
+        // delegate all show/hide to syncTimelyUI scoped to the containing panel.
+        // stopPropagation prevents rbfw-admin-input.js (loaded globally) from reading
+        // the already-updated value and inverting the toggle a second time.
+        $wrap.on('click', '[name="manage_inventory_as_timely"]', function (e) {
+            e.stopPropagation();
+            $(this).val(this.checked ? 'on' : 'off');
+            syncTimelyUI($(this).closest('.rbfw-me-panel'));
         });
 
-        $wrap.on('click', '[name="enable_specific_duration"]', function () {
+        $wrap.on('click', '[name="enable_specific_duration"]', function (e) {
+            e.stopPropagation();
             $(this).val(this.checked ? 'on' : 'off');
-            syncTimelyUI($wrap.find('.rbfw-me-pricing-classic-wrap'));
+            syncTimelyUI($(this).closest('.rbfw-me-panel'));
         });
     }
 
@@ -1290,7 +1282,6 @@
             $pricing.find('.rbfw_resort_price_config_wrapper').hide();
             $pricing.find('.rbfw_general_price_config_wrapper').hide();
             $pricing.find('.rbfw_multiple_items').hide();
-            $pricing.find('.manage_inventory_as_timely').hide();
             $pricing.find('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
             $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').addClass('hide').hide();
             $pricing.find('.rbfw_es_price_config_wrapper').hide();
@@ -1301,7 +1292,6 @@
 
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.manage_inventory_as_timely').show();
                 $pricing.find('.rbfw_es_price_config_wrapper').show();
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_single_day').show();
@@ -1310,9 +1300,6 @@
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.manage_inventory_as_timely').each(function () {
-                    this.style.setProperty('display', 'none', 'important');
-                });
                 $pricing.find('.rbfw_time_inventory').hide();
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
@@ -1330,7 +1317,6 @@
 
             } else if (type === 'multiple_items') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.manage_inventory_as_timely').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.additional-service-item-price').show();

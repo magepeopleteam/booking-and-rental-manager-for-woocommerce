@@ -1672,11 +1672,6 @@
     text-transform: uppercase !important;
 }
 
-/* Hide manage inventory section for Appointment type */
-.rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] section.manage_inventory_as_timely {
-    display: none !important;
-}
-
 /* ── Toggle-row sections (manage_inventory_as_timely etc.) ──── */
 .rbfw-me-pricing-classic-wrap section.manage_inventory_as_timely {
     display: flex;
