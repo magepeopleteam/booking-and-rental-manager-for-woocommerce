@@ -17,11 +17,14 @@
         initTemplate();
         initThumbnail();
         initServiceImages();
+        initServiceCategoryActions();
+        initServiceCategoryHeader();
         initResortImages();
         initGallery();
         initAdditionalGallery();
         initCategories();
         initFeatures();
+        initFeatureAccordion();
         initTitleSync();
         initEditorTabsInToolbar();
         initEditorMediaBtn();
@@ -102,6 +105,59 @@
             if (target) {
                 $(target).toggleClass('rbfw-me-hidden', ! this.checked);
             }
+        });
+    }
+
+    /* ── Update service category enable toggle label ────────────── */
+    function initServiceCategoryHeader() {
+        var $section = $wrap.find('.additional-service-item-price > section:not(.bg-light)');
+        if ( ! $section.length ) return;
+        // Update label text
+        $section.find('> div > label').text('Enable Category wise extra service');
+        // Update description
+        $section.find('> div > p').text('Enable or disable category-wise additional services for this item.');
+    }
+
+    /* ── Move service category sort/remove into title section ─── */
+    function initServiceCategoryActions() {
+        function moveActions($table) {
+            $table.find('tr').each(function () {
+                var $tr      = $(this);
+                var $titleSec = $tr.find('.service_category_title');
+                var $actionTd = $tr.find('td:last-child');
+                if ( ! $titleSec.length || ! $actionTd.length ) return;
+                // Already moved
+                if ( $titleSec.find('.rbfw-svc-cat-actions').length ) return;
+
+                var $actions = $(
+                    '<div class="rbfw-svc-cat-actions">' +
+                      '<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>' +
+                      '<span class="button tr_remove"><i class="fas fa-trash-can"></i></span>' +
+                    '</div>'
+                );
+
+                // Wire tr_remove to the original onclick
+                $actions.find('.tr_remove').on('click', function () {
+                    $tr.remove();
+                });
+
+                $titleSec.append($actions);
+                $actionTd.hide();
+            });
+        }
+
+        // Run on existing tables
+        $wrap.find('.rbfw_service_category_table').each(function () {
+            moveActions($(this));
+        });
+
+        // Re-run when new category rows are added (add-service-category button)
+        $wrap.on('click', '.add-service-category', function () {
+            setTimeout(function () {
+                $wrap.find('.rbfw_service_category_table').each(function () {
+                    moveActions($(this));
+                });
+            }, 50);
         });
     }
 
@@ -331,7 +387,115 @@
         });
     }
 
+    /* ── Navigate to field: switch tab + scroll ─────────────────── */
+    function navigateToField($field) {
+        var $panel = $field.closest('.rbfw-me-panel[data-panel]');
+        if ( $panel.length && ! $panel.hasClass('is-active') ) {
+            var panelKey = $panel.data('panel');
+            var $tab = $wrap.find('.rbfw-me-tab[data-tab="' + panelKey + '"]');
+            if ( $tab.length ) $tab.trigger('click');
+        }
+        setTimeout(function () {
+            var el = $field[0];
+            if ( el && el.scrollIntoView ) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            if ( $field.is('input, textarea') ) $field.focus();
+        }, 250);
+    }
+
+    /* ── Inline field validation ─────────────────────────────── */
+    function showFieldError($field, msg) {
+        clearFieldError($field);
+        var $err = $('<span class="rbfw-me-field-error">' + msg + '</span>');
+        $field.addClass('rbfw-me-field-invalid').after($err);
+        $field.one('input change keyup', function () { clearFieldError($field); });
+    }
+    function clearFieldError($field) {
+        $field.removeClass('rbfw-me-field-invalid');
+        $field.next('.rbfw-me-field-error').remove();
+    }
+
+    function validateBeforeSave() {
+        var errors = [];
+
+        // ── Title ──
+        var titleVal = $.trim($wrap.find('.rbfw-me-card-title-input').val()
+                       || $wrap.find('.rbfw-me-title-input').val());
+        if ( ! titleVal ) {
+            errors.push({ $field: $wrap.find('.rbfw-me-card-title-input'), msg: 'Title is required.' });
+            errors.push({ $field: $wrap.find('.rbfw-me-title-input'),      msg: 'Title is required.' });
+        }
+
+        // ── Description ──
+        var contentVal = '';
+        if (typeof tinymce !== 'undefined') {
+            var ed = tinymce.get('rbfw_me_post_content');
+            contentVal = (ed && !ed.isHidden())
+                ? $.trim(ed.getContent({ format: 'text' }))
+                : $.trim($wrap.find('[name="post_content"]').val());
+        } else {
+            contentVal = $.trim($wrap.find('[name="post_content"]').val());
+        }
+        if ( ! contentVal ) {
+            errors.push({ $field: $wrap.find('.rbfw-me-editor-wrap'), msg: 'Description is required.' });
+        }
+
+        // ── Generic: all [required] fields across every panel ──
+        $wrap.find('.rbfw-me-panel').each(function () {
+            $(this).find('input[required], select[required], textarea[required]').each(function () {
+                var $f   = $(this);
+                var type = ($f.attr('type') || '').toLowerCase();
+                var val  = $.trim($f.val());
+                var empty = false;
+
+                if ( type === 'checkbox' || type === 'radio' ) {
+                    // group — at least one must be checked
+                    var name = $f.attr('name');
+                    if ( name && ! $wrap.find('[name="' + name + '"]:checked').length ) {
+                        empty = true;
+                    }
+                } else {
+                    empty = val === '';
+                }
+
+                if ( empty ) {
+                    var label = $f.attr('placeholder')
+                              || $f.closest('.rbfw-me-field').find('.rbfw-me-field__label').text()
+                              || $f.attr('name')
+                              || 'This field';
+                    errors.push({ $field: $f, msg: label + ' is required.' });
+                }
+            });
+        });
+
+        if ( ! errors.length ) return true;
+
+        // Show all errors
+        $.each(errors, function (i, e) {
+            showFieldError(e.$field, e.msg);
+        });
+
+        // Navigate to the FIRST errored field inside a panel
+        var navigated = false;
+        $.each(errors, function (i, e) {
+            if ( navigated ) return false;
+            var $panel = e.$field.closest('.rbfw-me-panel[data-panel]');
+            if ( $panel.length ) {
+                navigateToField(e.$field);
+                navigated = true;
+            }
+        });
+        if ( ! navigated ) {
+            $wrap.find('.rbfw-me-title-input').focus();
+        }
+
+        return false;
+    }
+
     function doSave(status) {
+        if ( ! validateBeforeSave() ) return;
+
         var $indicator = $wrap.find('.rbfw-me-save-indicator');
         $indicator.text(cfg.i18n && cfg.i18n.saving || 'Saving…').removeClass('is-saved is-error').addClass('is-saving');
 
@@ -480,6 +644,57 @@
         });
     }
 
+    /* ── Feature category accordion ─────────────────────────── */
+    function initFeatureAccordion() {
+        function setupRow($row) {
+            var $title   = $row.find('.feature_category_title');
+            var $content = $row.find('.feature_category_inner_item_wrap');
+            var $addBtn  = $row.find('.add-new-feature');
+            if ( ! $title.length || $title.find('.rbfw-feat-chevron').length ) return;
+
+            // Wrap content + button in a single body container
+            if ( ! $row.find('.rbfw-feat-body').length ) {
+                $content.add($addBtn).wrapAll('<div class="rbfw-feat-body"></div>');
+            }
+            var $body = $row.find('.rbfw-feat-body');
+
+            // Inject chevron
+            var $chevron = $('<span class="rbfw-feat-chevron"><i class="fas fa-chevron-down"></i></span>');
+            $title.prepend($chevron);
+
+            // Start expanded
+            $row.addClass('rbfw-feat-open');
+            $body.show();
+
+            // Toggle on title row click (not on input / action buttons)
+            $title.on('click.accordion', function (e) {
+                if ( $(e.target).closest('input, .rbfw-me-features-actions').length ) return;
+                var isOpen = $row.hasClass('rbfw-feat-open');
+                if ( isOpen ) {
+                    $row.removeClass('rbfw-feat-open');
+                    $body.stop(true).slideUp(200);
+                } else {
+                    $row.addClass('rbfw-feat-open');
+                    $body.stop(true).slideDown(200);
+                }
+            });
+        }
+
+        // Init existing rows
+        $wrap.find('.rbfw_feature_category_table tbody tr').each(function () {
+            setupRow($(this));
+        });
+
+        // Init dynamically added rows
+        $wrap.on('click.accordion', '.add-feature-category', function () {
+            setTimeout(function () {
+                $wrap.find('.rbfw_feature_category_table tbody tr').each(function () {
+                    setupRow($(this));
+                });
+            }, 60);
+        });
+    }
+
     /* ── Feature category repeater ───────────────────────────── */
     function initFeatures() {
         // Init sortable
@@ -502,7 +717,9 @@
                 + '<div class="field-list rbfw_feature_category">'
                 + '<div class="feature_category_inner_wrap">'
                 + '<div class="feature_category_title"><label>Feature Category Title</label>'
-                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_title]" data-key="' + nextCat + '" placeholder="Feature Category Label" /></div>'
+                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_title]" data-key="' + nextCat + '" placeholder="Feature Category Label" />'
+                + '<div class="rbfw-me-features-actions"><span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span><span class="button tr_remove"><i class="fas fa-trash-can"></i></span></div>'
+                + '</div>'
                 + '<div class="feature_category_inner_item_wrap sortable">'
                 + '<div class="item">'
                 + '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fas fa-circle-plus"></i> Icon</a>'
@@ -912,6 +1129,7 @@
         if (!$pricing.length) return;
 
         function applyType(type) {
+            $pricing.attr('data-item-type', type);
             // Reset — hide all switchable sections
             $pricing.find('.rbfw_bike_car_sd_wrapper').hide();
             $pricing.find('.rbfw_resort_price_config_wrapper').hide();
@@ -948,11 +1166,15 @@
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                $pricing.find('.manage_inventory_as_timely').each(function () {
+                    this.style.setProperty('display', 'none', 'important');
+                });
+                $pricing.find('.rbfw_time_inventory').hide();
+                $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
                 $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').removeClass('hide').show();
                 $pricing.find('.rbfw_es_price_config_wrapper').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
-                $pricing.find('.rbfw_time_inventory').hide();
                 $pricing.find('.rbfw_without_time_inventory').show();
 
             } else if (type === 'resort') {
@@ -967,6 +1189,7 @@
                 $pricing.find('.manage_inventory_as_timely').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_multiple_items').show();
+                $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 var isTimely2 = $pricing.find('[name="manage_inventory_as_timely"]').val() === 'on';
                 if (isTimely2) {

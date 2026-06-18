@@ -421,7 +421,7 @@
 }
 
 .rbfw-me-sidebar {
-    width: 260px;
+    width: 360px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -527,6 +527,7 @@
 .rbfw-me-wrap select {
     border: 1px solid #cbd5e1 !important;
     border-radius: 5px !important;
+    background: #EFF4FF;
 }
 .rbfw-me-input,
 .rbfw-me-select {
@@ -980,10 +981,11 @@
     box-shadow: none !important;
 }
 .rbfw-me-editor-wrap .mce-toolbar-grp {
-    background: #fff !important;
     border-bottom: 1px solid #e2e8f0 !important;
     padding: 4px 8px !important;
+    background: #EFF4FF !important;
 }
+.rbfw-me-editor-wrap .mce-top-part { background: #EFF4FF !important; }
 .rbfw-me-editor-wrap .mce-top-part::before { display: none !important; }
 .rbfw-me-editor-wrap .mce-edit-area { border: none !important; }
 .rbfw-me-editor-wrap .mce-statusbar {
@@ -1135,6 +1137,7 @@
     overflow: hidden;
     background: #fff;
     box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    margin-bottom: 5px;
 }
 
 /* Inner wrappers — transparent pass-through */
@@ -1185,7 +1188,7 @@
 
 /* Feature items list */
 .features_category_wrapper .feature_category_inner_item_wrap {
-    padding: 0 16px !important;
+    padding: 0 80px 0 0px !important;
 }
 
 /* Individual feature row */
@@ -1255,11 +1258,12 @@
     padding: 0 !important;
 }
 
-/* Feature name input — override admin_style.css width: 74% !important */
+/* Feature name input — 40px shorter, right side clear for action buttons */
 .features_category_wrapper .item > input[type="text"],
 .rbfw-me-features-body .feature_category_inner_item_wrap [name*="[cat_features]"][name$="[title]"] {
     flex: 1 !important;
     width: auto !important;
+    max-width: calc(100% - 40px) !important;
     border: 1px solid #c3c4c7 !important;
     border-radius: 6px !important;
     padding: 7px 12px !important;
@@ -1277,12 +1281,15 @@
     outline: none;
 }
 
-/* Sort + remove action buttons per feature */
+/* Sort + remove action buttons per feature — fixed width, always clear */
 .features_category_wrapper .item > div {
     display: flex !important;
     align-items: center;
     gap: 2px;
     flex-shrink: 0;
+    width: 64px;
+    justify-content: flex-end;
+    margin-left: 4px;
 }
 .features_category_wrapper .item > div .button {
     display: inline-flex !important;
@@ -1308,7 +1315,7 @@
 .features_category_wrapper .item > div .button.sort { cursor: grab !important; }
 .features_category_wrapper .item > div .button.remove:hover { color: #d63638 !important; }
 
-/* "Add New Feature" full-width button at bottom of card */
+/* "Add New Feature" dashed full-width button */
 .rbfw-me-features-body .add-new-feature {
     display: flex !important;
     align-items: center !important;
@@ -1316,51 +1323,106 @@
     gap: 6px !important;
     width: 100% !important;
     padding: 10px 16px !important;
-    border: none !important;
-    border-top: 1px solid #dde1ec !important;
-    background: #2271b1 !important;
-    color: #fff !important;
+    border: 1.5px dashed #c3cfe2 !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #6b7280 !important;
     font-size: 13px !important;
     font-weight: 500 !important;
     cursor: pointer !important;
-    border-radius: 0 !important;
-    border-bottom-left-radius: 7px !important;
-    border-bottom-right-radius: 7px !important;
     text-shadow: none !important;
     box-shadow: none !important;
-    transition: background .15s;
-    margin: 0 !important;
+    transition: border-color .15s, color .15s, background .15s;
+    margin-top: 10px !important;
+    box-sizing: border-box !important;
+}
+.rbfw-me-features-body .add-new-feature i {
+    color: #2271b1 !important;
+    font-size: 14px !important;
 }
 .rbfw-me-features-body .add-new-feature:hover {
-    background: #135e96 !important;
-    color: #fff !important;
+    border-color: #2271b1 !important;
+    color: #2271b1 !important;
+    background: #f0f6ff !important;
 }
 
-/* Category-level sort / delete (second table cell) */
+/* ── Feature accordion ───────────────────────────────────────── */
+.rbfw-feat-chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    color: #6b7280;
+    cursor: pointer;
+    transition: transform .2s ease;
+    border-radius: 4px;
+}
+.rbfw-feat-chevron:hover { background: #f0f0f1; color: #1d2327; }
+.rbfw-feat-chevron i { font-size: 11px; line-height: 1; }
+
+.rbfw_feature_category_table tr.rbfw-feat-open .rbfw-feat-chevron {
+    transform: rotate(180deg);
+}
+
+.rbfw-me-features-body .feature_category_title { cursor: pointer; }
+
+.rbfw_feature_category_table tr:not(.rbfw-feat-open) .rbfw-feat-body {
+    display: none;
+}
+.rbfw-feat-body {
+    padding-bottom: 4px;
+}
+
+/* Category title row — flex: chevron | label | input | actions */
+.rbfw-me-features-body .feature_category_title {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+}
+.rbfw-me-features-body .feature_category_title > label {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0 !important;
+}
+.rbfw-me-features-body .feature_category_title > input[type="text"] {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Category-level sort / delete — now inside the title row */
 .rbfw-me-features-actions {
-    width: 52px !important;
-    min-width: 52px;
-    padding: 0 0 0 8px !important;
-    vertical-align: middle !important;
-    text-align: left !important;
+    display: flex !important;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: 40px;
+    width: auto !important;
+    min-width: unset !important;
+    padding: 0 !important;
+    vertical-align: unset !important;
 }
 .rbfw-me-features-actions .button {
-    display: flex !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 30px !important;
-    height: 30px !important;
+    width: 28px !important;
+    height: 28px !important;
     min-height: unset !important;
     padding: 0 !important;
     color: #8c8f94 !important;
-    background: none !important;
+    background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
     border-radius: 4px !important;
     cursor: pointer;
     font-size: 13px;
-    margin-bottom: 4px;
+    margin-bottom: 0 !important;
 }
 .rbfw-me-features-actions .button:hover {
     color: #1d2327 !important;
@@ -1464,6 +1526,13 @@
 }
 .rbfw-me-pricing-classic-wrap section:not(.bg-light):last-of-type {
     border-bottom: none !important;
+}
+
+/* Section info div — stack title above subtitle */
+.rbfw-me-pricing-classic-wrap section:not(.bg-light) > div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
 }
 
 /* Section label (field title, e.g. "Rent Types") */
@@ -1603,9 +1672,14 @@
     text-transform: uppercase !important;
 }
 
+/* Hide manage inventory section for Appointment type */
+.rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] section.manage_inventory_as_timely {
+    display: none !important;
+}
+
 /* ── Toggle-row sections (manage_inventory_as_timely etc.) ──── */
 .rbfw-me-pricing-classic-wrap section.manage_inventory_as_timely {
-    display: flex !important;
+    display: flex;
     align-items: center !important;
     justify-content: space-between !important;
     gap: 20px !important;
@@ -3123,12 +3197,13 @@
     left: 25px !important;
 }
 
-/* item-left (label + desc) */
+/* item-left (label + desc) — stacked vertically */
 .rbfw-me-pricing-classic-wrap .md-price-card .item-left {
-    align-items: center !important;
     display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
     flex: 1 !important;
-    gap: 10px !important;
+    gap: 3px !important;
     min-width: 0 !important;
 }
 
@@ -3172,6 +3247,45 @@
 /* Enable Time Picker row — toggle is on the RIGHT */
 .rbfw-me-pricing-classic-wrap .md-price-card .item.md-time-toggle-row {
     justify-content: space-between !important;
+}
+
+/* Max qty input wrapper (number + "qty" label) */
+.rbfw-me-pricing-classic-wrap .md-price-card .md-threshold-input-wrap {
+    display: flex !important;
+    align-items: center !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    flex-shrink: 0 !important;
+}
+.rbfw-me-pricing-classic-wrap .md-price-card .md-threshold-input-wrap input[type="number"] {
+    border: none !important;
+    background: transparent !important;
+    padding: 6px 10px !important;
+    width: 70px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    text-align: center !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -moz-appearance: textfield !important;
+}
+.rbfw-me-pricing-classic-wrap .md-price-card .md-threshold-input-wrap input[type="number"]::-webkit-outer-spin-button,
+.rbfw-me-pricing-classic-wrap .md-price-card .md-threshold-input-wrap input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+.rbfw-me-pricing-classic-wrap .md-price-card .md-threshold-input-wrap > span {
+    background: #f0f4fb !important;
+    border-left: 1px solid #dde4ef !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 6px 10px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
 }
 
 /* $ price input wrapper */
@@ -3626,30 +3740,42 @@
     display: none !important;
 }
 
-/* Move "Enable Additional service" toggle into the card head (right side) */
-.rbfw-me-card:has(.additional-service-item-price) {
-    position: relative !important;
-}
-
-.rbfw-me-card:has(.additional-service-item-price) > .rbfw-me-card__head {
-    padding-right: 80px !important;
-}
-
-/* Strip the section to invisible, float it up to card head position */
+/* "Enable Category wise extra service" toggle row — above the table */
 .rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) {
-    background: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+    background: #f0f6fc !important;
     border: none !important;
+    border-bottom: 1px solid #dde4ef !important;
+    border-radius: 0 !important;
+    padding: 14px 20px !important;
     margin: 0 !important;
-    padding: 0 !important;
-    position: absolute !important;
-    right: 20px !important;
-    top: 20px !important;
-    z-index: 1 !important;
+    position: static !important;
 }
 
-/* Hide the label text — keep only the switch */
 .rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) > div {
-    display: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 3px !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) > div > label {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1d2327 !important;
+    margin: 0 !important;
+    cursor: default !important;
+}
+
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) > div > p {
+    font-size: 12px !important;
+    color: #2ea2cc !important;
+    margin: 0 !important;
 }
 
 /* ── Additional Extra Services — category section ───────────── */
@@ -4850,6 +4976,98 @@
     font-size: 13px;
     color: var(--me-muted);
     font-style: italic;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_fee_management_wrapper {
+    border: none !important;
+    margin: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap table.rbfw_bike_car_sd_price_table {
+    border: 1px solid #ddd;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section {
+    border: none !important;
+}
+
+.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional {
+    border-top: none !important;
+}
+
+/* ── Service category title row — label | input | actions ───── */
+.rbfw-me-card .service_category_title.sss {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: none !important;
+    border-radius: 0 !important;
+    padding: 8px 0 !important;
+}
+.rbfw-me-card .service_category_title.sss > label {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 600;
+    font-size: 12px;
+    margin: 0 !important;
+}
+.rbfw-me-card .service_category_title.sss > input[type="text"] {
+    flex: 1 !important;
+    min-width: 0;
+}
+
+/* Actions div injected by JS */
+.rbfw-me-card .service_category_title .rbfw-svc-cat-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+    margin-left: auto;
+    margin-right: 40px;
+}
+.rbfw-me-card .service_category_title .rbfw-svc-cat-actions .button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 28px !important;
+    min-height: unset !important;
+    padding: 0 !important;
+    color: #8c8f94 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+    font-size: 13px;
+}
+.rbfw-me-card .service_category_title .rbfw-svc-cat-actions .button:hover {
+    background: #f0f0f1 !important;
+    color: #1d2327 !important;
+}
+.rbfw-me-card .service_category_title .rbfw-svc-cat-actions .tr_sort_handler { cursor: grab !important; }
+.rbfw-me-card .service_category_title .rbfw-svc-cat-actions .tr_remove:hover { color: #d63638 !important; }
+
+/* ── Field validation ────────────────────────────────────────── */
+.rbfw-me-field-error {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #d63638;
+    margin-top: 4px;
+}
+.rbfw-me-field-error::before {
+    content: '⚠ ';
+}
+input.rbfw-me-field-invalid,
+textarea.rbfw-me-field-invalid {
+    border-color: #d63638 !important;
+    box-shadow: 0 0 0 1px #d63638 !important;
+}
+.rbfw-me-editor-wrap.rbfw-me-field-invalid {
+    border: 1.5px solid #d63638 !important;
+    border-radius: 10px;
 }
 
 /* ── Utility ────────────────────────────────────────────────── */

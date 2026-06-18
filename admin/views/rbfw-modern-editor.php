@@ -178,6 +178,10 @@
 													<div class="feature_category_title">
 														<label><?php esc_html_e( 'Feature Category Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 														<input type="text" name="rbfw_feature_category[<?php echo esc_attr( $i ); ?>][cat_title]" value="<?php echo esc_attr( $cat_title ); ?>" data-key="<?php echo esc_attr( $i ); ?>" placeholder="<?php esc_attr_e( 'Feature Category Label', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+														<div class="rbfw-me-features-actions">
+															<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+															<span class="button tr_remove" onclick="jQuery(this).closest('tr').remove()"><i class="fas fa-trash-can"></i></span>
+														</div>
 													</div>
 													<div class="feature_category_inner_item_wrap sortable">
 														<?php $c = 0; foreach ( $cat_features as $feature ) :
@@ -201,10 +205,6 @@
 											<button type="button" class="ppof-button add-new-feature"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Feature', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 										</div>
 									</td>
-									<td class="rbfw-me-features-actions">
-										<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
-										<span class="button tr_remove" onclick="jQuery(this).closest('tr').remove()"><i class="fas fa-trash-can"></i></span>
-									</td>
 								</tr>
 								<?php $i++; endforeach;
 								else : ?>
@@ -216,6 +216,10 @@
 													<div class="feature_category_title">
 														<label><?php esc_html_e( 'Feature Category Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 														<input type="text" name="rbfw_feature_category[0][cat_title]" data-key="0" placeholder="<?php esc_attr_e( 'Feature Category Label', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+														<div class="rbfw-me-features-actions">
+															<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+															<span class="button tr_remove" onclick="jQuery(this).closest('tr').remove()"><i class="fas fa-trash-can"></i></span>
+														</div>
 													</div>
 													<div class="feature_category_inner_item_wrap sortable">
 														<div class="item">
@@ -233,10 +237,6 @@
 											</div>
 											<button type="button" class="ppof-button add-new-feature"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Feature', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 										</div>
-									</td>
-									<td class="rbfw-me-features-actions">
-										<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
-										<span class="button tr_remove" onclick="jQuery(this).closest('tr').remove()"><i class="fas fa-trash-can"></i></span>
 									</td>
 								</tr>
 								<?php endif; ?>
