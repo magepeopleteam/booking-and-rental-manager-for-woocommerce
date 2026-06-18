@@ -740,8 +740,7 @@
 				} else {
 					echo esc_attr( 'none' );
 				} ?>;">
-					<?php $this->panel_header( 'Resort Price Configuration', 'Here you can set price for resort.' ); ?>
-                    <section>
+                    <section class="bg-light mt-5">
                         <div>
                             <label>
 								<?php echo esc_html__( 'Day-long Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -936,12 +935,20 @@
 				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : 'appointment';
 				?>
                 <div class="rbfw_switch_sd_appointment_row <?php echo esc_attr( $rbfw_item_type != 'appointment' ) ? 'hide' : 'show'; ?>">
-                    <section>
-                        <label>
-							<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </label>
-                        <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
-                    </section>
+                    <div class="md-price-card">
+                        <div class="item">
+                            <div class="item-left">
+                                <div class="label"><?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="description"><?php esc_html_e( 'Set the maximum number of bookings allowed per session or time slot.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            </div>
+                            <div class="item-right">
+                                <div class="md-threshold-input-wrap">
+                                    <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
+                                    <span>qty</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <section class="hide">
                     <label class="w-30">
@@ -1173,7 +1180,7 @@
                             </div>
 
                             <!-- Half-Day Hour Threshold (conditional) -->
-                            <div class="item half-day-price-item" style="display: <?php echo esc_attr( $rbfw_enable_half_day_rate === 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item half-day-price-item" style="display: <?php echo esc_attr( ( $rbfw_enable_half_day_rate === 'yes' && $rbfw_enable_time_picker === 'yes' ) ? 'flex' : 'none' ); ?>;">
                                 <div class="item-left">
                                     <div class="label">Half-Day Hour Threshold</div>
                                     <div class="description">Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.</div>
@@ -1208,7 +1215,7 @@
                             </div>
 
                             <!-- Hour Threshold (conditional) -->
-                            <div class="item hour-threshold-item" style="display: <?php echo esc_attr( $rbfw_enable_hourly_rate === 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item hour-threshold-item" style="display: <?php echo esc_attr( ( $rbfw_enable_hourly_rate === 'yes' && $rbfw_enable_time_picker === 'yes' ) ? 'flex' : 'none' ); ?>;">
                                 <div class="toggle hour-threshold-toggle <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
@@ -1243,20 +1250,21 @@
 						);
 					?>
                     <div id="rbfw-daywise-config-wrapper" style="<?php echo $_daywise_visible ? '' : 'display:none;'; ?>">
-                    <section>
-                        <div>
-                            <label>
-								<?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </label>
-                            <P>
-								<?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </P>
+                    <div class="md-price-card">
+                        <div class="md-card-header"><?php esc_html_e( 'Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <div class="item md-time-toggle-row">
+                            <div class="item-left">
+                                <div class="label"><?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="description"><?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle daywise-price-toggle <?php echo esc_attr( $rbfw_enable_daywise_price === 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="hidden" name="rbfw_enable_daywise_price" value="<?php echo esc_attr( $rbfw_enable_daywise_price ); ?>">
+                            </div>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" name="rbfw_enable_daywise_price" value="<?php echo esc_attr( $rbfw_enable_daywise_price ); ?>" <?php echo esc_attr( ( $rbfw_enable_daywise_price == 'yes' ) ? 'checked' : '' ); ?>>
-                            <span class="slider round"></span>
-                        </label>
-                    </section>
+                    </div>
                     <section class="day-wise-price-configuration <?php echo esc_attr( ( $rbfw_enable_daywise_price == 'yes' ) ? 'show' : 'hide' ); ?>">
                         <table class='form-table'>
 							<?php do_action( 'rbfw_before_week_price_table_row' ); ?>

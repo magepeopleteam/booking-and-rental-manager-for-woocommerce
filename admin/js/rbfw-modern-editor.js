@@ -924,44 +924,58 @@
         var halfDayPriceEnabled   = $md.find('#rbfw_enable_half_day_rate').val() === 'yes';
         var hourThresholdEnabled  = $md.find('#rbfw_enable_hourly_threshold').val() === 'yes';
 
+        // rbfw-md-hidden beats .md-price-card .item { display:flex !important }
+        // via higher selector specificity with its own !important
+        function mdHide($el) { $el.addClass('rbfw-md-hidden'); }
+        function mdShow($el) { $el.removeClass('rbfw-md-hidden'); }
+
         function updateDaywiseVisibility() {
             var atLeastOne = dailyPriceEnabled || (timePickerEnabled && (hourlyPriceEnabled || halfDayPriceEnabled));
             $md.find('#rbfw-daywise-config-wrapper').css('display', atLeastOne ? '' : 'none');
         }
 
         function applyInitialState() {
+            // Monthly price
             $md.find('.monthly-price-toggle').toggleClass('active', monthlyPriceEnabled);
             $md.find('#monthly-price-input').prop('disabled', !monthlyPriceEnabled);
-            $md.find('.day-threshold-item-for-month').css('display', monthlyPriceEnabled ? 'flex' : 'none');
+            $md.find('.day-threshold-item-for-month').toggleClass('rbfw-md-hidden', !monthlyPriceEnabled);
 
+            // Monthly threshold
             $md.find('.day-threshold-toggle-for-month').toggleClass('active', monthThresholdEnabled);
             $md.find('#day-threshold-input-for-monthly').prop('disabled', !monthThresholdEnabled);
 
+            // Weekly price
             $md.find('.weekly-price-toggle').toggleClass('active', weeklyPriceEnabled);
             $md.find('#weekly-price-input').prop('disabled', !weeklyPriceEnabled);
-            $md.find('.day-threshold-item-for-week').css('display', weeklyPriceEnabled ? 'flex' : 'none');
+            $md.find('.day-threshold-item-for-week').toggleClass('rbfw-md-hidden', !weeklyPriceEnabled);
 
+            // Weekly threshold
             $md.find('.day-threshold-toggle-for-week').toggleClass('active', weekThresholdEnabled);
             $md.find('#day-threshold-input-for-weekly').prop('disabled', !weekThresholdEnabled);
 
+            // Daily price
             $md.find('.daily-price-toggle').toggleClass('active', dailyPriceEnabled);
             $md.find('#daily-price-input').prop('disabled', !dailyPriceEnabled);
             $md.find('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
 
+            // Time picker — half-day/hourly rows and time slots
             $md.find('.time-picker-toggle').toggleClass('active', timePickerEnabled);
-            $md.find('.hourly-price-item').css('display', timePickerEnabled ? 'flex' : 'none');
+            $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
 
+            // Hourly price
             $md.find('.hourly-price-toggle').toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
-            $md.find('.hour-threshold-item').css('display', hourlyPriceEnabled ? 'flex' : 'none');
+            $md.find('.hour-threshold-item').toggleClass('rbfw-md-hidden', !(hourlyPriceEnabled && timePickerEnabled));
             $md.find('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
 
+            // Half-day price
             $md.find('.half-day-price-toggle').toggleClass('active', halfDayPriceEnabled);
             $md.find('#half-day-price-input').prop('disabled', !halfDayPriceEnabled);
-            $md.find('.half-day-price-item').css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            $md.find('.half-day-price-item').toggleClass('rbfw-md-hidden', !(halfDayPriceEnabled && timePickerEnabled));
             $md.find('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
 
+            // Hour threshold
             $md.find('.hour-threshold-toggle').toggleClass('active', hourThresholdEnabled);
             $md.find('#hour-threshold-input').prop('disabled', !hourThresholdEnabled);
 
@@ -970,12 +984,14 @@
 
         applyInitialState();
 
+        // ── Duration Rate Toggles ────────────────────────────────
+
         $md.on('click', '.monthly-price-toggle', function () {
             monthlyPriceEnabled = !monthlyPriceEnabled;
             $(this).toggleClass('active', monthlyPriceEnabled);
             $md.find('#monthly-price-input').prop('disabled', !monthlyPriceEnabled);
             $md.find('#rbfw_enable_monthly_rate').val(monthlyPriceEnabled ? 'yes' : 'no');
-            $md.find('.day-threshold-item-for-month').css('display', monthlyPriceEnabled ? 'flex' : 'none');
+            $md.find('.day-threshold-item-for-month').toggleClass('rbfw-md-hidden', !monthlyPriceEnabled);
         });
 
         $md.on('click', '.weekly-price-toggle', function () {
@@ -983,7 +999,7 @@
             $(this).toggleClass('active', weeklyPriceEnabled);
             $md.find('#weekly-price-input').prop('disabled', !weeklyPriceEnabled);
             $md.find('#rbfw_enable_weekly_rate').val(weeklyPriceEnabled ? 'yes' : 'no');
-            $md.find('.day-threshold-item-for-week').css('display', weeklyPriceEnabled ? 'flex' : 'none');
+            $md.find('.day-threshold-item-for-week').toggleClass('rbfw-md-hidden', !weeklyPriceEnabled);
         });
 
         $md.on('click', '.daily-price-toggle', function () {
@@ -994,6 +1010,8 @@
             $md.find('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
             updateDaywiseVisibility();
         });
+
+        // ── Threshold Toggles ───────────────────────────────────
 
         $md.on('click', '.day-threshold-toggle-for-month', function () {
             monthThresholdEnabled = !monthThresholdEnabled;
@@ -1009,11 +1027,16 @@
             $md.find('#rbfw_enable_day_threshold_for_weekly').val(weekThresholdEnabled ? 'yes' : 'no');
         });
 
+        // ── Time Configuration ──────────────────────────────────
+
         $md.on('click', '.time-picker-toggle', function () {
             timePickerEnabled = !timePickerEnabled;
             $(this).toggleClass('active', timePickerEnabled);
-            $md.find('.hourly-price-item').css('display', timePickerEnabled ? 'flex' : 'none');
+            $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
+            // Sub-rows also depend on time picker being active
+            $md.find('.half-day-price-item').toggleClass('rbfw-md-hidden', !(timePickerEnabled && halfDayPriceEnabled));
+            $md.find('.hour-threshold-item').toggleClass('rbfw-md-hidden', !(timePickerEnabled && hourlyPriceEnabled));
             $md.find('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
             $md.find('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
             $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
@@ -1027,7 +1050,7 @@
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
             $md.find('#rbfw_enable_hourly_rate').val(hourlyPriceEnabled ? 'yes' : 'no');
             $md.find('.rbfw-daywise-hourly-col').css('display', (hourlyPriceEnabled && timePickerEnabled) ? '' : 'none');
-            $md.find('.hour-threshold-item').css('display', hourlyPriceEnabled ? 'flex' : 'none');
+            $md.find('.hour-threshold-item').toggleClass('rbfw-md-hidden', !(hourlyPriceEnabled && timePickerEnabled));
             updateDaywiseVisibility();
         });
 
@@ -1036,7 +1059,7 @@
             $(this).toggleClass('active', halfDayPriceEnabled);
             $md.find('#half-day-price-input').prop('disabled', !halfDayPriceEnabled);
             $md.find('#rbfw_enable_half_day_rate').val(halfDayPriceEnabled ? 'yes' : 'no');
-            $md.find('.half-day-price-item').css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            $md.find('.half-day-price-item').toggleClass('rbfw-md-hidden', !(halfDayPriceEnabled && timePickerEnabled));
             $md.find('.rbfw-daywise-halfday-col').css('display', (halfDayPriceEnabled && timePickerEnabled) ? '' : 'none');
             updateDaywiseVisibility();
         });
@@ -1052,16 +1075,21 @@
             $md.find('#hour-threshold-display').text($(this).val());
         });
 
-        $md.on('click', 'input[name="rbfw_enable_daywise_price"]', function () {
-            var status = $(this).val();
-            if (status === 'yes') {
-                $(this).val('no');
-                $md.find('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
-            } else {
-                $(this).val('yes');
+        // ── Day-wise Pricing Toggle ──────────────────────────────
+
+        $md.on('click', '.daywise-price-toggle', function () {
+            var $input   = $md.find('input[name="rbfw_enable_daywise_price"]');
+            var enabled  = $input.val() !== 'yes';
+            $(this).toggleClass('active', enabled);
+            $input.val(enabled ? 'yes' : 'no');
+            if (enabled) {
                 $md.find('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+            } else {
+                $md.find('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
             }
         });
+
+        // ── Particular Date Time Slots Toggle ───────────────────
 
         $md.on('click', '.rbfw_particular_switch', function () {
             var status = $(this).val();
@@ -1073,6 +1101,8 @@
                 $md.find('.available-particular').slideDown().removeClass('hide').addClass('show');
             }
         });
+
+        // ── Time Slot Management ─────────────────────────────────
 
         $md.on('click', '.time-slot-remove', function (e) {
             e.stopPropagation();
