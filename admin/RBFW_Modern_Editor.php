@@ -389,7 +389,6 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_enable_resort_daylong_price',
 				'manage_inventory_as_timely', 'rbfw_item_stock_quantity_timely',
 				'enable_specific_duration',
-				'rbfw_particular_switch',
 				'rbfw_enable_half_day_rate',     'rbfw_half_day_rate',
 				'half_day_hour_threshold_start', 'half_day_hour_threshold_end',
 				'rbfw_enable_hourly_threshold',  'rbfw_hourly_threshold',
@@ -403,6 +402,18 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					update_post_meta( $post_id, $key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
 				}
 			}
+
+			// rbfw_particular_switch is posted under a type-specific name
+			$_ps_item_type = sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ?? '' ) );
+			if ( in_array( $_ps_item_type, [ 'bike_car_md', 'equipment', 'dress', 'others' ], true ) ) {
+				$_ps_key = 'rbfw_particular_switch_md';
+			} elseif ( $_ps_item_type === 'multiple_items' ) {
+				$_ps_key = 'rbfw_particular_switch_mi';
+			} else {
+				$_ps_key = 'rbfw_particular_switch_sd';
+			}
+			$rbfw_particular_switch = ( isset( $_POST[ $_ps_key ] ) && $_POST[ $_ps_key ] === 'on' ) ? 'on' : 'off';
+			update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
 
 			/* ── Inventory ── */
 			$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? absint( $_POST['rbfw_item_stock_quantity'] ) : 0;

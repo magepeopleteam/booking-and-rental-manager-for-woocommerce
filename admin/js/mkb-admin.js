@@ -296,13 +296,7 @@
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
 
-                if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
-                    jQuery('.rbfw_time_inventory').show();
-                    jQuery('.rbfw_without_time_inventory').hide();
-                }else{
-                    jQuery('.rbfw_time_inventory').hide();
-                    jQuery('.rbfw_without_time_inventory').show();
-                }
+                syncTimelyColumns();
                 jQuery('.rbfw_multiple_items').hide();
 
                 jQuery('table.wprently_fee-table th:nth-child(3)').hide();
@@ -421,13 +415,7 @@
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
 
-                if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
-                    jQuery('.rbfw_time_inventory').show();
-                    jQuery('.rbfw_without_time_inventory').hide();
-                }else{
-                    jQuery('.rbfw_time_inventory').hide();
-                    jQuery('.rbfw_without_time_inventory').show();
-                }
+                syncTimelyColumns();
 
                 jQuery('.rbfw_multiple_items').show();
 
@@ -975,7 +963,58 @@
         }
 
         syncTimePickerWithSpecificDuration();
-        jQuery('.enable_specific_duration').on('change', syncTimePickerWithSpecificDuration);
+        jQuery('.enable_specific_duration').on('change', function () {
+            jQuery(this).val(this.checked ? 'on' : 'off');
+            syncTimePickerWithSpecificDuration();
+            syncTimelyColumns();
+        });
+
+        // Sync value attribute and all related UI when timely inventory is toggled
+        jQuery(document).on('change', '[name="manage_inventory_as_timely"]', function () {
+            var isTimely = this.checked;
+            jQuery(this).val(isTimely ? 'on' : 'off');
+            // Direct DOM traversal: stock-quantity section is the immediate next sibling
+            var $stockSection = jQuery(this).closest('section').next('.rbfw_item_stock_quantity');
+            if (isTimely) {
+                $stockSection.removeClass('rbfw_hide').css('display', 'block');
+                $stockSection.find('.rbfw_item_quantiry_duration').css('display', '');
+            } else {
+                $stockSection.addClass('rbfw_hide').css('display', 'none');
+                $stockSection.find('.rbfw_item_quantiry_duration').css('display', 'none');
+            }
+            syncTimelyColumns();
+        });
+
+        // Syncs all timely-dependent columns based on both toggle states:
+        // .duration_enable  — start/end time cols   (timely=on AND specific=on)
+        // .duration_disable — duration/d_type cols  (timely=on AND specific=off)
+        // .rbfw_item_stock_quantity section          (timely=on)
+        // .rbfw_without_time_inventory col           (timely=off)
+        function syncTimelyColumns() {
+            var isTimely   = jQuery('[name="manage_inventory_as_timely"]').is(':checked');
+            var isSpecific = jQuery('[name="enable_specific_duration"]').is(':checked');
+
+            var $stockSection = jQuery('.rbfw_time_inventory.rbfw_item_stock_quantity');
+            if (isTimely) {
+                $stockSection.removeClass('rbfw_hide').css('display', 'block');
+                jQuery('.rbfw_item_quantiry_duration').css('display', '');
+            } else {
+                $stockSection.addClass('rbfw_hide').css('display', 'none');
+                jQuery('.rbfw_item_quantiry_duration').css('display', 'none');
+            }
+
+            if (isTimely) { jQuery('.rbfw_without_time_inventory').hide(); }
+            else          { jQuery('.rbfw_without_time_inventory').show(); }
+
+            if (isTimely && isSpecific)  { jQuery('.rbfw_time_inventory.duration_enable').show(); }
+            else                          { jQuery('.rbfw_time_inventory.duration_enable').hide(); }
+
+            if (isTimely && !isSpecific) { jQuery('.rbfw_time_inventory.duration_disable').show(); }
+            else                          { jQuery('.rbfw_time_inventory.duration_disable').hide(); }
+
+            if (isTimely && isSpecific)  { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
+            else                          { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+        }
 
 
         function updateDaywisePricingVisibility() {
@@ -1669,16 +1708,27 @@
 
         e.preventDefault(); // prevent form submission if inside form
 
-        const time = $(this).closest('.add-slot-form').find('.new-slot-time').val();
+        const $btn = $(this);
+        const time = $btn.closest('.add-slot-form').find('.new-slot-time').val();
         if (!time) return;
 
-        const name_attr = $(this).data('name_attr');
-        const rent_type = $(this).data('rent_type');
-
-
+        const name_attr = $btn.data('name_attr');
+        const rent_type = $btn.data('rent_type');
 
         // Get a unique index (based on existing slots)
-        const $timeSlotsContainer = $(this).closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+        const $timeSlotsContainer = $btn.closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+
+        const isDuplicate = $timeSlotsContainer.find('.time-slot-time').filter(function () {
+            return $(this).text() === time;
+        }).length > 0;
+        if (isDuplicate) {
+            $btn.closest('.add-slot-form').find('.rbfw-slot-duplicate-warning').remove();
+            const $warning = $('<span class="rbfw-slot-duplicate-warning" style="display:block;color:#c0392b;font-size:12px;margin-top:4px;"><span class="dashicons dashicons-warning"></span> This time slot already exists.</span>');
+            $btn.after($warning);
+            setTimeout(function () { $warning.remove(); }, 3000);
+            return;
+        }
+
         const index = $timeSlotsContainer.children('.time-slot').length;
         const dataId = $('.rbfw_pdwt_insert').children('.time-slot').length; // Use your actual ID logic here
 

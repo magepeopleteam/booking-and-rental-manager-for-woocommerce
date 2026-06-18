@@ -5822,9 +5822,6 @@ table.rbfw_pricing_table thead th {
     color: #fff !important;
 }
 
-.add-slot-form button.add-slot-btn {
-    margin-top: 25px;
-}
 
 #rbfw_add_meta_box .add-feature-category {
     margin-bottom: 20px;
@@ -6024,6 +6021,14 @@ table.rbfw_pricing_table thead th {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     font-family: "Segoe UI", sans-serif;
+}
+
+/* Page-load hide: PHP sets class="hide" on containers whose toggle is off.
+   JS manages visibility after interaction via slideUp/slideDown.
+   Scoped to plugin wrappers to avoid collisions with other admin CSS. */
+#rbfw_add_meta_box .hide,
+.rbfw-me-wrap .hide {
+    display: none;
 }
 
 /* Header Row */

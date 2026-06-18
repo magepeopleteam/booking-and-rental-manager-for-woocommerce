@@ -106,6 +106,61 @@
                 $(target).toggleClass('rbfw-me-hidden', ! this.checked);
             }
         });
+
+        // Old-style toggles: value attribute stores current DB state ('on'/'off'),
+        // so it must be synced with the browser checked state on every click.
+        $wrap.on('click', '[name="manage_inventory_as_timely"]', function () {
+            var isTimely = this.checked;
+            $(this).val(isTimely ? 'on' : 'off');
+            // Direct DOM traversal: the stock-quantity section is the immediate next
+            // sibling of the toggle's <section>. This is guaranteed to find the right
+            // element regardless of $pricing scoping issues.
+            var $stockSection = $(this).closest('section').next('.rbfw_item_stock_quantity');
+            if (isTimely) {
+                $stockSection.removeClass('rbfw_hide').css('display', 'block');
+                $stockSection.find('.rbfw_item_quantiry_duration').css('display', '');
+            } else {
+                $stockSection.addClass('rbfw_hide').css('display', 'none');
+                $stockSection.find('.rbfw_item_quantiry_duration').css('display', 'none');
+            }
+            syncTimelyUI($wrap.find('.rbfw-me-pricing-classic-wrap'));
+        });
+
+        $wrap.on('click', '[name="enable_specific_duration"]', function () {
+            $(this).val(this.checked ? 'on' : 'off');
+            syncTimelyUI($wrap.find('.rbfw-me-pricing-classic-wrap'));
+        });
+    }
+
+    // Sync all timely-dependent UI elements based on current toggle states.
+    // .rbfw_item_stock_quantity   — stock qty + specific-duration section (show when timely=on)
+    // .duration_enable columns    — start/end time cols (show when timely=on AND specific=on)
+    // .duration_disable columns   — duration/d_type cols (show when timely=on AND specific=off)
+    // .rbfw_without_time_inventory — stock/day col (show when timely=off)
+    function syncTimelyUI($pricing) {
+        var isTimely   = $pricing.find('[name="manage_inventory_as_timely"]').is(':checked');
+        var isSpecific = $pricing.find('[name="enable_specific_duration"]').is(':checked');
+
+        var $stockSection = $pricing.find('.rbfw_time_inventory.rbfw_item_stock_quantity');
+        if (isTimely) {
+            $stockSection.removeClass('rbfw_hide').css('display', 'block');
+            $pricing.find('.rbfw_item_quantiry_duration').css('display', '');
+        } else {
+            $stockSection.addClass('rbfw_hide').css('display', 'none');
+            $pricing.find('.rbfw_item_quantiry_duration').css('display', 'none');
+        }
+
+        if (isTimely) { $pricing.find('.rbfw_without_time_inventory').hide(); }
+        else          { $pricing.find('.rbfw_without_time_inventory').show(); }
+
+        if (isTimely && isSpecific)  { $pricing.find('.rbfw_time_inventory.duration_enable').show(); }
+        else                          { $pricing.find('.rbfw_time_inventory.duration_enable').hide(); }
+
+        if (isTimely && !isSpecific) { $pricing.find('.rbfw_time_inventory.duration_disable').show(); }
+        else                          { $pricing.find('.rbfw_time_inventory.duration_disable').hide(); }
+
+        if (isTimely && isSpecific)  { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
+        else                          { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
     }
 
     /* ── Update service category enable toggle label ────────────── */
@@ -506,6 +561,40 @@
                 });
             }
         }
+
+        // ── Time Picker: at least one time slot required when enabled ──
+        var timePickerValid = true;
+        $wrap.find('.time-slots-section').each(function () {
+            var $section = $(this);
+            if ( ! $section.is(':visible') ) return; // time picker off or section hidden
+
+            var slotCount = $section.find('.time-slots .time-slot').length;
+            if ( slotCount === 0 ) {
+                timePickerValid = false;
+                var $addSlotContainer = $section.find('.add-slot-container');
+                if ( $addSlotContainer.length && ! $addSlotContainer.prev('.rbfw-me-table-warning').length ) {
+                    $addSlotContainer.before(
+                        '<div class="rbfw-me-table-warning">' +
+                          '<span class="dashicons dashicons-warning"></span>' +
+                          ' At least one time slot is required when Time Picker is enabled.' +
+                        '</div>'
+                    );
+                    $wrap.one('click', '.add-slot-btn', function () {
+                        $wrap.find('.rbfw-me-table-warning').remove();
+                    });
+                }
+                var $panel = $section.closest('.rbfw-me-panel[data-panel]');
+                if ( $panel.length && ! $panel.hasClass('is-active') ) {
+                    $wrap.find('.rbfw-me-tab[data-tab="' + $panel.data('panel') + '"]').trigger('click');
+                }
+                setTimeout(function () {
+                    var el = $addSlotContainer[0] || $section[0];
+                    if ( el ) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 250);
+                return false; // break .each
+            }
+        });
+        if ( ! timePickerValid ) return false;
 
         // ── Generic: all [required] fields across every panel ──
         $wrap.find('.rbfw-me-panel').each(function () {
@@ -1217,18 +1306,7 @@
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                var isTimely = $pricing.find('[name="manage_inventory_as_timely"]').val() === 'on';
-                var isSpecific = $pricing.find('[name="enable_specific_duration"]').val() === 'on';
-                if (isTimely && isSpecific) {
-                    $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide();
-                }
-                if (isTimely) {
-                    $pricing.find('.rbfw_time_inventory').show();
-                    $pricing.find('.rbfw_without_time_inventory').hide();
-                } else {
-                    $pricing.find('.rbfw_time_inventory').hide();
-                    $pricing.find('.rbfw_without_time_inventory').show();
-                }
+                syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
@@ -1257,14 +1335,7 @@
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                var isTimely2 = $pricing.find('[name="manage_inventory_as_timely"]').val() === 'on';
-                if (isTimely2) {
-                    $pricing.find('.rbfw_time_inventory').show();
-                    $pricing.find('.rbfw_without_time_inventory').hide();
-                } else {
-                    $pricing.find('.rbfw_time_inventory').hide();
-                    $pricing.find('.rbfw_without_time_inventory').show();
-                }
+                syncTimelyUI($pricing);
 
             } else {
                 // bike_car_md and other multi-day types
@@ -1525,6 +1596,19 @@
             var nameAttr = $btn.data('name_attr');
             var rentType = $btn.data('rent_type');
             var $slotsContainer = $btn.closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+
+            var isDuplicate = $slotsContainer.find('.time-slot-time').filter(function () {
+                return $(this).text() === time;
+            }).length > 0;
+            if ( isDuplicate ) {
+                $btn.closest('.add-slot-form').find('.rbfw-slot-duplicate-warning').remove();
+                var $warning = $('<span class="rbfw-slot-duplicate-warning" style="display:block;color:#c0392b;font-size:12px;margin-top:4px;">' +
+                    '<span class="dashicons dashicons-warning"></span> This time slot already exists.</span>');
+                $btn.after($warning);
+                setTimeout(function () { $warning.remove(); }, 3000);
+                return;
+            }
+
             var index = $slotsContainer.children('.time-slot').length;
 
             var newSlot = '';
