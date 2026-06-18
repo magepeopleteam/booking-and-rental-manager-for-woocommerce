@@ -705,72 +705,106 @@
 }
 
 /* ── Gallery sidebar ────────────────────────────────────────── */
-.rbfw-me-gallery-wrap { gap: 12px; }
+.rbfw-me-gallery-wrap { gap: 14px; }
 
 .rbfw-me-gallery-list {
     display: grid;
-    gap: 6px;
+    gap: 8px;
     grid-template-columns: repeat(3, 1fr);
-    margin-bottom: 10px;
+    margin-bottom: 4px;
     min-height: 0;
 }
 
 .rbfw-me-gallery-image {
     aspect-ratio: 1;
-    border: 1px solid var(--me-border);
-    border-radius: 6px;
+    border-radius: 8px;
     overflow: hidden;
     position: relative;
+    background: #f0f4fb;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
 }
 
 .rbfw-me-gallery-image img {
     display: block;
     height: 100%;
     object-fit: cover;
+    transition: transform .2s ease;
     width: 100%;
+}
+
+.rbfw-me-gallery-image:hover img {
+    transform: scale(1.05);
 }
 
 .rbfw-me-gallery-remove {
     align-items: center;
-    background: rgba(0,0,0,.55);
+    background: #fee2e2;
     border: none;
     border-radius: 50%;
-    color: #fff;
+    color: #dc2626;
     cursor: pointer;
-    display: none;
-    font-size: 10px;
+    display: flex;
+    font-size: 9px;
     height: 22px;
     justify-content: center;
+    opacity: 0;
     padding: 0;
     position: absolute;
-    right: 4px;
-    top: 4px;
+    right: 5px;
+    top: 5px;
+    transition: opacity .15s, background .15s;
     width: 22px;
     z-index: 1;
 }
 
 .rbfw-me-gallery-image:hover .rbfw-me-gallery-remove {
-    display: flex;
+    opacity: 1;
+}
+
+.rbfw-me-gallery-remove:hover {
+    background: #fca5a5;
 }
 
 .rbfw-me-gallery-actions {
     align-items: center;
+    border-top: 1px solid #e8edf5;
     display: flex;
     gap: 10px;
+    padding-top: 12px;
+}
+
+.rbfw-me-gallery-upload {
+    background: #e8edff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #2271b1 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    padding: 7px 14px !important;
+    transition: background .15s !important;
+    white-space: nowrap !important;
+}
+
+.rbfw-me-gallery-upload:hover {
+    background: #d4dcff !important;
 }
 
 .rbfw-me-gallery-clear {
     background: none;
     border: none;
-    color: #d63638;
+    color: #9ca3af;
     cursor: pointer;
     font-size: 12px;
     padding: 0;
+    transition: color .15s;
 }
 
 .rbfw-me-gallery-clear:hover {
-    color: #b02727;
-    text-decoration: underline;
+    color: #dc2626;
 }
 
 /* ── Status sidebar ─────────────────────────────────────────── */

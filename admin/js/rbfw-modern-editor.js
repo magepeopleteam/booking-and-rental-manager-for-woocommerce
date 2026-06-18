@@ -120,12 +120,7 @@
         $wrap.on('click', '[name="enable_specific_duration"]', function (e) {
             e.stopPropagation();
             $(this).val(this.checked ? 'on' : 'off');
-            var $panel = $(this).closest('.rbfw-me-panel');
-            syncTimelyUI($panel);
-            if ($panel.find('#rbfw_item_type').val() === 'multiple_items') {
-                $panel.find('.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf')
-                    .css('display', $(this).val() === 'on' ? '' : 'none');
-            }
+            syncTimelyUI($(this).closest('.rbfw-me-panel'));
         });
     }
 
@@ -1359,13 +1354,9 @@
             $sdWrap.find('.time-slots-section').css('display', enabled ? 'block' : 'none');
         }());
 
-        // Hide MI time settings wrap when enable_specific_duration is off for multiple_items type.
-        // Use .val() (the DB-synced value attribute) rather than .is(':checked') so the
-        // check works reliably even when the checkbox is inside a hidden parent.
+        // This section is a duplicate for multiple_items type — always keep it hidden.
         function syncMiTimeSettings() {
-            var specificOn = $pricing.find('[name="enable_specific_duration"]').val() === 'on';
-            $pricing.find('.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf')
-                .css('display', specificOn ? '' : 'none');
+            $pricing.find('.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf').css('display', 'none');
         }
 
         if (savedType === 'multiple_items') {
