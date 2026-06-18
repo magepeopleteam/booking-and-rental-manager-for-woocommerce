@@ -875,38 +875,240 @@
     color: var(--me-muted);
 }
 
-/* ── WP editor inside card ──────────────────────────────────── */
-.rbfw-me-editor-wrap .wp-editor-container,
-.rbfw-me-editor-wrap .wp-editor-wrap {
-    border-radius: 6px;
-    overflow: hidden;
+/* ── Description label row with VISUAL/CODE switch ──────────── */
+.rbfw-me-editor-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
 }
-.rbfw-me-editor-wrap .mce-tinymce {
-    border: 1px solid #c3c4c7 !important;
-    border-radius: 6px !important;
-    box-shadow: none !important;
+.rbfw-me-editor-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+}
+.rbfw-me-sw-btn {
+    background: transparent;
+    border: 1.5px solid #cbd5e1;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1.6;
+    transition: background .15s, color .15s, border-color .15s;
+}
+.rbfw-me-sw-btn:first-child {
+    border-radius: 6px 0 0 6px;
+    border-right: none;
+}
+.rbfw-me-sw-btn:last-child {
+    border-radius: 0 6px 6px 0;
+    border-left: 1.5px solid #cbd5e1;
+}
+.rbfw-me-sw-btn.is-active {
+    background: #1e293b;
+    border-color: #1e293b;
+    color: #fff;
+}
+.rbfw-me-sw-btn.is-active + .rbfw-me-sw-btn {
+    border-left-color: #1e293b;
 }
 
-/* ── Category checkbox grid ─────────────────────────────────── */
+/* ── WP Editor Redesign ──────────────────────────────────────── */
+.rbfw-me-editor-wrap .wp-editor-wrap {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+
+/* Header row: both tabs and media button moved into toolbar — hide entirely */
+.rbfw-me-editor-wrap .wp-editor-tools {
+    display: none !important;
+}
+.rbfw-me-editor-wrap .wp-media-buttons {
+    display: none !important;
+}
+
+/* VISUAL / CODE switcher — hidden from header, moved into toolbar via JS */
+.rbfw-me-editor-wrap .wp-editor-tabs {
+    display: none !important;
+}
+
+/* Switcher group appended inside mce-toolbar */
+.rbfw-me-editor-tabs-toolbar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border: 1.5px solid #cbd5e1;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-left: 8px;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+.rbfw-me-editor-tabs-toolbar .rbfw-tab-btn {
+    background: transparent;
+    border: none;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #64748b;
+    cursor: pointer;
+    line-height: 1.6;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+}
+.rbfw-me-editor-tabs-toolbar .rbfw-tab-btn.is-active {
+    background: #1e293b;
+    color: #fff;
+}
+.rbfw-me-editor-tabs-toolbar .rbfw-tab-btn + .rbfw-tab-btn {
+    border-left: 1.5px solid #cbd5e1;
+}
+
+/* TinyMCE wrapper */
+.rbfw-me-editor-wrap .mce-tinymce {
+    border: none !important;
+    box-shadow: none !important;
+}
+.rbfw-me-editor-wrap .mce-toolbar-grp {
+    background: #fff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 4px 8px !important;
+}
+.rbfw-me-editor-wrap .mce-top-part::before { display: none !important; }
+.rbfw-me-editor-wrap .mce-edit-area { border: none !important; }
+.rbfw-me-editor-wrap .mce-statusbar {
+    background: #f8fafc !important;
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Quicktags toolbar (Code mode) */
+.rbfw-me-editor-wrap .quicktags-toolbar {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    padding: 5px 10px !important;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+.rbfw-me-editor-wrap .quicktags-toolbar .ed_button {
+    border-radius: 4px !important;
+    font-size: 11px !important;
+    height: 24px !important;
+    padding: 0 6px !important;
+    line-height: 24px !important;
+}
+
+/* Add Media button — shared style for both Visual and Code toolbars */
+.rbfw-me-editor-wrap .rbfw-add-media-qt {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 5px;
+    height: 26px;
+    padding: 0 10px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    text-decoration: none !important;
+    line-height: 1;
+    margin-left: 6px;
+    white-space: nowrap;
+    transition: background .15s;
+    vertical-align: middle;
+    box-shadow: none !important;
+}
+.rbfw-me-editor-wrap .rbfw-add-media-qt:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+.rbfw-me-editor-wrap .rbfw-add-media-qt .wp-media-buttons-icon {
+    display: inline-block !important;
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: .65;
+    flex-shrink: 0;
+}
+/* Align the mce clone vertically with mce toolbar buttons */
+.rbfw-me-editor-wrap .mce-flow-layout .rbfw-add-media-mce {
+    margin-top: 1px;
+}
+
+/* Textarea in Code mode */
+.rbfw-me-editor-wrap .wp-editor-area {
+    border: none !important;
+    padding: 10px 12px !important;
+    font-size: 13px !important;
+    resize: vertical !important;
+}
+
+/* ── Category checkbox pills ─────────────────────────────────── */
 .rbfw-me-checkbox-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 20px;
+    gap: 8px;
 }
+
 .rbfw-me-checkbox-label {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
+    gap: 7px;
+    padding: 6px 14px 6px 10px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    background: #fff;
     cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #4b5563;
     user-select: none;
+    transition: border-color .15s, background .15s, color .15s;
 }
+.rbfw-me-checkbox-label:hover {
+    border-color: #93c5fd;
+    color: #2563eb;
+}
+
+/* Native checkbox — small, accent-coloured */
 .rbfw-me-checkbox-label input[type="checkbox"] {
     width: 15px;
     height: 15px;
     cursor: pointer;
-    accent-color: var(--me-primary);
+    accent-color: #2563eb;
     flex-shrink: 0;
+    margin: 0;
+}
+
+/* Checked pill state */
+.rbfw-me-checkbox-label:has(input:checked) {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+/* JS fallback for :has() — .is-checked class toggled via JS */
+.rbfw-me-checkbox-label.is-checked {
+    background: #eff6ff;
+    border-color: #3b82f6;
+    color: #1d4ed8;
+    font-weight: 600;
 }
 
 /* ── Features repeater ──────────────────────────────────────── */

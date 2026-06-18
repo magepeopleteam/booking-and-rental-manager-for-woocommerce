@@ -89,7 +89,13 @@
 							<input class="rbfw-me-input" type="text" id="rbfw_me_subtitle" name="rbfw_item_sub_title" value="<?php echo esc_attr( $m['rbfw_item_sub_title'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'Short description shown in hero…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
 						</div>
 						<div class="rbfw-me-field">
-							<label class="rbfw-me-field__label"><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-me-editor-label-row">
+								<label class="rbfw-me-field__label"><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<div class="rbfw-me-editor-switch">
+									<button type="button" class="rbfw-me-sw-btn rbfw-me-sw-visual is-active">VISUAL</button>
+									<button type="button" class="rbfw-me-sw-btn rbfw-me-sw-code">CODE</button>
+								</div>
+							</div>
 							<div class="rbfw-me-editor-wrap">
 								<?php
 								wp_editor(

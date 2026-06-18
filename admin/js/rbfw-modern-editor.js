@@ -23,6 +23,8 @@
         initCategories();
         initFeatures();
         initTitleSync();
+        initEditorTabsInToolbar();
+        initEditorMediaBtn();
         initPricingTypeSwitch();
         initMdPricing();
         initRelatedPicker();
@@ -362,6 +364,94 @@
         });
     }
 
+    /* ── VISUAL / CODE label-row switch ─────────────────────────── */
+    function initEditorTabsInToolbar() {
+        var $edWrap  = $('#wp-rbfw_me_post_content-wrap');
+        var $visual  = $wrap.find('.rbfw-me-sw-visual');
+        var $code    = $wrap.find('.rbfw-me-sw-code');
+
+        function wireBtns() {
+            var $tmceBtn = $edWrap.find('#rbfw_me_post_content-tmce');
+            var $htmlBtn = $edWrap.find('#rbfw_me_post_content-html');
+            if ( ! $tmceBtn.length ) return false;
+
+            $visual.off('click.edswitch').on('click.edswitch', function () {
+                $tmceBtn.trigger('click');
+                $visual.addClass('is-active');
+                $code.removeClass('is-active');
+            });
+            $code.off('click.edswitch').on('click.edswitch', function () {
+                $htmlBtn.trigger('click');
+                $code.addClass('is-active');
+                $visual.removeClass('is-active');
+            });
+            return true;
+        }
+
+        // Try immediately, then via TinyMCE init event, then fallback
+        if ( ! wireBtns() ) {
+            $(document).on('tinymce-editor-init', function (e, editor) {
+                if ( editor && editor.id === 'rbfw_me_post_content' ) {
+                    setTimeout(wireBtns, 50);
+                }
+            });
+            setTimeout(wireBtns, 1000);
+        }
+    }
+
+    /* ── Add Media button — inject into both Visual and Code toolbars ── */
+    function initEditorMediaBtn() {
+        var $edWrap = $('#wp-rbfw_me_post_content-wrap');
+
+        function getOrig() {
+            return $edWrap.find('#insert-media-button');
+        }
+
+        function makeClone(id, cls) {
+            var $orig  = getOrig();
+            if ( ! $orig.length ) return null;
+            return $orig.clone()
+                .removeClass()
+                .addClass(cls)
+                .attr('id', id)
+                .on('click', function (e) {
+                    e.preventDefault();
+                    $orig.trigger('click');
+                });
+        }
+
+        /* Visual mode — inject into mce flow-layout toolbar */
+        function injectVisual() {
+            if ( $edWrap.find('.rbfw-add-media-mce').length ) return;
+            var $flowLayout = $edWrap.find('.mce-toolbar-grp .mce-flow-layout').first();
+            if ( ! $flowLayout.length ) return;
+            var $clone = makeClone('rbfw-insert-media-mce', 'rbfw-add-media-mce rbfw-add-media-qt');
+            if ( $clone ) $flowLayout.append($clone);
+        }
+
+        /* Code mode — inject into quicktags toolbar */
+        function injectCode() {
+            var $qt = $edWrap.find('#qt_rbfw_me_post_content_toolbar');
+            if ( ! $qt.length ) return;
+            if ( $qt.find('.rbfw-add-media-qt-code').length ) return;
+            var $clone = makeClone('rbfw-insert-media-qt', 'rbfw-add-media-qt rbfw-add-media-qt-code');
+            if ( $clone ) $qt.append($clone);
+        }
+
+        function inject() {
+            injectVisual();
+            injectCode();
+        }
+
+        $(document).on('tinymce-editor-init', function (e, editor) {
+            if ( editor && editor.id === 'rbfw_me_post_content' ) {
+                setTimeout(inject, 100);
+            }
+        });
+        setTimeout(inject, 800);
+        setTimeout(inject, 2000);
+    }
+
     /* ── Sync card title → header h1 ────────────────────────────── */
     function initTitleSync() {
         $wrap.on('input', '.rbfw-me-card-title-input', function () {
@@ -369,9 +459,19 @@
         });
     }
 
-    /* ── Category checkboxes → hidden input sync ─────────────── */
+    /* ── Category checkboxes → hidden input sync + pill state ─── */
     function initCategories() {
+        function syncPill($cb) {
+            $cb.closest('.rbfw-me-checkbox-label').toggleClass('is-checked', $cb.is(':checked'));
+        }
+
+        // Set initial pill state for pre-checked boxes
+        $wrap.find('.rbfw-me-cat-checkbox').each(function () {
+            syncPill($(this));
+        });
+
         $wrap.on('change', '.rbfw-me-cat-checkbox', function () {
+            syncPill($(this));
             var selected = [];
             $wrap.find('.rbfw-me-cat-checkbox:checked').each(function () {
                 selected.push($(this).data('name'));

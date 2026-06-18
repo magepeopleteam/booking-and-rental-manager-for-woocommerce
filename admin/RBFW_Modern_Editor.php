@@ -589,7 +589,15 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$all_cat_terms   = is_wp_error( $all_cat_terms ) ? [] : $all_cat_terms;
 			$saved_cat_meta  = $post_id ? get_post_meta( $post_id, 'rbfw_categories', true ) : [];
 			$saved_cat_meta  = is_array( $saved_cat_meta ) ? $saved_cat_meta : ( $saved_cat_meta ? maybe_unserialize( $saved_cat_meta ) : [] );
-			$saved_cat_names = array_map( 'strtolower', array_map( 'trim', (array) $saved_cat_meta ) );
+			// Flatten any comma-separated values stored as a single element
+			$_flat = [];
+			foreach ( (array) $saved_cat_meta as $_val ) {
+				foreach ( explode( ',', (string) $_val ) as $_n ) {
+					$_n = strtolower( trim( $_n ) );
+					if ( $_n !== '' ) $_flat[] = $_n;
+				}
+			}
+			$saved_cat_names = array_unique( $_flat );
 
 			/* ── Feature categories repeater ── */
 			$raw_features    = $post_id ? get_post_meta( $post_id, 'rbfw_feature_category', true ) : [];
