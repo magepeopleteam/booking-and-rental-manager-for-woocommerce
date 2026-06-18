@@ -5049,6 +5049,31 @@
 .rbfw-me-card .service_category_title .rbfw-svc-cat-actions .tr_sort_handler { cursor: grab !important; }
 .rbfw-me-card .service_category_title .rbfw-svc-cat-actions .tr_remove:hover { color: #d63638 !important; }
 
+/* ── Table-level warning (e.g. no rows) ─────────────────────── */
+.rbfw-me-table-warning {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 8px 16px;
+    margin-bottom: 8px;
+    background: #fff5f5;
+    border: 1px solid #fca5a5;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #b91c1c;
+    text-align: center;
+    box-sizing: border-box;
+}
+.rbfw-me-table-warning .dashicons {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
 /* ── Field validation ────────────────────────────────────────── */
 .rbfw-me-field-error {
     display: block;

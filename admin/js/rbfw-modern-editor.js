@@ -389,18 +389,31 @@
 
     /* ── Navigate to field: switch tab + scroll ─────────────────── */
     function navigateToField($field) {
+        // Find nearest panel — check direct parent first, then walk up
         var $panel = $field.closest('.rbfw-me-panel[data-panel]');
+
+        // If not found directly (e.g. classic-editor table rows), check
+        // whether any panel contains the element
+        if ( ! $panel.length ) {
+            $wrap.find('.rbfw-me-panel[data-panel]').each(function () {
+                if ( $.contains(this, $field[0]) ) {
+                    $panel = $(this);
+                    return false;
+                }
+            });
+        }
+
         if ( $panel.length && ! $panel.hasClass('is-active') ) {
-            var panelKey = $panel.data('panel');
-            var $tab = $wrap.find('.rbfw-me-tab[data-tab="' + panelKey + '"]');
+            var $tab = $wrap.find('.rbfw-me-tab[data-tab="' + $panel.data('panel') + '"]');
             if ( $tab.length ) $tab.trigger('click');
         }
+
         setTimeout(function () {
             var el = $field[0];
             if ( el && el.scrollIntoView ) {
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
-            if ( $field.is('input, textarea') ) $field.focus();
+            if ( $field.is('input, textarea, select') ) $field.focus();
         }, 250);
     }
 
@@ -439,6 +452,59 @@
         }
         if ( ! contentVal ) {
             errors.push({ $field: $wrap.find('.rbfw-me-editor-wrap'), msg: 'Description is required.' });
+        }
+
+        // ── Single Day: rbfw_bike_car_sd_price_table_body rows ──
+        var rentType = $.trim($wrap.find('#rbfw_item_type').val());
+        if ( rentType === 'bike_car_sd' ) {
+            var $sdBody = $wrap.find('.rbfw_bike_car_sd_price_table_body');
+            var $sdRows = $sdBody.find('tr.rbfw_bike_car_sd_price_table_row');
+            var isTimely = $wrap.find('[name="manage_inventory_as_timely"]').val() === 'on';
+
+            if ( ! $sdRows.length ) {
+                // Show warning above "Add New Type" button, centred
+                var $addBtn = $wrap.find('#add-bike-car-sd-type-row').closest('.sd-add-type-and-sessional');
+                if ( ! $addBtn.length ) $addBtn = $wrap.find('.sd-add-type-and-sessional').first();
+                if ( $addBtn.length && ! $addBtn.prev('.rbfw-me-table-warning').length ) {
+                    $addBtn.before(
+                        '<div class="rbfw-me-table-warning">' +
+                          '<span class="dashicons dashicons-warning"></span>' +
+                          'At least one rental option row is required for Single Day type.' +
+                        '</div>'
+                    );
+                    // Auto-remove when user adds a row
+                    $wrap.one('click', '#add-bike-car-sd-type-row', function () {
+                        $wrap.find('.rbfw-me-table-warning').remove();
+                    });
+                }
+                // Navigate to pricing tab
+                var $pricingPanel = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
+                if ( $pricingPanel.length && ! $pricingPanel.hasClass('is-active') ) {
+                    $wrap.find('.rbfw-me-tab[data-tab="pricing"]').trigger('click');
+                }
+                setTimeout(function () {
+                    var el = $addBtn[0] || $pricingPanel[0];
+                    if ( el ) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 250);
+                return false; // block save
+            } else {
+                $sdRows.each(function (idx) {
+                    var $row  = $(this);
+                    var $title = $row.find('[name*="[rent_type]"]');
+                    var $price = $row.find('[name*="[price]"]');
+                    var $stock = $row.find('[name*="[qty]"]');
+
+                    if ( ! $.trim($title.val()) ) {
+                        errors.push({ $field: $title, msg: 'Row ' + (idx + 1) + ': Rental option name is required.' });
+                    }
+                    if ( $.trim($price.val()) === '' ) {
+                        errors.push({ $field: $price, msg: 'Row ' + (idx + 1) + ': Price is required.' });
+                    }
+                    if ( ! isTimely && $.trim($stock.val()) === '' ) {
+                        errors.push({ $field: $stock, msg: 'Row ' + (idx + 1) + ': Stock/Day is required.' });
+                    }
+                });
+            }
         }
 
         // ── Generic: all [required] fields across every panel ──
