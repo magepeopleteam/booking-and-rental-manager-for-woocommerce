@@ -1012,8 +1012,13 @@
             if (isTimely && !isSpecific) { jQuery('.rbfw_time_inventory.duration_disable').show(); }
             else                          { jQuery('.rbfw_time_inventory.duration_disable').hide(); }
 
-            if (isTimely && isSpecific)  { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
-            else                          { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+            // Only toggle the single-day Enable Time Picker for bike_car_sd / appointment.
+            // For multiple_items the .rbfw_bike_car_sd_wrapper is already hidden by the rent-type switch.
+            var _currentType = jQuery('#rbfw_item_type').val();
+            if ( _currentType === 'bike_car_sd' || _currentType === 'appointment' ) {
+                if (isTimely && isSpecific)  { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
+                else                          { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+            }
         }
 
 

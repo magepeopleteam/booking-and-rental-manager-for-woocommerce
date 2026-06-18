@@ -151,8 +151,13 @@
         if (isTimely && !isSpecific) { $pricing.find('.rbfw_time_inventory.duration_disable').show(); }
         else                          { $pricing.find('.rbfw_time_inventory.duration_disable').hide(); }
 
-        if (isTimely && isSpecific)  { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
-        else                          { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+        // Only toggle the single-day Enable Time Picker for bike_car_sd / appointment.
+        // For multiple_items the .rbfw_bike_car_sd_wrapper is hidden by applyType and must stay hidden.
+        var _meType = $pricing.find('#rbfw_item_type').val();
+        if ( _meType === 'bike_car_sd' || _meType === 'appointment' ) {
+            if (isTimely && isSpecific)  { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
+            else                          { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+        }
     }
 
     /* ── Update service category enable toggle label ────────────── */
@@ -1316,13 +1321,11 @@
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
 
             } else if (type === 'multiple_items') {
-                $pricing.find('.rbfw_bike_car_sd_wrapper').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
-                syncMiTimeSettings();
 
             } else {
                 // bike_car_md and other multi-day types
@@ -1353,15 +1356,6 @@
             var enabled = $sdWrap.find('[name="rbfw_enable_time_picker"]').val() === 'yes';
             $sdWrap.find('.time-slots-section').css('display', enabled ? 'block' : 'none');
         }());
-
-        // This section is a duplicate for multiple_items type — always keep it hidden.
-        function syncMiTimeSettings() {
-            $pricing.find('.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf').css('display', 'none');
-        }
-
-        if (savedType === 'multiple_items') {
-            syncMiTimeSettings();
-        }
 
         $pricing.on('click', '.rbfw-rent-type', function () {
             var type = $(this).data('rent-type');

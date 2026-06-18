@@ -505,7 +505,7 @@
 
                         </div>
 
-                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf" style="display:none;"><?php // duplicate — always hidden; the correct instance renders elsewhere ?>
+                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf" style="display:block;">
                             <div class="rbfw-mi-ts-header">
                                 <span class="rbfw-mi-ts-title"><?php esc_html_e( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 <div class="rbfw-mi-ts-toggle-group">
