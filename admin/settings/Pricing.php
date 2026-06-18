@@ -320,6 +320,7 @@
             public function multiple_items( $post_id ) {
                 $rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
                 $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'yes';
+                $enable_specific_duration   = get_post_meta( $post_id, 'enable_specific_duration', true ) ?: 'off';
                 $rbfw_mi_hourly_to_half_day_pivot  = get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) : '';
                 $rbfw_mi_half_day_to_daily_pivot   = get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) : '';
                 $rbfw_mi_daily_to_weekly_pivot     = get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) : '';
@@ -504,7 +505,7 @@
 
                         </div>
 
-                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf">
+                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf" style="display:<?php echo esc_attr( $enable_specific_duration === 'on' ? 'block' : 'none' ); ?>;"><?php // hidden when enable_specific_duration is off ?>
                             <div class="rbfw-mi-ts-header">
                                 <span class="rbfw-mi-ts-title"><?php esc_html_e( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 <div class="rbfw-mi-ts-toggle-group">
@@ -516,7 +517,7 @@
                                 </div>
                             </div>
 
-                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','mi','mi' ); ?>
+                            <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker, 'mi', 'mi' ); ?>
                         </div>
                     </div>
                     <script>

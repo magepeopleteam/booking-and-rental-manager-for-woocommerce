@@ -243,7 +243,7 @@
 							</tbody>
 						</table>
 						<button type="button" class="ppof-button add-feature-category mt-1">
-							<i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Feature Category', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add Feature Category', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</button>
 					</div>
 				</div>
@@ -489,13 +489,13 @@
 						<?php endif; ?>
 					</div>
 					<div class="rbfw-me-thumb-actions">
-						<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-thumb-set">
+						<button type="button" class="rbfw-me-btn rbfw-me-thumb-set">
 							<?php echo $thumb_id
 								? esc_html__( 'Change Image', 'booking-and-rental-manager-for-woocommerce' )
 								: esc_html__( 'Set Featured Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</button>
 						<?php if ( $thumb_id ) : ?>
-							<button type="button" class="rbfw-me-btn rbfw-me-btn--danger rbfw-me-thumb-remove"><?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							<button type="button" class="rbfw-me-btn rbfw-me-thumb-remove" title="<?php esc_attr_e( 'Remove Image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash"></i></button>
 						<?php endif; ?>
 					</div>
 				</div>

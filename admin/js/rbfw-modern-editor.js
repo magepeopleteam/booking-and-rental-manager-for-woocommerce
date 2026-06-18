@@ -120,7 +120,12 @@
         $wrap.on('click', '[name="enable_specific_duration"]', function (e) {
             e.stopPropagation();
             $(this).val(this.checked ? 'on' : 'off');
-            syncTimelyUI($(this).closest('.rbfw-me-panel'));
+            var $panel = $(this).closest('.rbfw-me-panel');
+            syncTimelyUI($panel);
+            if ($panel.find('#rbfw_item_type').val() === 'multiple_items') {
+                $panel.find('.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf')
+                    .css('display', $(this).val() === 'on' ? '' : 'none');
+            }
         });
     }
 
@@ -160,7 +165,7 @@
         var $section = $wrap.find('.additional-service-item-price > section:not(.bg-light)');
         if ( ! $section.length ) return;
         // Update label text
-        $section.find('> div > label').text('Enable Category wise extra service');
+        $section.find('> div > label').text('Enable category-wise extra services');
         // Update description
         $section.find('> div > p').text('Enable or disable category-wise additional services for this item.');
     }
@@ -1322,6 +1327,7 @@
                 $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
+                syncMiTimeSettings();
 
             } else {
                 // bike_car_md and other multi-day types
@@ -1342,6 +1348,29 @@
 
         var savedType = $pricing.find('#rbfw_item_type').val() || 'bike_car_sd';
         applyType(savedType);
+
+        // applyType show/hide sequences can disturb the PHP-rendered display:none on
+        // the SD time-slots-section. Re-enforce it from the hidden input value so the
+        // initial state always matches the saved DB value regardless of execution order.
+        (function syncSdTimeSlotsOnLoad() {
+            var $sdWrap = $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper');
+            if (!$sdWrap.length) return;
+            var enabled = $sdWrap.find('[name="rbfw_enable_time_picker"]').val() === 'yes';
+            $sdWrap.find('.time-slots-section').css('display', enabled ? 'block' : 'none');
+        }());
+
+        // Hide MI time settings wrap when enable_specific_duration is off for multiple_items type.
+        // Use .val() (the DB-synced value attribute) rather than .is(':checked') so the
+        // check works reliably even when the checkbox is inside a hidden parent.
+        function syncMiTimeSettings() {
+            var specificOn = $pricing.find('[name="enable_specific_duration"]').val() === 'on';
+            $pricing.find('.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf')
+                .css('display', specificOn ? '' : 'none');
+        }
+
+        if (savedType === 'multiple_items') {
+            syncMiTimeSettings();
+        }
 
         $pricing.on('click', '.rbfw-rent-type', function () {
             var type = $(this).data('rent-type');

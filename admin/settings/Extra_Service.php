@@ -370,7 +370,7 @@
 				</div>
                 <span class="ppof-button add-service-category mt-1">
 					<i class="fas fa-circle-plus"></i>
-					<?php echo esc_html__( 'Add New Service Category', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<?php echo esc_html__( 'Add Service Category', 'booking-and-rental-manager-for-woocommerce' ); ?>
 				</span>
 				<?php
 				return ob_get_clean();
