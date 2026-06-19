@@ -1861,29 +1861,7 @@
 .rbfw-me-features-actions .tr_sort_handler { cursor: grab !important; }
 .rbfw-me-features-actions .tr_remove:hover { color: #d63638 !important; }
 
-/* "Add New Feature Category" button */
-.rbfw-me-features-body .add-feature-category {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 20px !important;
-    border: 1px solid #2271b1 !important;
-    border-radius: 6px !important;
-    background: #2271b1 !important;
-    color: #fff !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    cursor: pointer;
-    text-shadow: none !important;
-    box-shadow: none !important;
-    transition: background .15s, border-color .15s;
-    margin-top: 4px;
-}
-.rbfw-me-features-body .add-feature-category:hover {
-    background: #135e96 !important;
-    border-color: #135e96 !important;
-    color: #fff !important;
-}
+/* "Add Feature Category" — uses shared add-button styles at file end */
 
 /* ── Classic pricing output inside modern editor card ────────── */
 .rbfw-me-pricing-classic-wrap {
@@ -4578,29 +4556,10 @@
     border-color: #e11d48 !important;
 }
 
-/* "Add New Service Category" button */
-.rbfw-me-pricing-classic-wrap #field-wrapper-rbfw_service_category_price .ppof-button.add-service-category {
-    align-items: center !important;
-    background: #2271b1 !important;
-    border: none !important;
-    border-radius: 8px !important;
-    box-shadow: none !important;
-    color: #fff !important;
-    cursor: pointer !important;
-    display: inline-flex !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    gap: 8px !important;
-    height: 44px !important;
-    margin: 12px 20px 20px !important;
-    padding: 0 22px !important;
-    text-shadow: none !important;
-    transition: background .15s !important;
-}
-
-.rbfw-me-pricing-classic-wrap #field-wrapper-rbfw_service_category_price .ppof-button.add-service-category:hover {
-    background: #135e96 !important;
-    color: #fff !important;
+/* "Add Service Category" — margin only; shared add-button styles at file end */
+.rbfw-me-pricing-classic-wrap #field-wrapper-rbfw_service_category_price .ppof-button.add-service-category,
+.rbfw-me-pricing-classic-wrap .additional-service-item-price .ppof-button.add-service-category {
+    margin: 8px auto 0 !important;
 }
 
 /* Hide the Fee Management card head (section.bg-light acts as header) */
@@ -6013,4 +5972,93 @@ textarea.rbfw-me-field-invalid {
 
 .rbfw-me-tabs::-webkit-scrollbar-track {
     background: transparent;
+}
+
+/* ── Modern Editor — primary add buttons (centered) ─────────── */
+.rbfw-me-wrap .add-feature-category,
+.rbfw-me-wrap .add-service-category,
+.rbfw-me-wrap .add-new-service,
+.rbfw-me-wrap .add-more-btn,
+.rbfw-me-wrap #add-row.ppof-button,
+.rbfw-me-wrap #add_new_discount_row,
+.rbfw-me-wrap #add-particular-row.ppof-button,
+.rbfw-me-wrap #add-resort-type-row.ppof-button,
+.rbfw-me-wrap .rbfw-me-term-add-btn,
+.rbfw-me-wrap .rbfw-me-offdate-add,
+.rbfw-me-wrap .wprently_fee-add-btn,
+.rbfw-me-wrap .sd-add-type-and-sessional .ppof-button,
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button {
+    align-items: center !important;
+    background: var(--me-primary) !important;
+    border: none !important;
+    border-radius: var(--me-radius-sm) !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: flex !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    gap: 8px !important;
+    height: auto !important;
+    justify-content: center !important;
+    line-height: 1.4 !important;
+    margin: 8px auto 0 !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-shadow: none !important;
+    transition: background var(--me-transition) !important;
+    width: fit-content !important;
+}
+
+.rbfw-me-wrap .add-feature-category:hover,
+.rbfw-me-wrap .add-service-category:hover,
+.rbfw-me-wrap .add-new-service:hover,
+.rbfw-me-wrap .add-more-btn:hover,
+.rbfw-me-wrap #add-row.ppof-button:hover,
+.rbfw-me-wrap #add_new_discount_row:hover,
+.rbfw-me-wrap #add-particular-row.ppof-button:hover,
+.rbfw-me-wrap #add-resort-type-row.ppof-button:hover,
+.rbfw-me-wrap .rbfw-me-term-add-btn:hover,
+.rbfw-me-wrap .rbfw-me-offdate-add:hover,
+.rbfw-me-wrap .wprently_fee-add-btn:hover,
+.rbfw-me-wrap .sd-add-type-and-sessional .ppof-button:hover,
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button:hover {
+    background: var(--me-primary-dk) !important;
+    border: none !important;
+    color: #fff !important;
+    transform: none !important;
+}
+
+.rbfw-me-wrap .add-feature-category i,
+.rbfw-me-wrap .add-service-category i,
+.rbfw-me-wrap .add-new-service i,
+.rbfw-me-wrap .add-more-btn i,
+.rbfw-me-wrap #add-row.ppof-button i,
+.rbfw-me-wrap #add_new_discount_row i,
+.rbfw-me-wrap #add-particular-row.ppof-button i,
+.rbfw-me-wrap #add-resort-type-row.ppof-button i,
+.rbfw-me-wrap .rbfw-me-term-add-btn .dashicons,
+.rbfw-me-wrap .rbfw-me-offdate-add .dashicons,
+.rbfw-me-wrap .wprently_fee-add-btn span,
+.rbfw-me-wrap .sd-add-type-and-sessional .ppof-button i,
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button i {
+    color: #fff !important;
+}
+
+/* Center add-button rows (wrappers that only host add actions) */
+.rbfw-me-offdate-actions,
+.rbfw-me-addon-discount-card .rbfw-mi-card-footer,
+.rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper > section:not(.bg-light) .mt-2,
+.rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap,
+.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional,
+.rbfw-me-pricing-classic-wrap .rbfw-mi-card-footer {
+    text-align: center !important;
+}
+
+/* Standalone add buttons — centered via auto margins */
+.rbfw-me-features-body > .add-feature-category,
+.rbfw-me-term-settings-body > .rbfw-me-term-add-btn,
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > .add-service-category {
+    margin-left: auto !important;
+    margin-right: auto !important;
 }
