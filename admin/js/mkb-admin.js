@@ -360,7 +360,6 @@
                 jQuery('.rbfw_resort_price_config_wrapper').show();
                 jQuery('.rbfw_location_switch').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
-                jQuery('.rbfw_es_price_config_wrapper').hide();
                 jQuery('.rbfw_discount_price_config_wrapper').show();
                 jQuery('.rbfw_min_max_booking_day_row').show();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
@@ -396,7 +395,6 @@
                 jQuery('.rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                jQuery('.rbfw_es_price_config_wrapper').hide();
                 jQuery('.additional-service-item-price').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
@@ -461,7 +459,6 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
-                jQuery('.rbfw_es_price_config_wrapper').hide();
                 jQuery('.additional-service-item-price').show();
 
            /*     var status = $('.rbfw_es_price_config_wrapper').data('status');
@@ -948,6 +945,19 @@
             }
 
         })
+
+        jQuery('.daywise-price-toggle').on('click', function () {
+            var $toggle  = jQuery(this);
+            var $input   = jQuery('input[name="rbfw_enable_daywise_price"]');
+            var enabled  = !$toggle.hasClass('active');
+            $toggle.toggleClass('active', enabled);
+            $input.val(enabled ? 'yes' : 'no');
+            if (enabled) {
+                jQuery('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+            } else {
+                jQuery('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+            }
+        });
 
         // Hide "Enable Time Picker" row and force it off when enable_specific_duration is on
         function syncTimePickerWithSpecificDuration() {
@@ -1458,19 +1468,6 @@
 
 
 
-
-    // Daywise price
-    $(document).on('click', 'input[name=rbfw_enable_daywise_price]', function (e) {
-        var status = $(this).val();
-        if (status === 'yes') {
-            $(this).val('no');
-            $('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
-        }
-        if (status === 'no') {
-            $(this).val('yes');
-            $('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
-        }
-    });
 
     $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
         var status = $(this).val();

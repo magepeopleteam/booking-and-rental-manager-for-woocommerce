@@ -1289,18 +1289,19 @@
             $pricing.find('.rbfw_multiple_items').hide();
             $pricing.find('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
             $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').addClass('hide').hide();
-            $pricing.find('.rbfw_es_price_config_wrapper').hide();
             $pricing.find('.rbfw_discount_price_config_wrapper').hide();
             $pricing.find('.rbfw_seasonal_price_config_wrapper').hide();
             $pricing.find('.sessional_price_single_day,.sessional_price_multi_day,.sessional_price_resort,.mds_price_resort').hide();
             $pricing.find('.additional-service-item-price').hide();
 
+            var _esWrap = $pricing.find('.rbfw_es_price_config_wrapper').get(0);
+
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.rbfw_es_price_config_wrapper').show();
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
+                if (_esWrap) _esWrap.style.display = '';
                 syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
@@ -1309,9 +1310,9 @@
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
                 $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').removeClass('hide').show();
-                $pricing.find('.rbfw_es_price_config_wrapper').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
                 $pricing.find('.rbfw_without_time_inventory').show();
+                if (_esWrap) _esWrap.style.display = '';
 
             } else if (type === 'resort') {
                 $pricing.find('.rbfw_resort_price_config_wrapper').show();
@@ -1319,20 +1320,24 @@
                 $pricing.find('.sessional_price_resort,.mds_price_resort').show();
                 $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
+                if (_esWrap) _esWrap.style.display = 'none';
 
             } else if (type === 'multiple_items') {
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
+                if (_esWrap) _esWrap.style.display = '';
                 syncTimelyUI($pricing);
 
             } else {
-                // bike_car_md and other multi-day types
+                // bike_car_md and legacy aliases
                 $pricing.find('.rbfw_general_price_config_wrapper').show();
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_multi_day').show();
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
+                $pricing.find('.additional-service-item-price').show();
+                if (_esWrap) _esWrap.style.display = 'none';
             }
 
             // Update description box

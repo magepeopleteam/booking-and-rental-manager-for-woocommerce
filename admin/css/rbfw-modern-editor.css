@@ -440,6 +440,7 @@
 .rbfw-me-panel[data-item-type="others"]      .rbfw-me-addon-discount-card,
 .rbfw-me-panel[data-item-type="resort"]      .rbfw-me-addon-discount-card { display: flex !important; }
 
+
 /* ── Cards ──────────────────────────────────────────────────── */
 .rbfw-me-card {
     background: var(--me-card-bg);
