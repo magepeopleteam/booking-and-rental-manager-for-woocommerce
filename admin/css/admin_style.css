@@ -103,12 +103,14 @@ table.atendee-info {
     width: 70%;
 }
 
-.rbfw-pickup-location-section table tr.location-pick-up-row:nth-child(odd){
+.rbfw-pickup-location-section table tr.location-pick-up-row:nth-child(odd) {
     background-color: #f2f2f2;
 }
-.rbfw-dropoff-location-section table tr.location-drop-off-row:nth-child(odd){
+
+.rbfw-dropoff-location-section table tr.location-drop-off-row:nth-child(odd) {
     background-color: #f2f2f2;
 }
+
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 
@@ -298,9 +300,11 @@ div#mage-primary-button {
 .mage_settings_panel_wrap .metabox-holder .group {
     padding: 5%;
 }
-.rbfw_settings_panel h2{
+
+.rbfw_settings_panel h2 {
     padding: 0 0 30px 0;
 }
+
 .mage_settings_panel_wrap .rbfw-nav-tab {
     position: relative;
     display: flex;
@@ -314,7 +318,7 @@ div#mage-primary-button {
     text-decoration: none;
 }
 
-.mage_settings_panel_wrap .rbfw-nav-tab::after{
+.mage_settings_panel_wrap .rbfw-nav-tab::after {
     content: "";
     position: absolute;
     left: 0;
@@ -358,8 +362,8 @@ div#mage-primary-button {
     font-size: 13px;
 }
 
-#rbfw_license_settings .mep-licensing-page table.mep-licensing-table th{
-    width:auto;
+#rbfw_license_settings .mep-licensing-page table.mep-licensing-table th {
+    width: auto;
 }
 
 .mage_settings_panel_wrap table td {
@@ -818,7 +822,7 @@ table.rbfw_pricing_table td {
 
 table.rbfw_pricing_table input,
 table.rbfw_pricing_table select {
-   
+
     width: auto;
 }
 
@@ -867,7 +871,7 @@ span.rbfw-remove-dd-ex {
 }
 
 .wp-core-ui .quicktags-toolbar input.button.button-small {
-    width: auto!important;
+    width: auto !important;
 }
 
 
@@ -881,7 +885,7 @@ div.rbfw_multi_image {
     display: flex;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-bottom:10px ;
+    margin-bottom: 10px;
 }
 
 div.rbfw_multi_image_item {
@@ -890,7 +894,8 @@ div.rbfw_multi_image_item {
     height: 120px;
     margin: 5px;
 }
-div.rbfw_multi_image_item img{
+
+div.rbfw_multi_image_item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -912,7 +917,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     width: 22px;
     height: 22px;
     text-align: center;
-    border-radius: 5px 0 0 0  ;
+    border-radius: 5px 0 0 0;
 }
 
 .rbfw_plugin_pro_meta_link {
@@ -927,7 +932,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .rbfw_settings_panel_header {
     color: var(--mage-white);
     font-size: 1.2rem;
-    padding:10px;
+    padding: 10px;
     background-color: var(--mage-primary);
 }
 
@@ -1012,8 +1017,8 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .rbfw_remove_room_type_image_btn,
 .rbfw_remove_service_image_btn {
     color: #fff;
-    margin:.1em;
-    padding:0 .5em;
+    margin: .1em;
+    padding: 0 .5em;
     cursor: pointer;
 }
 
@@ -1055,9 +1060,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     background-color: #d3d3d3;
 }
 
-#rbfw_add_meta_box table.form-table tr {
-
-}
+#rbfw_add_meta_box table.form-table tr {}
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr {
     border-top: 0;
@@ -1084,9 +1087,10 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
     border-collapse: collapse;
-    
+
 }
-#rbfw_add_meta_box .rbfw_feature_category_table{
+
+#rbfw_add_meta_box .rbfw_feature_category_table {
     width: 70%;
     margin: auto;
 }
@@ -1095,18 +1099,22 @@ div.mpStyle [class*="_bgColor_1"] i {
     border-collapse: collapse;
 }
 
-#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even){
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even) {
     background-color: #f2f2f2;
 }
-#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd){
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd) {
     background-color: #fff;
 }
-#rbfw_add_meta_box .mp_event_type_row:nth-child(even){
+
+#rbfw_add_meta_box .mp_event_type_row:nth-child(even) {
     background-color: #f2f2f2;
 }
-#rbfw_add_meta_box .mp_event_type_row:nth-child(odd){
+
+#rbfw_add_meta_box .mp_event_type_row:nth-child(odd) {
     background-color: #fff;
 }
+
 #rbfw_add_meta_box table.form-table tbody tr th {
     color: #474747;
     width: 120px;
@@ -1174,7 +1182,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     margin-bottom: 10px;
 }
 
-#rbfw_add_meta_box .select2-container--default .select2-selection--multiple  {
+#rbfw_add_meta_box .select2-container--default .select2-selection--multiple {
     border-color: #ddd;
     background-color: #fefefe;
 }
@@ -1190,13 +1198,13 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
-    padding:5px;
+    padding: 5px;
     margin: 5px 0;
     display: flex;
     justify-content: start;
     align-items: center;
     border: 1px solid var(--mage-light);
-    gap:30px;
+    gap: 30px;
 }
 
 #rbfw_features_icon_list_wrapper.mage_modal {
@@ -1295,7 +1303,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     color: #fff;
 }
 
-.rbfw_feature_icon_preview{
+.rbfw_feature_icon_preview {
     width: 30px;
     height: 30px;
 }
@@ -1742,7 +1750,7 @@ input#rbfw_features_search_icon {
     margin-bottom: 0 !important;
 }
 
-.service_image_add_remove{
+.service_image_add_remove {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1826,7 +1834,7 @@ input#rbfw_features_search_icon {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #b0b0b0;
-    margin-bottom:15px;
+    margin-bottom: 15px;
 }
 
 .rbfw_inventory_page_table {
@@ -2319,8 +2327,9 @@ input.rbfw_time_slot_edit_slot_label {
 .rbfw_switch_return_date {
     margin: 5px;
 }
-.rbfw_switch_return_date label{
-    margin:0;
+
+.rbfw_switch_return_date label {
+    margin: 0;
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr.rbfw_appointment_ondays_row td {
@@ -2449,9 +2458,10 @@ input.rbfw_time_slot_edit_slot_label {
     margin-bottom: 05px;
 }
 
-.mp_tab_item div.updated{
+.mp_tab_item div.updated {
     display: none;
 }
+
 .rbfw_hide {
     display: none;
 }
@@ -2541,12 +2551,14 @@ table.atendee-info {
     width: 70%;
 }
 
-.rbfw-pickup-location-section table tr.location-pick-up-row:nth-child(odd){
+.rbfw-pickup-location-section table tr.location-pick-up-row:nth-child(odd) {
     background-color: #f2f2f2;
 }
-.rbfw-dropoff-location-section table tr.location-drop-off-row:nth-child(odd){
+
+.rbfw-dropoff-location-section table tr.location-drop-off-row:nth-child(odd) {
     background-color: #f2f2f2;
 }
+
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 
@@ -2736,9 +2748,11 @@ div#mage-primary-button {
 .mage_settings_panel_wrap .metabox-holder .group {
     padding: 5%;
 }
-.rbfw_settings_panel h2{
+
+.rbfw_settings_panel h2 {
     padding: 0 0 30px 0;
 }
+
 .mage_settings_panel_wrap .rbfw-nav-tab {
     position: relative;
     display: flex;
@@ -2752,7 +2766,7 @@ div#mage-primary-button {
     text-decoration: none;
 }
 
-.mage_settings_panel_wrap .rbfw-nav-tab::after{
+.mage_settings_panel_wrap .rbfw-nav-tab::after {
     content: "";
     position: absolute;
     left: 0;
@@ -2796,8 +2810,8 @@ div#mage-primary-button {
     font-size: 13px;
 }
 
-#rbfw_license_settings .mep-licensing-page table.mep-licensing-table th{
-    width:auto;
+#rbfw_license_settings .mep-licensing-page table.mep-licensing-table th {
+    width: auto;
 }
 
 .mage_settings_panel_wrap table td {
@@ -3256,7 +3270,7 @@ table.rbfw_pricing_table td {
 
 table.rbfw_pricing_table input,
 table.rbfw_pricing_table select {
-   
+
     width: auto;
 }
 
@@ -3305,7 +3319,7 @@ span.rbfw-remove-dd-ex {
 }
 
 .wp-core-ui .quicktags-toolbar input.button.button-small {
-    width: auto!important;
+    width: auto !important;
 }
 
 
@@ -3319,7 +3333,7 @@ div.rbfw_multi_image {
     display: flex;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin-bottom:10px ;
+    margin-bottom: 10px;
 }
 
 div.rbfw_multi_image_item {
@@ -3328,7 +3342,8 @@ div.rbfw_multi_image_item {
     height: 120px;
     margin: 5px;
 }
-div.rbfw_multi_image_item img{
+
+div.rbfw_multi_image_item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -3350,7 +3365,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     width: 22px;
     height: 22px;
     text-align: center;
-    border-radius: 5px 0 0 0  ;
+    border-radius: 5px 0 0 0;
 }
 
 .rbfw_plugin_pro_meta_link {
@@ -3365,7 +3380,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .rbfw_settings_panel_header {
     color: var(--mage-white);
     font-size: 1.2rem;
-    padding:10px;
+    padding: 10px;
     background-color: var(--mage-primary);
 }
 
@@ -3449,9 +3464,9 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .wp-core-ui #rbfw_add_meta_box .button,
 .rbfw_remove_room_type_image_btn,
 .rbfw_remove_service_image_btn {
-    color: #fff;
-    margin:.1em;
-    padding:0 .5em;
+    color: #9f9999;
+    margin: .1em;
+    padding: 0 .5em;
     cursor: pointer;
 }
 
@@ -3493,9 +3508,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     background-color: #d3d3d3;
 }
 
-#rbfw_add_meta_box table.form-table tr {
-
-}
+#rbfw_add_meta_box table.form-table tr {}
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr {
     border-top: 0;
@@ -3518,17 +3531,20 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr td {
     padding: 0;
 }
+
 .sss {
     border: 0px solid #d30c0c !important;
 }
+
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
     border-collapse: collapse;
     border: 1px solid var(--mage-light);
     overflow: scroll;
-    
+
 }
-#rbfw_add_meta_box .rbfw_feature_category_table{
+
+#rbfw_add_meta_box .rbfw_feature_category_table {
     width: 100%;
     margin: auto;
 }
@@ -3537,18 +3553,22 @@ div.mpStyle [class*="_bgColor_1"] i {
     border-collapse: collapse;
 }
 
-#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even){
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even) {
     background-color: #f2f2f2;
 }
-#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd){
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd) {
     background-color: #fff;
 }
-#rbfw_add_meta_box .mp_event_type_row:nth-child(even){
+
+#rbfw_add_meta_box .mp_event_type_row:nth-child(even) {
     background-color: #f2f2f2;
 }
-#rbfw_add_meta_box .mp_event_type_row:nth-child(odd){
+
+#rbfw_add_meta_box .mp_event_type_row:nth-child(odd) {
     background-color: #fff;
 }
+
 #rbfw_add_meta_box table.form-table tbody tr th {
     color: #474747;
     width: 120px;
@@ -3632,17 +3652,19 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
-    padding:5px;
+    padding: 5px;
     margin: 5px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border: 1px solid var(--mage-light);
-    gap:10px;
+    gap: 10px;
 }
-.service_category_inner_item_wrap .item:nth-child(even){
+
+.service_category_inner_item_wrap .item:nth-child(even) {
     background-color: var(--mage-light);
 }
+
 .wp-core-ui select {
     height: auto !important;
 }
@@ -3743,7 +3765,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     color: #fff;
 }
 
-.rbfw_feature_icon_preview{
+.rbfw_feature_icon_preview {
     width: 30px;
     height: 30px;
 }
@@ -4190,7 +4212,7 @@ input#rbfw_features_search_icon {
     margin-bottom: 0 !important;
 }
 
-.service_image_add_remove{
+.service_image_add_remove {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -4354,7 +4376,7 @@ input#rbfw_features_search_icon {
 
 .rbfw_order_page_table .rbfw_order_status.on-hold {
     background: #ffaa00;
-        color: black;
+    color: black;
 }
 
 .rbfw_order_page_table .rbfw_order_status.pending {
@@ -4763,8 +4785,9 @@ input.rbfw_time_slot_edit_slot_label {
 .rbfw_switch_return_date {
     margin: 5px;
 }
-.rbfw_switch_return_date label{
-    margin:0;
+
+.rbfw_switch_return_date label {
+    margin: 0;
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr.rbfw_appointment_ondays_row td {
@@ -4893,7 +4916,7 @@ input.rbfw_time_slot_edit_slot_label {
     margin-bottom: 05px;
 }
 
-.mp_tab_item div.updated{
+.mp_tab_item div.updated {
     display: none;
 }
 
@@ -4923,27 +4946,36 @@ input.rbfw_time_slot_edit_slot_label {
     margin-top: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-.rbfw_order_page_table th, .rbfw_order_page_table td {
+
+.rbfw_order_page_table th,
+.rbfw_order_page_table td {
     padding: 16px;
     border: 1px solid #e0e0e0;
     text-align: left;
     font-size: 12px;
     color: #555;
 }
+
 .rbfw_order_page_table th {
-    background-color: #f1f1f1; /* Material purple */
+    background-color: #f1f1f1;
+    /* Material purple */
     color: #1c1717;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
 }
+
 .rbfw_order_page_table tr:nth-child(even) {
-    background-color: #f5f5f5; /* Light gray for alternating rows */
+    background-color: #f5f5f5;
+    /* Light gray for alternating rows */
 }
+
 .rbfw_order_page_table tr:hover {
-    background-color: #e0e0e0; /* Slightly darker gray on hover */
+    background-color: #e0e0e0;
+    /* Slightly darker gray on hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .rbfw_order_page_table td {
     color: #333;
 }
@@ -4958,24 +4990,30 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_order_status.completed {
-    background-color: #4caf50; /* Green */
+    background-color: #4caf50;
+    /* Green */
     color: #ffffff;
 }
+
 .rbfw_order_status.pending {
-    background-color: #ff9800; /* Orange */
+    background-color: #ff9800;
+    /* Orange */
     color: #ffffff;
 }
+
 .rbfw_order_status.cancelled {
-    background-color: #f44336; /* Red */
+    background-color: #f44336;
+    /* Red */
     color: #ffffff;
 }
+
 .rbfw_order_page_table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-.rbfw_order_page_table th, 
+.rbfw_order_page_table th,
 .rbfw_order_page_table td {
     padding: 16px;
     border: 1px solid #e0e0e0;
@@ -4984,20 +5022,24 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_order_page_table th {
-    background-color: #f1f1f1; /* Material purple */
+    background-color: #f1f1f1;
+    /* Material purple */
     color: #1c1717;
 }
 
 .rbfw_order_page_table tr:nth-child(even) {
-    background-color: #f5f5f5; /* Light gray for even rows */
+    background-color: #f5f5f5;
+    /* Light gray for even rows */
 }
 
 .rbfw_order_page_table tr:nth-child(odd) {
-    background-color: #ffffff; /* White for odd rows */
+    background-color: #ffffff;
+    /* White for odd rows */
 }
 
 .rbfw_order_page_table tr:hover {
-    background-color: #e0e0e0; /* Slightly darker gray on hover */
+    background-color: #e0e0e0;
+    /* Slightly darker gray on hover */
 }
 
 .rbfw_order_status {
@@ -5009,23 +5051,27 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_order_status.completed {
-    background-color: #4caf50; /* Green */
+    background-color: #4caf50;
+    /* Green */
     color: #ffffff;
 }
 
 .rbfw_order_status.pending {
-    background-color: #ff9800; /* Orange */
+    background-color: #ff9800;
+    /* Orange */
     color: #ffffff;
 }
 
 .rbfw_order_status.cancelled {
-    background-color: #f44336; /* Red */
+    background-color: #f44336;
+    /* Red */
     color: #ffffff;
 }
 
 .rbfw_order_edit_btn {
     padding: 8px 16px;
-    background-color: #0ab39c; /* Button background */
+    background-color: #0ab39c;
+    /* Button background */
     color: #ffffff;
     border-radius: 4px;
     text-decoration: none;
@@ -5033,9 +5079,12 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_order_edit_btn:hover {
-    background-color: #3700b3; /* Darker background on hover */
-    color: white; /* Text color on hover */
+    background-color: #3700b3;
+    /* Darker background on hover */
+    color: white;
+    /* Text color on hover */
 }
+
 .rbfw_order_meta_box_wrap {
     padding: 20px;
     border: 1px solid #ddd;
@@ -5052,34 +5101,45 @@ input.rbfw_time_slot_edit_slot_label {
 .rbfw_order_meta_box_body h2 {
     font-size: 1.8em;
     margin-bottom: 15px;
-    color: #0056b3; /* Darker blue for better contrast */
+    color: #0056b3;
+    /* Darker blue for better contrast */
 }
 
 /* Custom CSS for the Order Details Table */
 .rbfw_order_meta_box_wrap table {
-    width: 100%; /* Make the table take full width */
-    border-collapse: collapse; /* Ensure proper spacing between borders */
-    margin-bottom: 20px; /* Space out the table from other elements */
+    width: 100%;
+    /* Make the table take full width */
+    border-collapse: collapse;
+    /* Ensure proper spacing between borders */
+    margin-bottom: 20px;
+    /* Space out the table from other elements */
 }
 
-.rbfw_order_meta_box_wrap th, 
+.rbfw_order_meta_box_wrap th,
 .rbfw_order_meta_box_wrap td {
-    border: 1px solid #ddd; /* Light border around each cell */
-    padding: 8px; /* Padding inside each cell */
-    text-align: left; /* Align text to the left */
+    border: 1px solid #ddd;
+    /* Light border around each cell */
+    padding: 8px;
+    /* Padding inside each cell */
+    text-align: left;
+    /* Align text to the left */
 }
 
 .rbfw_order_meta_box_wrap th {
-    background-color: #f4f4f4; /* Light background color for table headers */
-    font-weight: bold; /* Bold the headers */
+    background-color: #f4f4f4;
+    /* Light background color for table headers */
+    font-weight: bold;
+    /* Bold the headers */
     color: black;
 }
 
 
 
 .rbfw_order_meta_box_wrap td {
-    color: #333; /* Text color for table content */
-    font-size: 14px; /* Set a custom font size */
+    color: #333;
+    /* Text color for table content */
+    font-size: 14px;
+    /* Set a custom font size */
 }
 
 /* Custom styling for the table heading */
@@ -5093,8 +5153,10 @@ input.rbfw_time_slot_edit_slot_label {
 
 /* Icon styles for details section */
 .rbfw_order_meta_box_body i {
-    margin-right: 5px; /* Space between icon and text */
-    color: #0073aa; /* Match icon color with theme */
+    margin-right: 5px;
+    /* Space between icon and text */
+    color: #0073aa;
+    /* Match icon color with theme */
 }
 
 /* Improve visibility of the service info section */
@@ -5103,22 +5165,29 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .service-info-table th {
-    background-color: #28a745; /* Green for service headers */
+    background-color: #28a745;
+    /* Green for service headers */
 }
 
 .service-info-table tr:hover {
-    background-color: #d1e7dd; /* Light green hover effect */
+    background-color: #d1e7dd;
+    /* Light green hover effect */
 }
 
 /* Additional responsive styling */
 @media (max-width: 600px) {
-    th, td {
-        font-size: 12px; /* Smaller font on mobile */
-        padding: 10px; /* Adjust padding for smaller screens */
+
+    th,
+    td {
+        font-size: 12px;
+        /* Smaller font on mobile */
+        padding: 10px;
+        /* Adjust padding for smaller screens */
     }
 
     .rbfw_order_meta_box_wrap {
-        padding: 15px; /* Less padding on smaller screens */
+        padding: 15px;
+        /* Less padding on smaller screens */
     }
 }
 
@@ -5128,7 +5197,8 @@ input.rbfw_time_slot_edit_slot_label {
     margin-bottom: 30px;
     padding: 12px 20px;
     width: 40%;
-    border: 1px solid #6200ea; /* Material purple */
+    border: 1px solid #6200ea;
+    /* Material purple */
     border-radius: 4px;
     font-size: 16px;
     display: block;
@@ -5140,7 +5210,8 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .search-input:focus {
-    border-color: #3700b3; /* Darker purple on focus */
+    border-color: #3700b3;
+    /* Darker purple on focus */
     outline: none;
     box-shadow: 0 0 5px rgba(98, 0, 234, 0.5);
 }
@@ -5148,7 +5219,8 @@ input.rbfw_time_slot_edit_slot_label {
 /* Button Styling */
 .rbfw_order_edit_btn {
     padding: 8px 16px;
-    background-color: #0ab39c; /* Material purple */
+    background-color: #0ab39c;
+    /* Material purple */
     color: #ffffff;
     border-radius: 4px;
     text-decoration: none;
@@ -5159,14 +5231,16 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_order_edit_btn:hover {
-    background-color: #ff0000; /* Darker purple on hover */
+    background-color: #ff0000;
+    /* Darker purple on hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .rbfw_order_view_btn {
     padding: 8px 16px;
-    background-color: #299cdb; /* Material purple */
+    background-color: #299cdb;
+    /* Material purple */
     color: #ffffff;
     border-radius: 4px;
     text-decoration: none;
@@ -5177,7 +5251,8 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_order_view_btn:hover {
-    background-color: #00ff4c; /* Darker purple on hover */
+    background-color: #00ff4c;
+    /* Darker purple on hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -5192,13 +5267,16 @@ input.rbfw_time_slot_edit_slot_label {
     .rbfw_order_page_wrap {
         padding: 20px;
     }
+
     .rbfw_order_page_table {
         font-size: 14px;
     }
+
     .search-input {
         font-size: 14px;
         width: 80%;
     }
+
     .rbfw_order_edit_btn {
         padding: 6px 12px;
         font-size: 12px;
@@ -5207,60 +5285,88 @@ input.rbfw_time_slot_edit_slot_label {
 
 /* Styles for the posts per page section */
 #posts-per-page {
-    margin-left: 10px; /* Space between label and dropdown */
-    font-size: 14px; /* Increase font size for better readability */
-    border: 1px solid #ccc; /* Border styling */
-    border-radius: 4px; /* Rounded corners */
-    background-color: #f9f9f9; /* Light background for the dropdown */
+    margin-left: 10px;
+    /* Space between label and dropdown */
+    font-size: 14px;
+    /* Increase font size for better readability */
+    border: 1px solid #ccc;
+    /* Border styling */
+    border-radius: 4px;
+    /* Rounded corners */
+    background-color: #f9f9f9;
+    /* Light background for the dropdown */
 }
 
 #posts-per-page:hover {
-    border-color: #888; /* Darker border on hover */
+    border-color: #888;
+    /* Darker border on hover */
 }
 
 #posts-per-page:focus {
-    outline: none; /* Remove default outline */
-    border-color: #0073aa; /* Change border color on focus */
-    box-shadow: 0 0 5px rgba(0, 115, 170, 0.5); /* Subtle shadow for focus */
+    outline: none;
+    /* Remove default outline */
+    border-color: #0073aa;
+    /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(0, 115, 170, 0.5);
+    /* Subtle shadow for focus */
 }
 
 .rbfw_order_page_table {
-    margin-top: 20px; /* Space between dropdown and table */
-    width: 100%; /* Full width */
-    border-collapse: collapse; /* Collapse borders */
+    margin-top: 20px;
+    /* Space between dropdown and table */
+    width: 100%;
+    /* Full width */
+    border-collapse: collapse;
+    /* Collapse borders */
 }
 
 .rbfw_order_page_table th,
 .rbfw_order_page_table td {
-    padding: 5px; /* Padding for table cells */
-    text-align: left; /* Align text to the left */
-    border-bottom: 1px solid #ddd; /* Light border for rows */
+    padding: 5px;
+    /* Padding for table cells */
+    text-align: left;
+    /* Align text to the left */
+    border-bottom: 1px solid #ddd;
+    /* Light border for rows */
     text-transform: capitalize;
 }
 
 .pagination {
-    margin-top: 20px; /* Space above pagination */
-    display: flex; /* Flexbox for pagination buttons */
-    justify-content: center; /* Center the buttons */
-    gap: 5px; /* Space between buttons */
+    margin-top: 20px;
+    /* Space above pagination */
+    display: flex;
+    /* Flexbox for pagination buttons */
+    justify-content: center;
+    /* Center the buttons */
+    gap: 5px;
+    /* Space between buttons */
 }
 
 .page-button {
-    padding: 5px 10px; /* Padding for buttons */
-    border: 1px solid #0073aa; /* Border for buttons */
-    background-color: #f1f1f1; /* Button background */
-    cursor: pointer; /* Pointer cursor */
+    padding: 5px 10px;
+    /* Padding for buttons */
+    border: 1px solid #0073aa;
+    /* Border for buttons */
+    background-color: #f1f1f1;
+    /* Button background */
+    cursor: pointer;
+    /* Pointer cursor */
 }
 
 .page-button:hover {
-    background-color: #0073aa; /* Background color on hover */
-    color: white; /* Text color on hover */
+    background-color: #0073aa;
+    /* Background color on hover */
+    color: white;
+    /* Text color on hover */
 }
 
 .page-button.active {
-    background-color: #0073aa; /* Active button background */
-    color: white; /* Active button text color */
-    font-weight: bold; /* Bold text for active button */
+    background-color: #0073aa;
+    /* Active button background */
+    color: white;
+    /* Active button text color */
+    font-weight: bold;
+    /* Bold text for active button */
 }
 
 .order-details {
@@ -5282,8 +5388,10 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .loader {
-    border: 16px solid #f3f3f3; /* Light grey */
-    border-top: 16px solid #3498db; /* Blue */
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid #3498db;
+    /* Blue */
     border-radius: 50%;
     width: 60px;
     height: 60px;
@@ -5292,13 +5400,20 @@ input.rbfw_time_slot_edit_slot_label {
 
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
 .pro-overlay {
     position: relative;
     text-decoration: none;
 }
+
 .pro-overlay:after {
     content: "PRO";
     position: absolute;
@@ -5315,9 +5430,11 @@ input.rbfw_time_slot_edit_slot_label {
     opacity: 0;
     transition: opacity 0.3s ease;
 }
+
 .pro-overlay:hover:after {
     opacity: 1;
 }
+
 /* Awesome heading style */
 .awesome-heading {
     font-family: 'Poppins', sans-serif;
@@ -5382,13 +5499,16 @@ input.rbfw_time_slot_edit_slot_label {
         padding: 8px 15px;
     }
 }
+
 .ss {
     margin-top: 1% !important;
 }
+
 .time-slots-section {
     margin-top: 2%;
 }
-.time-slot-item{
+
+.time-slot-item {
     margin-top: 2%;
 }
 
@@ -5479,13 +5599,13 @@ input.rbfw_time_slot_edit_slot_label {
     background-color: black !important;
 }
 
-.title-particular{
+.title-particular {
     font-size: 16px;
-        padding: 12px;
-        background: #2f809f4d;
-        margin-top: 0px !important;
-        margin-bottom: 0px;
-        color: black;
+    padding: 12px;
+    background: #2f809f4d;
+    margin-top: 0px !important;
+    margin-bottom: 0px;
+    color: black;
 }
 
 /* Styling for remove date button */
@@ -5533,91 +5653,183 @@ input.rbfw_time_slot_edit_slot_label {
         width: 100%;
     }
 }
-section.rbfw_item_quantiry_duration{
+
+section.rbfw_item_quantiry_duration {
     gap: 30px;
 }
+
 .service_category_inner_wrap input[name^="rbfw_service_category_price"][name*="[cat_services]"][name$="[title]"] {
-  max-width: 400px;
-  padding: 10px 14px;
-  color: #333;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    max-width: 400px;
+    padding: 10px 14px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-section.service_category_title.sss{
+
+section.service_category_title.sss {
     background: #e1e1e1;
     padding: 5px 10px;
-    border-radius: 5px !important;   
+    border-radius: 5px !important;
 }
-.service_category_inner_wrap .item{justify-content: normal !important;}
-.rbfw_es_price_config_wrapper button#add-row, span.ppof-button.add-new-service, span.ppof-button.add-new-feature, #add-date-range-row,.ppof-button{
-  display: block;
-  margin: 0px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #0073aa;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-align: center;
- }
-span.ppof-button.add-service-category.mt-1, .field-text-multi-wrapper-rbfw_feature_category .add-feature-category{
-  display: block;
-  margin: 0px auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  text-align: center;
-  max-width:256px;
- }
-.rbfw_es_price_config_wrapper section{padding: 20px 0px !important;}
+
+.service_category_inner_wrap .item {
+    justify-content: normal !important;
+}
+
+.rbfw_es_price_config_wrapper button#add-row,
+span.ppof-button.add-new-service,
+span.ppof-button.add-new-feature,
+#add-date-range-row,
+.ppof-button {
+    display: block;
+    margin: 0px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2170E4;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+span.ppof-button.add-service-category.mt-1,
+.field-text-multi-wrapper-rbfw_feature_category .add-feature-category {
+    display: block;
+    margin: 0px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    max-width: 256px;
+}
+
+.rbfw_es_price_config_wrapper section {
+    padding: 20px 0px !important;
+}
+
 .rbfw_es_price_config_wrapper section.bg-light.mt-5 {
     padding-left: 20px !important;
 }
-.feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"]{width:74% !important;}
-.field-text-multi-wrapper-rbfw_feature_category section{ padding: 0px 0px !important;}
+
+.feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"] {
+    width: 74% !important;
+}
+
+.field-text-multi-wrapper-rbfw_feature_category section {
+    padding: 0px 0px !important;
+}
+
 #rbfw_add_meta_box .bg-light {
     border-radius: 10px 10px 0px 0px;
-    background-color: #fff !important;
+    background-color: #f0f4fb !important;
     border-bottom: 3px solid #dbd8d8 !important;
 }
-#rbfw_add_meta_box .feature_category_title{
-    border-radius: 10px;
+
+#rbfw_add_meta_box .feature_category_title {
+    background-color: #eff4fd;
     border: 1px solid #ddd !important;
-    padding: 10px;  
+    padding: 10px;
 }
-.rbfw_min_max_booking_day_row .booking-input-group{margin:20px !important;}
-#rbfw_add_meta_box .mp_event_tab_area .mp_tab_details{background: #eaeaef; }
-#rbfw_add_meta_box section{background-color: #fff; }
-.booking-container{background: #fff !important;}
-#rbfw_add_meta_box .field-text-multi-wrapper .field-list .item{background:#fff !important;}
+
+.rbfw_min_max_booking_day_row .booking-input-group {
+    margin: 20px !important;
+}
+
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
+    background: #F8F9FF;
+    overflow: hidden;
+    padding: 20px !important;
+    width: 80%;
+}
+
+#rbfw_add_meta_box section {
+    background: #fff;
+}
+
+.booking-container {
+    background: #fff !important;
+}
+
+#rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
+    background: #fff !important;
+}
+
 table.form-table.rbfw_service_category_table {
     background: #fff !important;
 }
-#rbfw_add_meta_box section{border:1px solid var(--mage-light) !important; }
-.rbfw_feature_category_table table td{border-top: 1px solid var(--color_border) !important;}
-.rbfw_es_price_config_wrapper section.bg-light.mt-5 { padding: 20px !important;}
-.rbfw_es_price_config_wrapper  section{padding: 0px !important;}
-#rbfw_add_meta_box .service_category_title{background: #eee; padding: 5px;}
-table.rbfw_pricing_table thead th{background-color: #fff3f3 !important;}
 
-#rbfw_add_meta_box textarea, #rbfw_add_meta_box select, #rbfw_add_meta_box input[type=text], #rbfw_add_meta_box input[type=email], #rbfw_add_meta_box input[type=search], #rbfw_add_meta_box input[type=tel], #rbfw_add_meta_box input[type=url], #rbfw_add_meta_box input[type=password], #rbfw_add_meta_box input[type=file], #rbfw_add_meta_box input[type=color], #rbfw_add_meta_box input[type=number], #rbfw_add_meta_box input[type=range], #rbfw_add_meta_box input[type=date], #rbfw_add_meta_box input[type=month], #rbfw_add_meta_box input[type=week], #rbfw_add_meta_box input[type=time], #rbfw_add_meta_box input[type=datetime], #rbfw_add_meta_box input[type=datetime-local]
-{
-border: 1px solid #d4dadf !important;
+#rbfw_add_meta_box section {
+    border: 1px solid #c3c4cb !important;
 }
-.feature_category_inner_wrap label{padding-top: 8px !important; padding-left: 10px !important;}
-#rbfw_add_meta_box .postbox-header h2{color:#fff !important;}
-.add-slot-form button.add-slot-btn{margin-top:25px;}
-#rbfw_add_meta_box .add-feature-category{margin-bottom:20px;}
-.rbfw_es_price_config_wrapper .ppof-button{margin-bottom:20px; }
+
+.rbfw_feature_category_table table td {
+    border-top: 1px solid var(--color_border) !important;
+}
+
+.rbfw_es_price_config_wrapper section.bg-light.mt-5 {
+    padding: 20px !important;
+}
+
+.rbfw_es_price_config_wrapper section {
+    padding: 0px !important;
+}
+
+#rbfw_add_meta_box .service_category_title {
+    background: #eee;
+    padding: 5px;
+}
+
+table.rbfw_pricing_table thead th {
+    background-color: #fff3f3 !important;
+}
+
+#rbfw_add_meta_box textarea,
+#rbfw_add_meta_box select,
+#rbfw_add_meta_box input[type=text],
+#rbfw_add_meta_box input[type=email],
+#rbfw_add_meta_box input[type=search],
+#rbfw_add_meta_box input[type=tel],
+#rbfw_add_meta_box input[type=url],
+#rbfw_add_meta_box input[type=password],
+#rbfw_add_meta_box input[type=file],
+#rbfw_add_meta_box input[type=color],
+#rbfw_add_meta_box input[type=number],
+#rbfw_add_meta_box input[type=range],
+#rbfw_add_meta_box input[type=date],
+#rbfw_add_meta_box input[type=month],
+#rbfw_add_meta_box input[type=week],
+#rbfw_add_meta_box input[type=time],
+#rbfw_add_meta_box input[type=datetime],
+#rbfw_add_meta_box input[type=datetime-local] {
+    border: 1px solid #d4dadf !important;
+}
+
+.feature_category_inner_wrap label {
+    padding-top: 8px !important;
+    padding-left: 10px !important;
+}
+
+#rbfw_add_meta_box .postbox-header h2 {
+    color: #fff !important;
+}
+
+
+#rbfw_add_meta_box .add-feature-category {
+    margin-bottom: 20px;
+}
+
+.rbfw_es_price_config_wrapper .ppof-button {
+    margin-bottom: 20px;
+}
 
 
 .rbfw_multi_day_price_conf .section {
@@ -5724,7 +5936,7 @@ border: 1px solid #d4dadf !important;
     margin-top: 0px;
     background-color: white;
     border-radius: 4px;
-    padding:0 10px;
+    padding: 0 10px;
 }
 
 .rbfw_multi_day_price_conf .time-slots {
@@ -5751,7 +5963,7 @@ border: 1px solid #d4dadf !important;
 }
 
 .rbfw_multi_day_price_conf .time-slot-indicator {
-    border-radius:5px;
+    border-radius: 5px;
     background-color: #ccc;
     color: #333;
     cursor: pointer;
@@ -5795,7 +6007,8 @@ border: 1px solid #d4dadf !important;
     margin-bottom: 5px;
     display: block;
 }
-#rbfw_add_meta_box input.rbfw_particulars_date{
+
+#rbfw_add_meta_box input.rbfw_particulars_date {
     width: 100% !important;
 }
 
@@ -5804,10 +6017,18 @@ border: 1px solid #d4dadf !important;
     background: #fff;
     border: 1px solid #ddd;
     padding: 20px;
-    margin-top: 20px;
+    margin-top: 0;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     font-family: "Segoe UI", sans-serif;
+}
+
+/* Page-load hide: PHP sets class="hide" on containers whose toggle is off.
+   JS manages visibility after interaction via slideUp/slideDown.
+   Scoped to plugin wrappers to avoid collisions with other admin CSS. */
+#rbfw_add_meta_box .hide,
+.rbfw-me-wrap .hide {
+    display: none;
 }
 
 /* Header Row */
@@ -5838,7 +6059,7 @@ border: 1px solid #d4dadf !important;
     color: #00796b;
     padding: 6px 12px;
     margin: 5px 5px 0 0;
-    border-radius:5px;
+    border-radius: 5px;
     position: relative;
     font-size: 14px;
 }
@@ -5873,16 +6094,16 @@ border: 1px solid #d4dadf !important;
     cursor: pointer;
 }
 
-.rbfw-tent-types{
+.rbfw-tent-types {
     display: flex;
     justify-content: start;
     align-items: center;
-    gap:15px;
+    gap: 15px;
     flex-wrap: wrap;
-    margin:10px 0;
+    margin: 10px 0;
 }
 
-.rbfw-tent-types .rbfw-rent-type{
+.rbfw-tent-types .rbfw-rent-type {
     padding: 10px;
     border-radius: 12px;
     border: 1px solid #ddd;
@@ -5895,42 +6116,49 @@ border: 1px solid #d4dadf !important;
     align-items: center;
     position: relative;
     text-align: center;
-    
+
 }
-.rbfw-tent-types .rbfw-rent-type.selected::after{
+
+.rbfw-tent-types .rbfw-rent-type.selected::after {
     content: "";
     position: absolute;
-    top: -11px; /* position arrow above container */
+    top: -11px;
+    /* position arrow above container */
     left: 50%;
     transform: translateX(-50%) rotate(45deg);
     width: 20px;
     height: 20px;
     border-top: 2px solid var(--mage-primary);
     border-left: 2px solid var(--mage-primary);
-    background: #efefef; /* match container background */
+    background: #efefef;
+    /* match container background */
 }
-.rbfw-tent-types .rbfw-rent-type:hover{
+
+.rbfw-tent-types .rbfw-rent-type:hover {
     background-color: #efefef;
     border: 1px solid var(--mage-primary);
 }
-.rbfw-tent-types .rbfw-rent-type.selected{
+
+.rbfw-tent-types .rbfw-rent-type.selected {
     background-color: #efefef;
     border: 2px solid var(--mage-primary);
     color: var(--mage-primary);
     font-size: 16px;
 }
+
 .rbfw-rent-type .icon {
     font-size: 20px;
     text-align: center;
     color: #666;
 }
+
 .rbfw-rent-type.selected .icon {
     font-size: 20px;
     text-align: center;
     color: var(--mage-primary);
 }
 
-.rbfw-rent-type-desc{
+.rbfw-rent-type-desc {
     padding: 10px;
     width: 100%;
     background-color: #e1f1ff;
@@ -5941,45 +6169,46 @@ border: 1px solid #d4dadf !important;
 /* Quick setup */
 
 
-div.mpStyle.mep-quick-setup  .formControl{
-	max-width: 100%;
-	margin:8px 0;
-	padding: 14px 16px;
-	border: 2px solid #e5e7eb;
-	border-radius: 12px;
-	font-size: 16px;
-	transition: all 0.3s ease;
-	background: white;
-	color: #374151;
-	font-weight: normal;
-}
-div.mpStyle.mep-quick-setup  select.formControl:focus{
-	background-color: transparent;
-	border: 1px solid #0080F0;
+div.mpStyle.mep-quick-setup .formControl {
+    max-width: 100%;
+    margin: 8px 0;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    color: #374151;
+    font-weight: normal;
 }
 
-div.mpStyle.mep-quick-setup label{
+div.mpStyle.mep-quick-setup select.formControl:focus {
+    background-color: transparent;
+    border: 1px solid #0080F0;
+}
+
+div.mpStyle.mep-quick-setup label {
     display: flex;
     flex-direction: column;
     align-items: start;
 }
 
-div.mpStyle.mep-quick-setup .info_text{
-	color: #6b7280;
-	margin-bottom: 28px;
-	font-style:normal;
+div.mpStyle.mep-quick-setup .info_text {
+    color: #6b7280;
+    margin-bottom: 28px;
+    font-style: normal;
 }
 
-div.mpStyle.mep-quick-setup .info_text span{
-	color: #b1b4bc;
+div.mpStyle.mep-quick-setup .info_text span {
+    color: #b1b4bc;
 }
 
-div.mpStyle.mep-quick-setup .tabsContentNext{
-	padding:20px 0;
+div.mpStyle.mep-quick-setup .tabsContentNext {
+    padding: 20px 0;
 }
 
-div.mpStyle.mep-quick-setup [class*="_adminLayout"]{
-	background-color: #f8f7fc;
+div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
+    background-color: #f8f7fc;
 
 }
 
@@ -5987,58 +6216,69 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"]{
     border-color: var(--theme-color);
 }
 
-.mep-quick-setup .mpTabsNext .tabItemNext.active [class*="circleIcon"]{
-background-color: var(--theme-color);
-border: 1px solid var(--theme-color);
+.mep-quick-setup .mpTabsNext .tabItemNext.active [class*="circleIcon"] {
+    background-color: var(--theme-color);
+    border: 1px solid var(--theme-color);
 }
 
-.mep-quick-setup .mpTabsNext .tabItemNext [class*="circleIcon"]{
-border: 1px solid #d6d6d6;
+.mep-quick-setup .mpTabsNext .tabItemNext [class*="circleIcon"] {
+    border: 1px solid #d6d6d6;
 }
 
 .mep-quick-setup .mpTabsNext .tabItemNext.active .circleTitle {
     color: var(--theme-color);
-  }
-
-  .mep-quick-setup .nextTab_prev{
-	border: 1px solid #333;
-  }
-
-.mep-quick-setup .nextTab_prev:hover, .mep-quick-setup .nextTab_prev:focus{
-	background-color: #ddd;
-	color: #000;
 }
 
-.mep-quick-setup .themeButton:hover, .mep-quick-setup .themeButton:focus{
-	opacity: .8;
-	background-color: var(--theme-color);
-	border:2px solid transparent
+.mep-quick-setup .nextTab_prev {
+    border: 1px solid #333;
 }
 
-.mep-quick-setup .nextTab_prev:hover span, .mep-quick-setup .nextTab_prev:focus span{
-	color: #000;
+.mep-quick-setup .nextTab_prev:hover,
+.mep-quick-setup .nextTab_prev:focus {
+    background-color: #ddd;
+    color: #000;
 }
-.inventory_managed_order_status label{
+
+.mep-quick-setup .themeButton:hover,
+.mep-quick-setup .themeButton:focus {
+    opacity: .8;
+    background-color: var(--theme-color);
+    border: 2px solid transparent
+}
+
+.mep-quick-setup .nextTab_prev:hover span,
+.mep-quick-setup .nextTab_prev:focus span {
+    color: #000;
+}
+
+.inventory_managed_order_status label {
     padding-right: 20px;
 }
 
 /* Multiple items pricing configuration */
 #rbfw_add_meta_box .rbfw_multiple_items {
-    background: #f5f7fc;
+    background: none;
     border: 1px solid #d9dee9;
     border-radius: 4px;
-    padding: 28px 24px;
+    padding: 0px;
 }
 
 #rbfw_add_meta_box .rbfw-mi-pricing-shell {
     display: grid;
-    gap: 24px;
+    gap: 0;
+}
+
+/* Section spacing inside Multiple Items */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-price-types-card,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-card.rbfw_multi_day_price_conf,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle {
+    margin-top: 0px;
 }
 
 #rbfw_add_meta_box .rbfw-mi-card {
     background: #fff;
     border: 1px solid #cbd3e1;
-    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -6064,32 +6304,92 @@ border: 1px solid #d6d6d6;
     margin: 10px 0 0;
 }
 
+/* Price-types card header */
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-header {
+    background: #f0f4fb;
+    padding: 14px 20px;
+}
+
+.rbfw-mi-pricing-shell .rbfw-mi-pt-header {
+    background: none;
+}
+
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-title {
+    background: none;
+    color: #1e293b;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-divider {
+    border-bottom: 1px solid #dde4ef;
+}
+
+/* Price-type toggle tiles */
 #rbfw_add_meta_box .rbfw_multiple_items .pricing-toggles {
     display: flex;
     flex-wrap: wrap;
-    gap: 28px;
-    padding: 8px 24px 24px;
+    gap: 12px;
+    padding: 16px 20px 20px;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .price-toggle {
     align-items: center;
-    color: #2c3340;
+    background: #fff;
+    border: 1.5px solid #cbd3e1;
+    border-radius: 8px;
     cursor: pointer;
     display: inline-flex;
-    font-size: 14px;
-    gap: 8px;
-    line-height: 1;
+    flex: 1;
+    gap: 12px;
     margin: 0;
+    min-width: 120px;
+    padding: 14px 16px;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle:has(input:checked) {
+    background: #f0f5ff;
+    border-color: #0058d7;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .price-toggle input[type="checkbox"] {
     accent-color: #0058d7;
+    flex-shrink: 0;
     height: 16px;
     margin: 0;
     width: 16px;
 }
 
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-pt-option-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-pt-option-name {
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle:has(input:checked) .rbfw-mi-pt-option-name {
+    color: #0058d7;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-pt-option-hint {
+    color: #6b7790;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
 #rbfw_add_meta_box .rbfw-mi-items-card {
+    margin-bottom: 20px;
     overflow-x: auto;
 }
 
@@ -6128,7 +6428,7 @@ border: 1px solid #d6d6d6;
     margin: 0;
 }
 
-#rbfw_add_meta_box .rbfw-mi-items-head + .rbfw-mi-item-rows .form-group label,
+#rbfw_add_meta_box .rbfw-mi-items-head+.rbfw-mi-item-rows .form-group label,
 #rbfw_add_meta_box .rbfw-mi-row-action label {
     display: none;
 }
@@ -6285,7 +6585,12 @@ border: 1px solid #d6d6d6;
     background: #fff;
     border: 1px solid #cbd3e1;
     border-radius: 8px;
+    margin-top: 20px;
     overflow: hidden;
+}
+
+.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf {
+    margin-top: 20px !important;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row.item {
@@ -6329,6 +6634,951 @@ border: 1px solid #d6d6d6;
     border: 0;
 }
 
+/* ── Time Slots Configuration – mi redesign ─────────────────────────── */
+
+/* Card header */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-ts-header {
+    align-items: center;
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-title {
+    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-toggle-group {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-toggle-label {
+    color: #374151;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* Toggle inside the new header */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle {
+    background-color: #cbd3e1;
+    border-radius: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 26px;
+    position: relative;
+    width: 48px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle.active {
+    background-color: #0058d7;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle-knob {
+    background: #fff;
+    border-radius: 50%;
+    height: 20px;
+    left: 3px;
+    position: absolute;
+    top: 3px;
+    transition: left 0.2s;
+    width: 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle.active .toggle-knob {
+    left: 25px;
+}
+
+/* "Active Booking Slots" label */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-ts-active-label {
+    color: #111827;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 16px 20px 10px;
+}
+
+/* Reset time-slots-container for mi */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slots-container {
+    background: none;
+    margin: 0;
+    padding: 0 20px;
+}
+
+/* Flex chips row */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Each chip — override the old colored styles */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot.enabled,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot-indicator,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot.enabled .time-slot-indicator {
+    align-items: center;
+    background: #fff;
+    border: 1.5px solid #c7d3e8;
+    border-radius: 8px;
+    color: #374151;
+    cursor: default;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot-time {
+    margin: 0;
+}
+
+/* × remove button */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot-remove {
+    align-items: center;
+    background: none;
+    border-radius: 0;
+    color: #6b7790;
+    cursor: pointer;
+    display: flex;
+    font-size: 15px;
+    font-weight: normal;
+    height: auto;
+    justify-content: center;
+    line-height: 1;
+    width: auto;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .time-slot-remove:hover {
+    color: #dc2626;
+}
+
+/* Add-slot row */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-container {
+    background: none;
+    border-radius: 0;
+    margin: 12px 0 0;
+    padding: 0 20px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-container > .label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 13px;
+    height: 38px;
+    padding: 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn {
+    background: #0058d7;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: 38px;
+    margin: 0;
+    padding: 0 18px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn:disabled {
+    background: #a0b4d6;
+    cursor: not-allowed;
+}
+
+/* ── Particular Settings (mi) ────────────────────────────────────────── */
+
+/* Panel header (section.bg-light) */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle {
+    border-top: 1px solid #e5eaf3;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle section.bg-light {
+    background: none !important;
+    margin: 0 !important;
+    padding: 20px 20px 4px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle section.bg-light > div > label {
+    color: #111827;
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle section.bg-light > div > p {
+    color: #6b7790;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+/* Toggle row (second section – not bg-light) */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) {
+    align-items: center;
+    background: #f0f4fb;
+    border-bottom: 1px solid #e5eaf3;
+    display: flex !important;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 14px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) > div > label {
+    color: #111827;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) > div > p {
+    color: #6b7790;
+    font-size: 12px;
+    margin: 3px 0 0;
+}
+
+/* Custom switch toggle */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch {
+    display: inline-block;
+    flex-shrink: 0;
+    height: 26px;
+    margin: 0;
+    position: relative;
+    width: 48px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch input {
+    height: 0;
+    opacity: 0;
+    width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider {
+    background-color: #cbd3e1;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background .3s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider:before {
+    background-color: #fff;
+    bottom: 3px;
+    content: "";
+    height: 20px;
+    left: 3px;
+    position: absolute;
+    transition: transform .3s;
+    width: 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch input:checked + .slider {
+    background-color: #e91e63;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider.round {
+    border-radius: 26px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider.round:before {
+    border-radius: 50%;
+}
+
+/* available-particular wrapper */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .available-particular {
+    background: #fff;
+    border: 0 !important;
+    border-radius: 0;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 20px 20px;
+}
+
+/* Column headers */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .available-particular .header {
+    border-bottom: 1px solid #e5eaf3;
+    color: #6b7790;
+    display: grid !important;
+    flex: none !important;
+    font-size: 11px;
+    font-weight: 600;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 2fr 80px;
+    letter-spacing: .04em;
+    margin: 0 !important;
+    padding: 10px 0;
+    text-transform: uppercase;
+    width: 100% !important;
+}
+
+/* Each data row */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw_pdwt_row {
+    align-items: flex-start;
+    border-bottom: 1px solid #f0f3f8;
+    display: grid !important;
+    flex: none !important;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 2fr 80px;
+    margin: 0 !important;
+    padding: 16px 0;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-particular-date {
+    width: auto;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw_particulars_date {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 13px;
+    height: 36px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+/* Time slots inside particular rows */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slots-container {
+    background: none;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slots {
+    display: grid !important;
+    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot.enabled,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-indicator,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot.enabled .time-slot-indicator {
+    align-items: center;
+    background: #f5f7fa;
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    color: #374151;
+    cursor: default;
+    display: inline-flex !important;
+    font-size: 12px;
+    font-weight: 500;
+    gap: 4px;
+    justify-content: space-between;
+    margin: 0;
+    padding: 5px 8px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-time {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-remove {
+    align-items: center;
+    background: none;
+    border-radius: 0;
+    color: #6b7790;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: normal;
+    height: auto;
+    justify-content: center;
+    line-height: 1;
+    width: auto;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-remove:hover {
+    color: #dc2626;
+}
+
+/* Add-slot row inside particulars */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-container {
+    background: none;
+    border-radius: 0;
+    margin: 8px 0 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-container > .label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 12px;
+    height: 32px;
+    padding: 0 8px;
+    width: 116px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-btn {
+    background: #0058d7;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    height: 32px;
+    margin: 0;
+    padding: 0 14px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-btn:disabled {
+    background: #a0b4d6;
+    cursor: not-allowed;
+}
+
+/* Remove button */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-particular-time-action {
+    align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    padding-top: 2px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .remove-row.button {
+    background: #e91e63 !important;
+    border: none !important;
+    border-radius: 6px;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: auto;
+    padding: 7px 14px !important;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .remove-row.button:hover {
+    background: #c2185b !important;
+}
+
+/* Add Another button */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap #add-particular-row.ppof-button {
+    align-items: center;
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
+    border-radius: 6px;
+    color: #fff !important;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 8px 18px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap #add-particular-row.ppof-button:hover {
+    background: #0f766e !important;
+    border-color: #0f766e !important;
+}
+
+/* ── Time Slots Configuration – md redesign ─────────────────────────── */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section {
+    background: #fff;
+    border: 1px solid #cbd3e1;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .section {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    padding: 14px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .section .label {
+    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .section p {
+    color: #6b7790;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slots-container {
+    background: none;
+    margin: 0;
+    padding: 16px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot,
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot.enabled {
+    align-items: center;
+    background: #fff !important;
+    border: 1.5px solid #c7d3e8 !important;
+    border-radius: 20px;
+    color: #0058d7 !important;
+    cursor: default;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 6px;
+    margin: 0 !important;
+    padding: 5px 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot-time {
+    color: inherit;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot-remove {
+    align-items: center;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: #6b7790 !important;
+    cursor: pointer;
+    display: flex;
+    font-size: 15px;
+    height: auto !important;
+    justify-content: center;
+    line-height: 1;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot-remove:hover {
+    color: #dc2626 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-container {
+    background: none;
+    border-radius: 0;
+    border-top: 1px solid #e5eaf3;
+    margin: 0;
+    padding: 16px 20px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-container > .label {
+    color: #111827;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 13px;
+    height: 40px;
+    padding: 0 12px;
+    width: 200px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .new-slot-time:focus {
+    border-color: #0058d7;
+    outline: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-btn {
+    background: #0058d7 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: 40px;
+    margin: 0;
+    padding: 0 24px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-btn:disabled {
+    background: #a0b4d6 !important;
+    cursor: not-allowed;
+}
+
+/* ── Particular Settings – sd/md/appointment redesign ─────────────────── */
+/* Panel header */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .mpStyle .panel-head {
+    background: none;
+    border-bottom: 1px solid #e5eaf3;
+    padding: 14px 20px;
+}
+
+/* "Particular date time slots" toggle row */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section {
+    align-items: center;
+    background: #f0f4fb;
+    border-bottom: 1px solid #e5eaf3;
+    display: flex !important;
+    gap: 0;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 12px 20px;
+}
+
+/* Pink toggle */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch {
+    flex-shrink: 0;
+    height: 22px;
+    margin: 0;
+    position: relative;
+    width: 42px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch input {
+    height: 0;
+    opacity: 0;
+    width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch .slider {
+    background: #cfd8dc;
+    border-radius: 22px;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background 0.2s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch .slider:before {
+    background: #fff;
+    border-radius: 50%;
+    bottom: 3px;
+    content: '';
+    height: 16px;
+    left: 3px;
+    position: absolute;
+    transition: transform 0.2s;
+    width: 16px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch input:checked + .slider {
+    background: #e91e63;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Particular rows – header row */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .d-flex.justify-content-between.row.header {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    margin: 0 !important;
+    padding: 8px 20px;
+}
+
+/* Particular rows – data rows */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw_pdwt_row {
+    align-items: start !important;
+    border-bottom: 1px solid #e5eaf3;
+    display: grid !important;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    justify-content: unset !important;
+    margin: 0 !important;
+    padding: 12px 20px;
+}
+
+/* Chips inside particular rows */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot,
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot.enabled {
+    align-items: center;
+    background: #fff !important;
+    border: 1.5px solid #c7d3e8 !important;
+    border-radius: 20px;
+    color: #0058d7 !important;
+    cursor: default;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 6px;
+    margin: 0 !important;
+    padding: 5px 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot-remove {
+    align-items: center;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: #6b7790 !important;
+    cursor: pointer;
+    display: flex;
+    font-size: 15px;
+    height: auto !important;
+    justify-content: center;
+    line-height: 1;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot-remove:hover {
+    color: #dc2626 !important;
+}
+
+/* Add slot inside particular row */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-container {
+    border-top: 1px solid #e5eaf3;
+    margin-top: 8px;
+    padding: 10px 0 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-container > .label {
+    color: #111827;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 0 6px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 12px;
+    height: 36px;
+    padding: 0 10px;
+    width: 160px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .new-slot-time:focus {
+    border-color: #0058d7;
+    outline: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-btn {
+    background: #0058d7 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    height: 36px;
+    margin: 0;
+    padding: 0 16px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-btn:disabled {
+    background: #a0b4d6 !important;
+    cursor: not-allowed;
+}
+
+/* Remove row button */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-particular-time-action .remove-row {
+    background: #fce4ec !important;
+    border: 1px solid #f48fb1 !important;
+    border-radius: 6px !important;
+    color: #c2185b !important;
+    font-size: 12px;
+    padding: 6px 14px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-particular-time-action .remove-row:hover {
+    background: #f48fb1 !important;
+    color: #c2185b !important;
+}
+
+/* Add Another button */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section #add-particular-row.ppof-button {
+    align-items: center;
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
+    border-radius: 6px;
+    color: #fff !important;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 8px 18px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section #add-particular-row.ppof-button:hover {
+    background: #0f766e !important;
+    border-color: #0f766e !important;
+}
+
+/* ── Global Section Spacing ──────────────────────────────────────────── */
+#rbfw_add_meta_box .mpStyle {
+    margin-top: 20px;
+}
+
+/* ── Global Section Header Redesign ─────────────────────────────────── */
+/* Overrides the old white+3px-gray-border style on all panel_header() calls */
+#rbfw_add_meta_box .bg-light {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef !important;
+    border-radius: 0 !important;
+    margin-top: 20px !important;
+    padding: 14px 20px !important;
+}
+
+#rbfw_add_meta_box .bg-light > div > label {
+    color: #111827 !important;
+    display: block;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    line-height: 1.3;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .bg-light > div > p {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+    margin: 4px 0 0 !important;
+}
+
+/* Tab-level section_header(): h2 + p above the pricing panels */
+#rbfw_add_meta_box .mp_tab_item_title {
+    color: #111827;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 4px;
+}
+
+#rbfw_add_meta_box .mp_tab_item_description {
+    color: #6b7790;
+    font-size: 13px;
+    margin: 0 0 16px;
+}
+
 @media (max-width: 960px) {
     #rbfw_add_meta_box .rbfw-mi-threshold-grid {
         grid-template-columns: 1fr;
@@ -6341,7 +7591,11 @@ border: 1px solid #d6d6d6;
     }
 
     #rbfw_add_meta_box .rbfw_multiple_items .pricing-toggles {
-        gap: 16px;
+        gap: 10px;
+    }
+
+    #rbfw_add_meta_box .rbfw_multiple_items .price-toggle {
+        min-width: calc(50% - 5px);
     }
 
     #rbfw_add_meta_box .rbfw_multiple_items .item-row {
@@ -6349,3 +7603,1507 @@ border: 1px solid #d6d6d6;
     }
 }
 
+#rbfw_add_meta_box .btn,
+#rbfw_add_meta_box .button {
+    background-color: #eff4fd;
+}
+
+
+/* ── MD General Price Configuration – Card Redesign ───────────────────── */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-card {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    margin-top: 16px;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-card-header {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    color: #6b7790;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item {
+    align-items: center !important;
+    border-bottom: 1px solid #f0f4fb !important;
+    display: flex;
+    flex-wrap: nowrap !important;
+    gap: 14px !important;
+    padding: 14px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-card .item:last-child {
+    border-bottom: none !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-left {
+    flex: 1 !important;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-left .label {
+    color: #111827 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-left .description {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+    margin: 2px 0 0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-right {
+    align-items: center !important;
+    display: flex !important;
+    flex-shrink: 0 !important;
+    gap: 0 !important;
+    width: auto !important;
+}
+
+/* Price input with $ prefix */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap {
+    align-items: stretch;
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+    width: 160px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap > span {
+    align-items: center;
+    background: #f5f7fa;
+    border-right: 1px solid #cbd3e1;
+    color: #6b7790;
+    display: flex;
+    flex-shrink: 0;
+    font-size: 13px;
+    padding: 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap .price-input {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1;
+    font-size: 13px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    min-width: 0;
+    outline: none !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap:has(.price-input:not(:disabled)) {
+    border-color: #1a56db;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap:has(.price-input:not(:disabled)) > span {
+    border-right-color: #1a56db;
+    color: #1a56db;
+}
+
+/* Threshold input with suffix (days / hours) */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap {
+    align-items: stretch;
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+    width: 150px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap .price-input {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1;
+    font-size: 13px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    min-width: 0;
+    outline: none !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap > span {
+    align-items: center;
+    background: #f5f7fa;
+    border-left: 1px solid #cbd3e1;
+    color: #6b7790;
+    display: flex;
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap:has(.price-input:not(:disabled)) {
+    border-color: #1a56db;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap:has(.price-input:not(:disabled)) > span {
+    border-left-color: #1a56db;
+    color: #1a56db;
+}
+
+/* Time configuration row – toggle on right, clock icon on left */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .item-left {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .dashicons-clock {
+    color: #1a56db;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .item-right {
+    margin-left: auto;
+}
+
+/* Toggle knob inside md cards */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle {
+    background: #cfd8dc !important;
+    border-radius: 20px !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 22px !important;
+    min-width: 42px !important;
+    position: relative !important;
+    transition: background 0.2s;
+    width: 42px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle.active {
+    background: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle .toggle-knob {
+    background: #fff !important;
+    border-radius: 50% !important;
+    bottom: 3px !important;
+    height: 16px !important;
+    left: 3px !important;
+    position: absolute !important;
+    top: auto !important;
+    transition: left 0.2s !important;
+    width: 16px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle.active .toggle-knob {
+    left: calc(100% - 19px) !important;
+}
+
+/* ── SD Enable Time Picker row ──────────────────────────────────────────── */
+/* Higher specificity (1-3-0) beats the .rbfw_multi_day_price_conf .item rule (1-2-0) */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper > .item {
+    background: #f0f4fb !important;
+    border: 1px solid #c0c2c5 !important;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+}
+
+/* ── Day-wise Enable Toggle Section ─────────────────────────────────────── */
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > section:first-of-type {
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+}
+
+/* ── Extra Service Table Redesign ──────────────────────────────────────── */
+
+/* Content section – card shell */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper section.bg-light + section {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    overflow-x: auto;
+    padding: 0 !important;
+}
+
+/* Table reset */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table {
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    min-width: 600px;
+    width: 100% !important;
+}
+
+/* Header */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead tr {
+    background: #f0f4fb !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead th {
+    border-bottom: 1px solid #dde4ef !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead th .required,
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead th b {
+    color: #ef4444 !important;
+    font-weight: 700;
+}
+
+/* Body rows */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table tbody tr {
+    background: #fff !important;
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table tbody td {
+    border: none !important;
+    padding: 10px 14px !important;
+    vertical-align: middle !important;
+}
+
+/* Text & number inputs */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="text"],
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="number"] {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="text"]:focus,
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="number"]:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    outline: none !important;
+}
+
+/* Image +/- buttons */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .service_image_add_remove {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_service_image_btn,
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_remove_service_image_btn {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 50% !important;
+    color: #6b7790 !important;
+    display: inline-flex !important;
+    font-size: 16px !important;
+    height: 28px !important;
+    justify-content: center !important;
+    min-width: 28px !important;
+    padding: 0 !important;
+    width: 28px !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_service_image_btn:hover {
+    background: #1a56db !important;
+    border-color: #1a56db !important;
+    color: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_remove_service_image_btn:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Remove & drag buttons */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move {
+    align-items: center !important;
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: flex-end !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move .remove-row {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    gap: 4px;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move .remove-row:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move .mp_event_type_sortable_button {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+/* Add New button */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper #add-row {
+    align-items: center !important;
+    background: #1a56db !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 40px !important;
+    padding: 0 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper #add-row:hover {
+    background: #1648c0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mt-2 {
+    margin-top: 16px !important;
+    padding: 0 20px 20px !important;
+    text-align: center !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PRICING TAB — Visual Redesign
+   (color, border, spacing only — zero functional changes)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Rent Type selector cards ────────────────────────────────────────── */
+
+#rbfw_add_meta_box .rbfw-tent-types {
+    gap: 10px !important;
+    margin: 18px 0 6px !important;
+}
+
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type {
+    background: #fff !important;
+    border: 1.5px solid #dde4ef !important;
+    border-radius: 10px !important;
+    color: #374151 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    gap: 10px !important;
+    height: auto !important;
+    min-height: 88px !important;
+    padding: 14px 12px !important;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s !important;
+    width: 144px !important;
+}
+
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type:hover {
+    background: #f4f7fe !important;
+    border: 1.5px solid #1a56db !important;
+    box-shadow: 0 2px 8px rgba(26,86,219,.08) !important;
+}
+
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type.selected {
+    background: #eef3ff !important;
+    border: 2px solid #1a56db !important;
+    box-shadow: 0 2px 10px rgba(26,86,219,.12) !important;
+    color: #1a56db !important;
+    font-size: 12px !important;
+}
+
+/* Kill the old triangle arrow */
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type.selected::after {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .rbfw-rent-type .icon {
+    color: #8a9bbf !important;
+    font-size: 22px !important;
+}
+
+#rbfw_add_meta_box .rbfw-rent-type.selected .icon {
+    color: #1a56db !important;
+}
+
+/* Description strip — the arrow is a ::before pseudo-element that sticks out of the top */
+#rbfw_add_meta_box .rbfw-rent-type-desc {
+    background: #f0f5ff !important;
+    border: 1px solid #c3d4f8 !important;
+    border-radius: 8px !important;
+    color: #374151 !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    margin: 12px 0 12px !important;
+    overflow: visible !important;
+    padding: 14px 18px !important;
+    position: relative !important;
+    width: 100% !important;
+}
+
+/* Outer triangle — border colour, points upward toward the selected card */
+#rbfw_add_meta_box .rbfw-rent-type-desc::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -10px !important;
+    left: var(--rbfw-arrow-left, 72px) !important;
+    transform: translateX(-50%) !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 9px solid transparent !important;
+    border-right: 9px solid transparent !important;
+    border-bottom: 10px solid #c3d4f8 !important;
+    transition: left 0.22s ease !important;
+}
+
+/* Inner triangle — background colour, creates hollow outline effect */
+#rbfw_add_meta_box .rbfw-rent-type-desc::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -8px !important;
+    left: var(--rbfw-arrow-left, 72px) !important;
+    transform: translateX(-50%) !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 7px solid transparent !important;
+    border-right: 7px solid transparent !important;
+    border-bottom: 8px solid #f0f5ff !important;
+    transition: left 0.22s ease !important;
+}
+
+/* Selected type name label inside the description */
+#rbfw_add_meta_box .rbfw-rent-type-desc-name {
+    display: block !important;
+    color: #1a56db !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 6px !important;
+    text-transform: uppercase !important;
+}
+
+/* Manage single-item hourly inventory section */
+#rbfw_add_meta_box section.manage_inventory_as_timely {
+    background: #f5f8ff !important;
+    border: 1px solid #c3d4f8 !important;
+    margin-bottom:10px;
+    border-radius: 8px !important;
+    padding: 16px 20px !important;
+}
+
+#rbfw_add_meta_box section.manage_inventory_as_timely > div > label {
+    color: #1e3a5f !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+#rbfw_add_meta_box section.manage_inventory_as_timely > div > p {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+    margin: 4px 0 0 !important;
+}
+
+/* ── 2. Rent-type + Price Settings outer section ─────────────────────────
+   The `section` that wraps the rent-type tiles already has a global border.
+   Refine it to match the card language. */
+
+#rbfw_add_meta_box #travel_pricing .rent_type > section,
+#rbfw_add_meta_box #travel_pricing section.mp_tab_item_section {
+    border-color: #dde4ef !important;
+    border-radius: 0 0 8px 8px !important;
+}
+
+/* ── 3. SD pricing table ─────────────────────────────────────────────────── */
+
+/* Table-section card */
+#rbfw_add_meta_box .rbfw_bike_car_sd_wrapper > section:last-child {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+#rbfw_add_meta_box table.form-table.rbfw_bike_car_sd_price_table {
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+/* Header */
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table thead tr {
+    background: #eef3ff !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table thead th {
+    border-bottom: 1px solid #dde4ef !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
+
+/* Remove zebra, add subtle row borders */
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even),
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd) {
+    background: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table tbody tr {
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table tbody td {
+    border: none !important;
+    padding: 9px 14px !important;
+    vertical-align: middle !important;
+}
+
+/* Inputs inside SD table */
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table input[type="text"],
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table input[type="number"] {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 34px !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table select {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 34px !important;
+    padding: 0 8px !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table input:focus,
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table select:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    outline: none !important;
+}
+
+/* "Add New Type" button area */
+#rbfw_add_meta_box .sd-add-type-and-sessional {
+    border-top: 1px dashed #c3cfe0 !important;
+    padding: 14px 16px !important;
+    text-align: center !important;
+}
+
+#rbfw_add_meta_box .sd-add-type-and-sessional .ppof-button {
+    align-items: center !important;
+    background: #1a56db !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 38px !important;
+    padding: 0 18px !important;
+}
+
+#rbfw_add_meta_box .sd-add-type-and-sessional .ppof-button:hover {
+    background: #1648c0 !important;
+}
+
+/* ── 4. Multiple Items section ───────────────────────────────────────────── */
+
+/* Outer wrapper */
+#rbfw_add_meta_box .rbfw_multiple_items {
+    border: 1px solid #dde4ef !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+/* All mi-cards share the palette */
+#rbfw_add_meta_box .rbfw-mi-card {
+    border: none !important;
+    border-bottom: 1px solid #dde4ef !important;
+    border-radius: 0 !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-card:last-child {
+    border-bottom: none !important;
+}
+
+/* Price Types card header */
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-header {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde4ef !important;
+    padding: 14px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-divider {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-title {
+    color: #374151 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: .04em !important;
+    text-transform: uppercase !important;
+}
+
+/* Price toggle tiles */
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle {
+    border: 1.5px solid #dde4ef !important;
+    border-radius: 8px !important;
+    padding: 12px 14px !important;
+    transition: border-color .15s, background .15s !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle:has(input:checked) {
+    background: #eef3ff !important;
+    border-color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle input[type="checkbox"] {
+    accent-color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle:has(input:checked) .rbfw-mi-pt-option-name {
+    color: #1a56db !important;
+}
+
+/* Items table card */
+#rbfw_add_meta_box .rbfw-mi-items-head {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde4ef !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    letter-spacing: .06em !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-item-rows .item-row {
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+/* Inputs */
+#rbfw_add_meta_box .rbfw_multiple_items input[type=text],
+#rbfw_add_meta_box .rbfw_multiple_items input[type=number],
+#rbfw_add_meta_box .rbfw_multiple_items input[type=time] {
+    background: #f8fafd !important;
+    border-color: #dde4ef !important;
+    border-radius: 6px !important;
+    min-height: 36px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items input:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 2px rgba(26,86,219,.09) !important;
+}
+
+/* Card footer */
+#rbfw_add_meta_box .rbfw-mi-card-footer {
+    border-top: 1px dashed #c3cfe0 !important;
+    padding: 14px 18px !important;
+}
+
+/* Add More button */
+#rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn {
+    background: #1a56db !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    min-height: 38px !important;
+    padding: 0 18px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn:hover {
+    background: #1648c0 !important;
+}
+
+/* Delete row btn */
+#rbfw_add_meta_box .rbfw_multiple_items .btn {
+    border-radius: 6px !important;
+    color: #8a9bbf !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .btn:hover {
+    background: #fff1f1 !important;
+    color: #ef4444 !important;
+}
+
+/* ── 5. Pricing Automation & Thresholds ──────────────────────────────────── */
+
+#rbfw_add_meta_box .rbfw-mi-card-heading {
+    border-bottom: 1px solid #f0f4fb !important;
+    padding: 16px 20px 14px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-card-heading span {
+    color: #374151 !important;
+    font-size: 12px !important;
+    letter-spacing: .06em !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-card-heading p {
+    font-size: 12px !important;
+    margin-top: 4px !important;
+}
+
+/* Threshold grid items */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .item {
+    background: #f4f8ff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    padding: 14px 16px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-threshold-icon {
+    background: #dbeafe !important;
+    border-radius: 8px !important;
+    color: #1a56db !important;
+}
+
+/* Info note */
+#rbfw_add_meta_box .rbfw-mi-info-note {
+    background: #f0f5ff !important;
+    border: 1px solid #c3d4f8 !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    margin: 0 20px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-info-note i {
+    color: #1a56db !important;
+}
+
+/* ── 6. Time Slots Configuration ─────────────────────────────────────────── */
+
+#rbfw_add_meta_box .rbfw-mi-time-settings-wrap {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    margin-top: 16px !important;
+    overflow: hidden !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde4ef !important;
+    padding: 12px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-title {
+    color: #374151 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-toggle-label {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle {
+    background-color: #c9d3e6 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle.active {
+    background-color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn {
+    background: #1a56db !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn:hover {
+    background: #1648c0 !important;
+}
+
+/* ── Tab Content Skeleton Loader ───────────────────────────────────────── */
+
+.mp_tab_details {
+    position: relative;
+}
+
+.rbfw-tab-loader {
+    background: #fff;
+    bottom: 0;
+    left: 0;
+    padding: 28px 24px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 200;
+}
+
+/* Base shimmer block */
+.rbfw-sk {
+    background: linear-gradient(
+        90deg,
+        #eef1f7 25%,
+        #dde4ef 50%,
+        #eef1f7 75%
+    );
+    background-size: 400% 100%;
+    animation: rbfw-shimmer 1.6s ease-in-out infinite;
+    border-radius: 6px;
+}
+
+@keyframes rbfw-shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Title bar */
+.rbfw-sk-title {
+    height: 20px;
+    margin-bottom: 10px;
+    width: 38%;
+}
+
+/* Subtitle bar */
+.rbfw-sk-sub {
+    height: 12px;
+    margin-bottom: 30px;
+    width: 58%;
+}
+
+/* Skeleton row (mimics a config row: icon + label + input) */
+.rbfw-sk-row {
+    align-items: center;
+    border-bottom: 1px solid #f4f6fb;
+    display: flex;
+    gap: 14px;
+    padding: 13px 0;
+}
+
+.rbfw-sk-icon {
+    border-radius: 50%;
+    flex: 0 0 32px;
+    height: 32px;
+    width: 32px;
+}
+
+.rbfw-sk-label {
+    flex: 1 1 auto;
+    height: 13px;
+}
+
+.rbfw-sk-input {
+    border-radius: 6px;
+    flex: 0 0 90px;
+    height: 32px;
+}
+
+/* ── Additional Extra Service – Category Section Redesign ──────────────── */
+
+/* Enable Additional Service toggle row */
+#rbfw_add_meta_box .additional-service-item-price > section:not(.bg-light) {
+    align-items: center !important;
+    border: 1px solid #dde4ef !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 16px 20px !important;
+}
+
+/* Category table: remove default table chrome, use row-gap */
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table {
+    background: transparent !important;
+    border-collapse: separate !important;
+    border-spacing: 0 12px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table tbody tr {
+    background: transparent !important;
+}
+
+/* Category main cell */
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table td:first-child {
+    border: none !important;
+    padding: 0 10px 0 0 !important;
+    vertical-align: top !important;
+}
+
+/* Category actions cell (sort + delete category) */
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table td:last-child {
+    border: none !important;
+    padding: 8px 0 0 !important;
+    vertical-align: top !important;
+    white-space: nowrap;
+    width: 72px;
+}
+
+/* Category card wrapper */
+#rbfw_add_meta_box .additional-service-item-price .services_category_wrapper {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+/* Category header (title section) */
+#rbfw_add_meta_box .additional-service-item-price section.service_category_title {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: none !important;
+    border-bottom: 1px solid #dde4ef !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    gap: 12px !important;
+    padding: 10px 16px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price section.service_category_title label {
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+    margin: 0 !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .additional-service-item-price section.service_category_title input[type="text"] {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1;
+    font-size: 13px !important;
+    height: 34px !important;
+    max-width: 280px !important;
+    padding: 0 10px !important;
+}
+
+/* Service item rows */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_wrap .item {
+    align-items: center !important;
+    background: #fff !important;
+    border-bottom: 1px solid #f0f4fb !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    padding: 10px 16px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_wrap .item:last-child {
+    border-bottom: none !important;
+}
+
+/* Icon picker button */
+#rbfw_add_meta_box .additional-service-item-price .rbfw_service_icon_btn.btn {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #6b7790 !important;
+    display: inline-flex !important;
+    font-size: 12px !important;
+    gap: 4px;
+    height: 32px !important;
+    padding: 0 10px !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .rbfw_service_icon_btn.btn:hover {
+    background: #1a56db !important;
+    border-color: #1a56db !important;
+    color: #fff !important;
+}
+
+/* Icon preview */
+#rbfw_add_meta_box .additional-service-item-price .rbfw_service_icon_preview {
+    color: #6b7790;
+    font-size: 18px;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Name input (grows to fill space) */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input[type="text"]:not(.medium) {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1 1 auto;
+    font-size: 13px !important;
+    height: 32px !important;
+    min-width: 80px;
+    padding: 0 10px !important;
+    width: auto !important;
+}
+
+/* Price / Stock inputs */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input.medium {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 0 0 80px;
+    font-size: 13px !important;
+    height: 32px !important;
+    padding: 0 8px !important;
+    width: 80px !important;
+}
+
+/* Hide native radio; show sw-button as pill chip */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input[type="radio"] {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap label {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .sw-button {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 20px !important;
+    color: #6b7790 !important;
+    cursor: pointer;
+    display: inline-flex !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    height: 28px !important;
+    padding: 0 12px !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input[type="radio"]:checked + .sw-button {
+    background: #dbeafe !important;
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+}
+
+/* Item actions (sort + remove) */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .item > div:last-child {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .button.sort {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    font-size: 12px !important;
+    height: 30px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 30px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .button.remove {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 12px !important;
+    height: 30px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 30px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .button.remove:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* "Add New Service / Feature" — dashed footer of each category card */
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-service,
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-feature {
+    align-items: center !important;
+    background: #f8fafd !important;
+    border: none !important;
+    border-top: 1px dashed #b3c2d6 !important;
+    border-radius: 0 !important;
+    color: #1a56db !important;
+    cursor: pointer !important;
+    display: flex !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-service:hover,
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-feature:hover {
+    background: #eef2fb !important;
+}
+
+/* Category-level sort + remove */
+#rbfw_add_meta_box .additional-service-item-price .button.tr_sort_handler {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    height: 32px !important;
+    justify-content: center !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+    width: 32px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .button.tr_remove {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 32px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .button.tr_remove:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* "Add New Service Category" — primary blue button */
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-service-category {
+    align-items: center !important;
+    background: #1a56db !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 42px !important;
+    justify-content: center !important;
+    margin-top: 8px !important;
+    max-width: none !important;
+    padding: 0 24px !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-service-category:hover {
+    background: #1648c0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FEE MANAGEMENT — Visual Redesign
+   (color, border, spacing only — zero functional changes)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Panel header ────────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper > section.bg-light {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+}
+
+/* ── Content container ───────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-container {
+    margin-top: 12px !important;
+}
+
+/* ── Table wrap — upper card, no bottom border (joins add-wrap) ──────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table-wrap {
+    border: 1px solid #dde4ef !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    box-shadow: none !important;
+    overflow-x: auto !important;
+}
+
+/* ── Table header ────────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table thead {
+    background: #f0f4fb !important;
+    border-bottom: 2px solid #dde4ef !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table th {
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase !important;
+}
+
+/* ── Table body rows ─────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table tbody tr {
+    background: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table tbody tr:hover {
+    background: #f8fafd !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table td {
+    border-bottom: 1px solid #f0f4fb !important;
+    padding: 10px 14px !important;
+    vertical-align: middle !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* ── Inputs and selects ──────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-input {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    padding: 0 8px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-input:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 2px rgba(26,86,219,.09) !important;
+    outline: none !important;
+}
+
+/* ── Priority badges (compact pill, same line as select) ─────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    padding: 2px 5px !important;
+    border-radius: 8px !important;
+    font-size: 8px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    margin-top: 0 !important;
+    align-self: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge.optional {
+    background: #dbeafe !important;
+    border: 1px solid #bfdbfe !important;
+    color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge.required {
+    background: #fee2e2 !important;
+    border: 1px solid #fca5a5 !important;
+    color: #991b1b !important;
+}
+
+/* ── Refundable / non-refundable badges ──────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-badge {
+    border-radius: 20px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .04em !important;
+    padding: 3px 10px !important;
+    text-transform: uppercase !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-badge.refundable {
+    background: #dcfce7 !important;
+    border: 1px solid #bbf7d0 !important;
+    color: #166534 !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-badge.non-refundable {
+    background: #fee2e2 !important;
+    border: 1px solid #fca5a5 !important;
+    color: #991b1b !important;
+}
+
+/* ── Toggle slider ───────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-slider {
+    background: #c9d3e6 !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-toggle input:checked + .wprently_fee-slider {
+    background: #1a56db !important;
+}
+
+/* ── Action buttons ──────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move {
+    align-items: center !important;
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: flex-end !important;
+}
+
+/* Duplicate button (always first-child) */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:first-child {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    display: inline-flex !important;
+    font-size: 14px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:first-child:hover {
+    background: #1a56db !important;
+    border-color: #1a56db !important;
+    color: #fff !important;
+}
+
+/* Delete button (.remove-row from PHP rows; :last-child covers JS-added rows) */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .remove-row,
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:last-child {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .remove-row:hover,
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:last-child:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* ── Add Fee footer (dashed divider + blue button) ───────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-wrap {
+    border: 1px solid #dde4ef !important;
+    border-top: 1px dashed #c3cfe0 !important;
+    border-radius: 0 0 8px 8px !important;
+    margin-top: 0 !important;
+    padding: 14px 16px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-btn {
+    background: #1a56db !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 40px !important;
+    padding: 0 24px !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-btn:hover {
+    background: #1648c0 !important;
+}
+
+/* ── Particular Date: full-width input + calendar icon ── */
+.rbfw-particular-date {
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rbfw-particular-date input.rbfw_particulars_date,
+.rbfw-particular-date input.date_type {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-right: 32px !important;
+}
+
+.rbfw-particular-date::after {
+    content: '';
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+/* ── End Particular Date ── */
+
+/* Template picker — left-aligned thumbnail cards */
+#rbfw_add_meta_box section.rbfw-template-picker {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: flex-start;
+    gap: 12px;
+}

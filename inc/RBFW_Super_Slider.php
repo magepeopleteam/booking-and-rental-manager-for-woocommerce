@@ -86,6 +86,16 @@
                         <div data-bg-image="<?php echo esc_html( $thumbnail ); ?>"></div>
                     </div>
 					<?php
+				} else {
+					?>
+                    <div class="superSlider">
+                        <div class="sliderAllItem">
+                            <div class="rbfw_no_img_placeholder">
+                                <span class="rbfw_no_img_placeholder_icon"><i class="fas fa-image"></i></span>
+                            </div>
+                        </div>
+                    </div>
+					<?php
 				}
 			}
 

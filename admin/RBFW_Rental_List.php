@@ -161,12 +161,14 @@ if (!class_exists('RBFW_Rental_List')) {
         private function get_items($statuses = array('publish', 'draft', 'pending', 'private')): array
         {
             $query = new WP_Query(array(
-                'post_type'      => 'rbfw_item',
-                'post_status'    => $statuses,
-                'posts_per_page' => -1,
-                'orderby'        => 'date',
-                'order'          => 'DESC',
-                'no_found_rows'  => true,
+                'post_type'              => 'rbfw_item',
+                'post_status'            => $statuses,
+                'posts_per_page'         => -1,
+                'orderby'                => 'date',
+                'order'                  => 'DESC',
+                'no_found_rows'          => true,
+                'update_post_meta_cache' => true,
+                'update_term_meta_cache' => true,
             ));
             $rent_types = RBFW_Function::rbfw_rent_types();
             $items = array();

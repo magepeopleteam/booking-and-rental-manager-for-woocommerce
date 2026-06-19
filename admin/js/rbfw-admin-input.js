@@ -1,6 +1,17 @@
 (function($) {
     "use strict";
 
+    function syncSdTimeConf() {
+        var itemType = jQuery('#rbfw_item_type').val();
+        var isTimely = jQuery('input[name=manage_inventory_as_timely]').val() === 'on';
+        var isSpecific = jQuery('input[name=enable_specific_duration]').val() === 'on';
+        if (itemType === 'bike_car_sd' && isTimely && isSpecific) {
+            jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide();
+        } else if (itemType === 'bike_car_sd' || itemType === 'appointment') {
+            jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show();
+        }
+    }
+
     $(document).on('click','input[name=manage_inventory_as_timely]',function(){
         
         var status = $(this).val();
@@ -23,6 +34,7 @@
             $('.rbfw_time_inventory_enable.duration_disable').show();
             $('.rbfw_time_inventory_enable.duration_enable').hide()
         }
+        syncSdTimeConf();
     });
 
     $(document).on('click','input[name=enable_specific_duration]',function(){
@@ -37,6 +49,7 @@
             $('.rbfw_time_inventory_enable.duration_disable').hide();
             $('.rbfw_time_inventory_enable.duration_enable').show();
         }
+        syncSdTimeConf();
     });
 
 
@@ -83,8 +96,7 @@
         }
     });
 
-
-
+    $(document).ready(syncSdTimeConf);
 
 }(jQuery));
 

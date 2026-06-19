@@ -207,18 +207,12 @@ function rbfw_page_create() {
             ]);
 
             if (!is_wp_error($page_id)) {
-                $created = true;
-            } elseif (defined('WP_DEBUG') && WP_DEBUG) {
-                // Only surface failures while debugging; never spam the production log.
-                error_log("RBFW: failed to create page '{$page['title']}': " . $page_id->get_error_message());
+                wp_cache_delete( $slug, 'posts' );
+                error_log("Page '{$page['title']}' created successfully with ID: $page_id");
+            } else {
+                error_log("Failed to create page '{$page['title']}': " . $page_id->get_error_message());
             }
         }
-    }
-
-    // Only clear the cache when we actually created a page — this runs on
-    // every admin_init, so flushing every time would needlessly cold the cache.
-    if ($created) {
-        wp_cache_flush();
     }
 }
 

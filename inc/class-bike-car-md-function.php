@@ -104,7 +104,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
-            $item_quantity = isset($_POST['item_quantity'])?absint($_POST['item_quantity']):'';
+            $item_quantity = isset($_POST['item_quantity']) ? absint($_POST['item_quantity']) : 0;
             $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
             $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):'';
 
@@ -113,18 +113,32 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
+            if ( ! is_array( $max_available_qty ) ) {
+                $max_available_qty = array( 'remaining_stock' => 0, 'extra_service_instock' => array(), 'service_stock' => array(), 'variant_instock' => array() );
+            }
 
             $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_enable_time_slot);
 
 
             //echo '<pre>';print_r($duration_price_info);echo '<pre>';exit;
 
-            $duration_price = $duration_price_info['duration_price'] * $item_quantity;
+            $duration_price_per_unit = $duration_price_info['duration_price'];
+            // Use at least 1 unit for display so the Duration row always shows
+            // a meaningful price after dates are picked (actual qty comes from the form).
+            $effective_quantity    = max( 1, $item_quantity );
+            $duration_price        = $duration_price_per_unit * $effective_quantity;
+            $duration_price_display = $duration_price;
 
             $total_days = $duration_price_info['total_days'];
             $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_management_price + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
+
+            $pricing_applied = isset( $duration_price_info['pricing_applied'] ) ? $duration_price_info['pricing_applied'] : 'No';
+
+            $discount_amount = 0;
+            $discount_number = 0;
+            $discount_type = '';
 
             if(isset($duration_price_info['duration'])){
                 $duration =  $duration_price_info['duration'];
@@ -139,19 +153,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         $actual_days = $actual_days + 1;
                     }
                     $hours = 0;
-                }
-
-
-                $discount_amount = 0;
-                $discount_number = 0;
-                $discount_type = '';
-                if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
-                    if(function_exists('rbfw_get_discount_array')){
-                        $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
-                        $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
-                        $discount_number = isset($discount_arr['discount_number'])?$discount_arr['discount_number']:0;
-                        $discount_type = isset($discount_arr['discount_type'])?$discount_arr['discount_type']:0;
-                    }
                 }
 
                 $duration = '';
@@ -178,11 +179,19 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             }
 
+            if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
+                if(function_exists('rbfw_get_discount_array')){
+                    $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
+                    $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
+                    $discount_number = isset($discount_arr['discount_number'])?$discount_arr['discount_number']:0;
+                    $discount_type = isset($discount_arr['discount_type'])?$discount_arr['discount_type']:0;
+                }
+            }
 
             echo wp_json_encode( array(
                 'duration_price' => $duration_price,
-                'duration_price_html' => wc_price($duration_price),
-                'duration_price_number' => $duration_price,
+                'duration_price_html' => wc_price($duration_price_display),
+                'duration_price_number' => $duration_price_display,
                 'rbfw_service_price' => $rbfw_service_price,
                 'rbfw_service_price_html' => wc_price($rbfw_service_price),
                 'rbfw_management_price' => $rbfw_management_price,

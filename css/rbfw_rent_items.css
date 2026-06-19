@@ -460,8 +460,11 @@ ul.rbfw_popup_fearure_lists li{
     height: 100vh;
     background: #0000009c;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     z-index: 9999;
+}
+.rbfw_popup_wrapper.rbfw_popup_active {
+    display: flex;
 }
 
 /* Styles for the popup */

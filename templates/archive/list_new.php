@@ -11,8 +11,9 @@
 	} else {
 		$gallery_image = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
 	}
-	$post_featured_img = ! empty( get_the_post_thumbnail_url( $post_id, 'full' ) ) ? get_the_post_thumbnail_url( $post_id,
-		'full' ) : $gallery_image;
+	$post_featured_img_url = get_the_post_thumbnail_url( $post_id, 'full' );
+	$rbfw_has_real_img     = ! empty( $post_featured_img_url ) || ! empty( $gallery_images );
+	$post_featured_img     = ! empty( $post_featured_img_url ) ? $post_featured_img_url : $gallery_image;
 	$post_link         = get_the_permalink();
 	$book_now_label    = __( 'Book Now', 'booking-and-rental-manager-for-woocommerce' );
 	$rbfw_offday_range = get_post_meta( get_the_id(), 'rbfw_offday_range', true ) ? get_post_meta( get_the_id(), 'rbfw_offday_range', true ) : 'no';
@@ -49,12 +50,15 @@
             $weekly_rate_label = __('Weekly rate', 'booking-and-rental-manager-for-woocommerce');
             $monthly_rate_label = __('Monthly rate', 'booking-and-rental-manager-for-woocommerce');
             $rbfw_enable_hourly_rate = get_post_meta($post_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_enable_hourly_rate', true) : 'no';
-            $rbfw_enable_daily_rate = get_post_meta(get_the_id(), 'rbfw_enable_daily_rate', true) ? get_post_meta(get_the_id(), 'rbfw_enable_daily_rate', true) : 'no';
+            $rbfw_enable_daily_rate = get_post_meta(get_the_id(), 'rbfw_enable_daily_rate', true) ?: 'yes';
             $rbfw_enable_weekly_rate = get_post_meta(get_the_id(), 'rbfw_enable_weekly_rate', true) ? get_post_meta(get_the_id(), 'rbfw_enable_weekly_rate', true) : 'no';
             $rbfw_enable_monthly_rate = get_post_meta(get_the_id(), 'rbfw_enable_monthly_rate', true) ? get_post_meta(get_the_id(), 'rbfw_enable_monthly_rate', true) : 'no';
 
-            $rbfw_enable_time_picker = get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) ? get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) : 'no';
+            $rbfw_enable_time_picker   = get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) ? get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) : 'no';
+            $rbfw_enable_daywise_price = get_post_meta($post_id, 'rbfw_enable_daywise_price', true) ?: 'no';
 
+            $price_sun = 0; $price_mon = 0; $price_tue = 0; $price_wed = 0;
+            $price_thu = 0; $price_fri = 0; $price_sat = 0;
 
             if ($rbfw_enable_monthly_rate == 'yes' && $pricing_display_for_listing=='monthly') {
                 $price_label = $monthly_rate_label;
@@ -94,22 +98,22 @@
                 $enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
                 $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
                 $current_day = gmdate('D');
-                if ($current_day == 'Sun' && $enabled_sun == 'yes') {
-                    $price = (float)$price_sun;
-                } elseif ($current_day == 'Mon' && $enabled_mon == 'yes') {
-                    $price = (float)$price_mon;
-                } elseif ($current_day == 'Tue' && $enabled_tue == 'yes') {
-                    $price = (float)$price_tue;
-                } elseif ($current_day == 'Wed' && $enabled_wed == 'yes') {
-                    $price = (float)$price_wed;
-                } elseif ($current_day == 'Thu' && $enabled_thu == 'yes') {
-                    $price = (float)$price_thu;
-                } elseif ($current_day == 'Fri' && $enabled_fri == 'yes') {
-                    $price = (float)$price_fri;
-                } elseif ($current_day == 'Sat' && $enabled_sat == 'yes') {
-                    $price = (float)$price_sat;
-                } else {
-                    $price = (float)$price;
+                if ($rbfw_enable_daywise_price == 'yes') {
+                    if ($current_day == 'Sun' && $enabled_sun == 'yes' && (float)$price_sun > 0) {
+                        $price = (float)$price_sun;
+                    } elseif ($current_day == 'Mon' && $enabled_mon == 'yes' && (float)$price_mon > 0) {
+                        $price = (float)$price_mon;
+                    } elseif ($current_day == 'Tue' && $enabled_tue == 'yes' && (float)$price_tue > 0) {
+                        $price = (float)$price_tue;
+                    } elseif ($current_day == 'Wed' && $enabled_wed == 'yes' && (float)$price_wed > 0) {
+                        $price = (float)$price_wed;
+                    } elseif ($current_day == 'Thu' && $enabled_thu == 'yes' && (float)$price_thu > 0) {
+                        $price = (float)$price_thu;
+                    } elseif ($current_day == 'Fri' && $enabled_fri == 'yes' && (float)$price_fri > 0) {
+                        $price = (float)$price_fri;
+                    } elseif ($current_day == 'Sat' && $enabled_sat == 'yes' && (float)$price_sat > 0) {
+                        $price = (float)$price_sat;
+                    }
                 }
                 $current_date = gmdate('Y-m-d');
                 $rbfw_sp_prices = get_post_meta($post_id, 'rbfw_seasonal_prices', true);
@@ -169,22 +173,22 @@
                     $enabled_fri = get_post_meta( $post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_fri_day', true ) : 'yes';
                     $enabled_sat = get_post_meta( $post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_sat_day', true ) : 'yes';
                     $current_day = gmdate( 'D' );
-                    if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
-                        $price = (float) $price_sun;
-                    } elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
-                        $price = (float) $price_mon;
-                    } elseif ( $current_day == 'Tue' && $enabled_tue == 'yes' ) {
-                        $price = (float) $price_tue;
-                    } elseif ( $current_day == 'Wed' && $enabled_wed == 'yes' ) {
-                        $price = (float) $price_wed;
-                    } elseif ( $current_day == 'Thu' && $enabled_thu == 'yes' ) {
-                        $price = (float) $price_thu;
-                    } elseif ( $current_day == 'Fri' && $enabled_fri == 'yes' ) {
-                        $price = (float) $price_fri;
-                    } elseif ( $current_day == 'Sat' && $enabled_sat == 'yes' ) {
-                        $price = (float) $price_sat;
-                    } else {
-                        $price = (float) $price;
+                    if ($rbfw_enable_daywise_price == 'yes') {
+                        if ( $current_day == 'Sun' && $enabled_sun == 'yes' && (float)$price_sun > 0 ) {
+                            $price = (float) $price_sun;
+                        } elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' && (float)$price_mon > 0 ) {
+                            $price = (float) $price_mon;
+                        } elseif ( $current_day == 'Tue' && $enabled_tue == 'yes' && (float)$price_tue > 0 ) {
+                            $price = (float) $price_tue;
+                        } elseif ( $current_day == 'Wed' && $enabled_wed == 'yes' && (float)$price_wed > 0 ) {
+                            $price = (float) $price_wed;
+                        } elseif ( $current_day == 'Thu' && $enabled_thu == 'yes' && (float)$price_thu > 0 ) {
+                            $price = (float) $price_thu;
+                        } elseif ( $current_day == 'Fri' && $enabled_fri == 'yes' && (float)$price_fri > 0 ) {
+                            $price = (float) $price_fri;
+                        } elseif ( $current_day == 'Sat' && $enabled_sat == 'yes' && (float)$price_sat > 0 ) {
+                            $price = (float) $price_sat;
+                        }
                     }
                     $current_date   = gmdate( 'Y-m-d' );
                     $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
@@ -284,7 +288,13 @@
             <div class="rbfw_rent_list_inner_wrapper">
                 <div class="<?php echo esc_attr( $image_holder ) ?>">
                     <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url( $post_link ); ?>">
-                        <img src="<?php echo esc_url( $post_featured_img ); ?>" alt="Catalog Image">
+                        <?php if ( $rbfw_has_real_img ) : ?>
+                            <img src="<?php echo esc_url( $post_featured_img ); ?>" alt="<?php echo esc_attr( $post_title ); ?>">
+                        <?php else : ?>
+                            <div class="rbfw_no_img_placeholder">
+                                <span class="rbfw_no_img_placeholder_icon"><i class="fas fa-image"></i></span>
+                            </div>
+                        <?php endif; ?>
                     </a>
                 </div>
                 <div class="<?php echo esc_attr( $rent_item_info ) ?>">
@@ -345,6 +355,34 @@
 								$n ++;
 							endforeach;
 						endif;
+						// Hidden popup data — all categories and features pre-built for instant popup display
+						if ( $rbfw_feature_category ) : ?>
+						<div id="rbfw_feature_popup_data-<?php echo esc_attr( $post_id ); ?>" style="display:none">
+							<div class="rbfw_show_all_cat_features rbfw_show_all_cat_title" id="rbfw_show_all_cat_features-<?php echo esc_attr( $post_id ); ?>">
+								<?php foreach ( $rbfw_feature_category as $fc_val ) :
+									$fc_title    = ! empty( $fc_val['cat_title'] ) ? $fc_val['cat_title'] : '';
+									$fc_features = ! empty( $fc_val['cat_features'] ) ? $fc_val['cat_features'] : [];
+									if ( ! empty( $fc_features ) ) :
+										if ( $fc_title ) : ?>
+											<h2 class="rbfw_popup_fearure_title rbfw_popup_fearure_title_color"><?php echo esc_html( $fc_title ); ?></h2>
+										<?php endif; ?>
+										<ul class="rbfw_popup_fearure_lists">
+											<?php foreach ( $fc_features as $fc_feat ) :
+												$fc_icon       = ! empty( $fc_feat['icon'] ) ? $fc_feat['icon'] : 'fas fa-check-circle';
+												$fc_feat_title = ! empty( $fc_feat['title'] ) ? $fc_feat['title'] : '';
+												if ( $fc_feat_title ) : ?>
+												<li class="bfw_rent_list_items">
+													<span class="bfw_rent_list_items_icon"><i class="<?php echo esc_attr( $fc_icon ); ?>"></i></span>
+													<?php echo esc_html( $fc_feat_title ); ?>
+												</li>
+												<?php endif;
+											endforeach; ?>
+										</ul>
+									<?php endif;
+								endforeach; ?>
+							</div>
+						</div>
+						<?php endif;
 						?>
                         <div class="rbfw_rent_list_btn_holder">
                             <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>

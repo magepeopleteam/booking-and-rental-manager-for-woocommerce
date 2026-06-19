@@ -1,4 +1,4 @@
-(function($) {
+﻿(function($) {
     $(document).ready(function() {
 
 
@@ -197,7 +197,7 @@
         rbfw_pick_date_from_flatpicker();
 
         $('#rbfw_popup_close_btn').on('click', function() {
-            $('#rbfw_popup_wrapper').hide();
+            $('#rbfw_popup_wrapper').removeClass('rbfw_popup_active').hide();
             $('#rbfw_popup_content').empty(); // Clear the content when closed
         });
         $('#rbfw_left_filter_popup_close_btn').on('click', function() {
@@ -209,8 +209,16 @@
             e.preventDefault();
             let clickedId = $(this).attr('id');
             let item_number = clickedId.split('-').pop();
-            $("#rbfw_popup_wrapper").show();
-            $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
+            let $localData = $('#rbfw_feature_popup_data-' + item_number);
+
+            $("#rbfw_popup_wrapper").addClass('rbfw_popup_active').show();
+
+            if ( $localData.length ) {
+                $("#rbfw_popup_content").html( $localData.html() );
+                return;
+            }
+
+            $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>');
 
             jQuery.ajax({
                 type: 'POST',
@@ -237,7 +245,7 @@
             let room_type = $(this).data('room_type');
             let active_tab = $(this).data('active_tab');
 
-            $("#rbfw_popup_wrapper").show();
+            $("#rbfw_popup_wrapper").addClass('rbfw_popup_active').show();
             $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
 
             jQuery.ajax({
@@ -506,10 +514,6 @@
 
 
     //========= faq accordion=============
-    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_header').first().addClass('active');
-    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_content_wrapper').first().addClass('active');
-    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_content_wrapper').first().slideDown();
-    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
     $('.rbfw_faq_header').click(function (e) {
         e.preventDefault();
         $(this).next('.rbfw_faq_content_wrapper').slideToggle();
@@ -616,11 +620,49 @@ jQuery(document).ready(function($){
 
         if(select.val() === ''){
             select.css('border', '1px solid red');
-            //e.preventDefault(); // submit বন্ধ করবে
+            //e.preventDefault(); // submit à¦¬à¦¨à§à¦§ à¦•à¦°à¦¬à§‡
         } else {
             select.css('border', '');
         }
     });
 });
 
+jQuery(document).ready(function($) {
+    $('.rbfw_muff_slider .rbfw_muff_hero_overlay').each(function() {
+        var $overlay = $(this);
+        var $sliderAllItem = $overlay.closest('.rbfw_muff_slider').find('.sliderAllItem').first();
+        if ($sliderAllItem.length) {
+            $sliderAllItem.append($overlay);
+        }
+    });
+});
 
+
+
+/* Rate Summary - collapse beyond 2 items, toggle more/less */
+jQuery(document).ready(function($) {
+    $('.rbfw_muff_registration_wrapper .rbfw-rate-summary').each(function() {
+        var $summary = $(this);
+        var $items = $summary.find('.rbfw-rate-summary-item');
+        if ($items.length <= 2) return;
+
+        $items.filter(':gt(1)').addClass('rbfw-rate-hidden');
+
+        var $wrap = $('<div class="rbfw-rate-load-more-wrap"><span class="rbfw-rate-load-more">Show more &#9660;</span></div>');
+        $summary.after($wrap);
+
+        var expanded = false;
+        $wrap.find('.rbfw-rate-load-more').on('click', function() {
+            expanded = !expanded;
+            if (expanded) {
+                $items.filter(':gt(1)').removeClass('rbfw-rate-hidden');
+                $(this).html('Show less &#9650;');
+                $wrap.addClass('rbfw-rate-load-more-open');
+            } else {
+                $items.filter(':gt(1)').addClass('rbfw-rate-hidden');
+                $(this).html('Show more &#9660;');
+                $wrap.removeClass('rbfw-rate-load-more-open');
+            }
+        });
+    });
+});

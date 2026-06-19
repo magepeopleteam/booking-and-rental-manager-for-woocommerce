@@ -72,6 +72,57 @@
 				<?php
 			}
 
+			public static function render_for_modern_editor( int $post_id ): void {
+				$selected_ids = get_post_meta( $post_id, 'rbfw_releted_rbfw', true );
+				$selected_ids = $selected_ids ? maybe_unserialize( $selected_ids ) : [];
+				$selected_ids = is_array( $selected_ids ) ? array_map( 'intval', $selected_ids ) : [];
+
+				$all_posts = get_posts( [
+					'post_type'      => 'rbfw_item',
+					'posts_per_page' => -1,
+					'post_status'    => [ 'publish', 'draft' ],
+					'orderby'        => 'title',
+					'order'          => 'ASC',
+					'fields'         => 'ids',
+				] );
+
+				$items_map = [];
+				foreach ( $all_posts as $id ) {
+					$items_map[ (int) $id ] = get_the_title( $id );
+				}
+				?>
+				<input type="hidden" name="rbfw_has_related_picker" value="1">
+				<div class="rbfw-me-tag-picker">
+					<div class="rbfw-me-tag-picker__field">
+						<?php foreach ( $selected_ids as $sid ) :
+							$sid = (int) $sid;
+							if ( ! isset( $items_map[ $sid ] ) ) continue; ?>
+							<div class="rbfw-me-tag" data-id="<?php echo esc_attr( $sid ); ?>">
+								<span><?php echo esc_html( $items_map[ $sid ] ); ?></span>
+								<button type="button" class="rbfw-me-tag__remove" aria-label="<?php esc_attr_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-no-alt"></span>
+								</button>
+								<input type="hidden" name="rbfw_releted_rbfw[]" value="<?php echo esc_attr( $sid ); ?>">
+							</div>
+						<?php endforeach; ?>
+						<input type="text" class="rbfw-me-tag-picker__search" placeholder="<?php esc_attr_e( 'Search items…', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off">
+					</div>
+					<div class="rbfw-me-tag-picker__dropdown rbfw-me-hidden">
+						<?php foreach ( $items_map as $id => $title ) : ?>
+							<div class="rbfw-me-tag-picker__option<?php echo in_array( $id, $selected_ids, true ) ? ' is-selected' : ''; ?>"
+								data-id="<?php echo esc_attr( $id ); ?>"
+								data-title="<?php echo esc_attr( $title ); ?>">
+								<?php echo esc_html( $title ); ?>
+							</div>
+						<?php endforeach; ?>
+						<div class="rbfw-me-tag-picker__no-results rbfw-me-hidden">
+							<?php esc_html_e( 'No items found.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
+
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;

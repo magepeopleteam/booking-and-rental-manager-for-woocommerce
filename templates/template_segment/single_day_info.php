@@ -51,7 +51,7 @@ if(isset($_POST['post_id'])){
 
 
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step" data-step="3">
-        <a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fas fa-circle-left"></i>
+        <a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fas fa-arrow-left"></i>
            <?php echo esc_html__( 'Back to Previous Step','booking-and-rental-manager-for-woocommerce' );  ?>
         </a>
 
@@ -106,7 +106,7 @@ if(isset($_POST['post_id'])){
                             $i = 1;
                             foreach ($rbfw_bike_car_sd_data as $value) {
                                 $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time);
-                                if($value['qty'] > 0){
+                                if( isset($value['qty']) && $value['qty'] > 0 ){
 
                                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                                         $rbfw_sp_prices = get_post_meta( $id, 'rbfw_bike_car_sd_data_sp', true );

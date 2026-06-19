@@ -1,9 +1,49 @@
 (function($) {
     "use strict";
-    jQuery(window).load(function() {
+    var rbfwPostId = (window.location.search.match(/[?&]post=(\d+)/) || [])[1] || '';
+    var rbfwTabStorageKey = 'rbfw_active_tab_' + rbfwPostId;
+
+    // Inject skeleton loader as soon as the DOM is ready
+    jQuery(document).ready(function() {
+        var $tabDetails = jQuery('.mp_tab_details');
+        if ($tabDetails.length) {
+            var skeletonRows = '';
+            for (var s = 0; s < 7; s++) {
+                var widths = [55, 75, 40, 85, 60, 70, 50];
+                skeletonRows += '<div class="rbfw-sk-row">'
+                    + '<div class="rbfw-sk rbfw-sk-icon"></div>'
+                    + '<div class="rbfw-sk rbfw-sk-label" style="width:' + widths[s] + '%"></div>'
+                    + '<div class="rbfw-sk rbfw-sk-input"></div>'
+                    + '</div>';
+            }
+            $tabDetails.prepend(
+                '<div class="rbfw-tab-loader">'
+                +   '<div class="rbfw-sk rbfw-sk-title"></div>'
+                +   '<div class="rbfw-sk rbfw-sk-sub"></div>'
+                +   skeletonRows
+                + '</div>'
+            );
+        }
+    });
+
+    jQuery(window).on('load', function() {
         jQuery('.mp_tab_menu').each(function() {
-            jQuery(this).find('ul li:first-child').trigger('click');
+            var savedTab = rbfwPostId ? localStorage.getItem(rbfwTabStorageKey) : null;
+            var $menu = jQuery(this);
+            var $target = savedTab ? $menu.find('ul li[data-target-tabs="' + savedTab + '"]') : jQuery();
+            // Strip active from all tabs so the !hasClass('active') guard never blocks restore
+            $menu.find('ul li').removeClass('active');
+            if ($target.length && $target.is(':visible')) {
+                $target.trigger('click');
+            } else if ($target.length) {
+                // target exists but is hidden (e.g. hidden by item-type logic) — fall back to first visible tab
+                var $firstVisible = $menu.find('ul li:visible').first();
+                ($firstVisible.length ? $firstVisible : $menu.find('ul li:first-child')).trigger('click');
+            } else {
+                $menu.find('ul li:first-child').trigger('click');
+            }
         });
+        jQuery('.rbfw-tab-loader').fadeOut(280, function() { jQuery(this).remove(); });
         if (jQuery('[name="mep_org_address"]').val() > 0) {
             jQuery('.mp_event_address').slideUp(250);
         }
@@ -16,6 +56,9 @@
             targetParent.children('.mp_tab_item[data-tab-item="' + tabsTarget + '"]').slideDown(250);
             jQuery(this).siblings('li.active').removeClass('active');
             jQuery(this).addClass('active');
+        }
+        if (rbfwPostId) {
+            localStorage.setItem(rbfwTabStorageKey, jQuery(this).attr('data-target-tabs'));
         }
         return false;
     });
@@ -164,7 +207,7 @@
                 jQuery('.mds_price_resort').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
-                jQuery('.additional-service-item-price').hide();
+                jQuery('.additional-service-item-price').show();
             }else{
 
                 jQuery('.sessional_price_multi_day').show();
@@ -189,28 +232,39 @@
         }
 
 
-        var status = $('.rbfw_es_price_config_wrapper').data('status');
+        var rbfwLegacyEsHasData = !!parseInt(jQuery('.rbfw_es_price_config_wrapper').data('has-legacy-data'), 10);
 
-        
-        if(status=='no' && current_item_type == 'bike_car_md'){
-            $('.rbfw_es_price_config_wrapper').hide();
-        }else{
-            $('.rbfw_es_price_config_wrapper').show();
+        function rbfwUpdateRentTypeDesc($card) {
+            if (!$card.length) return;
+            var type_desc = $card.data('rent-type-desc');
+            var name = $card.clone().find('.icon').remove().end().text().trim();
+            var $desc = jQuery('.rbfw-rent-type-desc');
+            if (!$desc.length) return;
+            $desc.html('<strong class="rbfw-rent-type-desc-name">' + name + '</strong>' + type_desc);
+
+            // Position the ::before arrow relative to the desc box's own left edge
+            var descOffset = $desc.offset();
+            var cardOffset = $card.offset();
+            if (descOffset && cardOffset) {
+                var cardCenter = cardOffset.left - descOffset.left + $card.outerWidth() / 2;
+                $desc[0].style.setProperty('--rbfw-arrow-left', cardCenter + 'px');
+            }
         }
 
-        var type_desc = jQuery('.rbfw-rent-type.selected').data('rent-type-desc');
-        jQuery('.rbfw-rent-type-desc').html(type_desc);
-        
+        rbfwUpdateRentTypeDesc(jQuery('.rbfw-rent-type.selected'));
+
         jQuery('.rbfw-rent-type').on('click', function() {
             var item_type = jQuery(this).data('rent-type');
-            var type_desc = jQuery(this).data('rent-type-desc');
             jQuery('#rbfw_item_type').val(item_type);
-            jQuery('.rbfw-rent-type-desc').html(type_desc);
-            jQuery('.rbfw-rent-type').removeClass('selected')
+            jQuery('.rbfw-rent-type').removeClass('selected');
             jQuery(this).addClass('selected');
+            rbfwUpdateRentTypeDesc(jQuery(this));
 
             if (item_type == 'bike_car_sd') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
+                if ( jQuery('[name="manage_inventory_as_timely"]').val() === 'on' && jQuery('[name="enable_specific_duration"]').val() === 'on' ) {
+                    jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide();
+                }
                 jQuery('.rbfw_general_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
@@ -242,13 +296,7 @@
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
 
-                if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
-                    jQuery('.rbfw_time_inventory').show();
-                    jQuery('.rbfw_without_time_inventory').hide();
-                }else{
-                    jQuery('.rbfw_time_inventory').hide();
-                    jQuery('.rbfw_without_time_inventory').show();
-                }
+                syncTimelyColumns();
                 jQuery('.rbfw_multiple_items').hide();
 
                 jQuery('table.wprently_fee-table th:nth-child(3)').hide();
@@ -267,7 +315,7 @@
                 jQuery('.rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').show();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
-                jQuery('.rbfw_es_price_config_wrapper').hide();
+                jQuery('.rbfw_es_price_config_wrapper').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
@@ -312,7 +360,7 @@
                 jQuery('.rbfw_resort_price_config_wrapper').show();
                 jQuery('.rbfw_location_switch').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
-                jQuery('.rbfw_es_price_config_wrapper').show();
+                jQuery('.rbfw_es_price_config_wrapper').hide();
                 jQuery('.rbfw_discount_price_config_wrapper').show();
                 jQuery('.rbfw_min_max_booking_day_row').show();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
@@ -328,7 +376,7 @@
 
                 jQuery('.rbfw_multiple_items').hide();
 
-                jQuery('.additional-service-item-price').hide();
+                jQuery('.additional-service-item-price').show();
 
                 jQuery('table.wprently_fee-table th:nth-child(3)').show();
                 jQuery('table.wprently_fee-table td:nth-child(3)').show();
@@ -367,15 +415,19 @@
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
 
-                if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
-                    jQuery('.rbfw_time_inventory').show();
-                    jQuery('.rbfw_without_time_inventory').hide();
-                }else{
-                    jQuery('.rbfw_time_inventory').hide();
-                    jQuery('.rbfw_without_time_inventory').show();
-                }
+                syncTimelyColumns();
 
                 jQuery('.rbfw_multiple_items').show();
+
+                ['hourly', 'daily', 'weekly', 'monthly'].forEach(function(type) {
+                    var cb = document.getElementById('enable' + type.charAt(0).toUpperCase() + type.slice(1));
+                    if (cb && !cb.checked) {
+                        cb.checked = true;
+                        if (typeof toggleGlobalPricing === 'function') {
+                            toggleGlobalPricing(type);
+                        }
+                    }
+                });
 
                 jQuery('table.wprently_fee-table th:nth-child(3)').hide();
                 jQuery('table.wprently_fee-table td:nth-child(3)').hide();
@@ -409,7 +461,7 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
-                jQuery('.rbfw_es_price_config_wrapper').show();
+                jQuery('.rbfw_es_price_config_wrapper').hide();
                 jQuery('.additional-service-item-price').show();
 
            /*     var status = $('.rbfw_es_price_config_wrapper').data('status');
@@ -823,8 +875,8 @@
 
 
         let timePickerEnabled = rbfw_enable_time_picker.val() === 'yes';
-        let hourlyPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
-        let halfDayPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
+        let hourlyPriceEnabled = rbfw_enable_hourly_rate.val() === 'yes';
+        let halfDayPriceEnabled = rbfw_enable_half_day_rate.val() === 'yes';
 
 
 
@@ -852,6 +904,8 @@
             dailyPriceToggle.toggleClass('active', dailyPriceEnabled);
             dailyPriceInput.prop('disabled', !dailyPriceEnabled);
             rbfw_enable_daily_rate.val(dailyPriceEnabled ? 'yes' : 'no');
+            jQuery('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
+            updateDaywisePricingVisibility();
         }
 
         function toggleMonthThreshold() {
@@ -880,9 +934,10 @@
             timePickerEnabled = !timePickerEnabled;
             timePickerToggle.toggleClass('active', timePickerEnabled);
             hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
-            hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
             timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
-            halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            jQuery('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
+            jQuery('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
+            updateDaywisePricingVisibility();
 
             const $toggle = jQuery(this);
             const $input = jQuery('.rbfw_enable_time_picker');
@@ -894,14 +949,92 @@
 
         })
 
+        // Hide "Enable Time Picker" row and force it off when enable_specific_duration is on
+        function syncTimePickerWithSpecificDuration() {
+            var specificDurationOn = jQuery('.enable_specific_duration').is(':checked');
+
+            if ( specificDurationOn && timePickerEnabled ) {
+                timePickerEnabled = false;
+                timePickerToggle.removeClass('active');
+                hourlyPriceItem.css('display', 'none');
+                timeSlotsSection.css('display', 'none');
+                jQuery('.rbfw_enable_time_picker').val('no');
+            }
+        }
+
+        syncTimePickerWithSpecificDuration();
+        jQuery('.enable_specific_duration').on('change', function () {
+            jQuery(this).val(this.checked ? 'on' : 'off');
+            syncTimePickerWithSpecificDuration();
+            syncTimelyColumns();
+        });
+
+        // Sync value attribute and all related UI when timely inventory is toggled
+        jQuery(document).on('change', '[name="manage_inventory_as_timely"]', function () {
+            var isTimely = this.checked;
+            jQuery(this).val(isTimely ? 'on' : 'off');
+            // Direct DOM traversal: stock-quantity section is the immediate next sibling
+            var $stockSection = jQuery(this).closest('section').next('.rbfw_item_stock_quantity');
+            if (isTimely) {
+                $stockSection.removeClass('rbfw_hide').css('display', 'block');
+                $stockSection.find('.rbfw_item_quantiry_duration').css('display', '');
+            } else {
+                $stockSection.addClass('rbfw_hide').css('display', 'none');
+                $stockSection.find('.rbfw_item_quantiry_duration').css('display', 'none');
+            }
+            syncTimelyColumns();
+        });
+
+        // Syncs all timely-dependent columns based on both toggle states:
+        // .duration_enable  — start/end time cols   (timely=on AND specific=on)
+        // .duration_disable — duration/d_type cols  (timely=on AND specific=off)
+        // .rbfw_item_stock_quantity section          (timely=on)
+        // .rbfw_without_time_inventory col           (timely=off)
+        function syncTimelyColumns() {
+            var isTimely   = jQuery('[name="manage_inventory_as_timely"]').is(':checked');
+            var isSpecific = jQuery('[name="enable_specific_duration"]').is(':checked');
+
+            var $stockSection = jQuery('.rbfw_time_inventory.rbfw_item_stock_quantity');
+            if (isTimely) {
+                $stockSection.removeClass('rbfw_hide').css('display', 'block');
+                jQuery('.rbfw_item_quantiry_duration').css('display', '');
+            } else {
+                $stockSection.addClass('rbfw_hide').css('display', 'none');
+                jQuery('.rbfw_item_quantiry_duration').css('display', 'none');
+            }
+
+            if (isTimely) { jQuery('.rbfw_without_time_inventory').hide(); }
+            else          { jQuery('.rbfw_without_time_inventory').show(); }
+
+            if (isTimely && isSpecific)  { jQuery('.rbfw_time_inventory.duration_enable').show(); }
+            else                          { jQuery('.rbfw_time_inventory.duration_enable').hide(); }
+
+            if (isTimely && !isSpecific) { jQuery('.rbfw_time_inventory.duration_disable').show(); }
+            else                          { jQuery('.rbfw_time_inventory.duration_disable').hide(); }
+
+            // Only toggle the single-day Enable Time Picker for bike_car_sd / appointment.
+            // For multiple_items the .rbfw_bike_car_sd_wrapper is already hidden by the rent-type switch.
+            var _currentType = jQuery('#rbfw_item_type').val();
+            if ( _currentType === 'bike_car_sd' || _currentType === 'appointment' ) {
+                if (isTimely && isSpecific)  { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
+                else                          { jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+            }
+        }
 
 
+        function updateDaywisePricingVisibility() {
+            const atLeastOneEnabled = dailyPriceEnabled || (timePickerEnabled && (hourlyPriceEnabled || halfDayPriceEnabled));
+            jQuery('#rbfw-daywise-config-wrapper').css('display', atLeastOneEnabled ? '' : 'none');
+        }
 
         function toggleHourlyPrice() {
             hourlyPriceEnabled = !hourlyPriceEnabled;
             hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
             hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
             rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
+            jQuery('.rbfw-daywise-hourly-col').css('display', (hourlyPriceEnabled && timePickerEnabled) ? '' : 'none');
+            hourThresholdItem.css('display', hourlyPriceEnabled ? 'flex' : 'none');
+            updateDaywisePricingVisibility();
         }
 
         function toggleHalfDayPrice() {
@@ -910,6 +1043,8 @@
             halfDayPriceInput.prop('disabled', !halfDayPriceEnabled);
             rbfw_enable_half_day_rate.val(halfDayPriceEnabled ? 'yes' : 'no');
             halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            jQuery('.rbfw-daywise-halfday-col').css('display', (halfDayPriceEnabled && timePickerEnabled) ? '' : 'none');
+            updateDaywisePricingVisibility();
         }
 
         // Input change handlers
@@ -1578,16 +1713,33 @@
 
         e.preventDefault(); // prevent form submission if inside form
 
-        const time = $(this).closest('.add-slot-form').find('.new-slot-time').val();
-        if (!time) return;
+        const $btn = $(this);
+        const rawTime = $btn.closest('.add-slot-form').find('.new-slot-time').val();
+        if (!rawTime) return;
 
-        const name_attr = $(this).data('name_attr');
-        const rent_type = $(this).data('rent_type');
+        // Convert HH:MM (24-hour from <input type="time">) to 12-hour AM/PM
+        const [_h, _m] = rawTime.split(':').map(Number);
+        const _period = _h >= 12 ? 'PM' : 'AM';
+        const _h12 = _h % 12 || 12;
+        const time = `${_h12}:${String(_m).padStart(2, '0')} ${_period}`;
 
-
+        const name_attr = $btn.data('name_attr');
+        const rent_type = $btn.data('rent_type');
 
         // Get a unique index (based on existing slots)
-        const $timeSlotsContainer = $(this).closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+        const $timeSlotsContainer = $btn.closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+
+        const isDuplicate = $timeSlotsContainer.find('.time-slot-time').filter(function () {
+            return $(this).text() === time;
+        }).length > 0;
+        if (isDuplicate) {
+            $btn.closest('.add-slot-form').find('.rbfw-slot-duplicate-warning').remove();
+            const $warning = $('<span class="rbfw-slot-duplicate-warning" style="display:block;color:#c0392b;font-size:12px;margin-top:4px;"><span class="dashicons dashicons-warning"></span> This time slot already exists.</span>');
+            $btn.after($warning);
+            setTimeout(function () { $warning.remove(); }, 3000);
+            return;
+        }
+
         const index = $timeSlotsContainer.children('.time-slot').length;
         const dataId = $('.rbfw_pdwt_insert').children('.time-slot').length; // Use your actual ID logic here
 
@@ -1602,7 +1754,7 @@
           <input type="hidden" name="${name_attr}[${index}][id]" value="${dataId}">
           <input type="hidden" name="${name_attr}[${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
@@ -1613,7 +1765,7 @@
           <input type="hidden" name="rdfw_available_time_mi[${index}][id]" value="${dataId}">
           <input type="hidden" name="rdfw_available_time_mi[${index}][time]" value="${time}">
           <input type="hidden" name="rdfw_available_time_mi[${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
@@ -1624,7 +1776,7 @@
           <input type="hidden" name="rdfw_available_time_sd[${index}][id]" value="${dataId}">
           <input type="hidden" name="rdfw_available_time_sd[${index}][time]" value="${time}">
           <input type="hidden" name="rdfw_available_time_sd[${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
@@ -1642,7 +1794,7 @@
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;
@@ -1653,7 +1805,7 @@
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;
@@ -1664,7 +1816,7 @@
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;
@@ -1713,15 +1865,7 @@
         $('.rbfw-single-template').removeClass('active')
         $(this).addClass('active');
 
-        $('.donut-template-sidebar-switch').slideUp();
-        $('.sidebar-testimonial-settigns').slideUp();
-        $('.donut-template-sidebar-content').slideUp();
         $('.additional-gallery').slideUp();
-        if(currentTemplate=='Donut'){
-            $('.donut-template-sidebar-switch').slideDown();
-            $('.sidebar-testimonial-settigns').slideDown();
-            $('.donut-template-sidebar-content').slideDown();
-        }
         if(currentTemplate=='Muffin'){
             $('.additional-gallery').slideDown();
         }

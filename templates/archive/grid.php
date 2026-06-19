@@ -5,7 +5,9 @@
 global $rbfw;
 $post_id            = get_the_id();
 $post_title         = get_the_title();
-$post_featured_img  = !empty(get_the_post_thumbnail_url( $post_id, 'full' )) ? get_the_post_thumbnail_url( $post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';
+$post_featured_img_url = get_the_post_thumbnail_url( $post_id, 'full' );
+$rbfw_has_featured_img = ! empty( $post_featured_img_url );
+$post_featured_img     = $rbfw_has_featured_img ? $post_featured_img_url : RBFW_PLUGIN_URL . '/assets/images/no_image.png';
 $post_link          = get_the_permalink();
 $book_now_label     = __('Book Now','booking-and-rental-manager-for-woocommerce');
 
@@ -167,7 +169,13 @@ $rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
         <div class="rbfw_rent_list_featured_img_wrap">
             <a href="<?php echo esc_url($post_link); ?>">
                 <div class="rbfw_rent_list_featured_img">
-                    <img src="<?php echo esc_url($post_featured_img); ?>" alt="<?php echo esc_attr($post_title); ?>">
+                    <?php if ( $rbfw_has_featured_img ) : ?>
+                        <img src="<?php echo esc_url($post_featured_img); ?>" alt="<?php echo esc_attr($post_title); ?>">
+                    <?php else : ?>
+                        <div class="rbfw_no_img_placeholder">
+                            <span class="rbfw_no_img_placeholder_icon"><i class="fas fa-image"></i></span>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </a>
         </div>

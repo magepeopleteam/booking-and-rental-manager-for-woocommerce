@@ -64,51 +64,44 @@
 	$review_system = rbfw_get_option( 'rbfw_review_system', 'rbfw_basic_review_settings', 'on' );
 ?>
 <div class="rbfw_muffin_template">
-    <div class="rbfw_muff_row_header">
-        <div class="rbfw_muff_header_col1">
-            <div class="rbfw_muff_title">
-                <h1><?php echo esc_html( $post_title ); ?></h1>
-            </div>
-            <div class="rbfw_muff_rating">
-				<?php if ( ! empty( $post_review_rating ) ): ?>
-                    <div class="rbfw_rent_list_average_rating">
-                        <?php echo wp_kses( $post_review_rating , rbfw_allowed_html() ); ?>
-                    </div>
-				<?php endif; ?>
-            </div>
-        </div>
-        <div class="rbfw_muff_header_col2">
-            <div class="rbfw_muff_pricing">
-                <div class="rbfw_muff_pricing_card">
-                    <div class="rbfw_muff_pricing_card_col2">
-						<?php if ( ! empty( $price ) ) : ?>
-                            <div class="rbfw_muff_pricing_card_price">
-                                    <span class="rbfw_muff_pricing_card_price_badge">
-                                        <?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?>
-                                    </span>
-                                <span> /
-                                    <?php
-                                    if($rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
-                                        echo esc_html($rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings'));
-                                    }else{
-                                        echo esc_html__('Prices start at','booking-and-rental-manager-for-woocommerce');
-                                    }
-                                    ?>
-                                </span>
-                            </div>
-						<?php endif; ?>
-                    </div>
+    <div class="rbfw_muff_row_slider">
+        <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
+			<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
+            <div class="rbfw_muff_hero_overlay">
+                <div class="rbfw_muff_hero_content">
+                    <h1 class="rbfw_muff_hero_title"><?php echo esc_html( $post_title ); ?></h1>
+					<?php if ( ! empty( $post_review_rating ) ): ?>
+                        <div class="rbfw_muff_hero_rating rbfw_rent_list_average_rating">
+                            <?php echo wp_kses( $post_review_rating, rbfw_allowed_html() ); ?>
+                        </div>
+					<?php endif; ?>
+					<?php if ( ! empty( $price ) ) : ?>
+                        <div class="rbfw_muff_hero_price">
+                            <span class="rbfw_muff_hero_price_amount"><?php echo wp_kses( wc_price( $price ), rbfw_allowed_html() ); ?></span>
+                            <span class="rbfw_muff_hero_price_label">/ <?php
+                                if($rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                    echo esc_html($rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings'));
+                                }else{
+                                    echo esc_html__('Prices start at','booking-and-rental-manager-for-woocommerce');
+                                }
+                            ?></span>
+                        </div>
+					<?php endif; ?>
+                    <a href="#rbfw_muff_booking_form" class="rbfw_muff_hero_book_btn">
+                        <i class="fas fa-calendar-check"></i>
+                        <?php esc_html_e( 'Book Now', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="rbfw_muff_row_slider rbfw_muff_row_slider_content">
-        <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
-				<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
-            </div>
-            <div class="rbfw_muff_registration_wrapper">
-				<?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
+    <div class="rbfw_muff_row_slider_content">
+        <div class="rbfw_muff_content_col1 mp_default_theme" id="rbfw_muff_booking_form">
+            <div class="mp_right_section">
+                <?php do_action('booking_form_header', $post_id); ?>
+                <div class="rbfw-booking-form">
+                    <?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
+                </div>
             </div>
         </div>
         <div class="rbfw_muff_content_col2">
@@ -121,30 +114,43 @@
 				<?php if ( $rbfw_feature_category ) : ?>
                     <ul class="muff_features_item">
 						<?php
-							$total_features    = 0;
+							$total_features = 0;
 							foreach ( $rbfw_feature_category as $value ) :
-								$cat_title = $value['cat_title'];
-								$cat_features  = ! empty( $value['cat_features'] ) ? $value['cat_features'] : [];
+								$cat_title    = $value['cat_title'];
+								$cat_features = ! empty( $value['cat_features'] ) ? $value['cat_features'] : [];
 								if ( ! empty( $cat_features ) ):
 									foreach ( $cat_features as $index => $features ):
-										$icon = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
+										$icon  = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
 										$title = $features['title'];
-										if ( $total_features < 10 ): ?>
-                                            <li title="<?php echo esc_attr( $title ); ?>">
+										?>
+                                            <li<?php if ( $total_features >= 9 ) echo ' class="rbfw-muff-feature-extra"'; ?> title="<?php echo esc_attr( $title ); ?>">
                                                 <i class="<?php echo esc_attr( $icon ); ?>"></i>
                                                 <span><?php echo esc_html( $title ); ?></span>
                                             </li>
-											<?php
-											$total_features ++;
-										endif;
+										<?php
+										$total_features++;
 									endforeach;
 								endif;
 							endforeach;
 						?>
                     </ul>
-					<?php if ( $total_features >= 10 ) : ?>
-                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>"><?php echo esc_html__( 'See more','booking-and-rental-manager-for-woocommerce' ) ?></div>
+					<?php if ( $total_features > 9 ) : ?>
+                        <div class="rbfw-muff-load-more" id="rbfw-muff-load-more-<?php echo esc_attr( $post_id ); ?>">
+                            <?php esc_html_e( 'Load more', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </div>
 					<?php endif; ?>
+				<?php endif; ?>
+				<?php if ( ! defined( 'RBFW_MUFF_LOAD_MORE_SCRIPT' ) ) : define( 'RBFW_MUFF_LOAD_MORE_SCRIPT', true ); ?>
+                <script>
+                (function($){
+                    $(document).on('click', '.rbfw-muff-load-more', function(){
+                        $(this).closest('.rbfw_muff_highlighted_features')
+                               .find('.rbfw-muff-feature-extra')
+                               .fadeIn(300);
+                        $(this).fadeOut(200);
+                    });
+                })(jQuery);
+                </script>
 				<?php endif; ?>
             </div>
             <!-- popup content will show here -->
@@ -215,6 +221,20 @@
                     </div><!--end of tab three-->
 				<?php } ?>
             </div>
+			<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
+                <div class="rbfw_muff_row_related_item">
+                    <h3 class="rbfw_muff_heading">
+                        <?php
+                        if($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                            echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings'));
+                        }else{
+                            echo esc_html__('You May Also Like','booking-and-rental-manager-for-woocommerce');
+                        }
+                        ?>
+                    </h3>
+					<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
+                </div>
+			<?php endif; ?>
         </div>
     </div>
 
@@ -338,19 +358,5 @@
 	<?php endif; ?>
 
 
-	<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
-        <div class="rbfw_muff_row_related_item">
-            <h3 class="rbfw_muff_heading">
-                <?php
-                if($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
-                    echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings'));
-                }else{
-                    echo esc_html__('You May Also Like','booking-and-rental-manager-for-woocommerce');
-                }
-                ?>
-            </h3>
-			<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
-        </div>
-	<?php endif; ?>
 </div>
 

@@ -68,14 +68,14 @@ if( ! class_exists('RBFW_Custom_Post')){
                 $cpt_label        = $rbfw->get_name();
                 $cpt_slug         = sanitize_title( $rbfw->get_slug() );
                 $cpt_icon         = $rbfw->get_icon();
-                $gutenburg_switch = $rbfw->get_option_trans( 'rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'on' );
+                $gutenburg_switch = $rbfw->get_option_trans( 'rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'off' );
             } else {
                 $gen_settings     = get_option( 'rbfw_basic_gen_settings' );
                 $gen_settings     = is_array( $gen_settings ) ? $gen_settings : array();
                 $cpt_label        = ! empty( $gen_settings['rbfw_rent_label'] ) ? $gen_settings['rbfw_rent_label'] : 'Rent Item';
                 $cpt_slug         = sanitize_title( ! empty( $gen_settings['rbfw_rent_slug'] ) ? $gen_settings['rbfw_rent_slug'] : 'rent' );
                 $cpt_icon         = ! empty( $gen_settings['rbfw_rent_icon'] ) ? $gen_settings['rbfw_rent_icon'] : 'dashicons-clipboard';
-                $gutenburg_switch = isset( $gen_settings['rbfw_gutenburg_switch'] ) ? $gen_settings['rbfw_gutenburg_switch'] : 'on';
+                $gutenburg_switch = isset( $gen_settings['rbfw_gutenburg_switch'] ) ? $gen_settings['rbfw_gutenburg_switch'] : 'off';
             }
             if ( empty( $cpt_slug ) ) {
                 $cpt_slug = 'rent';

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 	/*
    * @Author 		raselsha@gmail.com
    */
@@ -118,8 +118,8 @@
 																		if ( ! empty( $value['cat_features'] ) ) {
 																			$c = 0;
 																			foreach ( $value['cat_features'] as $feature ) {
-																				$icon  = $feature['icon'];
-																				$title = $feature['title'];
+																				$icon  = $feature['icon'] ?? '';
+																				$title = $feature['title'] ?? '';
 																				?>
                                                                                 <div class="item">
                                                                                     <a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="<?php echo esc_attr( $c ); ?>"><i class="fas fa-circle-plus"></i> <?php _e('Icon','booking-and-rental-manager-for-woocommerce'); ?></a>

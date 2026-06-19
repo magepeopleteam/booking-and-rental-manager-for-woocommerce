@@ -21,6 +21,11 @@
 				// rbfw_delete_faq_data
 				add_action( 'wp_ajax_rbfw_faq_delete_item', [ $this, 'faq_delete_item' ] );
 
+				// Modern editor AJAX endpoints (return modern-styled HTML)
+				add_action( 'wp_ajax_rbfw_me_faq_save',   [ $this, 'me_faq_save' ] );
+				add_action( 'wp_ajax_rbfw_me_faq_update', [ $this, 'me_faq_update' ] );
+				add_action( 'wp_ajax_rbfw_me_faq_delete', [ $this, 'me_faq_delete' ] );
+
 				add_action( 'save_post', array( $this, 'settings_save' ), 99 );
 			}
 
@@ -354,6 +359,194 @@
 				wp_die(); // safer alternative to die
 			}
 			
+			/* ── Modern Editor: item renderer ─────────────────────────── */
+
+			public static function show_faq_data_modern( int $post_id ): void {
+				$items = get_post_meta( $post_id, 'mep_event_faq', true );
+				if ( empty( $items ) || ! is_array( $items ) ) return;
+				foreach ( $items as $key => $item ) :
+					$title   = esc_html( $item['rbfw_faq_title']   ?? '' );
+					$content = wp_kses_post( $item['rbfw_faq_content'] ?? '' );
+					?>
+					<div class="rbfw-me-faq-item" data-id="<?php echo esc_attr( $key ); ?>">
+						<div class="rbfw-me-faq-item__header">
+							<span class="rbfw-me-faq-item__title"><?php echo $title; ?></span>
+							<div class="rbfw-me-faq-item__actions">
+								<button type="button" class="rbfw-me-faq-btn rbfw-me-faq-view" title="<?php esc_attr_e( 'View', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-visibility"></span>
+								</button>
+								<button type="button" class="rbfw-me-faq-btn rbfw-me-faq-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-edit"></span>
+								</button>
+								<button type="button" class="rbfw-me-faq-btn rbfw-me-faq-btn--danger rbfw-me-faq-delete" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-trash"></span>
+								</button>
+							</div>
+						</div>
+						<div class="rbfw-me-faq-item__content rbfw-me-hidden"><?php echo $content; ?></div>
+					</div>
+					<?php
+				endforeach;
+			}
+
+			/* ── Modern Editor: render card ────────────────────────────── */
+
+			public static function render_for_modern_editor( int $post_id ): void {
+				$enable_faq = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ?: 'yes';
+				$is_enabled = $enable_faq === 'yes';
+				?>
+
+				<!-- Enable FAQ toggle -->
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'FAQ Settings Enable', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<p><?php esc_html_e( 'FAQ Settings Enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<label class="rbfw-me-toggle">
+						<input type="checkbox" name="rbfw_enable_faq_content" value="yes" <?php checked( $is_enabled ); ?> class="rbfw-me-toggle__input rbfw-me-toggle--reveal" data-reveals=".rbfw-me-faq-section" />
+						<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+					</label>
+				</div>
+
+				<!-- FAQ Items list + Add button -->
+				<div class="rbfw-me-faq-section <?php echo $is_enabled ? '' : 'rbfw-me-hidden'; ?>">
+					<input type="hidden" class="rbfw-me-faq-post-id" value="<?php echo esc_attr( $post_id ); ?>">
+					<div class="rbfw-me-faq-items">
+						<?php static::show_faq_data_modern( $post_id ); ?>
+					</div>
+					<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-faq-add-btn" style="margin-top:12px;">
+						<?php esc_html_e( 'Add FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+				</div>
+
+				<!-- Modal (always in DOM so TinyMCE can initialise) -->
+				<div class="rbfw-me-faq-modal" id="rbfw-me-faq-modal">
+					<div class="rbfw-me-faq-modal__backdrop"></div>
+					<div class="rbfw-me-faq-modal__box">
+						<div class="rbfw-me-faq-modal__head">
+							<h3 id="rbfw-me-faq-modal-title"><?php esc_html_e( 'Add F.A.Q.', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+							<button type="button" class="rbfw-me-faq-modal__close">
+								<span class="dashicons dashicons-no-alt"></span>
+							</button>
+						</div>
+						<div class="rbfw-me-faq-modal__body">
+							<input type="hidden" id="rbfw-me-faq-item-id" value="">
+							<div class="rbfw-me-field">
+								<label class="rbfw-me-field__label"><?php esc_html_e( 'Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<input type="text" id="rbfw-me-faq-title" class="rbfw-me-input" placeholder="<?php esc_attr_e( 'FAQ title…', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							</div>
+							<div class="rbfw-me-field">
+								<label class="rbfw-me-field__label"><?php esc_html_e( 'Content', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<?php
+								wp_editor( '', 'rbfw_me_faq_content', [
+									'textarea_name' => 'rbfw_me_faq_content',
+									'media_buttons' => false,
+									'textarea_rows' => 8,
+									'quicktags'     => true,
+									'teeny'         => true,
+								] );
+								?>
+							</div>
+							<div id="rbfw-me-faq-msg"></div>
+						</div>
+						<div class="rbfw-me-faq-modal__foot">
+							<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-faq-modal__close"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							<button type="button" class="rbfw-me-btn rbfw-me-btn--primary" id="rbfw-me-faq-save"><?php esc_html_e( 'Save', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							<button type="button" class="rbfw-me-btn rbfw-me-btn--primary rbfw-me-hidden" id="rbfw-me-faq-update"><?php esc_html_e( 'Update', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+						</div>
+					</div>
+				</div>
+				<?php
+			}
+
+			/* ── Modern Editor AJAX handlers ───────────────────────────── */
+
+			public function me_faq_save(): void {
+				if ( ! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['rbfw_faq_title'] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				check_ajax_referer( 'rbfw_faq_data_save_action', 'nonce' );
+
+				$post_id = intval( $_POST['rbfw_faq_postID'] );
+				if ( ! current_user_can( 'edit_post', $post_id ) || get_post_type( $post_id ) !== 'rbfw_item' ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+
+				$rbfw_faq   = get_post_meta( $post_id, 'mep_event_faq', true );
+				$rbfw_faq   = is_array( $rbfw_faq ) ? $rbfw_faq : [];
+				$rbfw_faq[] = [
+					'rbfw_faq_title'   => sanitize_text_field( wp_unslash( $_POST['rbfw_faq_title'] ) ),
+					'rbfw_faq_content' => wp_kses_post( wp_unslash( $_POST['rbfw_faq_content'] ?? '' ) ),
+				];
+				update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
+
+				ob_start();
+				static::show_faq_data_modern( $post_id );
+				$html = ob_get_clean();
+
+				wp_send_json_success( [ 'message' => __( 'Saved.', 'booking-and-rental-manager-for-woocommerce' ), 'html' => $html ] );
+			}
+
+			public function me_faq_update(): void {
+				if ( ! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['rbfw_faq_itemID'], $_POST['rbfw_faq_title'] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				check_ajax_referer( 'rbfw_faq_data_update_action', 'nonce' );
+
+				$post_id    = intval( $_POST['rbfw_faq_postID'] );
+				$item_id    = intval( $_POST['rbfw_faq_itemID'] );
+				if ( ! current_user_can( 'edit_post', $post_id ) || get_post_type( $post_id ) !== 'rbfw_item' ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+
+				$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
+				$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
+				if ( ! isset( $rbfw_faq[ $item_id ] ) ) {
+					wp_send_json_error( [ 'message' => __( 'FAQ item not found.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+
+				$rbfw_faq[ $item_id ] = [
+					'rbfw_faq_title'   => sanitize_text_field( wp_unslash( $_POST['rbfw_faq_title'] ) ),
+					'rbfw_faq_content' => wp_kses_post( wp_unslash( $_POST['rbfw_faq_content'] ?? '' ) ),
+				];
+				update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
+
+				ob_start();
+				static::show_faq_data_modern( $post_id );
+				$html = ob_get_clean();
+
+				wp_send_json_success( [ 'message' => __( 'Updated.', 'booking-and-rental-manager-for-woocommerce' ), 'html' => $html ] );
+			}
+
+			public function me_faq_delete(): void {
+				if ( ! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['itemId'] ) ) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+				check_ajax_referer( 'rbfw_faq_delete_item_action', 'nonce' );
+
+				$post_id = intval( $_POST['rbfw_faq_postID'] );
+				$item_id = intval( $_POST['itemId'] );
+				if ( ! current_user_can( 'edit_post', $post_id ) || get_post_type( $post_id ) !== 'rbfw_item' ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+
+				$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
+				$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
+				if ( ! isset( $rbfw_faq[ $item_id ] ) ) {
+					wp_send_json_error( [ 'message' => __( 'FAQ item not found.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+				}
+
+				unset( $rbfw_faq[ $item_id ] );
+				$rbfw_faq = array_values( $rbfw_faq );
+				update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
+
+				ob_start();
+				static::show_faq_data_modern( $post_id );
+				$html = ob_get_clean();
+
+				wp_send_json_success( [ 'message' => __( 'Deleted.', 'booking-and-rental-manager-for-woocommerce' ), 'html' => $html ] );
+			}
+
 		}
 		new RBFW_Faq_Settings();
 	}

@@ -116,16 +116,15 @@
                     ?>
 
                         <div class="rbfw-tent-types">
-                            <div class="rbfw-rent-type-desc"></div>
                             <input type="hidden" name="rbfw_item_type" id="rbfw_item_type" value="<?php echo esc_attr($rbfw_item_type); ?>">
                             <?php foreach ( $item_type as $key => $value ): ?>
-                                <div class="rbfw-rent-type <?php echo esc_attr( $key == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $key ); ?>" data-rent-type-desc="<?php echo esc_html( $value['desc'] ); ?>"> 
+                                <div class="rbfw-rent-type <?php echo esc_attr( $key == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $key ); ?>" data-rent-type-desc="<?php echo esc_html( $value['desc'] ); ?>">
                                     <div class="icon"><i class="<?php echo esc_html( $value['icon'] ); ?>"></i></div>
-                                    <?php echo esc_html( $value['name'] ); ?> 
+                                    <?php echo esc_html( $value['name'] ); ?>
                                 </div>
-                                
+
                             <?php endforeach; ?>
-                            
+                            <div class="rbfw-rent-type-desc"></div>
                         </div>
                     </div>
                 </section>
@@ -182,7 +181,7 @@
                                     <thead>
                                     <tr>
                                         <th>
-											<?php esc_html_e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											<?php esc_html_e( 'Rental option name', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </th>
                                         <th>
 											<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -218,7 +217,7 @@
 											foreach ( $rbfw_bike_car_sd_data as $key => $value ):
 												?>
                                                 <tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo esc_attr( $i ); ?>">
-                                                    <td><input type="text" class="rbfw_type_title" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input type="text" class="rbfw_type_title" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td class="rbfw_without_time_inventory <?php echo esc_attr( $manage_inventory_as_timely == 'on' ? 'rbfw_hide' : '' ); ?>">
@@ -257,7 +256,7 @@
 											?>
                                             <tr class="rbfw_bike_car_sd_price_table_row" data-key="0">
                                                 <td>
-                                                    <input type="text" class="rbfw_type_title" name="rbfw_bike_car_sd_data[0][rent_type]" placeholder="<?php esc_attr_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input type="text" class="rbfw_type_title" name="rbfw_bike_car_sd_data[0][rent_type]" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td>
                                                     <input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
@@ -321,6 +320,7 @@
             public function multiple_items( $post_id ) {
                 $rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
                 $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'yes';
+                $enable_specific_duration   = get_post_meta( $post_id, 'enable_specific_duration', true ) ?: 'off';
                 $rbfw_mi_hourly_to_half_day_pivot  = get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) : '';
                 $rbfw_mi_half_day_to_daily_pivot   = get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) : '';
                 $rbfw_mi_daily_to_weekly_pivot     = get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) : '';
@@ -331,11 +331,12 @@
 
                 $checked = (get_the_title($post_id)=='Auto Draft')?'checked':'';
                 $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
+                $pricing_types_initialized = isset( $pricing_types['_initialized'] );
                 $enabled_price_types = [
-                    'hourly'  => ( isset( $pricing_types['hourly'] ) && $pricing_types['hourly'] == 'on' ) || $checked_item,
-                    'daily'   => ( isset( $pricing_types['daily'] ) && $pricing_types['daily'] == 'on' ) || $checked_item,
-                    'weekly'  => isset( $pricing_types['weekly'] ) && $pricing_types['weekly'] == 'on',
-                    'monthly' => isset( $pricing_types['monthly'] ) && $pricing_types['monthly'] == 'on',
+                    'hourly'  => !$pricing_types_initialized || ( isset( $pricing_types['hourly'] ) && $pricing_types['hourly'] == 'on' ),
+                    'daily'   => !$pricing_types_initialized || ( isset( $pricing_types['daily'] ) && $pricing_types['daily'] == 'on' ),
+                    'weekly'  => !$pricing_types_initialized || ( isset( $pricing_types['weekly'] ) && $pricing_types['weekly'] == 'on' ),
+                    'monthly' => !$pricing_types_initialized || ( isset( $pricing_types['monthly'] ) && $pricing_types['monthly'] == 'on' ),
                 ];
                 $multiple_items_rows = ! empty( $multiple_items_info ) ? $multiple_items_info : [
                     [
@@ -353,28 +354,41 @@
                 <section class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
                     <div class="rbfw-mi-pricing-shell">
                         <div class="rbfw-mi-card rbfw-mi-price-types-card">
-                            <div class="rbfw-mi-card-heading">
-                                <span><?php esc_html_e( 'Enable Price Types', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <div class="rbfw-mi-pt-header">
+                                <h3 class="rbfw-mi-pt-title"><?php esc_html_e( 'Enable Price Types', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
                             </div>
+                            <div class="rbfw-mi-pt-divider"></div>
                             <div class="pricing-toggles">
                                 <label class="price-toggle" for="enableHourly">
                                     <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php checked( $enabled_price_types['hourly'] ); ?> onchange="toggleGlobalPricing('hourly')">
-                                    <span><?php esc_html_e( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( 'Min. 1 Hour', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
 
                                 <label class="price-toggle" for="enableDaily">
                                     <input type="checkbox" name="pricing_types[daily]" id="enableDaily" <?php checked( $enabled_price_types['daily'] ); ?> onchange="toggleGlobalPricing('daily')">
-                                    <span><?php esc_html_e( 'Daily', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Daily', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( '24 Hours', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
 
                                 <label class="price-toggle" for="enableWeekly">
                                     <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php checked( $enabled_price_types['weekly'] ); ?> onchange="toggleGlobalPricing('weekly')">
-                                    <span><?php esc_html_e( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( '7+ Days', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
 
                                 <label class="price-toggle" for="enableMonthly">
                                     <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php checked( $enabled_price_types['monthly'] ); ?> onchange="toggleGlobalPricing('monthly')">
-                                    <span><?php esc_html_e( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( '30+ Days', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -440,14 +454,14 @@
                             </div>
                         </div>
 
-                        <div class="rbfw-mi-card rbfw_multi_day_price_conf">
+                        <div class="rbfw-mi-card rbfw_multi_day_price_conf" id="rbfw-pricing-thresholds-card" style="display: <?php echo esc_attr( ( ( $enabled_price_types['hourly'] && $enabled_price_types['daily'] ) || ( $enabled_price_types['daily'] && $enabled_price_types['weekly'] ) || ( $enabled_price_types['weekly'] && $enabled_price_types['monthly'] ) ) ? 'block' : 'none' ); ?>;">
                             <div class="rbfw-mi-card-heading">
                                 <span><?php esc_html_e( 'Pricing Automation & Thresholds', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 <p><?php esc_html_e( 'Define the triggers for when a rental duration automatically upgrades to the next price tier.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                             </div>
 
                             <div class="rbfw-mi-threshold-grid">
-                                <div class="item">
+                                <div class="item" id="rbfw-pivot-hourly-daily" style="display: <?php echo esc_attr( ( $enabled_price_types['hourly'] && $enabled_price_types['daily'] ) ? 'flex' : 'none' ); ?>;">
                                     <div class="rbfw-mi-threshold-icon"><i class="far fa-clock"></i></div>
                                     <div class="item-left">
                                         <div class="label"><?php esc_html_e( 'Hourly to Day Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -459,7 +473,7 @@
                                     </div>
                                 </div>
 
-                                <div class="item">
+                                <div class="item" id="rbfw-pivot-daily-weekly" style="display: <?php echo esc_attr( ( $enabled_price_types['daily'] && $enabled_price_types['weekly'] ) ? 'flex' : 'none' ); ?>;">
                                     <div class="rbfw-mi-threshold-icon"><i class="far fa-calendar-alt"></i></div>
                                     <div class="item-left">
                                         <div class="label"><?php esc_html_e( 'Daily to Weekly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -471,7 +485,7 @@
                                     </div>
                                 </div>
 
-                                <div class="item">
+                                <div class="item" id="rbfw-pivot-weekly-monthly" style="display: <?php echo esc_attr( ( $enabled_price_types['weekly'] && $enabled_price_types['monthly'] ) ? 'flex' : 'none' ); ?>;">
                                     <div class="rbfw-mi-threshold-icon"><i class="far fa-calendar-check"></i></div>
                                     <div class="item-left">
                                         <div class="label"><?php esc_html_e( 'Weekly to Monthly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -491,13 +505,11 @@
 
                         </div>
 
-                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf">
-                            <div class="rbfw-mi-time-picker-row item">
-                                <div class="item-left">
-                                    <div class="label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                    <div class="description"><?php esc_html_e( 'Toggle to enable time selection for more precise rental periods.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                </div>
-                                <div class="item-right">
+                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf" style="display:block;">
+                            <div class="rbfw-mi-ts-header">
+                                <span class="rbfw-mi-ts-title"><?php esc_html_e( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <div class="rbfw-mi-ts-toggle-group">
+                                    <span class="rbfw-mi-ts-toggle-label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                     <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
                                         <div class="toggle-knob"></div>
                                     </div>
@@ -505,7 +517,7 @@
                                 </div>
                             </div>
 
-                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','mi','mi' ); ?>
+                            <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker, 'mi', 'mi' ); ?>
                         </div>
                     </div>
                     <script>
@@ -534,6 +546,24 @@
                             });
 
                             updateRowGridLayout();
+                            updatePivotVisibility();
+                        }
+
+                        function updatePivotVisibility() {
+                            const pivotHourlyDaily   = document.getElementById('rbfw-pivot-hourly-daily');
+                            const pivotDailyWeekly   = document.getElementById('rbfw-pivot-daily-weekly');
+                            const pivotWeeklyMonthly = document.getElementById('rbfw-pivot-weekly-monthly');
+                            const thresholdsCard     = document.getElementById('rbfw-pricing-thresholds-card');
+
+                            const showHourlyDaily   = !!(enabledPriceTypes.hourly  && enabledPriceTypes.daily);
+                            const showDailyWeekly   = !!(enabledPriceTypes.daily   && enabledPriceTypes.weekly);
+                            const showWeeklyMonthly = !!(enabledPriceTypes.weekly  && enabledPriceTypes.monthly);
+                            const showCard          = showHourlyDaily || showDailyWeekly || showWeeklyMonthly;
+
+                            if (pivotHourlyDaily)   pivotHourlyDaily.style.display   = showHourlyDaily   ? 'flex' : 'none';
+                            if (pivotDailyWeekly)   pivotDailyWeekly.style.display   = showDailyWeekly   ? 'flex' : 'none';
+                            if (pivotWeeklyMonthly) pivotWeeklyMonthly.style.display = showWeeklyMonthly ? 'flex' : 'none';
+                            if (thresholdsCard)     thresholdsCard.style.display     = showCard          ? 'block' : 'none';
                         }
 
                         function updateRowGridLayout() {
@@ -634,7 +664,7 @@
                                 <table class='form-table rbfw_bike_car_sd_price_table'>
                                     <thead>
                                     <tr>
-                                        <th><?php esc_html_e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php esc_html_e( 'Rental option name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
@@ -652,7 +682,7 @@
 											foreach ( $rbfw_bike_car_sd_data as $key => $value ):
 												?>
                                                 <tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo esc_attr( $i ); ?>">
-                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php echo ( $rbfw_item_type == 'appointment' )?'style="display:none"':''; ?>>
@@ -671,7 +701,7 @@
 										else:
 											?>
                                             <tr class="rbfw_bike_car_sd_price_table_row" data-key="0">
-                                                <td><input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" value="" placeholder="<?php esc_attr_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                <td><input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" value="" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td><input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" value="" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td><input type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" value="" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
@@ -711,8 +741,7 @@
 				} else {
 					echo esc_attr( 'none' );
 				} ?>;">
-					<?php $this->panel_header( 'Resort Price Configuration', 'Here you can set price for resort.' ); ?>
-                    <section>
+                    <section class="bg-light mt-5">
                         <div>
                             <label>
 								<?php echo esc_html__( 'Day-long Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -858,29 +887,32 @@
 				<?php
 			}
 
-			public function rbfw_day_row( $day_name, $day_slug ) {
+			public function rbfw_day_row( $day_name, $day_slug, $show_hourly_col = true, $show_halfday_col = true, $show_daily_col = true ) {
 				$hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
 				$half_day_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) : '';
 				$daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
 				$enable      = ! empty( get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) ) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
+				$hourly_col_style  = $show_hourly_col  ? '' : ' style="display:none;"';
+				$halfday_col_style = $show_halfday_col ? '' : ' style="display:none;"';
+				$daily_col_style   = $show_daily_col   ? '' : ' style="display:none;"';
 				?>
                 <tr>
                     <th><?php echo esc_html( $day_name ); ?></th>
-                    <td>
+                    <td class="rbfw-daywise-hourly-col"<?php echo $hourly_col_style; ?>>
                         <input
                             type="number"
                             name="rbfw_<?php echo esc_attr( $day_slug ); ?>_hourly_rate"
                             value="<?php echo esc_attr( $hourly_rate ); ?>"
                             placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                     </td>
-                    <td>
+                    <td class="rbfw-daywise-halfday-col"<?php echo $halfday_col_style; ?>>
                         <input
                                 type="number"
                                 name="rbfw_<?php echo esc_attr( $day_slug ); ?>_half_day_rate"
                                 value="<?php echo esc_attr( $half_day_rate ); ?>"
                                 placeholder="<?php esc_attr_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                     </td>
-                    <td>
+                    <td class="rbfw-daywise-dailyprice-col"<?php echo $daily_col_style; ?>>
                         <input
                             type="number"
                             name="rbfw_<?php echo esc_attr( $day_slug ); ?>_daily_rate"
@@ -904,12 +936,20 @@
 				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : 'appointment';
 				?>
                 <div class="rbfw_switch_sd_appointment_row <?php echo esc_attr( $rbfw_item_type != 'appointment' ) ? 'hide' : 'show'; ?>">
-                    <section>
-                        <label>
-							<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </label>
-                        <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
-                    </section>
+                    <div class="md-price-card">
+                        <div class="item">
+                            <div class="item-left">
+                                <div class="label"><?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="description"><?php esc_html_e( 'Set the maximum number of bookings allowed per session or time slot.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            </div>
+                            <div class="item-right">
+                                <div class="md-threshold-input-wrap">
+                                    <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
+                                    <span>qty</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <section class="hide">
                     <label class="w-30">
@@ -999,173 +1039,200 @@
 				$rbfw_item_type            = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$mdedo                     = ( $rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'others') ? 'block' : 'none';
 				$rbfw_enable_daywise_price = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
+				$manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true ) ?: 'off';
+				$enable_specific_duration   = get_post_meta( $post_id, 'enable_specific_duration', true ) ?: 'off';
 				?>
                 <div class="rbfw_general_price_config_wrapper " style="display: <?php echo esc_attr( $mdedo ) ?>;">
 
-                    <?php $this->panel_header( 'General Price Configuration', 'General Price Configuration' ); ?>
-
                     <div class="rbfw_multi_day_price_conf">
-                        <!-- Daily Price -->
 
-                        <div class="item">
-                            <div class="item-left">
-                                <div class="label">Monthly Price</div>
-                                <div class="description">Pricing will be calculated based on number of Month.</div>
-                            </div>
-                            <div class="item-right">
+                        <!-- DURATION RATES Card -->
+                        <div class="md-price-card">
+                            <div class="md-card-header">Duration Rates</div>
+
+                            <!-- Monthly Price -->
+                            <div class="item">
                                 <div class="toggle monthly-price-toggle <?php echo esc_attr( $rbfw_enable_monthly_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_monthly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_monthly_rate ); ?>" placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_monthly_rate == 'no' ? 'disabled' : '' ); ?> id="monthly-price-input" class="price-input">
-                                <input type="hidden" name="rbfw_enable_monthly_rate" id="rbfw_enable_monthly_rate" value="<?php echo esc_attr( $rbfw_enable_monthly_rate ); ?>">
-                            </div>
-                        </div>
-
-                        <div class="item day-threshold-item-for-month" style="display: <?php echo esc_attr( $rbfw_enable_monthly_rate == 'yes' ? 'flex' : 'none' ); ?>;">
-                            <div class="item-left">
-                                <div class="label">Monthly threshold: Number of day consider as a month</div>
-                                <div class="description">
-                                    If total day more than monthly threshold or less than 30 days it will calculate as month
+                                <div class="item-left">
+                                    <div class="label">Monthly Price</div>
+                                    <div class="description">Pricing will be calculated based on number of Month.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-price-input-wrap">
+                                        <span>$</span>
+                                        <input type="number" name="rbfw_monthly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_monthly_rate ); ?>" placeholder="<?php esc_attr_e( 'Monthly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_monthly_rate == 'no' ? 'disabled' : '' ); ?> id="monthly-price-input" class="price-input">
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_monthly_rate" id="rbfw_enable_monthly_rate" value="<?php echo esc_attr( $rbfw_enable_monthly_rate ); ?>">
                                 </div>
                             </div>
-                            <div class="item-right">
+
+                            <!-- Monthly threshold (conditional) -->
+                            <div class="item day-threshold-item-for-month" style="display: <?php echo esc_attr( $rbfw_enable_monthly_rate == 'yes' ? 'flex' : 'none' ); ?>;">
                                 <div class="toggle day-threshold-toggle-for-month <?php echo esc_attr( $rbfw_enable_day_threshold_for_monthly == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_day_threshold_for_monthly" step="0.01" value="<?php echo esc_attr( $rbfw_day_threshold_for_monthly ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_day_threshold_for_monthly == 'no' ? 'disabled' : '' ); ?> id="day-threshold-input-for-monthly" class="price-input">
-                                <input type="hidden" name="rbfw_enable_day_threshold_for_monthly" id="rbfw_enable_day_threshold_for_monthly" value="<?php echo esc_attr( $rbfw_enable_day_threshold_for_monthly ); ?>">
+                                <div class="item-left">
+                                    <div class="label">Monthly Threshold</div>
+                                    <div class="description">Number of days to consider as a month. If total days exceed this threshold it will calculate as month.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-threshold-input-wrap">
+                                        <input type="number" name="rbfw_day_threshold_for_monthly" step="0.01" value="<?php echo esc_attr( $rbfw_day_threshold_for_monthly ); ?>" placeholder="<?php esc_attr_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_day_threshold_for_monthly == 'no' ? 'disabled' : '' ); ?> id="day-threshold-input-for-monthly" class="price-input">
+                                        <span>days</span>
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_day_threshold_for_monthly" id="rbfw_enable_day_threshold_for_monthly" value="<?php echo esc_attr( $rbfw_enable_day_threshold_for_monthly ); ?>">
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="item">
-                            <div class="item-left">
-                                <div class="label">Weekly Price</div>
-                                <div class="description">Pricing will be calculated based on number of week.</div>
-                            </div>
-                            <div class="item-right">
+                            <!-- Weekly Price -->
+                            <div class="item">
                                 <div class="toggle weekly-price-toggle <?php echo esc_attr( $rbfw_enable_weekly_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_weekly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_weekly_rate ); ?>" placeholder="<?php esc_attr_e( 'weekly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_weekly_rate == 'no' ? 'disabled' : '' ); ?> id="weekly-price-input" class="price-input">
-                                <input type="hidden" name="rbfw_enable_weekly_rate" id="rbfw_enable_weekly_rate" value="<?php echo esc_attr( $rbfw_enable_weekly_rate ); ?>">
-                            </div>
-                        </div>
-
-                        <div class="item day-threshold-item-for-week" style="display: <?php echo esc_attr( $rbfw_enable_weekly_rate == 'yes' ? 'flex' : 'none' ); ?>;">
-                            <div class="item-left">
-                                <div class="label">Day threshold for weekly price</div>
-                                <div class="description">
-                                    If total hours are more than <span id="hour-threshold-display">x</span>, count as full day. If less, day will not count.
+                                <div class="item-left">
+                                    <div class="label">Weekly Price</div>
+                                    <div class="description">Pricing will be calculated based on number of week.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-price-input-wrap">
+                                        <span>$</span>
+                                        <input type="number" name="rbfw_weekly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_weekly_rate ); ?>" placeholder="<?php esc_attr_e( 'Weekly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_weekly_rate == 'no' ? 'disabled' : '' ); ?> id="weekly-price-input" class="price-input">
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_weekly_rate" id="rbfw_enable_weekly_rate" value="<?php echo esc_attr( $rbfw_enable_weekly_rate ); ?>">
                                 </div>
                             </div>
-                            <div class="item-right">
+
+                            <!-- Weekly threshold (conditional) -->
+                            <div class="item day-threshold-item-for-week" style="display: <?php echo esc_attr( $rbfw_enable_weekly_rate == 'yes' ? 'flex' : 'none' ); ?>;">
                                 <div class="toggle day-threshold-toggle-for-week <?php echo esc_attr( $rbfw_enable_day_threshold_for_weekly == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_day_threshold_for_weekly" step="0.01" value="<?php echo esc_attr( $rbfw_day_threshold_for_weekly ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_day_threshold_for_weekly == 'no' ? 'disabled' : '' ); ?> id="day-threshold-input-for-weekly" class="price-input">
-                                <input type="hidden" name="rbfw_enable_day_threshold_for_weekly" id="rbfw_enable_day_threshold_for_weekly" value="<?php echo esc_attr( $rbfw_enable_day_threshold_for_weekly ); ?>">
+                                <div class="item-left">
+                                    <div class="label">Weekly Threshold</div>
+                                    <div class="description">If total hours are more than <span id="hour-threshold-display">x</span>, count as full day. If less, day will not count.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-threshold-input-wrap">
+                                        <input type="number" name="rbfw_day_threshold_for_weekly" step="0.01" value="<?php echo esc_attr( $rbfw_day_threshold_for_weekly ); ?>" placeholder="<?php esc_attr_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_day_threshold_for_weekly == 'no' ? 'disabled' : '' ); ?> id="day-threshold-input-for-weekly" class="price-input">
+                                        <span>days</span>
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_day_threshold_for_weekly" id="rbfw_enable_day_threshold_for_weekly" value="<?php echo esc_attr( $rbfw_enable_day_threshold_for_weekly ); ?>">
+                                </div>
                             </div>
-                        </div>
 
-
-                        <div class="item">
-                            <div class="item-left">
-                                <div class="label">Daily Price</div>
-                                <div class="description">Pricing will be calculated based on number of day.</div>
-                            </div>
-                            <div class="item-right">
+                            <!-- Daily Price -->
+                            <div class="item">
                                 <div class="toggle daily-price-toggle <?php echo esc_attr( $rbfw_enable_daily_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_daily_rate" step="0.01" value="<?php echo esc_attr( $rbfw_daily_rate ); ?>" placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_daily_rate == 'no' ? 'disabled' : '' ); ?> id="daily-price-input" class="price-input">
-                                <input type="hidden" name="rbfw_enable_daily_rate" id="rbfw_enable_daily_rate" value="<?php echo esc_attr( $rbfw_enable_daily_rate ); ?>">
-                            </div>
-                        </div>
-
-
-                        <!-- Time Picker Toggle -->
-                        <div class="item">
-                            <div class="item-left">
-                                <div class="label">Enable Time Picker</div>
-                                <div class="description">
-                                    Toggle to enable time selection for more precise rental periods.
+                                <div class="item-left">
+                                    <div class="label">Daily Price</div>
+                                    <div class="description">Pricing will be calculated based on number of day.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-price-input-wrap">
+                                        <span>$</span>
+                                        <input type="number" name="rbfw_daily_rate" step="0.01" value="<?php echo esc_attr( $rbfw_daily_rate ); ?>" placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_daily_rate == 'no' ? 'disabled' : '' ); ?> id="daily-price-input" class="price-input">
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_daily_rate" id="rbfw_enable_daily_rate" value="<?php echo esc_attr( $rbfw_enable_daily_rate ); ?>">
                                 </div>
                             </div>
-                            <div class="item-right">
-                                <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
-                                    <div class="toggle-knob"></div>
-                                </div>
-                                <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
-                            </div>
-                        </div>
 
+                        </div><!-- /.md-price-card Duration Rates -->
 
-                        <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
-                            <div class="item-left">
-                                <div class="label">Half-Day Price</div>
-                                <div class="description">
-                                    Pricing will be calculated as half-day when rental hours fall within the specified range.
+                        <!-- TIME CONFIGURATION Card -->
+                        <div class="md-price-card">
+                            <div class="md-card-header">Time Configuration</div>
+
+                            <div class="item md-time-toggle-row">
+                                <div class="item-left">
+                                    <span class="dashicons dashicons-clock"></span>
+                                    <div>
+                                        <div class="label">Enable Time Picker</div>
+                                        <div class="description">Toggle to enable time selection for more precise rental periods.</div>
+                                    </div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_time_picker" id="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
                                 </div>
                             </div>
-                            <div class="item-right">
+
+                            <!-- Half-Day Price (conditional on time picker) -->
+                            <div class="item hourly-price-item" style="display: flex;">
                                 <div class="toggle half-day-price-toggle <?php echo esc_attr( $rbfw_enable_half_day_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_half_day_rate" step="0.01" value="<?php echo esc_attr( $rbfw_half_day_rate ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_half_day_rate == 'no' ? 'disabled' : '' ); ?> id="half-day-price-input" class="price-input">
-                                <input type="hidden" name="rbfw_enable_half_day_rate" id="rbfw_enable_half_day_rate" value="<?php echo esc_attr( $rbfw_enable_half_day_rate ); ?>">
-                            </div>
-                        </div>
-
-                        <!-- Hour Threshold (conditional) -->
-                        <div class="item half-day-price-item" style="display: <?php echo esc_attr( $rbfw_enable_half_day_rate == 'yes' ? 'flex' : 'none' ); ?>;">
-                            <div class="item-left">
-                                <div class="label">Half-Day Hour Threshold</div>
-                                <div class="description">
-                                    Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.
+                                <div class="item-left">
+                                    <div class="label">Half-Day Price</div>
+                                    <div class="description">Pricing will be calculated as half-day when rental hours fall within the specified range.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-price-input-wrap">
+                                        <span>$</span>
+                                        <input type="number" name="rbfw_half_day_rate" step="0.01" value="<?php echo esc_attr( $rbfw_half_day_rate ); ?>" placeholder="<?php esc_attr_e( 'Half-Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_half_day_rate == 'no' ? 'disabled' : '' ); ?> id="half-day-price-input" class="price-input">
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_half_day_rate" id="rbfw_enable_half_day_rate" value="<?php echo esc_attr( $rbfw_enable_half_day_rate ); ?>">
                                 </div>
                             </div>
-                            <div class="item-right">
-                                <div class="threshold-inputs">
-                                    <span>From</span>
-                                    <input  type="number" name="half_day_hour_threshold_start" class="input-field" value="<?php echo esc_attr( $half_day_hour_threshold_start ); ?>" min="1" max="24">
-                                    <span>to</span>
-                                    <input type="number" name="half_day_hour_threshold_end" class="input-field" value="<?php echo esc_attr( $half_day_hour_threshold_end ); ?>" min="1" max="24">
-                                    <span>hours</span>
+
+                            <!-- Half-Day Hour Threshold (conditional) -->
+                            <div class="item half-day-price-item" style="display: <?php echo esc_attr( ( $rbfw_enable_half_day_rate === 'yes' && $rbfw_enable_time_picker === 'yes' ) ? 'flex' : 'none' ); ?>;">
+                                <div class="item-left">
+                                    <div class="label">Half-Day Hour Threshold</div>
+                                    <div class="description">Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="threshold-inputs">
+                                        <span>From</span>
+                                        <input type="number" name="half_day_hour_threshold_start" class="input-field" value="<?php echo esc_attr( $half_day_hour_threshold_start ); ?>" min="1" max="24">
+                                        <span>to</span>
+                                        <input type="number" name="half_day_hour_threshold_end" class="input-field" value="<?php echo esc_attr( $half_day_hour_threshold_end ); ?>" min="1" max="24">
+                                        <span>hours</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Hourly Price (conditional) -->
-                        <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
-                            <div class="item-left">
-                                <div class="label">Hourly Price</div>
-                                <div class="description">Pricing will be calculated as per hour.</div>
-                            </div>
-                            <div class="item-right">
+                            <!-- Hourly Price (conditional) -->
+                            <div class="item hourly-price-item" style="display: flex;">
                                 <div class="toggle hourly-price-toggle <?php echo esc_attr( $rbfw_enable_hourly_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_hourly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_hourly_rate == 'no' ? 'disabled' : '' ); ?> id="hourly-price-input" class="price-input">
-                                <input type="hidden" name="rbfw_enable_hourly_rate" id="rbfw_enable_hourly_rate" value="<?php echo esc_attr( $rbfw_enable_hourly_rate ); ?>">
-                            </div>
-                        </div>
-
-                        <!-- Hour Threshold (conditional) -->
-                        <div class="item hour-threshold-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
-                            <div class="item-left">
-                                <div class="label">Hour Threshold</div>
-                                <div class="description">
-                                    If total hours are more than <span id="hour-threshold-display">X</span>, count as full day. If less, day will not count.
+                                <div class="item-left">
+                                    <div class="label">Hourly Price</div>
+                                    <div class="description">Pricing will be calculated as per hour.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-price-input-wrap">
+                                        <span>$</span>
+                                        <input type="number" name="rbfw_hourly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_hourly_rate == 'no' ? 'disabled' : '' ); ?> id="hourly-price-input" class="price-input">
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_hourly_rate" id="rbfw_enable_hourly_rate" value="<?php echo esc_attr( $rbfw_enable_hourly_rate ); ?>">
                                 </div>
                             </div>
-                            <div class="item-right">
+
+                            <!-- Hour Threshold (conditional) -->
+                            <div class="item hour-threshold-item" style="display: <?php echo esc_attr( ( $rbfw_enable_hourly_rate === 'yes' && $rbfw_enable_time_picker === 'yes' ) ? 'flex' : 'none' ); ?>;">
                                 <div class="toggle hour-threshold-toggle <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="number" name="rbfw_hourly_threshold" step="0.01" value="<?php echo esc_attr( $rbfw_hourly_threshold ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'no' ? 'disabled' : '' ); ?> id="hour-threshold-input" class="price-input">
-                                <input type="hidden" name="rbfw_enable_hourly_threshold" id="rbfw_enable_hourly_threshold" value="<?php echo esc_attr( $rbfw_enable_hourly_threshold ); ?>">
+                                <div class="item-left">
+                                    <div class="label">Hour Threshold</div>
+                                    <div class="description">If total hours are more than <span id="hour-threshold-display">X</span>, count as full day. If less, day will not count.</div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="md-threshold-input-wrap">
+                                        <input type="number" name="rbfw_hourly_threshold" step="0.01" value="<?php echo esc_attr( $rbfw_hourly_threshold ); ?>" placeholder="<?php esc_attr_e( 'Hours', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'no' ? 'disabled' : '' ); ?> id="hour-threshold-input" class="price-input">
+                                        <span>hours</span>
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_hourly_threshold" id="rbfw_enable_hourly_threshold" value="<?php echo esc_attr( $rbfw_enable_hourly_threshold ); ?>">
+                                </div>
                             </div>
-                        </div>
+                        </div><!-- /.md-price-card Time Configuration -->
 
                         <!-- Time Slots (conditional) -->
 
@@ -1177,48 +1244,59 @@
 
                     <?php do_action( 'rbfw_before_general_price_table_row' ); ?>
 
-					<?php $this->panel_header( 'Day-wise Price Configuration ', 'Day-wise Price Configuration lets you set different prices for each day of the week' ); ?>
-                    <section>
-                        <div>
-                            <label>
-								<?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </label>
-                            <P>
-								<?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </P>
+					<?php
+						$_daywise_visible = (
+							$rbfw_enable_daily_rate   === 'yes' ||
+							( $rbfw_enable_time_picker === 'yes' && ( $rbfw_enable_hourly_rate === 'yes' || $rbfw_enable_half_day_rate === 'yes' ) )
+						);
+					?>
+                    <div id="rbfw-daywise-config-wrapper" style="<?php echo $_daywise_visible ? '' : 'display:none;'; ?>">
+                    <div class="md-price-card">
+                        <div class="md-card-header"><?php esc_html_e( 'Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <div class="item md-time-toggle-row">
+                            <div class="item-left">
+                                <div class="label"><?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="description"><?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle daywise-price-toggle <?php echo esc_attr( $rbfw_enable_daywise_price === 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="hidden" name="rbfw_enable_daywise_price" value="<?php echo esc_attr( $rbfw_enable_daywise_price ); ?>">
+                            </div>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" name="rbfw_enable_daywise_price" value="<?php echo esc_attr( $rbfw_enable_daywise_price ); ?>" <?php echo esc_attr( ( $rbfw_enable_daywise_price == 'yes' ) ? 'checked' : '' ); ?>>
-                            <span class="slider round"></span>
-                        </label>
-                    </section>
+                    </div>
                     <section class="day-wise-price-configuration <?php echo esc_attr( ( $rbfw_enable_daywise_price == 'yes' ) ? 'show' : 'hide' ); ?>">
                         <table class='form-table'>
 							<?php do_action( 'rbfw_before_week_price_table_row' ); ?>
                             <thead>
                             <tr>
                                 <th scope="row"><?php esc_html_e( 'Day Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th scope="row"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th scope="row"><?php esc_html_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th scope="row"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row" class="rbfw-daywise-hourly-col" style="<?php echo ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_hourly_rate === 'yes' ) ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row" class="rbfw-daywise-halfday-col" style="<?php echo ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_half_day_rate === 'yes' ) ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row" class="rbfw-daywise-dailyprice-col" style="<?php echo $rbfw_enable_daily_rate === 'yes' ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                 <th scope="row"><?php esc_html_e( 'Enable/Disable', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                             </tr>
                             </thead>
                             <tbody>
 							<?php
-								$this->rbfw_day_row( esc_html__( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
-								$this->rbfw_day_row( esc_html__( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
-								$this->rbfw_day_row( esc_html__( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
-								$this->rbfw_day_row( esc_html__( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
-								$this->rbfw_day_row( esc_html__( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
-								$this->rbfw_day_row( esc_html__( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
-								$this->rbfw_day_row( esc_html__( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
+								$_show_hourly_col  = ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_hourly_rate === 'yes' );
+								$_show_halfday_col = ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_half_day_rate === 'yes' );
+								$_show_daily_col   = ( $rbfw_enable_daily_rate === 'yes' );
+								$this->rbfw_day_row( esc_html__( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
 								//do_action( 'rbfw_after_week_price_table_row' );
 							?>
                             </tbody>
                         </table>
                     </section>
                     <br>
+                    </div>
 
 					<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 
@@ -1234,7 +1312,7 @@
 				<?php do_action( 'rbfw_after_extra_service_table' ); ?>
 
 
-                <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
+                <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>"<?php echo ( $rbfw_item_type === 'bike_car_sd' && $manage_inventory_as_timely === 'on' && $enable_specific_duration === 'on' ) ? ' style="display:none"' : ''; ?>>
                     <div class="item">
                         <div class="item-left">
                             <div class="label">Enable Time Picker</div>
@@ -1266,10 +1344,15 @@
             {
                 ?>
                 <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
+                    <?php if ( $mi !== 'mi' ) : ?>
                     <div class="section">
                         <div class="label"><?php echo esc_html__( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                         <p><?php echo esc_html__( 'Configure available 30-minute time slots for booking', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
+                    <?php endif; ?>
+                    <?php if ( $mi === 'mi' ) : ?>
+                    <div class="rbfw-mi-ts-active-label"><?php echo esc_html__( 'Active Booking Slots (30-min increments)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                    <?php endif; ?>
 
                     <div class="time-slots-container">
                         <div class="time-slots" id="time-slots-container">
@@ -1289,7 +1372,7 @@
                             foreach ($rdfw_available_time as $key => $item) { if(is_array($item)){
                                 ?>
                                 <div class="time-slot time-slot-indicator <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
-                                    
+
                                     <span class="time-slot-time"><?php echo $item['time'] ?></span>
                                     <?php if($type=='md'){ ?>
                                         <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
@@ -1304,7 +1387,7 @@
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
                                     <?php } ?>
-                                    
+
                                     <div class="time-slot-remove" title="Remove time slot">×</div>
                                 </div>
                                 <?php $i++; } } ?>
@@ -1318,7 +1401,7 @@
                                 <label for="new-slot-time"><?php echo esc_html__( 'Time (30 min slot)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                 <input type="time" class="new-slot-time">
                             </div>
-                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled><?php echo esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled><?php echo $mi === 'mi' ? esc_html__( '+ Add Slot', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                         </div>
                     </div>
 
@@ -1328,7 +1411,6 @@
 
                     ?>
                     <div class="mpStyle">
-                        <?php $this->panel_header( 'Particular Settings', 'Here you can set Particulars' ); ?>
                         <section>
                             <div>
                                 <label>
@@ -1590,6 +1672,7 @@
                     $rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
 
                     $pricing_types                    = isset( $input_data_sabitized['pricing_types'] ) ? $input_data_sabitized['pricing_types'] : [];
+                    $pricing_types['_initialized']    = '1';
                     $multiple_items_info              = isset( $input_data_sabitized['multiple_items_info'] ) ? $input_data_sabitized['multiple_items_info'] : [];
                     if ( is_array( $multiple_items_info ) ) {
                         $multiple_items_info = array_values( array_filter( $multiple_items_info, function ( $item ) {
@@ -1763,9 +1846,26 @@
 					update_post_meta( $post_id, 'enable_specific_duration', $enable_specific_duration );
 				}
 			}
+
+		/**
+		 * Render all pricing panels for the modern editor without
+		 * re-registering hooks (uses reflection to skip __construct).
+		 */
+		public static function render_for_modern_editor( int $post_id ): void {
+			$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+			$renderer->rent_type( $post_id );
+			$renderer->bike_car_single_day( $post_id );
+			$renderer->appointment( $post_id );
+			$renderer->resort_price_config( $post_id );
+			$renderer->multiple_items( $post_id );
+			$renderer->md_price_config( $post_id );
+		}
+
 		}
 		new RBFW_Pricing();
 	}
 	
 	
+
+
 

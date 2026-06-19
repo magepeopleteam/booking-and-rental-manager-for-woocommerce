@@ -123,8 +123,8 @@
 						table-layout: fixed;
 					}
 					.wprently_fee-table thead { background: #f7fafc; border-bottom: 2px solid #e2e8f0; }
-					.wprently_fee-table th { 
-						padding: 12px 8px; 
+					.wprently_fee-table th {
+						padding: 10px 8px;
 						text-align: left; 
 						font-size: 11px; 
 						font-weight: 700; 
@@ -135,10 +135,10 @@
 						top: 0;
 						z-index: 10;
 					}
-					.wprently_fee-table td { 
-						padding: 12px 8px; 
+					.wprently_fee-table td {
+						padding: 8px 8px;
 						border-bottom: 1px solid #e2e8f0;
-						vertical-align: top;
+						vertical-align: middle;
 					}
 					.wprently_fee-table tr:last-child td { border-bottom: none; }
 					.wprently_fee-table tbody tr:hover { background: #f7fafc; }
@@ -173,25 +173,24 @@
 					.wprently_fee-badge.non-refundable { background: #f8d7da; color: #721c24; }
 					.wprently_fee-badge.taxable { background: #fff3cd; color: #856404; }
 					.wprently_fee-badges { display: flex; gap: 4px; flex-wrap: wrap; }
-					.wprently_fee-options { display: flex; flex-direction: column; gap: 8px; }
-					.wprently_fee-option-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+					.wprently_fee-options { display: flex; flex-direction: row; align-items: center; gap: 8px; flex-wrap: nowrap; }
+					.wprently_fee-option-item { display: flex; align-items: center; flex-shrink: 0; }
 					.wprently_fee-option-label { font-size: 11px; font-weight: 600; color: #4a5568; white-space: nowrap; }
-					.wprently_fee-priority { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-					.wprently_fee-priority-select { width: 100%; max-width: 100px; }
-					.wprently_fee-priority-badge { 
-						display: inline-flex; 
-						align-items: center; 
-						justify-content: center;
-						padding: 3px 8px; 
-						border-radius: 10px; 
-						font-size: 10px; 
-						font-weight: 700; 
+					.wprently_fee-priority { display: flex; flex-direction: row; align-items: center; gap: 5px; }
+					.wprently_fee-priority-select { flex: 1; min-width: 0; }
+					.wprently_fee-priority-badge {
+						display: inline-flex;
+						align-items: center;
+						flex-shrink: 0;
+						padding: 2px 5px;
+						border-radius: 8px;
+						font-size: 8px;
+						font-weight: 700;
 						text-transform: uppercase;
 						white-space: nowrap;
-						min-width: 45px;
 					}
-					.wprently_fee-priority-badge.required { background: #fee2e2; color: #991b1b; }
-					.wprently_fee-priority-badge.optional { background: #d1fae5; color: #065f46; }
+					.wprently_fee-priority-badge.required { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+					.wprently_fee-priority-badge.optional { background: #dbeafe; border: 1px solid #bfdbfe; color: #1a56db; }
 					.wprently_fee-toggle { position: relative; width: 40px; height: 22px; }
 					.wprently_fee-toggle input { opacity: 0; width: 0; height: 0; }
 					.wprently_fee-slider { 
@@ -249,22 +248,19 @@
 					}
 					.wprently_fee-add-btn:hover { background: #c2185b; }
 					
-					/* Table column specific widths for better layout */
-					.wprently_fee-table th:nth-child(1) { width: 260px; min-width: 260px; }
-					.wprently_fee-table th:nth-child(2) { width: 160px; min-width: 160px; }
-					.wprently_fee-table th:nth-child(3) { width: 130px; min-width: 130px; }
-					.wprently_fee-table th:nth-child(4) { width: 120px; min-width: 120px; }
-					.wprently_fee-table th:nth-child(5) { width: 170px; min-width: 170px; }
-					.wprently_fee-table th:nth-child(6) { width: 110px; min-width: 110px; }
-					.wprently_fee-table th:nth-child(7) { width: 90px; min-width: 90px; }
-					
-					.wprently_fee-table td:nth-child(1) { width: 260px; min-width: 260px; }
+					/* Table column widths — each row renders as a single compact line */
+					.wprently_fee-table th:nth-child(1),
+					.wprently_fee-table td:nth-child(1) { width: 210px; min-width: 210px; }
+					.wprently_fee-table th:nth-child(2),
 					.wprently_fee-table td:nth-child(2) { width: 160px; min-width: 160px; }
-					.wprently_fee-table td:nth-child(3) { width: 130px; min-width: 130px; }
-					.wprently_fee-table td:nth-child(4) { width: 120px; min-width: 120px; }
-					.wprently_fee-table td:nth-child(5) { width: 170px; min-width: 170px; }
-					.wprently_fee-table td:nth-child(6) { width: 110px; min-width: 110px; }
-					.wprently_fee-table td:nth-child(7) { width: 90px; min-width: 90px; }
+					.wprently_fee-table th:nth-child(3),
+					.wprently_fee-table td:nth-child(3) { width: 110px; min-width: 110px; }
+					.wprently_fee-table th:nth-child(4),
+					.wprently_fee-table td:nth-child(4) { width: 170px; min-width: 170px; }
+					.wprently_fee-table th:nth-child(5),
+					.wprently_fee-table td:nth-child(5) { width: 150px; min-width: 150px; }
+					.wprently_fee-table th:nth-child(6),
+					.wprently_fee-table td:nth-child(6) { width: 90px; min-width: 90px; }
 					
 					/* Scrollbar styling for better UX */
 					.wprently_fee-table-wrap::-webkit-scrollbar {
@@ -283,32 +279,10 @@
 					}
 					
 					/* Responsive improvements */
-					@media (max-width: 1400px) { 
-						.wprently_fee-container {
-							max-width: 100%;
-							padding: 0 10px;
-						}
-						.wprently_fee-table-wrap { 
-							overflow-x: auto;
-							max-width: 100%;
-						}
-						.wprently_fee-table {
-							min-width: 1140px;
-						}
-					}
-					
-					@media (max-width: 1200px) { 
-						.wprently_fee-container {
-							max-width: 100%;
-							padding: 0 10px;
-						}
-						.wprently_fee-table-wrap { 
-							overflow-x: auto;
-							max-width: calc(100vw - 40px);
-						}
-						.wprently_fee-table { 
-							min-width: 1120px;
-						}
+					@media (max-width: 1200px) {
+						.wprently_fee-container { padding: 0 10px; }
+						.wprently_fee-table-wrap { overflow-x: auto; max-width: 100%; }
+						.wprently_fee-table { min-width: 890px; }
 					}
 				</style>
 				<?php
@@ -772,6 +746,15 @@
 
 				wp_send_json_success( 'Fee row deleted successfully' );
 			}
+
+		/**
+		 * Render fee management for the modern editor without re-registering hooks.
+		 */
+		public static function render_for_modern_editor( int $post_id ): void {
+			$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+			$renderer->fee_management_table( $post_id );
+		}
+
 		}
 		new RBFW_Fee_Management();
 	}
