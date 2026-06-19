@@ -136,6 +136,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $pricing_applied = isset( $duration_price_info['pricing_applied'] ) ? $duration_price_info['pricing_applied'] : 'No';
 
+            $discount_amount = 0;
+            $discount_number = 0;
+            $discount_type = '';
+
             if(isset($duration_price_info['duration'])){
                 $duration =  $duration_price_info['duration'];
             }else{
@@ -149,19 +153,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         $actual_days = $actual_days + 1;
                     }
                     $hours = 0;
-                }
-
-
-                $discount_amount = 0;
-                $discount_number = 0;
-                $discount_type = '';
-                if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
-                    if(function_exists('rbfw_get_discount_array')){
-                        $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
-                        $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
-                        $discount_number = isset($discount_arr['discount_number'])?$discount_arr['discount_number']:0;
-                        $discount_type = isset($discount_arr['discount_type'])?$discount_arr['discount_type']:0;
-                    }
                 }
 
                 $duration = '';
@@ -188,6 +179,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             }
 
+            if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
+                if(function_exists('rbfw_get_discount_array')){
+                    $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
+                    $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
+                    $discount_number = isset($discount_arr['discount_number'])?$discount_arr['discount_number']:0;
+                    $discount_type = isset($discount_arr['discount_type'])?$discount_arr['discount_type']:0;
+                }
+            }
 
             echo wp_json_encode( array(
                 'duration_price' => $duration_price,
