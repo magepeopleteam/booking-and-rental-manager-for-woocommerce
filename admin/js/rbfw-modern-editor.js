@@ -29,6 +29,7 @@
         initEditorTabsInToolbar();
         initEditorMediaBtn();
         initPricingTypeSwitch();
+        initParticularSwitch();
         initMdPricing();
         initRelatedPicker();
         initFaq();
@@ -1289,15 +1290,12 @@
             $pricing.find('.rbfw_multiple_items').hide();
             $pricing.find('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
             $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').addClass('hide').hide();
-            $pricing.find('.rbfw_es_price_config_wrapper').hide();
             $pricing.find('.rbfw_discount_price_config_wrapper').hide();
             $pricing.find('.rbfw_seasonal_price_config_wrapper').hide();
             $pricing.find('.sessional_price_single_day,.sessional_price_multi_day,.sessional_price_resort,.mds_price_resort').hide();
-            $pricing.find('.additional-service-item-price').hide();
 
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.rbfw_es_price_config_wrapper').show();
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
@@ -1309,7 +1307,6 @@
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
                 $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').removeClass('hide').show();
-                $pricing.find('.rbfw_es_price_config_wrapper').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
                 $pricing.find('.rbfw_without_time_inventory').show();
 
@@ -1317,22 +1314,25 @@
                 $pricing.find('.rbfw_resort_price_config_wrapper').show();
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_resort,.mds_price_resort').show();
-                $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
 
             } else if (type === 'multiple_items') {
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_multiple_items').show();
-                $pricing.find('.additional-service-item-price').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
 
             } else {
-                // bike_car_md and other multi-day types
+                // bike_car_md and legacy aliases
                 $pricing.find('.rbfw_general_price_config_wrapper').show();
                 $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_multi_day').show();
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
+            }
+
+            // Extra service sections: one category per rental type (initial load + type change).
+            if (typeof window.rbfwUpdateExtraServiceSectionVisibility === 'function') {
+                window.rbfwUpdateExtraServiceSectionVisibility(type, $pricing);
             }
 
             // Update description box
@@ -1363,6 +1363,32 @@
             $pricing.find('.rbfw-rent-type').removeClass('selected');
             $(this).addClass('selected');
             applyType(type);
+        });
+    }
+
+    /* ── Particular date time slots toggle (all rent types) ─── */
+    function initParticularSwitch() {
+        $wrap.on('change', '.rbfw_particular_switch', function () {
+            var $input  = $(this);
+            var enabled = this.checked;
+
+            $input.val(enabled ? 'on' : 'off');
+
+            var $panel = $input.closest('.mpStyle').children('.available-particular').first();
+            if (!$panel.length) {
+                $panel = $input.closest('.mpStyle').find('.available-particular').first();
+            }
+
+            if (enabled) {
+                $panel.stop(true, true).slideDown().removeClass('hide').addClass('show');
+            } else {
+                $panel.stop(true, true).slideUp().removeClass('show').addClass('hide');
+            }
+        });
+
+        // Align value attribute with saved checked state on load
+        $wrap.find('.rbfw_particular_switch').each(function () {
+            $(this).val(this.checked ? 'on' : 'off');
         });
     }
 
@@ -1538,29 +1564,23 @@
         // ── Day-wise Pricing Toggle ──────────────────────────────
 
         $md.on('click', '.daywise-price-toggle', function () {
-            var $input   = $md.find('input[name="rbfw_enable_daywise_price"]');
-            var enabled  = $input.val() !== 'yes';
-            $(this).toggleClass('active', enabled);
+            var $toggle  = $(this);
+            var $wrapper = $toggle.closest('#rbfw-daywise-config-wrapper');
+            var $input   = $toggle.closest('.item-right').find('input[name="rbfw_enable_daywise_price"]');
+            var enabled  = !$toggle.hasClass('active');
+
+            $toggle.toggleClass('active', enabled);
             $input.val(enabled ? 'yes' : 'no');
+
+            var $panel = $wrapper.children('.day-wise-price-configuration');
             if (enabled) {
-                $md.find('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+                $panel.stop(true, true).slideDown().removeClass('hide').addClass('show');
             } else {
-                $md.find('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+                $panel.stop(true, true).slideUp().removeClass('show').addClass('hide');
             }
         });
 
-        // ── Particular Date Time Slots Toggle ───────────────────
-
-        $md.on('click', '.rbfw_particular_switch', function () {
-            var status = $(this).val();
-            if (status === 'on') {
-                $(this).val('off');
-                $md.find('.available-particular').slideUp().removeClass('show').addClass('hide');
-            } else {
-                $(this).val('on');
-                $md.find('.available-particular').slideDown().removeClass('hide').addClass('show');
-            }
-        });
+        // ── Particular Date Time Slots Toggle — see initParticularSwitch() ──
 
         // ── Time Slot Management ─────────────────────────────────
 
