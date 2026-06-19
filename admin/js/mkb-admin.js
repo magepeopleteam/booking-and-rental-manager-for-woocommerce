@@ -1714,8 +1714,14 @@
         e.preventDefault(); // prevent form submission if inside form
 
         const $btn = $(this);
-        const time = $btn.closest('.add-slot-form').find('.new-slot-time').val();
-        if (!time) return;
+        const rawTime = $btn.closest('.add-slot-form').find('.new-slot-time').val();
+        if (!rawTime) return;
+
+        // Convert HH:MM (24-hour from <input type="time">) to 12-hour AM/PM
+        const [_h, _m] = rawTime.split(':').map(Number);
+        const _period = _h >= 12 ? 'PM' : 'AM';
+        const _h12 = _h % 12 || 12;
+        const time = `${_h12}:${String(_m).padStart(2, '0')} ${_period}`;
 
         const name_attr = $btn.data('name_attr');
         const rent_type = $btn.data('rent_type');
