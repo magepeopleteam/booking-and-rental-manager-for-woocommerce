@@ -382,65 +382,314 @@
     letter-spacing: 0.01em;
 }
 
-/* ── Off Day Settings ───────────────────────────────────────── */
+/* ── Off Day Settings card (modern editor) ──────────────────── */
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) {
+    border: 1px solid var(--me-border) !important;
+    border-radius: var(--me-radius-lg) !important;
+    box-shadow: var(--me-shadow) !important;
+    overflow: hidden !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__head {
+    background: linear-gradient(180deg, #f4f7ff 0%, #f8f9fd 100%) !important;
+    border-bottom: 1px solid var(--me-border) !important;
+    padding: 20px 24px 18px !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__head h2 {
+    color: #0f172a !important;
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 0 6px !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__head p {
+    color: #64748b !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__body {
+    background: #fff !important;
+    gap: 24px !important;
+    padding: 22px 24px 24px !important;
+}
+
 .rbfw-me-offday-days {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    padding: 8px 0 20px;
+    gap: 10px;
+    padding: 0;
 }
+
 .rbfw-me-offday-label {
-    display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--me-text);
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    color: #334155;
     cursor: pointer;
+    display: inline-flex;
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: center;
+    line-height: 1.3;
+    margin: 0;
+    min-height: 38px;
+    padding: 0 18px;
+    position: relative;
+    transition: background var(--me-transition), border-color var(--me-transition), color var(--me-transition), box-shadow var(--me-transition);
     user-select: none;
 }
+
+.rbfw-me-offday-label:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+.rbfw-me-offday-label:has(.rbfw-me-offday-checkbox:checked) {
+    background: var(--me-primary-soft);
+    border-color: var(--me-primary);
+    box-shadow: 0 0 0 1px rgba(26, 86, 219, .08);
+    color: var(--me-primary);
+    font-weight: 600;
+}
+
 .rbfw-me-offday-label input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--me-primary);
-    cursor: pointer;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    opacity: 0;
+}
+
+.rbfw-me-offday-label span {
+    pointer-events: none;
+}
+
+.rbfw-me-offday-buffer {
+    margin-top: 0;
+}
+
+.rbfw-me-offday-buffer.rbfw-me-row {
+    gap: 16px;
+}
+
+.rbfw-me-offday-buffer .rbfw-me-field {
+    gap: 8px;
+}
+
+.rbfw-me-offday-buffer .rbfw-me-label {
+    color: #0f172a;
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
     margin: 0;
 }
-.rbfw-me-offday-buffer {
-    margin-top: 4px;
+
+.rbfw-me-offday-buffer .rbfw-me-input {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3C/svg%3E");
+    background-position: right 14px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: var(--me-radius-sm) !important;
+    box-shadow: none !important;
+    color: #334155 !important;
+    font-size: 14px !important;
+    height: 44px;
+    line-height: 1.4;
+    padding: 0 44px 0 14px !important;
+    width: 100%;
 }
-.rbfw-me-offdate-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    gap: 12px;
-    align-items: end;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--me-border);
+
+.rbfw-me-offday-buffer .rbfw-me-field:last-child .rbfw-me-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpolyline points='12 6 12 12 16 14'/%3E%3Cline x1='16' y1='8' x2='20' y2='4'/%3E%3Cline x1='19' y1='4' x2='20' y2='4'/%3E%3Cline x1='20' y1='4' x2='20' y2='5'/%3E%3C/svg%3E");
 }
-.rbfw-me-offdate-row:last-child {
-    border-bottom: none;
+
+.rbfw-me-offday-buffer .rbfw-me-input:focus {
+    border-color: var(--me-primary) !important;
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, .12) !important;
+    outline: none !important;
 }
-.rbfw-me-offdate-remove {
-    background: none;
-    border: 1px solid #e74c3c;
-    border-radius: 4px;
-    color: #e74c3c;
-    width: 34px;
-    height: 34px;
+
+.rbfw-me-offday-buffer .rbfw-me-input::-webkit-outer-spin-button,
+.rbfw-me-offday-buffer .rbfw-me-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* ── Off Date Settings card (modern editor) ─────────────────── */
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) {
+    border: 1px solid var(--me-border) !important;
+    border-radius: var(--me-radius-lg) !important;
+    box-shadow: var(--me-shadow) !important;
+    overflow: hidden !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__head {
+    background: linear-gradient(180deg, #f4f7ff 0%, #f8f9fd 100%) !important;
+    border-bottom: 1px solid var(--me-border) !important;
+    padding: 20px 24px 18px !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__head h2 {
+    color: #0f172a !important;
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 0 6px !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__head p {
+    color: #64748b !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+}
+
+.rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__body {
+    background: #fff !important;
+    gap: 20px !important;
+    padding: 22px 24px 24px !important;
+}
+
+.rbfw-me-offdate-list {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.rbfw-me-offdate-row {
+    align-items: flex-end;
+    border-bottom: none;
+    display: grid;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr auto;
     padding: 0;
-    margin-bottom: 2px;
+}
+
+.rbfw-me-offdate-row .rbfw-me-field {
+    gap: 8px;
+    min-width: 0;
+}
+
+.rbfw-me-offdate-row .rbfw-me-label {
+    color: #0f172a;
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.rbfw-me-offdate-row .rbfw-me-input {
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+    background-position: right 14px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: var(--me-radius-sm) !important;
+    box-shadow: none !important;
+    color: #334155 !important;
+    font-size: 14px !important;
+    height: 44px;
+    line-height: 1.4;
+    padding: 0 44px 0 14px !important;
+    width: 100%;
+}
+
+.rbfw-me-offdate-row .rbfw-me-input:focus {
+    border-color: var(--me-primary) !important;
+    box-shadow: 0 0 0 3px rgba(26, 86, 219, .12) !important;
+    outline: none !important;
+}
+
+.rbfw-me-offdate-remove {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #fecaca;
+    border-radius: var(--me-radius-sm);
+    color: #ef4444;
+    cursor: pointer;
+    display: inline-flex;
     flex-shrink: 0;
+    height: 44px;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    transition: background var(--me-transition), border-color var(--me-transition), color var(--me-transition);
+    width: 44px;
 }
+
+.rbfw-me-offdate-remove .dashicons {
+    font-size: 18px;
+    height: 18px;
+    line-height: 1;
+    width: 18px;
+}
+
 .rbfw-me-offdate-remove:hover {
-    background: #e74c3c;
-    color: #fff;
+    background: #fef2f2;
+    border-color: #f87171;
+    color: #dc2626;
 }
+
 .rbfw-me-offdate-actions {
-    padding-top: 16px;
+    padding-top: 4px;
+    text-align: left !important;
+}
+
+.rbfw-me-offdate-actions .rbfw-me-offdate-add {
+    align-items: center !important;
+    background: var(--me-primary) !important;
+    border: none !important;
+    border-radius: var(--me-radius-sm) !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    gap: 8px !important;
+    height: auto !important;
+    justify-content: center !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-shadow: none !important;
+    transition: background var(--me-transition) !important;
+    width: fit-content !important;
+}
+
+.rbfw-me-offdate-actions .rbfw-me-offdate-add:hover {
+    background: var(--me-primary-dk) !important;
+    border: none !important;
+    color: #fff !important;
+    transform: none !important;
+}
+
+.rbfw-me-offdate-actions .rbfw-me-offdate-add .dashicons {
+    color: #fff !important;
+    font-size: 16px !important;
+    height: 16px !important;
+    line-height: 1 !important;
+    width: 16px !important;
 }
 
 /* ── Body layout ────────────────────────────────────────────── */
@@ -1492,54 +1741,74 @@
 
 /* ── Category checkbox pills ─────────────────────────────────── */
 .rbfw-me-checkbox-grid {
+    background: #f4f7ff;
+    border: 1px solid #e8edf5;
+    border-radius: var(--me-radius);
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
+    padding: 16px 18px;
 }
 
 .rbfw-me-checkbox-label {
-    display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 6px 14px 6px 10px;
-    border: 1.5px solid #e2e8f0;
-    border-radius: 50px;
     background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    color: #334155;
     cursor: pointer;
-    font-size: 13px;
+    display: inline-flex;
+    font-size: 14px;
     font-weight: 500;
-    color: #4b5563;
+    justify-content: center;
+    line-height: 1.3;
+    margin: 0;
+    min-height: 38px;
+    padding: 0 18px;
+    position: relative;
+    transition: background var(--me-transition), border-color var(--me-transition), color var(--me-transition), box-shadow var(--me-transition);
     user-select: none;
-    transition: border-color .15s, background .15s, color .15s;
-}
-.rbfw-me-checkbox-label:hover {
-    border-color: #93c5fd;
-    color: #2563eb;
 }
 
-/* Native checkbox — small, accent-coloured */
+.rbfw-me-checkbox-label:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #1e293b;
+}
+
+/* Native checkbox hidden — pill text is the control surface */
 .rbfw-me-checkbox-label input[type="checkbox"] {
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
-    accent-color: #2563eb;
-    flex-shrink: 0;
-    margin: 0;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    margin: -1px;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.rbfw-me-checkbox-label span {
+    pointer-events: none;
 }
 
 /* Checked pill state */
 .rbfw-me-checkbox-label:has(input:checked) {
-    background: #eff6ff;
-    border-color: #3b82f6;
-    color: #1d4ed8;
+    background: var(--me-primary-soft);
+    border-color: var(--me-primary);
+    box-shadow: 0 0 0 1px rgba(26, 86, 219, .08);
+    color: var(--me-primary);
     font-weight: 600;
 }
 
 /* JS fallback for :has() — .is-checked class toggled via JS */
 .rbfw-me-checkbox-label.is-checked {
-    background: #eff6ff;
-    border-color: #3b82f6;
-    color: #1d4ed8;
+    background: var(--me-primary-soft);
+    border-color: var(--me-primary);
+    box-shadow: 0 0 0 1px rgba(26, 86, 219, .08);
+    color: var(--me-primary);
     font-weight: 600;
 }
 
@@ -1926,8 +2195,8 @@
 }
 
 /* ── Classic pricing regular sections — content padding ─────── */
-.rbfw-me-pricing-classic-wrap section:not(.bg-light) {
-    padding: 16px 20px !important;
+.rbfw-me-pricing-classic-wrap section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot) {
+    padding: 0 !important;
     border-bottom: 1px solid #f0f0f1 !important;
 }
 .rbfw-me-pricing-classic-wrap section:not(.bg-light):last-of-type {
@@ -1960,6 +2229,11 @@
     margin: 0 0 12px !important;
     padding: 0 !important;
     line-height: 1.4 !important;
+}
+
+/* Rent Types section wrapper */
+.rbfw-me-pricing-classic-wrap section.rent-type-area {
+    padding: 16px 20px !important;
 }
 
 /* ── Rent type cards ─────────────────────────────────────────── */
@@ -2662,17 +2936,17 @@
 }
 
 /* Particular date toggle row */
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot {
     align-items: center !important;
     background: #eef3ff !important;
     border-bottom: 1px solid #c3d4f8 !important;
     display: flex !important;
     justify-content: space-between !important;
     margin: 0 !important;
-    padding: 14px 20px !important;
+    padding: 16px 20px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section > div > label {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot > div > label {
     color: #1e3a5f !important;
     display: block !important;
     font-size: 14px !important;
@@ -2680,7 +2954,7 @@
     margin: 0 0 4px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section > div > p {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot > div > p {
     color: #2ea2cc !important;
     font-size: 12px !important;
     margin: 0 !important;
@@ -2688,7 +2962,7 @@
 }
 
 /* Toggle inside mpStyle toggle row */
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section .toggle {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot .toggle {
     background-color: #c9d3e6 !important;
     border-radius: 14px !important;
     cursor: pointer !important;
@@ -2699,11 +2973,11 @@
     width: 48px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section .toggle.active {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot .toggle.active {
     background-color: #e11d48 !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section .toggle .toggle-knob {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot .toggle .toggle-knob {
     background: #fff !important;
     border-radius: 50% !important;
     box-shadow: 0 1px 3px rgba(0,0,0,.3) !important;
@@ -2715,7 +2989,7 @@
     width: 20px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section .toggle.active .toggle-knob {
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .mpStyle > section.particulare-date-time-slot .toggle.active .toggle-knob {
     left: 25px !important;
 }
 
@@ -3417,17 +3691,17 @@
 }
 
 /* Particular date toggle row */
-.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .mpStyle > section {
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .mpStyle > section.particulare-date-time-slot {
     align-items: center !important;
     background: #eef3ff !important;
     border-bottom: 1px solid #c3d4f8 !important;
     display: flex !important;
     justify-content: space-between !important;
     margin: 0 !important;
-    padding: 14px 20px !important;
+    padding: 16px 20px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .mpStyle > section > div > label {
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .mpStyle > section.particulare-date-time-slot > div > label {
     color: #1e3a5f !important;
     display: block !important;
     font-size: 14px !important;
@@ -3435,7 +3709,7 @@
     margin: 0 0 4px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .mpStyle > section > div > p {
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .mpStyle > section.particulare-date-time-slot > div > p {
     color: #2ea2cc !important;
     font-size: 12px !important;
     margin: 0 !important;
@@ -4026,17 +4300,17 @@
     padding: 0 !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .mpStyle > section {
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .mpStyle > section.particulare-date-time-slot {
     align-items: center !important;
     background: #eef3ff !important;
     border-bottom: 1px solid #c3d4f8 !important;
     display: flex !important;
     justify-content: space-between !important;
     margin: 0 !important;
-    padding: 14px 20px !important;
+    padding: 16px 20px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .mpStyle > section > div > label {
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .mpStyle > section.particulare-date-time-slot > div > label {
     color: #1e3a5f !important;
     display: block !important;
     font-size: 14px !important;
@@ -4044,7 +4318,7 @@
     margin: 0 0 4px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .mpStyle > section > div > p {
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .mpStyle > section.particulare-date-time-slot > div > p {
     color: #2ea2cc !important;
     font-size: 12px !important;
     margin: 0 !important;
@@ -4248,7 +4522,7 @@
 }
 
 /* "Enable Category wise extra service" toggle row — above the table */
-.rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) {
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section.category-wise-service {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
@@ -4257,12 +4531,12 @@
     border: none !important;
     border-bottom: 1px solid #dde4ef !important;
     border-radius: 0 !important;
-    padding: 14px 20px !important;
+    padding: 16px 20px !important;
     margin: 0 !important;
     position: static !important;
 }
 
-.rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) > div {
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section.category-wise-service > div {
     display: flex !important;
     flex-direction: column !important;
     gap: 3px !important;
@@ -4270,7 +4544,7 @@
     min-width: 0 !important;
 }
 
-.rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) > div > label {
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section.category-wise-service > div > label {
     display: block !important;
     font-size: 14px !important;
     font-weight: 700 !important;
@@ -4279,7 +4553,7 @@
     cursor: default !important;
 }
 
-.rbfw-me-pricing-classic-wrap .additional-service-item-price > section:not(.bg-light) > div > p {
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section.category-wise-service > div > p {
     font-size: 12px !important;
     color: #2ea2cc !important;
     margin: 0 !important;
@@ -4330,7 +4604,7 @@
 }
 
 /* Category header — label + title input */
-.rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title {
+.rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title.sss {
     align-items: center !important;
     background: #f0f4fb !important;
     border: none !important;
@@ -4340,7 +4614,7 @@
     gap: 16px !important;
     justify-content: space-between !important;
     margin: 0 !important;
-    padding: 12px 16px !important;
+    padding: 6px 20px !important;
 }
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title label {
@@ -5678,7 +5952,7 @@
     width: 100%;
     background: none !important;
     border-radius: 0 !important;
-    padding: 8px 0 !important;
+    padding: 6px 20px !important;
 }
 .rbfw-me-card .service_category_title.sss > label {
     white-space: nowrap;
@@ -5872,8 +6146,24 @@ textarea.rbfw-me-field-invalid {
 }
 
 /* Classic pricing sections — spacing & type harmony */
-.rbfw-me-pricing-classic-wrap section:not(.bg-light) {
-    padding: 18px var(--me-space-xl) !important;
+.rbfw-me-pricing-classic-wrap section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot) {
+    padding: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.rent-type-area {
+    padding: 16px 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.category-wise-service {
+    padding: 16px 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.particulare-date-time-slot {
+    padding: 16px 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.service_category_title.sss {
+    padding: 6px 20px !important;
 }
 
 .rbfw-me-pricing-classic-wrap section:not(.bg-light) > div > label {
@@ -5907,21 +6197,7 @@ textarea.rbfw-me-field-invalid {
     letter-spacing: 0.07em !important;
 }
 
-/* Off-day & FAQ polish */
-.rbfw-me-offday-label {
-    font-size: 14px;
-    padding: 4px 0;
-    transition: color var(--me-transition);
-}
-
-.rbfw-me-offday-label:hover {
-    color: var(--me-primary);
-}
-
-.rbfw-me-offdate-row {
-    padding: 14px 0;
-    border-bottom-color: var(--me-border-subtle);
-}
+/* Off-date duplicate polish removed — see Off Date Settings card block */
 
 .rbfw-me-faq-btn,
 .rbfw-me-tag-picker__trigger {
@@ -5984,7 +6260,6 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-wrap #add-particular-row.ppof-button,
 .rbfw-me-wrap #add-resort-type-row.ppof-button,
 .rbfw-me-wrap .rbfw-me-term-add-btn,
-.rbfw-me-wrap .rbfw-me-offdate-add,
 .rbfw-me-wrap .wprently_fee-add-btn,
 .rbfw-me-wrap .sd-add-type-and-sessional .ppof-button,
 .rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button {
@@ -6019,7 +6294,6 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-wrap #add-particular-row.ppof-button:hover,
 .rbfw-me-wrap #add-resort-type-row.ppof-button:hover,
 .rbfw-me-wrap .rbfw-me-term-add-btn:hover,
-.rbfw-me-wrap .rbfw-me-offdate-add:hover,
 .rbfw-me-wrap .wprently_fee-add-btn:hover,
 .rbfw-me-wrap .sd-add-type-and-sessional .ppof-button:hover,
 .rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button:hover {
@@ -6038,7 +6312,6 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-wrap #add-particular-row.ppof-button i,
 .rbfw-me-wrap #add-resort-type-row.ppof-button i,
 .rbfw-me-wrap .rbfw-me-term-add-btn .dashicons,
-.rbfw-me-wrap .rbfw-me-offdate-add .dashicons,
 .rbfw-me-wrap .wprently_fee-add-btn span,
 .rbfw-me-wrap .sd-add-type-and-sessional .ppof-button i,
 .rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button i {
@@ -6046,7 +6319,6 @@ textarea.rbfw-me-field-invalid {
 }
 
 /* Center add-button rows (wrappers that only host add actions) */
-.rbfw-me-offdate-actions,
 .rbfw-me-addon-discount-card .rbfw-mi-card-footer,
 .rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper > section:not(.bg-light) .mt-2,
 .rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap,
@@ -6061,4 +6333,21 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-pricing-classic-wrap .additional-service-item-price > .add-service-category {
     margin-left: auto !important;
     margin-right: auto !important;
+}
+
+/* Priority padding — category-wise service toggle & category title row */
+.rbfw-me-pricing-classic-wrap .additional-service-item-price > section.category-wise-service {
+    padding: 16px 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title.sss,
+.rbfw-me-pricing-classic-wrap section.service_category_title.sss,
+.rbfw-me-card .service_category_title.sss {
+    padding: 6px 20px !important;
+}
+
+/* Priority padding — particular date time slots toggle */
+.rbfw-me-pricing-classic-wrap .mpStyle > section.particulare-date-time-slot,
+.rbfw-me-pricing-classic-wrap section.particulare-date-time-slot {
+    padding: 16px 20px !important;
 }

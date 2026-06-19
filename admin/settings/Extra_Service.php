@@ -55,7 +55,7 @@
                 ?>
                 <div class="additional-service-item-price">
 					<?php $this->panel_header( 'Additional Service item price settings ', 'Additional Service item and price settings' ); ?>
-                    <section>
+                    <section class="category-wise-service">
                         <div>
                             <label>
 								<?php echo esc_html__( 'Enable Additional service.', 'booking-and-rental-manager-for-woocommerce' ); ?>

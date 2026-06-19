@@ -75,7 +75,7 @@
 			public function rent_type( $post_id ) {
 				?>
 				<?php $this->panel_header( 'Price Settings', 'Price Settings' ); ?>
-                <section>
+                <section class="rent-type-area">
                     <div>
                         <label for="">
 							<?php esc_html_e( 'Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -1411,7 +1411,7 @@
 
                     ?>
                     <div class="mpStyle">
-                        <section>
+                        <section class="particulare-date-time-slot">
                             <div>
                                 <label>
                                     <?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>

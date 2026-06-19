@@ -29,6 +29,7 @@
         initEditorTabsInToolbar();
         initEditorMediaBtn();
         initPricingTypeSwitch();
+        initParticularSwitch();
         initMdPricing();
         initRelatedPicker();
         initFaq();
@@ -1365,6 +1366,32 @@
         });
     }
 
+    /* ── Particular date time slots toggle (all rent types) ─── */
+    function initParticularSwitch() {
+        $wrap.on('change', '.rbfw_particular_switch', function () {
+            var $input  = $(this);
+            var enabled = this.checked;
+
+            $input.val(enabled ? 'on' : 'off');
+
+            var $panel = $input.closest('.mpStyle').children('.available-particular').first();
+            if (!$panel.length) {
+                $panel = $input.closest('.mpStyle').find('.available-particular').first();
+            }
+
+            if (enabled) {
+                $panel.stop(true, true).slideDown().removeClass('hide').addClass('show');
+            } else {
+                $panel.stop(true, true).slideUp().removeClass('show').addClass('hide');
+            }
+        });
+
+        // Align value attribute with saved checked state on load
+        $wrap.find('.rbfw_particular_switch').each(function () {
+            $(this).val(this.checked ? 'on' : 'off');
+        });
+    }
+
     /* ── Multiple Day Pricing Interactivity ─────────────────── */
     function initMdPricing() {
         var $pricing = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
@@ -1537,29 +1564,23 @@
         // ── Day-wise Pricing Toggle ──────────────────────────────
 
         $md.on('click', '.daywise-price-toggle', function () {
-            var $input   = $md.find('input[name="rbfw_enable_daywise_price"]');
-            var enabled  = $input.val() !== 'yes';
-            $(this).toggleClass('active', enabled);
+            var $toggle  = $(this);
+            var $wrapper = $toggle.closest('#rbfw-daywise-config-wrapper');
+            var $input   = $toggle.closest('.item-right').find('input[name="rbfw_enable_daywise_price"]');
+            var enabled  = !$toggle.hasClass('active');
+
+            $toggle.toggleClass('active', enabled);
             $input.val(enabled ? 'yes' : 'no');
+
+            var $panel = $wrapper.children('.day-wise-price-configuration');
             if (enabled) {
-                $md.find('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+                $panel.stop(true, true).slideDown().removeClass('hide').addClass('show');
             } else {
-                $md.find('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+                $panel.stop(true, true).slideUp().removeClass('show').addClass('hide');
             }
         });
 
-        // ── Particular Date Time Slots Toggle ───────────────────
-
-        $md.on('click', '.rbfw_particular_switch', function () {
-            var status = $(this).val();
-            if (status === 'on') {
-                $(this).val('off');
-                $md.find('.available-particular').slideUp().removeClass('show').addClass('hide');
-            } else {
-                $(this).val('on');
-                $md.find('.available-particular').slideDown().removeClass('hide').addClass('show');
-            }
-        });
+        // ── Particular Date Time Slots Toggle — see initParticularSwitch() ──
 
         // ── Time Slot Management ─────────────────────────────────
 

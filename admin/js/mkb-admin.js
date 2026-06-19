@@ -961,6 +961,9 @@
         })
 
         jQuery('.daywise-price-toggle').on('click', function () {
+            if (jQuery(this).closest('.rbfw-me-wrap').length) {
+                return;
+            }
             var $toggle  = jQuery(this);
             var $input   = jQuery('input[name="rbfw_enable_daywise_price"]');
             var enabled  = !$toggle.hasClass('active');
@@ -1859,6 +1862,9 @@
 
 
     $(document).on('click', '.rbfw_particular_switch', function (e) {
+        if ($(this).closest('.rbfw-me-wrap').length) {
+            return;
+        }
         var status = $(this).val();
         if (status === 'on') {
             $(this).val('off');
