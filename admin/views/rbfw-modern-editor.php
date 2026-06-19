@@ -263,6 +263,14 @@
 					</div>
 				</div>
 
+				<?php if ( has_action( 'rbfw_after_extra_service_table' ) ) : ?>
+				<div class="rbfw-me-card rbfw-me-addon-discount-card">
+					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
+						<?php do_action( 'rbfw_after_extra_service_table' ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Fee Management', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>

@@ -174,20 +174,21 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 		public function enqueue_assets(): void {
 			if ( ! $this->is_edit_screen() ) return;
-			$ver = filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw-modern-editor.css' ) ?: '1.0.0';
+			$ver_css = filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw-modern-editor.css' ) ?: '1.0.0';
+			$ver_js  = filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw-modern-editor.js' )  ?: '1.0.0';
 			wp_enqueue_media();
 			wp_enqueue_style( 'rbfw-fee-management', RBFW_PLUGIN_URL . '/css/fee-management.css', [], '1.0.0' );
 			wp_enqueue_style(
 				'rbfw-modern-editor',
 				RBFW_PLUGIN_URL . '/admin/css/rbfw-modern-editor.css',
 				[],
-				$ver
+				$ver_css
 			);
 			wp_enqueue_script(
 				'rbfw-modern-editor',
 				RBFW_PLUGIN_URL . '/admin/js/rbfw-modern-editor.js',
 				[ 'jquery' ],
-				$ver,
+				$ver_js,
 				true
 			);
 			wp_localize_script( 'rbfw-modern-editor', 'rbfwModernEditor', [
@@ -632,6 +633,10 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'equipment'      => __( 'Equipment',                   'booking-and-rental-manager-for-woocommerce' ),
 				'others'         => __( 'Others',                      'booking-and-rental-manager-for-woocommerce' ),
 			];
+
+			// Expose $post globally so addon hooks that use `global $post`
+			// (e.g. the discount-over-x-days plugin) can resolve the post ID.
+			$GLOBALS['post'] = $post;
 
 			include RBFW_PLUGIN_DIR . '/admin/views/rbfw-modern-editor.php';
 		}

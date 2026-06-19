@@ -432,6 +432,14 @@
 .rbfw-me-panel { display: none; flex-direction: column; gap: 16px; }
 .rbfw-me-panel.is-active { display: flex; }
 
+/* ── Discount addon card: hidden by default, shown for multiday and resort only ── */
+.rbfw-me-addon-discount-card { display: none !important; }
+.rbfw-me-panel[data-item-type="bike_car_md"] .rbfw-me-addon-discount-card,
+.rbfw-me-panel[data-item-type="equipment"]   .rbfw-me-addon-discount-card,
+.rbfw-me-panel[data-item-type="dress"]       .rbfw-me-addon-discount-card,
+.rbfw-me-panel[data-item-type="others"]      .rbfw-me-addon-discount-card,
+.rbfw-me-panel[data-item-type="resort"]      .rbfw-me-addon-discount-card { display: flex !important; }
+
 /* ── Cards ──────────────────────────────────────────────────── */
 .rbfw-me-card {
     background: var(--me-card-bg);
