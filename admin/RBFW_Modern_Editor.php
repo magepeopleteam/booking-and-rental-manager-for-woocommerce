@@ -187,7 +187,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			wp_enqueue_script(
 				'rbfw-modern-editor',
 				RBFW_PLUGIN_URL . '/admin/js/rbfw-modern-editor.js',
-				[ 'jquery' ],
+				[ 'jquery', 'rbfw-script' ],
 				$ver_js,
 				true
 			);

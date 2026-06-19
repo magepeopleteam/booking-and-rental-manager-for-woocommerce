@@ -1,5 +1,37 @@
 (function($) {
     "use strict";
+
+    /**
+     * Extra Service admin sections — only one visible at a time.
+     *
+     * Category 1 (.rbfw_es_price_config_wrapper):
+     *   bike_car_sd, appointment, multiple_items
+     *
+     * Category 2 (.additional-service-item-price):
+     *   bike_car_md, resort
+     *
+     * @param {string} itemType  Current rbfw_item_type value.
+     * @param {jQuery} [$context] Optional DOM root (defaults to document).
+     */
+    window.rbfwUpdateExtraServiceSectionVisibility = function(itemType, $context) {
+        var $root = ($context && $context.length) ? $context : jQuery(document);
+        var $category1 = $root.find('.rbfw_es_price_config_wrapper');
+        var $category2 = $root.find('.additional-service-item-price');
+
+        // Always hide both first so they are never visible together.
+        $category1.hide();
+        $category2.hide();
+
+        var showCategory1 = ['bike_car_sd', 'appointment', 'multiple_items'];
+        var showCategory2 = ['bike_car_md', 'resort'];
+
+        if (showCategory1.indexOf(itemType) !== -1) {
+            $category1.show();
+        } else if (showCategory2.indexOf(itemType) !== -1) {
+            $category2.show();
+        }
+    };
+
     var rbfwPostId = (window.location.search.match(/[?&]post=(\d+)/) || [])[1] || '';
     var rbfwTabStorageKey = 'rbfw_active_tab_' + rbfwPostId;
 
@@ -200,14 +232,12 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
-                jQuery('.additional-service-item-price').hide();
 
             }else if(current_item_type == 'resort'){
                 jQuery('.sessional_price_resort').show();
                 jQuery('.mds_price_resort').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
-                jQuery('.additional-service-item-price').show();
             }else{
 
                 jQuery('.sessional_price_multi_day').show();
@@ -218,8 +248,10 @@
             }
         } else {
             jQuery('.rbfw_seasonal_price_config_wrapper').hide();
-            jQuery('.additional-service-item-price').hide();
         }
+
+        // Extra service sections: one category per rental type (initial load).
+        window.rbfwUpdateExtraServiceSectionVisibility(current_item_type);
 
         if (current_item_type == 'bike_car_sd' || current_item_type == 'appointment') {
             jQuery('tr[data-row=rbfw_time_slot_switch]').show();
@@ -274,7 +306,6 @@
                 jQuery('.rbfw_seasonal_price_config_wrapper').show();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                jQuery('.rbfw_es_price_config_wrapper').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
@@ -285,9 +316,6 @@
                 jQuery('.wervice_quantity_input_box').show();
 
                 jQuery('.sd-add-type-and-sessional').show();
-
-
-                jQuery('.additional-service-item-price').hide();
 
                 jQuery('.manage_inventory_as_timely').show();
 
@@ -315,7 +343,6 @@
                 jQuery('.rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').show();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
-                jQuery('.rbfw_es_price_config_wrapper').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
@@ -342,8 +369,6 @@
                     }
                 }
                 jQuery('.rbfw_multiple_items').hide();
-
-                jQuery('.additional-service-item-price').hide();
 
                 jQuery('table.wprently_fee-table th:nth-child(3)').hide();
                 jQuery('table.wprently_fee-table td:nth-child(3)').hide();
@@ -375,14 +400,9 @@
 
                 jQuery('.rbfw_multiple_items').hide();
 
-                jQuery('.additional-service-item-price').show();
-
                 jQuery('table.wprently_fee-table th:nth-child(3)').show();
                 jQuery('table.wprently_fee-table td:nth-child(3)').show();
 
-            }else if (item_type == 'resort') {
-                jQuery('.rbfw_bike_car_sd_wrapper').show();
-                jQuery('.additional-service-item-price').hide();
             }else if (item_type == 'multiple_items') {
 
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
@@ -395,7 +415,6 @@
                 jQuery('.rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                jQuery('.additional-service-item-price').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
@@ -459,14 +478,6 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
-                jQuery('.additional-service-item-price').show();
-
-           /*     var status = $('.rbfw_es_price_config_wrapper').data('status');
-                if(status=='yes'){
-                    $('.rbfw_es_price_config_wrapper').show();
-                }else{
-                    $('.rbfw_es_price_config_wrapper').hide();
-                }*/
                 jQuery('.sessional_price_multi_day').show();
                 jQuery('.sessional_price_single_day').hide();
                 jQuery('.sessional_price_resort').hide();
@@ -477,6 +488,9 @@
                 jQuery('table.wprently_fee-table td:nth-child(3)').show();
 
             }
+
+            // Extra service sections: one category per rental type (on type change).
+            window.rbfwUpdateExtraServiceSectionVisibility(item_type);
 
             return false;
         });
