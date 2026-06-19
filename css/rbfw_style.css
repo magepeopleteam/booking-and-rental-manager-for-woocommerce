@@ -11921,8 +11921,8 @@ i.fas.fa-minus {
 
 /* Row holds columns + arrow, aligns bottoms so arrow centers in the field boxes */
 .rbfw-drp-row {
-    display: flex;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
@@ -11931,7 +11931,6 @@ i.fas.fa-minus {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex: 1;
     min-width: 0;
 }
 
@@ -12027,10 +12026,9 @@ i.fas.fa-minus {
     align-items: center;
 }
 
-@media (max-width: 580px) {
+@media (max-width: 400px) {
     .rbfw-drp-row {
-        flex-direction: column;
-        align-items: stretch;
+        grid-template-columns: 1fr;
         gap: 14px;
     }
     .rbfw-drp-arrow {
