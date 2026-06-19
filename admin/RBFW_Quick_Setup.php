@@ -127,7 +127,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
 
 
                     $sample_rent_items = get_option( 'rbfw_sample_rent_items' );
-                    if ( $sample_rent_items != 'imported' ) {
+                    if ( $sample_rent_items !== 'yes' ) {
                         $dummy_import = new RbfwImportDemo();
                         $dummy_import->rbfw_import_demo_function();
                     }

@@ -193,6 +193,8 @@ function rbfw_page_create() {
         ]
     ];
 
+    $created = false;
+
     foreach ($pages as $slug => $page) {
         if (get_page_by_path($slug) === null) {
             $page_id = wp_insert_post([
