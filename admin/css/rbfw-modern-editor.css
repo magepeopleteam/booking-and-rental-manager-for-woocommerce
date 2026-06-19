@@ -440,6 +440,291 @@
 .rbfw-me-panel[data-item-type="others"]      .rbfw-me-addon-discount-card,
 .rbfw-me-panel[data-item-type="resort"]      .rbfw-me-addon-discount-card { display: flex !important; }
 
+/* Discount card — full-width body + toggle row (Particular date time slots style) */
+.rbfw-me-addon-discount-card > .rbfw-me-card__body.rbfw-me-pricing-classic-wrap {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper {
+    border: none !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light {
+    align-items: center !important;
+    background: #F0F4FB !important;
+    border: 1px solid #dbd0d0 !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    margin: 16px 20px !important;
+    gap: 20px !important;
+    justify-content: space-between !important;
+    padding: 16px 20px !important;
+    box-sizing: border-box !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > div {
+    display: flex !important;
+    flex: 1 !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > div > label {
+    color: #1e293b !important;
+    cursor: default !important;
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > div > p {
+    color: #64748b !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > label.switch {
+    flex-shrink: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table {
+    box-sizing: border-box !important;
+    padding: 0 20px 20px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .md-price-card {
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .md-price-card > div {
+    overflow: visible !important;
+}
+
+/* ── Discount rules table (form-table rbfw_discount_table) ── */
+.rbfw-me-addon-discount-card .rbfw_discount_table.form-table {
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table thead tr {
+    background: #fff !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table thead th {
+    background-color: #eef3ff !important;
+    border-bottom: 2px solid #e5e7eb !important;
+    color: #6a727e !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    line-height: 1.3 !important;
+    padding: 10px 12px !important;
+    text-align: left !important;
+    text-transform: uppercase !important;
+    vertical-align: middle !important;
+    white-space: normal !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody tr {
+    background: #fff !important;
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody tr:nth-child(even) {
+    background: #f5f8ff !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody tr:hover {
+    background: #f8fafd !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody td {
+    min-width: 0 !important;
+    padding: 10px 12px !important;
+    vertical-align: middle !important;
+}
+
+/* Column widths */
+.rbfw-me-addon-discount-card .rbfw_discount_table th:nth-child(1),
+.rbfw-me-addon-discount-card .rbfw_discount_table td:nth-child(1) {
+    width: 22% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table th:nth-child(2),
+.rbfw-me-addon-discount-card .rbfw_discount_table td:nth-child(2) {
+    width: 30% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table th:nth-child(3),
+.rbfw-me-addon-discount-card .rbfw_discount_table td:nth-child(3) {
+    width: 24% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table th:nth-child(4),
+.rbfw-me-addon-discount-card .rbfw_discount_table td:nth-child(4) {
+    width: 12% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table input[type="number"],
+.rbfw-me-addon-discount-card .rbfw_discount_table select.rbfw_discount_type {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table select.rbfw_discount_type {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7790' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+    background-position: right 8px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 12px !important;
+    cursor: pointer !important;
+    padding-right: 28px !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table input[type="number"]:focus,
+.rbfw-me-addon-discount-card .rbfw_discount_table select.rbfw_discount_type:focus {
+    border-color: #1a56db !important;
+    outline: none !important;
+}
+
+/* Sortable drag placeholder */
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody.ui-sortable .ui-sortable-placeholder {
+    background: #f0f4fb !important;
+    border: 1px dashed #c3d4f8 !important;
+    visibility: visible !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table tbody tr.ui-sortable-helper {
+    background: #fff !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08) !important;
+    display: table !important;
+}
+
+/* Action buttons */
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_remove_move {
+    align-items: center !important;
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: center !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_remove_move .button,
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_remove_move .tr_remove {
+    align-items: center !important;
+    background: #fef2f2 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #dc2626 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-shadow: none !important;
+    width: 32px !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_remove_move .button:hover,
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_remove_move .tr_remove:hover {
+    background: #fee2e2 !important;
+    border-color: #dc2626 !important;
+    color: #b91c1c !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_type_sortable_button {
+    align-items: center !important;
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #9ca3af !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-shadow: none !important;
+    width: 32px !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_type_sortable_button:hover {
+    background: #f0f4fb !important;
+    border-color: #c3cfe0 !important;
+    color: #374151 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_table .mp_event_type_sortable_button:active {
+    cursor: grabbing !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .rbfw-mi-card-footer {
+    border-top: 1px dashed #c3cfe0 !important;
+    padding: 14px 16px !important;
+    text-align: center !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button {
+    align-items: center !important;
+    background: #2271b1 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 42px !important;
+    padding: 0 24px !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw_discount_xday_table .ppof-button:hover {
+    background: #135e96 !important;
+}
+
 
 /* ── Cards ──────────────────────────────────────────────────── */
 .rbfw-me-card {
@@ -1563,16 +1848,14 @@
 .rbfw-me-pricing-classic-wrap section.bg-light {
     background: #f0f4fb !important;
     border: none !important;
-    border-top: 1px solid #dde1ec !important;
     border-bottom: 1px solid #dde1ec !important;
     border-radius: 0 !important;
     padding: 14px 20px !important;
     margin: 0 !important;
 }
 
-/* First panel header needs no top border (card already has one) */
-.rbfw-me-pricing-classic-wrap section.bg-light:first-of-type {
-    border-top: none !important;
+.rbfw-me-pricing-classic-wrap section.bg-light:not(:first-of-type) {
+    border-top: 1px solid #dde1ec !important;
 }
 
 .rbfw-me-pricing-classic-wrap section.bg-light > div {
@@ -3403,6 +3686,37 @@
     justify-content: space-between !important;
 }
 
+/* Enable Time Picker — icon + label on same line, description below */
+.rbfw-me-pricing-classic-wrap .md-price-card .item.md-time-toggle-row .item-left {
+    align-items: center !important;
+    column-gap: 10px !important;
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    row-gap: 3px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .md-price-card .item.md-time-toggle-row .item-left > div {
+    display: contents !important;
+}
+
+.rbfw-me-pricing-classic-wrap .md-price-card .item.md-time-toggle-row .item-left .dashicons {
+    align-self: center !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .md-price-card .item.md-time-toggle-row .item-left .label {
+    align-self: center !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .md-price-card .item.md-time-toggle-row .item-left .description {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    margin-top: 0 !important;
+}
+
 /* Max qty input wrapper (number + "qty" label) */
 .rbfw-me-pricing-classic-wrap .md-price-card .md-threshold-input-wrap {
     display: flex !important;
@@ -4597,6 +4911,194 @@
 .rbfw-me-pricing-classic-wrap .wprently_fee-table .mp_event_remove_move .button.remove-row:hover {
     background: #fff1f4 !important;
     border-color: #e11d48 !important;
+}
+
+/* Fee table — full width, no horizontal scroll */
+.rbfw-me-pricing-classic-wrap .wprently_fee-table-wrap {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table {
+    border-collapse: collapse !important;
+    min-width: 0 !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table thead tr {
+    background: #fff !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table thead th {
+    background-color: #eef3ff !important;
+    border-bottom: 2px solid #e5e7eb !important;
+    color: #6a727e !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    padding: 10px 12px !important;
+    position: static !important;
+    text-transform: uppercase !important;
+    white-space: normal !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table tbody tr {
+    background: #fff !important;
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table tbody tr:hover {
+    background: #f8fafd !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    padding: 10px 12px !important;
+    vertical-align: middle !important;
+}
+
+/* Fluid column widths — no fixed min-widths */
+.rbfw-me-pricing-classic-wrap .wprently_fee-table th:nth-child(1),
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td:nth-child(1) {
+    min-width: 0 !important;
+    width: 24% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table th:nth-child(2),
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td:nth-child(2) {
+    min-width: 0 !important;
+    width: 20% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table th:nth-child(3),
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td:nth-child(3) {
+    min-width: 0 !important;
+    width: 12% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table th:nth-child(4),
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td:nth-child(4) {
+    min-width: 0 !important;
+    width: 16% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table th:nth-child(5),
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td:nth-child(5) {
+    min-width: 0 !important;
+    width: 14% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-table th:nth-child(6),
+.rbfw-me-pricing-classic-wrap .wprently_fee-table td:nth-child(6) {
+    min-width: 0 !important;
+    width: 8% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-info {
+    gap: 4px !important;
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-input {
+    box-sizing: border-box !important;
+    font-size: 12px !important;
+    height: 32px !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+}
+
+/* Select dropdowns — visible chevron arrow */
+.rbfw-me-pricing-classic-wrap .wprently_fee-table select.wprently_fee-input {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7790' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") !important;
+    background-position: right 8px center !important;
+    background-repeat: no-repeat !important;
+    background-size: 12px !important;
+    cursor: pointer !important;
+    padding-right: 28px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-amount {
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-amount select.wprently_fee-input {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    width: auto !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-amount input.wprently_fee-input {
+    flex: 0 1 80px !important;
+    min-width: 0 !important;
+    width: 80px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-amount span {
+    flex-shrink: 0 !important;
+    font-size: 12px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-priority {
+    align-items: center !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-priority-select {
+    flex: 1 1 auto !important;
+    font-size: 11px !important;
+    height: 28px !important;
+    min-width: 0 !important;
+    padding: 0 24px 0 6px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-priority-badge {
+    flex-shrink: 0 !important;
+    font-size: 8px !important;
+    line-height: 1.2 !important;
+    padding: 1px 5px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-options {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-badge {
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-toggle {
+    flex-shrink: 0 !important;
+    height: 22px !important;
+    width: 38px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap {
+    margin-top: 16px !important;
 }
 
 /* ── Resort Price Configuration ─────────────────────────────── */
