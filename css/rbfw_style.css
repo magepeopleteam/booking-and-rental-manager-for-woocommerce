@@ -3749,6 +3749,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0 12px;
 }
 
+.rbfw-related-product .owl-item:first-child .item {
+    margin-left: 0;
+}
+
+.rbfw-related-product .owl-item:nth-child(3) .item {
+    margin-right: 0;
+}
+
 .rbfw_dt_row_related_item .owl-carousel.owl-drag .owl-item {
     overflow: hidden;
     border-radius: 0px;
@@ -11945,7 +11953,7 @@ i.fas.fa-minus {
 /* Label sits above the field */
 .rbfw-drp-label {
     display: block;
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
     line-height: 1;
     padding-left: 2px;
@@ -12021,6 +12029,13 @@ i.fas.fa-minus {
     background-image: none !important;
 }
 
+.rbfw-drp-field #pickup_date,
+.rbfw-drp-field #dropoff_date,
+.rbfw-drp-field input.rbfw-input.pickup_date,
+.rbfw-drp-field input.rbfw-input.dropoff_date {
+    color: #1e293b !important;
+}
+
 /* Time picker fields: center icon, label text, and chevron vertically; center selected time */
 .rbfw-drp-col--time .rbfw-drp-label {
     text-align: left;
@@ -12065,9 +12080,13 @@ i.fas.fa-minus {
     text-align: left;
 }
 
-.rbfw-drp-field input.rbfw-input::placeholder {
-    color: #94a3b8 !important;
-    font-weight: 400 !important;
+.rbfw-drp-field input.rbfw-input::placeholder,
+.rbfw-drp-field #pickup_date::placeholder,
+.rbfw-drp-field #dropoff_date::placeholder,
+.rbfw-drp-field .rbfw-time-price::placeholder {
+    color: #1e293b !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
 }
 
 .rbfw-drp-chevron {
