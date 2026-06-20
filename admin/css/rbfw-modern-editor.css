@@ -371,10 +371,10 @@ body.folded.rbfw-modern-editor-screen {
     }
 }
 .rbfw-me-step-nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 350px;
+    gap: 12px;
     position: fixed;
     bottom: 0;
     left: var(--me-admin-menu-w, 160px);
@@ -383,9 +383,12 @@ body.folded.rbfw-modern-editor-screen {
     background: rgba(255, 255, 255, .97);
     backdrop-filter: blur(8px);
     border-top: 1px solid var(--me-border);
-    padding: 14px 28px;
+    padding: 14px clamp(16px, 4vw, 28px);
     box-shadow: 0 -4px 16px rgba(15, 23, 42, .06);
 }
+.rbfw-me-step-prev { justify-self: start; }
+.rbfw-me-step-counter { justify-self: center; text-align: center; }
+.rbfw-me-step-next { justify-self: end; }
 body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     left: 0;
     right: var(--me-admin-menu-w, 160px);
@@ -6368,4 +6371,596 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-pricing-classic-wrap .mpStyle > section.particulare-date-time-slot,
 .rbfw-me-pricing-classic-wrap section.particulare-date-time-slot {
     padding: 16px 20px !important;
+}
+
+/* ============================================================
+   Responsive — modern editor (all devices)
+   ============================================================ */
+
+/* ── Large tablet / small desktop (≤1200px) ─────────────────── */
+@media screen and (max-width: 1200px) {
+    .rbfw-me-body {
+        flex-direction: column;
+        gap: var(--me-space-lg);
+        max-width: 100%;
+        padding: 24px 20px 32px;
+    }
+
+    .rbfw-me-sidebar {
+        width: 100%;
+    }
+
+    .rbfw-me-main {
+        margin-bottom: 32px;
+    }
+
+    .mep-top-nav-info {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+}
+
+/* ── Tablet (≤960px) ─────────────────────────────────────────── */
+@media screen and (max-width: 960px) {
+    .rbfw-me-title-display {
+        max-width: 280px;
+        font-size: 16px;
+    }
+
+    .rbfw-me-tabs {
+        justify-content: flex-start;
+        padding: 18px 16px 16px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .rbfw-me-tab {
+        flex: 0 0 auto;
+        min-width: 96px;
+        max-width: 140px;
+    }
+
+    .rbfw-me-tab:not(:last-child)::after {
+        width: calc(100% - 32px);
+        left: calc(50% + 16px);
+    }
+
+    .rbfw-me-row {
+        grid-template-columns: 1fr;
+    }
+
+    .rbfw-me-tpl-card {
+        width: calc(50% - 7px);
+        flex: 1 1 calc(50% - 7px);
+        min-width: 140px;
+    }
+
+    .rbfw-me-pricing-classic-wrap {
+        margin: 12px 12px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw-tent-types .rbfw-rent-type {
+        width: calc(33.333% - 7px) !important;
+        min-width: 120px !important;
+        flex: 1 1 calc(33.333% - 7px) !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .price-toggle {
+        min-width: calc(50% - 5px);
+        flex: 1 1 calc(50% - 5px);
+    }
+
+    .rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light,
+    .rbfw-me-pricing-classic-wrap .rbfw_fee_management_wrapper,
+    .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper,
+    .rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper {
+        margin-left: 12px !important;
+        margin-right: 12px !important;
+    }
+
+    .rbfw-me-offdate-row {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .rbfw-me-offdate-row .rbfw-me-offdate-remove {
+        grid-column: 1 / -1;
+        justify-self: start;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw-mi-threshold-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* ── WordPress admin mobile (≤782px) ───────────────────────── */
+@media screen and (max-width: 782px) {
+    .rbfw-modern-editor-screen #wpcontent {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .rbfw-me-wrap {
+        --me-admin-bar-h: 46px;
+    }
+
+    .rbfw-me-header {
+        top: var(--me-admin-bar-h, 46px);
+        height: auto;
+        min-height: var(--me-header-h);
+    }
+
+    .rbfw-me-tabs {
+        top: calc(var(--me-admin-bar-h, 46px) + var(--me-header-h));
+    }
+
+    .mep-top-nav-info {
+        grid-template-columns: auto 1fr auto;
+        gap: 8px;
+        padding: 10px 12px;
+        min-height: var(--me-header-h);
+    }
+
+    .rbfw-me-header__center {
+        min-width: 0;
+    }
+
+    .rbfw-me-title-display {
+        max-width: 100%;
+        font-size: 15px;
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .rbfw-me-back__text {
+        display: none;
+    }
+
+    .rbfw-me-classic-switch {
+        font-size: 0;
+        gap: 0;
+        padding: 8px;
+        min-width: 34px;
+        justify-content: center;
+    }
+
+    .rbfw-me-classic-switch .dashicons,
+    .rbfw-me-back .dashicons {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
+
+    .rbfw-me-header__right {
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .rbfw-me-save-indicator {
+        display: none;
+    }
+
+    .rbfw-me-publish-group .rbfw-me-publish {
+        padding: 7px 12px;
+        font-size: 12px;
+    }
+
+    .rbfw-me-body {
+        padding: 16px 12px 28px;
+        min-height: auto;
+    }
+
+    .rbfw-me-main {
+        padding-bottom: 76px;
+        margin-bottom: 24px;
+    }
+
+    .rbfw-me-card__head,
+    .rbfw-me-card__head--with-toggle {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 16px 14px;
+    }
+
+    .rbfw-me-card__head--with-toggle .rbfw-me-toggle {
+        align-self: flex-end;
+    }
+
+    .rbfw-me-card__body {
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .rbfw-me-card--sidebar .rbfw-me-card__head,
+    .rbfw-me-card--sidebar .rbfw-me-card__body {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .rbfw-me-step-nav {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .rbfw-me-step-counter {
+        font-size: 12px;
+    }
+
+    .rbfw-me-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .rbfw-me-tab {
+        min-width: 72px;
+        max-width: 100px;
+        padding: 2px 4px;
+        gap: 6px;
+    }
+
+    .rbfw-me-step-circle {
+        width: 34px;
+        height: 34px;
+        font-size: 12px;
+    }
+
+    .rbfw-me-tab:not(:last-child)::after {
+        top: 15px;
+    }
+
+    .rbfw-me-step-label {
+        font-size: 11px;
+        white-space: normal;
+        text-align: center;
+        line-height: 1.25;
+        max-width: 72px;
+    }
+
+    .rbfw-me-editor-label-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .rbfw-me-field--toggle-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .rbfw-me-field--inline {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .rbfw-me-checkbox-grid {
+        padding: 12px;
+        gap: 8px;
+    }
+
+    .rbfw-me-checkbox-label {
+        font-size: 13px;
+        min-height: 34px;
+        padding: 0 14px;
+    }
+
+    .rbfw-me-gallery-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rbfw-me-gallery-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .rbfw-me-gallery-upload,
+    .rbfw-me-gallery-clear {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rbfw-me-thumb-actions {
+        flex-wrap: wrap;
+    }
+
+    .rbfw-me-thumb-actions .rbfw-me-thumb-set {
+        flex: 1;
+        min-width: 0;
+        justify-content: center;
+    }
+
+    .rbfw-me-pricing-classic-wrap {
+        margin: 8px 0 !important;
+        border-radius: 8px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap section.rent-type-area,
+    .rbfw-me-pricing-classic-wrap section.bg-light,
+    .rbfw-me-pricing-classic-wrap .rbfw_fee_management_wrapper > section.bg-light,
+    .rbfw-me-pricing-classic-wrap .wprently_fee-container,
+    .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__body,
+    .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__body {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw-tent-types .rbfw-rent-type {
+        width: calc(50% - 5px) !important;
+        min-width: calc(50% - 5px) !important;
+        flex: 1 1 calc(50% - 5px) !important;
+        min-height: 80px !important;
+        padding: 12px 8px !important;
+        font-size: 11px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw-rent-type-desc {
+        font-size: 12px !important;
+        padding: 12px 14px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_fee_management_wrapper > section.bg-light,
+    .rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light,
+    .rbfw-me-pricing-classic-wrap section.particulare-date-time-slot,
+    .rbfw-me-pricing-classic-wrap .mpStyle > section.particulare-date-time-slot {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .wprently_fee-table-wrap {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .rbfw-me-pricing-classic-wrap .wprently_fee-table {
+        min-width: 520px !important;
+        table-layout: auto !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .pricing-toggles {
+        gap: 8px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .price-toggle {
+        min-width: calc(50% - 4px) !important;
+    }
+
+    .rbfw-me-offdate-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .features_category_wrapper .feature_category_title {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .features_category_wrapper .feature_category_title input[type="text"] {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .features_category_wrapper .feature_category_inner_item_wrap .item {
+        flex-wrap: wrap;
+    }
+
+    .features_category_wrapper .item > input[type="text"],
+    .rbfw-me-features-body .feature_category_inner_item_wrap [name*="[cat_features]"][name$="[title]"] {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        order: 3;
+    }
+
+    .rbfw-me-features-body {
+        padding: 12px !important;
+    }
+
+    .rbfw-me-editor-wrap .mce-toolbar-grp,
+    .rbfw-me-editor-wrap .quicktags-toolbar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .rbfw-me-faq-modal__box {
+        width: 100%;
+        max-width: calc(100vw - 24px);
+        max-height: calc(100vh - 48px);
+        margin: 12px;
+    }
+
+    .rbfw-me-help-card {
+        margin-bottom: 24px;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .available-particular .header {
+        display: none !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .rbfw_pdwt_row {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        padding: 14px !important;
+        border: 1px solid #eef2f7 !important;
+        border-radius: 8px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .rbfw_pdwt_row:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .rbfw_multi_day_price_conf .item {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .rbfw_multi_day_price_conf .item-right {
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+
+    .rbfw-me-wrap {
+        overflow-x: clip;
+    }
+}
+
+/* ── Small phones (≤600px) ───────────────────────────────────── */
+@media screen and (max-width: 600px) {
+    .mep-top-nav-info {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "back actions"
+            "title title";
+    }
+
+    .rbfw-me-header__left { grid-area: back; }
+    .rbfw-me-header__right { grid-area: actions; }
+    .rbfw-me-header__center {
+        grid-area: title;
+        justify-content: flex-start;
+        padding-top: 4px;
+    }
+
+    .rbfw-me-title-display {
+        text-align: left;
+        -webkit-line-clamp: 2;
+    }
+
+    .rbfw-me-tab.is-active::before {
+        bottom: -14px;
+        width: 36px;
+    }
+
+    .rbfw-me-tpl-card {
+        width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .rbfw-me-template-grid {
+        gap: 10px;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw-tent-types .rbfw-rent-type {
+        width: 100% !important;
+        min-width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .price-toggle {
+        min-width: 100% !important;
+    }
+
+    .rbfw-me-step-prev,
+    .rbfw-me-step-next {
+        position: relative;
+        min-width: 44px;
+        justify-content: center;
+        padding: 8px 10px;
+        font-size: 0;
+    }
+
+    .rbfw-me-step-prev .dashicons,
+    .rbfw-me-step-next .dashicons {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
+
+    .rbfw-me-step-nav {
+        grid-template-columns: auto 1fr auto;
+    }
+
+    .rbfw-me-offday-label {
+        flex: 1 1 calc(50% - 5px);
+        justify-content: center;
+        min-width: calc(50% - 5px);
+    }
+
+    .rbfw-me-gallery-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rbfw-me-publish-dropdown {
+        right: 0;
+        left: auto;
+        min-width: 140px;
+    }
+}
+
+/* ── Very small phones (≤480px) ──────────────────────────────── */
+@media screen and (max-width: 480px) {
+    .rbfw-me-tabs {
+        padding: 14px 10px 12px;
+    }
+
+    .rbfw-me-tab {
+        min-width: 56px;
+        max-width: 64px;
+    }
+
+    .rbfw-me-step-label {
+        font-size: 10px;
+        max-width: 56px;
+    }
+
+    .rbfw-me-step-circle {
+        width: 30px;
+        height: 30px;
+    }
+
+    .rbfw-me-tab:not(:last-child)::after {
+        top: 13px;
+        left: calc(50% + 13px);
+        width: calc(100% - 26px);
+    }
+
+    .rbfw-me-card__head h2,
+    .rbfw-me-card__head h3 {
+        font-size: 15px;
+    }
+
+    .rbfw-me-body {
+        padding: 12px 10px 24px;
+    }
+
+    .rbfw-me-card__body {
+        padding: 14px 12px;
+    }
+
+    .rbfw-me-checkbox-label {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .rbfw-me-gallery-list {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+    }
+}
+
+/* ── Touch devices — larger tap targets ──────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+    .rbfw-me-tab,
+    .rbfw-me-btn,
+    .rbfw-me-pricing-classic-wrap .rbfw-rent-type,
+    .rbfw-me-checkbox-label,
+    .rbfw-me-offday-label,
+    .rbfw-me-help-link {
+        min-height: 44px;
+    }
+
+    .rbfw-me-gallery-remove {
+        opacity: 1;
+    }
+
+    .rbfw-me-btn:hover {
+        transform: none;
+    }
+
+    .rbfw-me-tpl-card:hover {
+        transform: none;
+    }
 }
