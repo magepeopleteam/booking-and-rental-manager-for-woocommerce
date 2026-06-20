@@ -2765,7 +2765,16 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
                             $duration_price += $rbfw_daily_rate * $actual_days;
                         }else{
                             $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
-                            $duration_price += $rbfw_daily_rate * $days + $rbfw_hourly_rate * $hours;
+                            $day_slug         = strtolower( gmdate( 'D', strtotime( $start_date ) ) );
+                            $duration_price  += (float) $rbfw_daily_rate * (float) $days;
+                            $duration_price  += rbfw_md_price_for_hours_period(
+                                $post_id,
+                                $hours,
+                                $day_slug,
+                                $start_date,
+                                $rbfw_daily_rate,
+                                $rbfw_hourly_rate
+                            );
                         }
                     }
                 }
@@ -2808,7 +2817,16 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
                     $duration_price += $rbfw_daily_rate * $thresold_days;
                 }else{
                     $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
-                    $duration_price += $rbfw_daily_rate * $daysWeeks + $rbfw_hourly_rate * $hours;
+                    $day_slug         = strtolower( gmdate( 'D', strtotime( $start_date ) ) );
+                    $duration_price  += (float) $rbfw_daily_rate * (float) $daysWeeks;
+                    $duration_price  += rbfw_md_price_for_hours_period(
+                        $post_id,
+                        $hours,
+                        $day_slug,
+                        $start_date,
+                        $rbfw_daily_rate,
+                        $rbfw_hourly_rate
+                    );
                 }
             }
         }
@@ -2913,6 +2931,48 @@ function rbfw_apply_tiered_pricing($total_days, $rbfw_tiered_pricing, $default_d
 
 
 
+function rbfw_md_is_half_day_hours( $post_id, $hours ) {
+    if ( get_post_meta( $post_id, 'rbfw_enable_half_day_rate', true ) !== 'yes' ) {
+        return false;
+    }
+
+    $start = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
+    $end   = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
+    $start = is_numeric( $start ) ? (float) $start : 0;
+    $end   = is_numeric( $end ) ? (float) $end : 0;
+
+    if ( $start <= 0 || $end <= 0 || $end < $start ) {
+        return false;
+    }
+
+    $hours = (float) $hours;
+    return $hours >= $start && $hours <= $end;
+}
+
+function rbfw_md_price_for_hours_period( $post_id, $hours, $day, $date, $daily_rate, $hourly_rate, $seasonal_prices = '', $enable_daily = 'yes' ) {
+    $hours = (float) $hours;
+    if ( $hours <= 0 ) {
+        return 0;
+    }
+
+    if ( rbfw_md_is_half_day_hours( $post_id, $hours ) ) {
+        return (float) rbfw_get_half_day_rate( $post_id, $day, '', $seasonal_prices, $date, $hours, $enable_daily );
+    }
+
+    $rbfw_enable_hourly_threshold = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true );
+    $rbfw_hourly_threshold        = (float) get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
+    if ( $rbfw_enable_hourly_threshold === 'yes' && $rbfw_hourly_threshold > 0 && $hours >= $rbfw_hourly_threshold ) {
+        return (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily );
+    }
+
+    return (float) $hourly_rate * $hours;
+}
+
+function rbfw_md_get_rental_span_hours( $pickup_datetime, $dropoff_datetime ) {
+    return rbfw_get_time_diff_in_hours( $pickup_datetime, $dropoff_datetime );
+}
+
+
 function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_date, $end_date, $pickup_datetime, $dropoff_datetime,
                                   $total_days, $hours, $daily_rate, $hourly_rate, $enable_daily, $enable_hourly, $seasonal_prices, $endday) {
 
@@ -2960,10 +3020,16 @@ function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_
 
 function rbfw_handle_hourly_only($i, $post_id, $day, $date, $start_date, $end_date, $pickup_datetime, $dropoff_datetime, $seasonal_prices, $hourly_rate, $endday, $total_days) {
     $price = 0;
+    $span_hours = rbfw_md_get_rental_span_hours( $pickup_datetime, $dropoff_datetime );
+
+    if ( $start_date === $end_date || $total_days === 1 ) {
+        if ( rbfw_md_is_half_day_hours( $post_id, $span_hours ) ) {
+            return (float) rbfw_get_half_day_rate( $post_id, $day, '', $seasonal_prices, $date, $span_hours, 'no' );
+        }
+    }
 
     if ($start_date === $end_date) {
-        $hours = rbfw_get_time_diff_in_hours($pickup_datetime, $dropoff_datetime);
-        $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+        $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $span_hours);
     } elseif ($total_days === 1) {
         $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours($pickup_datetime, "$start_date 24:00:00"));
         $price += rbfw_get_hourly_rate($post_id, $endday, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours("$end_date 00:00:00", $dropoff_datetime));
@@ -2976,56 +3042,49 @@ function rbfw_handle_hourly_only($i, $post_id, $day, $date, $start_date, $end_da
 
 function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_date, $pickup_datetime, $dropoff_datetime, $seasonal_prices, $daily_rate, $hourly_rate, $hours, $total_days, $endday, $enable_daily) {
     $price = 0;
+    $span_hours = rbfw_md_get_rental_span_hours( $pickup_datetime, $dropoff_datetime );
 
-    if ($hours) {
+    if ( $total_days === 1 ) {
+        if ( rbfw_md_is_half_day_hours( $post_id, $span_hours ) ) {
+            return (float) rbfw_get_half_day_rate( $post_id, $day, '', $seasonal_prices, $date, $span_hours, $enable_daily );
+        }
 
         $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
-        $half_day_hour_threshold_start = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
-        $half_day_hour_threshold_end = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
-        $rbfw_half_day_rate = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
+        $rbfw_enable_hourly_threshold = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true );
 
-        if ($start_date != $end_date && $total_days == 1) {
-            if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold){
-                $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
-            }else{
-                $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours($pickup_datetime, "$start_date 24:00:00"));
-                $price += rbfw_get_hourly_rate($post_id, $endday, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours("$end_date 00:00:00", $dropoff_datetime));
-            }
-
-        } elseif ($start_date === $end_date && $total_days == 1) {
-            if($hours >= $half_day_hour_threshold_start && $hours <= $half_day_hour_threshold_end){
-                $price += rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, 0, $enable_daily);
-            }else{
-                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
-                    $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
-                }else{
-                    $rbfw_enable_hourly_rate = get_post_meta($post_id, 'rbfw_enable_hourly_rate', true);
-                    if($hours && $rbfw_enable_hourly_rate === 'no'){
-                        $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
-                    }else{
-                        $price = rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_date, $pickup_datetime, $dropoff_datetime, $seasonal_prices, $daily_rate, $hourly_rate, $hours, $total_days, $endday, $enable_daily);
-                    }
-
-
-                    //$price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
-                }
-            }
-
-        } elseif ($i == $total_days - 1) {
-            if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
-                $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
-            }else{
-                if($hours >= $half_day_hour_threshold_start && $hours <= $half_day_hour_threshold_end){
-                    $price += rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, 0, $enable_daily);
-                }else{
-                    $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
-                }
-            }
-        } else {
-            $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
+        if ( $rbfw_enable_hourly_threshold === 'yes' && $rbfw_hourly_threshold && $span_hours >= (float) $rbfw_hourly_threshold ) {
+            return (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily );
         }
+
+        if ( $start_date === $end_date ) {
+            $rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true );
+            if ( $span_hours && $rbfw_enable_hourly_rate === 'no' ) {
+                return (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, $span_hours, $enable_daily, $total_days, $start_date, $end_date );
+            }
+            return (float) rbfw_md_price_for_hours_period( $post_id, $span_hours, $day, $date, $daily_rate, $hourly_rate, $seasonal_prices, $enable_daily );
+        }
+
+        if ( $span_hours >= (float) $rbfw_hourly_threshold && $rbfw_enable_hourly_threshold === 'yes' && $rbfw_hourly_threshold ) {
+            return (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily );
+        }
+
+        $price += rbfw_get_hourly_rate( $post_id, $day, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours( $pickup_datetime, $start_date . ' 23:59:59' ) );
+        $price += rbfw_get_hourly_rate( $post_id, $endday, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours( $end_date . ' 00:00:00', $dropoff_datetime ) );
+        return $price;
+    }
+
+    if ( $hours ) {
+        if ( $i === $total_days - 1 ) {
+            if ( rbfw_md_is_half_day_hours( $post_id, $hours ) ) {
+                return (float) rbfw_get_half_day_rate( $post_id, $day, '', $seasonal_prices, $date, $hours, $enable_daily );
+            }
+
+            return (float) rbfw_md_price_for_hours_period( $post_id, $hours, $day, $date, $daily_rate, $hourly_rate, $seasonal_prices, $enable_daily );
+        }
+
+        $price += rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily );
     } else {
-        $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
+        $price += rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily );
     }
 
     return $price;
@@ -3066,16 +3125,18 @@ function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date,
 }
 
 function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
-        $rbfw_half_day_rate = get_post_meta($post_id, "rbfw_half_day_rate", true);
-        if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily,$rbfw_half_day_rate)) !== 'not_found') {
+        $global_half_day_rate = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
+        $global_half_day_rate = is_numeric( $global_half_day_rate ) ? (float) $global_half_day_rate : 0;
+
+        if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily, $global_half_day_rate)) !== 'not_found') {
             return $sp_price;
         }
         $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
-        $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
-        // Empty day-wise field falls back to the global half-day rate; explicit 0 kept.
-        return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
-            ? (float) $custom_rate
-            : $rbfw_half_day_rate;
+        $custom_rate = get_post_meta($post_id, "rbfw_{$day}_half_day_rate", true);
+        if ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null && is_numeric( $custom_rate ) ) {
+            return (float) $custom_rate;
+        }
+        return $global_half_day_rate;
     }
 
 /*function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3123,8 +3184,8 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
                 set_transient("pricing_applied", "sessional", 3600);
 
 				if ( $hours ) {
-                    if($rbfw_half_day_rate){
-                        return $rbfw_half_day_rate;
+                    if ( $half_day_rate > 0 ) {
+                        return (float) $half_day_rate;
                     }elseif($hourly_rate){
                         return $hourly_rate * $hours;
                     }else{
