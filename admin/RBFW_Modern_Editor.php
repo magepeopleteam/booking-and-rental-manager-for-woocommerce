@@ -545,6 +545,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
 			}
 
+			do_action( 'rbfw_modern_editor_save', $post_id );
+
 			wp_send_json_success( [
 				'post_id'      => $post_id,
 				'post_status'  => get_post_status( $post_id ),

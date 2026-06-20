@@ -465,6 +465,8 @@
 					</div>
 				</div>
 
+				<?php do_action( 'rbfw_modern_editor_advanced_sections', $post_id ); ?>
+
 			</div>
 
 			<!-- ── Step Navigation ──────────────────────────────────────── -->
