@@ -12013,6 +12013,51 @@ i.fas.fa-minus {
     background-image: none !important;
 }
 
+/* Time picker fields: center icon, label text, and chevron vertically; center selected time */
+.rbfw-drp-col--time .rbfw-drp-label {
+    text-align: center;
+    padding-left: 0;
+}
+
+.rbfw-drp-field--time {
+    position: relative;
+    justify-content: center;
+    min-height: 38px;
+    padding-left: 36px;
+    padding-right: 28px;
+}
+
+.rbfw-drp-field--time .rbfw-drp-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rbfw-drp-field--time .rbfw-drp-chevron {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rbfw-drp-field--time select.rbfw-select.rbfw-time-price {
+    text-align: center !important;
+    text-align-last: center !important;
+    width: 100% !important;
+    padding: 0 4px !important;
+}
+
+.rbfw-drp-field--time select.rbfw-select.rbfw-time-price option {
+    text-align: left;
+}
+
 .rbfw-drp-field input.rbfw-input::placeholder {
     color: #94a3b8 !important;
     font-weight: 400 !important;

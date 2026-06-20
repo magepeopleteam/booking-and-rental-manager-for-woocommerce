@@ -484,9 +484,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 </div>
 
                                 <?php if($rbfw_enable_time_picker == 'yes'){ ?>
-                                <div class="rbfw-drp-col">
+                                <div class="rbfw-drp-col rbfw-drp-col--time">
                                     <span class="rbfw-drp-label"><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></span>
-                                    <div class="rbfw-drp-field">
+                                    <div class="rbfw-drp-field rbfw-drp-field--time">
                                         <span class="rbfw-drp-icon"><i class="fa-regular fa-clock"></i></span>
                                         <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php esc_html_e('Select time','booking-and-rental-manager-for-woocommerce'); ?></option>
@@ -513,9 +513,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                                 <?php if($rbfw_enable_time_picker == 'yes'){ ?>
                                     <input name="rbfw_available_time" id="rbfw_available_time" value="yes" type="hidden">
-                                    <div class="rbfw-drp-col">
+                                    <div class="rbfw-drp-col rbfw-drp-col--time">
                                         <span class="rbfw-drp-label"><?php esc_html_e('Return Time','booking-and-rental-manager-for-woocommerce'); ?></span>
-                                        <div class="rbfw-drp-field">
+                                        <div class="rbfw-drp-field rbfw-drp-field--time">
                                             <span class="rbfw-drp-icon"><i class="fa-regular fa-clock"></i></span>
                                             <select class="rbfw-select rbfw-time-price dropoff_time" name="rbfw_pickup_end_time" id="dropoff_time" required>
                                                 <option value="" disabled selected><?php esc_html_e('Select time','booking-and-rental-manager-for-woocommerce'); ?></option>
