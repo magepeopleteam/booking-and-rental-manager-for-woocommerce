@@ -692,21 +692,24 @@ function rbfw_url_exclude_search_engine() {
                 jQuery(document).ready(function () {
                     jQuery(".owl-carousel.rbfw-related-product").owlCarousel({
                         loop: true,
-                        margin: 0,
+                        margin: 20,
                         responsiveClass: true,
                         responsive: {
                             0: {
                                 items: 1,
-                                nav: true
+                                nav: true,
+                                margin: 0
                             },
                             600: {
                                 items: 3,
-                                nav: false
+                                nav: false,
+                                margin: 20
                             },
                             1000: {
                                 items: 3,
                                 nav: true,
-                                loop: true
+                                loop: true,
+                                margin: 20
                             }
                         }
                     });

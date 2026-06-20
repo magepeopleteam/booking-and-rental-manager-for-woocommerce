@@ -1125,6 +1125,33 @@ div.mp_left_section {
 
 .rbfw-related-products-wrapper {
     position: relative;
+    width: 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.rbfw-related-products-wrapper .owl-carousel {
+    width: 100% !important;
+    max-width: 100%;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.rbfw-related-products-wrapper .owl-carousel .owl-stage-outer {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.rbfw-related-products-wrapper .owl-carousel .owl-stage {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .rbfw-related-products-wrapper .owl-carousel .owl-nav {
@@ -3738,23 +3765,23 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     line-height: 0.1;
 }
 
-.owl-carousel .owl-stage-outer {
-
-    /*width: calc(100% + 24px);*/
+.rbfw-related-products-wrapper .owl-carousel .owl-stage-outer {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .rbfw-related-product .owl-item .item {
-    /*padding: 0 12px;*/
     padding: 0;
-    margin: 0 12px;
+    margin: 0;
+    height: 100%;
+    box-sizing: border-box;
 }
 
-.rbfw-related-product .owl-item:first-child .item {
-    margin-left: 0;
-}
-
-.rbfw-related-product .owl-item:nth-child(3) .item {
-    margin-right: 0;
+/* 20px gap between related items (owl margin handles stage width) */
+.rbfw-related-product.owl-carousel .owl-item {
+    box-sizing: border-box;
 }
 
 .rbfw_dt_row_related_item .owl-carousel.owl-drag .owl-item {
@@ -5116,17 +5143,9 @@ span {
     background-color: #ffffff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-    margin: 10px;
+    margin: 10px 0;
     position: relative;
     min-height: 375px;
-}
-
-.rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap:first-child {
-    margin-left: 0;
-}
-
-.rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap:last-child {
-    margin-right: 0;
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap .rbfw-related-product-title-wrap {
