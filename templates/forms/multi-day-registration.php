@@ -882,7 +882,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                 <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                     <div class="item">
-                        <div class="rbfw_reg_form_rb">
+                        <div class="rbfw_reg_form_rb" style="display: none;">
                             <?php
                             $reg_form = new Rbfw_Reg_Form();
                             echo wp_kses($reg_form->rbfw_generate_regf_fields($post_id),rbfw_allowed_html());
