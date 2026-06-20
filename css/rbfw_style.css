@@ -7219,14 +7219,15 @@ span.rbfw_item_absolute:hover {
 
 .rbfw_regf_group {
     position: relative;
-    padding: 5px;
+    padding: 5px 12px;
 }
 
 .rbfw_regf_group input[type="text"],
 .rbfw_regf_group input[type="email"],
 .rbfw_regf_group input[type="date"],
 .rbfw_regf_group input[type="file"],
-.rbfw_regf_group textarea {
+.rbfw_regf_group textarea,
+.rbfw_regf_group select {
     display: block;
     width: 100%;
     padding: 0.375rem 0.75rem;
@@ -7240,6 +7241,13 @@ span.rbfw_item_absolute:hover {
     transition: #86b7fe 0.15s ease-in-out,
     rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
     box-sizing: border-box;
+}
+
+.rbfw_regf_group select {
+    appearance: auto;
+    -webkit-appearance: menulist;
+    cursor: pointer;
+    min-height: 38px;
 }
 
 .rbfw_regf_form_header {
@@ -7299,7 +7307,7 @@ table.rbfw_regf_cart_table {
 
 .rbfw_regf_group label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     width:180px;
 }
 
@@ -12015,7 +12023,7 @@ i.fas.fa-minus {
 
 /* Time picker fields: center icon, label text, and chevron vertically; center selected time */
 .rbfw-drp-col--time .rbfw-drp-label {
-    text-align: center;
+    text-align: left;
     padding-left: 0;
 }
 
@@ -12049,7 +12057,6 @@ i.fas.fa-minus {
 
 .rbfw-drp-field--time select.rbfw-select.rbfw-time-price {
     text-align: center !important;
-    text-align-last: center !important;
     width: 100% !important;
     padding: 0 4px !important;
 }
