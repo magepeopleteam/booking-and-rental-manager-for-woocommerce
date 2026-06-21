@@ -1439,8 +1439,9 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     align-items: center !important;
     display: flex !important;
     flex-direction: row !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     min-width: 0 !important;
+    width: 160px !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-item-row label {
@@ -3006,6 +3007,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     font-weight: 600 !important;
     color: #1d2327 !important;
     margin: 0 !important;
+    margin-left: 15px !important;
     padding: 0 !important;
     cursor: default !important;
     line-height: 1.4 !important;
@@ -7129,6 +7131,7 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-pricing-classic-wrap section.bg-light label {
     font-size: 14px !important;
     color: var(--me-text-secondary) !important;
+    margin-left: 15px !important;
 }
 
 .rbfw-me-pricing-classic-wrap section.bg-light p {
