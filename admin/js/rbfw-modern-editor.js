@@ -1602,7 +1602,7 @@
             $pricing.find('.rbfw_general_price_config_wrapper').hide();
             $pricing.find('.rbfw_multiple_items').hide();
             $pricing.find('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
-            $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').addClass('hide').hide();
+            $pricing.find('section.appointment-onday').addClass('hide').hide();
             $pricing.find('.rbfw_discount_price_config_wrapper').hide();
             $pricing.find('.rbfw_seasonal_price_config_wrapper:not(.rbfw-sp-modern-panel)').hide();
 
@@ -1616,7 +1616,7 @@
                 $pricing.find('.rbfw_time_inventory').hide();
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
-                $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').removeClass('hide').show();
+                $pricing.find('section.appointment-onday').removeClass('hide').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
                 $pricing.find('.rbfw_without_time_inventory').show();
 

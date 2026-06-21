@@ -949,7 +949,7 @@
                         </div>
                     </div>
                 </div>
-                <section class="hide">
+                <section class="appointment-onday <?php echo esc_attr( $rbfw_item_type != 'appointment' ? 'hide' : '' ); ?>">
                     <label class="w-30">
 						<?php esc_html_e( 'Appointment Ondays', 'booking-and-rental-manager-for-woocommerce' ); ?>
                     </label>

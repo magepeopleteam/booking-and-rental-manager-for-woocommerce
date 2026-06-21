@@ -1814,15 +1814,20 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     color: #d63638 !important;
 }
 
-.rbfw-me-addon-seasonal-card .rbfw-sp-modern-footer,
-.rbfw-me-addon-seasonal-card .rbfw-sp-modern-subpanel__title {
+.rbfw-me-addon-seasonal-card .rbfw-sp-modern-footer {
     margin: 0 !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-modern-footer {
     margin-top: 12px !important;
     padding: 0 !important;
-    text-align: left !important;
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
+}
+
+.rbfw-me-addon-seasonal-card span.ppof-button.mp_add_item_sessional_mi {
+    margin-bottom: 10px !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-modern-subpanel {
@@ -1833,9 +1838,12 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-modern-subpanel__title {
     color: #1d2327 !important;
+    margin-top: 20px !important;
     font-size: 13px !important;
     font-weight: 600 !important;
-    margin-bottom: 12px !important;
+    background: #F0F4FB !important;
+    margin-bottom: 4px !important;
+    padding: 16px 20px !important;
 }
 
 
@@ -3071,7 +3079,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 
 /* ── Classic pricing regular sections — content padding ─────── */
-.rbfw-me-pricing-classic-wrap section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration) {
+.rbfw-me-pricing-classic-wrap section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration):not(.appointment-onday) {
     padding: 0 !important;
     border-bottom: 1px solid #f0f0f1 !important;
 }
@@ -3599,6 +3607,47 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 /* ── Inline label + input field rows (appointment max qty etc.) */
 .rbfw-me-pricing-classic-wrap .rbfw_switch_sd_appointment_row {
     margin: 0 20px 12px !important;
+}
+
+/* ── Appointment Ondays section (appointment rent type only) ── */
+.rbfw-me-pricing-classic-wrap section.appointment-onday {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 20px 12px !important;
+    padding: 16px 20px !important;
+    width: auto !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.appointment-onday.hide {
+    display: none !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.appointment-onday > label {
+    color: #111827 !important;
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.appointment-onday .rbfw_appointment_ondays_wrap {
+    display: flex !important;
+    gap: 12px 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.appointment-onday .rbfw_appointment_ondays_value {
+    align-items: center !important;
+    display: inline-flex !important;
+    gap: 8px !important;
+}
+
+.rbfw-me-pricing-classic-wrap section.appointment-onday .rbfw_appointment_ondays_value span {
+    color: #374151 !important;
+    font-size: 13px !important;
 }
 
 /* ── rbfw_bike_car_sd_wrapper — Time Picker & Time Slots ─────── */
@@ -7042,7 +7091,7 @@ textarea.rbfw-me-field-invalid {
 }
 
 /* Classic pricing sections — spacing & type harmony */
-.rbfw-me-pricing-classic-wrap section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration) {
+.rbfw-me-pricing-classic-wrap section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration):not(.appointment-onday) {
     padding: 0 !important;
 }
 
@@ -8004,8 +8053,9 @@ textarea.rbfw-me-field-invalid {
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-config-panel__footer,
 .rbfw-me-addon-seasonal-card .rbfw-sp-config-panel__footer .rbfw-sp-add-btn {
-    justify-content: flex-start !important;
-    text-align: left !important;
+    display: flex !important;
+    justify-content: center !important;
+    text-align: center !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button {
