@@ -6497,21 +6497,28 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 
 #rbfw_add_meta_box .rbfw-mi-card-footer {
     border-top: 1px solid #d8deea;
+    display: flex;
+    justify-content: center;
     padding: 16px;
+    text-align: center;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn {
     align-items: center;
-    background: #0058d7;
-    border: 1px solid #0058d7;
-    border-radius: 2px;
+    background: #1a56db;
+    background: var(--me-primary, #1a56db);
+    border: none;
+    border-radius: 6px;
     color: #fff;
     display: inline-flex;
     font-size: 14px;
     font-weight: 600;
     gap: 8px;
+    justify-content: center;
+    margin: 0 auto;
     min-height: 42px;
-    padding: 0 18px;
+    padding: 10px 20px;
+    width: fit-content;
 }
 
 #rbfw_add_meta_box .rbfw-mi-threshold-grid {
@@ -8544,21 +8551,35 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 /* Card footer */
 #rbfw_add_meta_box .rbfw-mi-card-footer {
     border-top: 1px dashed #c3cfe0 !important;
+    display: flex !important;
+    justify-content: center !important;
     padding: 14px 18px !important;
+    text-align: center !important;
 }
 
 /* Add More button */
 #rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn {
+    align-items: center !important;
     background: #1a56db !important;
+    background: var(--me-primary, #1a56db) !important;
     border: none !important;
-    border-radius: 8px !important;
-    font-size: 13px !important;
-    min-height: 38px !important;
-    padding: 0 18px !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    min-height: 42px !important;
+    padding: 10px 20px !important;
+    width: fit-content !important;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn:hover {
-    background: #1648c0 !important;
+    background: #1347b8 !important;
+    background: var(--me-primary-dk, #1347b8) !important;
+    color: #fff !important;
 }
 
 /* Delete row btn */

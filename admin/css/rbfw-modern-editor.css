@@ -1856,7 +1856,9 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 
 .rbfw-me-addon-mds-card > .rbfw-me-card__body.rbfw-me-pricing-classic-wrap {
+    border: none !important;
     box-sizing: border-box !important;
+    margin: 0 !important;
     max-width: 100% !important;
     padding: 0 !important;
 }
@@ -1885,10 +1887,435 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 .rbfw-me-addon-mds-card .mp_hidden_content {
     display: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+    visibility: hidden !important;
+    width: 0 !important;
+}
+
+/* Modern MDS panel shell */
+.rbfw-me-addon-mds-card .rbfw-mds-modern-panel {
+    background: #fff !important;
+    border: 1px solid #dde1ec !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-head {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde1ec !important;
+    padding: 14px 20px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-head__text h3 {
+    color: #1d2327 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    margin: 0 0 3px !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-head__text p {
+    color: #646970 !important;
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-body {
+    background: #fff !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-grid-wrap {
+    overflow-x: auto !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-head-row,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-row {
+    align-items: center !important;
+    box-sizing: border-box !important;
+    display: grid !important;
+    gap: 0 12px !important;
+    grid-template-columns: minmax(88px, 1fr) minmax(88px, 1fr) minmax(120px, 1.25fr) minmax(120px, 1.25fr) minmax(120px, 1.25fr) 72px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-head-row {
+    background: #fff !important;
+    border-bottom: 1px solid #eef2f7 !important;
+    color: #6a727e !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    line-height: 1.3 !important;
+    padding: 14px 12px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-head-row .rbfw-mds-col-actions {
+    text-align: center !important;
+}
+
+.rbfw-me-addon-mds-card .md_item_insert_mds.rbfw-mds-modern-rows {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-row {
+    border-bottom: 1px solid #f0f4fb !important;
+    padding: 10px 12px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-row:nth-child(even) {
+    background: #fafbfd !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-row:hover {
+    background: #f5f8fc !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-field {
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-col-actions {
+    justify-self: center !important;
+    text-align: center !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-grid-wrap .formControl,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-grid-wrap .price-input {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    line-height: 1.2 !important;
+    min-height: 36px !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-modern-grid-wrap .formControl:focus,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-grid-wrap .price-input:focus {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+    outline: none !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-price-wrap {
+    align-items: center !important;
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    overflow: hidden !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-price-wrap > span {
+    align-items: center !important;
+    background: #f8fafc !important;
+    border-right: 1px solid #dde4ef !important;
+    box-sizing: border-box !important;
+    color: #6a727e !important;
+    display: inline-flex !important;
+    flex: 0 0 28px !important;
+    font-size: 13px !important;
+    height: 100% !important;
+    justify-content: center !important;
+    width: 28px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-price-wrap .price-input {
+    border: none !important;
+    box-shadow: none !important;
+    flex: 1 1 auto !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    min-width: 0 !important;
+    padding: 0 10px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-price-wrap:focus-within {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-row-remove {
+    align-items: center !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-radius: 5px !important;
+    color: #64748b !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    height: 32px !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    width: 32px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-row-remove:hover {
+    background: #fee2e2 !important;
+    border-color: #fecaca !important;
+    color: #dc2626 !important;
+}
+
+.rbfw-me-addon-mds-card .mds_price_md .rbfw-mds-modern-footer,
+.rbfw-me-addon-mds-card .mds_price_resort .rbfw-mds-modern-footer,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-footer {
+    border-top: 1px solid #eef2f7 !important;
+    display: flex !important;
+    justify-content: center !important;
+    padding: 14px 20px 16px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .mds_price_md .rbfw-mds-modern-footer .ppof-button.mp_add_item_mds,
+.rbfw-me-addon-mds-card .mds_price_resort .rbfw-mds-modern-footer .ppof-button.rbfw_add_item_mds_resort,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-footer .ppof-button,
+.rbfw-me-addon-mds-card .ppof-button.rbfw_add_item_mds_resort,
+.rbfw-me-addon-mds-card .ppof-button.mp_add_item_mds {
+    align-items: center !important;
+    background: var(--me-primary) !important;
+    border: none !important;
+    border-radius: var(--me-radius-sm) !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    line-height: 1.4 !important;
+    margin: 0 auto !important;
+    min-height: 42px !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    width: fit-content !important;
+}
+
+.rbfw-me-addon-mds-card .mds_price_md .rbfw-mds-modern-footer .ppof-button.mp_add_item_mds:hover,
+.rbfw-me-addon-mds-card .mds_price_resort .rbfw-mds-modern-footer .ppof-button.rbfw_add_item_mds_resort:hover,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-footer .ppof-button:hover,
+.rbfw-me-addon-mds-card .ppof-button.rbfw_add_item_mds_resort:hover,
+.rbfw-me-addon-mds-card .ppof-button.mp_add_item_mds:hover {
+    background: var(--me-primary-dk) !important;
+    color: #fff !important;
+}
+
+.rbfw-me-addon-mds-card .mds_price_resort.rbfw-mds-modern-panel > section {
+    padding: 16px 20px 0 !important;
+}
+
+/* Resort MDS — modern card blocks */
+.rbfw-me-addon-mds-card .rbfw-mds-resort-body {
+    padding: 16px 20px 0 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-blocks {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-block {
+    background: #fff !important;
+    border: 1px solid #dde1ec !important;
+    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    padding: 16px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-block__head {
+    align-items: center !important;
+    display: flex !important;
+    gap: 12px !important;
+    justify-content: space-between !important;
+    margin-bottom: 14px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-day-row {
+    align-items: center !important;
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-wrap: wrap !important;
+    gap: 12px 24px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-day-field {
+    align-items: center !important;
+    display: flex !important;
+    gap: 10px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-day-prefix {
+    color: #1d2327 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    margin-right: 4px !important;
+    white-space: nowrap !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-day-field .formControl {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    max-width: 120px !important;
+    min-height: 36px !important;
+    padding: 0 10px !important;
+    width: 120px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-day-field .formControl:focus {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+    outline: none !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-block-remove {
+    align-items: center !important;
+    background: #fff !important;
+    border: 1px solid #c8d7ef !important;
+    border-radius: 6px !important;
+    color: #2271b1 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    flex-shrink: 0 !important;
+    height: 36px !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 36px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-block-remove:hover {
+    background: #f0f6fc !important;
+    border-color: #2271b1 !important;
+    color: #135e96 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table-wrap {
+    overflow-x: auto !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table {
+    border: 1px solid #e5e7eb !important;
+    border-collapse: separate !important;
+    border-radius: 6px !important;
+    border-spacing: 0 !important;
+    display: table !important;
+    overflow: hidden !important;
+    table-layout: fixed !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table thead {
+    display: table-header-group !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tbody {
+    display: table-row-group !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tr {
+    display: table-row !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table th,
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table td {
+    display: table-cell !important;
+    vertical-align: middle !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table thead th {
+    background: #eef3ff !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    color: #6a727e !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    padding: 10px 12px !important;
+    text-align: left !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table thead th .required {
+    color: #d63638 !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tbody td {
+    border-bottom: 1px solid #eef2f7 !important;
+    padding: 10px 12px !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tbody input.medium {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    line-height: 1.2 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    min-height: 36px !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tbody input.medium:focus {
+    border-color: #2271b1 !important;
+    box-shadow: 0 0 0 1px #2271b1 !important;
+    outline: none !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-resort-table tbody input.rbfw_mds_room_type {
+    display: none !important;
+}
+
+.rbfw-me-addon-mds-card .rbfw-mds-room-type-label {
+    color: #1d2327 !important;
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
 }
 
 .rbfw-me-addon-mds-card section.rbfw-mds-section,
-.rbfw-me-addon-mds-card .mds_for_mds {
+.rbfw-me-addon-mds-card .mds_price_resort .mds_for_mds:not(.rbfw-mds-resort-block) {
     border: 1px solid #e5e7eb !important;
     border-left: 4px solid #2196f3 !important;
     background: #f4f7fb !important;
@@ -1917,23 +2344,6 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     margin-left: 10px !important;
 }
 
-.rbfw-me-addon-mds-card .rbfw-mi-card-footer {
-    display: flex !important;
-    justify-content: center !important;
-    margin-top: 10px !important;
-}
-
-.rbfw-me-addon-mds-card .rbfw-mi-card-footer .ppof-button,
-.rbfw-me-addon-mds-card .ppof-button.rbfw_add_item_mds_resort,
-.rbfw-me-addon-mds-card .ppof-button.mp_add_item_mds {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    cursor: pointer !important;
-    margin-bottom: 10px !important;
-}
-
 .rbfw-me-addon-mds-card .rbfw_resort_price_table_sp,
 .rbfw-me-addon-mds-card .rbfw-sp-item-row .form-table {
     width: 100% !important;
@@ -1954,37 +2364,21 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 
 .rbfw-me-addon-mds-card .rbfw-sp-item-row .formControl,
-.rbfw-me-addon-mds-card .rbfw-sp-item-row input.medium,
-.rbfw-me-addon-mds-card .mds_for_mds .formControl {
+.rbfw-me-addon-mds-card .rbfw-sp-item-row input.medium {
     width: 100% !important;
 }
 
-.rbfw-me-addon-mds-card .rbfw-sp-item-row > .button,
 .rbfw-me-addon-mds-card section.rbfw-mds-section > .button {
     position: absolute !important;
     top: 12px !important;
     right: 12px !important;
 }
 
-.rbfw-me-addon-mds-card .rbfw_seasonal_price_config_wrapper > section.bg-light.rbfw-sp-panel-header {
-    background: #F0F4FB !important;
-    border: 1px solid #e5e7eb !important;
-    border-radius: 6px !important;
-    padding: 16px 20px !important;
-    margin-bottom: 16px !important;
-}
-
-.rbfw-me-addon-mds-card .rbfw_seasonal_price_config_wrapper > section.bg-light.rbfw-sp-panel-header label {
-    display: block !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    margin-bottom: 4px !important;
-}
-
-.rbfw-me-addon-mds-card .rbfw_seasonal_price_config_wrapper > section.bg-light.rbfw-sp-panel-header span {
-    display: block !important;
-    color: #64748b !important;
-    font-size: 13px !important;
+@media (max-width: 960px) {
+    .rbfw-me-addon-mds-card .rbfw-mds-modern-head-row,
+    .rbfw-me-addon-mds-card .rbfw-mds-modern-row {
+        grid-template-columns: minmax(72px, 1fr) minmax(72px, 1fr) minmax(96px, 1.1fr) minmax(96px, 1.1fr) minmax(96px, 1.1fr) 56px !important;
+    }
 }
 
 
@@ -4420,30 +4814,41 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 /* Card footer */
 .rbfw-me-pricing-classic-wrap .rbfw-mi-card-footer {
     border-top: 1px dashed #c3cfe0 !important;
+    display: flex !important;
+    justify-content: center !important;
     padding: 14px 16px !important;
+    text-align: center !important;
 }
 
 /* Add More Item button */
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .ppof-button.add-more-btn {
     align-items: center !important;
-    background: #2271b1 !important;
+    background: var(--me-primary) !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: var(--me-radius-sm) !important;
     box-shadow: none !important;
     color: #fff !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
-    gap: 6px !important;
-    min-height: 38px !important;
-    padding: 0 18px !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    line-height: 1.4 !important;
+    margin: 0 auto !important;
+    min-height: 42px !important;
+    padding: 10px 20px !important;
     text-shadow: none !important;
-    transition: background .15s !important;
+    transition: background var(--me-transition) !important;
+    width: fit-content !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .ppof-button.add-more-btn:hover {
-    background: #135e96 !important;
+    background: var(--me-primary-dk) !important;
+    color: #fff !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_multiple_items .ppof-button.add-more-btn i {
     color: #fff !important;
 }
 
@@ -6183,7 +6588,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     color: #b91c1c !important;
 }
 
-/* ── Add New Extra Service footer ── */
+/* ── Add Extra Service footer ── */
 .rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper > section:not(.bg-light) .mt-2 {
     border-top: 1px dashed #c3cfe0 !important;
     margin: 0 !important;
@@ -6738,36 +7143,43 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     border-color: #dc2626 !important;
 }
 
-/* "Add New Resort Type" button — teal */
+/* "Add New Resort Type" button */
+.rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper .mt-2 {
+    align-items: center !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin: 14px 20px !important;
+    padding: 0 !important;
+    text-align: center !important;
+}
+
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper #add-resort-type-row.ppof-button {
     align-items: center !important;
-    background: #0d9488 !important;
+    background: var(--me-primary) !important;
     border: none !important;
-    border-radius: 8px !important;
+    border-radius: var(--me-radius-sm) !important;
     box-shadow: none !important;
     color: #fff !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     gap: 8px !important;
     height: 42px !important;
-    margin: 0 !important;
-    padding: 0 20px !important;
+    justify-content: center !important;
+    margin: 0 auto !important;
+    padding: 10px 20px !important;
     text-shadow: none !important;
-    transition: background .15s !important;
+    transition: background var(--me-transition) !important;
+    width: fit-content !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper #add-resort-type-row.ppof-button:hover {
-    background: #0f766e !important;
+    background: var(--me-primary-dk) !important;
     color: #fff !important;
 }
 
-/* Paragraph wrapper around the button */
-.rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper .mt-2 {
-    margin: 14px 20px !important;
-    padding: 0 !important;
-}
+/* Paragraph wrapper around the button — rules merged above */
 
 /* ── FAQ Settings ───────────────────────────────────────────── */
 .rbfw-me-faq-items {
@@ -7354,7 +7766,12 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-addon-seasonal-card .rbfw-mi-card-footer .ppof-button,
 .rbfw-me-addon-seasonal-card .sessional_price_multi_day .ppof-button,
 .rbfw-me-addon-seasonal-card .sessional_price_single_day .ppof-button,
-.rbfw-me-addon-seasonal-card .sessional_price_resort .ppof-button {
+.rbfw-me-addon-seasonal-card .sessional_price_resort .ppof-button,
+.rbfw-me-addon-seasonal-card .rbfw-sp-config-panel__footer .rbfw-sp-add-btn.ppof-button,
+.rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-footer .ppof-button,
+.rbfw-me-addon-mds-card .ppof-button.rbfw_add_item_mds_resort,
+.rbfw-me-addon-mds-card .ppof-button.mp_add_item_mds {
     align-items: center !important;
     background: var(--me-primary) !important;
     border: none !important;
@@ -7392,7 +7809,12 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-addon-seasonal-card .rbfw-mi-card-footer .ppof-button:hover,
 .rbfw-me-addon-seasonal-card .sessional_price_multi_day .ppof-button:hover,
 .rbfw-me-addon-seasonal-card .sessional_price_single_day .ppof-button:hover,
-.rbfw-me-addon-seasonal-card .sessional_price_resort .ppof-button:hover {
+.rbfw-me-addon-seasonal-card .sessional_price_resort .ppof-button:hover,
+.rbfw-me-addon-seasonal-card .rbfw-sp-config-panel__footer .rbfw-sp-add-btn.ppof-button:hover,
+.rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button:hover,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-footer .ppof-button:hover,
+.rbfw-me-addon-mds-card .ppof-button.rbfw_add_item_mds_resort:hover,
+.rbfw-me-addon-mds-card .ppof-button.mp_add_item_mds:hover {
     background: var(--me-primary-dk) !important;
     border: none !important;
     color: #fff !important;
@@ -7435,7 +7857,11 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-addon-seasonal-card .rbfw-mi-card-footer .ppof-button i,
 .rbfw-me-addon-seasonal-card .sessional_price_multi_day .ppof-button i,
 .rbfw-me-addon-seasonal-card .sessional_price_single_day .ppof-button i,
-.rbfw-me-addon-seasonal-card .sessional_price_resort .ppof-button i {
+.rbfw-me-addon-seasonal-card .sessional_price_resort .ppof-button i,
+.rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button i,
+.rbfw-me-addon-mds-card .rbfw-mds-modern-footer .ppof-button i,
+.rbfw-me-addon-mds-card .ppof-button.rbfw_add_item_mds_resort i,
+.rbfw-me-addon-mds-card .ppof-button.mp_add_item_mds i {
     color: #fff !important;
 }
 
@@ -8202,19 +8628,34 @@ textarea.rbfw-me-field-invalid {
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button {
-    background: #fff !important;
-    border: 1px solid #4338ca !important;
-    color: #4338ca !important;
+    align-items: center !important;
+    background: var(--me-primary) !important;
+    border: none !important;
+    border-radius: var(--me-radius-sm) !important;
+    box-shadow: none !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    gap: 8px !important;
+    justify-content: center !important;
+    line-height: 1.4 !important;
+    margin: 0 auto !important;
+    min-height: 42px !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    width: fit-content !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button:hover {
-    background: #eef2ff !important;
-    border-color: #3730a3 !important;
-    color: #3730a3 !important;
+    background: var(--me-primary-dk) !important;
+    border: none !important;
+    color: #fff !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-add-btn.ppof-button i {
-    color: inherit !important;
+    color: #fff !important;
 }
 
 @media (max-width: 1200px) {
