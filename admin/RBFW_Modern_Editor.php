@@ -340,9 +340,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'nonce_save' => wp_create_nonce( self::NONCE_SAVE ),
 				'list_url'   => admin_url( 'edit.php?post_type=' . self::POST_TYPE ),
 				'i18n'       => [
-					'saving'       => __( 'Saving…', 'booking-and-rental-manager-for-woocommerce' ),
-					'saved'        => __( 'Saved', 'booking-and-rental-manager-for-woocommerce' ),
-					'save_error'   => __( 'Save failed', 'booking-and-rental-manager-for-woocommerce' ),
+					'saving'       => __( 'Saving your changes…', 'booking-and-rental-manager-for-woocommerce' ),
+					'saved'        => __( 'All changes saved', 'booking-and-rental-manager-for-woocommerce' ),
+					'save_error'   => __( 'Save failed — please try again', 'booking-and-rental-manager-for-woocommerce' ),
 					'publish'      => __( 'Publish', 'booking-and-rental-manager-for-woocommerce' ),
 					'update'       => __( 'Update', 'booking-and-rental-manager-for-woocommerce' ),
 				],

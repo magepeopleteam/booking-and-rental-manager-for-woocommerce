@@ -692,11 +692,36 @@
         return false;
     }
 
+    function setSaveIndicator(state, text) {
+        var $indicator = $wrap.find('.rbfw-me-save-indicator');
+        var iconClass  = '';
+
+        if (state === 'saving') {
+            iconClass = 'dashicons-update rbfw-me-save-indicator__icon--spin';
+        } else if (state === 'saved') {
+            iconClass = 'dashicons-yes-alt';
+        } else if (state === 'error') {
+            iconClass = 'dashicons-warning';
+        }
+
+        if (!state || !text) {
+            $indicator.removeClass('is-saving is-saved is-error is-visible').empty();
+            return;
+        }
+
+        var html = '<span class="dashicons ' + iconClass + ' rbfw-me-save-indicator__icon"></span>' +
+            '<span class="rbfw-me-save-indicator__text">' + text + '</span>';
+
+        $indicator
+            .removeClass('is-saving is-saved is-error is-visible')
+            .addClass('is-' + state + ' is-visible')
+            .html(html);
+    }
+
     function doSave(status) {
         if ( ! validateBeforeSave() ) return;
 
-        var $indicator = $wrap.find('.rbfw-me-save-indicator');
-        $indicator.text(cfg.i18n && cfg.i18n.saving || 'Saving…').removeClass('is-saved is-error').addClass('is-saving');
+        setSaveIndicator('saving', cfg.i18n && cfg.i18n.saving || 'Saving your changes…');
 
         var data = collectFormData();
         data.action      = 'rbfw_modern_editor_save';
@@ -705,9 +730,8 @@
         data.post_status = status;
 
         $.post(cfg.ajax_url, data, function (res) {
-            $indicator.removeClass('is-saving');
             if (res.success) {
-                $indicator.text(cfg.i18n && cfg.i18n.saved || 'Saved').addClass('is-saved');
+                setSaveIndicator('saved', cfg.i18n && cfg.i18n.saved || 'All changes saved');
                 // Update publish button label if status changed
                 if (status === 'publish') {
                     $wrap.find('.rbfw-me-publish').text(cfg.i18n && cfg.i18n.update || 'Update').data('published', '1');
@@ -718,12 +742,12 @@
                 $dot.attr('class', 'rbfw-me-status-dot rbfw-me-status-dot--' + status);
                 $label.text(status.charAt(0).toUpperCase() + status.slice(1));
 
-                setTimeout(function () { $indicator.text(''); }, 3000);
+                setTimeout(function () { setSaveIndicator('', ''); }, 4500);
             } else {
-                $indicator.text(cfg.i18n && cfg.i18n.save_error || 'Save failed').addClass('is-error');
+                setSaveIndicator('error', cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again');
             }
         }).fail(function () {
-            $indicator.removeClass('is-saving').text(cfg.i18n && cfg.i18n.save_error || 'Save failed').addClass('is-error');
+            setSaveIndicator('error', cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again');
         });
     }
 

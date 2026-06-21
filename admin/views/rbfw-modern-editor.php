@@ -15,7 +15,6 @@
 			<h1 class="rbfw-me-title-display"><?php echo esc_html( $screen_title ); ?></h1>
 		</div>
 		<div class="rbfw-me-header__right">
-			<span class="rbfw-me-save-indicator" aria-live="polite"></span>
 			<?php if ( $classic_url ) : ?>
 				<a class="rbfw-me-btn rbfw-me-btn--ghost rbfw-me-classic-switch" href="<?php echo esc_url( $classic_url ); ?>" title="<?php esc_attr_e( 'Switch to Classic Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					<span class="dashicons dashicons-editor-code"></span>
@@ -48,6 +47,8 @@
 		</div>
 		</div><!-- /.mep-top-nav-info -->
 	</div>
+
+	<div class="rbfw-me-save-indicator" role="status" aria-live="polite" aria-atomic="true"></div>
 
 	<!-- ── Steps progress bar ───────────────────────────────────────────── -->
 	<div class="rbfw-me-tabs" role="tablist">

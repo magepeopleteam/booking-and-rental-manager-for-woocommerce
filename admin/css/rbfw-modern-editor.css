@@ -120,14 +120,66 @@
 }
 
 .rbfw-me-save-indicator {
-    font-size: 12px;
-    color: var(--me-muted);
-    min-width: 50px;
-    text-align: right;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+    display: none;
+    font-size: 14px;
+    font-weight: 600;
+    gap: 8px;
+    justify-content: center;
+    left: 50%;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    min-width: 240px;
+    max-width: calc(100vw - 32px);
+    padding: 12px 20px;
+    pointer-events: none;
+    position: fixed;
+    text-align: center;
+    top: calc(var(--me-admin-bar-h, 32px) + var(--me-header-h) + 12px);
+    transform: translateX(-50%);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    z-index: 100001;
 }
-.rbfw-me-save-indicator.is-saving { color: var(--me-primary); }
-.rbfw-me-save-indicator.is-saved  { color: #00a32a; }
-.rbfw-me-save-indicator.is-error  { color: var(--me-danger); }
+
+.rbfw-me-save-indicator.is-visible {
+    display: inline-flex;
+}
+
+.rbfw-me-save-indicator.is-saving {
+    background: #eff6ff;
+    border: 1px solid #93c5fd;
+    color: #1d4ed8;
+}
+
+.rbfw-me-save-indicator.is-saved {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    color: #15803d;
+}
+
+.rbfw-me-save-indicator.is-error {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+}
+
+.rbfw-me-save-indicator__icon {
+    flex-shrink: 0;
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+}
+
+.rbfw-me-save-indicator__icon--spin {
+    animation: rbfw-me-save-spin 0.85s linear infinite;
+}
+
+@keyframes rbfw-me-save-spin {
+    to { transform: rotate(360deg); }
+}
 
 .rbfw-me-classic-switch {
     display: inline-flex;
@@ -1063,7 +1115,6 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-addon-seasonal-card > .rbfw-me-card__body {
     align-items: stretch !important;
     padding: 0 !important;
-    width: 100% !important;
 }
 
 .rbfw-me-addon-seasonal-card > .rbfw-me-card__body.rbfw-me-pricing-classic-wrap > .rbfw_seasonal_price_config_wrapper,
@@ -6788,10 +6839,6 @@ textarea.rbfw-me-field-invalid {
     background: var(--me-primary-soft);
 }
 
-.rbfw-me-save-indicator {
-    font-size: 13px;
-}
-
 /* Sidebar & help cards */
 .rbfw-me-help-card h3 {
     color: #fff;
@@ -7235,7 +7282,10 @@ textarea.rbfw-me-field-invalid {
     }
 
     .rbfw-me-save-indicator {
-        display: none;
+        font-size: 13px;
+        min-width: 200px;
+        padding: 10px 16px;
+        top: calc(var(--me-admin-bar-h, 46px) + var(--me-header-h) + 8px);
     }
 
     .rbfw-me-publish-group .rbfw-me-publish {
