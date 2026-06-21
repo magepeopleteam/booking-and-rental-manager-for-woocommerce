@@ -1390,12 +1390,11 @@
             $pricing.find('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
             $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').addClass('hide').hide();
             $pricing.find('.rbfw_discount_price_config_wrapper').hide();
-            $pricing.find('.rbfw_seasonal_price_config_wrapper').hide();
-            $pricing.find('.sessional_price_single_day,.sessional_price_multi_day,.sessional_price_resort,.mds_price_resort').hide();
+            $pricing.find('.rbfw_seasonal_price_config_wrapper:not(.rbfw-sp-modern-panel)').hide();
+            $pricing.find('.sessional_price_single_day,.sessional_price_multi_day,.sessional_price_resort,.sessional_price_multiple_items,.mds_price_resort,.rbfw-sp-config-panel').hide();
 
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_single_day').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
@@ -1408,26 +1407,32 @@
                 $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').removeClass('hide').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
                 $pricing.find('.rbfw_without_time_inventory').show();
+                $pricing.find('.sessional_price_single_day').show();
 
             } else if (type === 'resort') {
                 $pricing.find('.rbfw_resort_price_config_wrapper').show();
-                $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
                 $pricing.find('.sessional_price_resort,.mds_price_resort').show();
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
 
             } else if (type === 'multiple_items') {
-                $pricing.find('.sessional_price_single_day').show();
+                $pricing.find('.rbfw-sp-config-panel,.sessional_price_multi_day').hide();
+                $pricing.find('.sessional_price_multiple_items').show();
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
+                if (typeof window.rbfwSpSyncAllMiSeasonal === 'function') {
+                    window.rbfwSpSyncAllMiSeasonal($pricing);
+                }
 
             } else {
                 // bike_car_md and legacy aliases
                 $pricing.find('.rbfw_general_price_config_wrapper').show();
-                $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
-                $pricing.find('.sessional_price_multi_day').show();
+                $pricing.find('.rbfw-sp-config-panel,.sessional_price_multi_day').show();
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
             }
+
+            // Modern panel visibility is CSS-driven; strip inline display from legacy .hide() calls.
+            $pricing.find('.rbfw-sp-modern-panel').removeAttr('style');
 
             // Extra service sections: one category per rental type (initial load + type change).
             if (typeof window.rbfwUpdateExtraServiceSectionVisibility === 'function') {

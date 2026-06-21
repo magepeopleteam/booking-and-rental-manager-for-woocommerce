@@ -225,7 +225,7 @@
 
 
         if ( current_item_type != 'appointment') {
-            jQuery('.rbfw_seasonal_price_config_wrapper').show();
+            jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
             if(current_item_type == 'bike_car_sd'){
 
                 jQuery('.sessional_price_single_day').show();
@@ -247,7 +247,7 @@
 
             }
         } else {
-            jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+            jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
         }
 
         // Extra service sections: one category per rental type (initial load).
@@ -257,7 +257,7 @@
             jQuery('tr[data-row=rbfw_time_slot_switch]').show();
         }else if(current_item_type == 'multiple_items'){
             jQuery('.rbfw_min_max_booking_day_row').hide();
-            jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+            jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
         } else {
             jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
             jQuery('tr[data-row=rdfw_available_time]').show();
@@ -303,7 +303,7 @@
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
-                jQuery('.rbfw_seasonal_price_config_wrapper').show();
+                jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
@@ -340,7 +340,7 @@
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
-                jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+                jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').show();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
@@ -412,7 +412,7 @@
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
-                jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+                jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
@@ -462,7 +462,7 @@
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_location_switch').show();
                 jQuery('.rbfw_general_price_config_wrapper').show();
-                jQuery('.rbfw_seasonal_price_config_wrapper').show();
+                jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
 
                 jQuery('.rbfw_discount_price_config_wrapper').show();

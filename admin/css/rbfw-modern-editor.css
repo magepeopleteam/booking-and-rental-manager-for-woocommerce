@@ -1296,6 +1296,10 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     width: 100% !important;
 }
 
+.rbfw-me-addon-seasonal-card .rbfw-sp-modern-panel {
+    display: block !important;
+}
+
 /* Hide row clone templates */
 .rbfw-me-addon-seasonal-card .mp_hidden_content {
     display: none !important;
