@@ -1608,6 +1608,14 @@
         });
         $(".rbfw_resort_price_table_body").sortable();
 
+        if (typeof window.rbfwSpScheduleResortSeasonalSync === 'function') {
+            var $root = jQuery('#rbfw_add_meta_box').first();
+            if (!$root.length) {
+                $root = jQuery('.rbfw-me-wrap').first();
+            }
+            window.rbfwSpScheduleResortSeasonalSync($root.length ? $root : jQuery(document), true);
+        }
+
         var daylong_price_label_val = $('input[name="rbfw_enable_resort_daylong_price"]').val();
 
         if (daylong_price_label_val === 'yes') {

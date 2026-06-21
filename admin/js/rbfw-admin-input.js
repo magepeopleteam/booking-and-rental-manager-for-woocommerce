@@ -79,6 +79,14 @@
                         console.log('List updated!');
                     }
                 });
+
+                if (typeof window.rbfwSpScheduleSdSeasonalSync === 'function') {
+                    var $root = jQuery('.rbfw-me-wrap').first();
+                    if (!$root.length) {
+                        $root = jQuery('#rbfw_add_meta_box').first();
+                    }
+                    window.rbfwSpScheduleSdSeasonalSync($root.length ? $root : jQuery(document), true);
+                }
             },
         });
     })
