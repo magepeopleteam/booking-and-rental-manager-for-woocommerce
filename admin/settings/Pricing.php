@@ -2077,10 +2077,14 @@
 			// md_price_config() fires addon hooks internally. The modern editor view
 			// renders those addons in dedicated cards after this call, so suppress them
 			// here to prevent duplicate classic markup inside the pricing card.
-			$saved_extra    = $wp_filter['rbfw_after_extra_service_table'] ?? null;
-			$saved_seasonal = $wp_filter['rbfw_after_week_price_table'] ?? null;
+			$saved_extra       = $wp_filter['rbfw_after_extra_service_table'] ?? null;
+			$saved_seasonal    = $wp_filter['rbfw_after_week_price_table'] ?? null;
+			$saved_mds_md      = $wp_filter['rbfw_after_general_price_table'] ?? null;
+			$saved_mds_resort  = $wp_filter['rbfw_after_room_type_price_saver_price_table'] ?? null;
 			unset( $wp_filter['rbfw_after_extra_service_table'] );
 			unset( $wp_filter['rbfw_after_week_price_table'] );
+			unset( $wp_filter['rbfw_after_general_price_table'] );
+			unset( $wp_filter['rbfw_after_room_type_price_saver_price_table'] );
 
 			$renderer->md_price_config( $post_id );
 
@@ -2089,6 +2093,12 @@
 			}
 			if ( $saved_seasonal !== null ) {
 				$wp_filter['rbfw_after_week_price_table'] = $saved_seasonal;
+			}
+			if ( $saved_mds_md !== null ) {
+				$wp_filter['rbfw_after_general_price_table'] = $saved_mds_md;
+			}
+			if ( $saved_mds_resort !== null ) {
+				$wp_filter['rbfw_after_room_type_price_saver_price_table'] = $saved_mds_resort;
 			}
 		}
 

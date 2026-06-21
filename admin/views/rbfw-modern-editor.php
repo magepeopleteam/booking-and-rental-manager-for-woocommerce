@@ -308,6 +308,15 @@
 				</div>
 				<?php endif; ?>
 
+				<?php if ( has_action( 'rbfw_after_general_price_table' ) || has_action( 'rbfw_after_room_type_price_saver_price_table' ) ) : ?>
+				<div class="rbfw-me-card rbfw-me-addon-mds-card">
+					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
+						<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
+						<?php do_action( 'rbfw_after_room_type_price_saver_price_table', $post_id ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Fee Management', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -615,16 +624,6 @@
 					<h3><?php esc_html_e( 'Resources & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
 				<div class="rbfw-me-card__body">
-
-					<!-- Documentation -->
-					<a href="https://booking-and-rental-manager.com/documentation/" target="_blank" rel="noopener" class="rbfw-me-help-link rbfw-me-help-link--docs">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-media-document"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Guides, tutorials & how-tos', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
 
 					<div class="rbfw-me-help-divider">
 						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
