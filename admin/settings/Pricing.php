@@ -302,12 +302,6 @@
                                     <i class="fas fa-circle-plus"></i>
                                     <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </span>
-
-                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) { ?>
-                                    <span id="sync-with-sessional-price-sd" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button sync-with-sessional-price-sd" >
-                                        <?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                    </span>
-                                <?php } ?>
                             </div>
                         </div>
                     </section>
@@ -868,13 +862,6 @@
 
                             <p class="mt-2">
                                 <span id="add-resort-type-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Resort Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) && is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) ) { ?>
-                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync with sessional price and multi day saver', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' )){ ?>
-                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php }elseif(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){ ?>
-                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync multi day saver', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php } ?>
                             </p>
 
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
