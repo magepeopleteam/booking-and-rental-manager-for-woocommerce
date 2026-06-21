@@ -9323,3 +9323,31 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     align-items: flex-start;
     gap: 12px;
 }
+
+/* Classic editor — seasonal sub-panels by rent type (always loaded with admin_style.css) */
+.rbfw_seasonal_price_config_wrapper[data-item-type] > .rbfw-sp-config-panel,
+.rbfw_seasonal_price_config_wrapper[data-item-type] > .sessional_price_single_day,
+.rbfw_seasonal_price_config_wrapper[data-item-type] > .sessional_price_resort,
+.rbfw_seasonal_price_config_wrapper[data-item-type] > .sessional_price_multiple_items {
+    display: none !important;
+}
+
+.rbfw_seasonal_price_config_wrapper[data-item-type="bike_car_sd"] > .sessional_price_single_day,
+.rbfw_seasonal_price_config_wrapper[data-item-type="appointment"] > .sessional_price_single_day {
+    display: block !important;
+}
+
+.rbfw_seasonal_price_config_wrapper[data-item-type="bike_car_md"] > .rbfw-sp-config-panel,
+.rbfw_seasonal_price_config_wrapper[data-item-type="equipment"] > .rbfw-sp-config-panel,
+.rbfw_seasonal_price_config_wrapper[data-item-type="dress"] > .rbfw-sp-config-panel,
+.rbfw_seasonal_price_config_wrapper[data-item-type="others"] > .rbfw-sp-config-panel {
+    display: block !important;
+}
+
+.rbfw_seasonal_price_config_wrapper[data-item-type="resort"] > .sessional_price_resort {
+    display: block !important;
+}
+
+.rbfw_seasonal_price_config_wrapper[data-item-type="multiple_items"] > .sessional_price_multiple_items {
+    display: block !important;
+}
