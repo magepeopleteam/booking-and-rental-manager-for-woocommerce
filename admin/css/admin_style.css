@@ -7779,6 +7779,119 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     color: #1a56db;
 }
 
+/* ── Appointment max qty row (classic editor — md-price-card layout) ── */
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row {
+    margin: 0 0 12px;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row.hide {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card .item {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 16px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card .item-left {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card .item-left .label {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card .item-left .description {
+    color: #6b7790;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card .item-right {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap {
+    align-items: stretch;
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #1e293b;
+    font-size: 13px;
+    font-weight: 600;
+    height: 36px;
+    margin: 0;
+    min-width: 0;
+    outline: none;
+    padding: 0 12px;
+    text-align: center;
+    width: 72px;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap input[type="number"]::-webkit-outer-spin-button,
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap > span {
+    align-items: center;
+    background: #f0f4fb;
+    border-left: 1px solid #dde4ef;
+    color: #6b7790;
+    display: flex;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap:focus-within {
+    border-color: #1a56db;
+}
+
+#rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-threshold-input-wrap:focus-within > span {
+    border-left-color: #1a56db;
+    color: #1a56db;
+}
+
 /* Time configuration row – toggle on right, clock icon on left */
 #rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .item-left {
     align-items: center;

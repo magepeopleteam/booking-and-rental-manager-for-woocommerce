@@ -931,7 +931,8 @@
 			public function appointment( $post_id ) {
 				$rbfw_item_type                          = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_sd_appointment_ondays_data         = get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) : [];
-				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : 'appointment';
+				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true );
+				$rbfw_sd_appointment_max_qty_per_session = ( $rbfw_sd_appointment_max_qty_per_session !== '' && is_numeric( $rbfw_sd_appointment_max_qty_per_session ) ) ? $rbfw_sd_appointment_max_qty_per_session : '1';
 				?>
                 <div class="rbfw_switch_sd_appointment_row <?php echo esc_attr( $rbfw_item_type != 'appointment' ) ? 'hide' : 'show'; ?>">
                     <div class="md-price-card">
@@ -942,8 +943,8 @@
                             </div>
                             <div class="item-right">
                                 <div class="md-threshold-input-wrap">
-                                    <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
-                                    <span>qty</span>
+                                    <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" min="1" step="1" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
+                                    <span><?php esc_html_e( 'QTY', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 </div>
                             </div>
                         </div>

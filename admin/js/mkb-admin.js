@@ -291,7 +291,7 @@
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
                 jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
-                jQuery('.rbfw_switch_sd_appointment_row').hide();
+                jQuery('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
                 jQuery('section.appointment-onday').addClass('hide').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
@@ -324,7 +324,7 @@
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
                 jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
-                jQuery('.rbfw_switch_sd_appointment_row').show();
+                jQuery('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
                 jQuery('section.appointment-onday').removeClass('hide').show();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
@@ -368,7 +368,7 @@
                 jQuery('.rbfw_general_price_config_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').show();
                 jQuery('.rbfw_location_switch').hide();
-                jQuery('.rbfw_switch_sd_appointment_row').hide();
+                jQuery('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
                 jQuery('section.appointment-onday').addClass('hide').hide();
                 jQuery('.rbfw_discount_price_config_wrapper').show();
                 jQuery('.rbfw_min_max_booking_day_row').show();
@@ -394,7 +394,7 @@
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
                 jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
-                jQuery('.rbfw_switch_sd_appointment_row').hide();
+                jQuery('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
                 jQuery('section.appointment-onday').addClass('hide').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
@@ -440,7 +440,7 @@
                 jQuery('.rbfw_location_switch').show();
                 jQuery('.rbfw_general_price_config_wrapper').show();
                 jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
-                jQuery('.rbfw_switch_sd_appointment_row').hide();
+                jQuery('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
                 jQuery('section.appointment-onday').addClass('hide').hide();
 
                 jQuery('.rbfw_discount_price_config_wrapper').show();
