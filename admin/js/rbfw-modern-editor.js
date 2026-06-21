@@ -37,8 +37,37 @@
         initOffDays();
         initPublishDropdown();
         initSave();
+        initPageLoader();
         initHashNav();
     });
+
+    function initPageLoader() {
+        var $loader = $wrap.find('.rbfw-me-page-loader');
+        if (!$loader.length) {
+            $wrap.removeClass('is-loading');
+            return;
+        }
+
+        var hidden = false;
+
+        function hideLoader() {
+            if (hidden || !$wrap.hasClass('is-loading')) {
+                return;
+            }
+            hidden = true;
+            $wrap.removeClass('is-loading');
+            $loader.fadeOut(280, function () {
+                $(this).remove();
+            });
+        }
+
+        $(window).on('load.rbfwMeLoader', hideLoader);
+        setTimeout(hideLoader, 6000);
+
+        if (document.readyState === 'complete') {
+            setTimeout(hideLoader, 150);
+        }
+    }
 
     /* ── Stepper ─────────────────────────────────────────────── */
     function initTabs() {

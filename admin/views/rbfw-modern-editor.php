@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) die; ?>
 
-<div class="rbfw-me-wrap" data-post-id="<?php echo esc_attr( $post_id ); ?>">
+<div class="rbfw-me-wrap is-loading" data-post-id="<?php echo esc_attr( $post_id ); ?>">
 
 	<!-- ── Header ───────────────────────────────────────────────────────── -->
 	<div class="rbfw-me-header">
@@ -49,6 +49,33 @@
 	</div>
 
 	<div class="rbfw-me-save-indicator" role="status" aria-live="polite" aria-atomic="true"></div>
+
+	<div class="rbfw-me-page-loader" aria-hidden="true">
+		<div class="rbfw-me-page-loader__inner">
+			<div class="rbfw-me-sk-tabs">
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+			</div>
+			<div class="rbfw-me-page-loader__grid">
+				<div class="rbfw-me-sk-card">
+					<div class="rbfw-me-sk rbfw-me-sk-card-head"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-card-sub"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field rbfw-me-sk-field--short"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-editor"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field rbfw-me-sk-field--short"></div>
+				</div>
+				<div class="rbfw-me-sk-sidebar">
+					<div class="rbfw-me-sk rbfw-me-sk-side-card"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-side-card rbfw-me-sk-side-card--sm"></div>
+				</div>
+			</div>
+			<p class="rbfw-me-page-loader__text"><?php esc_html_e( 'Loading editor…', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+		</div>
+	</div>
 
 	<!-- ── Steps progress bar ───────────────────────────────────────────── -->
 	<div class="rbfw-me-tabs" role="tablist">
@@ -252,6 +279,7 @@
 
 			<!-- Pricing ─────────────────────────────────────────────────── -->
 			<div class="rbfw-me-panel" data-panel="pricing">
+				<?php $GLOBALS['rbfw_modern_editor_rendering'] = true; ?>
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
 						<?php RBFW_Pricing::render_for_modern_editor( $post_id ); ?>
@@ -275,10 +303,7 @@
 				<?php if ( has_action( 'rbfw_after_week_price_table' ) ) : ?>
 				<div class="rbfw-me-card rbfw-me-addon-seasonal-card">
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
-						<?php
-						$GLOBALS['rbfw_modern_editor_rendering'] = true;
-						do_action( 'rbfw_after_week_price_table', $post_id );
-						?>
+						<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
 					</div>
 				</div>
 				<?php endif; ?>
@@ -292,6 +317,7 @@
 						<?php RBFW_Fee_Management::render_for_modern_editor( $post_id ); ?>
 					</div>
 				</div>
+				<?php unset( $GLOBALS['rbfw_modern_editor_rendering'] ); ?>
 			</div>
 
 			<!-- Off Days ─────────────────────────────────────────────────── -->
