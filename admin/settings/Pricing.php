@@ -141,7 +141,7 @@
 				$enable_specific_duration        = $enable_specific_duration ? $enable_specific_duration : 'off';
 				?>
                 <div class="rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
-                    <section class="manage_inventory_as_timely ">
+                    <section class="manage_inventory_as_timely">
                         <div>
                             <label>
 								<?php esc_html_e( 'Manage a single-item inventory on an hourly basis.', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -1289,8 +1289,8 @@
 
 					<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
 					<?php do_action( 'rbfw_after_general_price_table_tier_pricing', $post_id ); ?>
+					<?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
                 </div>
-                <?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
 
 				<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
 

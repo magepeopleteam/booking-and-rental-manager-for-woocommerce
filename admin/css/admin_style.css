@@ -5741,7 +5741,9 @@ span.ppof-button.add-service-category.mt-1,
 }
 
 .rbfw_min_max_booking_day_row {
-    margin-bottom: 12px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 0 !important;
     width: 100% !important;
 }
 
@@ -5758,6 +5760,17 @@ span.ppof-button.add-service-category.mt-1,
 
 #rbfw_add_meta_box .rbfw_min_max_booking_day_row > section.bg-light {
     display: none !important;
+}
+
+#rbfw_add_meta_box .rbfw_min_max_booking_day_row .rbfw-mmbd-config-panel {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin: 0 0 16px;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
@@ -7910,13 +7923,22 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     left: calc(100% - 19px);
 }
 
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
 #rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration {
     background: #fff;
     border: 1px solid #dde4ef;
     border-radius: 8px;
+    box-sizing: border-box;
     margin: 0 0 16px;
     overflow: hidden;
     padding: 0;
+    width: 100%;
 }
 
 #rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration table.form-table {
@@ -8286,12 +8308,17 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 }
 
 /* Manage single-item hourly inventory section */
-#rbfw_add_meta_box section.manage_inventory_as_timely {
+#rbfw_add_meta_box section.manage_inventory_as_timely,
+#rbfw_add_meta_box .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
     background: #f5f8ff !important;
-    border: 1px solid #c3d4f8 !important;
-    margin-bottom:10px;
+    border: 1px solid #ddd !important;
+    margin-bottom: 10px !important;
     border-radius: 8px !important;
-    padding: 16px 20px !important;
+    padding: 15px !important;
 }
 
 #rbfw_add_meta_box section.manage_inventory_as_timely > div > label {
