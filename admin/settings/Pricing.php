@@ -1599,6 +1599,216 @@
                 <?php
             }
 
+            public function get_pricing_validation_errors( $item_type, $post_data ) {
+                $errors = [];
+                $item_type = sanitize_text_field( (string) $item_type );
+
+                if ( in_array( $item_type, [ 'bike_car_sd', 'appointment' ], true ) ) {
+                    $rows = ( isset( $post_data['rbfw_bike_car_sd_data'] ) && is_array( $post_data['rbfw_bike_car_sd_data'] ) )
+                        ? $post_data['rbfw_bike_car_sd_data']
+                        : [];
+                    $timely = isset( $post_data['manage_inventory_as_timely'] ) && $post_data['manage_inventory_as_timely'] === 'on';
+                    $require_qty = $item_type === 'appointment' || ! $timely;
+                    $has_valid_row = false;
+
+                    if ( empty( $rows ) ) {
+                        return [
+                            __( 'At least one rental option row is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                        ];
+                    }
+
+                    foreach ( $rows as $index => $row ) {
+                        if ( ! is_array( $row ) ) {
+                            continue;
+                        }
+
+                        $rent_type = trim( (string) ( $row['rent_type'] ?? '' ) );
+                        $price     = trim( (string) ( $row['price'] ?? '' ) );
+                        $qty       = trim( (string) ( $row['qty'] ?? '' ) );
+
+                        if ( $rent_type === '' && $price === '' && $qty === '' ) {
+                            continue;
+                        }
+
+                        $row_num = (int) $index + 1;
+
+                        if ( $rent_type === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Rental option name is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $price === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Price is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $require_qty && $qty === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Stock/Day is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+
+                        if ( $rent_type !== '' && $price !== '' && ( ! $require_qty || $qty !== '' ) ) {
+                            $has_valid_row = true;
+                        }
+                    }
+
+                    if ( ! $has_valid_row ) {
+                        $errors[] = __( 'At least one complete rental option row is required (name, price, stock/day).', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+
+                    return $errors;
+                }
+
+                if ( $item_type === 'resort' ) {
+                    $rows = ( isset( $post_data['rbfw_resort_room_data'] ) && is_array( $post_data['rbfw_resort_room_data'] ) )
+                        ? $post_data['rbfw_resort_room_data']
+                        : [];
+                    $has_valid_row = false;
+
+                    if ( empty( $rows ) ) {
+                        return [
+                            __( 'At least one resort room type row is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                        ];
+                    }
+
+                    foreach ( $rows as $index => $row ) {
+                        if ( ! is_array( $row ) ) {
+                            continue;
+                        }
+
+                        $room_type = trim( (string) ( $row['room_type'] ?? '' ) );
+                        $daynight  = trim( (string) ( $row['rbfw_room_daynight_rate'] ?? '' ) );
+                        $qty       = trim( (string) ( $row['rbfw_room_available_qty'] ?? '' ) );
+
+                        if ( $room_type === '' && $daynight === '' && $qty === '' ) {
+                            continue;
+                        }
+
+                        $row_num = (int) $index + 1;
+
+                        if ( $room_type === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Room type is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $daynight === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Day-night price is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $qty === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Stock quantity is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+
+                        if ( $room_type !== '' && $daynight !== '' && $qty !== '' ) {
+                            $has_valid_row = true;
+                        }
+                    }
+
+                    if ( ! $has_valid_row ) {
+                        $errors[] = __( 'At least one complete resort room row is required (room type, day-night price, stock quantity).', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+
+                    return $errors;
+                }
+
+                if ( $item_type === 'multiple_items' ) {
+                    $rows = ( isset( $post_data['multiple_items_info'] ) && is_array( $post_data['multiple_items_info'] ) )
+                        ? $post_data['multiple_items_info']
+                        : [];
+                    $pricing_types = ( isset( $post_data['pricing_types'] ) && is_array( $post_data['pricing_types'] ) )
+                        ? $post_data['pricing_types']
+                        : [];
+                    $enabled_types = [
+                        'hourly'  => ( $pricing_types['hourly'] ?? '' ) === 'on',
+                        'daily'   => ( $pricing_types['daily'] ?? '' ) === 'on',
+                        'weekly'  => ( $pricing_types['weekly'] ?? '' ) === 'on',
+                        'monthly' => ( $pricing_types['monthly'] ?? '' ) === 'on',
+                    ];
+                    $has_valid_row = false;
+
+                    if ( empty( $rows ) ) {
+                        return [
+                            __( 'At least one item row is required for Multiple Items type.', 'booking-and-rental-manager-for-woocommerce' ),
+                        ];
+                    }
+
+                    foreach ( $rows as $index => $row ) {
+                        if ( ! is_array( $row ) ) {
+                            continue;
+                        }
+
+                        $item_name = trim( (string) ( $row['item_name'] ?? '' ) );
+                        $qty       = trim( (string) ( $row['available_qty'] ?? '' ) );
+                        $has_price = false;
+
+                        foreach ( $enabled_types as $type => $enabled ) {
+                            if ( ! $enabled ) {
+                                continue;
+                            }
+                            $price_key = $type . '_price';
+                            if ( trim( (string) ( $row[ $price_key ] ?? '' ) ) !== '' ) {
+                                $has_price = true;
+                                break;
+                            }
+                        }
+
+                        if ( $item_name === '' && $qty === '' && ! $has_price ) {
+                            continue;
+                        }
+
+                        $row_num = (int) $index + 1;
+
+                        if ( $item_name === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Item name is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $qty === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Quantity is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( ! $has_price ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: At least one enabled price is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+
+                        if ( $item_name !== '' && $qty !== '' && $has_price ) {
+                            $has_valid_row = true;
+                        }
+                    }
+
+                    if ( ! $has_valid_row ) {
+                        $errors[] = __( 'At least one complete item row is required (item name, quantity, and price).', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+                }
+
+                return $errors;
+            }
+
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
@@ -1612,6 +1822,15 @@
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
 					$input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
+                    $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+
+                    $pricing_validation_errors = $this->get_pricing_validation_errors( $rbfw_item_type, wp_unslash( $_POST ) );
+                    if ( ! empty( $pricing_validation_errors ) ) {
+                        set_transient( 'rbfw_pricing_save_errors_' . $post_id, $pricing_validation_errors, 30 );
+                        return;
+                    }
+
+                    delete_transient( 'rbfw_pricing_save_errors_' . $post_id );
 
                     $rbfw_enable_monthly_rate                  = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';
                     $rbfw_monthly_rate                         = isset( $_POST['rbfw_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_monthly_rate'] ) ) : 0;
@@ -1650,10 +1869,6 @@
 
 
                     $rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
-
-                    $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
-
-
 
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];

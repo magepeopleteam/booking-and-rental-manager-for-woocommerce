@@ -377,6 +377,18 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				wp_send_json_error( 'Forbidden', 403 );
 			}
 
+			$item_type = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+			if ( class_exists( 'RBFW_Pricing' ) ) {
+				$pricing_validator = new RBFW_Pricing();
+				$pricing_errors    = $pricing_validator->get_pricing_validation_errors( $item_type, wp_unslash( $_POST ) );
+				if ( ! empty( $pricing_errors ) ) {
+					wp_send_json_error( [
+						'message' => implode( ' ', $pricing_errors ),
+						'errors'  => $pricing_errors,
+					] );
+				}
+			}
+
 			/* ── Post fields ── */
 			$title   = isset( $_POST['post_title'] ) ? sanitize_text_field( wp_unslash( $_POST['post_title'] ) ) : '';
 			$content = isset( $_POST['post_content'] ) ? wp_kses_post( wp_unslash( $_POST['post_content'] ) ) : '';

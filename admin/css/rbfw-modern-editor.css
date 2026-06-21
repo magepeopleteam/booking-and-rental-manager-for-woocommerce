@@ -1827,8 +1827,8 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-modern-subpanel {
     border-top: 1px solid #eef2f7 !important;
-    margin-top: 16px !important;
-    padding-top: 16px !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
 .rbfw-me-addon-seasonal-card .rbfw-sp-modern-subpanel__title {

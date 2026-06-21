@@ -511,6 +511,270 @@
         $field.next('.rbfw-me-field-error').remove();
     }
 
+    function getMainSdPriceRows() {
+        var $sdBodies = $wrap.find('.rbfw_bike_car_sd_price_table_body').filter(function () {
+            var $body = $(this);
+            if ( $body.closest('.mp_hidden_content').length ) {
+                return false;
+            }
+            if ( $body.closest('.sessional_price_single_day, .sessional_price_resort, .rbfw_seasonal_price_config_wrapper').length ) {
+                return false;
+            }
+            if ( $body.closest('.rbfw_bike_car_sd_price_table_sp').length ) {
+                return false;
+            }
+            return true;
+        });
+
+        return $sdBodies.find('tr.rbfw_bike_car_sd_price_table_row');
+    }
+
+    function getMainResortPriceRows() {
+        return $wrap.find('.rbfw_resort_price_config_wrapper .rbfw_resort_price_table:not(.rbfw_resort_price_table_sp) .rbfw_resort_price_table_body .rbfw_resort_price_table_row');
+    }
+
+    function showPricingTableWarning(message, $anchor, removeOnClick) {
+        if ( ! $anchor || ! $anchor.length ) {
+            return;
+        }
+
+        if ( ! $anchor.prev('.rbfw-me-table-warning').length ) {
+            $anchor.before(
+                '<div class="rbfw-me-table-warning">' +
+                  '<span class="dashicons dashicons-warning"></span>' +
+                  message +
+                '</div>'
+            );
+        }
+
+        if ( removeOnClick ) {
+            $wrap.one(removeOnClick, function () {
+                $wrap.find('.rbfw-me-table-warning').remove();
+            });
+        }
+
+        var $pricingPanel = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
+        if ( $pricingPanel.length && ! $pricingPanel.hasClass('is-active') ) {
+            $wrap.find('.rbfw-me-tab[data-tab="pricing"]').trigger('click');
+        }
+
+        setTimeout(function () {
+            var el = $anchor[0] || $pricingPanel[0];
+            if ( el ) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 250);
+    }
+
+    function validateSdPricingRows(rentType, errors) {
+        var $sdRows = getMainSdPriceRows();
+        var isTimely = $wrap.find('[name="manage_inventory_as_timely"]').val() === 'on';
+        var requireQty = rentType === 'appointment' || ! isTimely;
+        var typeLabel = rentType === 'appointment' ? 'Appointment' : 'Single Day';
+        var hasValidRow = false;
+
+        if ( ! $sdRows.length ) {
+            var $addBtn = $wrap.find('#add-bike-car-sd-type-row').closest('.sd-add-type-and-sessional');
+            if ( ! $addBtn.length ) {
+                $addBtn = $wrap.find('.sd-add-type-and-sessional').first();
+            }
+            if ( ! $addBtn.length ) {
+                $addBtn = $wrap.find('.rbfw_bike_car_sd_wrapper .rbfw_bike_car_sd_price_table').first();
+            }
+            showPricingTableWarning(
+                'At least one rental option row is required for ' + typeLabel + ' type.',
+                $addBtn,
+                '#add-bike-car-sd-type-row'
+            );
+            return false;
+        }
+
+        $sdRows.each(function (idx) {
+            var $row = $(this);
+            var $title = $row.find('[name^="rbfw_bike_car_sd_data["][name*="[rent_type]"]');
+            var $price = $row.find('[name^="rbfw_bike_car_sd_data["][name*="[price]"]');
+            var $stock = $row.find('[name^="rbfw_bike_car_sd_data["][name*="[qty]"]');
+
+            if ( ! $title.length ) {
+                $title = $row.find('[name*="[rent_type]"]').filter(function () {
+                    return ( $(this).attr('name') || '' ).indexOf('rbfw_bike_car_sd_data_sp') === -1;
+                }).first();
+            }
+            if ( ! $price.length ) {
+                $price = $row.find('[name*="[price]"]').filter(function () {
+                    return ( $(this).attr('name') || '' ).indexOf('rbfw_bike_car_sd_data_sp') === -1;
+                }).first();
+            }
+            if ( ! $stock.length ) {
+                $stock = $row.find('[name*="[qty]"]').filter(function () {
+                    return ( $(this).attr('name') || '' ).indexOf('rbfw_bike_car_sd_data_sp') === -1;
+                }).first();
+            }
+
+            var rentTypeVal = $.trim($title.val());
+            var priceVal = $.trim($price.val());
+            var stockVal = $.trim($stock.val());
+
+            if ( ! rentTypeVal && ! priceVal && ! stockVal ) {
+                return;
+            }
+
+            if ( ! rentTypeVal ) {
+                errors.push({ $field: $title, msg: 'Row ' + (idx + 1) + ': Rental option name is required.' });
+            }
+            if ( priceVal === '' ) {
+                errors.push({ $field: $price, msg: 'Row ' + (idx + 1) + ': Price is required.' });
+            }
+            if ( requireQty && stockVal === '' ) {
+                errors.push({ $field: $stock, msg: 'Row ' + (idx + 1) + ': Stock/Day is required.' });
+            }
+
+            if ( rentTypeVal && priceVal !== '' && ( ! requireQty || stockVal !== '' ) ) {
+                hasValidRow = true;
+            }
+        });
+
+        if ( ! hasValidRow ) {
+            var $firstRow = $sdRows.first();
+            var $firstTitle = $firstRow.find('[name^="rbfw_bike_car_sd_data["][name*="[rent_type]"]').first();
+            if ( ! $firstTitle.length ) {
+                $firstTitle = $firstRow.find('[name*="[rent_type]"]').first();
+            }
+            errors.push({
+                $field: $firstTitle.length ? $firstTitle : $sdRows.first(),
+                msg: 'At least one complete rental option row is required (name, price' + (requireQty ? ', stock/day' : '') + ').'
+            });
+        }
+
+        return true;
+    }
+
+    function validateResortPricingRows(errors) {
+        var $rows = getMainResortPriceRows();
+        var hasValidRow = false;
+
+        if ( ! $rows.length ) {
+            showPricingTableWarning(
+                'At least one resort room type row is required.',
+                $wrap.find('#add-resort-type-row').first(),
+                '#add-resort-type-row'
+            );
+            return false;
+        }
+
+        $rows.each(function (idx) {
+            var $row = $(this);
+            var $roomType = $row.find('[name*="[room_type]"]').first();
+            var $dayNight = $row.find('[name*="[rbfw_room_daynight_rate]"]').first();
+            var $qty = $row.find('[name*="[rbfw_room_available_qty]"]').first();
+            var roomTypeVal = $.trim($roomType.val());
+            var dayNightVal = $.trim($dayNight.val());
+            var qtyVal = $.trim($qty.val());
+
+            if ( ! roomTypeVal && dayNightVal === '' && qtyVal === '' ) {
+                return;
+            }
+
+            if ( ! roomTypeVal ) {
+                errors.push({ $field: $roomType, msg: 'Row ' + (idx + 1) + ': Room type is required.' });
+            }
+            if ( dayNightVal === '' ) {
+                errors.push({ $field: $dayNight, msg: 'Row ' + (idx + 1) + ': Day-night price is required.' });
+            }
+            if ( qtyVal === '' ) {
+                errors.push({ $field: $qty, msg: 'Row ' + (idx + 1) + ': Stock quantity is required.' });
+            }
+
+            if ( roomTypeVal && dayNightVal !== '' && qtyVal !== '' ) {
+                hasValidRow = true;
+            }
+        });
+
+        if ( ! hasValidRow ) {
+            var $firstRoom = $rows.first().find('[name*="[room_type]"]').first();
+            errors.push({
+                $field: $firstRoom.length ? $firstRoom : $rows.first(),
+                msg: 'At least one complete resort room row is required (room type, day-night price, stock quantity).'
+            });
+        }
+
+        return true;
+    }
+
+    function validateMultipleItemsPricingRows(errors) {
+        var $rows = $wrap.find('.rbfw_multiple_items #itemRows .item-row');
+        var enabledTypes = {
+            hourly: $wrap.find('#enableHourly').prop('checked'),
+            daily: $wrap.find('#enableDaily').prop('checked'),
+            weekly: $wrap.find('#enableWeekly').prop('checked'),
+            monthly: $wrap.find('#enableMonthly').prop('checked')
+        };
+        var hasValidRow = false;
+
+        if ( ! $rows.length ) {
+            showPricingTableWarning(
+                'At least one item row is required for Multiple Items type.',
+                $wrap.find('.rbfw_multiple_items .add-more-btn').first(),
+                '.rbfw_multiple_items .add-more-btn'
+            );
+            return false;
+        }
+
+        $rows.each(function (idx) {
+            var $row = $(this);
+            var $name = $row.find('[name*="[item_name]"]').first();
+            var $qty = $row.find('[name*="[available_qty]"]').first();
+            var nameVal = $.trim($name.val());
+            var qtyVal = $.trim($qty.val());
+            var hasPrice = false;
+            var $firstEnabledPrice = null;
+
+            $.each(enabledTypes, function (type, enabled) {
+                if ( ! enabled ) {
+                    return;
+                }
+                var $price = $row.find('[name*="[' + type + '_price]"]').first();
+                if ( $price.length && ! $firstEnabledPrice ) {
+                    $firstEnabledPrice = $price;
+                }
+                if ( $price.length && $.trim($price.val()) !== '' ) {
+                    hasPrice = true;
+                }
+            });
+
+            if ( ! nameVal && qtyVal === '' && ! hasPrice ) {
+                return;
+            }
+
+            if ( ! nameVal ) {
+                errors.push({ $field: $name, msg: 'Row ' + (idx + 1) + ': Item name is required.' });
+            }
+            if ( qtyVal === '' ) {
+                errors.push({ $field: $qty, msg: 'Row ' + (idx + 1) + ': Quantity is required.' });
+            }
+            if ( ! hasPrice ) {
+                errors.push({
+                    $field: $firstEnabledPrice || $name,
+                    msg: 'Row ' + (idx + 1) + ': At least one enabled price is required.'
+                });
+            }
+
+            if ( nameVal && qtyVal !== '' && hasPrice ) {
+                hasValidRow = true;
+            }
+        });
+
+        if ( ! hasValidRow ) {
+            var $firstName = $rows.first().find('[name*="[item_name]"]').first();
+            errors.push({
+                $field: $firstName.length ? $firstName : $rows.first(),
+                msg: 'At least one complete item row is required (item name, quantity, and price).'
+            });
+        }
+
+        return true;
+    }
+
     function validateBeforeSave() {
         var errors = [];
 
@@ -536,79 +800,23 @@
             errors.push({ $field: $wrap.find('.rbfw-me-editor-wrap'), msg: 'Description is required.' });
         }
 
-        // ── Single Day: rbfw_bike_car_sd_price_table_body rows (main pricing only) ──
+        // ── Rent-type pricing rows ──
         var rentType = $.trim($wrap.find('#rbfw_item_type').val());
-        if ( rentType === 'bike_car_sd' ) {
-            var $sdBodies = $wrap.find('.rbfw_bike_car_sd_price_table_body').filter(function () {
-                var $body = $(this);
-                if ( $body.closest('.mp_hidden_content').length ) {
-                    return false;
-                }
-                if ( $body.closest('.sessional_price_single_day, .sessional_price_resort, .rbfw_seasonal_price_config_wrapper').length ) {
-                    return false;
-                }
-                return true;
-            });
-            var $sdRows = $sdBodies.find('tr.rbfw_bike_car_sd_price_table_row');
-            var isTimely = $wrap.find('[name="manage_inventory_as_timely"]').val() === 'on';
-
-            if ( ! $sdRows.length ) {
-                // Show warning above "Add New Type" button, centred
-                var $addBtn = $wrap.find('#add-bike-car-sd-type-row').closest('.sd-add-type-and-sessional');
-                if ( ! $addBtn.length ) $addBtn = $wrap.find('.sd-add-type-and-sessional').first();
-                if ( $addBtn.length && ! $addBtn.prev('.rbfw-me-table-warning').length ) {
-                    $addBtn.before(
-                        '<div class="rbfw-me-table-warning">' +
-                          '<span class="dashicons dashicons-warning"></span>' +
-                          'At least one rental option row is required for Single Day type.' +
-                        '</div>'
-                    );
-                    // Auto-remove when user adds a row
-                    $wrap.one('click', '#add-bike-car-sd-type-row', function () {
-                        $wrap.find('.rbfw-me-table-warning').remove();
-                    });
-                }
-                // Navigate to pricing tab
-                var $pricingPanel = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
-                if ( $pricingPanel.length && ! $pricingPanel.hasClass('is-active') ) {
-                    $wrap.find('.rbfw-me-tab[data-tab="pricing"]').trigger('click');
-                }
-                setTimeout(function () {
-                    var el = $addBtn[0] || $pricingPanel[0];
-                    if ( el ) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 250);
-                return false; // block save
-            } else {
-                $sdRows.each(function (idx) {
-                    var $row  = $(this);
-                    var $title = $row.find('[name^="rbfw_bike_car_sd_data["][name*="[rent_type]"]');
-                    var $price = $row.find('[name^="rbfw_bike_car_sd_data["][name*="[price]"]');
-                    var $stock = $row.find('[name^="rbfw_bike_car_sd_data["][name*="[qty]"]');
-
-                    if ( ! $title.length ) {
-                        $title = $row.find('[name*="[rent_type]"]');
-                    }
-                    if ( ! $price.length ) {
-                        $price = $row.find('[name*="[price]"]').filter(function () {
-                            return ( $(this).attr('name') || '' ).indexOf('rbfw_bike_car_sd_data_sp') === -1;
-                        }).first();
-                    }
-                    if ( ! $stock.length ) {
-                        $stock = $row.find('[name*="[qty]"]');
-                    }
-
-                    if ( ! $.trim($title.val()) ) {
-                        errors.push({ $field: $title, msg: 'Row ' + (idx + 1) + ': Rental option name is required.' });
-                    }
-                    if ( $.trim($price.val()) === '' ) {
-                        errors.push({ $field: $price, msg: 'Row ' + (idx + 1) + ': Price is required.' });
-                    }
-                    if ( ! isTimely && $.trim($stock.val()) === '' ) {
-                        errors.push({ $field: $stock, msg: 'Row ' + (idx + 1) + ': Stock/Day is required.' });
-                    }
-                });
+        if ( rentType === 'bike_car_sd' || rentType === 'appointment' ) {
+            if ( ! validateSdPricingRows(rentType, errors) ) {
+                return false;
             }
+        } else if ( rentType === 'resort' ) {
+            if ( ! validateResortPricingRows(errors) ) {
+                return false;
+            }
+        } else if ( rentType === 'multiple_items' ) {
+            if ( ! validateMultipleItemsPricingRows(errors) ) {
+                return false;
+            }
+        }
 
+        if ( rentType === 'bike_car_sd' ) {
             // ── Single Day seasonal pricing: validate only when both dates are set ──
             $wrap.find('.sessional_price_single_day .rbfw-sp-item-row').each(function () {
                 var $block = $(this);
@@ -773,7 +981,13 @@
 
                 setTimeout(function () { setSaveIndicator('', ''); }, 4500);
             } else {
-                setSaveIndicator('error', cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again');
+                var errorMsg = cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again';
+                if (res.data && res.data.message) {
+                    errorMsg = res.data.message;
+                } else if (res.data && res.data.errors && res.data.errors.length) {
+                    errorMsg = res.data.errors.join(' ');
+                }
+                setSaveIndicator('error', errorMsg);
             }
         }).fail(function () {
             setSaveIndicator('error', cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again');
