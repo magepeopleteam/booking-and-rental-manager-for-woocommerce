@@ -1854,6 +1854,8 @@
 		public static function render_for_modern_editor( int $post_id ): void {
 			global $wp_filter;
 
+			$GLOBALS['rbfw_modern_editor_rendering'] = true;
+
 			$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
 			$renderer->rent_type( $post_id );
 			$renderer->bike_car_single_day( $post_id );
@@ -1861,22 +1863,22 @@
 			$renderer->resort_price_config( $post_id );
 			$renderer->multiple_items( $post_id );
 
-			// md_price_config() fires do_action('rbfw_after_extra_service_table') internally.
-			// The modern editor view renders addon output in its own dedicated card after this
-			// call, so suppress the action here to prevent a duplicate render.
-			$saved = $wp_filter['rbfw_after_extra_service_table'] ?? null;
+			// md_price_config() fires addon hooks internally. The modern editor view
+			// renders those addons in dedicated cards after this call, so suppress them
+			// here to prevent duplicate classic markup inside the pricing card.
+			$saved_extra   = $wp_filter['rbfw_after_extra_service_table'] ?? null;
+			$saved_seasonal = $wp_filter['rbfw_after_week_price_table'] ?? null;
 			unset( $wp_filter['rbfw_after_extra_service_table'] );
+			unset( $wp_filter['rbfw_after_week_price_table'] );
 
 			$renderer->md_price_config( $post_id );
 
-			if ( $saved !== null ) {
-				$wp_filter['rbfw_after_extra_service_table'] = $saved;
+			if ( $saved_extra !== null ) {
+				$wp_filter['rbfw_after_extra_service_table'] = $saved_extra;
 			}
-
-			// Flag for addon hooks: the next do_action('rbfw_after_extra_service_table')
-			// call (in rbfw-modern-editor.php) happens inside the modern editor, so addons
-			// can branch their HTML to use modern-editor design classes.
-			$GLOBALS['rbfw_modern_editor_rendering'] = true;
+			if ( $saved_seasonal !== null ) {
+				$wp_filter['rbfw_after_week_price_table'] = $saved_seasonal;
+			}
 		}
 
 		}

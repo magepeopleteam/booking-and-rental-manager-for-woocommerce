@@ -131,6 +131,9 @@ function load_sortable_datepicker(parent, item) {
     }
     //=========Add Setting Item==============//
     $(document).on("click", ".mp_add_item", function (e) {
+        if ($(this).closest(".rbfw-sp-config-panel, .rbfw-sp-modern-panel").length) {
+            return;
+        }
         e.preventDefault();
         // on click event. add collpase id for last child
         addCollapseId();

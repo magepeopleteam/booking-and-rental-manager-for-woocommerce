@@ -965,14 +965,16 @@
                 return;
             }
             var $toggle  = jQuery(this);
-            var $input   = jQuery('input[name="rbfw_enable_daywise_price"]');
+            var $wrapper = $toggle.closest('#rbfw-daywise-config-wrapper');
+            var $input   = $wrapper.find('input[name="rbfw_enable_daywise_price"]');
+            var $panel   = $wrapper.children('.day-wise-price-configuration');
             var enabled  = !$toggle.hasClass('active');
             $toggle.toggleClass('active', enabled);
             $input.val(enabled ? 'yes' : 'no');
             if (enabled) {
-                jQuery('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+                $panel.stop(true, true).slideDown().removeClass('hide').addClass('show');
             } else {
-                jQuery('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+                $panel.stop(true, true).slideUp().removeClass('show').addClass('hide');
             }
         });
 

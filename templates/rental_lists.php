@@ -20,7 +20,7 @@ $posts = get_posts(array(
 ));
 $post_type = 'rbfw_item';
 
-$add_new_link = admin_url('post-new.php?post_type=' . $post_type);
+$add_new_link = class_exists( 'RBFW_Modern_Editor' ) ? RBFW_Modern_Editor::add_new_url() : admin_url( 'post-new.php?post_type=' . $post_type );
 $trash_url = admin_url('edit.php?post_status=trash&post_type=rbfw_item');
 
 function render_mep_events_by_status( $posts ) {

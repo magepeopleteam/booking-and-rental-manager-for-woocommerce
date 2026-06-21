@@ -5729,7 +5729,7 @@ span.ppof-button.add-service-category.mt-1,
 }
 
 #rbfw_add_meta_box .bg-light {
-    border-radius: 10px 10px 0px 0px;
+    border-radius: 10px 10px 0px 0 !important;
     background-color: #f0f4fb !important;
     border-bottom: 3px solid #dbd8d8 !important;
 }
@@ -5811,6 +5811,7 @@ table.rbfw_pricing_table thead th {
 #rbfw_add_meta_box input[type=datetime],
 #rbfw_add_meta_box input[type=datetime-local] {
     border: 1px solid #d4dadf !important;
+    padding: 0 !important;
 }
 
 .feature_category_inner_wrap label {
@@ -7544,7 +7545,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 #rbfw_add_meta_box .bg-light {
     background: #f0f4fb;
     border-bottom: 1px solid #dde4ef !important;
-    border-radius: 0 !important;
+    border-radius: 10px 10px 0px 0 !important;
     margin-top: 20px !important;
     padding: 14px 20px !important;
 }
@@ -7816,12 +7817,178 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     margin-top: 10px !important;
 }
 
-/* ── Day-wise Enable Toggle Section ─────────────────────────────────────── */
-#rbfw_add_meta_box #rbfw-daywise-config-wrapper > section:first-of-type {
-    background: #f0f4fb !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 8px !important;
-    margin-top: 10px !important;
+/* ── Day-wise Pricing (classic editor — matches modern md-price-card layout) ── */
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > br {
+    display: none;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    margin: 16px 0 2px;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card .md-card-header {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    color: #6b7790;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 10px 20px;
+    text-transform: uppercase;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card .item {
+    align-items: center;
+    border-bottom: none;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 14px;
+    justify-content: space-between;
+    padding: 14px 20px;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card .item-left {
+    flex: 1;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card .item-left .label {
+    color: #111827;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card .item-left .description {
+    color: #6b7790;
+    font-size: 12px;
+    line-height: 1.55;
+    margin: 2px 0 0;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper > .md-price-card .item-right {
+    align-items: center;
+    display: flex;
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper .toggle {
+    background: #cfd8dc;
+    border-radius: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 22px;
+    min-width: 42px;
+    position: relative;
+    transition: background 0.2s;
+    width: 42px;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper .toggle.active {
+    background: #1a56db;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper .toggle .toggle-knob {
+    background: #fff;
+    border-radius: 50%;
+    bottom: 3px;
+    height: 16px;
+    left: 3px;
+    position: absolute;
+    top: auto;
+    transition: left 0.2s;
+    width: 16px;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper .toggle.active .toggle-knob {
+    left: calc(100% - 19px);
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    margin: 0 0 16px;
+    overflow: hidden;
+    padding: 0;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration table.form-table {
+    border-collapse: collapse;
+    margin: 0;
+    width: 100%;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration thead tr {
+    background: #f0f4fb;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration thead th {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    color: #6b7790;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 10px 16px;
+    text-align: left;
+    text-transform: uppercase;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody tr {
+    background: #fff;
+    border-bottom: 1px solid #f0f4fb;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody tr:last-child {
+    border-bottom: none;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody th {
+    background: #fff;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    max-width: none;
+    min-width: 0;
+    padding: 10px 16px;
+    text-align: left;
+    white-space: nowrap;
+    width: auto;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody td {
+    padding: 8px 16px;
+    vertical-align: middle;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration input[type="number"] {
+    background: #f8fafd;
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    box-shadow: none;
+    box-sizing: border-box;
+    color: #111827;
+    font-size: 13px;
+    height: 36px;
+    margin: 0;
+    padding: 0 10px;
+    width: 100%;
+}
+
+#rbfw_add_meta_box #rbfw-daywise-config-wrapper section.day-wise-price-configuration input[type="checkbox"] {
+    accent-color: #2271b1;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
 }
 
 /* ── Extra Service Table Redesign ──────────────────────────────────────── */
