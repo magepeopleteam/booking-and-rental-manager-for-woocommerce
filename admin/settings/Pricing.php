@@ -541,6 +541,9 @@
 
                             updateRowGridLayout();
                             updatePivotVisibility();
+                            if (typeof window.rbfwSpSyncMiSeasonalPriceFields === 'function') {
+                                window.rbfwSpSyncMiSeasonalPriceFields();
+                            }
                         }
 
                         function updatePivotVisibility() {
@@ -614,12 +617,20 @@
                             updateRowGridLayout();
                             updateRemoveButtons();
                             newRow.querySelector('.item-name-input').focus();
+                            if (typeof window.rbfwSpScheduleMiSeasonalSync === 'function') {
+                                var root = document.querySelector('.rbfw-me-wrap') || document.getElementById('rbfw_add_meta_box') || document.body;
+                                window.rbfwSpScheduleMiSeasonalSync(jQuery(root), true);
+                            }
                         }
 
                         function removeItemRow(button) {
                             const row = button.closest('.item-row');
                             row.remove();
                             updateRemoveButtons();
+                            if (typeof window.rbfwSpScheduleMiSeasonalSync === 'function') {
+                                var root = document.querySelector('.rbfw-me-wrap') || document.getElementById('rbfw_add_meta_box') || document.body;
+                                window.rbfwSpScheduleMiSeasonalSync(jQuery(root), true);
+                            }
                         }
 
                         function updateRemoveButtons() {

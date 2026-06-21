@@ -224,30 +224,8 @@
         var current_item_type = jQuery('#rbfw_item_type').val();
 
 
-        if ( current_item_type != 'appointment') {
-            jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').show();
-            if(current_item_type == 'bike_car_sd'){
-
-                jQuery('.sessional_price_single_day').show();
-                jQuery('.sessional_price_multi_day').hide();
-                jQuery('.sessional_price_resort').hide();
-                jQuery('.mds_price_resort').hide();
-
-            }else if(current_item_type == 'resort'){
-                jQuery('.sessional_price_resort').show();
-                jQuery('.mds_price_resort').show();
-                jQuery('.sessional_price_multi_day').hide();
-                jQuery('.sessional_price_single_day').hide();
-            }else{
-
-                jQuery('.sessional_price_multi_day').show();
-                jQuery('.sessional_price_single_day').hide();
-                jQuery('.sessional_price_resort').hide();
-                jQuery('.mds_price_resort').hide();
-
-            }
-        } else {
-            jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
+        if (typeof window.rbfwSpSyncSeasonalPanelForRentType === 'function') {
+            window.rbfwSpSyncSeasonalPanelForRentType(current_item_type, jQuery('#rbfw_add_meta_box'));
         }
 
         // Extra service sections: one category per rental type (initial load).
@@ -257,7 +235,6 @@
             jQuery('tr[data-row=rbfw_time_slot_switch]').show();
         }else if(current_item_type == 'multiple_items'){
             jQuery('.rbfw_min_max_booking_day_row').hide();
-            jQuery('#rbfw_add_meta_box .rbfw_seasonal_price_config_wrapper').hide();
         } else {
             jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
             jQuery('tr[data-row=rdfw_available_time]').show();
@@ -491,6 +468,10 @@
 
             // Extra service sections: one category per rental type (on type change).
             window.rbfwUpdateExtraServiceSectionVisibility(item_type);
+
+            if (typeof window.rbfwSpSyncSeasonalPanelForRentType === 'function') {
+                window.rbfwSpSyncSeasonalPanelForRentType(item_type, jQuery('#rbfw_add_meta_box'));
+            }
 
             return false;
         });

@@ -1259,6 +1259,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 .rbfw-me-panel[data-item-type="bike_car_sd"] .rbfw-me-addon-seasonal-card,
 .rbfw-me-panel[data-item-type="bike_car_md"] .rbfw-me-addon-seasonal-card,
+.rbfw-me-panel[data-item-type="appointment"]  .rbfw-me-addon-seasonal-card,
 .rbfw-me-panel[data-item-type="equipment"]   .rbfw-me-addon-seasonal-card,
 .rbfw-me-panel[data-item-type="dress"]       .rbfw-me-addon-seasonal-card,
 .rbfw-me-panel[data-item-type="others"]      .rbfw-me-addon-seasonal-card,
@@ -8166,4 +8167,37 @@ textarea.rbfw-me-field-invalid {
     padding: 15px !important;
     margin: 0 0 12px !important;
     overflow: visible !important;
+}
+
+/* Seasonal sub-panels — switch instantly by rent type (data-item-type on pricing panel) */
+.rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .rbfw-sp-config-panel,
+.rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .sessional_price_single_day,
+.rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .sessional_price_multi_day,
+.rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .sessional_price_resort,
+.rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .sessional_price_multiple_items {
+    display: none !important;
+}
+
+.rbfw-me-panel[data-panel="pricing"][data-item-type="bike_car_sd"] .rbfw-sp-modern-panel > .sessional_price_single_day,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] .rbfw-sp-modern-panel > .sessional_price_single_day {
+    display: block !important;
+}
+
+.rbfw-me-panel[data-panel="pricing"][data-item-type="bike_car_md"] .rbfw-sp-modern-panel > .rbfw-sp-config-panel,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="bike_car_md"] .rbfw-sp-modern-panel > .sessional_price_multi_day,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="equipment"] .rbfw-sp-modern-panel > .rbfw-sp-config-panel,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="equipment"] .rbfw-sp-modern-panel > .sessional_price_multi_day,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="dress"] .rbfw-sp-modern-panel > .rbfw-sp-config-panel,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="dress"] .rbfw-sp-modern-panel > .sessional_price_multi_day,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="others"] .rbfw-sp-modern-panel > .rbfw-sp-config-panel,
+.rbfw-me-panel[data-panel="pricing"][data-item-type="others"] .rbfw-sp-modern-panel > .sessional_price_multi_day {
+    display: block !important;
+}
+
+.rbfw-me-panel[data-panel="pricing"][data-item-type="resort"] .rbfw-sp-modern-panel > .sessional_price_resort {
+    display: block !important;
+}
+
+.rbfw-me-panel[data-panel="pricing"][data-item-type="multiple_items"] .rbfw-sp-modern-panel > .sessional_price_multiple_items {
+    display: block !important;
 }
