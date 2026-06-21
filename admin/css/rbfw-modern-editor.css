@@ -7806,3 +7806,76 @@ textarea.rbfw-me-field-invalid {
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ── Min/Max Booking Duration (addon) ─────────────────────────── */
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-config-panel {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    margin-top: 0 !important;
+    overflow: hidden !important;
+    width: 100% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-config-panel__head {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde1ec !important;
+    padding: 14px 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-config-panel__title {
+    color: #1d2327 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-config-panel__desc {
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-config-panel__body {
+    padding: 20px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-field > label {
+    color: #111827 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-field__hint {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-days-wrap {
+    border-color: #dde4ef !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-days-wrap .price-input {
+    font-size: 14px !important;
+    height: 100% !important;
+    padding: 0 12px !important;
+    text-align: left !important;
+    width: 100% !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-days-wrap > span {
+    font-size: 13px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mmbd-days-wrap:focus-within {
+    border-color: #1a56db !important;
+}
+
+@media (max-width: 782px) {
+    .rbfw-me-pricing-classic-wrap .rbfw-mmbd-fields {
+        grid-template-columns: 1fr !important;
+    }
+}

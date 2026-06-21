@@ -5740,8 +5740,9 @@ span.ppof-button.add-service-category.mt-1,
     padding: 10px;
 }
 
-.rbfw_min_max_booking_day_row .booking-input-group {
-    margin: 20px !important;
+.rbfw_min_max_booking_day_row {
+    margin-bottom: 12px !important;
+    width: 100% !important;
 }
 
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
@@ -5755,8 +5756,8 @@ span.ppof-button.add-service-category.mt-1,
     background: #fff;
 }
 
-.booking-container {
-    background: #fff !important;
+#rbfw_add_meta_box .rbfw_min_max_booking_day_row > section.bg-light {
+    display: none !important;
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
