@@ -451,6 +451,58 @@
             $(this).addClass('is-selected');
             $wrap.find('.rbfw-me-tpl-value').val($(this).data('tpl'));
         });
+
+        $wrap.find('.rbfw-me-tpl-card__img').each(function () {
+            var $img = $(this).find('img');
+            if (!$img.length || $(this).find('.rbfw-me-tpl-preview-btn').length) return;
+            $(this).append(
+                '<button type="button" class="rbfw-me-tpl-preview-btn" title="Preview">' +
+                    '<span class="dashicons dashicons-visibility"></span>' +
+                '</button>'
+            );
+        });
+
+        var $overlay;
+        function getOverlay() {
+            if (!$overlay || !$overlay.length) {
+                $overlay = $(
+                    '<div class="rbfw-me-tpl-overlay">' +
+                        '<div class="rbfw-me-tpl-overlay__inner">' +
+                            '<button type="button" class="rbfw-me-tpl-overlay__close" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '<img src="" alt="" />' +
+                        '</div>' +
+                    '</div>'
+                );
+                $wrap.append($overlay);
+                $overlay.on('click', function (e) {
+                    if (e.target === this) closePreview();
+                });
+                $overlay.find('.rbfw-me-tpl-overlay__close').on('click', closePreview);
+                $(document).on('keydown.rbfwTplPreview', function (e) {
+                    if (e.key === 'Escape') closePreview();
+                });
+            }
+            return $overlay;
+        }
+        function openPreview(src, alt) {
+            var $o = getOverlay();
+            $o.find('img').attr('src', src).attr('alt', alt || '');
+            $o.addClass('is-open');
+        }
+        function closePreview() {
+            if ($overlay && $overlay.length) $overlay.removeClass('is-open');
+        }
+
+        $wrap.on('click', '.rbfw-me-tpl-preview-btn', function (e) {
+            e.stopPropagation();
+            var $card = $(this).closest('.rbfw-me-tpl-card');
+            var $img  = $card.find('.rbfw-me-tpl-card__img img');
+            var src   = $img.attr('src');
+            var alt   = $img.attr('alt');
+            if (src) openPreview(src, alt);
+        });
     }
 
     /* ── Featured image ──────────────────────────────────────── */
