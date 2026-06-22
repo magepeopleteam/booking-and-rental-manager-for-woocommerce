@@ -68,49 +68,72 @@
     var rbfwPostId = (window.location.search.match(/[?&]post=(\d+)/) || [])[1] || '';
     var rbfwTabStorageKey = 'rbfw_active_tab_' + rbfwPostId;
 
+    var rbfwClassicTabLoaderDone = false;
+
+    function rbfwHideClassicTabLoader() {
+        jQuery('.rbfw-tab-loader').fadeOut(280, function() { jQuery(this).remove(); });
+    }
+
+    function rbfwInitClassicTabLoader() {
+        if (rbfwClassicTabLoaderDone || !jQuery('.mp_tab_details').length) {
+            return;
+        }
+        rbfwClassicTabLoaderDone = true;
+
+        try {
+            jQuery('.mp_tab_menu').each(function() {
+                var savedTab = rbfwPostId ? localStorage.getItem(rbfwTabStorageKey) : null;
+                var $menu = jQuery(this);
+                var $target = savedTab ? $menu.find('ul li[data-target-tabs="' + savedTab + '"]') : jQuery();
+                // Strip active from all tabs so the !hasClass('active') guard never blocks restore
+                $menu.find('ul li').removeClass('active');
+                if ($target.length && $target.is(':visible')) {
+                    $target.trigger('click');
+                } else if ($target.length) {
+                    // target exists but is hidden (e.g. hidden by item-type logic) — fall back to first visible tab
+                    var $firstVisible = $menu.find('ul li:visible').first();
+                    ($firstVisible.length ? $firstVisible : $menu.find('ul li:first-child')).trigger('click');
+                } else {
+                    $menu.find('ul li:first-child').trigger('click');
+                }
+            });
+            if (jQuery('[name="mep_org_address"]').val() > 0) {
+                jQuery('.mp_event_address').slideUp(250);
+            }
+        } finally {
+            rbfwHideClassicTabLoader();
+        }
+    }
+
     // Inject skeleton loader as soon as the DOM is ready
     jQuery(document).ready(function() {
         var $tabDetails = jQuery('.mp_tab_details');
-        if ($tabDetails.length) {
-            var skeletonRows = '';
-            for (var s = 0; s < 7; s++) {
-                var widths = [55, 75, 40, 85, 60, 70, 50];
-                skeletonRows += '<div class="rbfw-sk-row">'
-                    + '<div class="rbfw-sk rbfw-sk-icon"></div>'
-                    + '<div class="rbfw-sk rbfw-sk-label" style="width:' + widths[s] + '%"></div>'
-                    + '<div class="rbfw-sk rbfw-sk-input"></div>'
-                    + '</div>';
-            }
-            $tabDetails.prepend(
-                '<div class="rbfw-tab-loader">'
-                +   '<div class="rbfw-sk rbfw-sk-title"></div>'
-                +   '<div class="rbfw-sk rbfw-sk-sub"></div>'
-                +   skeletonRows
-                + '</div>'
-            );
+        if (!$tabDetails.length) {
+            return;
         }
-    });
 
-    jQuery(window).on('load', function() {
-        jQuery('.mp_tab_menu').each(function() {
-            var savedTab = rbfwPostId ? localStorage.getItem(rbfwTabStorageKey) : null;
-            var $menu = jQuery(this);
-            var $target = savedTab ? $menu.find('ul li[data-target-tabs="' + savedTab + '"]') : jQuery();
-            // Strip active from all tabs so the !hasClass('active') guard never blocks restore
-            $menu.find('ul li').removeClass('active');
-            if ($target.length && $target.is(':visible')) {
-                $target.trigger('click');
-            } else if ($target.length) {
-                // target exists but is hidden (e.g. hidden by item-type logic) — fall back to first visible tab
-                var $firstVisible = $menu.find('ul li:visible').first();
-                ($firstVisible.length ? $firstVisible : $menu.find('ul li:first-child')).trigger('click');
-            } else {
-                $menu.find('ul li:first-child').trigger('click');
-            }
-        });
-        jQuery('.rbfw-tab-loader').fadeOut(280, function() { jQuery(this).remove(); });
-        if (jQuery('[name="mep_org_address"]').val() > 0) {
-            jQuery('.mp_event_address').slideUp(250);
+        var skeletonRows = '';
+        for (var s = 0; s < 7; s++) {
+            var widths = [55, 75, 40, 85, 60, 70, 50];
+            skeletonRows += '<div class="rbfw-sk-row">'
+                + '<div class="rbfw-sk rbfw-sk-icon"></div>'
+                + '<div class="rbfw-sk rbfw-sk-label" style="width:' + widths[s] + '%"></div>'
+                + '<div class="rbfw-sk rbfw-sk-input"></div>'
+                + '</div>';
+        }
+        $tabDetails.prepend(
+            '<div class="rbfw-tab-loader">'
+            +   '<div class="rbfw-sk rbfw-sk-title"></div>'
+            +   '<div class="rbfw-sk rbfw-sk-sub"></div>'
+            +   skeletonRows
+            + '</div>'
+        );
+
+        jQuery(window).on('load.rbfwClassicTabLoader', rbfwInitClassicTabLoader);
+        setTimeout(rbfwInitClassicTabLoader, 6000);
+
+        if (document.readyState === 'complete') {
+            setTimeout(rbfwInitClassicTabLoader, 150);
         }
     });
     jQuery(document).on('click', '[data-target-tabs]', function() {
