@@ -3799,6 +3799,12 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     overflow: visible !important;
 }
 
+.rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely,
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely.rbfw_hide,
+.rbfw-me-pricing-classic-wrap section.manage_inventory_as_timely.rbfw_hide {
+    display: none !important;
+}
+
 .rbfw-me-pricing-classic-wrap section.manage_inventory_as_timely > div {
     flex: 1 !important;
     min-width: 0 !important;
@@ -4151,7 +4157,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     border: 1px solid #dde4ef !important;
     border-radius: 8px !important;
     box-sizing: border-box !important;
-    margin: 0 20px 12px !important;
+    margin: 0 20px 10px !important;
     padding: 16px 20px !important;
     width: auto !important;
 }
@@ -8801,6 +8807,11 @@ textarea.rbfw-me-field-invalid {
     padding: 15px !important;
     margin: 0 0 12px !important;
     overflow: visible !important;
+}
+
+.rbfw-me-wrap .rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely,
+.rbfw-me-wrap .rbfw-me-panel[data-panel="pricing"] .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely.rbfw_hide {
+    display: none !important;
 }
 
 /* Seasonal sub-panels — switch instantly by rent type (data-item-type on pricing panel) */

@@ -244,6 +244,9 @@
 
         if (current_item_type == 'appointment') {
             jQuery('section.appointment-onday').removeClass('hide').show();
+            jQuery('.manage_inventory_as_timely').addClass('rbfw_hide hide').attr('style', 'display:none !important;').hide();
+            jQuery('.rbfw_time_inventory').hide();
+            jQuery('.rbfw_item_stock_quantity').hide();
         } else {
             jQuery('section.appointment-onday').addClass('hide').hide();
         }
@@ -305,7 +308,7 @@
 
                 jQuery('.sd-add-type-and-sessional').show();
 
-                jQuery('.manage_inventory_as_timely').show();
+                jQuery('.manage_inventory_as_timely').removeClass('rbfw_hide hide').removeAttr('style').show();
 
                 syncTimelyColumns();
                 jQuery('.rbfw_multiple_items').hide();
@@ -340,7 +343,7 @@
                 jQuery('.sd-add-type-and-sessional').hide();
 
 
-                jQuery('.manage_inventory_as_timely').hide();
+                jQuery('.manage_inventory_as_timely').addClass('rbfw_hide hide').attr('style', 'display:none !important;').hide();
                 jQuery('.rbfw_time_inventory').hide();
                 jQuery('.rbfw_without_time_inventory').show();
                 jQuery('.rbfw_item_stock_quantity').hide();

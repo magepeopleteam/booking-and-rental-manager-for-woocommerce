@@ -278,7 +278,7 @@
 			</div>
 
 			<!-- Pricing ─────────────────────────────────────────────────── -->
-			<div class="rbfw-me-panel" data-panel="pricing">
+			<div class="rbfw-me-panel" data-panel="pricing" data-item-type="<?php echo esc_attr( get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd' ); ?>">
 				<?php $GLOBALS['rbfw_modern_editor_rendering'] = true; ?>
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">

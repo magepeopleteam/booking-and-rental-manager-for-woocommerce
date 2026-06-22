@@ -141,7 +141,10 @@
 				$enable_specific_duration        = $enable_specific_duration ? $enable_specific_duration : 'off';
 				?>
                 <div class="rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
-                    <section class="manage_inventory_as_timely">
+					<?php if ( $rbfw_item_type === 'appointment' ) : ?>
+						<input type="hidden" name="manage_inventory_as_timely" value="off">
+					<?php endif; ?>
+                    <section class="manage_inventory_as_timely <?php echo esc_attr( $rbfw_item_type === 'appointment' ? 'rbfw_hide hide' : '' ); ?>"<?php echo $rbfw_item_type === 'appointment' ? ' style="display:none !important;"' : ''; ?>>
                         <div>
                             <label>
 								<?php esc_html_e( 'Manage a single-item inventory on an hourly basis.', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -149,7 +152,7 @@
                             <p><?php esc_html_e( 'Enabling this allows you to manage a shared inventory for rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr( $manage_inventory_as_timely ); ?>" <?php echo esc_attr( $manage_inventory_as_timely == 'on' ? 'checked' : '' ); ?>>
+                            <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr( $manage_inventory_as_timely ); ?>" <?php checked( $manage_inventory_as_timely, 'on' ); ?> <?php disabled( $rbfw_item_type === 'appointment', true ); ?>>
                             <span class="slider round"></span>
                         </label>
                     </section>
@@ -1910,6 +1913,9 @@
 					//sun
 
                     $manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : 'off';
+					if ( $rbfw_item_type === 'appointment' ) {
+						$manage_inventory_as_timely = 'off';
+					}
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
                     $rbfw_particular_switch = 'off';

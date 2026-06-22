@@ -562,8 +562,12 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 
-			// rbfw_particular_switch is posted under a type-specific name
 			$_ps_item_type = sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ?? '' ) );
+			if ( $_ps_item_type === 'appointment' ) {
+				update_post_meta( $post_id, 'manage_inventory_as_timely', 'off' );
+			}
+
+			// rbfw_particular_switch is posted under a type-specific name
 			if ( in_array( $_ps_item_type, [ 'bike_car_md', 'equipment', 'dress', 'others' ], true ) ) {
 				$_ps_key = 'rbfw_particular_switch_md';
 			} elseif ( $_ps_item_type === 'multiple_items' ) {

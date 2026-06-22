@@ -5756,6 +5756,8 @@ span.ppof-button.add-service-category.mt-1,
 
 #rbfw_add_meta_box section {
     background: #fff;
+    border: 1px solid #c3c4cb !important;
+    border-radius: 10px !important;
 }
 
 #rbfw_add_meta_box .rbfw_min_max_booking_day_row > section.bg-light {
@@ -5773,16 +5775,8 @@ span.ppof-button.add-service-category.mt-1,
     width: 100%;
 }
 
-#rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
-    background: #fff !important;
-}
-
 table.form-table.rbfw_service_category_table {
     background: #fff !important;
-}
-
-#rbfw_add_meta_box section {
-    border: 1px solid #c3c4cb !important;
 }
 
 .rbfw_feature_category_table table td {
@@ -5825,7 +5819,8 @@ table.rbfw_pricing_table thead th {
 #rbfw_add_meta_box input[type=datetime],
 #rbfw_add_meta_box input[type=datetime-local] {
     border: 1px solid #d4dadf !important;
-    padding: 0 !important;
+    border-radius: 5px;
+    padding: 10px !important;
 }
 
 .feature_category_inner_wrap label {
@@ -7781,11 +7776,15 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 
 /* ── Appointment max qty row (classic editor — md-price-card layout) ── */
 #rbfw_add_meta_box .rbfw_switch_sd_appointment_row {
-    margin: 0 0 12px;
+    margin: 10px 0 12px;
 }
 
 #rbfw_add_meta_box .rbfw_switch_sd_appointment_row.hide {
     display: none !important;
+}
+
+#rbfw_add_meta_box section.appointment-onday {
+    margin-bottom: 10px;
 }
 
 #rbfw_add_meta_box .rbfw_switch_sd_appointment_row .md-price-card {
@@ -8141,7 +8140,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     background: #fff !important;
     border: 1px solid #dde4ef !important;
     border-top: none !important;
-    border-radius: 0 0 8px 8px !important;
+    border-radius: 0 0 10px 10px !important;
     overflow-x: auto;
     padding: 0 !important;
 }
@@ -8437,7 +8436,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     background: #f5f8ff !important;
     border: 1px solid #ddd !important;
     margin-bottom: 10px !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     padding: 15px !important;
 }
 
@@ -8453,6 +8452,12 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     margin: 4px 0 0 !important;
 }
 
+#rbfw_add_meta_box[data-item-type="appointment"] .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely,
+#rbfw_add_meta_box .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely.rbfw_hide,
+#rbfw_add_meta_box section.manage_inventory_as_timely.rbfw_hide {
+    display: none !important;
+}
+
 /* ── 2. Rent-type + Price Settings outer section ─────────────────────────
    The `section` that wraps the rent-type tiles already has a global border.
    Refine it to match the card language. */
@@ -8460,7 +8465,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 #rbfw_add_meta_box #travel_pricing .rent_type > section,
 #rbfw_add_meta_box #travel_pricing section.mp_tab_item_section {
     border-color: #dde4ef !important;
-    border-radius: 0 0 8px 8px !important;
+    border-radius: 0 0 10px 10px !important;
 }
 
 /* ── 3. SD pricing table ─────────────────────────────────────────────────── */
@@ -8468,7 +8473,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 /* Table-section card */
 #rbfw_add_meta_box .rbfw_bike_car_sd_wrapper > section:last-child {
     border: 1px solid #dde4ef !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     overflow: hidden !important;
     padding: 0 !important;
 }
@@ -8878,7 +8883,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     align-items: center !important;
     border: 1px solid #dde4ef !important;
     border-top: none !important;
-    border-radius: 0 0 8px 8px !important;
+    border-radius: 0 0 10px 10px !important;
     display: flex !important;
     justify-content: space-between !important;
     padding: 16px 20px !important;
@@ -9198,7 +9203,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 /* ── Panel header ────────────────────────────────────────────────────────── */
 #rbfw_add_meta_box .rbfw_fee_management_wrapper > section.bg-light {
     border: 1px solid #dde4ef !important;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
 }
 
 /* ── Content container ───────────────────────────────────────────────────── */
@@ -9379,7 +9384,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 #rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-wrap {
     border: 1px solid #dde4ef !important;
     border-top: 1px dashed #c3cfe0 !important;
-    border-radius: 0 0 8px 8px !important;
+    border-radius: 0 0 10px 10px !important;
     margin-top: 0 !important;
     padding: 14px 16px !important;
 }

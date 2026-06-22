@@ -38,7 +38,6 @@
         initPublishDropdown();
         initSave();
         initPageLoader();
-        initHashNav();
     });
 
     function initPageLoader() {
@@ -73,8 +72,56 @@
     function initTabs() {
         var $tabs = $wrap.find('.rbfw-me-tab');
         var total = $tabs.length;
+        var storageKey = 'rbfw_me_active_tab_' + (postId || 'new');
 
-        function goToStep(idx) {
+        function parseTabFromHash() {
+            var hash = window.location.hash || '';
+            var match = hash.match(/#\/rental\/(?:edit\/(\d+)|new)\/(\w+)/);
+            if (!match || !match[2]) {
+                return null;
+            }
+            var hashPostId = match[1] ? parseInt(match[1], 10) : 0;
+            if (postId && hashPostId && hashPostId !== postId) {
+                return null;
+            }
+            return match[2];
+        }
+
+        function tabIndexFromKey(tabKey) {
+            if (!tabKey) {
+                return -1;
+            }
+            return $tabs.index($tabs.filter('[data-tab="' + tabKey + '"]'));
+        }
+
+        function updateHash(tabKey) {
+            var hash = postId
+                ? '#/rental/edit/' + postId + '/' + tabKey
+                : '#/rental/new/' + tabKey;
+            if (window.location.hash !== hash) {
+                history.replaceState(null, '', hash);
+            }
+        }
+
+        function getInitialTabIndex() {
+            var idx = tabIndexFromKey(parseTabFromHash());
+            if (idx >= 0) {
+                return idx;
+            }
+
+            try {
+                idx = tabIndexFromKey(localStorage.getItem(storageKey));
+                if (idx >= 0) {
+                    return idx;
+                }
+            } catch (e) {}
+
+            var activeIdx = $tabs.index($tabs.filter('.is-active'));
+            return activeIdx >= 0 ? activeIdx : 0;
+        }
+
+        function goToStep(idx, options) {
+            options = options || {};
             if (idx < 0 || idx >= total) return;
             $tabs.each(function (i) {
                 $(this)
@@ -93,8 +140,11 @@
             } else {
                 $next.html('Next <span class="dashicons dashicons-arrow-right-alt2"></span>');
             }
-            if (postId) {
-                history.replaceState(null, '', '#/rental/edit/' + postId + '/' + tabKey);
+            if (options.updateHash !== false) {
+                updateHash(tabKey);
+                try {
+                    localStorage.setItem(storageKey, tabKey);
+                } catch (e) {}
             }
         }
 
@@ -108,17 +158,14 @@
             goToStep($tabs.index($tabs.filter('.is-active')) - 1);
         });
 
-        goToStep($tabs.index($tabs.filter('.is-active')));
-    }
+        $(window).on('hashchange.rbfwMeTabs', function () {
+            var idx = tabIndexFromKey(parseTabFromHash());
+            if (idx >= 0) {
+                goToStep(idx, { updateHash: false });
+            }
+        });
 
-    /* ── Restore tab from URL hash ───────────────────────────── */
-    function initHashNav() {
-        var hash = window.location.hash;
-        var match = hash.match(/#\/rental\/(?:edit|new)\/\d+\/(\w+)/);
-        if (match && match[1]) {
-            var $tab = $wrap.find('.rbfw-me-tab[data-tab="' + match[1] + '"]');
-            if ($tab.length) $tab.trigger('click');
-        }
+        goToStep(getInitialTabIndex());
     }
 
     /* ── Rate rows (enable/disable with toggle) ──────────────── */
@@ -1609,11 +1656,13 @@
 
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                $pricing.find('.manage_inventory_as_timely').removeClass('rbfw_hide hide').removeAttr('style').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                $pricing.find('.manage_inventory_as_timely').addClass('rbfw_hide hide').attr('style', 'display:none !important;').hide();
                 $pricing.find('.rbfw_time_inventory').hide();
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
