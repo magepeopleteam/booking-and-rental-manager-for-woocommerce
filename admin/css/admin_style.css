@@ -9469,3 +9469,70 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 .rbfw_seasonal_price_config_wrapper[data-item-type="multiple_items"] > .sessional_price_multiple_items {
     display: block !important;
 }
+
+/* Classic editor — switch to modern editor (after Add New Item) */
+.post-type-rbfw_item .wrap > h1.wp-heading-inline {
+    display: inline-block;
+    margin-right: 0;
+    vertical-align: middle;
+}
+
+.post-type-rbfw_item .wrap > .rbfw-classic-title-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.post-type-rbfw_item .rbfw-classic-title-actions .page-title-action {
+    align-items: center !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    float: none !important;
+    justify-content: center;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    min-height: 30px;
+    padding: 4px 10px !important;
+    position: static !important;
+    top: auto !important;
+    vertical-align: middle !important;
+}
+
+a.rbfw-switch-to-modern.page-title-action {
+    align-items: center;
+    background: linear-gradient(135deg, #1a56db 0%, #2563eb 100%);
+    border: 1px solid #1d4ed8;
+    border-radius: 3px;
+    box-shadow: none;
+    color: #fff !important;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 6px;
+    margin-left: 0;
+    text-decoration: none !important;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+a.rbfw-switch-to-modern.page-title-action:hover,
+a.rbfw-switch-to-modern.page-title-action:focus {
+    background: linear-gradient(135deg, #1648c0 0%, #1d4ed8 100%);
+    border-color: #1648c0;
+    box-shadow: none;
+    color: #fff !important;
+    outline: none;
+    transform: none;
+}
+
+a.rbfw-switch-to-modern .rbfw-switch-to-modern__icon {
+    display: inline-flex;
+    font-size: 16px;
+    height: 16px;
+    line-height: 16px;
+    width: 16px;
+}
+
+a.rbfw-switch-to-modern .rbfw-switch-to-modern__label {
+    line-height: 1.4;
+}
