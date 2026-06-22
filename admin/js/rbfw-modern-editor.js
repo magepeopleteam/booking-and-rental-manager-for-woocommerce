@@ -1656,13 +1656,17 @@
 
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.manage_inventory_as_timely').removeClass('rbfw_hide hide').removeAttr('style').show();
+                if (typeof window.rbfwSetTimelyInventorySection === 'function') {
+                    window.rbfwSetTimelyInventorySection($pricing, true);
+                }
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
-                $pricing.find('.manage_inventory_as_timely').addClass('rbfw_hide hide').attr('style', 'display:none !important;').hide();
+                if (typeof window.rbfwSetTimelyInventorySection === 'function') {
+                    window.rbfwSetTimelyInventorySection($pricing, false);
+                }
                 $pricing.find('.rbfw_time_inventory').hide();
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
