@@ -89,27 +89,27 @@
                         $item_type = [
                             'bike_car_sd'     =>[
                                                     'name' =>__( 'Single day', 'booking-and-rental-manager-for-woocommerce' ) ,
-                                                    'desc' => 'This option is ideal for rentals such as <b>bikes</b>, <b>boats</b>, <b>yachts</b>, <b>kayaks</b>, or similar items that can be hired for a full day, by the hour, or for a specific time slot within a single day. It provides flexibility for both hourly and fixed-duration',
+                                                    'desc' => 'Best for items rented within a single day. Customers can choose specific time slots like hourly, morning, evening, or full-day booking. Ideal for <b>bikes</b>, <b>boats</b>, <b>kayaks</b>, and similar short-use rentals.',
                                                     'icon' => 'fa fa-calendar-day'
                                                 ],
                             'bike_car_md'     =>[
                                                     'name' => __( 'Multiple day', 'booking-and-rental-manager-for-woocommerce' ),
-                                                    'desc' => 'This option is perfect for rentals like <b>cars</b>, <b>equipment</b>, <b>dresses</b>, <b>sports kits</b>, or similar items that customers can hire for one day or several days. Customers can select a date range for their booking, and you can set pricing by the hour, per day, or for weekends.',   
+                                                    'desc' => 'Suitable for items rented for more than one day. Customers select a start and end date, and pricing can be set per hour, per day, or even for weekends. Perfect for <b>cars</b>, <b>equipment</b>, <b>dresses</b>, or <b>sports gear</b>.',   
                                                     'icon' => 'fa fa-calendar-alt'
                                                 ],
                             'resort'          =>[
                                                     'name' => __( 'Resort', 'booking-and-rental-manager-for-woocommerce' ),
-                                                    'desc' => 'This option is designed for resorts or similar accommodations where you can set <b>day-night</b> price or <b>day-long</b> price. The total price is automatically calculated based on the number of days the customer selects for their stay.',                       
+                                                    'desc' => 'Designed for <b>hotels</b>, <b>resorts</b>, and stays. Pricing is automatically calculated based on nights or full-day stay. You can set <b>day-night</b> or <b>per-night</b> rates for seamless booking.',                       
                                                     'icon' => 'fa fa-hotel'
                                                 ],
                             'appointment'     =>[
                                                     'name' => __( 'Appointment', 'booking-and-rental-manager-for-woocommerce' ),
-                                                    'desc' => 'This option is ideal for appointment-based services such as <b>barbers</b>, <b>spas</b>, <b>yoga classes</b>, <b>consultations</b>, <b>hair care</b>, and similar activities. Pricing can be set according to the specific service offered.',                   
+                                                    'desc' => 'Used for time-based services instead of physical items. Customers book a time slot for services like <b>barber</b>, <b>spa</b>, <b>yoga</b>, <b>consultation</b>, or <b>coaching</b>. Pricing depends on the selected service or duration.',                   
                                                     'icon' => 'fa fa-calendar-check'
                                                 ],  
                             'multiple_items'  =>[
                                                     'name' => __( 'Multiple day for multiple items', 'booking-and-rental-manager-for-woocommerce' ),
-                                                    'desc' => 'This option is perfect for renting out multiple items over multiple days. You can set pricing by the <b>hour</b>, <b>per day</b>, <b>per week</b>, or <b>per month</b>, giving customers flexible rental choices.',
+                                                    'desc' => 'Best for renting several items together over multiple days. Customers can select multiple products in one booking and choose rental duration (<b>hourly</b>, <b>daily</b>, <b>weekly</b>, or <b>monthly</b>). Ideal for <b>bundles</b> or <b>group rentals</b>.',
                                                     'icon' => 'fa fa-layer-group'
                                                 ],
                         ];
@@ -141,7 +141,7 @@
 				$enable_specific_duration        = $enable_specific_duration ? $enable_specific_duration : 'off';
 				?>
                 <div class="rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
-                    <section class="manage_inventory_as_timely ">
+                    <section class="manage_inventory_as_timely">
                         <div>
                             <label>
 								<?php esc_html_e( 'Manage a single-item inventory on an hourly basis.', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -302,12 +302,6 @@
                                     <i class="fas fa-circle-plus"></i>
                                     <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </span>
-
-                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) { ?>
-                                    <span id="sync-with-sessional-price-sd" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button sync-with-sessional-price-sd" >
-                                        <?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                    </span>
-                                <?php } ?>
                             </div>
                         </div>
                     </section>
@@ -547,6 +541,9 @@
 
                             updateRowGridLayout();
                             updatePivotVisibility();
+                            if (typeof window.rbfwSpSyncMiSeasonalPriceFields === 'function') {
+                                window.rbfwSpSyncMiSeasonalPriceFields();
+                            }
                         }
 
                         function updatePivotVisibility() {
@@ -620,12 +617,20 @@
                             updateRowGridLayout();
                             updateRemoveButtons();
                             newRow.querySelector('.item-name-input').focus();
+                            if (typeof window.rbfwSpScheduleMiSeasonalSync === 'function') {
+                                var root = document.querySelector('.rbfw-me-wrap') || document.getElementById('rbfw_add_meta_box') || document.body;
+                                window.rbfwSpScheduleMiSeasonalSync(jQuery(root), true);
+                            }
                         }
 
                         function removeItemRow(button) {
                             const row = button.closest('.item-row');
                             row.remove();
                             updateRemoveButtons();
+                            if (typeof window.rbfwSpScheduleMiSeasonalSync === 'function') {
+                                var root = document.querySelector('.rbfw-me-wrap') || document.getElementById('rbfw_add_meta_box') || document.body;
+                                window.rbfwSpScheduleMiSeasonalSync(jQuery(root), true);
+                            }
                         }
 
                         function updateRemoveButtons() {
@@ -868,13 +873,6 @@
 
                             <p class="mt-2">
                                 <span id="add-resort-type-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Resort Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) && is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) ) { ?>
-                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync with sessional price and multi day saver', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' )){ ?>
-                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php }elseif(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){ ?>
-                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync multi day saver', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <?php } ?>
                             </p>
 
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
@@ -933,7 +931,8 @@
 			public function appointment( $post_id ) {
 				$rbfw_item_type                          = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_sd_appointment_ondays_data         = get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) : [];
-				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : 'appointment';
+				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true );
+				$rbfw_sd_appointment_max_qty_per_session = ( $rbfw_sd_appointment_max_qty_per_session !== '' && is_numeric( $rbfw_sd_appointment_max_qty_per_session ) ) ? $rbfw_sd_appointment_max_qty_per_session : '1';
 				?>
                 <div class="rbfw_switch_sd_appointment_row <?php echo esc_attr( $rbfw_item_type != 'appointment' ) ? 'hide' : 'show'; ?>">
                     <div class="md-price-card">
@@ -944,14 +943,14 @@
                             </div>
                             <div class="item-right">
                                 <div class="md-threshold-input-wrap">
-                                    <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
-                                    <span>qty</span>
+                                    <input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" min="1" step="1" value="<?php echo esc_attr( $rbfw_sd_appointment_max_qty_per_session ); ?>">
+                                    <span><?php esc_html_e( 'QTY', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <section class="hide">
+                <section class="appointment-onday <?php echo esc_attr( $rbfw_item_type != 'appointment' ? 'hide' : '' ); ?>">
                     <label class="w-30">
 						<?php esc_html_e( 'Appointment Ondays', 'booking-and-rental-manager-for-woocommerce' ); ?>
                     </label>
@@ -1302,8 +1301,8 @@
 
 					<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
 					<?php do_action( 'rbfw_after_general_price_table_tier_pricing', $post_id ); ?>
+					<?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
                 </div>
-                <?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
 
 				<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
 
@@ -1601,6 +1600,216 @@
                 <?php
             }
 
+            public function get_pricing_validation_errors( $item_type, $post_data ) {
+                $errors = [];
+                $item_type = sanitize_text_field( (string) $item_type );
+
+                if ( in_array( $item_type, [ 'bike_car_sd', 'appointment' ], true ) ) {
+                    $rows = ( isset( $post_data['rbfw_bike_car_sd_data'] ) && is_array( $post_data['rbfw_bike_car_sd_data'] ) )
+                        ? $post_data['rbfw_bike_car_sd_data']
+                        : [];
+                    $timely = isset( $post_data['manage_inventory_as_timely'] ) && $post_data['manage_inventory_as_timely'] === 'on';
+                    $require_qty = $item_type === 'appointment' || ! $timely;
+                    $has_valid_row = false;
+
+                    if ( empty( $rows ) ) {
+                        return [
+                            __( 'At least one rental option row is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                        ];
+                    }
+
+                    foreach ( $rows as $index => $row ) {
+                        if ( ! is_array( $row ) ) {
+                            continue;
+                        }
+
+                        $rent_type = trim( (string) ( $row['rent_type'] ?? '' ) );
+                        $price     = trim( (string) ( $row['price'] ?? '' ) );
+                        $qty       = trim( (string) ( $row['qty'] ?? '' ) );
+
+                        if ( $rent_type === '' && $price === '' && $qty === '' ) {
+                            continue;
+                        }
+
+                        $row_num = (int) $index + 1;
+
+                        if ( $rent_type === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Rental option name is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $price === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Price is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $require_qty && $qty === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Stock/Day is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+
+                        if ( $rent_type !== '' && $price !== '' && ( ! $require_qty || $qty !== '' ) ) {
+                            $has_valid_row = true;
+                        }
+                    }
+
+                    if ( ! $has_valid_row ) {
+                        $errors[] = __( 'At least one complete rental option row is required (name, price, stock/day).', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+
+                    return $errors;
+                }
+
+                if ( $item_type === 'resort' ) {
+                    $rows = ( isset( $post_data['rbfw_resort_room_data'] ) && is_array( $post_data['rbfw_resort_room_data'] ) )
+                        ? $post_data['rbfw_resort_room_data']
+                        : [];
+                    $has_valid_row = false;
+
+                    if ( empty( $rows ) ) {
+                        return [
+                            __( 'At least one resort room type row is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                        ];
+                    }
+
+                    foreach ( $rows as $index => $row ) {
+                        if ( ! is_array( $row ) ) {
+                            continue;
+                        }
+
+                        $room_type = trim( (string) ( $row['room_type'] ?? '' ) );
+                        $daynight  = trim( (string) ( $row['rbfw_room_daynight_rate'] ?? '' ) );
+                        $qty       = trim( (string) ( $row['rbfw_room_available_qty'] ?? '' ) );
+
+                        if ( $room_type === '' && $daynight === '' && $qty === '' ) {
+                            continue;
+                        }
+
+                        $row_num = (int) $index + 1;
+
+                        if ( $room_type === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Room type is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $daynight === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Day-night price is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $qty === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Stock quantity is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+
+                        if ( $room_type !== '' && $daynight !== '' && $qty !== '' ) {
+                            $has_valid_row = true;
+                        }
+                    }
+
+                    if ( ! $has_valid_row ) {
+                        $errors[] = __( 'At least one complete resort room row is required (room type, day-night price, stock quantity).', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+
+                    return $errors;
+                }
+
+                if ( $item_type === 'multiple_items' ) {
+                    $rows = ( isset( $post_data['multiple_items_info'] ) && is_array( $post_data['multiple_items_info'] ) )
+                        ? $post_data['multiple_items_info']
+                        : [];
+                    $pricing_types = ( isset( $post_data['pricing_types'] ) && is_array( $post_data['pricing_types'] ) )
+                        ? $post_data['pricing_types']
+                        : [];
+                    $enabled_types = [
+                        'hourly'  => ( $pricing_types['hourly'] ?? '' ) === 'on',
+                        'daily'   => ( $pricing_types['daily'] ?? '' ) === 'on',
+                        'weekly'  => ( $pricing_types['weekly'] ?? '' ) === 'on',
+                        'monthly' => ( $pricing_types['monthly'] ?? '' ) === 'on',
+                    ];
+                    $has_valid_row = false;
+
+                    if ( empty( $rows ) ) {
+                        return [
+                            __( 'At least one item row is required for Multiple Items type.', 'booking-and-rental-manager-for-woocommerce' ),
+                        ];
+                    }
+
+                    foreach ( $rows as $index => $row ) {
+                        if ( ! is_array( $row ) ) {
+                            continue;
+                        }
+
+                        $item_name = trim( (string) ( $row['item_name'] ?? '' ) );
+                        $qty       = trim( (string) ( $row['available_qty'] ?? '' ) );
+                        $has_price = false;
+
+                        foreach ( $enabled_types as $type => $enabled ) {
+                            if ( ! $enabled ) {
+                                continue;
+                            }
+                            $price_key = $type . '_price';
+                            if ( trim( (string) ( $row[ $price_key ] ?? '' ) ) !== '' ) {
+                                $has_price = true;
+                                break;
+                            }
+                        }
+
+                        if ( $item_name === '' && $qty === '' && ! $has_price ) {
+                            continue;
+                        }
+
+                        $row_num = (int) $index + 1;
+
+                        if ( $item_name === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Item name is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( $qty === '' ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: Quantity is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+                        if ( ! $has_price ) {
+                            $errors[] = sprintf(
+                                /* translators: %d: row number */
+                                __( 'Row %d: At least one enabled price is required.', 'booking-and-rental-manager-for-woocommerce' ),
+                                $row_num
+                            );
+                        }
+
+                        if ( $item_name !== '' && $qty !== '' && $has_price ) {
+                            $has_valid_row = true;
+                        }
+                    }
+
+                    if ( ! $has_valid_row ) {
+                        $errors[] = __( 'At least one complete item row is required (item name, quantity, and price).', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+                }
+
+                return $errors;
+            }
+
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
@@ -1614,6 +1823,15 @@
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
 					$input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
+                    $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+
+                    $pricing_validation_errors = $this->get_pricing_validation_errors( $rbfw_item_type, wp_unslash( $_POST ) );
+                    if ( ! empty( $pricing_validation_errors ) ) {
+                        set_transient( 'rbfw_pricing_save_errors_' . $post_id, $pricing_validation_errors, 30 );
+                        return;
+                    }
+
+                    delete_transient( 'rbfw_pricing_save_errors_' . $post_id );
 
                     $rbfw_enable_monthly_rate                  = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';
                     $rbfw_monthly_rate                         = isset( $_POST['rbfw_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_monthly_rate'] ) ) : 0;
@@ -1652,10 +1870,6 @@
 
 
                     $rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
-
-                    $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
-
-
 
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
@@ -1861,22 +2075,32 @@
 			$renderer->resort_price_config( $post_id );
 			$renderer->multiple_items( $post_id );
 
-			// md_price_config() fires do_action('rbfw_after_extra_service_table') internally.
-			// The modern editor view renders addon output in its own dedicated card after this
-			// call, so suppress the action here to prevent a duplicate render.
-			$saved = $wp_filter['rbfw_after_extra_service_table'] ?? null;
+			// md_price_config() fires addon hooks internally. The modern editor view
+			// renders those addons in dedicated cards after this call, so suppress them
+			// here to prevent duplicate classic markup inside the pricing card.
+			$saved_extra       = $wp_filter['rbfw_after_extra_service_table'] ?? null;
+			$saved_seasonal    = $wp_filter['rbfw_after_week_price_table'] ?? null;
+			$saved_mds_md      = $wp_filter['rbfw_after_general_price_table'] ?? null;
+			$saved_mds_resort  = $wp_filter['rbfw_after_room_type_price_saver_price_table'] ?? null;
 			unset( $wp_filter['rbfw_after_extra_service_table'] );
+			unset( $wp_filter['rbfw_after_week_price_table'] );
+			unset( $wp_filter['rbfw_after_general_price_table'] );
+			unset( $wp_filter['rbfw_after_room_type_price_saver_price_table'] );
 
 			$renderer->md_price_config( $post_id );
 
-			if ( $saved !== null ) {
-				$wp_filter['rbfw_after_extra_service_table'] = $saved;
+			if ( $saved_extra !== null ) {
+				$wp_filter['rbfw_after_extra_service_table'] = $saved_extra;
 			}
-
-			// Flag for addon hooks: the next do_action('rbfw_after_extra_service_table')
-			// call (in rbfw-modern-editor.php) happens inside the modern editor, so addons
-			// can branch their HTML to use modern-editor design classes.
-			$GLOBALS['rbfw_modern_editor_rendering'] = true;
+			if ( $saved_seasonal !== null ) {
+				$wp_filter['rbfw_after_week_price_table'] = $saved_seasonal;
+			}
+			if ( $saved_mds_md !== null ) {
+				$wp_filter['rbfw_after_general_price_table'] = $saved_mds_md;
+			}
+			if ( $saved_mds_resort !== null ) {
+				$wp_filter['rbfw_after_room_type_price_saver_price_table'] = $saved_mds_resort;
+			}
 		}
 
 		}

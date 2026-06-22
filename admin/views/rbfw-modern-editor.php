@@ -1,6 +1,6 @@
 <?php if ( ! defined( 'ABSPATH' ) ) die; ?>
 
-<div class="rbfw-me-wrap" data-post-id="<?php echo esc_attr( $post_id ); ?>">
+<div class="rbfw-me-wrap is-loading" data-post-id="<?php echo esc_attr( $post_id ); ?>">
 
 	<!-- ── Header ───────────────────────────────────────────────────────── -->
 	<div class="rbfw-me-header">
@@ -15,7 +15,6 @@
 			<h1 class="rbfw-me-title-display"><?php echo esc_html( $screen_title ); ?></h1>
 		</div>
 		<div class="rbfw-me-header__right">
-			<span class="rbfw-me-save-indicator" aria-live="polite"></span>
 			<?php if ( $classic_url ) : ?>
 				<a class="rbfw-me-btn rbfw-me-btn--ghost rbfw-me-classic-switch" href="<?php echo esc_url( $classic_url ); ?>" title="<?php esc_attr_e( 'Switch to Classic Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					<span class="dashicons dashicons-editor-code"></span>
@@ -47,6 +46,35 @@
 			</div>
 		</div>
 		</div><!-- /.mep-top-nav-info -->
+	</div>
+
+	<div class="rbfw-me-save-indicator" role="status" aria-live="polite" aria-atomic="true"></div>
+
+	<div class="rbfw-me-page-loader" aria-hidden="true">
+		<div class="rbfw-me-page-loader__inner">
+			<div class="rbfw-me-sk-tabs">
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+				<span class="rbfw-me-sk rbfw-me-sk-tab"></span>
+			</div>
+			<div class="rbfw-me-page-loader__grid">
+				<div class="rbfw-me-sk-card">
+					<div class="rbfw-me-sk rbfw-me-sk-card-head"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-card-sub"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field rbfw-me-sk-field--short"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-editor"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-field rbfw-me-sk-field--short"></div>
+				</div>
+				<div class="rbfw-me-sk-sidebar">
+					<div class="rbfw-me-sk rbfw-me-sk-side-card"></div>
+					<div class="rbfw-me-sk rbfw-me-sk-side-card rbfw-me-sk-side-card--sm"></div>
+				</div>
+			</div>
+			<p class="rbfw-me-page-loader__text"><?php esc_html_e( 'Loading editor…', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+		</div>
 	</div>
 
 	<!-- ── Steps progress bar ───────────────────────────────────────────── -->
@@ -251,6 +279,7 @@
 
 			<!-- Pricing ─────────────────────────────────────────────────── -->
 			<div class="rbfw-me-panel" data-panel="pricing">
+				<?php $GLOBALS['rbfw_modern_editor_rendering'] = true; ?>
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
 						<?php RBFW_Pricing::render_for_modern_editor( $post_id ); ?>
@@ -271,6 +300,23 @@
 				</div>
 				<?php endif; ?>
 
+				<?php if ( has_action( 'rbfw_after_week_price_table' ) ) : ?>
+				<div class="rbfw-me-card rbfw-me-addon-seasonal-card">
+					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
+						<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
+				<?php if ( has_action( 'rbfw_after_general_price_table' ) || has_action( 'rbfw_after_room_type_price_saver_price_table' ) ) : ?>
+				<div class="rbfw-me-card rbfw-me-addon-mds-card">
+					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
+						<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
+						<?php do_action( 'rbfw_after_room_type_price_saver_price_table', $post_id ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Fee Management', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -280,6 +326,7 @@
 						<?php RBFW_Fee_Management::render_for_modern_editor( $post_id ); ?>
 					</div>
 				</div>
+				<?php unset( $GLOBALS['rbfw_modern_editor_rendering'] ); ?>
 			</div>
 
 			<!-- Off Days ─────────────────────────────────────────────────── -->
@@ -465,6 +512,8 @@
 					</div>
 				</div>
 
+				<?php do_action( 'rbfw_modern_editor_advanced_sections', $post_id ); ?>
+
 			</div>
 
 			<!-- ── Step Navigation ──────────────────────────────────────── -->
@@ -575,16 +624,6 @@
 					<h3><?php esc_html_e( 'Resources & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
 				<div class="rbfw-me-card__body">
-
-					<!-- Documentation -->
-					<a href="https://booking-and-rental-manager.com/documentation/" target="_blank" rel="noopener" class="rbfw-me-help-link rbfw-me-help-link--docs">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-media-document"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Guides, tutorials & how-tos', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
 
 					<div class="rbfw-me-help-divider">
 						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>

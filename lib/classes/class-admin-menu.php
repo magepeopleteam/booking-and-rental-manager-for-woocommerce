@@ -538,9 +538,21 @@
 			}
 
 			public function mp_event_all_in_tab() {
-				$post_id = get_the_id();
+				$post_id        = get_the_id();
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
 				?>
+                <script>
+                (function () {
+                    var box = document.getElementById('rbfw_add_meta_box');
+                    if (box) {
+                        box.setAttribute('data-item-type', <?php echo wp_json_encode( $rbfw_item_type ); ?>);
+                    }
+                    document.querySelectorAll('.rbfw_seasonal_price_config_wrapper').forEach(function (el) {
+                        el.setAttribute('data-item-type', <?php echo wp_json_encode( $rbfw_item_type ); ?>);
+                    });
+                })();
+                </script>
                 <div class="mp_event_tab_area">
                     <aside class="mp_tab_menu">
                         <ul>

@@ -485,7 +485,7 @@
 									</table>
 								</div>
 								<p class="mt-2">
-									<button id="add-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Extra Service', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+									<button id="add-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add Extra Service', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 								</p>
 							</div>
 						</section>

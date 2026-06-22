@@ -179,6 +179,18 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             }
 
+            if ( empty( trim( (string) $duration ) ) && ! empty( $total_days ) ) {
+                $duration = $total_days . ' ' . (
+                    $total_days > 1
+                        ? ( ( $rbfw->get_option_trans( 'rbfw_text_days', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_days', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Days', 'booking-and-rental-manager-for-woocommerce' ) )
+                        : ( ( $rbfw->get_option_trans( 'rbfw_text_days', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_days', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Day', 'booking-and-rental-manager-for-woocommerce' ) )
+                );
+            }
+
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
                 if(function_exists('rbfw_get_discount_array')){
                     $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);

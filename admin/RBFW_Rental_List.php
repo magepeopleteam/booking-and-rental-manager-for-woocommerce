@@ -278,7 +278,7 @@ if (!class_exists('RBFW_Rental_List')) {
             $items     = $is_trash ? $this->get_items(array('trash')) : $active;
             $base_url  = admin_url('admin.php?page=' . self::PAGE_SLUG);
             $trash_url = add_query_arg('rbfw_status', 'trash', $base_url);
-            $add_url   = admin_url('post-new.php?post_type=rbfw_item');
+            $add_url   = class_exists( 'RBFW_Modern_Editor' ) ? RBFW_Modern_Editor::add_new_url() : admin_url( 'post-new.php?post_type=rbfw_item' );
             $classic   = admin_url('edit.php?post_type=rbfw_item&rbfw_view=classic');
             $rent_types = RBFW_Function::rbfw_rent_types();
             ?>

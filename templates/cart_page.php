@@ -540,29 +540,29 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 <?php if($rbfw_rent_type == 'bike_car_md' || $rbfw_rent_type == 'dress' || $rbfw_rent_type == 'equipment' || $rbfw_rent_type == 'others'){
 
 
-    $start_datetime     = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
-    $end_datetime       = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
-    $start_date         = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
-    $start_time         = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
-    $end_date           = $cart_item['rbfw_end_date'] ? $cart_item['rbfw_end_date'] : '';
-    $end_time           = $cart_item['rbfw_end_time'] ? $cart_item['rbfw_end_time'] : '';
-    $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
-    $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
-    $rbfw_duration_md = $cart_item['rbfw_duration_md'] ? $cart_item['rbfw_duration_md'] : '';
+    $start_datetime     = $cart_item['rbfw_start_datetime'] ?? '';
+    $end_datetime       = $cart_item['rbfw_end_datetime'] ?? '';
+    $start_date         = $cart_item['rbfw_start_date'] ?? '';
+    $start_time         = $cart_item['rbfw_start_time'] ?? '';
+    $end_date           = $cart_item['rbfw_end_date'] ?? '';
+    $end_time           = $cart_item['rbfw_end_time'] ?? '';
+    $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ?? '';
+    $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ?? '';
+    $rbfw_duration_md   = $cart_item['rbfw_duration_md'] ?? '';
 
-    $rbfw_duration_price_individual = isset($cart_item['rbfw_duration_price_individual'] )? $cart_item['rbfw_duration_price_individual'] : 0;
+    $rbfw_duration_price_individual = $cart_item['rbfw_duration_price_individual'] ?? 0;
 
-    $rbfw_duration_price = $cart_item['rbfw_duration_price'] ? $cart_item['rbfw_duration_price'] : 0;
+    $rbfw_duration_price = $cart_item['rbfw_duration_price'] ?? 0;
 
 
-    $rbfw_item_quantity = $cart_item['rbfw_item_quantity'] ? $cart_item['rbfw_item_quantity'] : 1;
-    $rbfw_service_price = $cart_item['rbfw_service_price'] ? $cart_item['rbfw_service_price'] : '';
-    $rbfw_service_info 	= $cart_item['rbfw_service_info'] ? $cart_item['rbfw_service_info'] : [];
-    $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ? $cart_item['rbfw_service_infos'] : [];
+    $rbfw_item_quantity = $cart_item['rbfw_item_quantity'] ?? 1;
+    $rbfw_service_price = $cart_item['rbfw_service_price'] ?? '';
+    $rbfw_service_info 	= $cart_item['rbfw_service_info'] ?? [];
+    $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ?? [];
 
-    $rbfw_ticket_info = $cart_item['rbfw_ticket_info'] ? $cart_item['rbfw_ticket_info'] : [];
-    $variation_info = $cart_item['rbfw_variation_info'] ? $cart_item['rbfw_variation_info'] : [];
-    $total_days = $cart_item['total_days'];
+    $rbfw_ticket_info = $cart_item['rbfw_ticket_info'] ?? [];
+    $variation_info = $cart_item['rbfw_variation_info'] ?? [];
+    $total_days = $cart_item['total_days'] ?? '';
 
 
     $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
@@ -574,8 +574,8 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         $extra_services = array();
     endif;
 
-    $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
-    $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
+    $discount_type 	= $cart_item['discount_type'] ?? '';
+    $discount_amount 	= $cart_item['discount_amount'] ?? '';
 
     $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
