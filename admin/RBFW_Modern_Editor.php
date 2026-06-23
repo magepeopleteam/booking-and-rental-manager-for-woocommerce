@@ -942,6 +942,12 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 			if ( $screen->id === 'edit-' . self::POST_TYPE ) {
+				// On the list screen this button is a view toggle (mirrors the modern
+				// list's "Classic view" link), so it must go to the modern LIST — not
+				// the modern editor, which would open/create a single item.
+				if ( class_exists( 'RBFW_Rental_List' ) ) {
+					return admin_url( 'admin.php?page=' . RBFW_Rental_List::PAGE_SLUG );
+				}
 				return admin_url( 'edit.php?post_type=' . self::POST_TYPE . '&page=' . self::PAGE_SLUG );
 			}
 
@@ -967,7 +973,13 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				return;
 			}
 
-			$label = __( 'Modern Editor', 'booking-and-rental-manager-for-woocommerce' );
+			// On the list screen the button switches the list view ("Modern view");
+			// on a single item it opens the modern editor ("Modern Editor").
+			$screen  = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			$is_list = $screen && $screen->id === 'edit-' . self::POST_TYPE;
+			$label   = $is_list
+				? __( 'Modern view', 'booking-and-rental-manager-for-woocommerce' )
+				: __( 'Modern Editor', 'booking-and-rental-manager-for-woocommerce' );
 			?>
 			<script>
 			(function ($) {
