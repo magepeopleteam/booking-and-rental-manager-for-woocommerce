@@ -5448,6 +5448,30 @@ color: #666;
     padding: 20px;
 }
 
+/* Calendar prev/next arrows must not inherit the day-cell's 20px padded highlight
+   (that made the hovered arrow balloon into a huge brand-coloured circle). Keep a
+   neat, fixed-size circular button on hover. */
+.single-rbfw_item .ui-datepicker .ui-datepicker-prev,
+.single-rbfw_item .ui-datepicker .ui-datepicker-next{
+    transition: background-color .2s ease, color .2s ease;
+}
+.single-rbfw_item .ui-datepicker .ui-datepicker-prev.ui-state-hover:hover,
+.single-rbfw_item .ui-datepicker .ui-datepicker-next.ui-state-hover:hover,
+.single-rbfw_item .ui-datepicker .ui-datepicker-prev:hover,
+.single-rbfw_item .ui-datepicker .ui-datepicker-next:hover{
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--rbfw_color_primary);
+    border: 1px solid var(--rbfw_color_primary);
+    color: #fff;
+}
+.single-rbfw_item .ui-datepicker .ui-datepicker-prev:hover::before,
+.single-rbfw_item .ui-datepicker .ui-datepicker-next:hover::before{
+    color: #fff;
+}
+
 .single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
     background: var(--rbfw_color_primary);
     opacity: .35;

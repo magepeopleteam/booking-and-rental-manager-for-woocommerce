@@ -271,6 +271,9 @@
                                     foreach ($rbfw_extra_service_data as $value) {
                                         $img_url = !empty($value['service_img']) ? wp_get_attachment_url($value['service_img']) : '';
                                         $uniq_id = wp_rand();
+                                        // Available qty defaults to the configured stock (no date is selected at
+                                        // initial render); avoids an undefined-variable warning in the notice below.
+                                        $max_es_available_qty = isset($value['service_qty']) ? $value['service_qty'] : 0;
                                         if ($img_url) {
                                             $img = '<a href="#rbfw_service_img_<?php echo $uniq_id ?>" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
                                             $img .= '<div id="rbfw_service_img_' . $uniq_id . '" class="mage_modal"><img src="<?php echo esc_url($img_url) ?>"/></div>';

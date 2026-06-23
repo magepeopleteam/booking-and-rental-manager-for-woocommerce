@@ -404,7 +404,7 @@
 									<table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one">
 										<thead>
 										<tr>
-											<th><?php // esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+											<th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 											<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 											<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 											<th><?php echo wp_kses_post( 'Price <b class="required">*</b>' ); ?></th>
@@ -439,7 +439,7 @@
 																	<?php  endif; ?>
 																</div>
 																<div class="service_image_add_remove">
-																	<a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fas fa-circle-minus"></i></a>
+																	<a class="rbfw_service_image_btn button" title="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-image"></i></a><a class="rbfw_remove_service_image_btn btn" title="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></a>
 																	<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
 																</div>
 															</div>
@@ -465,7 +465,7 @@
 												<div class="rbfw_service_image_wrap text-center">
 													<div class="rbfw_service_image_preview"></div>
 													<div class="service_image_add_remove">
-														<a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fas fa-circle-minus"></i></a>
+														<a class="rbfw_service_image_btn button" title="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-image"></i></a><a class="rbfw_remove_service_image_btn button" title="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></a>
 														<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
 													</div>
 												</div>
