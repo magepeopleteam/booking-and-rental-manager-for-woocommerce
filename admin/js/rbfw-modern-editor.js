@@ -1870,6 +1870,16 @@
             $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
 
+            // Half-day / hourly / hour-threshold all require the time picker. When it is
+            // off, force those dependent toggles off so the saved data stays consistent
+            // (otherwise a previously-enabled hourly/half-day stays "yes" while hidden).
+            if (!timePickerEnabled) {
+                hourlyPriceEnabled   = false;
+                halfDayPriceEnabled  = false;
+                hourThresholdEnabled = false;
+                $md.find('#rbfw_enable_hourly_rate, #rbfw_enable_half_day_rate, #rbfw_enable_hourly_threshold').val('no');
+            }
+
             // Hourly price
             $md.find('.hourly-price-toggle').toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
@@ -1939,6 +1949,15 @@
         $md.on('click', '.time-picker-toggle', function () {
             timePickerEnabled = !timePickerEnabled;
             $(this).toggleClass('active', timePickerEnabled);
+            // Time Picker off → force every dependent toggle off & disabled.
+            if (!timePickerEnabled) {
+                hourlyPriceEnabled   = false;
+                halfDayPriceEnabled  = false;
+                hourThresholdEnabled = false;
+                $md.find('.hourly-price-toggle, .half-day-price-toggle, .hour-threshold-toggle').removeClass('active');
+                $md.find('#rbfw_enable_hourly_rate, #rbfw_enable_half_day_rate, #rbfw_enable_hourly_threshold').val('no');
+                $md.find('#hourly-price-input, #half-day-price-input, #hour-threshold-input').prop('disabled', true);
+            }
             $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
             // Sub-rows also depend on time picker being active
@@ -1952,6 +1971,7 @@
         });
 
         $md.on('click', '.hourly-price-toggle', function () {
+            if (!timePickerEnabled) { return; } // requires Time Picker
             hourlyPriceEnabled = !hourlyPriceEnabled;
             $(this).toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
@@ -1962,6 +1982,7 @@
         });
 
         $md.on('click', '.half-day-price-toggle', function () {
+            if (!timePickerEnabled) { return; } // requires Time Picker
             halfDayPriceEnabled = !halfDayPriceEnabled;
             $(this).toggleClass('active', halfDayPriceEnabled);
             $md.find('#half-day-price-input').prop('disabled', !halfDayPriceEnabled);
@@ -1972,6 +1993,7 @@
         });
 
         $md.on('click', '.hour-threshold-toggle', function () {
+            if (!timePickerEnabled) { return; } // requires Time Picker
             hourThresholdEnabled = !hourThresholdEnabled;
             $(this).toggleClass('active', hourThresholdEnabled);
             $md.find('#hour-threshold-input').prop('disabled', !hourThresholdEnabled);
