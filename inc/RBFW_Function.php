@@ -153,6 +153,42 @@
 				return 'rbfw_item';
 			}
 
+			//*********** WooCommerce optional / booking mode ***********//
+			/**
+			 * Whether WooCommerce is active in this request.
+			 *
+			 * Single source of truth for runtime branching. `rbfw_woo_install_check()`
+			 * is kept for the installer UI (it also reports "Installed But Not Active"),
+			 * but feature code should branch on this instead.
+			 */
+			public static function has_woocommerce(): bool {
+				return class_exists( 'WooCommerce' );
+			}
+
+			/**
+			 * Active booking mode: 'woocommerce' | 'standalone'.
+			 *
+			 * Reads the admin setting, but always falls back to 'standalone' when
+			 * WooCommerce is not active so the plugin never assumes WooCommerce exists.
+			 */
+			public static function booking_mode(): string {
+				if ( ! self::has_woocommerce() ) {
+					return 'standalone';
+				}
+				$mode = self::get_settings( 'rbfw_booking_mode', 'rbfw_basic_payment_settings', 'woocommerce' );
+				return ( $mode === 'standalone' ) ? 'standalone' : 'woocommerce';
+			}
+
+			/**
+			 * Whether the WooCommerce cart/checkout/order flow should be used for bookings.
+			 *
+			 * True only when WooCommerce is active AND the admin has selected WooCommerce
+			 * mode. Otherwise bookings use the native (standalone) flow.
+			 */
+			public static function use_wc(): bool {
+				return self::has_woocommerce() && self::booking_mode() === 'woocommerce';
+			}
+
             public static function rbfw_rent_types( ) {
                 $item_type = [
                     'bike_car_sd'     => __('Rent item for single day', 'booking-and-rental-manager-for-woocommerce'),

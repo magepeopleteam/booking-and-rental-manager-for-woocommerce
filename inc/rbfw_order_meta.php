@@ -1172,8 +1172,14 @@ function save_rbfw_order_meta_box( $post_id ) {
 
 
             $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
-            $orderDetail        = new WC_Order( $rbfw_link_order_id );
-            $orderDetail->update_status( "wc-" . $current_status_wc, $current_status_wc, true );
+            // Sync the linked WooCommerce order status only when WooCommerce is active.
+            // Standalone bookings have no WC order to update.
+            if ( rbfw_has_woocommerce() && class_exists( 'WC_Order' ) && $rbfw_link_order_id ) {
+                $orderDetail = new WC_Order( $rbfw_link_order_id );
+                if ( $orderDetail ) {
+                    $orderDetail->update_status( "wc-" . $current_status_wc, $current_status_wc, true );
+                }
+            }
             update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) );
 
 

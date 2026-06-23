@@ -11,6 +11,8 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-form-fields-wrapper.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-meta-box.php';
 require_once RBFW_PLUGIN_DIR . '/admin/admin.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Modern_Editor.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_WC_Payment_Manager.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Settings.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_resort_functions.php';
@@ -37,6 +39,15 @@ require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 
 require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
 //require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
+
+// ---- Booking abstraction layer (WooCommerce optional) ----
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Payment_Provider_Interface.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Service_Interface.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Woo_Booking_Service.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Standalone_Booking_Service.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Manager.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Post_Type.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_List_Table.php';
 
 
 
@@ -76,17 +87,29 @@ function rbfw_new_installation_or_update(){
 }
 
 /*************************************************
-* if Woocommerce Payment System is Enabled
+* Booking integration: load the WooCommerce cart/checkout bridge only when WooCommerce
+* is active; otherwise load the native (standalone) checkout flow. The bridge files call
+* WooCommerce order/cart APIs that the fallback shims cannot fake, so they must not load
+* in Standalone mode.
 **************************************************/
 add_action('wp_loaded', 'rbfw_free_woocommerce_integrate');
 
 function rbfw_free_woocommerce_integrate(){
 
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
-    require_once(RBFW_PLUGIN_DIR . "/Frontend/RBFW_Woocommerse.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+    if ( RBFW_Function::has_woocommerce() ) {
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
+        require_once(RBFW_PLUGIN_DIR . "/Frontend/RBFW_Woocommerse.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+    }
+
+    // Native checkout + booking confirmation run whenever the WooCommerce flow is not in
+    // use (WooCommerce inactive, or active but Booking Mode = Standalone).
+    if ( ! RBFW_Function::use_wc() ) {
+        require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Native_Checkout.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Confirmation.php");
+    }
 
 }
 

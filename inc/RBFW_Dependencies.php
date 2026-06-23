@@ -51,6 +51,10 @@ if (! class_exists('RBFW_Dependencies')) {
 
 			wp_enqueue_script('sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true);
 
+			// Standalone (non-WooCommerce) checkout interception. Loads in every mode but
+			// only acts when rbfw_ajax_front.booking_mode === 'standalone'.
+			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
+
 			wp_enqueue_style('select2css', RBFW_PLUGIN_URL . '/admin/css/select2.min.css', false, '1.0', 'all');
 			wp_enqueue_script('select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array('jquery'), null, true);
 
@@ -113,6 +117,11 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_bikecarsd_type_list'        => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
 				'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
 				'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
+				// WooCommerce-optional booking flow.
+				'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),
+				'booking_mode'                 => rbfw_booking_mode(),
+				'has_woocommerce'              => rbfw_has_woocommerce() ? '1' : '0',
+				'currency_symbol'              => get_woocommerce_currency_symbol(),
 
 			));
 
@@ -146,7 +155,7 @@ if (! class_exists('RBFW_Dependencies')) {
             $timezone = wp_timezone(); // WP 5.3+
             $datetime = new DateTime('now', $timezone);
 
-            if (rbfw_woo_install_check() == 'Yes') {
+            if ( true ) { // WooCommerce optional: frontend booking variables are needed in all modes.
                 wp_localize_script(
                     'jquery',
                     'rbfw_js_variables',
@@ -255,7 +264,7 @@ if (! class_exists('RBFW_Dependencies')) {
 
 
 
-			if (rbfw_woo_install_check() == 'Yes') {
+			if ( true ) { // WooCommerce optional: render in all modes.
 				$view_more_feature_btn_text = (
 					($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings') && want_loco_translate() == 'no')
 					? esc_html($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings'))
@@ -397,7 +406,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				};
 			</script>
 			<?php
-			if (rbfw_woo_install_check() == 'Yes') {
+			if ( true ) { // WooCommerce optional: render in all modes.
 				global $rbfw;
 				$custom_cost = $rbfw->get_option_trans('rbfw_custom_css', 'rbfw_custom_style_settings');
 			?>

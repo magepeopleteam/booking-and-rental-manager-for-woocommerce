@@ -65,7 +65,7 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 }
 
 
-function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
+function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id, $order_status = null){
 
     global $rbfw;
     $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
@@ -75,8 +75,18 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         $rbfw_inventory_info = [];
     }
 
-    $order = wc_get_order( $order_id );
-    $rbfw_order_status = $order->get_status();
+    // When an explicit status is supplied (native/standalone booking) use it; otherwise
+    // resolve it from the WooCommerce order. This lets the inventory writer be reused
+    // without WooCommerce.
+    if ( $order_status !== null ) {
+        $rbfw_order_status = $order_status;
+    } else {
+        $order = wc_get_order( $order_id );
+        if ( ! $order ) {
+            return false;
+        }
+        $rbfw_order_status = $order->get_status();
+    }
 
     $start_date = !empty($ticket_info['rbfw_start_date']) ? $ticket_info['rbfw_start_date'] : '';
     $end_date = !empty($ticket_info['rbfw_end_date']) ? $ticket_info['rbfw_end_date'] : '';

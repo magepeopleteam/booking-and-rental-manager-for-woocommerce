@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	/*
    * @Author 		raselsha@gmail.com
    */

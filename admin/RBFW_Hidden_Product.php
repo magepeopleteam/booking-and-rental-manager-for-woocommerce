@@ -17,6 +17,10 @@ if (!class_exists('RBFW_Hidden_Product')) {
         }
 
         public function create_hidden_wc_product($post_id, $title) {
+	        // The hidden product is a WooCommerce 'product' post; skip in Standalone mode.
+	        if ( ! rbfw_has_woocommerce() ) {
+		        return;
+	        }
 	        $new_post = array(
 		        'post_title'    => $title,
 		        'post_content'  => '',
@@ -37,6 +41,10 @@ if (!class_exists('RBFW_Hidden_Product')) {
 	        update_post_meta($post_id, 'check_if_run_once', true);
         }
         public function create_hidden_wc_product_on_publish($post_id, $post) {
+	        // No backing WooCommerce product is needed in Standalone mode.
+	        if ( ! rbfw_has_woocommerce() ) {
+		        return;
+	        }
 	        if ( $post->post_type == 'rbfw_item' && $post->post_status == 'publish' && empty( get_post_meta( $post_id, 'check_if_run_once' ) ) ) {
 		        $new_post = array(
 			        'post_title'    => $post->post_title,
@@ -75,6 +83,10 @@ if (!class_exists('RBFW_Hidden_Product')) {
 	        return $loop->post_count;
         }
         public function run_link_product_on_save($post_id) {
+            // Linking a backing WooCommerce product only applies in WooCommerce mode.
+            if ( ! rbfw_has_woocommerce() ) {
+                return;
+            }
             if (get_post_type($post_id) == 'rbfw_item') {
 
                 // Unslash and sanitize the nonce
