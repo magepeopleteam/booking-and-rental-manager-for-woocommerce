@@ -195,6 +195,26 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 }
 
 
+// Convert a time string ("10:00 am", "2:30 PM" or 24h "14:30") to minutes-of-day
+// so time options can be ordered clock-wise instead of by stored/string order.
+function rbfwTimeToMinutes(t) {
+    if (t === undefined || t === null) return 0;
+    var s = String(t).trim();
+    var ampm = s.match(/(am|pm)\s*$/i);
+    var clean = s.replace(/\s*(am|pm)\s*$/i, '').trim();
+    var parts = clean.split(':');
+    var h = parseInt(parts[0], 10);
+    var m = parseInt(parts[1], 10);
+    if (isNaN(h)) h = 0;
+    if (isNaN(m)) m = 0;
+    if (ampm) {
+        var mod = ampm[1].toLowerCase();
+        if (mod === 'pm' && h !== 12) h += 12;
+        if (mod === 'am' && h === 12) h = 0;
+    }
+    return h * 60 + m;
+}
+
 function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
     var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val());
@@ -227,6 +247,10 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
     } catch (e) {
         rdfw_available_timeJson = [];
     }
+    // Order the general available times clock-wise.
+    rdfw_available_timeJson.sort(function (a, b) {
+        return rbfwTimeToMinutes(a && a.time) - rbfwTimeToMinutes(b && b.time);
+    });
     let  sapecific_date_time = false;
     let  time_enable = false;
     let past_time = ''
@@ -266,6 +290,10 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                 specific_available_time = [];
             }
 
+            // Order the date-specific available times clock-wise.
+            specific_available_time.sort(function (a, b) {
+                return rbfwTimeToMinutes(a && a.time) - rbfwTimeToMinutes(b && b.time);
+            });
 
             specific_available_time.forEach(timeObj => {
                 if (timeObj.status === "enabled") {

@@ -2470,13 +2470,15 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 
 
                     }
-	
+
+					uksort( $the_array, function ( $a, $b ) { return strtotime( $a ) <=> strtotime( $b ); } );
+
 					return array( $the_array, $selector );
 				}
 			}
 
 		}
-		
+
 
         $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 
@@ -2500,6 +2502,8 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
                 $the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
             }
         }
+
+		uksort( $the_array, function ( $a, $b ) { return strtotime( $a ) <=> strtotime( $b ); } );
 
 		return array( $the_array, $selector );
 	}
