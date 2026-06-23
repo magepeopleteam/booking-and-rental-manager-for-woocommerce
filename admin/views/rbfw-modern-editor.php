@@ -599,15 +599,15 @@
 				</div>
 				<div class="rbfw-me-card__body">
 					<div class="rbfw-me-status-row">
-						<span class="rbfw-me-status-dot rbfw-me-status-dot--<?php echo esc_attr( $post ? $post->post_status : 'draft' ); ?>"></span>
+						<span class="rbfw-me-status-dot rbfw-me-status-dot--<?php echo esc_attr( $editor_status ); ?>"></span>
 						<span class="rbfw-me-status-label">
-							<?php echo esc_html( ucfirst( $post ? $post->post_status : 'draft' ) ); ?>
+							<?php echo esc_html( ucfirst( $editor_status ) ); ?>
 						</span>
 					</div>
 					<select class="rbfw-me-select" name="post_status">
-						<option value="draft"   <?php selected( $post ? $post->post_status : 'draft', 'draft' ); ?>><?php esc_html_e( 'Draft', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-						<option value="publish" <?php selected( $post ? $post->post_status : '', 'publish' ); ?>><?php esc_html_e( 'Published', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-						<option value="private" <?php selected( $post ? $post->post_status : '', 'private' ); ?>><?php esc_html_e( 'Private', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+						<option value="draft"   <?php selected( $editor_status, 'draft' ); ?>><?php esc_html_e( 'Draft', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+						<option value="publish" <?php selected( $editor_status, 'publish' ); ?>><?php esc_html_e( 'Published', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+						<option value="private" <?php selected( $editor_status, 'private' ); ?>><?php esc_html_e( 'Private', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 					</select>
 					<?php if ( $permalink ) : ?>
 						<a class="rbfw-me-permalink" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="noopener">

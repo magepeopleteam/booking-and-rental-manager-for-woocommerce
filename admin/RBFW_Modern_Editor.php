@@ -138,10 +138,14 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 		}
 
 		private function create_draft_item(): int {
+			// "auto-draft" (not "draft") so an item the user opens but never saves
+			// stays out of the list and is auto-purged by WordPress, exactly like
+			// the classic "Add New" screen. The first real save promotes it to
+			// draft/publish via ajax_save().
 			$post_id = wp_insert_post(
 				[
 					'post_type'   => self::POST_TYPE,
-					'post_status' => 'draft',
+					'post_status' => 'auto-draft',
 					'post_title'  => __( 'New Rental Item', 'booking-and-rental-manager-for-woocommerce' ),
 				],
 				true
@@ -208,6 +212,16 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 			if ( ! is_admin() || $this->is_edit_screen() || $this->is_classic_bypass() ) {
+				return;
+			}
+
+			// Only intercept the actual edit screen. post.php also handles trash,
+			// untrash, delete and preview; load-post.php fires before those run, so
+			// redirecting here for every action would bounce "Trash"/"Delete" to the
+			// editor and the item would never be deleted.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+			if ( $action !== '' && $action !== 'edit' ) {
 				return;
 			}
 
@@ -395,7 +409,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			if ( ! current_user_can( 'edit_posts' ) ) wp_send_json_error( 'Forbidden', 403 );
 			$post_id = wp_insert_post( [
 				'post_type'   => self::POST_TYPE,
-				'post_status' => 'draft',
+				'post_status' => 'auto-draft',
 				'post_title'  => __( 'New Rental Item', 'booking-and-rental-manager-for-woocommerce' ),
 			], true );
 			if ( is_wp_error( $post_id ) ) wp_send_json_error( $post_id->get_error_message() );
@@ -433,6 +447,10 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$status  = isset( $_POST['post_status'] ) && in_array( $_POST['post_status'], [ 'publish', 'draft', 'private' ], true )
 				? sanitize_key( wp_unslash( $_POST['post_status'] ) )
 				: get_post_status( $post_id );
+			// First save of a freshly-opened item promotes the auto-draft to a real draft.
+			if ( $status === 'auto-draft' ) {
+				$status = 'draft';
+			}
 
 			wp_update_post( [
 				'ID'           => $post_id,
@@ -798,6 +816,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			$screen_title  = $post && trim( $post->post_title ) ? $post->post_title : __( 'New Rental Item', 'booking-and-rental-manager-for-woocommerce' );
 			$is_published  = $post && $post->post_status === 'publish';
+			// A brand-new item is an auto-draft under the hood; show it as "Draft" in the UI.
+			$editor_status = ( $post && $post->post_status !== 'auto-draft' ) ? $post->post_status : 'draft';
 			$permalink     = $post_id ? get_permalink( $post_id ) : '';
 			$classic_url   = $post_id ? $this->switch_url( 'classic', $post_id ) : '';
 			$thumb_id      = $post_id ? (int) get_post_thumbnail_id( $post_id ) : 0;
