@@ -3974,6 +3974,209 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     margin-bottom: 12px !important;
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+   Inventory card (reused classic markup) — match the modern editor's field
+   spacing. The generic `.rbfw-me-pricing-classic-wrap section:not(…)` rule
+   forces padding:0 with high specificity, so the padding override below
+   replicates that :not() chain (plus the .rbfw-me-inventory-card scope) to
+   win, while the layout/control rules stay scoped to this card only.
+   ════════════════════════════════════════════════════════════════════════ */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration):not(.appointment-onday) {
+    padding: 16px 20px !important;
+    margin: 0 !important;
+}
+/* Toggle / stock rows: title + helper on the left, control on the right */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section:not(.rbfw_variations_table_wrap) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+/* Stock quantity — modern input, right aligned */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity input {
+    width: 160px !important;
+    max-width: 100% !important;
+    height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    color: #1d2327 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity input:focus {
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
+    outline: none !important;
+}
+/* Variation rows table spans full width below the toggles */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_variations_table_wrap.show {
+    display: block !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_variations_table_wrap.hide {
+    display: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Variations builder (inside the inventory card) — modern, card-per-variation
+   layout with styled inputs, value table and action buttons.
+   ════════════════════════════════════════════════════════════════════════ */
+.rbfw-me-inventory-card .rbfw_variations_table {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+}
+/* Each variation = a bordered sub-card */
+.rbfw-me-inventory-card .rbfw_variations_table_row {
+    position: relative !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    padding: 16px !important;
+    margin: 0 0 14px !important;
+}
+/* Field Label header */
+.rbfw-me-inventory-card .rbfw_variations_table_row > header {
+    display: block !important;
+    margin: 0 0 14px !important;
+    padding-right: 48px !important; /* room for the remove-variation button */
+}
+.rbfw-me-inventory-card .rbfw_variations_table_row > header > label {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1d2327 !important;
+    margin: 0 0 6px !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_table_row > header > div > input[type="text"] {
+    width: 100% !important;
+    height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+/* Value table */
+.rbfw-me-inventory-card .rbfw_variations_value_table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table thead th {
+    text-align: left !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    padding: 6px 10px !important;
+    border: none !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table tbody td {
+    padding: 6px 10px !important;
+    border: none !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table td input[type="text"],
+.rbfw-me-inventory-card .rbfw_variations_value_table td input[type="number"] {
+    width: 100% !important;
+    height: 38px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table td input:focus,
+.rbfw-me-inventory-card .rbfw_variations_table_row > header input:focus {
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
+    outline: none !important;
+}
+/* "Is Default" column — centre the checkbox */
+.rbfw-me-inventory-card .rbfw_variations_value_table th:nth-child(3),
+.rbfw-me-inventory-card .rbfw_variations_value_table td:nth-child(3) {
+    text-align: center !important;
+    width: 90px !important;
+}
+.rbfw-me-inventory-card .rbfw_variation_selected_value {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table th:nth-child(4),
+.rbfw-me-inventory-card .rbfw_variations_value_table td:nth-child(4) {
+    width: 90px !important;
+}
+/* Action icon buttons (trash / move) */
+.rbfw-me-inventory-card .mp_event_remove_move {
+    display: inline-flex !important;
+    gap: 6px !important;
+    align-items: center !important;
+}
+.rbfw-me-inventory-card .mp_event_remove_move .button,
+.rbfw-me-inventory-card .remove-rbfw_variations_table_row {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #6b7280 !important;
+    cursor: pointer !important;
+    transition: border-color .15s, color .15s, background .15s !important;
+}
+.rbfw-me-inventory-card .mp_event_remove_move .button:hover {
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+    background: #f4f7fe !important;
+}
+.rbfw-me-inventory-card .remove-rbfw_variations_value_table_row:hover,
+.rbfw-me-inventory-card .remove-rbfw_variations_table_row:hover {
+    border-color: #dc2626 !important;
+    color: #dc2626 !important;
+    background: #fef2f2 !important;
+}
+/* Remove-whole-variation button — pin to the card's top-right corner */
+.rbfw-me-inventory-card .rbfw_variations_table_row > .mp_event_remove_move {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+}
+/* Divider + add buttons spacing */
+.rbfw-me-inventory-card .variations-inner-table hr {
+    border: none !important;
+    border-top: 1px solid #f0f0f1 !important;
+    margin: 12px 0 !important;
+}
+.rbfw-me-inventory-card .add-new-variation-value {
+    margin-top: 4px !important;
+}
+.rbfw-me-inventory-card #add-new-variation {
+    margin-top: 4px !important;
+}
+
 .rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration {
     display: flex !important;
     align-items: center !important;

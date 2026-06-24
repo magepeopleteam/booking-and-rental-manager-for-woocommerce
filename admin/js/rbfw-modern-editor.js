@@ -1743,6 +1743,11 @@
                 $pricing.find('.mds_price_md').show();
             }
 
+            // Inventory card (stock + variations): mirror the classic editor, which
+            // hides inventory for resort / bike_car_sd / appointment.
+            var _invShow = (type !== 'resort' && type !== 'bike_car_sd' && type !== 'appointment');
+            $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
+
             if (typeof window.rbfwMdsSyncPanelForRentType === 'function') {
                 window.rbfwMdsSyncPanelForRentType(type, $pricing);
             }
