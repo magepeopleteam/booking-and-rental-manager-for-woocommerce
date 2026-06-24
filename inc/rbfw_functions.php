@@ -3396,6 +3396,54 @@ function rbfw_build_category_meta_clause( $category_name ) {
 	);
 }
 
+/**
+ * Build a SINGLE flat meta_query OR group matching any of the supplied
+ * category names against the rbfw_categories meta.
+ *
+ * PERF / 504 FIX: rbfw_build_category_meta_clause() returns a nested OR group
+ * per category. WP_Meta_Query only reuses a wp_postmeta JOIN between clauses
+ * that share the SAME immediate parent, so adding one nested group per selected
+ * category forced a separate self-JOIN on wp_postmeta for every category. With
+ * several categories selected (and leading-wildcard LIKEs that cannot use an
+ * index) the resulting multi-JOIN query was slow enough to exceed the
+ * nginx/php-fpm timeout, surfacing as a "504 Gateway Time-out" in the Elementor
+ * editor and on the front end.
+ *
+ * Flattening every leaf condition into one OR group that all share the
+ * rbfw_categories key lets WP_Meta_Query collapse them onto a single JOIN,
+ * regardless of how many categories are selected, while preserving the exact
+ * same matching (an item is shown when it belongs to ANY selected category).
+ *
+ * @param array|string $category_names One or more category display names.
+ * @return array Flat meta_query OR group, or array() when nothing is usable.
+ */
+function rbfw_build_categories_meta_clause( $category_names ) {
+	if ( ! is_array( $category_names ) ) {
+		$category_names = ( '' === $category_names || null === $category_names ) ? array() : array( $category_names );
+	}
+
+	$group = array( 'relation' => 'OR' );
+
+	foreach ( $category_names as $category_name ) {
+		$clause = rbfw_build_category_meta_clause( $category_name );
+		if ( empty( $clause ) ) {
+			continue;
+		}
+		// Merge the per-category leaf conditions up into the single flat OR
+		// group (dropping the nested 'relation' key) so every leaf shares one
+		// JOIN alias instead of forcing a JOIN per category.
+		foreach ( $clause as $clause_key => $leaf ) {
+			if ( 'relation' === $clause_key || ! is_array( $leaf ) ) {
+				continue;
+			}
+			$group[] = $leaf;
+		}
+	}
+
+	// Only return a usable group when at least one leaf was added.
+	return ( count( $group ) > 1 ) ? $group : array();
+}
+
 
 
 
