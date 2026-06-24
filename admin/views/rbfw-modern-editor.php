@@ -356,6 +356,25 @@
 			<!-- Advanced ─────────────────────────────────────────────────── -->
 			<div class="rbfw-me-panel" data-panel="advanced">
 
+				<?php
+				// Location Configuration (pick-up / drop-off). The classic editor
+				// hides this tab for resort / appointment; mirror that here, with
+				// applyType() in the JS keeping it in sync on live type changes.
+				if ( class_exists( 'RBFW_Location' ) ) :
+					$rbfw_me_loc_type   = get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd';
+					$rbfw_me_loc_hidden = in_array( $rbfw_me_loc_type, [ 'resort', 'appointment' ], true );
+				?>
+				<div class="rbfw-me-card rbfw-me-location-card<?php echo $rbfw_me_loc_hidden ? ' rbfw-me-hidden' : ''; ?>">
+					<div class="rbfw-me-card__head">
+						<h2><?php esc_html_e( 'Location Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+						<p><?php esc_html_e( 'Configure pick-up and drop-off locations for this rental item.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<div class="rbfw-me-card__body">
+						<?php RBFW_Location::render_for_modern_editor( $post_id ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
 				<!-- Template picker -->
 				<?php
 				$screenshot_url = RBFW_PLUGIN_URL . '/templates/screenshot/';
