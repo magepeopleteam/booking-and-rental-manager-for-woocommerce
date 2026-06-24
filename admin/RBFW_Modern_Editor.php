@@ -749,6 +749,32 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 			update_post_meta( $post_id, 'rbfw_offday_range', $off_schedules );
 
+			/* ── Location (pick-up / drop-off) ──
+			 * Enable flags plus the selected location slugs (posted as a hidden,
+			 * comma-separated value). Stored in the same shape the classic editor
+			 * and the front end expect: array( array( 'loc_pickup_name' => slug ) ). */
+			$enable_pick = ( isset( $_POST['rbfw_enable_pick_point'] ) && $_POST['rbfw_enable_pick_point'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_pick_point', $enable_pick );
+
+			$enable_dropoff = ( isset( $_POST['rbfw_enable_dropoff_point'] ) && $_POST['rbfw_enable_dropoff_point'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $enable_dropoff );
+
+			$pickup_csv   = isset( $_POST['rbfw_pickup_locations'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_locations'] ) ) : '';
+			$pickup_slugs = array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $pickup_csv ) ) ) );
+			$pickup_data  = [];
+			foreach ( array_values( $pickup_slugs ) as $slug ) {
+				$pickup_data[] = [ 'loc_pickup_name' => $slug ];
+			}
+			update_post_meta( $post_id, 'rbfw_pickup_data', $pickup_data );
+
+			$dropoff_csv   = isset( $_POST['rbfw_dropoff_locations'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_dropoff_locations'] ) ) : '';
+			$dropoff_slugs = array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $dropoff_csv ) ) ) );
+			$dropoff_data  = [];
+			foreach ( array_values( $dropoff_slugs ) as $slug ) {
+				$dropoff_data[] = [ 'loc_dropoff_name' => $slug ];
+			}
+			update_post_meta( $post_id, 'rbfw_dropoff_data', $dropoff_data );
+
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
 				$cats = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) );

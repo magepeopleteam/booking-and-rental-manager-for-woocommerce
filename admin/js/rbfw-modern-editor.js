@@ -184,6 +184,124 @@
             }
         });
 
+        // Location pick-up / drop-off: mirror the checkbox group into a hidden
+        // comma-separated value (one hidden input per .rbfw-me-loc-group) that
+        // the modern AJAX save reads.
+        $wrap.on('change', '.rbfw-me-loc-checkbox', function () {
+            var $group = $(this).closest('.rbfw-me-loc-group');
+            var selected = [];
+            $group.find('.rbfw-me-loc-checkbox:checked').each(function () {
+                selected.push($(this).data('loc'));
+            });
+            $group.find('.rbfw-me-loc-hidden').val(selected.join(','));
+        });
+
+        /* ── Inline location CRUD (add / rename / delete taxonomy terms) ── */
+        function locEsc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
+
+        function locAjax(action, data, $manage, cb) {
+            data.action = action;
+            data.nonce  = $manage.data('nonce');
+            $.post(window.ajaxurl, data, function (resp) {
+                if (resp && resp.success) {
+                    rebuildLocations(resp.data.locations);
+                    if (cb) cb();
+                } else {
+                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                }
+            }).fail(function () { window.alert('Request failed.'); });
+        }
+
+        // Rebuild the manage list + every pick-up/drop-off checkbox group from the
+        // authoritative location list returned by the server, preserving the
+        // current per-item selection (and dropping any deleted values).
+        function rebuildLocations(locations) {
+            locations = locations || [];
+            var $list = $wrap.find('.rbfw-me-loc-list').empty();
+            locations.forEach(function (loc) {
+                $list.append(
+                    '<li class="rbfw-me-loc-row" data-term-id="' + loc.term_id + '" data-value="' + locEsc(loc.value) + '">' +
+                        '<span class="rbfw-me-loc-row__name">' + locEsc(loc.name) + '</span>' +
+                        '<span class="rbfw-me-loc-row__actions">' +
+                            '<button type="button" class="rbfw-me-loc-edit" title="Rename"><i class="fas fa-pen" aria-hidden="true"></i></button>' +
+                            '<button type="button" class="rbfw-me-loc-delete" title="Delete"><i class="fas fa-trash-can" aria-hidden="true"></i></button>' +
+                        '</span>' +
+                    '</li>'
+                );
+            });
+
+            $wrap.find('.rbfw-me-loc-group').each(function () {
+                var $group  = $(this);
+                var current = ($group.find('.rbfw-me-loc-hidden').val() || '').split(',').filter(Boolean);
+                var values  = [];
+                var $cb     = $group.find('.rbfw-me-loc-checkboxes').empty();
+                locations.forEach(function (loc) {
+                    values.push(loc.value);
+                    var checked = current.indexOf(loc.value) !== -1 ? ' checked' : '';
+                    $cb.append(
+                        '<label class="rbfw-me-loc-label">' +
+                            '<input type="checkbox" class="rbfw-me-loc-checkbox" data-loc="' + locEsc(loc.value) + '"' + checked + ' />' +
+                            '<span>' + locEsc(loc.name) + '</span>' +
+                        '</label>'
+                    );
+                });
+                // Keep the hidden CSV in sync (remove values whose location is gone).
+                $group.find('.rbfw-me-loc-hidden').val(current.filter(function (v) { return values.indexOf(v) !== -1; }).join(','));
+                $group.find('.rbfw-me-loc-empty').toggleClass('rbfw-me-hidden', locations.length > 0);
+            });
+        }
+
+        $wrap.on('click', '.rbfw-me-loc-add-btn', function () {
+            var $manage = $(this).closest('.rbfw-me-loc-manage');
+            var $input  = $manage.find('.rbfw-me-loc-new');
+            var name    = $.trim($input.val());
+            if (! name) { $input.trigger('focus'); return; }
+            locAjax('rbfw_location_add', { name: name }, $manage, function () { $input.val(''); });
+        });
+
+        $wrap.on('keypress', '.rbfw-me-loc-new', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $(this).closest('.rbfw-me-loc-manage').find('.rbfw-me-loc-add-btn').trigger('click');
+            }
+        });
+
+        // Edit → open the rename modal (no browser prompt).
+        $wrap.on('click', '.rbfw-me-loc-edit', function () {
+            var $row   = $(this).closest('.rbfw-me-loc-row');
+            var $modal = $wrap.find('#rbfw-me-loc-modal');
+            $modal.find('#rbfw-me-loc-modal-term-id').val($row.data('term-id'));
+            $modal.find('#rbfw-me-loc-modal-input').val($row.find('.rbfw-me-loc-row__name').text());
+            $modal.addClass('is-open');
+            setTimeout(function () { $modal.find('#rbfw-me-loc-modal-input').trigger('focus').select(); }, 50);
+        });
+
+        $wrap.on('click', '#rbfw-me-loc-modal .rbfw-me-faq-modal__close, #rbfw-me-loc-modal .rbfw-me-faq-modal__backdrop', function () {
+            $wrap.find('#rbfw-me-loc-modal').removeClass('is-open');
+        });
+
+        $wrap.on('click', '#rbfw-me-loc-modal-save', function () {
+            var $modal  = $wrap.find('#rbfw-me-loc-modal');
+            var $manage = $wrap.find('.rbfw-me-loc-manage');
+            var termId  = $modal.find('#rbfw-me-loc-modal-term-id').val();
+            var name    = $.trim($modal.find('#rbfw-me-loc-modal-input').val());
+            if (! name) { $modal.find('#rbfw-me-loc-modal-input').trigger('focus'); return; }
+            locAjax('rbfw_location_update', { term_id: termId, name: name }, $manage, function () {
+                $modal.removeClass('is-open');
+            });
+        });
+
+        $wrap.on('keypress', '#rbfw-me-loc-modal-input', function (e) {
+            if (e.which === 13) { e.preventDefault(); $wrap.find('#rbfw-me-loc-modal-save').trigger('click'); }
+        });
+
+        $wrap.on('click', '.rbfw-me-loc-delete', function () {
+            var $row    = $(this).closest('.rbfw-me-loc-row');
+            var $manage = $(this).closest('.rbfw-me-loc-manage');
+            if (! window.confirm('Delete this location? Items using it will no longer reference it.')) return;
+            locAjax('rbfw_location_delete', { term_id: $row.data('term-id') }, $manage);
+        });
+
         // Old-style toggle: value attribute stores DB state ('on'/'off'); sync it then
         // delegate all show/hide to syncTimelyUI scoped to the containing panel.
         // stopPropagation prevents rbfw-admin-input.js (loaded globally) from reading
@@ -1747,6 +1865,11 @@
             // hides inventory for resort / bike_car_sd / appointment.
             var _invShow = (type !== 'resort' && type !== 'bike_car_sd' && type !== 'appointment');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
+
+            // Location card (Advanced step): mirror the classic editor, which hides
+            // the Location tab for resort / appointment.
+            var _locShow = (type !== 'resort' && type !== 'appointment');
+            $wrap.find('.rbfw-me-location-card').toggleClass('rbfw-me-hidden', !_locShow);
 
             if (typeof window.rbfwMdsSyncPanelForRentType === 'function') {
                 window.rbfwMdsSyncPanelForRentType(type, $pricing);

@@ -4177,6 +4177,138 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     margin-top: 4px !important;
 }
 
+/* ════════════════════════════════════════════════════════════════════════
+   Location card (modern) — pick-up / drop-off location checkbox groups.
+   ════════════════════════════════════════════════════════════════════════ */
+.rbfw-me-location-card .rbfw-me-loc-group {
+    padding: 4px 0 14px !important;
+    margin: 0 0 6px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-checkboxes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 10px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 13px !important;
+    color: #1d2327 !important;
+    cursor: pointer !important;
+    transition: border-color .15s, background .15s !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-label:hover {
+    border-color: #1a56db !important;
+    background: #f4f7fe !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-checkbox {
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-empty {
+    margin: 0 !important;
+    font-size: 13px !important;
+    color: #6b7280 !important;
+}
+
+/* Manage locations (add / rename / delete taxonomy terms inline) */
+.rbfw-me-location-card .rbfw-me-loc-manage {
+    border: 1px solid #e2e6ee !important;
+    border-radius: 10px !important;
+    background: #f9fafc !important;
+    padding: 16px !important;
+    margin: 0 0 18px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-manage__head {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    margin: 0 0 12px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-manage__head strong {
+    font-size: 14px !important;
+    color: #1d2327 !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-manage__add {
+    display: flex !important;
+    gap: 8px !important;
+    margin: 0 0 12px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-new {
+    flex: 1 1 auto !important;
+    height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-add-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-list {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    margin: 0 !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-row__name {
+    font-size: 13px !important;
+    color: #1d2327 !important;
+    word-break: break-word !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-row__actions {
+    display: inline-flex !important;
+    gap: 6px !important;
+    flex: 0 0 auto !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-edit,
+.rbfw-me-location-card .rbfw-me-loc-delete {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 7px !important;
+    background: #fff !important;
+    color: #6b7280 !important;
+    cursor: pointer !important;
+    transition: border-color .15s, color .15s, background .15s !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-edit:hover {
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+    background: #f4f7fe !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-delete:hover {
+    border-color: #dc2626 !important;
+    color: #dc2626 !important;
+    background: #fef2f2 !important;
+}
+
 .rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration {
     display: flex !important;
     align-items: center !important;
