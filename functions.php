@@ -12,6 +12,82 @@ function rbfw_woo_install_check() {
 }
 
 /**
+ * Global wrappers around the capability helpers on RBFW_Function.
+ *
+ * These exist for templates and any code that may run before RBFW_Function is
+ * loaded (e.g. WP-CLI), mirroring the WP-CLI fallback pattern used elsewhere.
+ * They are the single source of truth for runtime WooCommerce branching.
+ */
+if ( ! function_exists( 'rbfw_has_woocommerce' ) ) {
+    function rbfw_has_woocommerce() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::has_woocommerce();
+        }
+        return class_exists( 'WooCommerce' );
+    }
+}
+
+if ( ! function_exists( 'rbfw_booking_mode' ) ) {
+    function rbfw_booking_mode() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::booking_mode();
+        }
+        if ( ! rbfw_has_woocommerce() ) {
+            return 'standalone';
+        }
+        $options = get_option( 'rbfw_basic_payment_settings' );
+        $mode    = isset( $options['rbfw_booking_mode'] ) ? $options['rbfw_booking_mode'] : 'woocommerce';
+        return ( $mode === 'standalone' ) ? 'standalone' : 'woocommerce';
+    }
+}
+
+if ( ! function_exists( 'rbfw_use_wc' ) ) {
+    function rbfw_use_wc() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::use_wc();
+        }
+        return rbfw_has_woocommerce() && rbfw_booking_mode() === 'woocommerce';
+    }
+}
+
+/**
+ * Helpful, dismissible admin notice shown when WooCommerce is inactive, explaining that the
+ * plugin has switched to Standalone booking mode. Replaces the old forced "install WooCommerce"
+ * error now that WooCommerce is optional.
+ */
+add_action( 'admin_init', 'rbfw_handle_standalone_notice_dismiss' );
+function rbfw_handle_standalone_notice_dismiss() {
+    if ( isset( $_GET['rbfw_dismiss_standalone'] ) && $_GET['rbfw_dismiss_standalone'] === '1' ) {
+        if ( isset( $_GET['_wpnonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'rbfw_dismiss_standalone' ) && current_user_can( 'manage_options' ) ) {
+            update_option( 'rbfw_standalone_dismissed', 'yes' );
+        }
+    }
+}
+
+add_action( 'admin_notices', 'rbfw_standalone_mode_notice' );
+function rbfw_standalone_mode_notice() {
+    if ( rbfw_has_woocommerce() ) {
+        return;
+    }
+    if ( get_option( 'rbfw_standalone_dismissed' ) === 'yes' ) {
+        return;
+    }
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
+    $dismiss_url = wp_nonce_url( add_query_arg( 'rbfw_dismiss_standalone', '1' ), 'rbfw_dismiss_standalone' );
+    ?>
+    <div class="notice notice-info is-dismissible">
+        <p>
+            <strong><?php esc_html_e( 'Booking & Rental Manager is running in Standalone mode.', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+            <?php esc_html_e( 'WooCommerce is not active, so bookings are handled internally. Activate WooCommerce any time to use its cart, checkout and order flow.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+            <a href="<?php echo esc_url( $dismiss_url ); ?>"><?php esc_html_e( 'Continue without WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+        </p>
+    </div>
+    <?php
+}
+
+/**
  * Detect dangerous serialized payloads (objects/custom classes).
  *
  * @param string $value Serialized string.

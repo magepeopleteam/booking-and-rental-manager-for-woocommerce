@@ -31,17 +31,19 @@
 
 			private function load_rbfw_plugin() {
 				require_once RBFW_PLUGIN_DIR . '/functions.php';
-				if ( rbfw_woo_install_check() == 'Yes' ) {
-					add_filter( 'plugin_action_links', [ $this, 'plugin_action_link' ], 10, 2 );
-					add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
-					add_filter( 'post_row_actions', [ $this, 'duplicate_post_link' ], 10, 2 );
-					add_filter( 'body_class', [ $this, 'add_body_class' ] );
-					add_action( 'save_post', [ $this, 'flush_rules_on_save_posts' ], 20, 2 );
-					add_action( 'admin_init', [ $this, 'get_plugin_data' ] );
-					add_action( 'admin_init', [ $this, 'flush_rules_rbfw_post_list_page' ] );
-					// Rebuild permalinks automatically (once) – no manual Settings → Permalinks save needed.
-					add_action( 'init', [ $this, 'rbfw_auto_flush_rewrite_rules' ], 99 );
-				}
+				// WooCommerce fallback shims (only take effect when WooCommerce is inactive).
+				require_once RBFW_PLUGIN_DIR . '/inc/rbfw_wc_fallbacks.php';
+				// These hooks are not WooCommerce-specific (rewrite-rule self-healing, body class,
+				// admin links) and must run in both WooCommerce and Standalone modes.
+				add_filter( 'plugin_action_links', [ $this, 'plugin_action_link' ], 10, 2 );
+				add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
+				add_filter( 'post_row_actions', [ $this, 'duplicate_post_link' ], 10, 2 );
+				add_filter( 'body_class', [ $this, 'add_body_class' ] );
+				add_action( 'save_post', [ $this, 'flush_rules_on_save_posts' ], 20, 2 );
+				add_action( 'admin_init', [ $this, 'get_plugin_data' ] );
+				add_action( 'admin_init', [ $this, 'flush_rules_rbfw_post_list_page' ] );
+				// Rebuild permalinks automatically (once) – no manual Settings → Permalinks save needed.
+				add_action( 'init', [ $this, 'rbfw_auto_flush_rewrite_rules' ], 99 );
 				require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Hidden_Product.php';
 				require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Woo_Installer.php';
 				require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
@@ -230,9 +232,9 @@
 		register_uninstall_hook( __FILE__, array( 'RBFW_Rent_Manager', 'uninstall' ) );
 		new RBFW_Rent_Manager();
 	}
-	if ( rbfw_woo_install_check() == 'Yes' ) {
-		require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
-	}
+	// Load the full plugin in every mode. WooCommerce-specific integration is wired
+	// conditionally inside rbfw_file_include.php (see rbfw_free_woocommerce_integrate()).
+	require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
 
 
 // this include file can't added inside class method due to fatal error. need to fix.
