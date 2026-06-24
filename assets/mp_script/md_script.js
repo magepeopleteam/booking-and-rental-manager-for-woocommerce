@@ -3,6 +3,29 @@
 // Holds sold-out dates returned from loadDisabledDates
 var disabledDates = [];
 
+// Date-wise Min/Max (Min & Max Booking Day addon): resolve the effective
+// min/max for a selected pickup date — the first configured date range that
+// contains it, otherwise the global values. The ranges are rendered into
+// #rbfw_datewise_minmax (JSON) server-side and refreshed via AJAX. Returns the
+// global values unchanged when date-wise is disabled or nothing matches.
+function rbfwEffectiveMinMax(dateYmd, globalMin, globalMax) {
+    var eff = { min: globalMin, max: globalMax };
+    var dw = [];
+    try { dw = JSON.parse(jQuery('#rbfw_datewise_minmax').val()) || []; } catch (e) {}
+    if (dw.length && dateYmd) {
+        var d = new Date(dateYmd);
+        for (var i = 0; i < dw.length; i++) {
+            var s = new Date(dw[i].start_date), e = new Date(dw[i].end_date);
+            if (!isNaN(s.getTime()) && !isNaN(e.getTime()) && d >= s && d <= e) {
+                eff.min = parseInt(dw[i].min_days, 10) || 0;
+                eff.max = parseInt(dw[i].max_days, 10) || 0;
+                break;
+            }
+        }
+    }
+    return eff;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
     const summaryDiv = document.getElementById('rbfw-items-summary');
@@ -123,8 +146,9 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 
 
-            let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
-            let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
+            let rbfw_eff = rbfwEffectiveMinMax(date_ymd, parseInt(jQuery('#rbfw_minimum_booking_day').val()), parseInt(jQuery('#rbfw_maximum_booking_day').val()));
+            let rbfw_minimum_booking_day = rbfw_eff.min;
+            let rbfw_maximum_booking_day = rbfw_eff.max;
 
 
             let selected_date_array = date_ymd.split('-');
@@ -138,10 +162,16 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             jQuery(".dropoff_date").datepicker("option", "minDate", minDate);
 
 
-            if(rbfw_minimum_booking_day){
-                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
+            // Apply the max only when one is set. Use the same base day as minDate
+            // (pickup + max_days) — the previous "gDay - 1" made the max one day
+            // short, and tying it to the min meant a max of 0 ("no cap") collapsed
+            // the window to the day before pickup and disabled the whole calendar.
+            if(rbfw_maximum_booking_day){
+                let maxDate = new Date(gYear,  gMonth - 1, gDay );
                 maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
                 jQuery(".dropoff_date").datepicker("option", "maxDate", maxDate );
+            } else {
+                jQuery(".dropoff_date").datepicker("option", "maxDate", null );
             }
 
             if(rbfw_enable_time_slot=='yes'){
@@ -388,6 +418,7 @@ jQuery('body').on('change', '#rbfw_search_type', function (e) {
             jQuery('#rbfw_maximum_booking_day').attr('value',response.rbfw_maximum_booking_day);
             jQuery('#rbfw_off_days').attr('value',response.rbfw_off_days);
             jQuery('#rbfw_offday_range').attr('value',response.rbfw_offday_range);
+            jQuery('#rbfw_datewise_minmax').attr('value', response.rbfw_datewise_minmax ? JSON.stringify(response.rbfw_datewise_minmax) : '[]');
 
             jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
             jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove();
@@ -420,8 +451,9 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
             let post_id = jQuery('#rbfw_post_id').val();
 
 
-            let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
-            let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
+            let rbfw_eff = rbfwEffectiveMinMax(date_ymd, parseInt(jQuery('#rbfw_minimum_booking_day').val()), parseInt(jQuery('#rbfw_maximum_booking_day').val()));
+            let rbfw_minimum_booking_day = rbfw_eff.min;
+            let rbfw_maximum_booking_day = rbfw_eff.max;
             let selected_date_array = date_ymd.split('-');
             let gYear = selected_date_array[0];
             let gMonth = selected_date_array[1];

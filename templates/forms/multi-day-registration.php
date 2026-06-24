@@ -814,10 +814,15 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                 $rbfw_minimum_booking_day = 0;
                 $rbfw_maximum_booking_day = 0;
+                $rbfw_datewise_minmax     = array();
                 if(rbfw_check_min_max_booking_day_active()){
                     $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
                     if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
                         $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+                    }
+                    if(get_post_meta($post_id, 'rbfw_enable_datewise_minmax', true) === 'yes'){
+                        $dw = get_post_meta($post_id, 'rbfw_datewise_minmax', true);
+                        $rbfw_datewise_minmax = is_array($dw) ? array_values($dw) : array();
                     }
                 }
 
@@ -869,6 +874,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 <input type="hidden" name="total_days" id="rbfw_total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
+                <input type="hidden" id="rbfw_datewise_minmax" value="<?php echo esc_attr( wp_json_encode( $rbfw_datewise_minmax ) ); ?>">
                 <input type="hidden" id="rbfw_month_wise_inventory" value="<?php echo esc_attr($day_wise_imventory); ?>">
 
                 <input type="hidden" name="rbfw_particular_switch" id="rbfw_particular_switch"  value='<?php echo esc_attr($rbfw_particular_switch); ?>'>
