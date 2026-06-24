@@ -317,6 +317,25 @@
 				</div>
 				<?php endif; ?>
 
+				<?php
+				// Inventory (stock quantity + variations). The classic editor hides this
+				// for resort / bike_car_sd / appointment; mirror that here, with applyType()
+				// in the JS keeping it in sync when the rental type is changed live.
+				if ( class_exists( 'RBFW_Inventory' ) ) :
+					$rbfw_me_inv_type   = get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd';
+					$rbfw_me_inv_hidden = in_array( $rbfw_me_inv_type, [ 'resort', 'bike_car_sd', 'appointment' ], true );
+				?>
+				<div class="rbfw-me-card rbfw-me-inventory-card<?php echo $rbfw_me_inv_hidden ? ' rbfw-me-hidden' : ''; ?>">
+					<div class="rbfw-me-card__head">
+						<h2><?php esc_html_e( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+						<p><?php esc_html_e( 'Manage stock quantity, return-date availability and item variations.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
+						<?php RBFW_Inventory::render_for_modern_editor( $post_id ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Fee Management', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>

@@ -270,6 +270,30 @@
 				<?php
 			}
 
+			/**
+			 * Render the Inventory section for the modern editor.
+			 *
+			 * Mirrors the RBFW_Pricing / RBFW_Off_Day reuse pattern: the modern
+			 * editor lacked any inventory UI, so its AJAX save read empty values
+			 * and silently reset stock to 1000, disabled variations and wiped the
+			 * variation rows on every save. Reusing the existing classic render
+			 * methods (via a constructor-less instance, so no hooks re-register)
+			 * surfaces the exact same fields/markup the save handler expects, and
+			 * the already-loaded mkb-admin.js drives the variations repeater and
+			 * the enable/return-date toggles unchanged.
+			 *
+			 * @param int $post_id Current rental item ID.
+			 * @return void
+			 */
+			public static function render_for_modern_editor( int $post_id ): void {
+				$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+				$renderer->stock_settings( $post_id );
+				$renderer->stock_manage_return_date( $post_id );
+				$renderer->quantity_box_toggle( $post_id );
+				$renderer->variation_table_switch_on_off( $post_id );
+				$renderer->variation_settings( $post_id );
+			}
+
 			public function add_tabs_content( $post_id ) {
 				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : '';
 				?>
