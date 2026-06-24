@@ -11473,9 +11473,27 @@ i.fas.fa-minus {
     margin-bottom: 5px !important;
 }
 
-/* Hide the per-field calendar icon spans */
+/* Per-field calendar icon — shown at the right of each date field.
+   Overrides the base `.rbfw-datetime .calendar` rule (left:2px; padding:12px)
+   which otherwise pins it to the top-left over the PICKUP/RETURN label. */
 .mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime span.calendar,
 .rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime span.calendar {
+    display: flex !important;
+    align-items: center !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: auto !important;
+    right: 12px !important;
+    transform: translateY(-50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #2563eb !important;
+    font-size: 15px !important;
+    pointer-events: none !important;
+}
+/* Once a date is chosen the clear (×) button takes its place, so hide the icon */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .date:has(.rbfw-date-clear-visible) span.calendar,
+.rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime .date:has(.rbfw-date-clear-visible) span.calendar {
     display: none !important;
 }
 
@@ -11484,7 +11502,7 @@ i.fas.fa-minus {
 .rbfw_muff_registration_wrapper .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input {
     border: none !important;
     background: transparent !important;
-    padding: 0 !important;
+    padding: 0 24px 0 0 !important;
     height: auto !important;
     font-size: 15px !important;
     font-weight: 700 !important;

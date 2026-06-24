@@ -33,6 +33,12 @@ if(isset($post_id) && isset($active_tab)){
     $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
     ?>
+    <style>
+        .rbfw_resort_rt_price_table .rbfw-room-price { display: flex; flex-direction: column; gap: 2px; line-height: 1.25; }
+        .rbfw_resort_rt_price_table .rbfw-room-price__rate { white-space: nowrap; font-weight: 600; }
+        .rbfw_resort_rt_price_table .rbfw-room-price__unit { font-weight: 400; font-size: 11px; color: #8a94a6; margin-left: 1px; }
+        .rbfw_resort_rt_price_table .rbfw-room-price__stay { white-space: nowrap; font-size: 11px; color: #121511; border: #ff00002e solid 1px; border-radius: 10px; padding: 3px; background-color: #ff00001c; }
+    </style>
 
     <div class="rbfw-single-right-heading" style="margin-top: 10px;margin-bottom:0;">
         <i class="fas fa-clock rbfw-srh-icon"></i>
@@ -61,6 +67,16 @@ if(isset($post_id) && isset($active_tab)){
 
             <?php
             $i = 0;
+
+            // Per-night / per-day unit labels so the room price clearly relates
+            // to the selected day-night stay length (e.g. "$400 / night" and the
+            // "$1,200 / 3 nights" stay total), helping the customer understand it.
+            $rbfw_room_unit        = ( $active_tab === 'daylong' )
+                ? __( 'day', 'booking-and-rental-manager-for-woocommerce' )
+                : __( 'night', 'booking-and-rental-manager-for-woocommerce' );
+            $rbfw_room_unit_plural = ( $active_tab === 'daylong' )
+                ? _n( 'day', 'days', (int) $total_days, 'booking-and-rental-manager-for-woocommerce' )
+                : _n( 'night', 'nights', (int) $total_days, 'booking-and-rental-manager-for-woocommerce' );
 
             foreach ($rbfw_resort_room_data as $key => $value) {
                 $img_url    = wp_get_attachment_url($value['rbfw_room_image']);
@@ -179,7 +195,12 @@ if(isset($post_id) && isset($active_tab)){
 
                         <?php }else{ ?>
                             <td>
-                                <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
+                                <div class="rbfw-room-price">
+                                    <span class="rbfw-room-price__rate"><?php echo wp_kses( wc_price( $price ), rbfw_allowed_html() ); ?><span class="rbfw-room-price__unit">/<?php echo esc_html( $rbfw_room_unit ); ?></span></span>
+                                    <?php if ( (int) $total_days > 0 ) : ?>
+                                        <span class="rbfw-room-price__stay"><?php echo wp_kses( wc_price( (float) $price * (int) $total_days ), rbfw_allowed_html() ); ?> · <?php echo esc_html( $total_days . ' ' . $rbfw_room_unit_plural ); ?></span>
+                                    <?php endif; ?>
+                                </div>
                                 <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
                             </td>
                         <?php } ?>
@@ -187,7 +208,12 @@ if(isset($post_id) && isset($active_tab)){
 
                     <?php }else{ ?>
                         <td>
-                            <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
+                            <div class="rbfw-room-price">
+                                <span class="rbfw-room-price__rate"><?php echo wp_kses( wc_price( $price ), rbfw_allowed_html() ); ?><span class="rbfw-room-price__unit">/<?php echo esc_html( $rbfw_room_unit ); ?></span></span>
+                                <?php if ( (int) $total_days > 0 ) : ?>
+                                    <span class="rbfw-room-price__stay"><?php echo wp_kses( wc_price( (float) $price * (int) $total_days ), rbfw_allowed_html() ); ?> · <?php echo esc_html( $total_days . ' ' . $rbfw_room_unit_plural ); ?></span>
+                                <?php endif; ?>
+                            </div>
                             <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
                         </td>
                     <?php } ?>
