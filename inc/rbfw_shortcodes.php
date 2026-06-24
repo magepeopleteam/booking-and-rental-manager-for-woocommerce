@@ -309,6 +309,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
         if(!empty($category)) {
             $category = array_filter( array_map( 'trim', explode( ',', $category ) ) );
+            $category_names = array();
             foreach ($category as $cat) {
                 $term = get_term( absint( $cat ) );
 
@@ -316,15 +317,18 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                     continue;
                 }
 
-                $category_name = $term->name;
+                $category_name            = $term->name;
                 $base_filter_categories[] = $category_name;
-                // Match every storage format of rbfw_categories (serialized
-                // array / single string / comma separated) so the initial list
-                // is not empty when the meta is not a serialized array.
-                $category_clause = rbfw_build_category_meta_clause( $category_name );
-                if ( ! empty( $category_clause ) ) {
-                    $args['meta_query'][] = $category_clause;
-                }
+                $category_names[]         = $category_name;
+            }
+            // Match every storage format of rbfw_categories (serialized array /
+            // single string / comma separated) in ONE flat OR group so several
+            // selected categories share a single wp_postmeta JOIN instead of
+            // forcing one JOIN per category, which timed out (504 Gateway
+            // Time-out). See rbfw_build_categories_meta_clause().
+            $category_clause = rbfw_build_categories_meta_clause( $category_names );
+            if ( ! empty( $category_clause ) ) {
+                $args['meta_query'][] = $category_clause;
             }
         }
     }
