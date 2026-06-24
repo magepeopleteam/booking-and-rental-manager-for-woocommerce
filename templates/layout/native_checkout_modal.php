@@ -53,6 +53,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<label for="rbfw_billing_phone"><?php echo esc_html__( 'Phone', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 				<input type="text" id="rbfw_billing_phone" name="rbfw_billing_phone">
 			</p>
+			<?php
+			/**
+			 * Payment gateway selector / fields. The Pro plugin hooks this to render the
+			 * PayPal / Stripe / Offline method picker; with no gateway configured nothing
+			 * is rendered and the booking stays pending (free behaviour).
+			 *
+			 * @param int $item_id The rental item id.
+			 */
+			do_action( 'rbfw_native_checkout_payment_fields', get_queried_object_id() );
+			?>
 		</div>
 
 		<div class="rbfw-native-modal__message" data-rbfw-native-message aria-live="polite"></div>

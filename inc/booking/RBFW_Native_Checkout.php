@@ -88,9 +88,32 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 			}
 
-			// 8. Confirmation email (best-effort; reuses the plugin's email helper if present).
+			// 8. Build the response, then let add-ons (e.g. the Pro payment gateways) take over.
+			$response = array(
+				'message'    => esc_html__( 'Booking received! Please follow up with payment to confirm your reservation.', 'booking-and-rental-manager-for-woocommerce' ),
+				'redirect'   => isset( $result['redirect'] ) ? $result['redirect'] : '',
+				'booking_id' => isset( $result['booking_id'] ) ? $result['booking_id'] : 0,
+				'reference'  => isset( $result['reference'] ) ? $result['reference'] : '',
+				'status'     => isset( $result['status'] ) ? $result['status'] : 'pending',
+			);
+
+			/**
+			 * Filter the native checkout response before it is returned to the browser.
+			 *
+			 * The Pro payment add-on hooks this to charge the pending booking: it replaces
+			 * `redirect` with the gateway's hosted-checkout URL and sets `requires_redirect`.
+			 * Implementations may also short-circuit with wp_send_json_error() on failure.
+			 *
+			 * @param array $response The response array about to be sent.
+			 * @param int   $item_id  The rental item id.
+			 * @param array $result   The create_booking() result (booking_id, reference, status, redirect).
+			 */
+			$response = apply_filters( 'rbfw_native_checkout_response', $response, $item_id, $result );
+
+			// 9. Confirmation email (best-effort). Skipped when redirecting to an external
+			// gateway — in the paid flow the booking is confirmed only after payment.
 			global $rbfw;
-			if ( $email && isset( $rbfw ) && method_exists( $rbfw, 'send_email' ) ) {
+			if ( empty( $response['requires_redirect'] ) && $email && isset( $rbfw ) && method_exists( $rbfw, 'send_email' ) ) {
 				$subject = esc_html__( 'Your booking has been received', 'booking-and-rental-manager-for-woocommerce' );
 				$body    = sprintf(
 					/* translators: 1: item name, 2: booking reference */
@@ -101,13 +124,7 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 				$rbfw->send_email( $email, $item_id, $subject, $body, isset( $result['booking_id'] ) ? $result['booking_id'] : '' );
 			}
 
-			wp_send_json_success( array(
-				'message'    => esc_html__( 'Booking received! Please follow up with payment to confirm your reservation.', 'booking-and-rental-manager-for-woocommerce' ),
-				'redirect'   => isset( $result['redirect'] ) ? $result['redirect'] : '',
-				'booking_id' => isset( $result['booking_id'] ) ? $result['booking_id'] : 0,
-				'reference'  => isset( $result['reference'] ) ? $result['reference'] : '',
-				'status'     => isset( $result['status'] ) ? $result['status'] : 'pending',
-			) );
+			wp_send_json_success( $response );
 		}
 
 		/**

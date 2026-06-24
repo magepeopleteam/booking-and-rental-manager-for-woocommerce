@@ -214,9 +214,11 @@
 								<span class="gateway-sub"><?php esc_html_e( 'Cards & PayPal balance', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 							</span>
 						</div>
+						<?php if ( $is_pro ) : ?>
+							<span class="gateway-status <?php echo $pp_enabled ? 'active' : ''; ?>"><?php echo esc_html( $pp_enabled ? $enabled_txt : $disabled_txt ); ?></span>
+						<?php endif; ?>
 						<div class="gateway-actions">
 							<?php if ( $is_pro ) : ?>
-								<span class="gateway-status <?php echo $pp_enabled ? 'active' : ''; ?>"><?php echo esc_html( $pp_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 								<button type="button" class="gateway-configure-btn" id="rbfw-paypal-configure-btn"><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 							<?php else : ?>
 								<?php echo wp_kses_post( $pro_badge ); ?>
@@ -239,9 +241,11 @@
 								<span class="gateway-sub"><?php esc_html_e( 'Credit & debit cards', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 							</span>
 						</div>
+						<?php if ( $is_pro ) : ?>
+							<span class="gateway-status <?php echo $st_enabled ? 'active' : ''; ?>"><?php echo esc_html( $st_enabled ? $enabled_txt : $disabled_txt ); ?></span>
+						<?php endif; ?>
 						<div class="gateway-actions">
 							<?php if ( $is_pro ) : ?>
-								<span class="gateway-status <?php echo $st_enabled ? 'active' : ''; ?>"><?php echo esc_html( $st_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 								<button type="button" class="gateway-configure-btn" id="rbfw-stripe-configure-btn"><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 							<?php else : ?>
 								<?php echo wp_kses_post( $pro_badge ); ?>
@@ -265,8 +269,8 @@
 								<span class="gateway-sub"><?php esc_html_e( 'Bank transfer, cash, pay on pickup', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 							</span>
 						</div>
+						<span class="gateway-status <?php echo $off_enabled ? 'active' : ''; ?>"><?php echo esc_html( $off_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 						<div class="gateway-actions">
-							<span class="gateway-status <?php echo $off_enabled ? 'active' : ''; ?>"><?php echo esc_html( $off_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 							<button type="button" class="gateway-configure-btn" id="rbfw-offline-configure-btn"><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 						</div>
 					</div>
@@ -652,13 +656,13 @@
 				.gateway-card{border:none;border-radius:14px;margin-bottom:14px;box-shadow:0 6px 18px rgba(16,24,40,0.10);width:100%;box-sizing:border-box;color:#fff;overflow:hidden;transition:transform 0.18s ease,box-shadow 0.18s ease;}
 				.gateway-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(16,24,40,0.16);}
 				.gateway-card .gateway-header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;}
-				.gateway-card .gateway-id{display:flex;align-items:center;gap:14px;min-width:0;}
+				.gateway-card .gateway-id{display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 0;}
 				.gateway-card .gateway-icon{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;}
 				.gateway-card .gateway-meta{display:flex;flex-direction:column;min-width:0;}
 				.gateway-card .gateway-name{font-size:16px;font-weight:700;color:#fff;line-height:1.3;}
 				.gateway-card .gateway-sub{font-size:12px;color:rgba(255,255,255,0.82);line-height:1.4;}
-				.gateway-card .gateway-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto;}
-				.gateway-card .gateway-status{font-size:11px;text-transform:uppercase;letter-spacing:0.4px;padding:4px 11px;border-radius:20px;background:rgba(255,255,255,0.2);color:#fff;font-weight:700;}
+				.gateway-card .gateway-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:1 1 0;}
+				.gateway-card .gateway-status{display:inline-block;min-width:78px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;padding:4px 11px;border-radius:20px;background:rgba(255,255,255,0.2);color:#fff;font-weight:700;}
 				.gateway-card .gateway-status.active{background:#fff;}
 				.gateway-card.paypal-card{background:linear-gradient(135deg,#003087 0%,#0079C1 100%);}
 				.gateway-card.paypal-card .gateway-status.active{color:#003087;}

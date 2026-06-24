@@ -232,6 +232,11 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true);
 			wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
 
+			// Standalone (non-WooCommerce) checkout interception. Loads in every mode but
+			// only acts when rbfw_ajax_front.booking_mode === 'standalone'. Must be enqueued
+			// on the frontend (this method) — the native checkout modal lives on the item page.
+			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
+
 			wp_enqueue_script('coockie-js', 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js', array('jquery'), null, true);
 
 
@@ -343,6 +348,11 @@ if (! class_exists('RBFW_Dependencies')) {
 					'nonce_bikecarsd_type_list'        => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
 					'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
 					'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
+					// WooCommerce-optional native booking flow (consumed by rbfw_native_checkout.js).
+					'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),
+					'booking_mode'                 => rbfw_booking_mode(),
+					'has_woocommerce'              => rbfw_has_woocommerce() ? '1' : '0',
+					'currency_symbol'              => get_woocommerce_currency_symbol(),
 
 				));
 				//font awesome

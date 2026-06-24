@@ -72,6 +72,13 @@
 		data.push({ name: 'rbfw_billing_phone', value: phone });
 		data.push({ name: 'rbfw_total', value: readTotal($activeForm) });
 
+		// Payment method (Pro): the selector lives in the modal, not the booking form,
+		// so push the chosen gateway explicitly when present.
+		var pm = $modal.find('input[name="rbfw_payment_method"]:checked').val();
+		if (pm) {
+			data.push({ name: 'rbfw_payment_method', value: pm });
+		}
+
 		var $btn = $modal.find('[data-rbfw-native-submit]');
 		$btn.prop('disabled', true).addClass('is-loading');
 		$msg.removeClass('error success').text('');
