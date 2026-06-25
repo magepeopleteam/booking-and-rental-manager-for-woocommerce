@@ -677,17 +677,30 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_service_infos_post = isset( $sd_input_data_sabitized['rbfw_service_price_data'] ) ? $sd_input_data_sabitized['rbfw_service_price_data'] : [];
                 $rbfw_service_infos = [];
 
-                if ( ! empty( $rbfw_service_infos_post ) ) {
+                if ( ! empty( $rbfw_service_infos_post ) && is_array( $rbfw_service_infos_post ) ) {
                     foreach ( $rbfw_service_infos_post as $key_cat => $value ) {
-                        $rbfw_service_infos[ $value['cat_title'] ] = [];
+                        if ( ! is_array( $value ) ) {
+                            continue;
+                        }
+                        $cat_title                       = isset( $value['cat_title'] ) ? $value['cat_title'] : '';
+                        $rbfw_service_infos[ $cat_title ] = [];
                         foreach ( $value as $key_ser => $item ) {
-                            if ( isset( $item['main_cat_name'] ) && $item['main_cat_name'] ) {
-                                $rbfw_service_infos[ $value['cat_title'] ][] = $item;
-                                if ( $item['service_price_type'] == 'day_wise' ) {
-                                    $rbfw_service_price = $rbfw_service_price + $item['price'] * $item['quantity'] * $total_days;
-                                } else {
-                                    $rbfw_service_price = $rbfw_service_price + $item['price'] * $item['quantity'];
-                                }
+                            // The category-level "cat_title" entry is a string; only service rows are arrays
+                            // carrying the [name] field posted by forms/multi-day-registration.php.
+                            if ( 'cat_title' === $key_ser || ! is_array( $item ) || empty( $item['name'] ) ) {
+                                continue;
+                            }
+                            $service_qty = isset( $item['quantity'] ) ? (float) $item['quantity'] : 0;
+                            if ( $service_qty <= 0 ) {
+                                continue; // service not selected
+                            }
+                            $service_unit_price = isset( $item['price'] ) ? (float) $item['price'] : 0;
+                            $service_type       = isset( $item['service_price_type'] ) ? $item['service_price_type'] : '';
+                            $rbfw_service_infos[ $cat_title ][] = $item;
+                            if ( 'day_wise' === $service_type ) {
+                                $rbfw_service_price += $service_unit_price * $service_qty * $total_days;
+                            } else {
+                                $rbfw_service_price += $service_unit_price * $service_qty;
                             }
                         }
                     }

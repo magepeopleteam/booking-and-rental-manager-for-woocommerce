@@ -1329,17 +1329,34 @@ function calculateTotalSingleItem() {
     });
 
     // Loop through qty-based services (Multiple Day — no checkbox)
+    let rbfw_days_label = (typeof rbfw_translation !== 'undefined' && rbfw_translation.days) ? rbfw_translation.days : 'Days';
     jQuery('.multi-service-category-section .rbfw_service_qty').each(function() {
         let qty = parseInt(jQuery(this).val()) || 0;
+        let $row = jQuery(this).closest('tr');
+        let $calc = $row.find('.rbfw_service_day_calc');
         if (qty > 0) {
             let price = parseFloat(jQuery(this).data('price')) || 0;
-            let service_price_type = jQuery(this).closest('tr').find('input[name*="[service_price_type]"]').val() || 'one_time';
+            let service_price_type = $row.find('input[name*="[service_price_type]"]').val() || 'one_time';
+            let line_total;
             if (service_price_type === 'day_wise') {
                 let rbfw_total_days = parseFloat(jQuery('#rbfw_total_days').val()) || 1;
-                service_price += price * qty * rbfw_total_days;
+                line_total = price * qty * rbfw_total_days;
+                service_price += line_total;
+                // Day-wise breakdown badge, e.g. "500.00 × 5 Days × 2 = 2,000.00"
+                $calc.html(wc_price_rbfw(price) + ' &times; ' + rbfw_total_days + ' ' + rbfw_days_label
+                    + (qty > 1 ? ' &times; ' + qty : '') + ' = <strong>' + wc_price_rbfw(line_total) + '</strong>').show();
             } else {
-                service_price += price * qty;
+                line_total = price * qty;
+                service_price += line_total;
+                // One-time: only show the breakdown when qty > 1 (otherwise it is redundant)
+                if (qty > 1) {
+                    $calc.html(wc_price_rbfw(price) + ' &times; ' + qty + ' = <strong>' + wc_price_rbfw(line_total) + '</strong>').show();
+                } else {
+                    $calc.hide().empty();
+                }
             }
+        } else {
+            $calc.hide().empty();
         }
     });
 

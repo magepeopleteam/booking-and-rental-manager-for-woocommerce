@@ -28,6 +28,16 @@
 				'div'   => true,
 				'a'     => true
 			),
+            'thead'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
+            'tfoot'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
             'tbody'     => array(
                 'style'   => true, // Allows inline styles
                 'class'   => true,
@@ -43,6 +53,8 @@
                 'style'   => true, // Allows inline styles
                 'class'   => true,
                 'id'   => true,
+                'colspan' => true,
+                'data-th' => true,
             ),
             'th'     => array(
                 'style'   => true, // Allows inline styles

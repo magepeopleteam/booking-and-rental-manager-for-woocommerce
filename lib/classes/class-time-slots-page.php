@@ -18,12 +18,24 @@
 			}
 
 			public function rbfw_time_slots_page() {
+				$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
+				$total_slots     = is_array( $rbfw_time_slots ) ? count( $rbfw_time_slots ) : 0;
 				?>
-                <div class="rbfw_time_slots_page_wrap wrap">
-                    <h1><?php esc_html_e( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+                <div class="rbfw_ts rbfw_time_slots_page_wrap wrap">
+                    <div class="rbfw_ts_header">
+                        <div class="rbfw_ts_title">
+                            <span class="rbfw_ts_title_icon"><?php echo rbfw_inv_icon( 'clock' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            <h1><?php esc_html_e( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+                            <span class="rbfw_ts_badge"><?php
+                                /* translators: %s: number of time slots. */
+                                echo esc_html( sprintf( _n( '%s Slot', '%s Slots', $total_slots, 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( $total_slots ) ) );
+                            ?></span>
+                        </div>
+                    </div>
+                    <hr class="wp-header-end">
 					<?php
 						$this->rbfw_time_slots_form();
-						$this->rbfw_time_slots_table();
+						$this->rbfw_time_slots_table( $rbfw_time_slots );
 					?>
                 </div>
 				<?php
@@ -31,26 +43,22 @@
 
 			public function rbfw_time_slots_form() {
 				?>
-                <div class="rbfw_time_slot_page_form">
-                    <div class="rbfw_time_slot_form_input_group">
-                        <label><?php esc_html_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <input type="text" class="rbfw_time_slot_label" placeholder="Enter slot label here"/>
-                    </div>
-                    <div class="rbfw_time_slot_form_input_group">
-                        <label><?php esc_html_e( 'Slot Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <input type="time" class="rbfw_time_slot_time" placeholder="10:00 AM"/>
-                    </div>
-                    <div class="rbfw_time_slot_form_input_group">
-                        <label></label>
-                        <button class="rbfw_time_slot_add_btn"><?php esc_html_e( 'Add Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                    </div>
-                    <div class="rbfw_time_slot_form_input_group">
-                        <label></label>
-                        <button class="rbfw_time_slot_reset_btn"><?php esc_html_e( 'Reset Form', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                    </div>
-                    <div class="rbfw_time_slot_form_input_group">
-                        <label></label>
-                        <button class="rbfw_time_slot_refresh_btn"><?php esc_html_e( 'Refresh Page', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                <div class="rbfw_ts_card rbfw_ts_form_card">
+                    <div class="rbfw_ts_card_label"><?php echo rbfw_inv_icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Add New Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                    <div class="rbfw_ts_form rbfw_time_slot_page_form">
+                        <div class="rbfw_ts_field rbfw_time_slot_form_input_group">
+                            <label><?php esc_html_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <input type="text" class="rbfw_time_slot_label" placeholder="<?php esc_attr_e( 'e.g. Morning', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                        </div>
+                        <div class="rbfw_ts_field rbfw_time_slot_form_input_group">
+                            <label><?php esc_html_e( 'Slot Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <input type="time" class="rbfw_time_slot_time"/>
+                        </div>
+                        <div class="rbfw_ts_form_actions">
+                            <button type="button" class="rbfw_ts_btn rbfw_ts_btn_primary rbfw_time_slot_add_btn"><?php echo rbfw_inv_icon( 'plus' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Add Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                            <button type="button" class="rbfw_ts_btn rbfw_ts_btn_ghost rbfw_time_slot_reset_btn"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                            <button type="button" class="rbfw_ts_btn rbfw_ts_btn_refresh rbfw_time_slot_refresh_btn"><?php echo rbfw_inv_icon( 'refresh' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Refresh', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                        </div>
                     </div>
                 </div>
 				<?php
@@ -68,56 +76,69 @@
 				return $arr;
 			}
 
-			public function rbfw_time_slots_table() {
-				$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
-				//$rbfw_time_slots = usort($rbfw_time_slots);
-				//echo '<pre>';print_r($rbfw_time_slots);echo '<pre>';exit;
+			public function rbfw_time_slots_table( $rbfw_time_slots = null ) {
+				if ( null === $rbfw_time_slots ) {
+					$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
+				}
 				?>
-                <table class="rbfw_time_slots_page_table">
-                    <thead>
-                    <tr>
-                        <th><?php esc_html_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                        <th><?php esc_html_e( 'Slot Time', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                        <th style="text-align:right"><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-					<?php
-						if ( ! empty( $rbfw_time_slots ) ) {
-							$rbfw_time_slots = $this->rbfw_format_time_slot( $rbfw_time_slots );
-							asort( $rbfw_time_slots );
-							foreach ( $rbfw_time_slots as $key => $value ) {
-								?>
-                                <tr>
-                                    <td><?php echo esc_html( $key ); ?></td>
-                                    <td><?php echo esc_html( wp_strip_all_tags( $value ) ); ?></td>
-                                    <td style="text-align:right">
-                                        <a href="#" class="rbfw_time_slot_edit_btn" data-label="<?php echo esc_attr( $key ); ?>"><i class="fas fa-pen-to-square"></i> <?php esc_html_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-                                        <a href="#" class="rbfw_time_slot_remove_btn" data-time="<?php echo esc_attr( $value ); ?>" data-label="<?php echo esc_attr( $key ); ?>"><i class="fas fa-trash-can"></i></a>
-                                    </td>
-                                </tr>
-								<?php
-							}
-						} else {
-							?>
+                <div class="rbfw_ts_card">
+                    <div class="rbfw_ts_table_scroll">
+                        <table class="rbfw_ts_table">
+                            <thead>
                             <tr>
-                                <td colspan="3"><?php esc_html_e( 'Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                                <th><?php esc_html_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th><?php esc_html_e( 'Slot Time', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th class="rbfw_ts_th_right"><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                             </tr>
+                            </thead>
+                            <tbody>
 							<?php
-						}
-					?>
-                    </tbody>
-                </table>
-                <div class="rbfw_time_slot_edit_form">
-                    <h3><?php esc_html_e( 'Edit Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-                    <hr>
-                    <div class="rbfw_time_slot_edit_form_group first_child">
-                        <label><?php esc_html_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <input type="text" class="rbfw_time_slot_edit_slot_label"/>
+								if ( ! empty( $rbfw_time_slots ) ) {
+									$rbfw_time_slots = $this->rbfw_format_time_slot( $rbfw_time_slots );
+									asort( $rbfw_time_slots );
+									foreach ( $rbfw_time_slots as $key => $value ) {
+										?>
+                                        <tr class="rbfw_ts_row">
+                                            <td class="rbfw_ts_td_label" data-th="<?php esc_attr_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ts_slot_name"><?php echo esc_html( $key ); ?></span></td>
+                                            <td data-th="<?php esc_attr_e( 'Slot Time', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ts_time_pill"><?php echo rbfw_inv_icon( 'clock' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html( wp_strip_all_tags( $value ) ); ?></span></td>
+                                            <td class="rbfw_ts_td_action" data-th="<?php esc_attr_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                <a href="#" class="rbfw_ts_action rbfw_ts_action_edit rbfw_time_slot_edit_btn" data-label="<?php echo esc_attr( $key ); ?>"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <span><?php esc_html_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?></span></a>
+                                                <a href="#" class="rbfw_ts_action rbfw_ts_action_del rbfw_time_slot_remove_btn" data-time="<?php echo esc_attr( $value ); ?>" data-label="<?php echo esc_attr( $key ); ?>" aria-label="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'trash' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                                            </td>
+                                        </tr>
+										<?php
+									}
+								} else {
+									?>
+                                    <tr class="rbfw_ts_empty_tr">
+                                        <td colspan="3" class="rbfw_ts_empty"><?php esc_html_e( 'No time slots yet — add your first one above.', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                                    </tr>
+									<?php
+								}
+							?>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="rbfw_time_slot_edit_form_group">
-                        <button class="rbfw_time_slot_edit_form_save"><?php esc_html_e( 'Save', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                        <input type="hidden" class="rbfw_time_slot_edit_slot_label_current_value"/>
+                </div>
+
+                <div class="rbfw_time_slot_edit_form">
+                    <div class="rbfw_ts_modal_head">
+                        <div class="rbfw_ts_modal_icon"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                        <div class="rbfw_ts_modal_title_wrap">
+                            <div class="rbfw_ts_modal_title"><?php esc_html_e( 'Edit Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            <div class="rbfw_ts_modal_sub"><?php esc_html_e( 'Rename this slot label', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        </div>
+                        <a href="#" class="rbfw_ts_modal_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                    </div>
+                    <div class="rbfw_ts_modal_body">
+                        <div class="rbfw_ts_field">
+                            <label><?php esc_html_e( 'Slot Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <input type="text" class="rbfw_time_slot_edit_slot_label"/>
+                        </div>
+                        <div class="rbfw_ts_modal_footer">
+                            <button type="button" class="rbfw_ts_btn rbfw_ts_btn_primary rbfw_time_slot_edit_form_save"><?php echo rbfw_inv_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Save Changes', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                            <input type="hidden" class="rbfw_time_slot_edit_slot_label_current_value"/>
+                        </div>
                     </div>
                 </div>
 				<?php
@@ -299,10 +320,22 @@
                             jQuery('.rbfw_time_slot_edit_slot_label').val(ts_label);
                             jQuery('.rbfw_time_slot_edit_slot_label_current_value').val(ts_label);
                             jQuery(".rbfw_time_slot_edit_form").mage_modal({
-                                escapeClose: false,
-                                clickClose: false,
-                                showClose: true
+                                escapeClose: true,
+                                clickClose: true,
+                                showClose: false
                             });
+                        });
+                        function rbfwTsCloseModal() {
+                            if (jQuery.mage_modal && typeof jQuery.mage_modal.isActive === 'function' && jQuery.mage_modal.isActive()) {
+                                jQuery.mage_modal.close();
+                            }
+                        }
+                        jQuery(document).on('click', '.rbfw_ts_modal_close', function (e) {
+                            e.preventDefault();
+                            rbfwTsCloseModal();
+                        });
+                        jQuery(document).on('click', '.mage_blocker', function (e) {
+                            if (e.target === this) { rbfwTsCloseModal(); }
                         });
                         jQuery('.rbfw_time_slot_edit_form_save').click(function (e) {
                             e.preventDefault();
