@@ -915,6 +915,8 @@ function rbfw_inv_icon( $name, $extra_class = '' ) {
         'download' => '<path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/>',
         'file_csv' => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M8.5 14h2"/><path d="M13.5 14h2"/><path d="M8.5 17h2"/><path d="M13.5 17h2"/>',
         'file_pdf' => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M8.5 13v4"/><path d="M8.5 13h1.2a1.2 1.2 0 0 1 0 2.4H8.5"/><path d="M13 13v4h1a1.5 1.5 0 0 0 1.5-1.5v-1A1.5 1.5 0 0 0 14 13z"/>',
+        'sliders'  => '<path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h2"/><path d="M10 12h10"/><circle cx="8" cy="12" r="2"/><path d="M4 18h10"/><path d="M18 18h2"/><circle cx="16" cy="18" r="2"/>',
+        'chevron_down' => '<path d="M6 9l6 6 6-6"/>',
     );
 
     if ( ! isset( $paths[ $name ] ) ) {

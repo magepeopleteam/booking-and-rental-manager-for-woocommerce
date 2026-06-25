@@ -105,6 +105,105 @@ function rbfw_export_columns() {
 }
 
 /**
+ * Export columns arranged into accordion groups for the settings UI.
+ *
+ * @return array<string,array{label:string,columns:string[]}>
+ */
+function rbfw_export_column_groups() {
+	return array(
+		'order'    => array(
+			'label'   => __( 'Order', 'booking-and-rental-manager-for-woocommerce' ),
+			'columns' => array( 'order_no', 'booking_id', 'status', 'order_total', 'order_created' ),
+		),
+		'customer' => array(
+			'label'   => __( 'Customer', 'booking-and-rental-manager-for-woocommerce' ),
+			'columns' => array( 'customer', 'email', 'phone' ),
+		),
+		'booking'  => array(
+			'label'   => __( 'Booking', 'booking-and-rental-manager-for-woocommerce' ),
+			'columns' => array( 'item', 'item_type', 'qty', 'booking_start', 'booking_end', 'total_days' ),
+		),
+		'pricing'  => array(
+			'label'   => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
+			'columns' => array( 'duration_cost', 'service_cost', 'discount', 'security_deposit' ),
+		),
+	);
+}
+
+/**
+ * Option name holding the per-column export toggles.
+ *
+ * @return string
+ */
+function rbfw_export_settings_option_name() {
+	return 'rbfw_order_export_settings';
+}
+
+/**
+ * Enabled/disabled map for every export column.
+ *
+ * Columns default to ON — a column is only hidden when it has an explicit 'off'
+ * saved — so the export is unchanged until the admin customises it.
+ *
+ * @return array<string,bool>
+ */
+function rbfw_export_column_enabled_map() {
+	$saved = get_option( rbfw_export_settings_option_name(), array() );
+	if ( ! is_array( $saved ) ) {
+		$saved = array();
+	}
+	$map = array();
+	foreach ( rbfw_export_columns() as $key => $label ) {
+		$map[ $key ] = ! ( isset( $saved[ $key ] ) && 'off' === $saved[ $key ] );
+	}
+	return $map;
+}
+
+/**
+ * The export columns that are currently enabled, in display order.
+ *
+ * Falls back to all columns if every toggle was switched off, so the export
+ * file is never completely empty of columns.
+ *
+ * @return array<string,string> key => label.
+ */
+function rbfw_export_enabled_columns() {
+	$all     = rbfw_export_columns();
+	$map     = rbfw_export_column_enabled_map();
+	$enabled = array();
+	foreach ( $all as $key => $label ) {
+		if ( ! empty( $map[ $key ] ) ) {
+			$enabled[ $key ] = $label;
+		}
+	}
+	return $enabled ? $enabled : $all;
+}
+
+add_action( 'wp_ajax_rbfw_save_export_settings', 'rbfw_save_export_settings_callback' );
+/**
+ * AJAX: persist the export column toggles from the Order List accordion.
+ */
+function rbfw_save_export_settings_callback() {
+	check_ajax_referer( 'rbfw_save_export_settings_action', 'nonce' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized access.', 'booking-and-rental-manager-for-woocommerce' ) ), 403 );
+	}
+
+	$posted = ( isset( $_POST['columns'] ) && is_array( $_POST['columns'] ) ) ? wp_unslash( $_POST['columns'] ) : array();
+
+	$settings = array();
+	foreach ( rbfw_export_columns() as $key => $label ) {
+		$val               = isset( $posted[ $key ] ) ? sanitize_text_field( $posted[ $key ] ) : '0';
+		$settings[ $key ]  = in_array( $val, array( '1', 'on', 'true' ), true ) ? 'on' : 'off';
+	}
+
+	update_option( rbfw_export_settings_option_name(), $settings );
+
+	wp_send_json_success( array( 'message' => esc_html__( 'Export settings saved.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+}
+
+/**
  * Build the export dataset — one row per booking line item (ticket).
  *
  * Producing a row per ticket (rather than per order) is what makes the
@@ -447,7 +546,7 @@ function rbfw_export_filename_stem() {
  * @param array $filters applied filters.
  */
 function rbfw_export_orders_csv( $rows, $filters ) {
-	$columns  = rbfw_export_columns();
+	$columns  = rbfw_export_enabled_columns();
 	$filename = rbfw_export_filename_stem() . '.csv';
 
 	nocache_headers();
@@ -614,7 +713,7 @@ function rbfw_export_pdf_footer_html() {
  * @return string
  */
 function rbfw_export_pdf_body_html( $rows, $filters ) {
-	$columns    = rbfw_export_columns();
+	$columns    = rbfw_export_enabled_columns();
 	$money_keys = array( 'duration_cost', 'service_cost', 'discount', 'security_deposit', 'order_total' );
 	$num_keys   = array( 'qty', 'total_days' );
 
@@ -646,16 +745,39 @@ function rbfw_export_pdf_body_html( $rows, $filters ) {
 			$html .= '</tr>';
 		}
 
-		// Totals row spanning to the order-total column.
+		// Totals row — aligned to the order-total column when it is shown, and
+		// robust to that column being toggled off or positioned first/last.
 		$keys      = array_keys( $columns );
+		$col_count = count( $columns );
 		$total_pos = array_search( 'order_total', $keys, true );
-		$lead_span = false === $total_pos ? count( $columns ) : $total_pos;
-		$html     .= '<tr class="rbfw_exp_tot"><td colspan="' . $lead_span . '">'
-			. esc_html__( 'Grand Total', 'booking-and-rental-manager-for-woocommerce' )
+		$label     = esc_html__( 'Grand Total', 'booking-and-rental-manager-for-woocommerce' )
 			. ' (' . esc_html( rbfw_export_count_orders( $rows ) ) . ' '
-			. esc_html__( 'orders', 'booking-and-rental-manager-for-woocommerce' ) . ')</td>'
-			. '<td class="rbfw_exp_num">' . esc_html( rbfw_export_money( rbfw_export_grand_total( $rows ) ) ) . '</td>'
-			. '<td></td></tr>';
+			. esc_html__( 'orders', 'booking-and-rental-manager-for-woocommerce' ) . ')';
+		$amount    = esc_html( rbfw_export_money( rbfw_export_grand_total( $rows ) ) );
+
+		$html .= '<tr class="rbfw_exp_tot">';
+		if ( false === $total_pos ) {
+			// No order-total column: a single full-width labelled row.
+			$html .= '<td colspan="' . $col_count . '">' . $label . '</td>';
+		} else {
+			$lead  = (int) $total_pos;                 // cells before the total column.
+			$trail = $col_count - $total_pos - 1;       // cells after it.
+			if ( $lead > 0 ) {
+				$html .= '<td colspan="' . $lead . '">' . $label . '</td>';
+				$html .= '<td class="rbfw_exp_num">' . $amount . '</td>';
+			} else {
+				// order_total is the first column.
+				$html .= '<td class="rbfw_exp_num">' . $amount . '</td>';
+			}
+			if ( $trail > 0 ) {
+				$cell = ( 0 === $lead ) ? $label : '';
+				$html .= '<td colspan="' . $trail . '">' . $cell . '</td>';
+			} elseif ( 0 === $lead ) {
+				// Total is first and only-ish: ensure the label is still shown.
+				$html .= '<td>' . $label . '</td>';
+			}
+		}
+		$html .= '</tr>';
 	}
 
 	$html .= '</tbody></table>';

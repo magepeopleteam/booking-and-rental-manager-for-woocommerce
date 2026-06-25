@@ -21,6 +21,10 @@
 				// Runs late ( priority 999 ) so it removes the entry after Pro registers it.
 				add_action( 'admin_menu', array( $this, 'rbfw_remove_reports_submenu' ), 999 );
 				add_action( 'admin_enqueue_scripts', array( $this, 'rbfw_admin_enqueue_scripts' ) );
+				// The Pro "Report Settings" tab has moved to the Order List page as the
+				// "Export Settings" accordion, so remove it from the global Settings.
+				add_filter( 'rbfw_settings_sec_reg', array( $this, 'rbfw_remove_report_settings_section' ), 200 );
+				add_filter( 'rbfw_settings_sec_fields', array( $this, 'rbfw_remove_report_settings_fields' ), 200 );
 				/* WooCommerce Action and Filter */
 				add_filter( 'woocommerce_order_status_changed', array( $this, 'rbfw_wc_status_update' ), 10, 4 );
 				/* End WooCommerce Action and Filter */
@@ -58,6 +62,40 @@
 			 */
 			public function rbfw_remove_reports_submenu() {
 				remove_submenu_page( 'edit.php?post_type=rbfw_item', 'reports' );
+			}
+
+			/**
+			 * Remove the "Report Settings" section from the global Settings tabs.
+			 *
+			 * Its purpose ( choosing which columns the report/export shows ) now lives
+			 * on the Order List page as the "Export Settings" accordion.
+			 *
+			 * @param array $sections registered settings sections.
+			 * @return array
+			 */
+			public function rbfw_remove_report_settings_section( $sections ) {
+				if ( ! is_array( $sections ) ) {
+					return $sections;
+				}
+				foreach ( $sections as $index => $section ) {
+					if ( isset( $section['id'] ) && 'rbfw_basic_purchase_list_settings' === $section['id'] ) {
+						unset( $sections[ $index ] );
+					}
+				}
+				return array_values( $sections );
+			}
+
+			/**
+			 * Remove the "Report Settings" fields that belong to the moved section.
+			 *
+			 * @param array $fields registered settings fields keyed by section id.
+			 * @return array
+			 */
+			public function rbfw_remove_report_settings_fields( $fields ) {
+				if ( is_array( $fields ) && isset( $fields['rbfw_basic_purchase_list_settings'] ) ) {
+					unset( $fields['rbfw_basic_purchase_list_settings'] );
+				}
+				return $fields;
 			}
 
 			public function rbfw_admin_enqueue_scripts( $hook ) {
@@ -254,6 +292,53 @@
                             <span><?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         </button>
                     </div>
+
+                    <?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) && function_exists( 'rbfw_export_column_groups' ) ) :
+                        $rbfw_exs_labels  = rbfw_export_columns();
+                        $rbfw_exs_enabled = rbfw_export_column_enabled_map();
+                        ?>
+                        <!-- Export Settings accordion -->
+                        <div class="rbfw_ol_exs" id="rbfw_ol_exs">
+                            <button type="button" class="rbfw_ol_exs_head" aria-expanded="false" aria-controls="rbfw_ol_exs_body">
+                                <span class="rbfw_ol_exs_head_ic"><?php echo rbfw_inv_icon( 'sliders' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                <span class="rbfw_ol_exs_head_txt">
+                                    <span class="rbfw_ol_exs_title"><?php esc_html_e( 'Export Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw_ol_exs_sub"><?php esc_html_e( 'Choose which columns are included in the CSV / PDF export', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </span>
+                                <span class="rbfw_ol_exs_chev"><?php echo rbfw_inv_icon( 'chevron_down' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            </button>
+                            <div class="rbfw_ol_exs_body" id="rbfw_ol_exs_body" hidden>
+                                <div class="rbfw_ol_exs_groups">
+                                    <?php foreach ( rbfw_export_column_groups() as $rbfw_exs_gkey => $rbfw_exs_group ) : ?>
+                                        <div class="rbfw_ol_exs_group">
+                                            <div class="rbfw_ol_exs_group_title"><?php echo esc_html( $rbfw_exs_group['label'] ); ?></div>
+                                            <div class="rbfw_ol_exs_cols">
+                                                <?php foreach ( $rbfw_exs_group['columns'] as $rbfw_exs_col ) :
+                                                    if ( ! isset( $rbfw_exs_labels[ $rbfw_exs_col ] ) ) { continue; }
+                                                    $rbfw_exs_on = ! empty( $rbfw_exs_enabled[ $rbfw_exs_col ] );
+                                                    ?>
+                                                    <label class="rbfw_ol_exs_toggle">
+                                                        <input type="checkbox" class="rbfw_ol_exs_cb" data-col="<?php echo esc_attr( $rbfw_exs_col ); ?>" <?php checked( $rbfw_exs_on ); ?>>
+                                                        <span class="rbfw_ol_exs_switch"></span>
+                                                        <span class="rbfw_ol_exs_label"><?php echo esc_html( $rbfw_exs_labels[ $rbfw_exs_col ] ); ?></span>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="rbfw_ol_exs_foot">
+                                    <div class="rbfw_ol_exs_quick">
+                                        <button type="button" class="rbfw_ol_exs_all"><?php esc_html_e( 'Select all', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                        <span class="rbfw_ol_exs_dot">&middot;</span>
+                                        <button type="button" class="rbfw_ol_exs_none"><?php esc_html_e( 'Clear all', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    </div>
+                                    <span class="rbfw_ol_exs_hint"><?php esc_html_e( 'Changes are saved automatically.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw_ol_exs_msg" id="rbfw_ol_exs_msg" style="display:none;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Table -->
                     <div class="rbfw_ol_card">

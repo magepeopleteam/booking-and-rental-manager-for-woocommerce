@@ -913,6 +913,75 @@
             }
         })();
 
+        /* ----------------------------------------------------------------- *
+         *  Export Settings accordion — toggle export columns (CSV / PDF).
+         * ----------------------------------------------------------------- */
+        (function initExportSettings() {
+            var exs = document.getElementById('rbfw_ol_exs');
+            if (!exs) { return; }
+            var head    = exs.querySelector('.rbfw_ol_exs_head');
+            var body    = document.getElementById('rbfw_ol_exs_body');
+            var allBtn  = exs.querySelector('.rbfw_ol_exs_all');
+            var noneBtn = exs.querySelector('.rbfw_ol_exs_none');
+            var msg     = document.getElementById('rbfw_ol_exs_msg');
+
+            function checks() { return Array.prototype.slice.call(exs.querySelectorAll('.rbfw_ol_exs_cb')); }
+
+            function setOpen(open) {
+                body.hidden = !open;
+                exs.classList.toggle('is-open', open);
+                if (head) { head.setAttribute('aria-expanded', open ? 'true' : 'false'); }
+            }
+            if (head) { head.addEventListener('click', function () { setOpen(body.hidden); }); }
+
+            function showMsg(text, ok) {
+                if (!msg) { return; }
+                msg.textContent = text;
+                msg.className = 'rbfw_ol_exs_msg ' + (ok ? 'is_success' : 'is_error');
+                msg.style.display = 'inline-block';
+            }
+
+            function doSave() {
+                if (typeof rbfw_ajax_admin === 'undefined' || !rbfw_ajax_admin.nonce_save_export_settings) {
+                    // Stale page / missing localisation — make the failure visible
+                    // instead of silently doing nothing.
+                    showMsg('Could not save — please reload the page and try again.', false);
+                    return;
+                }
+                var parts = [
+                    'action=rbfw_save_export_settings',
+                    'nonce=' + encodeURIComponent(rbfw_ajax_admin.nonce_save_export_settings)
+                ];
+                checks().forEach(function (c) {
+                    parts.push('columns[' + encodeURIComponent(c.getAttribute('data-col')) + ']=' + (c.checked ? '1' : '0'));
+                });
+                showMsg('Saving…', true);
+                fetch(rbfw_ajax_admin.rbfw_ajaxurl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: parts.join('&')
+                }).then(function (r) { return r.json(); }).then(function (res) {
+                    if (res && res.success) { showMsg((res.data && res.data.message) || 'Export settings saved.', true); }
+                    else { showMsg((res && res.data && res.data.message) || 'Could not save.', false); }
+                }).catch(function () {
+                    showMsg('Network error. Please try again.', false);
+                });
+            }
+
+            // Debounced auto-save: toggling a column persists automatically so the
+            // next CSV / PDF export always reflects the current selection.
+            var saveTimer = null;
+            function scheduleSave() {
+                if (saveTimer) { clearTimeout(saveTimer); }
+                saveTimer = setTimeout(doSave, 500);
+            }
+
+            checks().forEach(function (c) { c.addEventListener('change', scheduleSave); });
+
+            if (allBtn) { allBtn.addEventListener('click', function () { checks().forEach(function (c) { c.checked = true; }); scheduleSave(); }); }
+            if (noneBtn) { noneBtn.addEventListener('click', function () { checks().forEach(function (c) { c.checked = false; }); scheduleSave(); }); }
+        })();
+
         render();
     });
 })();
