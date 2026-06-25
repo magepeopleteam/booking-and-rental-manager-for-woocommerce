@@ -8054,6 +8054,29 @@ a.rbfw_rent_list_btn:hover{
     font-size: 12px;
     color: var(--rbfw_color_primary);
 }
+/* Day-wise / multi-qty service price breakdown badge (e.g. 500.00 × 5 Days = 2,500.00) */
+.service-price-item .rbfw_service_day_calc {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    max-width: 100%;
+    margin-top: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: #f3f6fb;
+    border: 1px solid #e3e9f2;
+    color: #5b6678;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+    letter-spacing: .1px;
+}
+.service-price-item .rbfw_service_day_calc strong {
+    color: var(--rbfw_color_primary, #0058b8);
+    font-weight: 700;
+}
 div.rbfw_day_wise_price table{
     margin:0;
 }

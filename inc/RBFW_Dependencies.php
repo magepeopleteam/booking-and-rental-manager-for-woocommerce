@@ -103,6 +103,35 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('form-field-dependency', plugins_url('admin/js/form-field-dependency.js', __DIR__), array('jquery'), null, false);
 			wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker', 'wp-tinymce'), time(), false);
 
+			/* Inventory page only: modern redesign assets (font, icons, layout, pagination). */
+			if ( isset( $hook ) && $hook === 'rbfw_item_page_rbfw_inventory' ) {
+				wp_enqueue_style( 'rbfw-jakarta-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', array(), null );
+				/* Icons are inline SVG (rbfw_inv_icon) – no icon-font dependency. */
+				wp_enqueue_style( 'rbfw-inventory', plugins_url( 'admin/css/rbfw_inventory.css', __DIR__ ), array( 'rbfw-admin-style' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_inventory.css' ) );
+				wp_enqueue_script( 'rbfw-inventory', plugins_url( 'admin/js/rbfw_inventory.js', __DIR__ ), array( 'jquery', 'rbfw-script', 'jquery.modal.min' ), filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw_inventory.js' ), true );
+				wp_localize_script( 'rbfw-inventory', 'rbfwInvI18n', array(
+					/* translators: 1: first row number, 2: last row number, 3: total rows. */
+					'showing'     => __( 'Showing %1$s–%2$s of %3$s entries', 'booking-and-rental-manager-for-woocommerce' ),
+					/* translators: %s: total rows. */
+					'showing_all' => __( 'Showing %s entries', 'booking-and-rental-manager-for-woocommerce' ),
+				) );
+			}
+
+			/* Time Slots page only: modern redesign stylesheet (inline-SVG icons, primary + secondary). */
+			if ( isset( $hook ) && $hook === 'rbfw_item_page_rbfw_time_slots' ) {
+				wp_enqueue_style( 'rbfw-jakarta-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', array(), null );
+				wp_enqueue_style( 'rbfw-timeslots', plugins_url( 'admin/css/rbfw_timeslots.css', __DIR__ ), array( 'rbfw-admin-style' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_timeslots.css' ) );
+			}
+
+			/* Order List page only: modern redesign (stat cards, search, animated detail panel). */
+			if ( isset( $hook ) && $hook === 'rbfw_item_page_rbfw_order' ) {
+				wp_enqueue_style( 'rbfw-jakarta-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap', array(), null );
+				wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/assets/flatpickr.min.css', array(), null );
+				wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js', array(), null, true );
+				wp_enqueue_style( 'rbfw-order', plugins_url( 'admin/css/rbfw_order.css', __DIR__ ), array( 'rbfw-admin-style', 'flatpickr-css' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_order.css' ) );
+				wp_enqueue_script( 'rbfw-order', plugins_url( 'admin/js/rbfw_order.js', __DIR__ ), array( 'jquery', 'flatpickr-js' ), filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw_order.js' ), true );
+			}
+
 			wp_localize_script('jquery', 'rbfw_ajax_front', array(
 				'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
 				'nonce_check_resort_availibility'        => wp_create_nonce('rbfw_check_resort_availibility_action'),
@@ -127,12 +156,17 @@ if (! class_exists('RBFW_Dependencies')) {
 
 			wp_localize_script('jquery', 'rbfw_ajax_admin', array(
 				'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
+				'currency_symbol' => function_exists('get_woocommerce_currency_symbol') ? html_entity_decode( get_woocommerce_currency_symbol() ) : '',
 				'nonce_time_slot'        => wp_create_nonce('rbfw_time_slot_action'),
 				'nonce_duration_form'        => wp_create_nonce('rbfw_duration_form_action'),
 				'nonce_room_types_with_sd_price'        => wp_create_nonce('rbfw_room_types_with_sd_price_action'),
 				'nonce_room_types_with_sessional_price'        => wp_create_nonce('rbfw_room_types_with_sessional_price_action'),
 				'nonce_room_types_with_resort_price_mds'        => wp_create_nonce('rbfw_room_types_with_resort_price_mds_action'),
 				'nonce_fetch_order_details'        => wp_create_nonce('rbfw_fetch_order_details_action'),
+				'nonce_update_order_status'        => wp_create_nonce('rbfw_update_order_status_action'),
+				'nonce_delete_order'        => wp_create_nonce('rbfw_delete_order_action'),
+				'nonce_get_order_edit_form'        => wp_create_nonce('rbfw_get_order_edit_form_action'),
+				'nonce_save_order_edit'        => wp_create_nonce('rbfw_save_order_edit_action'),
 				'nonce_load_more_icons'        => wp_create_nonce('rbfw_load_more_icons_action'),
 				'nonce_update_time_slot'        => wp_create_nonce('rbfw_update_time_slot_action'),
 				'nonce_delete_time_slot'        => wp_create_nonce('rbfw_delete_time_slot_action'),

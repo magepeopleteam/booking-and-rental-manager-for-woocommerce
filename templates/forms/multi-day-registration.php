@@ -646,6 +646,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                             </div>
                                                             <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
                                                             <span class="day-time-wise"><?php echo (isset($service['service_price_type']) && $service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                            <span class="rbfw_service_day_calc" style="display:none;"></span>
                                                         </td>
                                                         <td class="rbfw_service_quantity item_<?php echo esc_attr($cat . $serkey); ?>">
                                                             <div class="rbfw_qty_input">
