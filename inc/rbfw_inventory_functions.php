@@ -416,10 +416,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
         $variant_q = [];
         foreach($rbfw_variations_data as $key=>$item1){
-            $field_label = $item1['field_label'];
-            if($field_label){
+            $field_label = isset($item1['field_label']) ? $item1['field_label'] : '';
+            if($field_label && !empty($item1['value']) && is_array($item1['value'])){
                 foreach ($item1['value'] as $key1=>$single){
-                    if($single['name']){
+                    if(!empty($single['name'])){
                         foreach($date_range as $date){
                             $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                         }
@@ -680,10 +680,10 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
             $variant_q = [];
             foreach($rbfw_variations_data as $key=>$item1){
-                $field_label = $item1['field_label'];
-                if($field_label){
+                $field_label = isset($item1['field_label']) ? $item1['field_label'] : '';
+                if($field_label && !empty($item1['value']) && is_array($item1['value'])){
                     foreach ($item1['value'] as $key1=>$single){
-                        if($single['name']){
+                        if(!empty($single['name'])){
                             foreach($date_range as $date1){
                                 $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                             }
@@ -912,6 +912,9 @@ function rbfw_inv_icon( $name, $extra_class = '' ) {
         'calendar' => '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16"/><path d="M8 3v4"/><path d="M16 3v4"/>',
         'receipt'  => '<path d="M6 3h12v18l-2.2-1.5L13.5 21 12 19.5 10.5 21 8.2 19.5 6 21z"/><path d="M9 8h6"/><path d="M9 12h6"/>',
         'calculator' => '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6"/><path d="M8.5 12h.01"/><path d="M12 12h.01"/><path d="M15.5 12h.01"/><path d="M8.5 16h.01"/><path d="M12 16h.01"/><path d="M15.5 16h.01"/>',
+        'download' => '<path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/>',
+        'file_csv' => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M8.5 14h2"/><path d="M13.5 14h2"/><path d="M8.5 17h2"/><path d="M13.5 17h2"/>',
+        'file_pdf' => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M8.5 13v4"/><path d="M8.5 13h1.2a1.2 1.2 0 0 1 0 2.4H8.5"/><path d="M13 13v4h1a1.5 1.5 0 0 0 1.5-1.5v-1A1.5 1.5 0 0 0 14 13z"/>',
     );
 
     if ( ! isset( $paths[ $name ] ) ) {
@@ -1480,21 +1483,21 @@ function rbfw_get_stock_details(){
                                 $sold_item_qty += $rbfw_item_quantity;
                                 $f = 0;
                                 foreach ($rbfw_variations_data_closing as $key => $v_data) {
-                                    $field_id = $rbfw_variations_data_closing[$f]['field_id'];
-                                    $field_label = $rbfw_variations_data_closing[$f]['field_label'];
-                                    $field_value = $rbfw_variations_data_closing[$f]['value'];
+                                    $field_id = isset($rbfw_variations_data_closing[$f]['field_id']) ? $rbfw_variations_data_closing[$f]['field_id'] : '';
+                                    $field_label = isset($rbfw_variations_data_closing[$f]['field_label']) ? $rbfw_variations_data_closing[$f]['field_label'] : '';
+                                    $field_value = ( isset($rbfw_variations_data_closing[$f]['value']) && is_array($rbfw_variations_data_closing[$f]['value']) ) ? $rbfw_variations_data_closing[$f]['value'] : array();
 
                                     if(!empty($rbfw_variation_info)){
                                         foreach ($rbfw_variation_info as $key => $v_info) {
-                                            $s_field_id = $v_info['field_id'];
-                                            $s_field_label = $v_info['field_label'];
-                                            $s_field_value = $v_info['field_value'];
+                                            $s_field_id = $v_info['field_id'] ?? '';
+                                            $s_field_label = $v_info['field_label'] ?? '';
+                                            $s_field_value = $v_info['field_value'] ?? '';
                                             if($s_field_id == $field_id){
                                                 $g = 0;
                                                 foreach ($field_value as $key => $f_value) {
 
-                                                    $fv_name = $f_value['name'];
-                                                    $fv_qty = $f_value['quantity'];
+                                                    $fv_name = $f_value['name'] ?? '';
+                                                    $fv_qty = $f_value['quantity'] ?? '';
 
                                                     if ($s_field_value == $fv_name) {
                                                         $rbfw_variations_data_closing[$f]['value'][$g]['quantity'] = $fv_qty - $rbfw_item_quantity;
@@ -1593,7 +1596,7 @@ function rbfw_get_stock_details(){
                     <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){ ?>
                         <?php foreach ($rbfw_variations_data as $_variations_data) { ?>
                         <div class="rbfw_inv_modal_section">
-                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clone'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html( $_variations_data['field_label'] ); ?></div>
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clone'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html( $_variations_data['field_label'] ?? '' ); ?></div>
                             <?php if(!empty($_variations_data['value'])){ ?>
                             <table class="rbfw_inv_mini_table">
                                 <thead><tr><th><?php esc_html_e('Name','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>

@@ -3994,3 +3994,46 @@ function rbfw_enqueue_reset_orders_assets( $hook ) {
 		)
 	) );
 }
+
+if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
+	/**
+	 * Normalise saved product-variation rows before they are persisted.
+	 *
+	 * The variations repeater can submit blank or partial rows — an untouched
+	 * "add new" row, or a row whose label was cleared. Persisting those leads to
+	 * "Undefined array key 'field_label'" notices wherever the data is rendered
+	 * later (single-item form, cart, checkout, thank-you page, order meta). This
+	 * drops any row without a usable label and strips value entries that have no
+	 * name, fixing the problem at the source.
+	 *
+	 * @param mixed $rows raw (already sanitised) variations data.
+	 * @return array cleaned, re-indexed rows.
+	 */
+	function rbfw_clean_variations_data( $rows ) {
+		if ( empty( $rows ) || ! is_array( $rows ) ) {
+			return array();
+		}
+		$clean = array();
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$label = isset( $row['field_label'] ) ? trim( (string) $row['field_label'] ) : '';
+			if ( '' === $label ) {
+				continue; // No label -> unusable, skip it.
+			}
+			// Keep only value entries that actually carry a name.
+			$values = array();
+			if ( ! empty( $row['value'] ) && is_array( $row['value'] ) ) {
+				foreach ( $row['value'] as $val ) {
+					if ( is_array( $val ) && isset( $val['name'] ) && '' !== trim( (string) $val['name'] ) ) {
+						$values[] = $val;
+					}
+				}
+			}
+			$row['value'] = $values;
+			$clean[]      = $row;
+		}
+		return $clean;
+	}
+}

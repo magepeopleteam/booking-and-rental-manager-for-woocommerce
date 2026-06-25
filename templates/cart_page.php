@@ -674,8 +674,8 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php if(!empty($variation_info)){ ?>
             <?php foreach ($variation_info as $key => $value) { ?>
                 <tr>
-                    <th><?php echo esc_html($value['field_label']);  ?></th>
-                    <td><?php echo esc_html($value['field_value']); ?></td>
+                    <th><?php echo esc_html($value['field_label'] ?? '');  ?></th>
+                    <td><?php echo esc_html($value['field_value'] ?? ''); ?></td>
                 </tr>
             <?php } ?>
         <?php }  ?>

@@ -156,7 +156,9 @@ if (! class_exists('RBFW_Dependencies')) {
 
 			wp_localize_script('jquery', 'rbfw_ajax_admin', array(
 				'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
+				'admin_post_url' => admin_url('admin-post.php'),
 				'currency_symbol' => function_exists('get_woocommerce_currency_symbol') ? html_entity_decode( get_woocommerce_currency_symbol() ) : '',
+				'nonce_export_orders'        => wp_create_nonce('rbfw_export_orders_action'),
 				'nonce_time_slot'        => wp_create_nonce('rbfw_time_slot_action'),
 				'nonce_duration_form'        => wp_create_nonce('rbfw_duration_form_action'),
 				'nonce_room_types_with_sd_price'        => wp_create_nonce('rbfw_room_types_with_sd_price_action'),

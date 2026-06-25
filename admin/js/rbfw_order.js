@@ -816,6 +816,97 @@
             }
         });
 
+        /* ----------------------------------------------------------------- *
+         *  Export (CSV / PDF) — item-wise + month-range download.
+         * ----------------------------------------------------------------- */
+        (function initExport() {
+            var exportBtn   = document.getElementById('rbfw_ol_export_btn');
+            var exportModal = document.getElementById('rbfw_ol_export_modal');
+            if (!exportBtn || !exportModal) { return; }
+
+            var itemSel   = document.getElementById('rbfw_ol_export_item');
+            var statusSelE = document.getElementById('rbfw_ol_export_status');
+            var fromMonth = document.getElementById('rbfw_ol_export_from');
+            var toMonth   = document.getElementById('rbfw_ol_export_to');
+
+            function openExport() {
+                // Pre-fill from the currently applied on-page filters as a convenience.
+                if (itemSel && fbItem) { itemSel.value = fbItem; }
+                if (statusSelE && statusFilter) { statusSelE.value = statusFilter; }
+                // Use flex (not block) so the shared .rbfw_ol_status_modal
+                // centering (align/justify center) applies — same as the other modals.
+                exportModal.style.display = 'flex';
+                exportModal.setAttribute('aria-hidden', 'false');
+                document.body.classList.add('rbfw_ol_modal_open');
+            }
+
+            function closeExport() {
+                exportModal.style.display = 'none';
+                exportModal.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('rbfw_ol_modal_open');
+            }
+
+            exportBtn.addEventListener('click', function (e) { e.preventDefault(); openExport(); });
+
+            exportModal.addEventListener('click', function (e) {
+                if (!e.target) { return; }
+                if (e.target.closest('.rbfw_ol_export_close') ||
+                    e.target.closest('.rbfw_ol_export_cancel') ||
+                    e.target.classList.contains('rbfw_ol_status_modal_overlay')) {
+                    e.preventDefault();
+                    closeExport();
+                    return;
+                }
+                // Active-state styling for the format cards.
+                var fmt = e.target.closest('.rbfw_ol_export_fmt');
+                if (fmt) {
+                    var radio = fmt.querySelector('input[type="radio"]');
+                    if (radio) { radio.checked = true; }
+                    exportModal.querySelectorAll('.rbfw_ol_export_fmt').forEach(function (c) {
+                        c.classList.toggle('is-active', c === fmt);
+                    });
+                    return;
+                }
+                // Trigger the download.
+                if (e.target.closest('.rbfw_ol_export_do')) {
+                    e.preventDefault();
+                    doExport();
+                }
+            });
+
+            // Keep card highlight in sync if the radio itself receives focus/change.
+            exportModal.querySelectorAll('input[name="rbfw_ol_export_format"]').forEach(function (r) {
+                r.addEventListener('change', function () {
+                    exportModal.querySelectorAll('.rbfw_ol_export_fmt').forEach(function (c) {
+                        c.classList.toggle('is-active', c.contains(r) && r.checked);
+                    });
+                });
+            });
+
+            function doExport() {
+                if (typeof rbfw_ajax_admin === 'undefined' || !rbfw_ajax_admin.admin_post_url) { return; }
+                var fmtEl = exportModal.querySelector('input[name="rbfw_ol_export_format"]:checked');
+                var params = {
+                    action: 'rbfw_export_orders',
+                    format: fmtEl ? fmtEl.value : 'csv',
+                    item_id: itemSel ? itemSel.value : '0',
+                    status: statusSelE ? statusSelE.value : '',
+                    from_month: fromMonth ? fromMonth.value : '',
+                    to_month: toMonth ? toMonth.value : '',
+                    _wpnonce: rbfw_ajax_admin.nonce_export_orders || ''
+                };
+                var qs = Object.keys(params).map(function (k) {
+                    return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+                }).join('&');
+
+                // Navigate to the download endpoint. The server streams a file
+                // (CSV/PDF) with a Content-Disposition: attachment header, so the
+                // current admin page is not replaced.
+                window.location.href = rbfw_ajax_admin.admin_post_url + '?' + qs;
+                closeExport();
+            }
+        })();
+
         render();
     });
 })();
