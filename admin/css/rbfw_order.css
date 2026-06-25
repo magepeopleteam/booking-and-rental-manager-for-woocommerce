@@ -622,3 +622,96 @@ span.flatpickr-weekday { color: #8896B0; font-weight: 700; font-size: 11px; }
 .rbfw_ol_edit_modal .flatpickr-wrapper { display: block; width: 100%; }
 .rbfw_ol_edit_modal .flatpickr-calendar.static,
 .rbfw_ol_edit_modal .flatpickr-calendar.static.open { z-index: 100070; }
+
+/* =========================================================================
+   Export (CSV / PDF) — header button + modal
+   ========================================================================= */
+.rbfw_ol_header_actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.rbfw_ol .rbfw_ol_export_btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    padding: 10px 18px; border-radius: var(--rbfw-radius-sm); border: 1px solid var(--rbfw-accent);
+    background: linear-gradient(90deg, var(--rbfw-accent) 0%, var(--rbfw-purple) 100%);
+    color: #fff; transition: filter .15s, box-shadow .15s, transform .05s;
+    box-shadow: 0 2px 6px rgba(79,110,247,.28);
+}
+.rbfw_ol .rbfw_ol_export_btn:hover { filter: brightness(1.05); box-shadow: 0 4px 12px rgba(79,110,247,.36); }
+.rbfw_ol .rbfw_ol_export_btn:active { transform: translateY(1px); }
+.rbfw_ol .rbfw_ol_export_btn svg.rbfw_inv_ic { width: 17px; height: 17px; }
+
+/* Export modal */
+.rbfw_ol_export_box {
+    max-width: 480px;
+    max-height: calc(100vh - 40px);
+    display: flex; flex-direction: column;
+}
+.rbfw_ol_export_box .rbfw_ol_status_modal_head,
+.rbfw_ol_export_box .rbfw_ol_status_modal_foot { flex: 0 0 auto; }
+.rbfw_ol_export_body { padding: 20px 18px 10px; overflow-y: auto; flex: 1 1 auto; }
+.rbfw_ol_export_label {
+    display: block; font-size: 12px; font-weight: 700; color: var(--rbfw-text-2);
+    margin: 0 0 8px; text-transform: uppercase; letter-spacing: .4px;
+}
+.rbfw_ol_export_label:not(:first-child) { margin-top: 18px; }
+.rbfw_ol_export_hint { text-transform: none; letter-spacing: 0; font-weight: 600; color: var(--rbfw-text-3); font-size: 11px; }
+
+/* Format cards */
+.rbfw_ol_export_formats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rbfw_ol_export_fmt {
+    display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;
+    padding: 12px; border: 1.5px solid var(--rbfw-border); border-radius: var(--rbfw-radius-sm);
+    background: var(--rbfw-surface); transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.rbfw_ol_export_fmt:hover { border-color: #C7D0E8; }
+.rbfw_ol_export_fmt.is-active { border-color: var(--rbfw-accent); background: var(--rbfw-accent-lt); box-shadow: 0 0 0 3px rgba(79,110,247,.1); }
+.rbfw_ol_export_fmt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.rbfw_ol_export_fmt_ic {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 36px; height: 36px; border-radius: 9px; background: var(--rbfw-bg); color: var(--rbfw-accent);
+}
+.rbfw_ol_export_fmt.is-active .rbfw_ol_export_fmt_ic { background: #fff; }
+.rbfw_ol_export_fmt_ic svg.rbfw_inv_ic { width: 20px; height: 20px; }
+.rbfw_ol_export_fmt_txt { display: flex; flex-direction: column; gap: 2px; line-height: 1.2; }
+.rbfw_ol_export_fmt_title { font-size: 14px; font-weight: 700; color: var(--rbfw-text-1); }
+.rbfw_ol_export_fmt_sub { font-size: 10.5px; color: var(--rbfw-text-3); }
+
+/* Selects + month inputs reuse the status-select look */
+.rbfw_ol_status_modal .rbfw_ol_export_select {
+    width: 100%; height: 42px; padding: 0 36px 0 12px; margin: 0;
+    border: 1px solid var(--rbfw-border); border-radius: var(--rbfw-radius-sm);
+    background-color: var(--rbfw-surface); color: var(--rbfw-text-1); font-size: 14px; font-weight: 600;
+    box-shadow: none; outline: none; line-height: normal; transition: border-color .15s, box-shadow .15s;
+    -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238896B0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center; background-size: 14px 14px; cursor: pointer;
+}
+.rbfw_ol_status_modal .rbfw_ol_export_select:focus { border-color: var(--rbfw-accent); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
+
+.rbfw_ol_export_months { display: flex; align-items: center; gap: 10px; }
+.rbfw_ol_status_modal .rbfw_ol_export_month {
+    flex: 1; min-width: 0; height: 42px; padding: 0 12px; margin: 0;
+    border: 1px solid var(--rbfw-border); border-radius: var(--rbfw-radius-sm);
+    background-color: var(--rbfw-surface); color: var(--rbfw-text-1);
+    font-size: 14px; font-weight: 600; font-family: inherit; outline: none; box-shadow: none;
+    transition: border-color .15s, box-shadow .15s;
+}
+.rbfw_ol_status_modal .rbfw_ol_export_month:focus { border-color: var(--rbfw-accent); box-shadow: 0 0 0 3px rgba(79,110,247,.12); }
+.rbfw_ol_export_month_sep { color: var(--rbfw-text-3); font-weight: 700; }
+.rbfw_ol_export_note { margin: 8px 0 0; font-size: 11.5px; color: var(--rbfw-text-3); }
+
+/* Download button */
+.rbfw_ol_export_do {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--rbfw-accent); border: 1px solid var(--rbfw-accent); color: #fff; min-width: 140px; justify-content: center;
+}
+.rbfw_ol_export_do:hover { background: #3B5BE0; border-color: #3B5BE0; }
+.rbfw_ol_export_do svg.rbfw_inv_ic { width: 16px; height: 16px; }
+
+@media (max-width: 600px) {
+    .rbfw_ol_header_actions { margin-left: 0; width: 100%; }
+    .rbfw_ol .rbfw_ol_export_btn { width: 100%; justify-content: center; }
+    .rbfw_ol_export_modal.rbfw_ol_status_modal { padding: 12px; }
+    .rbfw_ol_export_box { max-height: calc(100vh - 24px); }
+    .rbfw_ol_export_formats { grid-template-columns: 1fr; }
+    .rbfw_ol_export_months { flex-wrap: nowrap; }
+}

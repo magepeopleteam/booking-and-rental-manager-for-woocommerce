@@ -736,15 +736,21 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
                 $variation_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true );
                 $variation_info = [];
-                if ( ! empty( $variation_data ) ) {
+                if ( ! empty( $variation_data ) && is_array( $variation_data ) ) {
                     $i = 0;
                     foreach ( $variation_data as $level_one_arr ) {
-                        $selected_field_value = ! empty( $sd_input_data_sabitized[ $level_one_arr['field_id'] ] ) ? $sd_input_data_sabitized[ $level_one_arr['field_id'] ] : [];
-                        $level_two_arr        = $level_one_arr['value'];
-                        foreach ( $level_two_arr as $level_two_arr_value ) {
-                            if ( $selected_field_value == $level_two_arr_value['name'] ) {
-                                $field_label                         = $level_one_arr['field_label'];
-                                $field_id                            = $level_one_arr['field_id'];
+                        // Skip incomplete/legacy variation rows (missing id or values)
+                        // so they cannot raise "Undefined array key" notices here.
+                        if ( ! is_array( $level_one_arr ) || empty( $level_one_arr['field_id'] ) || empty( $level_one_arr['value'] ) || ! is_array( $level_one_arr['value'] ) ) {
+                            $i ++;
+                            continue;
+                        }
+                        $field_id             = $level_one_arr['field_id'];
+                        $field_label          = isset( $level_one_arr['field_label'] ) ? $level_one_arr['field_label'] : '';
+                        $selected_field_value = ! empty( $sd_input_data_sabitized[ $field_id ] ) ? $sd_input_data_sabitized[ $field_id ] : [];
+                        foreach ( $level_one_arr['value'] as $level_two_arr_value ) {
+                            $level_two_name = isset( $level_two_arr_value['name'] ) ? $level_two_arr_value['name'] : '';
+                            if ( $selected_field_value == $level_two_name ) {
                                 $variation_info[ $i ]['field_id']    = $field_id;
                                 $variation_info[ $i ]['field_label'] = $field_label;
                                 $variation_info[ $i ]['field_value'] = $selected_field_value;
@@ -1635,8 +1641,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $variation_content .= '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                     foreach ( $variation_info as $key => $value ) {
                         $variation_content .= '<tr>';
-                        $variation_content .= '<td style="border:1px solid #f5f5f5;"><strong>' . esc_html( $value['field_label'] ) . '</strong></td>';
-                        $variation_content .= '<td style="border:1px solid #f5f5f5;">' . esc_html( $value['field_value'] ) . '</td>';
+                        $variation_content .= '<td style="border:1px solid #f5f5f5;"><strong>' . esc_html( $value['field_label'] ?? '' ) . '</strong></td>';
+                        $variation_content .= '<td style="border:1px solid #f5f5f5;">' . esc_html( $value['field_value'] ?? '' ) . '</td>';
                         $variation_content .= '</tr>';
                     }
                     $variation_content .= '</table>';

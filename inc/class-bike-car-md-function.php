@@ -424,9 +424,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     $c = 0;
                     foreach ($variation_info as $key => $value):
 
-                        $main_array[0]['rbfw_variation_info'][$c]['field_id'] = $value['field_id'];
-                        $main_array[0]['rbfw_variation_info'][$c]['field_label'] = $value['field_label'];
-                        $main_array[0]['rbfw_variation_info'][$c]['field_value'] = $value['field_value'];
+                        $main_array[0]['rbfw_variation_info'][$c]['field_id'] = $value['field_id'] ?? '';
+                        $main_array[0]['rbfw_variation_info'][$c]['field_label'] = $value['field_label'] ?? '';
+                        $main_array[0]['rbfw_variation_info'][$c]['field_value'] = $value['field_value'] ?? '';
                         $c++;
                     endforeach;
                 }

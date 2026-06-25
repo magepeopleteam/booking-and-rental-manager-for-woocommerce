@@ -142,6 +142,14 @@
                                 echo esc_html( sprintf( _n( '%s Order', '%s Orders', $total_orders, 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( $total_orders ) ) );
                             ?></span>
                         </div>
+                        <?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) { ?>
+                        <div class="rbfw_ol_header_actions">
+                            <button type="button" id="rbfw_ol_export_btn" class="rbfw_ol_export_btn">
+                                <?php echo rbfw_inv_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                <span><?php esc_html_e( 'Export', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            </button>
+                        </div>
+                        <?php } ?>
                     </div>
                     <hr class="wp-header-end">
 
@@ -388,6 +396,74 @@
                                 <div class="rbfw_ol_status_modal_foot">
                                     <button type="button" class="rbfw_ol_status_cancel rbfw_ol_edit_cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                     <button type="button" class="rbfw_ol_edit_save"><?php esc_html_e( 'Save Changes', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Export modal -->
+                        <div id="rbfw_ol_export_modal" class="rbfw_ol_status_modal rbfw_ol_export_modal" style="display:none;" aria-hidden="true">
+                            <div class="rbfw_ol_status_modal_overlay"></div>
+                            <div class="rbfw_ol_status_modal_box rbfw_ol_export_box" role="dialog" aria-modal="true" aria-labelledby="rbfw_ol_export_modal_title">
+                                <div class="rbfw_ol_status_modal_head">
+                                    <span class="rbfw_ol_status_modal_ic"><?php echo rbfw_inv_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                    <h2 id="rbfw_ol_export_modal_title"><?php esc_html_e( 'Export Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                                    <button type="button" class="rbfw_ol_status_modal_close rbfw_ol_export_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></button>
+                                </div>
+                                <div class="rbfw_ol_status_modal_body rbfw_ol_export_body">
+                                    <label class="rbfw_ol_export_label"><?php esc_html_e( 'Export format', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <div class="rbfw_ol_export_formats">
+                                        <label class="rbfw_ol_export_fmt is-active">
+                                            <input type="radio" name="rbfw_ol_export_format" value="csv" checked>
+                                            <span class="rbfw_ol_export_fmt_ic"><?php echo rbfw_inv_icon( 'file_csv' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                            <span class="rbfw_ol_export_fmt_txt">
+                                                <span class="rbfw_ol_export_fmt_title"><?php esc_html_e( 'CSV', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                <span class="rbfw_ol_export_fmt_sub"><?php esc_html_e( 'Spreadsheet (Excel, Sheets)', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                            </span>
+                                        </label>
+                                        <label class="rbfw_ol_export_fmt">
+                                            <input type="radio" name="rbfw_ol_export_format" value="pdf">
+                                            <span class="rbfw_ol_export_fmt_ic"><?php echo rbfw_inv_icon( 'file_pdf' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                            <span class="rbfw_ol_export_fmt_txt">
+                                                <span class="rbfw_ol_export_fmt_title"><?php esc_html_e( 'PDF', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                <span class="rbfw_ol_export_fmt_sub"><?php esc_html_e( 'Printable document', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <label class="rbfw_ol_export_label" for="rbfw_ol_export_item"><?php esc_html_e( 'Item', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <select id="rbfw_ol_export_item" class="rbfw_ol_export_select">
+                                        <option value="0"><?php esc_html_e( 'All Items', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                        <?php
+                                        $rbfw_export_items = get_posts( array( 'post_type' => 'rbfw_item', 'numberposts' => -1, 'orderby' => 'title', 'order' => 'ASC', 'post_status' => 'publish' ) );
+                                        foreach ( $rbfw_export_items as $rbfw_export_item ) : ?>
+                                            <option value="<?php echo esc_attr( $rbfw_export_item->ID ); ?>"><?php echo esc_html( get_the_title( $rbfw_export_item->ID ) ); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <label class="rbfw_ol_export_label" for="rbfw_ol_export_status"><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <select id="rbfw_ol_export_status" class="rbfw_ol_export_select">
+                                        <option value=""><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                        <?php if ( function_exists( 'wc_get_order_statuses' ) ) :
+                                            foreach ( wc_get_order_statuses() as $rbfw_es_key => $rbfw_es_label ) : ?>
+                                                <option value="<?php echo esc_attr( str_replace( 'wc-', '', $rbfw_es_key ) ); ?>"><?php echo esc_html( $rbfw_es_label ); ?></option>
+                                            <?php endforeach;
+                                        endif; ?>
+                                    </select>
+
+                                    <label class="rbfw_ol_export_label"><?php esc_html_e( 'Month range', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_ol_export_hint">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
+                                    <div class="rbfw_ol_export_months">
+                                        <input type="month" id="rbfw_ol_export_from" class="rbfw_ol_export_month" aria-label="<?php esc_attr_e( 'From month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                        <span class="rbfw_ol_export_month_sep">&ndash;</span>
+                                        <input type="month" id="rbfw_ol_export_to" class="rbfw_ol_export_month" aria-label="<?php esc_attr_e( 'To month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                    </div>
+                                    <p class="rbfw_ol_export_note"><?php esc_html_e( 'Filters by booking start date. Leave blank to export all dates.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                                </div>
+                                <div class="rbfw_ol_status_modal_foot">
+                                    <button type="button" class="rbfw_ol_status_cancel rbfw_ol_export_cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <button type="button" class="rbfw_ol_export_do">
+                                        <?php echo rbfw_inv_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                        <span><?php esc_html_e( 'Download', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </button>
                                 </div>
                             </div>
                         </div>

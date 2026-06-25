@@ -646,7 +646,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			$rbfw_variations_data = [];
 			if ( isset( $_POST['rbfw_variations_data'] ) && is_array( $_POST['rbfw_variations_data'] ) ) {
-				$rbfw_variations_data = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) );
+				$rbfw_variations_data = rbfw_clean_variations_data( RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) ) );
 			}
 			update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
 

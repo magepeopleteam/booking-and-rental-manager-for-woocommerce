@@ -326,7 +326,7 @@
 					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_stock_quantity'] ) ) : '';
 					$stock_manage_on_return_date = isset( $_POST['stock_manage_on_return_date'] ) ? sanitize_text_field( wp_unslash( $_POST['stock_manage_on_return_date'] ) ) : '';
 					$rbfw_enable_md_type_item_qty = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_md_type_item_qty'] ) ) : 'no';
-					$rbfw_variations_data = isset( $_POST['rbfw_variations_data'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_variations_data'] ) : [];
+					$rbfw_variations_data = isset( $_POST['rbfw_variations_data'] ) ? rbfw_clean_variations_data( RBFW_Function::data_sanitize( $_POST['rbfw_variations_data'] ) ) : [];
 
                     $rbfw_item_stock_quantity = ($rbfw_item_stock_quantity)?$rbfw_item_stock_quantity:1000;
 

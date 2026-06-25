@@ -1220,8 +1220,8 @@ function fetch_order_details_callback() {
                             foreach ( $variation_info as $key => $value ) {
                                 ?>
                                 <tr>
-                                    <td><strong><?php echo esc_html( $value['field_label'] ); ?></strong></td>
-                                    <td><?php echo esc_html( $value['field_value'] ); ?></td>
+                                    <td><strong><?php echo esc_html( $value['field_label'] ?? '' ); ?></strong></td>
+                                    <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
                                 </tr>
                             <?php }
                         } ?>
@@ -1789,8 +1789,8 @@ function rbfw_order_meta_box_callback() {
                         foreach ( $variation_info as $key => $value ) {
                             ?>
                             <tr>
-                                <td><strong><?php echo esc_html( $value['field_label'] ); ?></strong></td>
-                                <td><?php echo esc_html( $value['field_value'] ); ?></td>
+                                <td><strong><?php echo esc_html( $value['field_label'] ?? '' ); ?></strong></td>
+                                <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
                             </tr>
                         <?php }
                     } ?>
