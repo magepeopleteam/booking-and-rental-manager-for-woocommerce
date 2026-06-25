@@ -433,7 +433,7 @@
             deleteCtx.row = deleteCtx.postId = null;
         }
 
-        function applyStats(stats, headerText) {
+        function applyStats(stats, headerText, revenue) {
             if (stats) {
                 Object.keys(stats).forEach(function (key) {
                     var card = root.querySelector('[data-stat="' + key + '"]');
@@ -445,6 +445,12 @@
                         amt.innerHTML = stats[key].amount;
                         amt.className = 'rbfw_ol_stat_amt ' + (stats[key].pos ? 'pos' : 'zero');
                     }
+                });
+            }
+            if (revenue) {
+                Object.keys(revenue).forEach(function (rk) {
+                    var el = root.querySelector('[data-rev="' + rk + '"]');
+                    if (el) { el.innerHTML = revenue[rk]; }
                 });
             }
             var headBadge = root.querySelector('.rbfw_ol_badge_count');
@@ -479,7 +485,7 @@
                     if (deleteCtx.row) { deleteCtx.row.parentNode.removeChild(deleteCtx.row); }
                     var detail = document.getElementById('order-details-' + pid);
                     if (detail) { detail.parentNode.removeChild(detail); }
-                    applyStats(res.data.stats, res.data.header);
+                    applyStats(res.data.stats, res.data.header, res.data.revenue);
                     closeDeleteModal();
                     render();
                 })

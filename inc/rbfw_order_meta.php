@@ -104,16 +104,24 @@ function rbfw_update_order_status_callback() {
  */
 function rbfw_calculate_order_list_stats() {
     $stats = array(
-        'total_orders'     => 0, 'total_amount'     => 0,
-        'completed_orders' => 0, 'completed_amount' => 0,
-        'cancelled_orders' => 0, 'cancelled_amount' => 0,
-        'pending_orders'   => 0, 'pending_amount'   => 0,
-        'refunded_orders'  => 0, 'refunded_amount'  => 0,
+        'total_orders'      => 0, 'total_amount'      => 0,
+        'completed_orders'  => 0, 'completed_amount'  => 0,
+        'cancelled_orders'  => 0, 'cancelled_amount'  => 0,
+        'pending_orders'    => 0, 'pending_amount'    => 0,
+        'refunded_orders'   => 0, 'refunded_amount'   => 0,
+        // Revenue summary ( "earned" money = completed + processing ).
+        'processing_orders' => 0, 'processing_amount' => 0,
+        'paid_orders'       => 0,
+        'net_revenue'       => 0,
+        'this_month_revenue'=> 0,
+        'avg_order_value'   => 0,
     );
 
     if ( ! function_exists( 'wc_get_order' ) ) {
         return $stats;
     }
+
+    $this_ym = function_exists( 'current_time' ) ? current_time( 'Y-m' ) : gmdate( 'Y-m' );
 
     $query = new WP_Query( array(
         'post_type'      => 'rbfw_order',
@@ -137,7 +145,9 @@ function rbfw_calculate_order_list_stats() {
         $stats['total_orders']++;
         $stats['total_amount'] += $order_total;
 
-        switch ( str_replace( 'wc-', '', $status ) ) {
+        $norm = str_replace( 'wc-', '', $status );
+
+        switch ( $norm ) {
             case 'completed':
                 $stats['completed_orders']++;
                 $stats['completed_amount'] += $order_total;
@@ -159,8 +169,24 @@ function rbfw_calculate_order_list_stats() {
                 $stats['pending_amount'] += $order_total;
                 break;
         }
+
+        // Revenue: count completed + processing as earned/collected money.
+        if ( 'completed' === $norm || 'processing' === $norm ) {
+            $stats['net_revenue'] += $order_total;
+            $stats['paid_orders']++;
+            if ( 'processing' === $norm ) {
+                $stats['processing_orders']++;
+                $stats['processing_amount'] += $order_total;
+            }
+            $created = $order->get_date_created();
+            if ( $created && $created->date( 'Y-m' ) === $this_ym ) {
+                $stats['this_month_revenue'] += $order_total;
+            }
+        }
     }
     wp_reset_postdata();
+
+    $stats['avg_order_value'] = $stats['paid_orders'] > 0 ? ( $stats['net_revenue'] / $stats['paid_orders'] ) : 0;
 
     return $stats;
 }
@@ -219,6 +245,18 @@ function rbfw_delete_order_callback() {
             'completed' => $fmt( $stats['completed_orders'], $stats['completed_amount'] ),
             'pending'   => $fmt( $stats['pending_orders'], $stats['pending_amount'] ),
             'refunded'  => $fmt( $stats['refunded_orders'], $stats['refunded_amount'] ),
+        ),
+        'revenue' => array(
+            'net'        => wc_price( $stats['net_revenue'] ),
+            'completed'  => wc_price( $stats['completed_amount'] ),
+            'processing' => wc_price( $stats['processing_amount'] ),
+            'month'      => wc_price( $stats['this_month_revenue'] ),
+            'avg'        => wc_price( $stats['avg_order_value'] ),
+            'paid_label' => esc_html( sprintf(
+                /* translators: %s: number of paid (completed + processing) orders. */
+                _n( 'From %s paid order', 'From %s paid orders', $stats['paid_orders'], 'booking-and-rental-manager-for-woocommerce' ),
+                number_format_i18n( $stats['paid_orders'] )
+            ) ),
         ),
     ) );
 }

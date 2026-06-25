@@ -17,6 +17,9 @@
 				add_action( 'add_meta_boxes', array( $this, 'add_meta_box_func' ) );
 				add_action( 'admin_init', array( $this, 'admin_init' ) );
 				add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+				// Hide the Pro "Reports" submenu — its data now lives in the Order List.
+				// Runs late ( priority 999 ) so it removes the entry after Pro registers it.
+				add_action( 'admin_menu', array( $this, 'rbfw_remove_reports_submenu' ), 999 );
 				add_action( 'admin_enqueue_scripts', array( $this, 'rbfw_admin_enqueue_scripts' ) );
 				/* WooCommerce Action and Filter */
 				add_filter( 'woocommerce_order_status_changed', array( $this, 'rbfw_wc_status_update' ), 10, 4 );
@@ -44,6 +47,19 @@
 				// End PRO plugin is activated
 			}
 
+			/**
+			 * Remove the Pro "Reports" submenu.
+			 *
+			 * The Reports (attendee/customer) dashboard has been superseded by the
+			 * Order List page — booking details, status management, filtering,
+			 * export and the revenue summary all live there now — so the duplicate
+			 * submenu is hidden. Runs at admin_menu priority 999, after the Pro
+			 * plugin has registered it on rbfw_admin_menu_after_inventory.
+			 */
+			public function rbfw_remove_reports_submenu() {
+				remove_submenu_page( 'edit.php?post_type=rbfw_item', 'reports' );
+			}
+
 			public function rbfw_admin_enqueue_scripts( $hook ) {
 				// The Order List page is fully styled by the modern admin/css/rbfw_order.css
 				// (scoped under .rbfw_ol). The legacy rbfw-order-list-modern.css was retired:
@@ -68,69 +84,26 @@
 					'post_status'    => array('publish', 'private', 'draft', 'pending', 'future', 'inherit')
 				);
 				$query                = new WP_Query( $args );
-				
-				// Calculate stats
-				$total_orders = 0;
-				$completed_orders = 0;
-				$cancelled_orders = 0;
-				$pending_orders = 0;
-				$refunded_orders = 0;
-				$total_amount = 0;
-				$completed_amount = 0;
-				$cancelled_amount = 0;
-				$pending_amount = 0;
-				$refunded_amount = 0;
-				
-				if ( $query->have_posts() ) {
-					while ( $query->have_posts() ) {
-						$query->the_post();
-						global $post;
-						$post_id = $post->ID;
-						$wc_order_id = get_post_meta( $post_id, 'rbfw_order_id', true );
-						$order = wc_get_order($wc_order_id);
-						
-						if ($order) {
-							$status = $order->get_status();
-							
-							// Skip orders with trash status
-							if ($status === 'trash' || $status === 'wc-trash') {
-								continue;
-							}
-							
-							$total_orders++;
-							$order_total = $order->get_total();
-							$total_amount += $order_total;
-							
-							// Normalize status by removing 'wc-' prefix if present
-							$normalized_status = str_replace('wc-', '', $status);
-							
-							// Count orders and amounts by normalized status
-							switch($normalized_status) {
-								case 'completed':
-									$completed_orders++;
-									$completed_amount += $order_total;
-									break;
-								case 'cancelled':
-								case 'canceled':
-								case 'failed':
-									$cancelled_orders++;
-									$cancelled_amount += $order_total;
-									break;
-								case 'refunded':
-									$refunded_orders++;
-									$refunded_amount += $order_total;
-									break;
-								case 'pending':
-								case 'on-hold':
-								case 'processing':
-									$pending_orders++;
-									$pending_amount += $order_total;
-									break;
-							}
-						}
-					}
-					wp_reset_postdata();
-				}
+
+				// Dashboard stats ( status counts/amounts + revenue summary ) come from
+				// the shared calculator so the page load and the post-delete AJAX update
+				// stay in sync.
+				$stats            = function_exists( 'rbfw_calculate_order_list_stats' ) ? rbfw_calculate_order_list_stats() : array();
+				$total_orders     = isset( $stats['total_orders'] ) ? $stats['total_orders'] : 0;
+				$total_amount     = isset( $stats['total_amount'] ) ? $stats['total_amount'] : 0;
+				$completed_orders = isset( $stats['completed_orders'] ) ? $stats['completed_orders'] : 0;
+				$completed_amount = isset( $stats['completed_amount'] ) ? $stats['completed_amount'] : 0;
+				$cancelled_orders = isset( $stats['cancelled_orders'] ) ? $stats['cancelled_orders'] : 0;
+				$cancelled_amount = isset( $stats['cancelled_amount'] ) ? $stats['cancelled_amount'] : 0;
+				$pending_orders   = isset( $stats['pending_orders'] ) ? $stats['pending_orders'] : 0;
+				$pending_amount   = isset( $stats['pending_amount'] ) ? $stats['pending_amount'] : 0;
+				$refunded_orders  = isset( $stats['refunded_orders'] ) ? $stats['refunded_orders'] : 0;
+				$refunded_amount  = isset( $stats['refunded_amount'] ) ? $stats['refunded_amount'] : 0;
+				$processing_amount  = isset( $stats['processing_amount'] ) ? $stats['processing_amount'] : 0;
+				$net_revenue        = isset( $stats['net_revenue'] ) ? $stats['net_revenue'] : 0;
+				$this_month_revenue = isset( $stats['this_month_revenue'] ) ? $stats['this_month_revenue'] : 0;
+				$avg_order_value    = isset( $stats['avg_order_value'] ) ? $stats['avg_order_value'] : 0;
+				$paid_orders        = isset( $stats['paid_orders'] ) ? $stats['paid_orders'] : 0;
 				?>
                 <div class="rbfw_ol rental-order-list-dashboard wrap">
                     <div class="rbfw_ol_header">
@@ -152,6 +125,41 @@
                         <?php } ?>
                     </div>
                     <hr class="wp-header-end">
+
+                    <!-- Revenue summary card -->
+                    <div class="rbfw_ol_revenue">
+                        <div class="rbfw_ol_rev_main">
+                            <div class="rbfw_ol_rev_ic"><?php echo rbfw_inv_icon( 'tag' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_rev_main_txt">
+                                <div class="rbfw_ol_rev_label"><?php esc_html_e( 'Net Revenue', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_rev_value" data-rev="net"><?php echo wp_kses_post( wc_price( $net_revenue ) ); ?></div>
+                                <div class="rbfw_ol_rev_sub" data-rev="paid_label">
+                                    <?php
+                                    /* translators: %s: number of paid (completed + processing) orders. */
+                                    echo esc_html( sprintf( _n( 'From %s paid order', 'From %s paid orders', $paid_orders, 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( $paid_orders ) ) );
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rbfw_ol_rev_breakdown">
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Completed', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="completed"><?php echo wp_kses_post( wc_price( $completed_amount ) ); ?></span>
+                            </div>
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'clock' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Processing', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="processing"><?php echo wp_kses_post( wc_price( $processing_amount ) ); ?></span>
+                            </div>
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'calendar' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'This Month', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="month"><?php echo wp_kses_post( wc_price( $this_month_revenue ) ); ?></span>
+                            </div>
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'calculator' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Avg. Order', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="avg"><?php echo wp_kses_post( wc_price( $avg_order_value ) ); ?></span>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Stat cards -->
                     <div class="rbfw_ol_stats">
