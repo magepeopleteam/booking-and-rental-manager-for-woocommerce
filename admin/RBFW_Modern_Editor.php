@@ -635,8 +635,13 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
 
 			/* ── Inventory ── */
-			$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? absint( $_POST['rbfw_item_stock_quantity'] ) : 0;
-			update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity ?: 1000 );
+			// Store the entered stock as-is (blank stays blank so it is consistently
+			// treated as a single unit, like the classic editor). Previously a blank
+			// value was silently saved as 1000, which made "one vehicle" items
+			// effectively unlimited and allowed double-booking.
+			$rbfw_item_stock_raw      = isset( $_POST['rbfw_item_stock_quantity'] ) ? trim( wp_unslash( $_POST['rbfw_item_stock_quantity'] ) ) : '';
+			$rbfw_item_stock_quantity = ( '' === $rbfw_item_stock_raw ) ? '' : absint( $rbfw_item_stock_raw );
+			update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
 			$stock_manage_on_return_date = ( isset( $_POST['stock_manage_on_return_date'] ) && $_POST['stock_manage_on_return_date'] === 'yes' ) ? 'yes' : 'no';
 			update_post_meta( $post_id, 'stock_manage_on_return_date', $stock_manage_on_return_date );
