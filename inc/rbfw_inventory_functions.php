@@ -1674,3 +1674,517 @@ function rbfw_get_stock_details(){
             wp_die();
         }
 
+/* =====================================================================
+ * Server-side availability validation (prevents double-booking).
+ *
+ * The pricing/availability engine above is only consumed by the AJAX
+ * price-calculation endpoints to *draw* the booking form; nothing on the
+ * server re-checked availability when an item was added to the cart or when
+ * the order was placed, so an overlapping booking could still be completed
+ * (race, stale cart, bypassed JS, or an item with no stock configured).
+ *
+ * The helpers below add the missing server-side gate. They reuse the exact
+ * same interval-overlap + buffer + return-date model as
+ * rbfw_get_multiple_date_available_qty(), so a booking the form shows as
+ * available stays bookable — only genuine over-capacity overlaps are blocked.
+ * ===================================================================== */
+
+/**
+ * Order statuses that occupy a rental slot for *server-side validation*.
+ *
+ * Starts from the admin-configured managed statuses
+ * (rbfw_basic_gen_settings → inventory_managed_order_status, default
+ * processing + completed), always includes picked, and — per the configured
+ * overbooking policy — also pending + on-hold, so an unpaid reservation still
+ * holds its dates during checkout. Honors "inventory based on return".
+ *
+ * @return string[] Status slugs (without the wc- prefix).
+ */
+function rbfw_get_blocking_order_statuses() {
+	$managed = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+	$managed = is_array( $managed ) ? array_values( $managed ) : array( 'processing', 'completed' );
+
+	$blocking = array_merge( $managed, array( 'processing', 'completed', 'picked', 'pending', 'on-hold' ) );
+
+	if ( rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' ) === 'yes' ) {
+		$blocking[] = 'returned';
+	}
+
+	/**
+	 * Filter the order statuses that reserve a rental slot during validation.
+	 *
+	 * @param string[] $blocking Status slugs.
+	 */
+	return apply_filters( 'rbfw_blocking_order_statuses', array_values( array_unique( $blocking ) ) );
+}
+
+/**
+ * Effective main stock for a rental item.
+ *
+ * An item with a blank/unset stock quantity is treated as a single unit (1),
+ * so a forgotten stock field can never silently allow double-booking. A value
+ * the admin explicitly set (including 0) is respected as-is.
+ *
+ * @param int $post_id rbfw_item id.
+ * @return int
+ */
+function rbfw_get_effective_item_stock( $post_id ) {
+	$raw = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+	if ( '' === $raw || null === $raw || false === $raw ) {
+		return 1;
+	}
+	return max( 0, (int) $raw );
+}
+
+/**
+ * Stock configured for a single variation value (e.g. "Red", "Large").
+ *
+ * @param int    $post_id rbfw_item id.
+ * @param string $value   Variation value name.
+ * @return int|null Quantity, or null when the value can't be resolved (caller fails open).
+ */
+function rbfw_get_variation_stock_for_value( $post_id, $value ) {
+	$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return null;
+	}
+	foreach ( $data as $row ) {
+		if ( empty( $row['value'] ) || ! is_array( $row['value'] ) ) {
+			continue;
+		}
+		foreach ( $row['value'] as $single ) {
+			if ( isset( $single['name'] ) && (string) $single['name'] === (string) $value ) {
+				return isset( $single['quantity'] ) ? max( 0, (int) $single['quantity'] ) : null;
+			}
+		}
+	}
+	return null;
+}
+
+/**
+ * Whether a stored inventory entry booked a given variation value.
+ *
+ * @param array  $inventory Single rbfw_inventory entry.
+ * @param string $value     Variation value name.
+ * @return bool
+ */
+function rbfw_inventory_entry_matches_variation( $inventory, $value ) {
+	$vinfo = isset( $inventory['rbfw_variation_info'] ) ? $inventory['rbfw_variation_info'] : array();
+	if ( empty( $vinfo ) || ! is_array( $vinfo ) ) {
+		return false;
+	}
+	foreach ( $vinfo as $r ) {
+		if ( is_array( $r ) && isset( $r['field_value'] ) && (string) $r['field_value'] === (string) $value ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Count units already booked (from existing orders) that overlap a datetime range.
+ *
+ * Mirrors the interval-overlap + buffer-time + return-date handling used by
+ * rbfw_get_multiple_date_available_qty(), but counts across the blocking status
+ * set and can be filtered to a single variation value or a rbfw_type_info key
+ * (room type / single-day type).
+ *
+ * @param int    $post_id            rbfw_item id.
+ * @param string $req_start_datetime Requested pickup (strtotime-parsable).
+ * @param string $req_end_datetime   Requested dropoff.
+ * @param array  $args {
+ *     @type string $variation_value  Only count bookings of this variation value.
+ *     @type string $type_key         Only count bookings of this rbfw_type_info key.
+ *     @type int    $exclude_order_id Skip this WC order id.
+ * }
+ * @return int Booked quantity overlapping the requested range.
+ */
+function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_end_datetime, $args = array() ) {
+	$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+	if ( empty( $inventory ) || ! is_array( $inventory ) ) {
+		return 0;
+	}
+
+	$variation_value  = isset( $args['variation_value'] ) ? (string) $args['variation_value'] : '';
+	$type_key         = isset( $args['type_key'] ) ? (string) $args['type_key'] : '';
+	$exclude_order_id = isset( $args['exclude_order_id'] ) ? (int) $args['exclude_order_id'] : 0;
+
+	$blocking          = rbfw_get_blocking_order_statuses();
+	$mepp_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
+
+	$stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
+	$stock_manage_on_return_date = $stock_manage_on_return_date ? $stock_manage_on_return_date : 'no';
+	$buffer_after                = (int) get_post_meta( $post_id, 'rbfw_buffer_time_after', true );
+
+	try {
+		$req_start = new DateTime( $req_start_datetime );
+		$req_end   = new DateTime( $req_end_datetime );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	$total_booked = 0;
+
+	foreach ( $inventory as $order_id => $entry ) {
+		if ( ! is_array( $entry ) ) {
+			continue;
+		}
+		if ( $exclude_order_id && (int) $order_id === $exclude_order_id ) {
+			continue;
+		}
+
+		$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+		if ( ! in_array( $status, $blocking, true ) ) {
+			continue;
+		}
+		if ( 'partially-paid' === $status && 'deposit' === $mepp_reduce_stock ) {
+			continue;
+		}
+
+		if ( '' !== $variation_value && ! rbfw_inventory_entry_matches_variation( $entry, $variation_value ) ) {
+			continue;
+		}
+
+		$inv_start_date = isset( $entry['rbfw_start_date_ymd'] ) ? $entry['rbfw_start_date_ymd'] : '';
+		$inv_end_date   = isset( $entry['rbfw_end_date_ymd'] ) ? $entry['rbfw_end_date_ymd'] : '';
+		$inv_start_time = isset( $entry['rbfw_start_time_24'] ) ? $entry['rbfw_start_time_24'] : '';
+		$inv_end_time   = isset( $entry['rbfw_end_time_24'] ) ? $entry['rbfw_end_time_24'] : '';
+
+		if ( empty( $inv_start_date ) || empty( $inv_end_date ) ) {
+			continue;
+		}
+		if ( false !== strpos( $inv_start_date . $inv_end_date . $inv_start_time . $inv_end_time, 'NaN' ) ) {
+			continue;
+		}
+
+		// Buffer / return-date end adjustment — identical to the display engine.
+		if ( $buffer_after ) {
+			try {
+				$dt = new DateTime( $inv_end_date . ' ' . $inv_end_time );
+				$dt->modify( '+' . $buffer_after . ' hours' );
+				$inv_end_date = $dt->format( 'Y-m-d' );
+				$inv_end_time = $dt->format( 'H:i' );
+			} catch ( Exception $e ) {
+				continue;
+			}
+		} elseif ( 'no' === $stock_manage_on_return_date ) {
+			try {
+				$dt = new DateTime( $inv_end_date );
+				$dt->modify( '-1 day' );
+				$inv_end_date = $dt->format( 'Y-m-d' );
+			} catch ( Exception $e ) {
+				continue;
+			}
+		}
+
+		try {
+			$inv_start = new DateTime( $inv_start_date . ' ' . $inv_start_time );
+			$inv_end   = new DateTime( $inv_end_date . ' ' . $inv_end_time );
+		} catch ( Exception $e ) {
+			continue;
+		}
+
+		if ( $inv_start <= $req_end && $req_start <= $inv_end ) {
+			if ( '' !== $type_key ) {
+				$type_info = isset( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) ? $entry['rbfw_type_info'] : array();
+				if ( isset( $type_info[ $type_key ] ) ) {
+					$total_booked += max( 0, (int) $type_info[ $type_key ] );
+				}
+			} else {
+				$qty = isset( $entry['rbfw_item_quantity'] ) ? (int) $entry['rbfw_item_quantity'] : 0;
+				$total_booked += max( 0, $qty );
+			}
+		}
+	}
+
+	return $total_booked;
+}
+
+/**
+ * Count units booked by OTHER cart lines of the same item that overlap a range.
+ *
+ * Lets checkout validation account for several cart lines competing for the
+ * same finite stock, in a date-aware way (non-overlapping lines don't compete).
+ *
+ * @param array  $sibling_lines     List of cart-item value arrays (excluding the current line).
+ * @param string $req_start_datetime Requested pickup.
+ * @param string $req_end_datetime   Requested dropoff.
+ * @param array  $args               'variation_value' / 'type_key' filters (see counter above).
+ * @return int
+ */
+function rbfw_count_overlapping_cart_qty( $sibling_lines, $req_start_datetime, $req_end_datetime, $args = array() ) {
+	if ( empty( $sibling_lines ) || ! is_array( $sibling_lines ) ) {
+		return 0;
+	}
+	$variation_value = isset( $args['variation_value'] ) ? (string) $args['variation_value'] : '';
+	$type_key        = isset( $args['type_key'] ) ? (string) $args['type_key'] : '';
+
+	try {
+		$req_start = new DateTime( $req_start_datetime );
+		$req_end   = new DateTime( $req_end_datetime );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	$used = 0;
+	foreach ( $sibling_lines as $line ) {
+		if ( ! is_array( $line ) ) {
+			continue;
+		}
+		$ls = ! empty( $line['rbfw_start_datetime'] ) ? $line['rbfw_start_datetime'] : '';
+		$le = ! empty( $line['rbfw_end_datetime'] ) ? $line['rbfw_end_datetime'] : '';
+		if ( empty( $ls ) || empty( $le ) ) {
+			continue;
+		}
+		try {
+			$lstart = new DateTime( $ls );
+			$lend   = new DateTime( $le );
+		} catch ( Exception $e ) {
+			continue;
+		}
+		if ( ! ( $lstart <= $req_end && $req_start <= $lend ) ) {
+			continue; // sibling does not overlap this request
+		}
+
+		if ( '' !== $variation_value ) {
+			$matches = false;
+			$vinfo   = isset( $line['rbfw_variation_info'] ) && is_array( $line['rbfw_variation_info'] ) ? $line['rbfw_variation_info'] : array();
+			foreach ( $vinfo as $r ) {
+				if ( is_array( $r ) && isset( $r['field_value'] ) && (string) $r['field_value'] === $variation_value ) {
+					$matches = true;
+					break;
+				}
+			}
+			if ( ! $matches ) {
+				continue;
+			}
+			$used += max( 1, isset( $line['rbfw_item_quantity'] ) ? (int) $line['rbfw_item_quantity'] : 1 );
+		} elseif ( '' !== $type_key ) {
+			$ti = isset( $line['rbfw_type_info'] ) && is_array( $line['rbfw_type_info'] ) ? $line['rbfw_type_info'] : array();
+			if ( isset( $ti[ $type_key ] ) ) {
+				$used += max( 0, (int) $ti[ $type_key ] );
+			}
+		} else {
+			$used += max( 1, isset( $line['rbfw_item_quantity'] ) ? (int) $line['rbfw_item_quantity'] : 1 );
+		}
+	}
+	return $used;
+}
+
+/**
+ * Evaluate availability for one rental request (cart line or add-to-cart POST).
+ *
+ * Returns a list of per-resource checks. Each check is:
+ *   array( 'ok' => bool, 'requested' => int, 'available' => int, 'label' => string )
+ * An empty list means "nothing to enforce" (fail-open) — e.g. dates missing or
+ * an unsupported configuration, so a valid booking is never wrongly blocked.
+ *
+ * @param int   $rbfw_id       rbfw_item id.
+ * @param array $values        Cart-item value array (rbfw_start_datetime, rbfw_item_quantity, …).
+ * @param array $sibling_lines Other cart lines competing for the same stock.
+ * @return array[]
+ */
+function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = array() ) {
+	$checks    = array();
+	$rent_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+
+	$start_dt = ! empty( $values['rbfw_start_datetime'] ) ? $values['rbfw_start_datetime'] : '';
+	$end_dt   = ! empty( $values['rbfw_end_datetime'] ) ? $values['rbfw_end_datetime'] : '';
+	if ( empty( $start_dt ) || empty( $end_dt ) ) {
+		return $checks; // can't evaluate -> fail open
+	}
+
+	$item_name = get_the_title( $rbfw_id );
+
+	/* ---- Resort: one check per booked room type ---- */
+	if ( 'resort' === $rent_type ) {
+		$room_info = isset( $values['rbfw_room_info'] ) && is_array( $values['rbfw_room_info'] ) ? $values['rbfw_room_info'] : array();
+		if ( empty( $room_info ) && isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ) {
+			$room_info = $values['rbfw_type_info'];
+		}
+		$room_data = get_post_meta( $rbfw_id, 'rbfw_resort_room_data', true );
+		$room_data = is_array( $room_data ) ? $room_data : array();
+		$stock_map = array();
+		foreach ( $room_data as $rd ) {
+			if ( isset( $rd['room_type'] ) ) {
+				$stock_map[ $rd['room_type'] ] = isset( $rd['rbfw_room_available_qty'] ) ? (int) $rd['rbfw_room_available_qty'] : 0;
+			}
+		}
+		foreach ( $room_info as $room_type => $req_qty ) {
+			$req_qty = (int) $req_qty;
+			if ( $req_qty < 1 || ! isset( $stock_map[ $room_type ] ) ) {
+				continue;
+			}
+			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'type_key' => $room_type ) );
+			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'type_key' => $room_type ) );
+			$available = $stock_map[ $room_type ] - $booked - $used;
+			$checks[]  = array(
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $room_type . ')',
+			);
+		}
+		return $checks;
+	}
+
+	/* ---- Multiple items: one check per chosen item ---- */
+	if ( 'multiple_items' === $rent_type ) {
+		$lines = isset( $values['multiple_items_info'] ) && is_array( $values['multiple_items_info'] ) ? $values['multiple_items_info'] : array();
+		foreach ( $lines as $li ) {
+			if ( ! is_array( $li ) || empty( $li['item_name'] ) ) {
+				continue;
+			}
+			$req_qty = isset( $li['item_qty'] ) ? (int) $li['item_qty'] : 0;
+			if ( $req_qty < 1 ) {
+				continue;
+			}
+			$stock     = isset( $li['available_qty'] ) ? (int) $li['available_qty'] : null;
+			if ( null === $stock ) {
+				continue; // unknown -> fail open
+			}
+			$booked    = rbfw_count_overlapping_multi_item_qty( $rbfw_id, $start_dt, $end_dt, $li['item_name'] );
+			$available = $stock - $booked;
+			$checks[]  = array(
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $li['item_name'] . ')',
+			);
+		}
+		return $checks;
+	}
+
+	/*
+	 * Main single-unit date-range types: bike_car_md / dress / equipment / others.
+	 * Single-day & appointment types use a different stock model
+	 * (rbfw_item_stock_quantity_timely / per-session / per-type capacity), so they
+	 * are intentionally left to their existing handling to avoid wrongly blocking
+	 * valid time-slot bookings.
+	 */
+	$supported_main_types = apply_filters(
+		'rbfw_availability_main_unit_types',
+		array( 'bike_car_md', 'dress', 'equipment', 'others' )
+	);
+	if ( ! in_array( $rent_type, $supported_main_types, true ) ) {
+		return $checks; // unsupported type -> fail open
+	}
+
+	$requested = isset( $values['rbfw_item_quantity'] ) ? (int) $values['rbfw_item_quantity'] : 1;
+	if ( $requested < 1 ) {
+		$requested = 1;
+	}
+
+	$variations_enabled = ( get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' );
+	$variation_values   = array();
+	if ( $variations_enabled ) {
+		$vinfo = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
+		foreach ( $vinfo as $r ) {
+			if ( is_array( $r ) && ! empty( $r['field_value'] ) ) {
+				$variation_values[] = (string) $r['field_value'];
+			}
+		}
+		// Variations on but the selection couldn't be resolved: fail open so a
+		// valid variation booking is never blocked by the plain single-unit path.
+		if ( empty( $variation_values ) ) {
+			return $checks;
+		}
+	}
+
+	if ( ! empty( $variation_values ) ) {
+		foreach ( $variation_values as $vv ) {
+			$stock = rbfw_get_variation_stock_for_value( $rbfw_id, $vv );
+			if ( null === $stock ) {
+				continue; // unknown variation stock -> fail open for this value
+			}
+			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
+			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
+			$available = $stock - $booked - $used;
+			$checks[]  = array(
+				'ok'        => ( $requested <= $available ),
+				'requested' => $requested,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $vv . ')',
+			);
+		}
+		return $checks;
+	}
+
+	// Plain single-unit stock (blank treated as 1).
+	$stock     = rbfw_get_effective_item_stock( $rbfw_id );
+	$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt );
+	$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt );
+	$available = $stock - $booked - $used;
+	$checks[]  = array(
+		'ok'        => ( $requested <= $available ),
+		'requested' => $requested,
+		'available' => max( 0, $available ),
+		'label'     => $item_name,
+	);
+
+	return $checks;
+}
+
+/**
+ * Count booked quantity of a single "multiple items" sub-item overlapping a range.
+ *
+ * Multiple-items inventory stores each chosen item under rbfw_service_info as
+ * { item_name, item_qty } against the booking's date list; this mirrors
+ * total_multi_items_quantity() but restricted to the blocking status set and a
+ * datetime overlap with the requested range.
+ *
+ * @param int    $post_id   rbfw_item id.
+ * @param string $start_dt  Requested pickup.
+ * @param string $end_dt    Requested dropoff.
+ * @param string $item_name Sub-item name.
+ * @return int
+ */
+function rbfw_count_overlapping_multi_item_qty( $post_id, $start_dt, $end_dt, $item_name ) {
+	$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+	if ( empty( $inventory ) || ! is_array( $inventory ) ) {
+		return 0;
+	}
+	$blocking = rbfw_get_blocking_order_statuses();
+
+	try {
+		$req_start = new DateTime( $start_dt );
+		$req_end   = new DateTime( $end_dt );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	$booked = 0;
+	foreach ( $inventory as $entry ) {
+		if ( ! is_array( $entry ) ) {
+			continue;
+		}
+		$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+		if ( ! in_array( $status, $blocking, true ) ) {
+			continue;
+		}
+		$is = isset( $entry['rbfw_start_date_ymd'] ) ? $entry['rbfw_start_date_ymd'] : '';
+		$ie = isset( $entry['rbfw_end_date_ymd'] ) ? $entry['rbfw_end_date_ymd'] : '';
+		$it = isset( $entry['rbfw_start_time_24'] ) ? $entry['rbfw_start_time_24'] : '';
+		$et = isset( $entry['rbfw_end_time_24'] ) ? $entry['rbfw_end_time_24'] : '';
+		if ( empty( $is ) || empty( $ie ) ) {
+			continue;
+		}
+		try {
+			$inv_start = new DateTime( $is . ' ' . $it );
+			$inv_end   = new DateTime( $ie . ' ' . $et );
+		} catch ( Exception $e ) {
+			continue;
+		}
+		if ( ! ( $inv_start <= $req_end && $req_start <= $inv_end ) ) {
+			continue;
+		}
+		$items = isset( $entry['rbfw_service_info'] ) && is_array( $entry['rbfw_service_info'] ) ? $entry['rbfw_service_info'] : array();
+		foreach ( $items as $single ) {
+			if ( is_array( $single ) && isset( $single['item_name'] ) && (string) $single['item_name'] === (string) $item_name ) {
+				$booked += isset( $single['item_qty'] ) ? max( 0, (int) $single['item_qty'] ) : 0;
+			}
+		}
+	}
+	return $booked;
+}
+

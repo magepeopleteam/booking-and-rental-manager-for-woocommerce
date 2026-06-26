@@ -386,6 +386,62 @@ function rbfw_add_term_condition_item( $post_id ) {
     }
 }
 
+/**
+ * One-time, self-healing migration: clear the bogus "1000" stock default.
+ *
+ * Older builds of the modern editor silently saved a blank Stock Quantity as
+ * 1000, which made single-unit rentals effectively unlimited and allowed
+ * double-booking. This converts any rental item still holding exactly 1000 back
+ * to blank, so the server-side availability guard treats it as a single unit
+ * (see rbfw_get_effective_item_stock()). Items the admin deliberately set to a
+ * real number are untouched, and the migration runs only once per site (guarded
+ * by an option flag) — so a value an admin later sets is never overwritten.
+ *
+ * Runs on admin_init so it self-applies on the next admin page load after
+ * activation or an update, without a manual step.
+ */
+add_action( 'admin_init', 'rbfw_maybe_migrate_stock_1000_default' );
+function rbfw_maybe_migrate_stock_1000_default() {
+
+	if ( 'done' === get_option( 'rbfw_stock_1000_migrated' ) ) {
+		return;
+	}
+
+	// Allow a site to opt out of the data migration entirely.
+	if ( apply_filters( 'rbfw_skip_stock_1000_migration', false ) ) {
+		update_option( 'rbfw_stock_1000_migrated', 'done' );
+		return;
+	}
+
+	// What blank/1000 stock should become. Default '' (blank => treated as 1 unit).
+	$target_value = apply_filters( 'rbfw_stock_1000_migration_target', '' );
+
+	$item_ids = get_posts(
+		array(
+			'post_type'      => 'rbfw_item',
+			'post_status'    => 'any',
+			'numberposts'    => -1,
+			'fields'         => 'ids',
+			'no_found_rows'  => true,
+			'meta_query'     => array(
+				array(
+					'key'     => 'rbfw_item_stock_quantity',
+					'value'   => '1000',
+					'compare' => '=',
+				),
+			),
+		)
+	);
+
+	if ( ! empty( $item_ids ) ) {
+		foreach ( $item_ids as $item_id ) {
+			update_post_meta( $item_id, 'rbfw_item_stock_quantity', $target_value );
+		}
+	}
+
+	update_option( 'rbfw_stock_1000_migrated', 'done' );
+}
+
 
 
 

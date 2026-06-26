@@ -9,11 +9,13 @@ if (!class_exists('RBFW_Woocommerce')) {
         public function __construct()
         {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
             /*after place order*/
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validation_before_checkout') );
+            add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validate_availability_before_checkout'), 20 );
             add_action( 'woocommerce_checkout_create_order_line_item', array($this ,  'rbfw_add_order_item_data'), 90, 4 );
             add_action( 'woocommerce_before_thankyou', array($this ,  'rbfw_booking_management') );
            // add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
@@ -91,6 +93,137 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             }
             return $passed;
+        }
+
+        /**
+         * Block adding a rental to the cart when the chosen dates are no longer available.
+         *
+         * Reuses rbfw_add_cart_item_func() to parse the submitted booking exactly as the
+         * real cart build does, then checks it against existing orders and whatever is
+         * already in the cart. Fails open (returns $passed) whenever the request can't be
+         * evaluated, so a valid booking is never wrongly blocked.
+         *
+         * @param bool $passed     Current validation result.
+         * @param int  $product_id WooCommerce product id being added.
+         * @param int  $quantity   Quantity (unused; rental qty travels in the booking POST).
+         * @return bool
+         */
+        public function rbfw_validate_availability_add_to_cart( $passed, $product_id, $quantity = 1 ) {
+            if ( ! $passed ) {
+                return $passed; // already rejected by another validator
+            }
+            global $rbfw;
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            if ( get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+                return $passed;
+            }
+            if ( ! function_exists( 'rbfw_check_rental_availability' ) ) {
+                return $passed;
+            }
+
+            // Parse the submitted booking the same way the cart build does.
+            $values = $this->rbfw_add_cart_item_func( array(), $rbfw_id );
+            if ( ! is_array( $values ) ) {
+                return $passed; // nonce missing / not a booking submit -> fail open
+            }
+
+            // Other lines for the same item already in the cart compete for the stock.
+            $siblings = array();
+            if ( function_exists( 'WC' ) && WC()->cart ) {
+                foreach ( WC()->cart->get_cart() as $ci ) {
+                    if ( isset( $ci['rbfw_id'] ) && (int) $ci['rbfw_id'] === (int) $rbfw_id ) {
+                        $siblings[] = $ci;
+                    }
+                }
+            }
+
+            $checks  = rbfw_check_rental_availability( $rbfw_id, $values, $siblings );
+            $blocked = false;
+            foreach ( $checks as $check ) {
+                if ( empty( $check['ok'] ) ) {
+                    $blocked = true;
+                    wc_add_notice( $this->rbfw_availability_notice( $check ), 'error' );
+                }
+            }
+
+            if ( $blocked ) {
+                if ( wp_doing_ajax() ) {
+                    wc_print_notices();
+                    wp_die();
+                }
+                return false;
+            }
+
+            return $passed;
+        }
+
+        /**
+         * Final server-side availability gate at checkout.
+         *
+         * Walks the cart once, validating each rental line against existing orders and the
+         * lines processed before it (so several lines can't oversubscribe the same finite
+         * stock). Adding an error notice here halts checkout — closing the race / stale-cart
+         * / bypassed-JS gap that previously allowed double-booking.
+         *
+         * @param array $data Posted checkout data (unused).
+         * @return void
+         */
+        public function rbfw_validate_availability_before_checkout( $data = null ) {
+            global $rbfw;
+            if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+                return;
+            }
+            if ( ! function_exists( 'rbfw_check_rental_availability' ) ) {
+                return;
+            }
+
+            $seen = array(); // rbfw_id => array of already-validated line values (siblings)
+
+            foreach ( WC()->cart->get_cart() as $values ) {
+                $rbfw_id = isset( $values['rbfw_id'] ) ? $values['rbfw_id'] : 0;
+                if ( ! $rbfw_id || get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+                    continue;
+                }
+
+                $siblings = isset( $seen[ $rbfw_id ] ) ? $seen[ $rbfw_id ] : array();
+                $checks   = rbfw_check_rental_availability( $rbfw_id, $values, $siblings );
+                foreach ( $checks as $check ) {
+                    if ( empty( $check['ok'] ) ) {
+                        wc_add_notice( $this->rbfw_availability_notice( $check ), 'error' );
+                    }
+                }
+
+                $seen[ $rbfw_id ][] = $values;
+            }
+        }
+
+        /**
+         * Build a customer-facing "no longer available" notice for a failed availability check.
+         *
+         * @param array $check One entry from rbfw_check_rental_availability().
+         * @return string
+         */
+        private function rbfw_availability_notice( $check ) {
+            $label     = isset( $check['label'] ) ? $check['label'] : __( 'This rental', 'booking-and-rental-manager-for-woocommerce' );
+            $available = isset( $check['available'] ) ? (int) $check['available'] : 0;
+
+            if ( $available > 0 ) {
+                return sprintf(
+                    /* translators: 1: item name, 2: available quantity */
+                    esc_html__( 'Sorry, "%1$s" is no longer available for the selected dates. Only %2$d left for those dates — please reduce the quantity or choose different dates.', 'booking-and-rental-manager-for-woocommerce' ),
+                    esc_html( $label ),
+                    $available
+                );
+            }
+
+            return sprintf(
+                /* translators: %s: item name */
+                esc_html__( 'Sorry, "%s" is already booked for the selected dates. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ),
+                esc_html( $label )
+            );
         }
 
         public function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
