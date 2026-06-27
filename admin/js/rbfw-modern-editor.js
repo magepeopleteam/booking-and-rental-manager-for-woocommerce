@@ -1312,6 +1312,45 @@
             $cb.closest('.rbfw-me-checkbox-label').toggleClass('is-checked', $cb.is(':checked'));
         }
 
+        function rtEsc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
+
+        function rebuildRentTypes(rentTypes, selectName) {
+            rentTypes = rentTypes || [];
+            var current = ($wrap.find('.rbfw-me-cats-hidden').val() || '').split(',').filter(Boolean);
+            if (selectName) {
+                var selectLower = String(selectName).toLowerCase().trim();
+                var has = current.some(function (n) { return String(n).toLowerCase().trim() === selectLower; });
+                if (!has) {
+                    current.push(selectName);
+                }
+            }
+            var $grid = $wrap.find('.rbfw-me-checkbox-grid').empty();
+            rentTypes.forEach(function (rt) {
+                var nameLower = String(rt.name).toLowerCase().trim();
+                var checked = current.some(function (n) { return String(n).toLowerCase().trim() === nameLower; });
+                var checkedAttr = checked ? ' checked' : '';
+                $grid.append(
+                    '<label class="rbfw-me-checkbox-label' + (checked ? ' is-checked' : '') + '">' +
+                        '<input type="checkbox" class="rbfw-me-cat-checkbox" data-name="' + rtEsc(rt.name) + '"' + checkedAttr + ' />' +
+                        '<span>' + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
+                    '</label>'
+                );
+            });
+            $wrap.find('.rbfw-me-cats-hidden').val(current.join(','));
+            $wrap.find('.rbfw-me-rent-type-empty').toggleClass('rbfw-me-hidden', rentTypes.length > 0);
+        }
+
+        function openRentTypeModal() {
+            var $modal = $wrap.find('#rbfw-me-rent-type-modal');
+            $modal.find('#rbfw-me-rent-type-modal-input').val('');
+            $modal.addClass('is-open');
+            setTimeout(function () { $modal.find('#rbfw-me-rent-type-modal-input').trigger('focus'); }, 50);
+        }
+
+        function closeRentTypeModal() {
+            $wrap.find('#rbfw-me-rent-type-modal').removeClass('is-open');
+        }
+
         // Set initial pill state for pre-checked boxes
         $wrap.find('.rbfw-me-cat-checkbox').each(function () {
             syncPill($(this));
@@ -1324,6 +1363,38 @@
                 selected.push($(this).data('name'));
             });
             $wrap.find('.rbfw-me-cats-hidden').val(selected.join(','));
+        });
+
+        $wrap.on('click', '.rbfw-rent-type-add-trigger', function (e) {
+            e.preventDefault();
+            openRentTypeModal();
+        });
+
+        $wrap.on('click', '#rbfw-me-rent-type-modal .rbfw-me-faq-modal__close, #rbfw-me-rent-type-modal .rbfw-me-faq-modal__backdrop, .rbfw-me-rent-type-modal-cancel', function () {
+            closeRentTypeModal();
+        });
+
+        $wrap.on('click', '#rbfw-me-rent-type-modal-save', function () {
+            var $card  = $wrap.find('.rbfw-me-rent-type-card');
+            var $input = $wrap.find('#rbfw-me-rent-type-modal-input');
+            var name   = $.trim($input.val());
+            if (!name) { $input.trigger('focus'); return; }
+            $.post(window.ajaxurl, {
+                action: 'rbfw_rent_type_add',
+                nonce:  $card.data('nonce'),
+                name:   name
+            }, function (resp) {
+                if (resp && resp.success) {
+                    rebuildRentTypes(resp.data.rent_types, resp.data.added_name);
+                    closeRentTypeModal();
+                } else {
+                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                }
+            }).fail(function () { window.alert('Request failed.'); });
+        });
+
+        $wrap.on('keypress', '#rbfw-me-rent-type-modal-input', function (e) {
+            if (e.which === 13) { e.preventDefault(); $wrap.find('#rbfw-me-rent-type-modal-save').trigger('click'); }
         });
     }
 
