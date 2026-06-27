@@ -100,11 +100,10 @@ function render_mep_events_by_status( $posts ) {
 function fount_post_number_by_category(){
 
     global $wpdb;
-    $results = $wpdb->get_results("
-    SELECT post_id, meta_value 
-    FROM {$wpdb->prefix}postmeta 
-    WHERE meta_key = 'rbfw_categories'
-");
+    $results = $wpdb->get_results( $wpdb->prepare(
+        "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s",
+        'rbfw_categories'
+    ) );
 
     $category_counts = [];
 

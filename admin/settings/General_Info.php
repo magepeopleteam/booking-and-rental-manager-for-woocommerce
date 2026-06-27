@@ -44,12 +44,16 @@
 			public function ajax_rent_type_add() {
 				$this->rbfw_rent_type_crud_guard();
 				$name = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+				$name = trim( $name );
 				if ( '' === $name ) {
 					wp_send_json_error( array( 'message' => esc_html__( 'Please enter a rent type name.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 				}
+				if ( mb_strlen( $name ) > 200 ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Rent type name must be 200 characters or fewer.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
 				$res = wp_insert_term( $name, 'rbfw_item_caregory' );
 				if ( is_wp_error( $res ) ) {
-					wp_send_json_error( array( 'message' => $res->get_error_message() ) );
+					wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
 				}
 				wp_send_json_success( array(
 					'rent_types' => $this->rbfw_get_rent_type_list(),
@@ -101,7 +105,9 @@
                         </label>
                         <p>
                             <?php echo esc_html__( "Here you can manage rent type.",'booking-and-rental-manager-for-woocommerce'); ?>
+                            <?php if ( current_user_can( 'manage_categories' ) ) : ?>
                             <a href="#" class="rbfw-rent-type-add-trigger"><?php echo esc_html__( "Add new ",'booking-and-rental-manager-for-woocommerce'); ?></a><?php echo esc_html__( "rent type",'booking-and-rental-manager-for-woocommerce'); ?>
+                            <?php endif; ?>
                         </p>
                     </div>
                 </section>
@@ -125,7 +131,7 @@
                         </div>
                         <div class="rbfw-rent-type-modal__body">
                             <label for="rbfw-rent-type-modal-input"><strong><?php esc_html_e( 'Rent type name', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></label>
-                            <input type="text" id="rbfw-rent-type-modal-input" class="widefat" style="margin-top:6px;" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <input type="text" id="rbfw-rent-type-modal-input" class="widefat" style="margin-top:6px;" maxlength="200" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                         <div class="rbfw-rent-type-modal__foot">
                             <button type="button" class="button button-primary" id="rbfw-rent-type-modal-save"><?php esc_html_e( 'Add Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
@@ -179,6 +185,7 @@
                         jQuery(document).on('click', '#rbfw-rent-type-modal-save', function () {
                             var name = jQuery.trim(jQuery('#rbfw-rent-type-modal-input').val());
                             if (!name) { jQuery('#rbfw-rent-type-modal-input').trigger('focus'); return; }
+                            if (name.length > 200) { name = name.substring(0, 200); }
                             jQuery.post(ajaxurl, {
                                 action: 'rbfw_rent_type_add',
                                 nonce: rtNonce(),
@@ -495,7 +502,9 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-					$rbfw_categories = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+					$rbfw_categories = isset( $_POST['rbfw_categories'] )
+						? rbfw_sanitize_rent_type_categories( wp_unslash( $_POST['rbfw_categories'] ) )
+						: array();
 					wp_set_object_terms( $post_id, $rbfw_categories, 'rbfw_item_caregory' );
 					$feature_category_input = isset( $_POST['rbfw_feature_category'] ) ? wp_unslash( $_POST['rbfw_feature_category'] ) : array();
 					$feature_category = rbfw_prepare_feature_category_meta_value( $feature_category_input );

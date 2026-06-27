@@ -1379,6 +1379,7 @@
             var $input = $wrap.find('#rbfw-me-rent-type-modal-input');
             var name   = $.trim($input.val());
             if (!name) { $input.trigger('focus'); return; }
+            if (name.length > 200) { name = name.substring(0, 200); }
             $.post(window.ajaxurl, {
                 action: 'rbfw_rent_type_add',
                 nonce:  $card.data('nonce'),

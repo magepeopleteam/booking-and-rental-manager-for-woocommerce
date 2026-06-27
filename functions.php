@@ -169,6 +169,89 @@ function rbfw_prepare_feature_category_meta_value( $value ) {
 }
 
 /**
+ * Flatten posted rent-type values into a list of names.
+ *
+ * @param mixed $raw Posted rbfw_categories value (array or string).
+ * @return string[]
+ */
+function rbfw_normalize_rent_type_input( $raw ) {
+    $names = array();
+
+    if ( is_string( $raw ) ) {
+        $raw = array( $raw );
+    }
+
+    if ( ! is_array( $raw ) ) {
+        return array();
+    }
+
+    foreach ( $raw as $item ) {
+        if ( is_array( $item ) ) {
+            $names = array_merge( $names, rbfw_normalize_rent_type_input( $item ) );
+            continue;
+        }
+
+        $item = sanitize_text_field( (string) $item );
+        if ( '' === $item ) {
+            continue;
+        }
+
+        foreach ( explode( ',', $item ) as $part ) {
+            $part = trim( $part );
+            if ( '' !== $part ) {
+                $names[] = $part;
+            }
+        }
+    }
+
+    return $names;
+}
+
+/**
+ * Map of lowercase rent-type name => canonical taxonomy term name.
+ *
+ * @return array<string, string>
+ */
+function rbfw_get_valid_rent_type_names() {
+    $terms = get_terms(
+        array(
+            'taxonomy'   => 'rbfw_item_caregory',
+            'hide_empty' => false,
+        )
+    );
+
+    $valid = array();
+    if ( ! is_wp_error( $terms ) ) {
+        foreach ( $terms as $term ) {
+            $valid[ strtolower( $term->name ) ] = $term->name;
+        }
+    }
+
+    return $valid;
+}
+
+/**
+ * Keep only rent types that exist in rbfw_item_caregory.
+ *
+ * @param mixed $raw Posted rbfw_categories value.
+ * @return string[]
+ */
+function rbfw_sanitize_rent_type_categories( $raw ) {
+    $names = rbfw_normalize_rent_type_input( $raw );
+    $valid = rbfw_get_valid_rent_type_names();
+    $out   = array();
+
+    foreach ( $names as $name ) {
+        $key = strtolower( $name );
+        if ( isset( $valid[ $key ] ) ) {
+            $out[] = $valid[ $key ];
+        }
+    }
+
+    return array_values( array_unique( $out ) );
+}
+
+/**
  * Helper to fetch the sanitized feature category meta.
  *
  * @param int $post_id

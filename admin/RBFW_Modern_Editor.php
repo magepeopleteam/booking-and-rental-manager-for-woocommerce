@@ -782,7 +782,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
-				$cats = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) );
+				$cats = rbfw_sanitize_rent_type_categories( wp_unslash( $_POST['rbfw_categories'] ) );
 				wp_set_object_terms( $post_id, $cats, 'rbfw_item_caregory' );
 				update_post_meta( $post_id, 'rbfw_categories', $cats );
 			}
