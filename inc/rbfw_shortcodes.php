@@ -58,7 +58,13 @@ function rbfw_rent_list_get_category_filter_names( $category ) {
                 $category_names[] = $term->name;
             }
         } else {
-            $category_names[] = $category_value;
+            $term = get_term_by( 'name', $category_value, 'rbfw_item_caregory' );
+            if ( ! $term ) {
+                $term = get_term_by( 'slug', sanitize_title( $category_value ), 'rbfw_item_caregory' );
+            }
+            if ( $term && ! is_wp_error( $term ) ) {
+                $category_names[] = $term->name;
+            }
         }
     }
 
@@ -256,13 +262,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         );
 
 
-        if( !empty( $rbfw_search_type ) ) {
-            $search_category_name = $rbfw_search_type;
-            $args['meta_query'][] = array(
-                    'key' => 'rbfw_categories',
-                'value' => $search_category_name,
-                'compare' => 'LIKE'
+        if ( ! empty( $rbfw_search_type ) ) {
+            $validated_types = rbfw_sanitize_rent_type_categories(
+                array( sanitize_text_field( (string) $rbfw_search_type ) )
             );
+            $category_clause = rbfw_build_categories_meta_clause( $validated_types );
+            if ( ! empty( $category_clause ) ) {
+                $args['meta_query'][] = $category_clause;
+            }
         }
 
 

@@ -144,14 +144,14 @@
 				</div>
 
 				<!-- Category Settings ───────────────────────────────── -->
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card rbfw-me-rent-type-card" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_rent_type_crud' ) ); ?>">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Category Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p>
 							<?php esc_html_e( 'Here you can manage rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=rbfw_item_caregory&post_type=rbfw_item' ) ); ?>" target="_blank">
-								<?php esc_html_e( 'Add new rent type', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</a>
+							<?php if ( current_user_can( 'manage_categories' ) ) : ?>
+							<a href="#" class="rbfw-rent-type-add-trigger"><?php esc_html_e( 'Add new rent type', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+							<?php endif; ?>
 						</p>
 					</div>
 					<div class="rbfw-me-card__body">
@@ -175,11 +175,33 @@
 							<?php endforeach; ?>
 						</div>
 						<?php if ( empty( $all_cat_terms ) ) : ?>
-							<p class="rbfw-me-field__help">
-								<?php esc_html_e( 'No categories found.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-								<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=rbfw_item_caregory&post_type=rbfw_item' ) ); ?>" target="_blank"><?php esc_html_e( 'Create one', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+							<p class="rbfw-me-field__help rbfw-me-rent-type-empty">
+								<?php esc_html_e( 'No rent types found.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								<?php if ( current_user_can( 'manage_categories' ) ) : ?>
+								<a href="#" class="rbfw-rent-type-add-trigger"><?php esc_html_e( 'Create one', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+								<?php endif; ?>
 							</p>
 						<?php endif; ?>
+					</div>
+
+					<div class="rbfw-me-faq-modal" id="rbfw-me-rent-type-modal">
+						<div class="rbfw-me-faq-modal__backdrop"></div>
+						<div class="rbfw-me-faq-modal__box">
+							<div class="rbfw-me-faq-modal__head">
+								<h3><?php esc_html_e( 'Add New Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+								<button type="button" class="rbfw-me-faq-modal__close"><span class="dashicons dashicons-no-alt"></span></button>
+							</div>
+							<div class="rbfw-me-faq-modal__body">
+								<div class="rbfw-me-field">
+									<label class="rbfw-me-field__label" for="rbfw-me-rent-type-modal-input"><?php esc_html_e( 'Rent type name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<input class="rbfw-me-input" type="text" id="rbfw-me-rent-type-modal-input" maxlength="200" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+								</div>
+							</div>
+							<div class="rbfw-me-faq-modal__foot">
+								<button type="button" id="rbfw-me-rent-type-modal-save" class="rbfw-me-btn rbfw-me-btn--primary"><?php esc_html_e( 'Add Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+								<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-rent-type-modal-cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							</div>
+						</div>
 					</div>
 				</div>
 
