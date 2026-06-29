@@ -1495,6 +1495,12 @@ ul.rbfw-feature-lists li i, .service-price-item .title i.sc-icon {
     div.mp_right_section {
         width: 100%;
         margin-top: 20px;
+        /* On mobile the booking form is relocated by JS to sit directly under
+           .rbfw-header-container. Drop the desktop sticky pinning so it scrolls
+           with the content; keep relative so the ::before border overlay stays
+           anchored to this box. */
+        position: relative;
+        top: auto;
     }
 
     .rbfw-single-right-container {
@@ -10858,6 +10864,42 @@ i.fas.fa-minus {
     .rbfw_default_hero_price_amount { font-size: 20px; }
     .rbfw_default_hero_desc { display: none; }
     .rbfw_default_hero_features_bar { display: none; }
+}
+/* Mobile: lift the hero title/price out of the image overlay and render it as a
+   plain text block below the slider, sitting above .rbfw-header-container with a
+   gap. Placed after the 768px block so it wins where the breakpoints overlap. */
+@media only screen and (max-width: 792px) {
+    .mp_default_theme .rbfw_default_hero_wrap {
+        margin-bottom: 16px;          /* gap before the Share / features section */
+    }
+    .rbfw_default_hero_overlay {
+        position: static;             /* drop the absolute image overlay */
+        width: 100%;
+        height: auto;
+        background: none;             /* remove the dark gradient */
+        display: block;
+        align-items: stretch;
+        padding: 14px 2px 2px;        /* gap between the image and the text */
+        pointer-events: auto;
+    }
+    .rbfw_default_hero_content {
+        color: #1a1a1a;               /* dark text now that it sits on white */
+        max-width: 100%;
+    }
+    .rbfw_default_hero_badge {
+        display: none;                /* keep current mobile appearance (was clipped) */
+    }
+    .rbfw_default_hero_title {
+        color: #1a1a1a;
+        text-shadow: none;
+        margin-bottom: 8px;
+    }
+    .rbfw_default_hero_desc {
+        display: none;
+    }
+    .rbfw_default_hero_price_label {
+        color: rgba(0, 0, 0, 0.55);
+    }
 }
 /* === End Default Template Hero Banner === */
 

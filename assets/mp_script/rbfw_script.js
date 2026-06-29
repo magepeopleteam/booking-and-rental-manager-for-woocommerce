@@ -693,3 +693,62 @@ function fee_management(sub_total_price,total_days=1,quantity=1){
 }
 
 
+/*
+ * Mobile layout reorder for the default single-rental template.
+ *
+ * Desktop: .mp_left_section (content) and .mp_right_section (booking form) sit
+ * side by side as the two columns of .mp_details_page. On mobile (<=792px)
+ * .mp_details_page becomes a single column, which would otherwise push the
+ * booking form to the very bottom (below Description / FAQ / Related Items).
+ *
+ * The booking form and the features header (.rbfw-header-container) live at
+ * different DOM depths, so they cannot be reordered with pure CSS without
+ * flattening several wrappers that carry layout styles. We instead relocate the
+ * whole .mp_right_section node (preserving its bound state) to sit directly
+ * under .rbfw-header-container on mobile, and restore it as the last column on
+ * larger screens. Guarded so it only runs where all three nodes exist (the
+ * "default" template family); it no-ops on the muffin template and elsewhere.
+ */
+(function () {
+    var rbfwBookingMq = window.matchMedia('(max-width: 792px)');
+
+    function rbfwArrangeBookingForm() {
+        var detailsPage = document.querySelector('.mp_details_page');
+        if (!detailsPage) {
+            return;
+        }
+        var rightSection = detailsPage.querySelector('.mp_right_section');
+        var header = detailsPage.querySelector('.rbfw-header-container');
+        if (!rightSection || !header) {
+            return;
+        }
+
+        if (rbfwBookingMq.matches) {
+            // Mobile: place the booking form right after the features header.
+            if (header.nextElementSibling !== rightSection) {
+                header.insertAdjacentElement('afterend', rightSection);
+            }
+        } else {
+            // Desktop / tablet: keep the booking form as the last column.
+            if (detailsPage.lastElementChild !== rightSection) {
+                detailsPage.appendChild(rightSection);
+            }
+        }
+    }
+
+    // Re-run whenever the breakpoint is crossed (e.g. device rotation, resize).
+    if (typeof rbfwBookingMq.addEventListener === 'function') {
+        rbfwBookingMq.addEventListener('change', rbfwArrangeBookingForm);
+    } else if (typeof rbfwBookingMq.addListener === 'function') {
+        // Safari < 14 / legacy fallback.
+        rbfwBookingMq.addListener(rbfwArrangeBookingForm);
+    }
+
+    // This script is enqueued in the footer, so the template markup above it is
+    // already parsed: run immediately to avoid a visible jump, then re-run on
+    // DOMContentLoaded as a safety net if the nodes were not ready yet.
+    rbfwArrangeBookingForm();
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', rbfwArrangeBookingForm);
+    }
+})();
