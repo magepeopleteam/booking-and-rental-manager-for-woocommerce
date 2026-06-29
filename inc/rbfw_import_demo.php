@@ -35,11 +35,11 @@ if (!class_exists('RbfwImportDemo')) {
 				return false;
 			}
 
-			// Wait for WooCommerce — the Woo Installer popup must be handled first
-			if (!function_exists('rbfw_woo_install_check') || rbfw_woo_install_check() !== 'Yes') {
-				return false;
-			}
-
+			// WooCommerce is optional (Standalone mode). The sample import only
+			// creates rbfw_item posts; the backing WooCommerce product is created
+			// lazily by RBFW_Hidden_Product, which itself no-ops without Woo. So
+			// the import is safe to offer whether or not WooCommerce is active and
+			// must not be gated behind it.
 			if (self::check_plugin('booking-and-rental-manager-for-woocommerce', 'rent-manager.php') != 1) {
 				return false;
 			}

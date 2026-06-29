@@ -46,6 +46,14 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 			echo '<div class="wrap">';
 			echo '<h1>' . esc_html__( 'Bookings', 'booking-and-rental-manager-for-woocommerce' ) . '</h1>';
 
+			if ( isset( $_GET['rbfw_status_updated'] ) ) {
+				if ( '1' === (string) $_GET['rbfw_status_updated'] ) {
+					echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__( 'Booking status updated.', 'booking-and-rental-manager-for-woocommerce' ) . '</p></div>';
+				} else {
+					echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'Could not update the booking status.', 'booking-and-rental-manager-for-woocommerce' ) . '</p></div>';
+				}
+			}
+
 			if ( ! RBFW_Function::use_wc() ) {
 				echo '<p class="description">' . esc_html__( 'Bookings created through the standalone (non-WooCommerce) flow.', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 			}
@@ -65,6 +73,7 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 			echo '<th>' . esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' ) . '</th>';
 			echo '<th>' . esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' ) . '</th>';
 			echo '<th>' . esc_html__( 'Created', 'booking-and-rental-manager-for-woocommerce' ) . '</th>';
+			echo '<th>' . esc_html__( 'Change Status', 'booking-and-rental-manager-for-woocommerce' ) . '</th>';
 			echo '</tr></thead><tbody>';
 
 			while ( $query->have_posts() ) {
@@ -96,6 +105,11 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 				echo '<td>' . wp_kses_post( wc_price( $total ) ) . '</td>';
 				echo '<td><span class="rbfw-booking-status rbfw-booking-status--' . esc_attr( $status ) . '">' . esc_html( ucfirst( $status ) ) . '</span></td>';
 				echo '<td>' . esc_html( get_the_date() . ' ' . get_the_time() ) . '</td>';
+				echo '<td>';
+				if ( class_exists( 'RBFW_Booking_Actions' ) ) {
+					RBFW_Booking_Actions::render_status_control( $id, $status );
+				}
+				echo '</td>';
 				echo '</tr>';
 			}
 			wp_reset_postdata();
