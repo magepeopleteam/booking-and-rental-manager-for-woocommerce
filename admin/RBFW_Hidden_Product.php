@@ -8,12 +8,101 @@ if (!class_exists('RBFW_Hidden_Product')) {
 
             add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
             add_action('save_post', array($this, 'run_link_product_on_save'), 99);
+            // Self-healing: reconcile missing backing products (e.g. items imported in
+            // Standalone mode that later switched to WooCommerce mode).
+            add_action('admin_init', array($this, 'maybe_backfill_hidden_products'));
+            add_action('update_option_rbfw_basic_payment_settings', array($this, 'flush_backfill_flag'));
+            add_action('add_option_rbfw_basic_payment_settings', array($this, 'flush_backfill_flag'));
             add_action('parse_query', array($this, 'hide_wc_hidden_product_from_product_list'));
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
             //******************//
             add_action('wp_head', [$this, 'url_exclude_search_engine']);
             // add_action('init', [$this, 'get_all_hidden_product_id']);
             add_filter('wpseo_exclude_from_sitemap_by_post_ids', [$this, 'get_all_hidden_product_id']);
+        }
+
+        /**
+         * Clear the one-time backfill flag whenever the payment settings are saved.
+         *
+         * Switching Booking Mode from Standalone to WooCommerce is the case that strands
+         * items without a backing product; re-running the reconcile on the next admin
+         * request heals them automatically.
+         */
+        public function flush_backfill_flag() {
+            delete_option('rbfw_hidden_product_backfill_done');
+        }
+
+        /**
+         * One-time (per signal) reconcile that ensures every published rental item has a
+         * valid backing hidden WooCommerce product.
+         *
+         * Items created while the site was in Standalone mode (or imported as demo data)
+         * never received a hidden product, so after switching to WooCommerce mode their
+         * "Book Now" button submits add-to-cart with an id that has no purchasable product
+         * behind it — the click silently does nothing. This repairs them.
+         *
+         * Guarded by an option so the full scan runs only once until the next settings save.
+         */
+        public function maybe_backfill_hidden_products() {
+            // Only relevant in WooCommerce mode (Standalone has no backing products).
+            if (!function_exists('rbfw_booking_mode') || rbfw_booking_mode() !== 'woocommerce') {
+                return;
+            }
+            if (!current_user_can('manage_options')) {
+                return;
+            }
+            if (get_option('rbfw_hidden_product_backfill_done') === 'yes') {
+                return;
+            }
+
+            $this->backfill_missing_hidden_products();
+            update_option('rbfw_hidden_product_backfill_done', 'yes');
+        }
+
+        /**
+         * Create backing hidden products for any published rbfw_item missing a valid one.
+         *
+         * @return int Number of products created/repaired.
+         */
+        public function backfill_missing_hidden_products() {
+            $items = get_posts(array(
+                'post_type'      => 'rbfw_item',
+                'post_status'    => 'publish',
+                'posts_per_page' => -1,
+                'fields'         => 'ids',
+                'no_found_rows'  => true,
+            ));
+
+            $repaired = 0;
+            foreach ($items as $item_id) {
+                $linked = get_post_meta($item_id, 'link_wc_product', true);
+                $valid  = $linked
+                    && get_post_type($linked) === 'product'
+                    && get_post_status($linked) === 'publish';
+                if ($valid) {
+                    continue;
+                }
+
+                // Create a fresh backing product (overwrites a stale/missing link).
+                $this->create_hidden_wc_product($item_id, get_the_title($item_id));
+
+                // Make sure the new product is actually purchasable. The normal save flow
+                // sets these via run_link_product_on_save(); the backfill has no save_post,
+                // so set them here to mirror that path.
+                $product_id = get_post_meta($item_id, 'link_wc_product', true);
+                if ($product_id) {
+                    update_post_meta($product_id, '_stock_status', 'instock');
+                    update_post_meta($product_id, '_manage_stock', 'no');
+                    update_post_meta($product_id, '_tax_status', 'none');
+                    if ('' === get_post_meta($product_id, '_regular_price', true)) {
+                        update_post_meta($product_id, '_regular_price', 0.01);
+                    }
+                    set_post_thumbnail($product_id, get_post_thumbnail_id($item_id));
+                    $repaired++;
+                }
+            }
+
+            return $repaired;
         }
 
         public function create_hidden_wc_product($post_id, $title) {
