@@ -9262,3 +9262,62 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-panel[data-panel="pricing"][data-item-type="multiple_items"] .rbfw-sp-modern-panel > .sessional_price_multiple_items {
     display: block !important;
 }
+
+/* Rent-type chip hover actions (edit / delete) */
+.rbfw-me-checkbox-label.rbfw-rt-chip { position: relative; }
+/* The pill sets `span { pointer-events: none }` so text clicks fall through to the
+   label; re-enable it on the action icons or edit/delete clicks never register. */
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions,
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions span { pointer-events: auto; }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #d8dee9;
+    border-radius: 7px;
+    padding: 4px 9px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.16);
+    z-index: 4;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip:hover .rbfw-rt-actions { display: inline-flex; }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: color .15s, transform .15s;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .dashicons:hover { transform: scale(1.18); }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .rbfw-rt-edit:hover { color: #2271b1; }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .rbfw-rt-del:hover { color: #d63638; }
+
+/* Animated (moving) gradient border shown while hovering a rent-type chip */
+.rbfw-me-checkbox-label.rbfw-rt-chip::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    padding: 2px;
+    background: linear-gradient(90deg, #1a73e8, #34a853, #fbbc05, #ea4335, #1a73e8);
+    background-size: 300% 100%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip:hover::after {
+    opacity: 1;
+    animation: rbfw-rt-border-move 2s linear infinite;
+}
+@keyframes rbfw-rt-border-move {
+    to { background-position: 300% 0; }
+}

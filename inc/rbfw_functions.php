@@ -18,6 +18,11 @@
 				'onclick' => true, // Allows inline JavaScript
 				'data-step' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
+				'data-rbfw-field' => true,      // conditional logic: field wrapper key
+				'data-rbfw-rules' => true,      // conditional logic: base64 rules JSON
+				'data-rbfw-form' => true,       // conditional logic: form id
+				'data-rbfw-item' => true,       // conditional logic: rental item id
+				'data-rbfw-rent-type' => true,  // conditional logic: rent type token
 			),
 			'table'   => array(
                 'class' => true,
@@ -74,6 +79,7 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'for' => true, // Allows inline JavaScript
+				'data-rbfw-field' => true, // conditional logic: field wrapper key
 			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles

@@ -12,6 +12,8 @@
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
 				add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
 				add_action( 'wp_ajax_rbfw_rent_type_add', [ $this, 'ajax_rent_type_add' ] );
+				add_action( 'wp_ajax_rbfw_rent_type_rename', [ $this, 'ajax_rent_type_rename' ] );
+				add_action( 'wp_ajax_rbfw_rent_type_delete', [ $this, 'ajax_rent_type_delete' ] );
 			}
 
 			/**
@@ -59,6 +61,135 @@
 					'rent_types' => $this->rbfw_get_rent_type_list(),
 					'added_name' => $name,
 				) );
+			}
+
+			/**
+			 * AJAX: rename a rent type and migrate the name-based selection meta on every
+			 * item that used it ( rbfw_categories stores names, not ids ).
+			 */
+			public function ajax_rent_type_rename() {
+				$this->rbfw_rent_type_crud_guard();
+				$term_id = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
+				$name    = isset( $_POST['name'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['name'] ) ) ) : '';
+				if ( ! $term_id ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid rent type.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				if ( '' === $name ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Please enter a rent type name.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				if ( mb_strlen( $name ) > 200 ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Rent type name must be 200 characters or fewer.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				$term = get_term( $term_id, 'rbfw_item_caregory' );
+				if ( ! $term || is_wp_error( $term ) ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Rent type not found.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				$old_name = $term->name;
+				if ( $old_name !== $name ) {
+					$res = wp_update_term( $term_id, 'rbfw_item_caregory', array( 'name' => $name ) );
+					if ( is_wp_error( $res ) ) {
+						wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
+					}
+					$this->rbfw_sync_rent_type_meta( $this->rbfw_get_items_with_term( $term_id ), $old_name, $name );
+				}
+				wp_send_json_success( array(
+					'rent_types' => $this->rbfw_get_rent_type_list(),
+					'term_id'    => $term_id,
+					'old_name'   => $old_name,
+					'new_name'   => $name,
+				) );
+			}
+
+			/**
+			 * AJAX: delete a rent type and drop its name from every item's selection meta.
+			 */
+			public function ajax_rent_type_delete() {
+				$this->rbfw_rent_type_crud_guard();
+				$term_id = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
+				if ( ! $term_id ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Invalid rent type.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				$term = get_term( $term_id, 'rbfw_item_caregory' );
+				if ( ! $term || is_wp_error( $term ) ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Rent type not found.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				$old_name = $term->name;
+				// Capture affected items before the term relationship is removed.
+				$affected = $this->rbfw_get_items_with_term( $term_id );
+				$res      = wp_delete_term( $term_id, 'rbfw_item_caregory' );
+				if ( is_wp_error( $res ) ) {
+					wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
+				}
+				if ( false === $res || 0 === $res ) {
+					wp_send_json_error( array( 'message' => esc_html__( 'Could not delete the rent type.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				}
+				$this->rbfw_sync_rent_type_meta( $affected, $old_name, null );
+				wp_send_json_success( array(
+					'rent_types'      => $this->rbfw_get_rent_type_list(),
+					'deleted_term_id' => $term_id,
+					'deleted_name'    => $old_name,
+				) );
+			}
+
+			/**
+			 * IDs of rbfw_item posts that currently have the given term assigned.
+			 *
+			 * @param int $term_id
+			 * @return int[]
+			 */
+			private function rbfw_get_items_with_term( $term_id ) {
+				$query = new WP_Query( array(
+					'post_type'              => 'rbfw_item',
+					'post_status'            => 'any',
+					'fields'                 => 'ids',
+					'posts_per_page'         => -1,
+					'no_found_rows'          => true,
+					'update_post_meta_cache' => false,
+					'update_post_term_cache' => false,
+					'tax_query'              => array(
+						array(
+							'taxonomy' => 'rbfw_item_caregory',
+							'field'    => 'term_id',
+							'terms'    => (int) $term_id,
+						),
+					),
+				) );
+				return array_map( 'intval', (array) $query->posts );
+			}
+
+			/**
+			 * Update the name-based rbfw_categories post meta for affected items.
+			 *
+			 * @param int[]       $post_ids
+			 * @param string      $old_name
+			 * @param string|null $new_name Pass null to remove the name (delete).
+			 */
+			private function rbfw_sync_rent_type_meta( $post_ids, $old_name, $new_name ) {
+				$old_key = strtolower( trim( $old_name ) );
+				foreach ( (array) $post_ids as $pid ) {
+					$cats = get_post_meta( $pid, 'rbfw_categories', true );
+					$cats = is_array( $cats ) ? $cats : ( $cats ? maybe_unserialize( $cats ) : array() );
+					if ( ! is_array( $cats ) ) {
+						continue;
+					}
+					$changed = false;
+					$out     = array();
+					foreach ( $cats as $cat ) {
+						if ( strtolower( trim( (string) $cat ) ) === $old_key ) {
+							$changed = true;
+							if ( null !== $new_name && '' !== $new_name ) {
+								$out[] = $new_name; // rename
+							}
+							// delete -> drop it
+						} else {
+							$out[] = $cat;
+						}
+					}
+					if ( $changed ) {
+						$out = array_values( array_unique( $out ) );
+						update_post_meta( $pid, 'rbfw_categories', $out );
+					}
+				}
 			}
 
 			public function add_tab_menu() {
@@ -111,13 +242,20 @@
                         </p>
                     </div>
                 </section>
-                <section class="rbfw_off_days justify-content-center rbfw-rent-type-checkboxes" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_rent_type_crud' ) ); ?>">
+                <?php $rbfw_rt_can_manage = current_user_can( 'manage_categories' ); ?>
+                <section class="rbfw_off_days justify-content-center rbfw-rent-type-checkboxes" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_rent_type_crud' ) ); ?>" data-can-manage="<?php echo $rbfw_rt_can_manage ? '1' : '0'; ?>">
                     <div class="groupCheckBox">
                         <input type="hidden" name="rbfw_categories[]" value="<?php echo esc_attr( $rbfw_categories_items ); ?>">
                         <?php foreach ( $terms as $key => $value ) { ?>
-                            <label class="customCheckboxLabel">
+                            <label class="customCheckboxLabel rbfw-rt-chip" data-term-id="<?php echo esc_attr( $value->term_id ); ?>" data-name="<?php echo esc_attr( $value->name ); ?>">
                                 <input type="checkbox" <?php echo esc_attr( in_array( $value->name, $rbfw_categories_array ) ) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr( $value->name ) ?>">
                                 <span class="customCheckbox"><?php echo esc_html( ucfirst( $value->name ) ); ?></span>
+                                <?php if ( $rbfw_rt_can_manage ) { ?>
+                                    <span class="rbfw-rt-actions">
+                                        <span class="rbfw-rt-edit dashicons dashicons-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
+                                        <span class="rbfw-rt-del dashicons dashicons-trash" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
+                                    </span>
+                                <?php } ?>
                             </label>
                         <?php } ?>
                     </div>
@@ -141,8 +279,21 @@
                 </div>
                 <script>
                     (function () {
+                        var editTermId = 0; // 0 = add mode, >0 = rename mode
+
                         function rtEsc(s) { return jQuery('<div>').text(s == null ? '' : String(s)).html(); }
                         function rtNonce() { return jQuery('.rbfw-rent-type-checkboxes').data('nonce'); }
+                        function rtCanManage() { return String(jQuery('.rbfw-rent-type-checkboxes').data('can-manage')) === '1'; }
+
+                        function rtActionsHtml() {
+                            if (!rtCanManage()) { return ''; }
+                            return '<span class="rbfw-rt-actions">' +
+                                '<span class="rbfw-rt-edit dashicons dashicons-edit" title="Edit"></span>' +
+                                '<span class="rbfw-rt-del dashicons dashicons-trash" title="Delete"></span>' +
+                            '</span>';
+                        }
+
+                        function rtHidden() { return jQuery('.rbfw-rent-type-checkboxes input[type="hidden"]'); }
 
                         function rtRebuild(rentTypes, selectName) {
                             rentTypes = rentTypes || [];
@@ -156,29 +307,68 @@
                             rentTypes.forEach(function (rt) {
                                 var checked = current.indexOf(rt.name) !== -1 ? ' checked' : '';
                                 $group.append(
-                                    '<label class="customCheckboxLabel">' +
+                                    '<label class="customCheckboxLabel rbfw-rt-chip" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '">' +
                                         '<input type="checkbox"' + checked + ' data-checked="' + rtEsc(rt.name) + '">' +
                                         '<span class="customCheckbox">' + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
+                                        rtActionsHtml() +
                                     '</label>'
                                 );
                             });
                             $group.find('input[type="hidden"]').val(current.join(','));
                         }
 
-                        function rtOpenModal() {
-                            jQuery('#rbfw-rent-type-modal-input').val('');
+                        function rtOpenModal(mode, termId, name) {
+                            editTermId = mode === 'edit' ? (parseInt(termId, 10) || 0) : 0;
+                            var isEdit = editTermId > 0;
+                            jQuery('#rbfw-rent-type-modal .rbfw-rent-type-modal__head h3').text(isEdit ? 'Rename Rent Type' : 'Add New Rent Type');
+                            jQuery('#rbfw-rent-type-modal-save').text(isEdit ? 'Save Changes' : 'Add Rent Type');
+                            jQuery('#rbfw-rent-type-modal-input').val(name || '');
                             jQuery('#rbfw-rent-type-modal').addClass('is-open');
                             setTimeout(function () { jQuery('#rbfw-rent-type-modal-input').trigger('focus'); }, 50);
                         }
 
                         function rtCloseModal() {
                             jQuery('#rbfw-rent-type-modal').removeClass('is-open');
+                            editTermId = 0;
                         }
 
                         jQuery(document).on('click', '.rbfw-rent-type-add-trigger', function (e) {
                             e.preventDefault();
-                            rtOpenModal();
+                            rtOpenModal('add');
                         });
+
+                        // Edit (rename) a rent type.
+                        jQuery(document).on('click', '.rbfw-rent-type-checkboxes .rbfw-rt-edit', function (e) {
+                            e.preventDefault(); e.stopPropagation();
+                            var $chip = jQuery(this).closest('.rbfw-rt-chip');
+                            rtOpenModal('edit', $chip.data('term-id'), $chip.data('name'));
+                        });
+
+                        // Delete a rent type.
+                        jQuery(document).on('click', '.rbfw-rent-type-checkboxes .rbfw-rt-del', function (e) {
+                            e.preventDefault(); e.stopPropagation();
+                            var $chip  = jQuery(this).closest('.rbfw-rt-chip');
+                            var termId = parseInt($chip.data('term-id'), 10) || 0;
+                            var name   = $chip.data('name');
+                            if (!termId) { return; }
+                            if (!window.confirm('Delete rent type "' + name + '"? Items using it will have this type removed.')) { return; }
+                            jQuery.post(ajaxurl, {
+                                action: 'rbfw_rent_type_delete',
+                                nonce: rtNonce(),
+                                term_id: termId
+                            }, function (resp) {
+                                if (resp && resp.success) {
+                                    var cur = (rtHidden().val() || '').split(',').filter(Boolean).filter(function (n) {
+                                        return n.toLowerCase() !== String(resp.data.deleted_name).toLowerCase();
+                                    });
+                                    rtHidden().val(cur.join(','));
+                                    rtRebuild(resp.data.rent_types);
+                                } else {
+                                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                                }
+                            }).fail(function () { window.alert('Request failed.'); });
+                        });
+
                         jQuery(document).on('click', '.rbfw-rent-type-modal__close, .rbfw-rent-type-modal__backdrop', function () {
                             rtCloseModal();
                         });
@@ -186,18 +376,39 @@
                             var name = jQuery.trim(jQuery('#rbfw-rent-type-modal-input').val());
                             if (!name) { jQuery('#rbfw-rent-type-modal-input').trigger('focus'); return; }
                             if (name.length > 200) { name = name.substring(0, 200); }
-                            jQuery.post(ajaxurl, {
-                                action: 'rbfw_rent_type_add',
-                                nonce: rtNonce(),
-                                name: name
-                            }, function (resp) {
-                                if (resp && resp.success) {
-                                    rtRebuild(resp.data.rent_types, resp.data.added_name);
-                                    rtCloseModal();
-                                } else {
-                                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
-                                }
-                            }).fail(function () { window.alert('Request failed.'); });
+
+                            if (editTermId > 0) {
+                                jQuery.post(ajaxurl, {
+                                    action: 'rbfw_rent_type_rename',
+                                    nonce: rtNonce(),
+                                    term_id: editTermId,
+                                    name: name
+                                }, function (resp) {
+                                    if (resp && resp.success) {
+                                        var cur = (rtHidden().val() || '').split(',').filter(Boolean).map(function (n) {
+                                            return n.toLowerCase() === String(resp.data.old_name).toLowerCase() ? resp.data.new_name : n;
+                                        });
+                                        rtHidden().val(cur.join(','));
+                                        rtRebuild(resp.data.rent_types);
+                                        rtCloseModal();
+                                    } else {
+                                        window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                                    }
+                                }).fail(function () { window.alert('Request failed.'); });
+                            } else {
+                                jQuery.post(ajaxurl, {
+                                    action: 'rbfw_rent_type_add',
+                                    nonce: rtNonce(),
+                                    name: name
+                                }, function (resp) {
+                                    if (resp && resp.success) {
+                                        rtRebuild(resp.data.rent_types, resp.data.added_name);
+                                        rtCloseModal();
+                                    } else {
+                                        window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                                    }
+                                }).fail(function () { window.alert('Request failed.'); });
+                            }
                         });
                         jQuery(document).on('keypress', '#rbfw-rent-type-modal-input', function (e) {
                             if (e.which === 13) { e.preventDefault(); jQuery('#rbfw-rent-type-modal-save').trigger('click'); }
@@ -214,6 +425,12 @@
                     .rbfw-rent-type-modal__close { background: none; border: none; font-size: 22px; line-height: 1; cursor: pointer; color: #6b7280; }
                     .rbfw-rent-type-modal__body { padding: 18px; }
                     .rbfw-rent-type-modal__foot { padding: 14px 18px; border-top: 1px solid #e2e6ee; display: flex; gap: 8px; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-chip { position: relative; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions { position: absolute; top: -9px; right: -7px; display: none; align-items: center; gap: 1px; background: #fff; border: 1px solid #e2e6ee; border-radius: 4px; padding: 1px 3px; box-shadow: 0 2px 6px rgba(0,0,0,.14); z-index: 3; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-chip:hover .rbfw-rt-actions { display: inline-flex; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions .dashicons { font-size: 15px; width: 15px; height: 15px; line-height: 15px; cursor: pointer; color: #6b7280; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions .rbfw-rt-edit:hover { color: #2271b1; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions .rbfw-rt-del:hover { color: #d63638; }
                 </style>
 				<?php
 			}

@@ -281,7 +281,6 @@ if (!class_exists('RBFW_Rental_List')) {
             $base_url  = admin_url('admin.php?page=' . self::PAGE_SLUG);
             $trash_url = add_query_arg('rbfw_status', 'trash', $base_url);
             $add_url   = class_exists( 'RBFW_Modern_Editor' ) ? RBFW_Modern_Editor::add_new_url() : admin_url( 'post-new.php?post_type=rbfw_item' );
-            $classic   = admin_url('edit.php?post_type=rbfw_item&rbfw_view=classic');
             $rent_types = RBFW_Function::rbfw_rent_types();
             ?>
             <div class="wrap rbfw-fleet-wrap">
@@ -292,10 +291,6 @@ if (!class_exists('RBFW_Rental_List')) {
                             <span><?php echo esc_html(sprintf(_n('%d item', '%d items', $total, 'booking-and-rental-manager-for-woocommerce'), $total)); ?></span>
                         </div>
                         <div class="rbfw-header-actions">
-                            <a class="rbfw-classic-link" href="<?php echo esc_url($classic); ?>">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                                <?php esc_html_e('Classic view', 'booking-and-rental-manager-for-woocommerce'); ?>
-                            </a>
                             <a class="rbfw-add-btn" href="<?php echo esc_url($add_url); ?>">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                 <?php printf(esc_html__('Add New %s', 'booking-and-rental-manager-for-woocommerce'), esc_html($name)); ?>
