@@ -1314,9 +1314,24 @@
 
         function rtEsc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
 
+        var meEditTermId = 0; // 0 = add mode, >0 = rename mode
+
+        function meCard()      { return $wrap.find('.rbfw-me-rent-type-card'); }
+        function meNonce()     { return meCard().data('nonce'); }
+        function meCanManage() { return String(meCard().data('can-manage')) === '1'; }
+        function meHidden()    { return $wrap.find('.rbfw-me-cats-hidden'); }
+
+        function meActionsHtml() {
+            if (!meCanManage()) { return ''; }
+            return '<span class="rbfw-rt-actions">' +
+                '<span class="rbfw-rt-edit dashicons dashicons-edit" title="Edit"></span>' +
+                '<span class="rbfw-rt-del dashicons dashicons-trash" title="Delete"></span>' +
+            '</span>';
+        }
+
         function rebuildRentTypes(rentTypes, selectName) {
             rentTypes = rentTypes || [];
-            var current = ($wrap.find('.rbfw-me-cats-hidden').val() || '').split(',').filter(Boolean);
+            var current = (meHidden().val() || '').split(',').filter(Boolean);
             if (selectName) {
                 var selectLower = String(selectName).toLowerCase().trim();
                 var has = current.some(function (n) { return String(n).toLowerCase().trim() === selectLower; });
@@ -1330,25 +1345,31 @@
                 var checked = current.some(function (n) { return String(n).toLowerCase().trim() === nameLower; });
                 var checkedAttr = checked ? ' checked' : '';
                 $grid.append(
-                    '<label class="rbfw-me-checkbox-label' + (checked ? ' is-checked' : '') + '">' +
+                    '<label class="rbfw-me-checkbox-label rbfw-rt-chip' + (checked ? ' is-checked' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '">' +
                         '<input type="checkbox" class="rbfw-me-cat-checkbox" data-name="' + rtEsc(rt.name) + '"' + checkedAttr + ' />' +
                         '<span>' + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
+                        meActionsHtml() +
                     '</label>'
                 );
             });
-            $wrap.find('.rbfw-me-cats-hidden').val(current.join(','));
+            meHidden().val(current.join(','));
             $wrap.find('.rbfw-me-rent-type-empty').toggleClass('rbfw-me-hidden', rentTypes.length > 0);
         }
 
-        function openRentTypeModal() {
+        function openRentTypeModal(mode, termId, name) {
+            meEditTermId = mode === 'edit' ? (parseInt(termId, 10) || 0) : 0;
+            var isEdit = meEditTermId > 0;
             var $modal = $wrap.find('#rbfw-me-rent-type-modal');
-            $modal.find('#rbfw-me-rent-type-modal-input').val('');
+            $modal.find('.rbfw-me-faq-modal__head h3').text(isEdit ? 'Rename Rent Type' : 'Add New Rent Type');
+            $modal.find('#rbfw-me-rent-type-modal-save').text(isEdit ? 'Save Changes' : 'Add Rent Type');
+            $modal.find('#rbfw-me-rent-type-modal-input').val(name || '');
             $modal.addClass('is-open');
             setTimeout(function () { $modal.find('#rbfw-me-rent-type-modal-input').trigger('focus'); }, 50);
         }
 
         function closeRentTypeModal() {
             $wrap.find('#rbfw-me-rent-type-modal').removeClass('is-open');
+            meEditTermId = 0;
         }
 
         // Set initial pill state for pre-checked boxes
@@ -1362,12 +1383,44 @@
             $wrap.find('.rbfw-me-cat-checkbox:checked').each(function () {
                 selected.push($(this).data('name'));
             });
-            $wrap.find('.rbfw-me-cats-hidden').val(selected.join(','));
+            meHidden().val(selected.join(','));
         });
 
         $wrap.on('click', '.rbfw-rent-type-add-trigger', function (e) {
             e.preventDefault();
-            openRentTypeModal();
+            openRentTypeModal('add');
+        });
+
+        // Edit (rename) a rent type.
+        $wrap.on('click', '.rbfw-me-rent-type-card .rbfw-rt-edit', function (e) {
+            e.preventDefault(); e.stopPropagation();
+            var $chip = $(this).closest('.rbfw-rt-chip');
+            openRentTypeModal('edit', $chip.data('term-id'), $chip.data('name'));
+        });
+
+        // Delete a rent type.
+        $wrap.on('click', '.rbfw-me-rent-type-card .rbfw-rt-del', function (e) {
+            e.preventDefault(); e.stopPropagation();
+            var $chip  = $(this).closest('.rbfw-rt-chip');
+            var termId = parseInt($chip.data('term-id'), 10) || 0;
+            var name   = $chip.data('name');
+            if (!termId) { return; }
+            if (!window.confirm('Delete rent type "' + name + '"? Items using it will have this type removed.')) { return; }
+            $.post(window.ajaxurl, {
+                action: 'rbfw_rent_type_delete',
+                nonce:  meNonce(),
+                term_id: termId
+            }, function (resp) {
+                if (resp && resp.success) {
+                    var cur = (meHidden().val() || '').split(',').filter(Boolean).filter(function (n) {
+                        return n.toLowerCase() !== String(resp.data.deleted_name).toLowerCase();
+                    });
+                    meHidden().val(cur.join(','));
+                    rebuildRentTypes(resp.data.rent_types);
+                } else {
+                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                }
+            }).fail(function () { window.alert('Request failed.'); });
         });
 
         $wrap.on('click', '#rbfw-me-rent-type-modal .rbfw-me-faq-modal__close, #rbfw-me-rent-type-modal .rbfw-me-faq-modal__backdrop, .rbfw-me-rent-type-modal-cancel', function () {
@@ -1375,23 +1428,43 @@
         });
 
         $wrap.on('click', '#rbfw-me-rent-type-modal-save', function () {
-            var $card  = $wrap.find('.rbfw-me-rent-type-card');
             var $input = $wrap.find('#rbfw-me-rent-type-modal-input');
             var name   = $.trim($input.val());
             if (!name) { $input.trigger('focus'); return; }
             if (name.length > 200) { name = name.substring(0, 200); }
-            $.post(window.ajaxurl, {
-                action: 'rbfw_rent_type_add',
-                nonce:  $card.data('nonce'),
-                name:   name
-            }, function (resp) {
-                if (resp && resp.success) {
-                    rebuildRentTypes(resp.data.rent_types, resp.data.added_name);
-                    closeRentTypeModal();
-                } else {
-                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
-                }
-            }).fail(function () { window.alert('Request failed.'); });
+
+            if (meEditTermId > 0) {
+                $.post(window.ajaxurl, {
+                    action: 'rbfw_rent_type_rename',
+                    nonce:  meNonce(),
+                    term_id: meEditTermId,
+                    name:   name
+                }, function (resp) {
+                    if (resp && resp.success) {
+                        var cur = (meHidden().val() || '').split(',').filter(Boolean).map(function (n) {
+                            return n.toLowerCase() === String(resp.data.old_name).toLowerCase() ? resp.data.new_name : n;
+                        });
+                        meHidden().val(cur.join(','));
+                        rebuildRentTypes(resp.data.rent_types);
+                        closeRentTypeModal();
+                    } else {
+                        window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                    }
+                }).fail(function () { window.alert('Request failed.'); });
+            } else {
+                $.post(window.ajaxurl, {
+                    action: 'rbfw_rent_type_add',
+                    nonce:  meNonce(),
+                    name:   name
+                }, function (resp) {
+                    if (resp && resp.success) {
+                        rebuildRentTypes(resp.data.rent_types, resp.data.added_name);
+                        closeRentTypeModal();
+                    } else {
+                        window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                    }
+                }).fail(function () { window.alert('Request failed.'); });
+            }
         });
 
         $wrap.on('keypress', '#rbfw-me-rent-type-modal-input', function (e) {

@@ -144,7 +144,7 @@
 				</div>
 
 				<!-- Category Settings ───────────────────────────────── -->
-				<div class="rbfw-me-card rbfw-me-rent-type-card" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_rent_type_crud' ) ); ?>">
+				<div class="rbfw-me-card rbfw-me-rent-type-card" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_rent_type_crud' ) ); ?>" data-can-manage="<?php echo current_user_can( 'manage_categories' ) ? '1' : '0'; ?>">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Category Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p>
@@ -163,14 +163,14 @@
 							<?php foreach ( $all_cat_terms as $term ) :
 								$checked = in_array( strtolower( trim( $term->name ) ), $saved_cat_names, true );
 							?>
-								<label class="rbfw-me-checkbox-label">
+								<label class="rbfw-me-checkbox-label rbfw-rt-chip" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>">
 									<input
 										type="checkbox"
 										class="rbfw-me-cat-checkbox"
 										data-name="<?php echo esc_attr( $term->name ); ?>"
 										<?php checked( $checked ); ?>
 									/>
-									<span><?php echo esc_html( ucfirst( $term->name ) ); ?></span>
+									<span><?php echo esc_html( ucfirst( $term->name ) ); ?></span><?php if ( current_user_can( 'manage_categories' ) ) : ?><span class="rbfw-rt-actions"><span class="rbfw-rt-edit dashicons dashicons-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span><span class="rbfw-rt-del dashicons dashicons-trash" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span></span><?php endif; ?>
 								</label>
 							<?php endforeach; ?>
 						</div>
