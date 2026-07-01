@@ -704,6 +704,68 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     return $day_wise_inventory;
 
 }
+/**
+ * Single-day (bike_car_sd / appointment) fully-sold-out dates.
+ *
+ * Unlike multi-day (one shared stock), a single-day item has per-option stock,
+ * so a date is sold out only when EVERY rental option has zero remaining
+ * quantity. Only dates that actually have bookings can be sold out, so we test
+ * just those — O(booked dates x options), not a full-calendar scan — using the
+ * same rbfw_get_bike_car_sd_available_qty() the booking step uses, so the
+ * calendar and the step-3 availability always agree.
+ *
+ * @param int $post_id Rental item ID.
+ * @return array<string,int> Map of sold-out dates ( value 0 ), keyed 'd-m-Y' to
+ *                           match the datepicker's date_in.
+ */
+function rbfw_sd_sold_out_dates( $post_id ) {
+    if ( empty( $post_id ) ) {
+        return [];
+    }
+    $sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+    if ( empty( $sd_data ) || ! is_array( $sd_data ) ) {
+        return [];
+    }
+    $types = array_filter( array_column( $sd_data, 'rent_type' ) );
+    if ( empty( $types ) ) {
+        return [];
+    }
+    $inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+    if ( empty( $inventory ) || ! is_array( $inventory ) ) {
+        return [];
+    }
+
+    // Candidate dates = every booked date; a date with no bookings can't be sold out.
+    $candidates = [];
+    foreach ( $inventory as $inv ) {
+        if ( ! empty( $inv['booked_dates'] ) && is_array( $inv['booked_dates'] ) ) {
+            foreach ( $inv['booked_dates'] as $d ) {
+                $candidates[ $d ] = true;
+            }
+        }
+    }
+
+    $sold_out = [];
+    foreach ( array_keys( $candidates ) as $date_dmy ) {
+        $dt = DateTime::createFromFormat( 'd-m-Y', $date_dmy );
+        if ( ! $dt ) {
+            continue;
+        }
+        $date_ymd     = $dt->format( 'Y-m-d' );
+        $all_sold_out = true;
+        foreach ( $types as $type ) {
+            if ( (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date_ymd, $type, '' ) > 0 ) {
+                $all_sold_out = false;
+                break;
+            }
+        }
+        if ( $all_sold_out ) {
+            $sold_out[ $date_dmy ] = 0;
+        }
+    }
+
+    return $sold_out;
+}
 function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return,$start_time = null, $end_time = null){
     $total_single_service = 0;
 
