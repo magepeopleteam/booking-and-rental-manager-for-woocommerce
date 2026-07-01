@@ -140,12 +140,12 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
             let rbfw_rent_type = jQuery("#rbfw_rent_type").val();
 
-            if(rbfw_rent_type == 'bike_car_md'){
+            if(rbfw_rent_type == 'bike_car_md' || rbfw_rent_type == 'bike_car_sd' || rbfw_rent_type == 'appointment'){
                 if(jQuery('#rbfw_month_wise_inventory').val()){
                     const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val());
 
                     if(day_wise_inventory[date_in]==0){
-                        return [false, "notav", rbfw_translation.sold_out];
+                        return [false, "notav rbfw-soldout-day", rbfw_translation.sold_out];
                     }
 
 

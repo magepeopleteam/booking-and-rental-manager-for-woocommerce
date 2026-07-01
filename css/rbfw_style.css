@@ -5416,6 +5416,33 @@ span {
     background: transparent;
 }
 
+/* Fully sold-out day: struck-through date + a small "Sold Out" label
+   ( label text comes from the cell's title attribute, so it stays translated ). */
+#rbfw-bikecarsd-calendar .ui-datepicker table td.rbfw-soldout-day {
+    background: #FFF4F3;
+    line-height: 1;
+    vertical-align: top;
+    padding-bottom: 3px;
+}
+#rbfw-bikecarsd-calendar .ui-datepicker table td.rbfw-soldout-day span.ui-state-default {
+    text-decoration: line-through;
+    opacity: .55;
+    color: #b91c1c;
+}
+#rbfw-bikecarsd-calendar .ui-datepicker table td.rbfw-soldout-day::after {
+    content: attr(title);
+    display: block;
+    margin-top: 2px;
+    font-size: 7.5px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: .2px;
+    text-transform: uppercase;
+    color: #d63638;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
 .single-rbfw_item  .ui-widget-content {
     border-radius:0;
     border: 1px solid #dfdedd;
