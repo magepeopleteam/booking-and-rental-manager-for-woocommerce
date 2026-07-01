@@ -13,6 +13,40 @@
 				add_action( 'wp_ajax_rbfw_load_duration_form', [ $this, 'rbfw_load_duration_form' ] );
 				add_action( 'wp_ajax_nopriv_rbfw_load_duration_form', [ $this, 'rbfw_load_duration_form' ] );
                 add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
+                add_action( 'admin_notices', array( $this, 'render_pricing_save_errors_notice' ) );
+			}
+
+			/**
+			 * Show the pricing validation errors saved by settings_save() when a
+			 * classic-editor save was rejected. The modern editor surfaces the same
+			 * errors through its AJAX response, so this notice is for the classic
+			 * meta-box edit screen only.
+			 */
+			public function render_pricing_save_errors_notice() {
+				if ( ! function_exists( 'get_current_screen' ) ) {
+					return;
+				}
+				$screen = get_current_screen();
+				if ( ! $screen || 'rbfw_item' !== $screen->post_type || 'post' !== $screen->base ) {
+					return;
+				}
+				$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0;
+				if ( ! $post_id && isset( $GLOBALS['post']->ID ) ) {
+					$post_id = (int) $GLOBALS['post']->ID;
+				}
+				if ( ! $post_id ) {
+					return;
+				}
+				$errors = get_transient( 'rbfw_pricing_save_errors_' . $post_id );
+				if ( empty( $errors ) || ! is_array( $errors ) ) {
+					return;
+				}
+				delete_transient( 'rbfw_pricing_save_errors_' . $post_id );
+				echo '<div class="notice notice-error is-dismissible"><p><strong>' . esc_html__( 'Pricing was not saved. Please fix the following and save again:', 'booking-and-rental-manager-for-woocommerce' ) . '</strong></p><ul style="list-style:disc;margin:4px 0 4px 22px;">';
+				foreach ( $errors as $err ) {
+					echo '<li>' . esc_html( $err ) . '</li>';
+				}
+				echo '</ul></div>';
 			}
 
 			public function add_tab_menu() {
@@ -1615,10 +1649,16 @@
                     $require_qty = $item_type === 'appointment' || ! $timely;
                     $has_valid_row = false;
 
+                    // "Manage a single-item inventory on an hourly basis" needs the time
+                    // picker enabled so slots can be selected — enforce that pairing.
+                    $time_picker_on = isset( $post_data['rbfw_enable_time_picker'] ) && $post_data['rbfw_enable_time_picker'] === 'yes';
+                    if ( $timely && ! $time_picker_on ) {
+                        $errors[] = __( 'Please enable "Enable Time Picker" — it is required when "Manage a single-item inventory on an hourly basis" is enabled.', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+
                     if ( empty( $rows ) ) {
-                        return [
-                            __( 'At least one rental option row is required.', 'booking-and-rental-manager-for-woocommerce' ),
-                        ];
+                        $errors[] = __( 'At least one rental option row is required.', 'booking-and-rental-manager-for-woocommerce' );
+                        return $errors;
                     }
 
                     foreach ( $rows as $index => $row ) {
