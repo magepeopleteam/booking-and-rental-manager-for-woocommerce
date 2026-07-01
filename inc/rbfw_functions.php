@@ -298,6 +298,22 @@ function rbfw_url_exclude_search_engine() {
 
 		return $rbfw->get_datetime( $date, $type );
 	}
+	if ( ! function_exists( 'rbfw_booking_has_time' ) ) {
+		/**
+		 * Whether a stored booking time value represents a real, meaningful time.
+		 *
+		 * Day-wise (non-hourly) rentals store no time — the value is either an
+		 * empty string or a midnight placeholder ("00:00" / "00:00:00"). Use this
+		 * to decide whether the time should be shown/edited anywhere in the UI.
+		 *
+		 * @param string $time Raw stored time value.
+		 * @return bool True when the value is a real time; false for empty/midnight.
+		 */
+		function rbfw_booking_has_time( $time ) {
+			$time = trim( (string) $time );
+			return '' !== $time && '00:00' !== $time && '00:00:00' !== $time;
+		}
+	}
 	function rbfw_check_product_exists( $id ) {
 		return is_string( get_post_status( $id ) );
 	}

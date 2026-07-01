@@ -104,7 +104,7 @@
 							$rent_type       = $ticket_info['rbfw_rent_type'];
 							$rbfw_start_time = ! empty( $ticket_info['rbfw_start_time'] ) ? $ticket_info['rbfw_start_time'] : '';
 							$rbfw_end_time   = ! empty( $ticket_info['rbfw_end_time'] ) ? $ticket_info['rbfw_end_time'] : '';
-							if ( $rent_type == 'resort' || ( empty( $rbfw_start_time ) && empty( $rbfw_end_time ) ) ) {
+							if ( $rent_type == 'resort' || ! rbfw_booking_has_time( $rbfw_start_time ) ) {
 								$rbfw_start_datetime = rbfw_get_datetime( $ticket_info['rbfw_start_datetime'], 'date-text' );
 								$rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'], 'date-text' );
 							} elseif ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
