@@ -36,6 +36,12 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 		}
 
 		public function process() {
+			// 0. Neither WooCommerce nor Pro is active — there is no checkout path to complete
+			// this booking, so refuse it server-side even if a disabled button was bypassed.
+			if ( ! RBFW_Function::is_booking_available() ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Booking is currently not possible. Please contact us directly.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+
 			// 1. Nonce.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_native_checkout_action' ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Security check failed. Please refresh and try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );

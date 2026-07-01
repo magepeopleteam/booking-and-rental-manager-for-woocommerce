@@ -50,6 +50,15 @@ if ( ! function_exists( 'rbfw_use_wc' ) ) {
     }
 }
 
+if ( ! function_exists( 'rbfw_is_booking_available' ) ) {
+    function rbfw_is_booking_available() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::is_booking_available();
+        }
+        return rbfw_has_woocommerce() || ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() );
+    }
+}
+
 /**
  * Helpful, dismissible admin notice shown when WooCommerce is inactive, explaining that the
  * plugin has switched to Standalone booking mode. Replaces the old forced "install WooCommerce"

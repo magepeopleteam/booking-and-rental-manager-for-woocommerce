@@ -894,7 +894,14 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
 
 
-                <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
+                <?php if ( ! rbfw_is_booking_available() ) { ?>
+                    <div class="item">
+                        <p class="rbfw_booking_unavailable_msg" style="background:#fff3cd;color:#856404;padding:10px 14px;border-left:4px solid #ffc107;border-radius:4px;margin:0 0 10px;font-size:13px;"><i class="fas fa-exclamation-triangle" style="margin-right:6px;color:#e0a800;"></i><?php esc_html_e( 'Booking currently not possible. Please contact us directly to complete your booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        <button type="button" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_disabled_button" disabled style="opacity:.55;cursor:not-allowed;" title="<?php esc_attr_e( 'Booking is currently not possible. Please contact us directly.', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
+                        </button>
+                    </div>
+                <?php } elseif(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                     <div class="item">
                         <div class="rbfw_reg_form_rb" style="display: none;">
                             <?php

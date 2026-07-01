@@ -456,11 +456,18 @@
                 <?php do_action('rbfw_add_term_condition',$rbfw_id) ?>
 
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
-					<button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
-					<?php
-						esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce');
-					?>
-					</button>
+					<?php if ( ! rbfw_is_booking_available() ) { ?>
+						<p class="rbfw_booking_unavailable_msg" style="background:#fff3cd;color:#856404;padding:10px 14px;border-left:4px solid #ffc107;border-radius:4px;margin:0 0 10px;font-size:13px;"><i class="fas fa-exclamation-triangle" style="margin-right:6px;color:#e0a800;"></i><?php esc_html_e( 'Booking currently not possible. Please contact us directly to complete your booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<button type="button" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_disabled_button" disabled style="opacity:.55;cursor:not-allowed;" title="<?php esc_attr_e( 'Booking is currently not possible. Please contact us directly.', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							<?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
+						</button>
+					<?php } else { ?>
+						<button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
+						<?php
+							esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce');
+						?>
+						</button>
+					<?php } ?>
 				</div>
 
                 <?php
