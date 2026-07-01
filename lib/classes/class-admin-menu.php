@@ -426,6 +426,16 @@
                                                     <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_view pro-overlay" title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
                                                     <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_edit pro-overlay" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
                                                 <?php } ?>
+                                                <?php
+                                                /**
+                                                 * Extra per-row order actions (e.g. Pro "Export PDF").
+                                                 *
+                                                 * @param int    $post_id     Booking ( rbfw_order ) post ID.
+                                                 * @param string $wc_order_id WooCommerce order number.
+                                                 * @param string $status      Current order status.
+                                                 */
+                                                do_action( 'rbfw_ol_row_actions', $post_id, $wc_order_id, $status );
+                                                ?>
                                             </div>
                                         </td>
                                     </tr>
