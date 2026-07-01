@@ -15,6 +15,7 @@ require_once RBFW_PLUGIN_DIR . '/admin/RBFW_WC_Payment_Manager.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Settings.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_frontend_display.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_resort_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_fee_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
