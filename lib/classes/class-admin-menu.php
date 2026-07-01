@@ -103,6 +103,19 @@
 				// (scoped under .rbfw_ol). The legacy rbfw-order-list-modern.css was retired:
 				// it wrapped the page in a centered max-width card (margin:0 auto -> side gaps)
 				// and shipped a global "*"/"body" reset that leaked into the rest of wp-admin.
+
+				// Global Settings page — modern two-column layout (panel + sidebar cards).
+				// Scoped under .rbfw_global_settings and loaded after the base admin style
+				// ( dependency ) so its overrides win without touching the shared Settings API.
+				if ( 'rbfw_item_page_rbfw_settings_page' === $hook ) {
+					$gs_css = RBFW_PLUGIN_DIR . '/admin/css/rbfw_global_settings.css';
+					wp_enqueue_style(
+						'rbfw-global-settings',
+						RBFW_PLUGIN_URL . '/admin/css/rbfw_global_settings.css',
+						array( 'rbfw-admin-style' ),
+						file_exists( $gs_css ) ? filemtime( $gs_css ) : false
+					);
+				}
 			}
 
 			public function rbfw_time_slots() {
@@ -614,21 +627,59 @@
 			}
 
 			function plugin_page() {
-				echo '<div class="wrap">';
-				settings_errors();
-				echo '</div>';
-				echo '<div class="rbfw_settings_wrapper">';
-				echo '<div class="rbfw_settings_inner_wrapper">';
-				echo '<div class="rbfw_settings_panel_header">';
-				echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) );
-				echo '<small>' . esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ) . '</small>';
-				echo '</div>';
-				echo '<div class="mage_settings_panel_wrap rbfw_settings_panel">';
-				$this->settings_api->show_navigation();
-				$this->settings_api->show_forms();
-				echo '</div>';
-				echo '</div>';
-				echo '</div>';
+				$pro_active = is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' );
+				?>
+				<div class="wrap rbfw_gs_notices"><?php settings_errors(); ?></div>
+				<div id="rbfw_content" class="rbfw_global_settings">
+					<div class="rbfw-gs-layout">
+						<div class="rbfw-gs-main">
+							<div class="rbfwPanel">
+								<div class="rbfwPanelHeader">
+									<div class="rbfw-gs-header-icon"><i class="fas fa-gear"></i></div>
+									<div class="rbfw-gs-header-text">
+										<h2><?php esc_html_e( 'Global Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+										<p><?php esc_html_e( 'Configure plugin preferences — general behaviour, styling, custom CSS, checkout, and license settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									</div>
+									<span class="rbfw-gs-version"><?php echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) ); ?> <small>v<?php echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ); ?></small></span>
+								</div>
+								<div class="rbfwPanelBody">
+									<div class="rbfw_settings_wrapper">
+										<div class="mage_settings_panel_wrap rbfw_settings_panel">
+											<?php
+												$this->settings_api->show_navigation();
+												$this->settings_api->show_forms();
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<aside class="rbfw-gs-sidebar">
+							<?php if ( ! $pro_active ) : ?>
+								<div class="rbfw-gs-card rbfw-gs-pro-card">
+									<div class="rbfw-gs-card-icon"><i class="fas fa-crown"></i></div>
+									<h4><?php esc_html_e( 'Upgrade to Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+									<p><?php esc_html_e( 'Unlock advanced pricing, security deposits, PDF invoices, backend orders, and priority support.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-pro"><?php esc_html_e( 'Get Pro Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+								</div>
+							<?php endif; ?>
+							<div class="rbfw-gs-card">
+								<h4><i class="fas fa-book"></i> <?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+								<ul class="rbfw-gs-links">
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Configuration Guide', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'View All Docs', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+								</ul>
+							</div>
+							<div class="rbfw-gs-card">
+								<h4><i class="fas fa-puzzle-piece"></i> <?php esc_html_e( 'Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+								<p><?php esc_html_e( 'Extend your plugin with our powerful addon collection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+								<a href="https://mage-people.com/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-outline"><?php esc_html_e( 'Browse Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+							</div>
+						</aside>
+					</div>
+				</div>
+				<?php
 			}
 
 			function get_pages() {
