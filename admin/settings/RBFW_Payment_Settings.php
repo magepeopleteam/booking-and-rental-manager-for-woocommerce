@@ -696,6 +696,16 @@
 				tr.wc-payment-methods-field .rbfw-wc-payment-manager{margin-top:4px;padding:6px 2px;}
 				/* WooCommerce enable toggle row + additional fields: lighter rows */
 				tr.woocommerce-field td, tr.no-woocommerce-field td{vertical-align:middle;}
+
+				/* --- Align with the modern Global Settings shell ---
+				   The gateway cards / sub-tabs / accordions are the visual layer on
+				   this tab, so neutralise the generic form-table "card" (border,
+				   shadow, row striping + hover) that the shell applies to every tab,
+				   otherwise a striped box sits behind the cards. */
+				#rbfw_payment_settings table.form-table{background:transparent !important;border:none !important;box-shadow:none !important;border-radius:0 !important;margin-bottom:0 !important;}
+				#rbfw_payment_settings table.form-table tr{background:transparent !important;border-bottom:none !important;}
+				#rbfw_payment_settings table.form-table tr:hover{background:transparent !important;}
+				#rbfw_payment_settings table.form-table > tbody > tr > th{padding-left:0 !important;}
 				</style>
 				<script>
 				jQuery(function($){
