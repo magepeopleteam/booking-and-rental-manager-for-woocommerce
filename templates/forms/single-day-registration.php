@@ -91,21 +91,9 @@
                 }
                 ?>
                 <div class="rbfw-sd-rate-box">
-                    <div class="rbfw-sd-rate-box-badges">
-                        <span class="rbfw-sd-badge rbfw-sd-badge--available">
-                            <span class="rbfw-sd-badge-dot"></span>
-                            <?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </span>
-                        <span class="rbfw-sd-badge rbfw-sd-badge--seller">
-                            <?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </span>
-                    </div>
-                    <h3 class="rbfw-sd-rate-box-title">
-                        <?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                    </h3>
-                    <p class="rbfw-sd-rate-box-desc">
-                        <?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                    </p>
+                    <?php rbfw_fd_summary_badges(); ?>
+                    <?php rbfw_fd_summary_title(); ?>
+                    <?php rbfw_fd_summary_desc(); ?>
                     <?php if ( $_rbfw_start > 0 ) : ?>
                     <div class="rbfw-sd-rate-box-price-row">
                         <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>

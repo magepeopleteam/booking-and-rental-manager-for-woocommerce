@@ -106,6 +106,7 @@
 			),
 			'a'       => array(
                 'href' => true,
+				'id'      => true, // needed so settings-api nav tab anchors keep their #{section}-tab id
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
