@@ -7957,6 +7957,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     content: '⚠ ';
 }
 input.rbfw-me-field-invalid,
+select.rbfw-me-field-invalid,
 textarea.rbfw-me-field-invalid {
     border-color: #d63638 !important;
     box-shadow: 0 0 0 1px #d63638 !important;
