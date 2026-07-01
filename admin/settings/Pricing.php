@@ -1639,39 +1639,6 @@
                 <?php
             }
 
-            /**
-             * Show the pricing validation errors saved by settings_save() when a
-             * classic-editor save was rejected. The modern editor surfaces the same
-             * errors through its AJAX response, so this notice is for the classic
-             * meta-box edit screen only.
-             */
-            public function render_pricing_save_errors_notice() {
-                if ( ! function_exists( 'get_current_screen' ) ) {
-                    return;
-                }
-                $screen = get_current_screen();
-                if ( ! $screen || 'rbfw_item' !== $screen->post_type || 'post' !== $screen->base ) {
-                    return;
-                }
-                $post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0;
-                if ( ! $post_id && isset( $GLOBALS['post']->ID ) ) {
-                    $post_id = (int) $GLOBALS['post']->ID;
-                }
-                if ( ! $post_id ) {
-                    return;
-                }
-                $errors = get_transient( 'rbfw_pricing_save_errors_' . $post_id );
-                if ( empty( $errors ) || ! is_array( $errors ) ) {
-                    return;
-                }
-                delete_transient( 'rbfw_pricing_save_errors_' . $post_id );
-                echo '<div class="notice notice-error is-dismissible"><p><strong>' . esc_html__( 'Pricing was not saved. Please fix the following and save again:', 'booking-and-rental-manager-for-woocommerce' ) . '</strong></p><ul style="list-style:disc;margin:4px 0 4px 22px;">';
-                foreach ( $errors as $err ) {
-                    echo '<li>' . esc_html( $err ) . '</li>';
-                }
-                echo '</ul></div>';
-            }
-
             public function get_pricing_validation_errors( $item_type, $post_data ) {
                 $errors = [];
                 $item_type = sanitize_text_field( (string) $item_type );

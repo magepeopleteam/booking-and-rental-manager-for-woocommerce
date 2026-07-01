@@ -61,7 +61,13 @@ if(isset($_POST['post_id'])){
         $datetime_string = $result . ' ' . $selected_time;
         $timestamp = strtotime($datetime_string);
 
-        $wp_datetime = date_i18n( get_option('date_format') . ' ' . get_option('time_format'), $timestamp );
+        // Day-wise rentals carry no meaningful time — omit it so the summary
+        // doesn't show a misleading "12:00 am" when no time was actually picked.
+        $rbfw_selected_format = rbfw_booking_has_time( $selected_time )
+            ? get_option('date_format') . ' ' . get_option('time_format')
+            : get_option('date_format');
+
+        $wp_datetime = date_i18n( $rbfw_selected_format, $timestamp );
 
 
 

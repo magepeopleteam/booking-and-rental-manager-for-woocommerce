@@ -386,24 +386,34 @@
                                     $ticket_info_array = maybe_unserialize( $ticket_infos );
                                     $rbfw_start_datetime = '';
                                     $rbfw_end_datetime   = '';
+                                    $rbfw_start_time     = '';
+                                    $rbfw_end_time       = '';
                                     $rbfw_row_item_ids   = array();
                                     if ( ! empty( $ticket_info_array ) && is_array( $ticket_info_array ) ) {
                                         foreach ( $ticket_info_array as $ticket_info ) {
                                             $rbfw_start_datetime = isset( $ticket_info['rbfw_start_datetime'] ) ? $ticket_info['rbfw_start_datetime'] : '';
                                             $rbfw_end_datetime   = isset( $ticket_info['rbfw_end_datetime'] ) ? $ticket_info['rbfw_end_datetime'] : '';
+                                            $rbfw_start_time     = isset( $ticket_info['rbfw_start_time'] ) ? $ticket_info['rbfw_start_time'] : '';
+                                            $rbfw_end_time       = isset( $ticket_info['rbfw_end_time'] ) ? $ticket_info['rbfw_end_time'] : '';
                                             if ( ! empty( $ticket_info['rbfw_id'] ) ) {
                                                 $rbfw_row_item_ids[] = (string) $ticket_info['rbfw_id'];
                                             }
                                         }
                                     }
+                                    // Day-wise bookings carry no real time; drop it from the columns.
+                                    // The booking is "timed" only when it has a real START time — the end
+                                    // time can be a duration artifact, so gate it on the start too.
+                                    $rbfw_ol_is_timed  = rbfw_booking_has_time( $rbfw_start_time );
+                                    $rbfw_ol_start_fmt = $rbfw_ol_is_timed ? 'F j, Y g:i a' : 'F j, Y';
+                                    $rbfw_ol_end_fmt   = ( $rbfw_ol_is_timed && rbfw_booking_has_time( $rbfw_end_time ) ) ? 'F j, Y g:i a' : 'F j, Y';
                                     $rbfw_is_pro = function_exists( 'rbfw_pro_tab_menu_list' );
                                     ?>
                                     <tr class="order-row rbfw_ol_row" data-order="<?php echo esc_attr( strtolower( (string) $wc_order_id ) ); ?>" data-name="<?php echo esc_attr( strtolower( (string) $billing_name ) ); ?>" data-phone="<?php echo esc_attr( strtolower( (string) $billing_phone ) ); ?>" data-email="<?php echo esc_attr( strtolower( (string) $billing_email ) ); ?>" data-item="<?php echo esc_attr( implode( ' ', array_unique( $rbfw_row_item_ids ) ) ); ?>" data-status="<?php echo esc_attr( $status ); ?>" data-start="<?php echo esc_attr( ! empty( $rbfw_start_datetime ) ? gmdate( 'Y-m-d', strtotime( $rbfw_start_datetime ) ) : '' ); ?>">
                                         <td class="rbfw_ol_td_order" data-th="<?php esc_attr_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?>">#<?php echo esc_html( $wc_order_id ); ?></td>
                                         <td class="rbfw_ol_td_name" data-th="<?php esc_attr_e( 'Billing Name', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( $billing_name ); ?></td>
                                         <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Order Created', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
-                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_start_datetime ) ) : '—' ); ?></td>
-                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_end_datetime ) ) : '—' ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( $rbfw_ol_start_fmt, strtotime( $rbfw_start_datetime ) ) : '—' ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( $rbfw_ol_end_fmt, strtotime( $rbfw_end_datetime ) ) : '—' ); ?></td>
                                         <td data-th="<?php esc_attr_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ol_badge rbfw_ol_badge_<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst( $status ) ); ?></span></td>
                                         <td class="rbfw_ol_td_total" data-th="<?php esc_attr_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $total_price ) ); ?></td>
                                         <td class="rbfw_ol_td_action" data-th="<?php esc_attr_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>">

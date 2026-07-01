@@ -1325,7 +1325,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 endif;
                 $rbfw_bikecarsd_duration_price = $values['rbfw_bikecarsd_duration_price'] ? $values['rbfw_bikecarsd_duration_price'] : '';
                 $rbfw_bikecarsd_service_price  = $values['rbfw_bikecarsd_service_price'] ? $values['rbfw_bikecarsd_service_price'] : '';
-                if ( $rbfw_start_time != '00:00' ) {
+                if ( rbfw_booking_has_time( $rbfw_start_time ) ) {
                     $start_date_time_label = (
                         $rbfw->get_option_trans( 'rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings' )
                         && want_loco_translate() == 'no'
@@ -1351,7 +1351,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     );
                 }
                 if ( ! empty( $rbfw_end_datetime ) ) {
-                    if ( $rbfw_end_time != '00:00' ) {
+                    if ( rbfw_booking_has_time( $rbfw_start_time ) && rbfw_booking_has_time( $rbfw_end_time ) ) {
                         $end_date_time_label = (
                             $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
                             && want_loco_translate() == 'no'
@@ -1518,7 +1518,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $multiple_items_info = get_post_meta( $rbfw_id, 'multiple_items_info', true ) ? get_post_meta( $rbfw_id, 'multiple_items_info', true ) : array();
 
 
-                if ( $rbfw_start_time != '00:00' ) {
+                if ( rbfw_booking_has_time( $rbfw_start_time ) ) {
                     $start_date_time_label = (
                         $rbfw->get_option_trans( 'rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings' )
                         && want_loco_translate() == 'no'
@@ -1544,7 +1544,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     );
                 }
                 if ( ! empty( $rbfw_end_datetime ) ) {
-                    if ( $rbfw_end_time != '00:00' ) {
+                    if ( rbfw_booking_has_time( $rbfw_start_time ) && rbfw_booking_has_time( $rbfw_end_time ) ) {
                         $end_date_time_label = (
                             $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
                             && want_loco_translate() == 'no'
