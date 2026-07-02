@@ -229,7 +229,7 @@ if (!class_exists('RBFW_Status')) {
                 .rbfw_status_section_head h3 { margin: 0 0 3px; font-size: 15px; font-weight: 700; color: var(--rbfw-st-text-1); }
                 .rbfw_status_section_head p { margin: 0; font-size: 12px; color: var(--rbfw-st-text-3); }
 
-                .rbfw_status_card_grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+                .rbfw_status_card_grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 12px; }
                 .rbfw_status_card {
                     display: flex; align-items: center; gap: 14px;
                     background: var(--rbfw-st-surface); border: 1px solid var(--rbfw-st-border);
@@ -261,7 +261,7 @@ if (!class_exists('RBFW_Status')) {
                 .rbfw_status_modern .rbfw_plugin_na { font-size: 12px; color: var(--rbfw-st-text-3); font-style: italic; }
 
                 .rbfw_status_info_grid {
-                    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
                     background: var(--rbfw-st-surface); border: 1px solid var(--rbfw-st-border);
                     border-radius: var(--rbfw-st-radius); box-shadow: var(--rbfw-st-shadow);
                     overflow: hidden;

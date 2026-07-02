@@ -54,6 +54,7 @@
 .rbfw_global_settings .rbfwPanelHeader {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 16px;
     padding: 18px 24px;
     background: linear-gradient(135deg, #3F13A4 0%, #2271B1 100%);
@@ -523,6 +524,28 @@
     .rbfw_global_settings {
         margin-right: 10px;
     }
+
+    /* Header: icon/title on their own line, version badge wraps under
+       instead of overflowing off the right edge (its nowrap + margin-left:
+       auto forced a horizontal scrollbar on every mobile tab). */
+    .rbfw_global_settings .rbfwPanelHeader {
+        padding: 16px;
+    }
+    .rbfw_global_settings .rbfw-gs-version {
+        margin-left: 0;
+        white-space: normal;
+    }
+
+    /* Sidebar cards: full-width single column, not a 2-up row — a 240px
+       min-width per card no longer fits two abreast on a phone. */
+    .rbfw_global_settings .rbfw-gs-sidebar {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+    .rbfw_global_settings .rbfw-gs-sidebar .rbfw-gs-card {
+        min-width: 0;
+    }
+
     .rbfw_global_settings .mage_settings_panel_wrap {
         flex-direction: column;
     }
@@ -532,9 +555,33 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
+    .rbfw_global_settings .mage_settings_panel_wrap .metabox-holder {
+        padding: 16px;
+    }
     .rbfw_global_settings .metabox-holder table.form-table th,
     .rbfw_global_settings .metabox-holder table.form-table td {
         display: block;
         width: 100%;
+    }
+    .rbfw_global_settings .metabox-holder table.form-table td input.regular-text:not(.wp-color-picker-field),
+    .rbfw_global_settings .metabox-holder table.form-table td input[type="text"]:not(.wp-color-picker-field),
+    .rbfw_global_settings .metabox-holder table.form-table td input[type="url"],
+    .rbfw_global_settings .metabox-holder table.form-table td input[type="email"],
+    .rbfw_global_settings .metabox-holder table.form-table td input[type="number"],
+    .rbfw_global_settings .metabox-holder table.form-table td select {
+        max-width: 100%;
+    }
+
+    /* License tab: the addon license table (columns registered by other
+       plugins via an action hook, so its markup isn't ours to reflow into
+       stacked cards) scrolls horizontally within its own box instead of
+       breaking the page width. */
+    .rbfw_global_settings .mep-licensing-page {
+        max-width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .rbfw_global_settings .mep-licensing-table {
+        min-width: 640px;
     }
 }
