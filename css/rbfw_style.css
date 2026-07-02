@@ -12464,3 +12464,143 @@ i.fas.fa-minus {
    ====================================================== */
 
 
+
+/* ── Pickup-location chooser cards (Location Inventory & Price) ── */
+.rbfw_loc_cards_wrap {
+    background: #f8f9fd;
+    border: 1px solid #e4e9f2;
+    border-radius: 14px;
+    margin-bottom: 22px;
+    padding: 18px 18px 14px;
+}
+.rbfw_loc_cards_head {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+.rbfw_loc_cards_title { color: #1f2733; font-size: 15px; font-weight: 700; }
+.rbfw_loc_cards_required {
+    background: #fff1f2;
+    border: 1px solid #ffd7db;
+    border-radius: 20px;
+    color: #e11d48;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    padding: 3px 10px;
+    text-transform: uppercase;
+}
+.rbfw_loc_cards {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr));
+}
+.rbfw_loc_card {
+    align-items: center;
+    background: #fff;
+    border: 2px solid #e4e9f2;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, .05);
+    cursor: pointer;
+    display: flex;
+    font-family: inherit;
+    gap: 12px;
+    padding: 14px;
+    position: relative;
+    text-align: left;
+    transition: border-color .16s, box-shadow .16s, transform .12s;
+    width: 100%;
+}
+.rbfw_loc_card:hover:not(:disabled) {
+    border-color: #7b6ff0;
+    box-shadow: 0 6px 16px rgba(123, 111, 240, .16);
+    transform: translateY(-1px);
+}
+.rbfw_loc_card_pin {
+    align-items: center;
+    background: linear-gradient(135deg, #7b6ff0 0%, #4f8ef7 100%);
+    border-radius: 10px;
+    color: #fff;
+    display: flex;
+    flex-shrink: 0;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+.rbfw_loc_card_pin svg { height: 20px; width: 20px; }
+.rbfw_loc_card_body { display: flex; flex: 1; flex-direction: column; gap: 3px; min-width: 0; }
+.rbfw_loc_card_name { color: #1f2733; font-size: 14px; font-weight: 700; }
+.rbfw_loc_card_stock { color: #16a34a; font-size: 12px; font-weight: 600; }
+.rbfw_loc_card_price {
+    background: #eef3ff;
+    border-radius: 8px;
+    color: #2f5eff;
+    flex-shrink: 0;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 5px 10px;
+    white-space: nowrap;
+}
+.rbfw_loc_card_price .woocommerce-Price-amount { font-weight: 700; }
+.rbfw_loc_card_price_free { background: #ecfdf5; color: #16a34a; }
+.rbfw_loc_card_check {
+    align-items: center;
+    background: #16a34a;
+    border-radius: 50%;
+    color: #fff;
+    display: none;
+    height: 22px;
+    justify-content: center;
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    width: 22px;
+}
+.rbfw_loc_card_check svg { height: 12px; width: 12px; }
+.rbfw_loc_card_selected {
+    border-color: #7b6ff0 !important;
+    box-shadow: 0 8px 20px rgba(123, 111, 240, .22) !important;
+}
+.rbfw_loc_card_selected .rbfw_loc_card_check { display: flex; }
+.rbfw_loc_card_soldout { cursor: not-allowed; filter: grayscale(1); opacity: .55; }
+.rbfw_loc_card_soldout .rbfw_loc_card_stock { color: #e11d48; }
+.rbfw_loc_cards_note {
+    color: #6a727e;
+    font-size: 12.5px;
+    margin: 12px 0 0;
+}
+.rbfw_loc_cards_wrap:not(.rbfw_loc_pending) .rbfw_loc_cards_note { display: none; }
+
+/* Dates-first flow: availability is date-wise, so the cards wait (dimmed,
+   unclickable) until booking dates are chosen; then they activate with the
+   exact remaining stock for that range. The cards block sits right AFTER
+   the date fields in every booking form, and everything that follows it
+   stays locked until a location is chosen. */
+.rbfw_loc_cards_wrap.rbfw_loc_pending ~ * {
+    filter: grayscale(.15);
+    opacity: .45;
+    pointer-events: none;
+    user-select: none;
+}
+.rbfw_loc_cards_wrap.rbfw_loc_waitdates .rbfw_loc_card {
+    cursor: not-allowed;
+    opacity: .55;
+}
+.rbfw_loc_cards_wrap.rbfw_loc_waitdates .rbfw_loc_card_stock { color: #6a727e; }
+
+/* Booking attempted without choosing a location. */
+.rbfw_loc_cards_wrap.rbfw_loc_cards_error {
+    animation: rbfw-loc-shake .3s ease-in-out;
+    border-color: #e11d48;
+}
+.rbfw_loc_cards_wrap.rbfw_loc_cards_error .rbfw_loc_cards_note { color: #e11d48; font-weight: 600; }
+@keyframes rbfw-loc-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* The classic pickup dropdown is redundant while cards are active. */
+.rbfw_loc_cards_hide_select { display: none !important; }

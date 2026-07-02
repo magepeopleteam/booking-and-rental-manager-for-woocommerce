@@ -196,6 +196,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id, $order_st
     $order_array['rbfw_service_infos'] = $rbfw_service_infos;
     $order_array['rbfw_item_quantity'] = $rbfw_item_quantity;
     $order_array['rbfw_order_status'] = $rbfw_order_status;
+    /* Pickup location — lets rbfw_location_sold_qty() track location-wise stock. */
+    $order_array['rbfw_pickup_point'] = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
 
     $rbfw_inventory_info[$order_id] = $order_array;
 

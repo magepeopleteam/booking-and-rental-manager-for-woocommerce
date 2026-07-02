@@ -535,6 +535,8 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         <input type="hidden" name="rbfw_pickup_end_time" id="dropoff_time" value="<?php echo esc_html($rbfw_event_end_time); ?>"/>
                     <?php } ?>
 
+                    <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+
 
                     <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>
                         <div class="item rbfw_quantity_md">

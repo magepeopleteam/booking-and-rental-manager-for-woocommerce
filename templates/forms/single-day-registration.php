@@ -133,6 +133,8 @@
                         </div>
                     </div>
 
+                    <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+
                     <div class="rbfw-bikecarsd-result-wrap">
                         <div class="rbfw-bikecarsd-result-loader"></div>
                         <div class="rbfw-bikecarsd-result">
@@ -185,6 +187,12 @@
 
                         </div>
                     </div>
+
+                    <?php
+                    /* Timely-inventory mode has its own Rental Start Date field
+                       above; the location cards follow it (dates → location). */
+                    include RBFW_TEMPLATE_PATH . 'forms/location-cards.php';
+                    ?>
 
                     <label class="rbfw-single-right-heading">
                         <?php esc_html_e('Rental Duration', 'booking-and-rental-manager-for-woocommerce'); ?>

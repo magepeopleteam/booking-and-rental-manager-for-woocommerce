@@ -310,6 +310,65 @@
 					$locations,
 					$dropoff_slugs
 				);
+
+				self::render_modern_location_inventory( $post_id, $locations );
+			}
+
+			/**
+			 * Modern editor: "Location Inventory & Price" block — toggle + one
+			 * stock/price row per location (same field names as the classic
+			 * panel; collectFormData() posts them as the same arrays).
+			 */
+			private static function render_modern_location_inventory( int $post_id, array $locations ): void {
+				$enabled = get_post_meta( $post_id, 'rbfw_enable_location_inventory', true ) === 'on';
+				$rows    = self::location_inventory_rows( $post_id );
+				?>
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Location Inventory & Price', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<span class="rbfw-me-field__desc"><?php esc_html_e( 'Customers choose a pick-up location first; each location has its own stock and price added to the booking total.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<label class="rbfw-me-toggle">
+						<input type="checkbox" name="rbfw_enable_location_inventory" value="on" <?php checked( $enabled ); ?> class="rbfw-me-toggle__input rbfw-me-toggle--reveal" data-reveals=".rbfw-me-loc-inv-rows" />
+						<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+					</label>
+				</div>
+				<div class="rbfw-me-loc-inv-rows<?php echo $enabled ? '' : ' rbfw-me-hidden'; ?>">
+					<?php if ( empty( $locations ) ) : ?>
+						<p class="rbfw-me-loc-empty"><?php esc_html_e( 'No locations yet — add one above.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					<?php else : ?>
+						<div class="rbfw-me-loc-inv-grid">
+							<div class="rbfw-me-loc-inv-head"><?php esc_html_e( 'Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+							<div class="rbfw-me-loc-inv-head"><?php esc_html_e( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+							<div class="rbfw-me-loc-inv-head"><?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+							<?php foreach ( $locations as $loc ) :
+								$slug  = $loc['value'];
+								$stock = isset( $rows[ $slug ]['stock'] ) ? (int) $rows[ $slug ]['stock'] : '';
+								$price = isset( $rows[ $slug ]['price'] ) ? (float) $rows[ $slug ]['price'] : '';
+								?>
+								<div class="rbfw-me-loc-inv-name"><?php echo esc_html( $loc['name'] ); ?></div>
+								<div><input type="number" min="0" step="1" class="rbfw-me-input" name="rbfw_loc_inv_stock[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $stock ); ?>" placeholder="0"></div>
+								<div><input type="number" min="0" step="0.01" class="rbfw-me-input" name="rbfw_loc_inv_price[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $price ); ?>" placeholder="0"></div>
+							<?php endforeach; ?>
+						</div>
+						<p class="rbfw-me-field__desc"><?php esc_html_e( 'Fill in stock/price only for the locations you offer — empty rows are ignored. Works on its own; the Pick-up/Drop-off switches above are a separate, simpler dropdown feature.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					<?php endif; ?>
+
+					<div class="rbfw-me-offday-rules rbfw-me-loc-inv-rules">
+						<?php foreach ( self::location_inventory_rules() as $rule ) : ?>
+							<div class="rbfw-me-offday-rule">
+								<span class="rbfw-me-offday-rule__badge"><?php echo esc_html( $rule[0] ); ?></span>
+								<span class="rbfw-me-offday-rule__text"><?php echo esc_html( $rule[1] ); ?></span>
+								<span class="dashicons dashicons-yes-alt rbfw-me-offday-rule__check"></span>
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<p class="rbfw-me-offday-rules-note">
+						<span class="dashicons dashicons-info-outline"></span>
+						<?php esc_html_e( 'When disabled, the booking form works without the location step — no location stock caps and no location charge.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</p>
+				</div>
+				<?php
 			}
 
 			/**
@@ -397,6 +456,8 @@
 					<?php do_action( 'rbfw_location_config_before', $post_id ); ?>
 					<?php $this->panel_header( 'Pick-up Location Configuration', 'Here you can set location.' ); ?>
 					<?php $this->pickup_location_config( $post_id ); ?>
+					<?php $this->panel_header( 'Location Inventory & Price', 'Set stock and price per location. Customers choose a location first on the booking form; its stock caps the quantity and its price is added to the total. Works on its own — the Pick-up/Drop-off switches are a separate, simpler dropdown feature.' ); ?>
+					<?php $this->location_inventory_config( $post_id ); ?>
 					<?php $this->panel_header( 'Drop-off Location Configuration', 'Here you can set drop off location.' ); ?>
 					<?php $this->drop_off_location_config( $post_id ); ?>
 					<?php do_action( 'rbfw_location_config_after', $post_id ); ?>
@@ -532,6 +593,164 @@
 				<?php
 			}
 
+			/**
+			 * Saved location-inventory rows (raw, unfiltered by pickup selection).
+			 * slug => [ 'stock' => int, 'price' => float ].
+			 */
+			public static function location_inventory_rows( $post_id ) {
+				$rows = get_post_meta( $post_id, 'rbfw_location_inventory', true );
+				return is_array( $rows ) ? $rows : array();
+			}
+
+			/**
+			 * Conditional rules per rental type / pricing mode — how the
+			 * booking dates arrive in each mode and how the location cards
+			 * react. Shown in both editors so admins understand the
+			 * dates-first → location flow for every item type they sell.
+			 *
+			 * @return array[] Each row: [ mode badge, rule text ].
+			 */
+			public static function location_inventory_rules() {
+				return array(
+					array(
+						__( 'Multi Day', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Pickup & return date pickers — the location cards activate once both dates are chosen; availability is calculated over the whole range', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'Hourly / Time', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Hourly rates and time pickers use the same dates — stock is counted per day, so times never reduce it further', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'Fixed Dates', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Items with a fixed event start/end (date picker turned off) activate the location cards automatically on page load', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'From Search', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Dates carried over from the search page also activate the cards automatically', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'Single Day', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Clicking a date on the availability calendar activates the cards (Appointment items included)', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'Timely Stock', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Single-day items with timely inventory use their own Rental Start Date field — the cards follow right after it', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'Multiple Items', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Duration bookings (hourly / daily / weekly / monthly × quantity) derive the end date from the duration — changing it re-checks location stock', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+					array(
+						__( 'Resort', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Check-in & check-out dates drive the cards, shown before the Check Availability step', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+				);
+			}
+
+			/**
+			 * Classic editor: "Location Inventory & Price" panel — a toggle plus one
+			 * stock/price row per location. Rows are keyed by the same
+			 * sanitize_title( term name ) value the pickup selection uses, so a row
+			 * only takes effect when its location is also selected for pick-up.
+			 */
+			public function location_inventory_config( $post_id ) {
+				$enabled   = get_post_meta( $post_id, 'rbfw_enable_location_inventory', true ) === 'on';
+				$rows      = self::location_inventory_rows( $post_id );
+				$locations = $this->rbfw_get_location_list();
+				?>
+                <section>
+                    <div>
+                        <label><?php esc_html_e( 'Enable Location Inventory & Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <p><?php esc_html_e( 'Customers must choose a pick-up location before booking; each location has its own stock and price.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="rbfw_enable_location_inventory" value="on" <?php checked( $enabled ); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+                <section>
+                    <div class="rbfw_loc_inv_rules" style="width:100%;">
+						<?php foreach ( self::location_inventory_rules() as $rule ) : ?>
+                            <div style="display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:10px 14px;margin-bottom:8px;">
+                                <span style="background:#eef3ff;border:1px solid #dbe4ff;border-radius:6px;color:#2f5eff;flex-shrink:0;font-size:11px;font-weight:700;padding:3px 9px;white-space:nowrap;"><?php echo esc_html( $rule[0] ); ?></span>
+                                <span style="flex:1;font-size:13px;"><?php echo esc_html( $rule[1] ); ?></span>
+                                <span class="dashicons dashicons-yes-alt" style="color:#16a34a;flex-shrink:0;"></span>
+                            </div>
+						<?php endforeach; ?>
+                        <p style="background:#eef3ff;border-radius:6px;color:#4a5568;font-size:12.5px;margin:10px 0 0;padding:9px 13px;">
+                            <span class="dashicons dashicons-info-outline" style="color:#2f5eff;font-size:15px;height:15px;width:15px;vertical-align:middle;"></span>
+							<?php esc_html_e( 'When disabled, the booking form works without the location step — no location stock caps and no location charge.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </p>
+                    </div>
+                </section>
+				<?php if ( empty( $locations ) ) : ?>
+                    <section><div><p><?php esc_html_e( 'No locations yet — add locations above first.', 'booking-and-rental-manager-for-woocommerce' ); ?></p></div></section>
+				<?php else : ?>
+                    <section>
+                        <table class="form-table rbfw_loc_inv_table" style="width:100%;border-collapse:collapse;">
+                            <thead>
+                            <tr>
+                                <th style="text-align:left;padding:6px 8px;"><?php esc_html_e( 'Location', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th style="text-align:left;padding:6px 8px;"><?php esc_html_e( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th style="text-align:left;padding:6px 8px;"><?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+							<?php foreach ( $locations as $loc ) :
+								$slug  = $loc['value'];
+								$stock = isset( $rows[ $slug ]['stock'] ) ? (int) $rows[ $slug ]['stock'] : '';
+								$price = isset( $rows[ $slug ]['price'] ) ? (float) $rows[ $slug ]['price'] : '';
+								?>
+                                <tr>
+                                    <td style="padding:6px 8px;"><?php echo esc_html( $loc['name'] ); ?></td>
+                                    <td style="padding:6px 8px;"><input type="number" min="0" step="1" name="rbfw_loc_inv_stock[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $stock ); ?>" placeholder="0"></td>
+                                    <td style="padding:6px 8px;"><input type="number" min="0" step="0.01" name="rbfw_loc_inv_price[<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $price ); ?>" placeholder="0"></td>
+                                </tr>
+							<?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </section>
+				<?php endif;
+			}
+
+			/**
+			 * Persist the location-inventory fields from a submitted editor form.
+			 * Shared by the classic save_post handler and the modern editor's
+			 * AJAX save (both post the same field names).
+			 */
+			public static function save_location_inventory_from_post( $post_id ) {
+				// phpcs:disable WordPress.Security.NonceVerification.Missing -- callers verify their own nonce.
+				$enable = ( isset( $_POST['rbfw_enable_location_inventory'] ) && $_POST['rbfw_enable_location_inventory'] === 'on' ) ? 'on' : 'off';
+				update_post_meta( $post_id, 'rbfw_enable_location_inventory', $enable );
+
+				$stocks = ( isset( $_POST['rbfw_loc_inv_stock'] ) && is_array( $_POST['rbfw_loc_inv_stock'] ) )
+					? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_loc_inv_stock'] ) ) : array();
+				$prices = ( isset( $_POST['rbfw_loc_inv_price'] ) && is_array( $_POST['rbfw_loc_inv_price'] ) )
+					? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_loc_inv_price'] ) ) : array();
+				// phpcs:enable WordPress.Security.NonceVerification.Missing
+
+				if ( empty( $stocks ) && empty( $prices ) ) {
+					return; // fields not rendered in this submit — leave saved rows alone
+				}
+
+				$rows = array();
+				foreach ( $stocks as $slug => $stock ) {
+					$slug = sanitize_title( $slug );
+					if ( '' === $slug ) {
+						continue;
+					}
+					$price = isset( $prices[ $slug ] ) ? (float) $prices[ $slug ] : 0;
+					if ( '' === $stock && $price <= 0 ) {
+						continue; // untouched row
+					}
+					$rows[ $slug ] = array(
+						'stock' => max( 0, (int) $stock ),
+						'price' => max( 0, $price ),
+					);
+				}
+				update_post_meta( $post_id, 'rbfw_location_inventory', $rows );
+			}
+
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
@@ -579,6 +798,8 @@
 					} elseif ( empty( $dropoff_data_arr ) && $old_rbfw_dropoff_data ) {
 						delete_post_meta( $post_id, 'rbfw_dropoff_data', $old_rbfw_dropoff_data );
 					}
+
+					self::save_location_inventory_from_post( $post_id );
 				}
 			}
 		}

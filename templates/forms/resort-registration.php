@@ -285,6 +285,8 @@
                     </div>
                 </div>
 
+                <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+
                 <div class="item">
                     <a class="rbfw_chk_availability_btn rbfw-avail-btn-disabled"
                        title="<?php esc_attr_e('Please select check-in and check-out dates','booking-and-rental-manager-for-woocommerce'); ?>">
