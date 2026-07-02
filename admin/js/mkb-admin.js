@@ -893,12 +893,11 @@
                     if (response && response.success) {
                         $msg.text(rbfwInvI18n && rbfwInvI18n.stock_saved ? rbfwInvI18n.stock_saved : 'Stock updated.').addClass('rbfw_inv_msg_success');
 
-                        let newTotal = response.data && typeof response.data.total !== 'undefined' ? parseFloat(response.data.total) : null;
                         let $row = jQuery('.rbfw_stock_view_details[data-id="' + post_id + '"]').closest('tr.rbfw_inv_row');
 
-                        if (newTotal !== null && $row.length) {
-                            let $pill = $row.find('.rbfw_inv_stock_wrap .rbfw_inv_pill').first();
-                            let soldQty = parseFloat($row.find('.rbfw_inv_qty_badge').first().text()) || 0;
+                        function refreshPill($pill, $soldBadge, newTotal) {
+                            if (newTotal === null || !$pill.length) { return; }
+                            let soldQty = parseFloat($soldBadge.text()) || 0;
                             let remaining = newTotal - soldQty;
 
                             $pill.removeClass('full zero');
@@ -908,6 +907,22 @@
                                 $pill.addClass('full');
                             }
                             $pill.text(remaining + '/' + newTotal);
+                        }
+
+                        if ($row.length) {
+                            let newTotal = response.data && typeof response.data.total !== 'undefined' ? parseFloat(response.data.total) : null;
+                            refreshPill(
+                                $row.find('.rbfw_inv_stock_wrap .rbfw_inv_pill').first(),
+                                $row.find('.rbfw_inv_qty_badge').first(),
+                                newTotal
+                            );
+
+                            let newEsTotal = response.data && typeof response.data.es_total !== 'undefined' ? parseFloat(response.data.es_total) : null;
+                            refreshPill(
+                                $row.find('.rbfw_inv_td_es_stock .rbfw_inv_pill').first(),
+                                $row.find('.rbfw_inv_td_es_sold .rbfw_inv_qty_badge').first(),
+                                newEsTotal
+                            );
                         }
 
                         setTimeout(function () {
