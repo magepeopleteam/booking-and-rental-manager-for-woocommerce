@@ -32,7 +32,7 @@
 .rbfw_inv *::before,
 .rbfw_inv *::after {
     box-sizing: border-box;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 }
 
 /* Inline SVG icons – size with 1em (inherits parent font-size), colour via currentColor */

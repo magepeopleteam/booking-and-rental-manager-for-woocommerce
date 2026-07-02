@@ -706,6 +706,18 @@
 				#rbfw_payment_settings table.form-table tr{background:transparent !important;border-bottom:none !important;}
 				#rbfw_payment_settings table.form-table tr:hover{background:transparent !important;}
 				#rbfw_payment_settings table.form-table > tbody > tr > th{padding-left:0 !important;}
+
+				/* Mobile: gateway card header wraps to two rows (icon/name/sub on
+				   its own line, status + action below) instead of squeezing three
+				   flex items — icon, status pill, and Configure button — onto one
+				   narrow line. Sub-tab pills wrap instead of overflowing. */
+				@media (max-width: 480px) {
+					.payment-sub-tabs.nav-tab-wrapper{flex-wrap:wrap;}
+					.gateway-card .gateway-header{flex-wrap:wrap;row-gap:10px;}
+					.gateway-card .gateway-id{flex:1 1 100%;}
+					.gateway-card .gateway-status{flex:0 0 auto;}
+					.gateway-card .gateway-actions{flex:0 0 auto;justify-content:flex-start;margin-left:auto;}
+				}
 				</style>
 				<script>
 				jQuery(function($){
