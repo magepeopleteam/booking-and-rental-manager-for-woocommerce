@@ -22,6 +22,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shortcodes.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_booking_search.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
