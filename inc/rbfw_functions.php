@@ -3664,10 +3664,20 @@ function rbfw_build_categories_meta_clause( $category_names ) {
 
 		return $all_locations;
 	}
-	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for ) {
+	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for, $title_override = '' ) {
+		$term_map = array();
 		if ( $dropdown_for === 'category' ) {
 			$title        = esc_html__( 'Rental Type', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_post_categories_from_meta();
+			// Map each stored ( name-based ) category to its taxonomy term's exact
+			// casing, so an item saved as "rental" still displays as the "Rental"
+			// rent-type name. Keyed by lowercased name for a case-insensitive match.
+			$terms = get_terms( array( 'taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false ) );
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $rbfw_term ) {
+					$term_map[ strtolower( $rbfw_term->name ) ] = $rbfw_term->name;
+				}
+			}
 		} elseif ( $dropdown_for === 'location' ) {
 			$title        = esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_pickup_data_wp_query();
@@ -3675,23 +3685,30 @@ function rbfw_build_categories_meta_clause( $category_names ) {
 			$title        = '';
 			$category_arr = [];
 		}
-		
+
+		// Allow the caller ( e.g. a shortcode attribute ) to override the placeholder label.
+		if ( '' !== (string) $title_override ) {
+			$title = $title_override;
+		}
+
 		$option = '';
-		
+
 		// Escape name and class attributes
 		$option .= "<select name='" . esc_attr( $name ) . "' class='" . esc_attr( $class ) . "'>";
 		$option .= "<option value=''>" . esc_html( $title ) . "</option>";
-		
+
 		if ( is_array( $category_arr ) && count( $category_arr ) > 0 ) {
 			foreach ( $category_arr as $key => $value ) {
-				// Escape each option value for security
+				// Display the taxonomy term's proper casing when we have a match; the
+				// submitted value stays the stored string so the search still matches.
+				$label         = isset( $term_map[ strtolower( (string) $value ) ] ) ? $term_map[ strtolower( (string) $value ) ] : $value;
 				$selected_text = ( ! empty( $saved_value ) && $saved_value == $value ) ? 'selected' : '';
-				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $value ) . "</option>";
+				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $label ) . "</option>";
 			}
 		}
-	
+
 		$option .= "</select>";
-		
+
 		// Use wp_kses to filter the HTML and ensure it adheres to allowed HTML rules
 		echo wp_kses( $option, rbfw_allowed_html() );
 	}
