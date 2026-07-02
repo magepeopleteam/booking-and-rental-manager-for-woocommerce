@@ -378,8 +378,8 @@
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
-                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
+                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').show();
+                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').show();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
@@ -419,8 +419,8 @@
                 jQuery('table.wprently_fee-table td:nth-child(3)').hide();
 
             } else if (item_type == 'resort') {
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
-                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
+                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').show();
+                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').show();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();

@@ -379,12 +379,10 @@
 			<div class="rbfw-me-panel" data-panel="advanced">
 
 				<?php
-				// Location Configuration (pick-up / drop-off). The classic editor
-				// hides this tab for resort / appointment; mirror that here, with
-				// applyType() in the JS keeping it in sync on live type changes.
+				// Location Configuration (pick-up / drop-off) is available for every
+				// rent type ( multi-location feature ).
 				if ( class_exists( 'RBFW_Location' ) ) :
-					$rbfw_me_loc_type   = get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd';
-					$rbfw_me_loc_hidden = in_array( $rbfw_me_loc_type, [ 'resort', 'appointment' ], true );
+					$rbfw_me_loc_hidden = false;
 				?>
 				<div class="rbfw-me-card rbfw-me-location-card<?php echo $rbfw_me_loc_hidden ? ' rbfw-me-hidden' : ''; ?>">
 					<div class="rbfw-me-card__head">

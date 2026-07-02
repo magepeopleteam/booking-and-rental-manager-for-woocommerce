@@ -89,9 +89,9 @@
 			}
 
 			public function add_tab_menu($rbfw_id) {
-                $rbfw_item_type         = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				// Location is available for every rent type ( multi-location feature ).
 				?>
-                <li data-target-tabs="#rbfw_location_config" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
+                <li data-target-tabs="#rbfw_location_config">
                     <i class="fas fa-location-dot"></i><?php esc_html_e( 'Location', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </li>
 				<?php

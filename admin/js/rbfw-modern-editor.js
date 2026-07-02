@@ -2048,10 +2048,9 @@
             var _invShow = (type !== 'resort' && type !== 'bike_car_sd' && type !== 'appointment');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
 
-            // Location card (Advanced step): mirror the classic editor, which hides
-            // the Location tab for resort / appointment.
-            var _locShow = (type !== 'resort' && type !== 'appointment');
-            $wrap.find('.rbfw-me-location-card').toggleClass('rbfw-me-hidden', !_locShow);
+            // Location card (Advanced step): available for every rent type
+            // ( multi-location feature ).
+            $wrap.find('.rbfw-me-location-card').removeClass('rbfw-me-hidden');
 
             if (typeof window.rbfwMdsSyncPanelForRentType === 'function') {
                 window.rbfwMdsSyncPanelForRentType(type, $pricing);
