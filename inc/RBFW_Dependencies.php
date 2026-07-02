@@ -175,6 +175,8 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_delete_time_slot'        => wp_create_nonce('rbfw_delete_time_slot_action'),
 				'nonce_get_stock_by_filter'        => wp_create_nonce('rbfw_get_stock_by_filter_action'),
 				'nonce_get_stock_details'        => wp_create_nonce('rbfw_get_stock_details_action'),
+				'nonce_get_stock_edit_form'        => wp_create_nonce('rbfw_get_stock_edit_form_action'),
+				'nonce_update_inventory_stock'        => wp_create_nonce('rbfw_update_inventory_stock_action'),
 				'nonce_faq_data_save'        => wp_create_nonce('rbfw_faq_data_save_action'),
 				'nonce_faq_delete_item'        => wp_create_nonce('rbfw_faq_delete_item_action'),
 				'nonce_faq_data_update'        => wp_create_nonce('rbfw_faq_data_update_action'),

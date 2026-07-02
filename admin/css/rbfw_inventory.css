@@ -536,6 +536,64 @@
 }
 .rbfw_inv_cat_title svg.rbfw_inv_ic { font-size: 13px; color: var(--rbfw-text-3); }
 
+/* Two side-by-side row actions (View Details / Edit Stock) */
+.rbfw_inv .rbfw_inv_stock_actions { display: flex; gap: 6px; }
+.rbfw_inv .rbfw_inv_edit_btn { display: inline-flex; align-items: center; gap: 4px; }
+.rbfw_inv .rbfw_inv_edit_btn svg.rbfw_inv_ic { font-size: 11px; }
+
+/* Edit Stock form */
+.rbfw_inv_modal .rbfw_inv_qty_input {
+    width: 90px;
+    max-width: 100%;
+    padding: 5px 8px;
+    border: 1px solid var(--rbfw-border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rbfw-text-1);
+    text-align: right;
+}
+.rbfw_inv_modal .rbfw_inv_qty_input:focus { outline: none; border-color: var(--rbfw-accent); box-shadow: 0 0 0 2px var(--rbfw-accent-lt); }
+.rbfw_inv_modal .rbfw_inv_qty_input_flat { width: 100%; text-align: left; font-size: 15px; padding: 9px 12px; }
+
+.rbfw_inv_edit_stock_msg { margin: 10px 0 0; font-size: 12px; font-weight: 600; min-height: 1em; }
+.rbfw_inv_edit_stock_msg.rbfw_inv_msg_success { color: var(--rbfw-green); }
+.rbfw_inv_edit_stock_msg.rbfw_inv_msg_error { color: #DC2626; }
+
+.rbfw_inv_modal_foot {
+    padding: 14px 20px;
+    border-top: 1px solid var(--rbfw-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+/* Scoped to .rbfw_inv_modal_foot (2-class specificity) so this reliably beats
+   .rbfw_inv_modal_close's 30x30 icon-box sizing — the Cancel button reuses
+   that class only to hook the existing close-modal click handler, and must
+   not inherit its header-icon dimensions (was squashing "Cancel" to 30px
+   wide, overlapping the Save button next to it). */
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: auto;
+    height: 34px;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 7px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn svg.rbfw_inv_ic { font-size: 14px; }
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_ghost { background: #fff; border-color: var(--rbfw-border); color: var(--rbfw-text-2); }
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_ghost:hover { background: var(--rbfw-bg); }
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary { background: var(--rbfw-accent); color: #fff; }
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary:hover { opacity: .9; color: #fff; }
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary:disabled { opacity: .6; cursor: not-allowed; }
+
 /* =========================================================================
    Responsive
    ========================================================================= */
