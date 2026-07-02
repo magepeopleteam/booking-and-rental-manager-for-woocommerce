@@ -768,12 +768,6 @@ function rbfw_rent_search_shortcode( $atts = null ){
     $type_label       = $attributes['type_label'];
     $location_label   = $attributes['location_label'];
 
-
-
-
-    $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
-    $search_page_link = get_page_link($search_page_id);
-
     $location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
     $type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
     $pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
