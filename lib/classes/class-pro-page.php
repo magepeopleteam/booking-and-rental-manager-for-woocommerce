@@ -269,13 +269,26 @@ if (!class_exists('RBFWProPage')) {
 				.rbfw_gopro_addon_body h3 { margin: 0 0 4px; padding: 0; border: none; font-size: 15px; font-weight: 700; }
 				.rbfw_gopro_addon_body p { margin: 0; font-size: 13px; color: var(--rbfw-gp-text); }
 
-				/* Testimonial */
+				/* Testimonial — centred with a decorative quote mark; a single
+				   review left-aligned in a full-width section left a large,
+				   unbalanced empty gap on wide screens once the outer max-
+				   width cap was removed elsewhere on this page. */
 				.rbfw_gopro_review {
-					background: #fff; border: 1px solid var(--rbfw-gp-border); border-radius: 12px;
-					padding: 28px 32px; box-shadow: 0 2px 10px rgba(15,23,42,.05); max-width: 640px;
+					position: relative;
+					background: #fff; border: 1px solid var(--rbfw-gp-border); border-radius: 14px;
+					padding: 36px 40px; box-shadow: 0 2px 10px rgba(15,23,42,.05);
+					max-width: 640px; margin: 0 auto; text-align: center;
 				}
+				.rbfw_gopro_review::before {
+					content: '\201C';
+					position: absolute; top: 6px; left: 24px;
+					font-size: 64px; font-weight: 800; line-height: 1;
+					color: var(--rbfw-gp-accent2); opacity: .12;
+					font-family: Georgia, serif;
+				}
+				.rbfw_gopro_review_stars { display: flex; justify-content: center; gap: 2px; }
 				.rbfw_gopro_review_stars .dashicons { color: #F59E0B; font-size: 16px; width: 16px; height: 16px; }
-				.rbfw_gopro_review_text { font-size: 15px; font-style: italic; line-height: 1.6; color: var(--rbfw-gp-heading); margin: 12px 0 16px; }
+				.rbfw_gopro_review_text { font-size: 15.5px; font-style: italic; line-height: 1.65; color: var(--rbfw-gp-heading); margin: 14px 0 18px; position: relative; }
 				.rbfw_gopro_review_author strong { display: block; font-size: 13px; }
 				.rbfw_gopro_review_author span { font-size: 12px; color: var(--rbfw-gp-text); }
 
