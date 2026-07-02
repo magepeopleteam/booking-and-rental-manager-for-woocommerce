@@ -49,6 +49,9 @@ if ( ! function_exists( 'rbfw_fd_defaults' ) ) {
 			'summary_desc_show'  => 'on',
 			'summary_desc_text'  => __( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ),
 			'summary_desc_color' => '#6b7280',
+			// Search form dropdown placeholder labels.
+			'search_type_label'     => __( 'Rental Type', 'booking-and-rental-manager-for-woocommerce' ),
+			'search_location_label' => __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ),
 		);
 	}
 }
@@ -335,6 +338,20 @@ function rbfw_fd_register_fields( $fields ) {
 			'label'   => esc_html__( 'Summary Subtitle — Colour', 'booking-and-rental-manager-for-woocommerce' ),
 			'type'    => 'color',
 			'default' => $d['summary_desc_color'],
+		),
+		array(
+			'name'    => 'search_type_label',
+			'label'   => esc_html__( 'Search: Rental Type Label', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Placeholder for the rent-type dropdown in the [rbfw_search] / [rbfw_search_ac] form.', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'text',
+			'default' => $d['search_type_label'],
+		),
+		array(
+			'name'    => 'search_location_label',
+			'label'   => esc_html__( 'Search: Pickup Location Label', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Placeholder for the location dropdown in the search form.', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'text',
+			'default' => $d['search_location_label'],
 		),
 	);
 

@@ -755,18 +755,18 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
 
     $attributes = shortcode_atts( array(
-        'search-type'  => '',
+        'search-type'      => '',
         'hide_pickup_date' => 'no',
+        'hide_location'    => 'no',
+        'type_label'       => '',
+        'location_label'   => '',
     ), $atts );
 
-    $search_type  = $attributes['search-type'];
+    $search_type      = $attributes['search-type'];
     $hide_pickup_date = $attributes['hide_pickup_date'];
-
-
-
-
-    $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
-    $search_page_link = get_page_link($search_page_id);
+    $hide_location    = $attributes['hide_location'];
+    $type_label       = $attributes['type_label'];
+    $location_label   = $attributes['location_label'];
 
     $location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
     $type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
@@ -850,11 +850,13 @@ function rbfw_rent_search_shortcode( $atts = null ){
                     <?php endif; ?>
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
-                            <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
+                            <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category', $type_label );?>
                         </div>
+                        <?php if( $hide_location !== 'yes' ): ?>
                         <div class="rbfw_search_item">
-                            <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
+                            <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location', $location_label );?>
                         </div>
+                        <?php endif; ?>
                         <?php if( $hide_pickup_date !== 'yes' ): ?>
                         <div class="rbfw_search_item rbfw_flatpicker">
                             <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="<?php echo date_i18n( get_option('date_format')) ?>">
