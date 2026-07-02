@@ -134,83 +134,233 @@ if (!class_exists('RBFW_Status')) {
 
             // PDF Support
             $button_pdf = $this->rbfw_pdf_btn();
+
+            $server_rows = $this->rbfw_server_environment_rows();
             ?>
-            <div class="rbfw-status-page-wrapper wrap">
-                <h3><?php esc_html_e( 'Booking and Rental Manager Required Plugin', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th><?php esc_html_e( 'Plugin Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                            <td><?php esc_html_e( 'Required for booking, payments and order management.', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                            <td><?php echo wp_kses($button_wc, rbfw_allowed_html()); ?></td>
-                        </tr>
-                        <tr>
-                            <td><strong><?php esc_html_e( 'MagePeople PDF Support', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                            <td><?php esc_html_e( 'Required for PDF booking receipts and email attachments.', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                            <td><?php echo wp_kses($button_pdf, array(
+            <div class="rbfw-status-page-wrapper rbfw_status_modern">
+
+                <div class="rbfw_status_section">
+                    <div class="rbfw_status_section_head">
+                        <span class="rbfw_status_section_icon"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                        <div>
+                            <h3><?php esc_html_e( 'Required Plugins', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+                            <p><?php esc_html_e( 'Third-party plugins this plugin depends on for full functionality.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        </div>
+                    </div>
+                    <div class="rbfw_status_card_grid">
+                        <div class="rbfw_status_card">
+                            <div class="rbfw_status_card_icon"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_status_card_body">
+                                <div class="rbfw_status_card_title"><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_status_card_desc"><?php esc_html_e( 'Required for booking, payments and order management.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            </div>
+                            <div class="rbfw_status_card_action"><?php echo wp_kses($button_wc, rbfw_allowed_html()); ?></div>
+                        </div>
+                        <div class="rbfw_status_card">
+                            <div class="rbfw_status_card_icon"><?php echo rbfw_inv_icon('file_pdf'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_status_card_body">
+                                <div class="rbfw_status_card_title"><?php esc_html_e( 'MagePeople PDF Support', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_status_card_desc"><?php esc_html_e( 'Required for PDF booking receipts and email attachments.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            </div>
+                            <div class="rbfw_status_card_action"><?php echo wp_kses($button_pdf, array(
                                 'a' => array( 'href' => array(), 'class' => array(), 'onclick' => array() ),
                                 'span' => array( 'class' => array() ),
-                            )); ?></td>
-                        </tr>
-                    </tbody>
-                </table>
+                            )); ?></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rbfw_status_section">
+                    <div class="rbfw_status_section_head">
+                        <span class="rbfw_status_section_icon"><?php echo rbfw_inv_icon('clipboard'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                        <div>
+                            <h3><?php esc_html_e( 'Server Environment', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+                            <p><?php esc_html_e( 'Useful when reporting an issue to support — copy these details along with your report.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        </div>
+                    </div>
+                    <div class="rbfw_status_info_grid">
+                        <?php foreach ( $server_rows as $row ) : ?>
+                            <div class="rbfw_status_info_item">
+                                <span class="rbfw_status_info_label"><?php echo esc_html( $row['label'] ); ?></span>
+                                <span class="rbfw_status_info_value <?php echo esc_attr( $row['state'] ); ?>"><?php echo esc_html( $row['value'] ); ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+
             </div>
             <style>
-                .rbfw-status-page-wrapper table{
-                    width: 100%;
-                    border-collapse:collapse;
+                /* The Settings API auto-prints an <h2>{section title}</h2> for every
+                   registered section, even when it has no fields — that's the plugin
+                   icon + "Status" text that showed up duplicated under this tab. */
+                #rbfw_status_page_settings > form > h2 { display: none; }
+
+                .rbfw_status_modern,
+                .rbfw_status_modern * {
+                    box-sizing: border-box;
                 }
-                .rbfw-status-page-wrapper table thead th {
-                    background: #c18d5f;
-                    color: #fff;
-                    text-align: left;
-                    padding: 10px;
-                    font-weight: 500;
+                .rbfw_status_modern {
+                    --rbfw-st-bg:        #F4F6FA;
+                    --rbfw-st-surface:   #FFFFFF;
+                    --rbfw-st-border:    #E4E9F2;
+                    --rbfw-st-text-1:    #1A1F36;
+                    --rbfw-st-text-2:    #4A5568;
+                    --rbfw-st-text-3:    #8896B0;
+                    --rbfw-st-accent:    #4F6EF7;
+                    --rbfw-st-accent-lt: #EEF1FE;
+                    --rbfw-st-green:     #10B981;
+                    --rbfw-st-green-lt:  #D1FAE5;
+                    --rbfw-st-amber:     #B45309;
+                    --rbfw-st-amber-lt:  #FEF3C7;
+                    --rbfw-st-radius:    12px;
+                    --rbfw-st-shadow:    0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+                    color: var(--rbfw-st-text-1);
+                    font-size: 14px;
                 }
-                .rbfw-status-page-wrapper table tbody td{
-                    padding:10px;
+                .rbfw_status_modern svg { width: 1em; height: 1em; stroke: currentColor; fill: none; }
+
+                .rbfw_status_section { margin-bottom: 26px; }
+                .rbfw_status_section_head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+                .rbfw_status_section_icon {
+                    width: 36px; height: 36px; border-radius: 9px; flex-shrink: 0;
+                    background: var(--rbfw-st-accent-lt); color: var(--rbfw-st-accent);
+                    display: grid; place-items: center; font-size: 17px;
                 }
-                .rbfw-status-page-wrapper table tbody tr:nth-child(odd){
-                    background: #fff;
+                .rbfw_status_section_head h3 { margin: 0 0 3px; font-size: 15px; font-weight: 700; color: var(--rbfw-st-text-1); }
+                .rbfw_status_section_head p { margin: 0; font-size: 12px; color: var(--rbfw-st-text-3); }
+
+                .rbfw_status_card_grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+                .rbfw_status_card {
+                    display: flex; align-items: center; gap: 14px;
+                    background: var(--rbfw-st-surface); border: 1px solid var(--rbfw-st-border);
+                    border-radius: var(--rbfw-st-radius); box-shadow: var(--rbfw-st-shadow);
+                    padding: 16px;
                 }
-                .rbfw-status-page-wrapper table tbody tr:nth-child(even){
-                    background: #cdd1e3;
+                .rbfw_status_card_icon {
+                    width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
+                    background: var(--rbfw-st-bg); color: var(--rbfw-st-text-2);
+                    display: grid; place-items: center; font-size: 18px;
                 }
-                .rbfw-status-page-wrapper .rbfw_plugin_btn{
-                    background-color: #ff982d;
-                    border-color: #ff982d;
-                    color: #fff;
-                    text-decoration: none;
-                    padding: 8px 16px;
-                    transition: 0.2s;
-                    border-radius: 5px;
-                    display: inline-block;
-                    cursor: pointer;
-                    font-weight: 500;
+                .rbfw_status_card_body { flex: 1; min-width: 0; }
+                .rbfw_status_card_title { font-weight: 700; font-size: 13px; color: var(--rbfw-st-text-1); margin-bottom: 2px; }
+                .rbfw_status_card_desc { font-size: 12px; color: var(--rbfw-st-text-3); line-height: 1.4; }
+                .rbfw_status_card_action { flex-shrink: 0; }
+
+                .rbfw_status_modern .rbfw_plugin_btn {
+                    display: inline-flex; align-items: center; height: 32px; padding: 0 14px;
+                    background: var(--rbfw-st-accent); color: #fff; border-radius: 7px;
+                    font-size: 12px; font-weight: 700; text-decoration: none; cursor: pointer;
+                    transition: opacity .15s;
                 }
-                .rbfw-status-page-wrapper .rbfw_plugin_btn:hover{
-                    background-color: #e68a25;
-                    color: #fff;
-                    transition: 0.2s;
+                .rbfw_status_modern .rbfw_plugin_btn:hover { opacity: .88; color: #fff; }
+                .rbfw_status_modern .rbfw_plugin_status {
+                    display: inline-flex; align-items: center; height: 26px; padding: 0 12px;
+                    background: var(--rbfw-st-green-lt); color: #065F46;
+                    border-radius: 20px; font-size: 11px; font-weight: 700;
                 }
-                .rbfw_plugin_status{
-                    color: #13df13;
-                    font-weight: 600;
+                .rbfw_status_modern .rbfw_plugin_na { font-size: 12px; color: var(--rbfw-st-text-3); font-style: italic; }
+
+                .rbfw_status_info_grid {
+                    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                    background: var(--rbfw-st-surface); border: 1px solid var(--rbfw-st-border);
+                    border-radius: var(--rbfw-st-radius); box-shadow: var(--rbfw-st-shadow);
+                    overflow: hidden;
                 }
-                .rbfw_plugin_na{
-                    color: #999;
-                    font-style: italic;
+                .rbfw_status_info_item {
+                    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+                    padding: 12px 16px; border-bottom: 1px solid var(--rbfw-st-border); border-right: 1px solid var(--rbfw-st-border);
+                }
+                .rbfw_status_info_label { font-size: 12px; color: var(--rbfw-st-text-3); font-weight: 600; }
+                .rbfw_status_info_value { font-size: 12px; font-weight: 700; color: var(--rbfw-st-text-1); text-align: right; word-break: break-word; }
+                .rbfw_status_info_value.warn { color: var(--rbfw-st-amber); }
+                .rbfw_status_info_value.good { color: var(--rbfw-st-green); }
+
+                @media (max-width: 782px) {
+                    .rbfw_status_card { flex-wrap: wrap; }
                 }
             </style>
             <?php
 
+        }
+
+        /**
+         * Server / environment info rows for the Status tab.
+         *
+         * Read-only diagnostics ( PHP, WordPress, database, server, theme,
+         * WooCommerce and this plugin's own version ) useful when reporting an
+         * issue to support. A couple of well-known thresholds are flagged so a
+         * misconfigured host stands out at a glance.
+         *
+         * @return array[] Each row: [ 'label' => string, 'value' => string, 'state' => ''|'good'|'warn' ].
+         */
+        public function rbfw_server_environment_rows() {
+            global $wpdb;
+
+            $php_version = phpversion();
+            $memory_limit_raw = ini_get( 'memory_limit' );
+            $memory_limit_bytes = wp_convert_hr_to_bytes( $memory_limit_raw );
+
+            $rows = array();
+
+            $rows[] = array(
+                'label' => esc_html__( 'Plugin Version', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => class_exists( 'RBFW_Rent_Manager' ) ? RBFW_Rent_Manager::get_plugin_data( 'Version' ) : '',
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'PHP Version', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => $php_version,
+                'state' => version_compare( $php_version, '7.4', '<' ) ? 'warn' : 'good',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'PHP Memory Limit', 'booking-and-rental-manager-for-woocommerce' ),
+                /* -1 ( or 0 ) means "unlimited" — show that instead of the raw ini value. */
+                'value' => $memory_limit_bytes > 0 ? $memory_limit_raw : esc_html__( 'Unlimited', 'booking-and-rental-manager-for-woocommerce' ),
+                'state' => ( $memory_limit_bytes > 0 && $memory_limit_bytes < 128 * MB_IN_BYTES ) ? 'warn' : 'good',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'Max Upload Size', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => size_format( wp_max_upload_size() ),
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'Max Execution Time', 'booking-and-rental-manager-for-woocommerce' ),
+                /* translators: %s: seconds. */
+                'value' => sprintf( esc_html__( '%s seconds', 'booking-and-rental-manager-for-woocommerce' ), ini_get( 'max_execution_time' ) ),
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'WordPress Version', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => get_bloginfo( 'version' ),
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'Database Version', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => $wpdb->db_version(),
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'Server Software', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( wp_unslash( $_SERVER['SERVER_SOFTWARE'] ) ) : '',
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'Active Theme', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => wp_get_theme()->get( 'Name' ) . ' ' . wp_get_theme()->get( 'Version' ),
+                'state' => '',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'WooCommerce Version', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => defined( 'WC_VERSION' ) ? WC_VERSION : esc_html__( 'Not active', 'booking-and-rental-manager-for-woocommerce' ),
+                'state' => defined( 'WC_VERSION' ) ? 'good' : 'warn',
+            );
+            $rows[] = array(
+                'label' => esc_html__( 'Multisite', 'booking-and-rental-manager-for-woocommerce' ),
+                'value' => is_multisite() ? esc_html__( 'Yes', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'No', 'booking-and-rental-manager-for-woocommerce' ),
+                'state' => '',
+            );
+
+            return $rows;
         }
 
         public function rbfw_plugin_page_location(){
