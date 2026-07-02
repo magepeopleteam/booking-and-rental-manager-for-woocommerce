@@ -17,11 +17,47 @@ if (!class_exists('RBFW_Status')) {
             add_action( 'admin_init', array( $this, 'rbfw_plugin_install' ) );
             add_action( 'admin_init', array( $this, 'rbfw_plugin_activate' ) );
             add_action( 'rbfw_admin_menu_after_settings', array( $this, 'rbfw_status_submenu' ) );
+
+            /* Status now also lives as a tab inside Global Settings, so hide the
+             * separate CPT submenu entry ( priority 999, after it's registered
+             * above, matching the same pattern used to hide the Pro "Reports"
+             * submenu in class-admin-menu.php ). The page itself stays
+             * registered — the install/activate/PDF-popup action URLs below
+             * redirect back to it and must keep working either way. */
+            add_action( 'admin_menu', array( $this, 'rbfw_hide_status_submenu' ), 999 );
+            add_filter( 'rbfw_settings_sec_reg', array( $this, 'rbfw_register_status_settings_section' ), 110 );
+            add_action( 'wsa_form_top_rbfw_status_page_settings', array( $this, 'rbfw_status_page' ) );
         }
 
         public function rbfw_status_submenu(){
 
             add_submenu_page('edit.php?post_type=rbfw_item', esc_html__('Status', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#13df13">'.esc_html__('Status', 'booking-and-rental-manager-for-woocommerce').'</span>', 'manage_options', 'rbfw-status', array($this, 'rbfw_status_page'));
+        }
+
+        public function rbfw_hide_status_submenu() {
+            remove_submenu_page( 'edit.php?post_type=rbfw_item', 'rbfw-status' );
+        }
+
+        /**
+         * Register the "Status" tab on the Global Settings page.
+         *
+         * No fields are added for this section id ( rbfw_settings_sec_fields
+         * is intentionally left untouched ), so the Settings API renders no
+         * Save button for it — the tab is a live action page ( install /
+         * activate / PDF-popup links ), not a saved options form.
+         *
+         * @param array $sections Registered settings sections.
+         * @return array
+         */
+        public function rbfw_register_status_settings_section( $sections ) {
+            if ( ! is_array( $sections ) ) {
+                return $sections;
+            }
+            $sections[] = array(
+                'id'    => 'rbfw_status_page_settings',
+                'title' => '<i class="fas fa-heart-pulse"></i>' . esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' ),
+            );
+            return $sections;
         }
 
         public function rbfw_wc_btn() {
