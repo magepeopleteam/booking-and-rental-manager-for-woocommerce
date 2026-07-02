@@ -12604,3 +12604,953 @@ i.fas.fa-minus {
 
 /* The classic pickup dropdown is redundant while cards are active. */
 .rbfw_loc_cards_hide_select { display: none !important; }
+
+/* ============================================================
+   [rbfw_booking_search] — multi-item booking search
+   ============================================================ */
+.rbfw_bsearch_wrap {
+    position: relative;
+    margin-bottom: 90px;
+}
+.rbfw_bsearch_bar .rbfw_search_container {
+    align-items: flex-end;
+}
+.rbfw_bsearch_field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.rbfw_bsearch_label {
+    color: #5d6b82;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+}
+.rbfw_bsearch_field input[type="text"],
+.rbfw_bsearch_field select {
+    background: #fff;
+    border: 1px solid #e4e9f2;
+    border-radius: 8px;
+    cursor: pointer;
+    min-height: 44px;
+    padding: 8px 12px;
+}
+.rbfw_bsearch_loading,
+.rbfw_bsearch_empty {
+    background: #f8f9fd;
+    border: 1px dashed #d7deeb;
+    border-radius: 12px;
+    color: #5d6b82;
+    font-size: 15px;
+    margin-top: 22px;
+    padding: 28px 18px;
+    text-align: center;
+}
+.rbfw_bsearch_spinner {
+    animation: rbfw_bsearch_spin .8s linear infinite;
+    border: 3px solid #d7deeb;
+    border-radius: 50%;
+    border-top-color: var(--rbfw_color_primary, #4c6fff);
+    display: inline-block;
+    height: 18px;
+    margin-right: 10px;
+    vertical-align: -4px;
+    width: 18px;
+}
+@keyframes rbfw_bsearch_spin { to { transform: rotate(360deg); } }
+
+.rbfw_bsearch_grid {
+    display: grid;
+    gap: 22px;
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 24px;
+}
+.rbfw_bsearch_grid[data-columns="1"] { grid-template-columns: 1fr; }
+.rbfw_bsearch_grid[data-columns="2"] { grid-template-columns: repeat(2, 1fr); }
+.rbfw_bsearch_grid[data-columns="4"] { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 992px) {
+    .rbfw_bsearch_grid,
+    .rbfw_bsearch_grid[data-columns="4"] { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+    .rbfw_bsearch_grid,
+    .rbfw_bsearch_grid[data-columns="2"],
+    .rbfw_bsearch_grid[data-columns="4"] { grid-template-columns: 1fr; }
+}
+
+.rbfw_bsearch_card {
+    background: #fff;
+    border: 1px solid #e4e9f2;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+.rbfw_bsearch_card:hover {
+    box-shadow: 0 10px 28px rgba(23, 43, 99, .12);
+    transform: translateY(-2px);
+}
+.rbfw_bsearch_card.rbfw_bsearch_soldout { opacity: .62; }
+.rbfw_bsearch_thumb {
+    background: #eef1f8;
+    display: block;
+    height: 180px;
+    overflow: hidden;
+    position: relative;
+}
+.rbfw_bsearch_thumb img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    width: 100%;
+}
+.rbfw_bsearch_thumb_ph {
+    background: repeating-linear-gradient(45deg, #eef1f8, #eef1f8 12px, #e6eaf4 12px, #e6eaf4 24px);
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+.rbfw_bsearch_badge {
+    background: rgba(20, 28, 46, .78);
+    border-radius: 30px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    left: 12px;
+    letter-spacing: .04em;
+    padding: 4px 12px;
+    position: absolute;
+    text-transform: uppercase;
+    top: 12px;
+}
+.rbfw_bsearch_body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+}
+.rbfw_bsearch_title {
+    font-size: 17px;
+    line-height: 1.35;
+    margin: 0;
+}
+.rbfw_bsearch_title a { color: #1d2b4f; text-decoration: none; }
+.rbfw_bsearch_title a:hover { color: var(--rbfw_color_primary, #4c6fff); }
+.rbfw_bsearch_stock {
+    border-radius: 30px;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+}
+.rbfw_bsearch_stock_ok { background: #e7f7ee; color: #157347; }
+.rbfw_bsearch_stock_out { background: #fdecec; color: #c0392b; }
+.rbfw_bsearch_price {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+}
+.rbfw_bsearch_amount,
+.rbfw_bsearch_amount .woocommerce-Price-amount {
+    color: #1d2b4f;
+    font-size: 20px;
+    font-weight: 700;
+}
+.rbfw_bsearch_price small { color: #7a869c; font-size: 12px; }
+.rbfw_bsearch_loc_fee { flex-basis: 100%; }
+.rbfw_bsearch_actions {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    margin-top: 6px;
+}
+.rbfw_bsearch_qty {
+    align-items: center;
+    border: 1px solid #e4e9f2;
+    border-radius: 8px;
+    display: flex;
+    overflow: hidden;
+}
+.rbfw_bsearch_qty button {
+    background: #f4f6fb;
+    border: none;
+    color: #1d2b4f;
+    cursor: pointer;
+    font-size: 16px;
+    height: 38px;
+    width: 34px;
+}
+.rbfw_bsearch_qty button:hover { background: #e8ecf6; }
+.rbfw_bsearch_qty_input {
+    -moz-appearance: textfield;
+    border: none !important;
+    height: 38px;
+    padding: 0 !important;
+    text-align: center;
+    width: 44px !important;
+}
+.rbfw_bsearch_qty_input::-webkit-outer-spin-button,
+.rbfw_bsearch_qty_input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.rbfw_bsearch_add,
+.rbfw_bsearch_view {
+    background: var(--rbfw_color_primary, #4c6fff);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 40px;
+    padding: 9px 14px;
+    text-align: center;
+    text-decoration: none;
+    transition: filter .15s ease;
+}
+.rbfw_bsearch_add:hover,
+.rbfw_bsearch_view:hover { color: #fff; filter: brightness(.92); }
+.rbfw_bsearch_view { line-height: 22px; }
+.rbfw_bsearch_add.rbfw_bsearch_busy { cursor: wait; opacity: .7; }
+.rbfw_bsearch_add.rbfw_bsearch_added { background: #157347; }
+.rbfw_bsearch_msg {
+    color: #c0392b;
+    display: none;
+    font-size: 13px;
+    line-height: 1.45;
+}
+.rbfw_bsearch_msg.rbfw_bsearch_msg_show { display: block; }
+
+/* floating booking bar */
+.rbfw_bsearch_bar_float {
+    align-items: center;
+    background: #141c2e;
+    border-radius: 14px;
+    bottom: 18px;
+    box-shadow: 0 14px 34px rgba(10, 16, 34, .35);
+    color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    left: 50%;
+    max-width: 680px;
+    padding: 13px 18px;
+    position: fixed;
+    transform: translateX(-50%);
+    width: calc(100% - 36px);
+    z-index: 9999;
+}
+.rbfw_bsearch_bar_info {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.rbfw_bsearch_bar_count {
+    align-items: center;
+    background: var(--rbfw_color_primary, #4c6fff);
+    border-radius: 50%;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 700;
+    height: 26px;
+    justify-content: center;
+    min-width: 26px;
+}
+.rbfw_bsearch_bar_label { color: #aeb8cf; font-size: 14px; }
+.rbfw_bsearch_bar_total,
+.rbfw_bsearch_bar_total .woocommerce-Price-amount { color: #fff; font-size: 16px; font-weight: 700; }
+.rbfw_bsearch_bar_actions { align-items: center; display: flex; gap: 10px; }
+.rbfw_bsearch_bar_empty {
+    align-items: center;
+    background: rgba(255, 255, 255, .1);
+    border: none;
+    border-radius: 8px;
+    color: #ffb4b4;
+    cursor: pointer;
+    display: inline-flex;
+    height: 38px;
+    justify-content: center;
+    transition: background .15s ease, color .15s ease;
+    width: 40px;
+}
+.rbfw_bsearch_bar_empty:hover { background: rgba(224, 78, 78, .22); color: #ff8f8f; }
+.rbfw_bsearch_bar_empty svg { display: block; }
+.rbfw_bsearch_bar_empty_busy { cursor: wait; opacity: .6; }
+.rbfw_bsearch_bar_cart,
+.rbfw_bsearch_bar_checkout {
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 9px 16px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.rbfw_bsearch_bar_cart {
+    background: rgba(255, 255, 255, .12);
+    color: #fff;
+}
+.rbfw_bsearch_bar_cart:hover { background: rgba(255, 255, 255, .2); color: #fff; }
+.rbfw_bsearch_bar_checkout {
+    background: var(--rbfw_color_primary, #4c6fff);
+    color: #fff;
+}
+.rbfw_bsearch_bar_checkout:hover { color: #fff; filter: brightness(.92); }
+@media (max-width: 600px) {
+    .rbfw_bsearch_bar_float { border-radius: 12px 12px 0 0; bottom: 0; width: 100%; }
+    .rbfw_bsearch_bar_actions { flex: 1; }
+    .rbfw_bsearch_bar_cart, .rbfw_bsearch_bar_checkout { flex: 1; text-align: center; }
+}
+
+/* search bar field sizing (5 fields share the row, wrap on small screens) */
+.rbfw_bsearch_bar .rbfw_search_container {
+    flex-wrap: wrap;
+}
+.rbfw_bsearch_bar .rbfw_search_item {
+    flex: 1 1 160px;
+    min-width: 150px;
+    width: auto;
+}
+.rbfw_bsearch_btn_field {
+    flex: 0 0 auto;
+    min-width: 130px;
+}
+.rbfw_bsearch_field select,
+.rbfw_bsearch_field input[type="text"] {
+    box-sizing: border-box;
+    width: 100%;
+}
+.rbfw_bsearch_go {
+    border: none;
+    min-height: 44px;
+    width: 100%;
+}
+
+/* results header: count + grid/list toggle */
+.rbfw_bsearch_results_head {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+}
+.rbfw_bsearch_results_count {
+    color: #5d6b82;
+    font-size: 14px;
+    font-weight: 600;
+}
+.rbfw_bsearch_viewtoggle {
+    background: #f1f4fa;
+    border-radius: 8px;
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+}
+.rbfw_bsearch_viewtoggle button {
+    align-items: center;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    color: #7a869c;
+    cursor: pointer;
+    display: inline-flex;
+    height: 30px;
+    justify-content: center;
+    width: 34px;
+}
+.rbfw_bsearch_viewtoggle button:hover { color: #1d2b4f; }
+.rbfw_bsearch_viewtoggle button.rbfw_bsearch_viewtoggle_active {
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(23, 43, 99, .18);
+    color: var(--rbfw_color_primary, #4c6fff);
+}
+.rbfw_bsearch_results_head + .rbfw_bsearch_grid { margin-top: 14px; }
+
+/* list view: horizontal rows */
+.rbfw_bsearch_grid.rbfw_bsearch_view_list,
+.rbfw_bsearch_grid.rbfw_bsearch_view_list[data-columns] {
+    grid-template-columns: 1fr;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_card {
+    flex-direction: row;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_thumb {
+    flex: 0 0 250px;
+    height: auto;
+    min-height: 175px;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_body {
+    display: grid;
+    gap: 6px 18px;
+    grid-template-columns: 1fr auto;
+    padding: 18px 20px;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_title { grid-column: 1; }
+.rbfw_bsearch_view_list .rbfw_bsearch_meta { grid-column: 1; }
+.rbfw_bsearch_view_list .rbfw_bsearch_msg { grid-column: 1 / -1; }
+.rbfw_bsearch_view_list .rbfw_bsearch_price {
+    align-items: flex-end;
+    align-self: start;
+    flex-direction: column;
+    gap: 2px;
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+    text-align: right;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_actions {
+    align-self: end;
+    grid-column: 2;
+    grid-row: 3;
+    justify-content: flex-end;
+    margin-top: 0;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_actions .rbfw_bsearch_add,
+.rbfw_bsearch_view_list .rbfw_bsearch_actions .rbfw_bsearch_view {
+    flex: 0 0 auto;
+}
+@media (max-width: 700px) {
+    .rbfw_bsearch_view_list .rbfw_bsearch_card { flex-direction: column; }
+    .rbfw_bsearch_view_list .rbfw_bsearch_thumb { flex: none; height: 180px; }
+    .rbfw_bsearch_view_list .rbfw_bsearch_body { display: flex; flex-direction: column; }
+    .rbfw_bsearch_view_list .rbfw_bsearch_price { align-items: baseline; flex-direction: row; text-align: left; }
+    .rbfw_bsearch_view_list .rbfw_bsearch_actions { justify-content: stretch; }
+}
+
+/* item description: fills the empty middle of list rows; hidden in grid */
+.rbfw_bsearch_desc {
+    color: #5d6b82;
+    display: none;
+    font-size: 13.5px;
+    line-height: 1.55;
+    margin: 0;
+}
+.rbfw_bsearch_view_list .rbfw_bsearch_desc {
+    display: block;
+    grid-column: 1;
+    max-width: 640px;
+}
+
+/* "Select options" booking modal */
+body.rbfw_bsearch_noscroll { overflow: hidden; }
+.rbfw_bsearch_modal {
+    inset: 0;
+    position: fixed;
+    z-index: 100000;
+}
+.rbfw_bsearch_modal[hidden] { display: none; }
+.rbfw_bsearch_modal_overlay {
+    background: rgba(10, 16, 34, .55);
+    inset: 0;
+    position: absolute;
+}
+.rbfw_bsearch_modal_dialog {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(10, 16, 34, .35);
+    left: 50%;
+    max-height: 88vh;
+    max-width: 820px;
+    overflow-y: auto;
+    padding: 20px 24px 26px;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 32px);
+}
+.rbfw_bsearch_modal_head {
+    align-items: center;
+    border-bottom: 1px solid #eef1f8;
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+}
+.rbfw_bsearch_modal_title {
+    color: #1d2b4f;
+    font-size: 20px;
+    margin: 0;
+}
+.rbfw_bsearch_modal_close {
+    align-items: center;
+    background: #f1f4fa;
+    border: none;
+    border-radius: 50%;
+    color: #1d2b4f;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 22px;
+    height: 36px;
+    justify-content: center;
+    line-height: 1;
+    width: 36px;
+}
+.rbfw_bsearch_modal_close:hover { background: #e4e9f4; }
+.rbfw_bsearch_modal_msg {
+    background: #fdecec;
+    border-radius: 8px;
+    color: #c0392b;
+    display: none;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+}
+.rbfw_bsearch_modal_msg.rbfw_bsearch_modal_msg_show { display: block; }
+/* keep injected single-page layout usable inside the dialog */
+.rbfw_bsearch_modal_body .rbfw-single-container { display: block; }
+.rbfw_bsearch_modal_body .rbfw-single-right-container { width: 100%; }
+@media (max-width: 600px) {
+    .rbfw_bsearch_modal_dialog { border-radius: 12px; max-height: 94vh; padding: 14px 14px 20px; }
+}
+
+/* Modal shows only the essential booking controls: hide the single-page
+   promo/summary blocks (badges, trust grid, rate tables) inside the popup. */
+.rbfw_bsearch_modal_body .rbfw-sd-rate-box,
+.rbfw_bsearch_modal_body .pricing-content-container,
+.rbfw_bsearch_modal_body .rbfw-single-left-container {
+    display: none !important;
+}
+.rbfw_bsearch_modal_body .rbfw-single-container,
+.rbfw_bsearch_modal_body .rbfw-single-right-container {
+    display: block;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+}
+
+/* ============================================================
+   Checkout modal — normalize WooCommerce's classic checkout form so
+   it lays out cleanly regardless of the active theme's typography.
+   ============================================================ */
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_dialog {
+    max-height: 94vh;
+    max-width: 1180px;
+    padding-top: 0;
+}
+/* Pin the modal header so the title/close stay visible while the body scrolls. */
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_head {
+    background: #fff;
+    margin: 0 -24px 12px;
+    padding: 16px 24px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+/* Form = two columns: billing details (left) | order + payment (right).
+   Billing and order-review are flat siblings, so we pin them to the same
+   explicit grid rows — otherwise auto-placement drops the (short) order
+   column BELOW the tall billing column, leaving the top-right empty. The
+   high sentinel rows sit after however many full-width rows precede them
+   (notices / coupon), which auto-place at the top and collapse when empty. */
+.rbfw_bsearch_modal_body form.checkout.woocommerce-checkout {
+    align-items: start;
+    column-gap: 34px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    row-gap: 0; /* empty sentinel rows must not accumulate gap; space via margins */
+    text-align: left;
+}
+.rbfw_bsearch_modal_body form.checkout.woocommerce-checkout > .woocommerce-notices-wrapper,
+.rbfw_bsearch_modal_body form.checkout .woocommerce-form-coupon-toggle,
+.rbfw_bsearch_modal_body form.checkout .woocommerce-form-coupon,
+.rbfw_bsearch_modal_body form.checkout .rbfw_bsearch_checkout_notices {
+    grid-column: 1 / -1;
+    margin-bottom: 14px;
+}
+.rbfw_bsearch_modal_body #customer_details { grid-column: 1; grid-row: 50 / 52; }
+.rbfw_bsearch_modal_body #order_review_heading { grid-column: 2; grid-row: 50; align-self: start; margin-top: 0; }
+.rbfw_bsearch_modal_body #order_review { grid-column: 2; grid-row: 51; align-self: start; }
+
+/* Billing / shipping / notes stack within the left column. */
+.rbfw_bsearch_modal_body #customer_details.col2-set,
+.rbfw_bsearch_modal_body #customer_details .col-1,
+.rbfw_bsearch_modal_body #customer_details .col-2 {
+    display: block;
+    float: none;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+}
+.rbfw_bsearch_modal_body #customer_details .col-2 { margin-top: 8px; }
+
+/* Field rows: name pair side by side, everything else full width. */
+.rbfw_bsearch_modal_body .woocommerce-billing-fields__field-wrapper,
+.rbfw_bsearch_modal_body .woocommerce-shipping-fields__field-wrapper,
+.rbfw_bsearch_modal_body .woocommerce-additional-fields__field-wrapper {
+    display: grid;
+    gap: 0 16px;
+    grid-template-columns: 1fr 1fr;
+}
+.rbfw_bsearch_modal_body form .form-row {
+    float: none !important;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+    width: auto !important;
+}
+.rbfw_bsearch_modal_body form .form-row-first { grid-column: 1; }
+.rbfw_bsearch_modal_body form .form-row-last { grid-column: 2; }
+.rbfw_bsearch_modal_body form .form-row-wide,
+.rbfw_bsearch_modal_body form .form-row.notes,
+.rbfw_bsearch_modal_body form .form-row.create-account,
+.rbfw_bsearch_modal_body form .woocommerce-account-fields,
+.rbfw_bsearch_modal_body form .woocommerce-shipping-fields,
+.rbfw_bsearch_modal_body form h3 {
+    grid-column: 1 / -1;
+}
+
+/* Headings + labels: readable, left-aligned, not oversized. */
+.rbfw_bsearch_modal_body form h3,
+.rbfw_bsearch_modal_body #order_review_heading {
+    border-bottom: 1px solid #eef1f8;
+    font-size: 16px;
+    font-weight: 700;
+    margin: 4px 0 14px;
+    padding-bottom: 8px;
+}
+.rbfw_bsearch_modal_body form .form-row > label {
+    color: #3a4560;
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 5px;
+}
+.rbfw_bsearch_modal_body form .form-row.create-account label,
+.rbfw_bsearch_modal_body form label.woocommerce-form__label-for-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+/* Inputs. */
+.rbfw_bsearch_modal_body form .input-text,
+.rbfw_bsearch_modal_body form input[type="text"],
+.rbfw_bsearch_modal_body form input[type="email"],
+.rbfw_bsearch_modal_body form input[type="tel"],
+.rbfw_bsearch_modal_body form input[type="password"],
+.rbfw_bsearch_modal_body form select,
+.rbfw_bsearch_modal_body form textarea,
+.rbfw_bsearch_modal_body form .select2-container .select2-selection {
+    background: #fff;
+    border: 1px solid #dbe1ee;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 14px;
+    min-height: 44px;
+    padding: 10px 12px;
+    width: 100%;
+}
+.rbfw_bsearch_modal_body form .select2-container { width: 100% !important; }
+.rbfw_bsearch_modal_body form .select2-container .select2-selection__rendered {
+    line-height: 22px;
+    padding: 0;
+}
+.rbfw_bsearch_modal_body form .select2-container .select2-selection__arrow { top: 10px; }
+
+/* Order review table + payment — compact, modern booking summary. */
+.rbfw_bsearch_modal_body #order_review .shop_table {
+    background: #fff;
+    border: 1px solid #eef1f8;
+    border-collapse: separate;
+    border-radius: 14px;
+    border-spacing: 0;
+    overflow: hidden;
+    width: 100%;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table thead th {
+    background: #f4f6fb;
+    color: #3a4560;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    padding: 11px 16px;
+    text-align: left;
+    text-transform: uppercase;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table thead th.product-total { text-align: right; }
+.rbfw_bsearch_modal_body #order_review .shop_table tbody td {
+    border-top: 1px solid #eef1f8;
+    padding: 14px 16px;
+    vertical-align: top;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table td.product-name {
+    color: #1d2b4f;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table td.product-name a {
+    color: #1d2b4f;
+    text-decoration: none;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table .product-quantity {
+    color: #7a869c;
+    font-weight: 600;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table td.product-total {
+    color: #1d2b4f;
+    font-weight: 700;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* rental booking details rendered inside the product cell */
+.rbfw_bsearch_modal_body #order_review dl.variation {
+    margin: 10px 0 0;
+}
+.rbfw_bsearch_modal_body #order_review dl.variation > dt { display: none; } /* stray ":" label */
+.rbfw_bsearch_modal_body #order_review dl.variation > dd {
+    margin: 0;
+    padding: 0;
+}
+.rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table {
+    background: #f8f9fd;
+    border: 1px solid #eef1f8;
+    border-collapse: collapse;
+    border-radius: 10px;
+    margin: 0;
+    overflow: hidden;
+    width: 100%;
+}
+.rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table tr + tr th,
+.rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table tr + tr td {
+    border-top: 1px solid #e9edf6;
+}
+.rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table th {
+    color: #7a869c;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 7px 12px;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 42%;
+}
+.rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table td {
+    color: #28324d;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 7px 12px;
+    text-align: left;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table tfoot th,
+.rbfw_bsearch_modal_body #order_review .shop_table tfoot td {
+    border-top: 1px solid #eef1f8;
+    padding: 12px 16px;
+    text-align: left;
+}
+.rbfw_bsearch_modal_body #order_review .shop_table tfoot td { text-align: right; }
+.rbfw_bsearch_modal_body #order_review .shop_table tfoot .order-total th,
+.rbfw_bsearch_modal_body #order_review .shop_table tfoot .order-total td { font-size: 16px; }
+.rbfw_bsearch_modal_body #order_review .shop_table tfoot .order-total .amount { font-size: 18px; }
+.rbfw_bsearch_modal_body #payment {
+    background: #f8f9fd;
+    border-radius: 12px;
+    margin-top: 14px;
+    padding: 6px 18px 16px;
+}
+.rbfw_bsearch_modal_body #payment ul.payment_methods {
+    border: none;
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+}
+.rbfw_bsearch_modal_body #payment ul.payment_methods li { margin-bottom: 6px; }
+.rbfw_bsearch_modal_body #payment .payment_box {
+    background: #fff;
+    border-radius: 8px;
+    font-size: 13px;
+    margin: 6px 0;
+    padding: 10px 12px;
+}
+.rbfw_bsearch_modal_body #place_order,
+.rbfw_bsearch_modal_body button[name="woocommerce_checkout_place_order"] {
+    background: var(--rbfw_color_primary, #4c6fff);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    float: none;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 6px;
+    min-height: 50px;
+    padding: 12px 20px;
+    width: 100%;
+}
+.rbfw_bsearch_modal_body #place_order:hover { filter: brightness(.93); }
+
+.rbfw_bsearch_checkout_processing { opacity: .55; pointer-events: none; }
+.rbfw_bsearch_checkout_notices,
+.rbfw_bsearch_modal_body .woocommerce-error,
+.rbfw_bsearch_modal_body .woocommerce-NoticeGroup { margin-bottom: 14px; }
+
+/* Stack to one column on smaller viewports. */
+@media (max-width: 820px) {
+    .rbfw_bsearch_modal_body form.checkout.woocommerce-checkout {
+        grid-template-columns: 1fr;
+    }
+    .rbfw_bsearch_modal_body #customer_details { grid-column: 1; grid-row: 50; }
+    .rbfw_bsearch_modal_body #order_review_heading { grid-column: 1; grid-row: 51; }
+    .rbfw_bsearch_modal_body #order_review { grid-column: 1; grid-row: 52; }
+}
+@media (max-width: 480px) {
+    .rbfw_bsearch_modal_body .woocommerce-billing-fields__field-wrapper,
+    .rbfw_bsearch_modal_body .woocommerce-shipping-fields__field-wrapper,
+    .rbfw_bsearch_modal_body .woocommerce-additional-fields__field-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .rbfw_bsearch_modal_body form .form-row-first,
+    .rbfw_bsearch_modal_body form .form-row-last { grid-column: 1; }
+}
+
+/* ---- Compact density: fit the whole checkout in one screen ---- */
+/* Coupon toggle: one small line, no big banner / no icon.
+   WooCommerce renders it as a block notice banner (.wc-block-components-notice-banner.is-info). */
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle { margin: 0 0 8px; }
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle .wc-block-components-notice-banner {
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #5d6b82 !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle .wc-block-components-notice-banner > svg,
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle .wc-block-components-notice-banner::before { display: none !important; }
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle .wc-block-components-notice-banner__content { margin: 0 !important; }
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle .showcoupon {
+    color: var(--rbfw_color_primary, #4c6fff);
+    font-weight: 600;
+    text-decoration: none;
+}
+.rbfw_bsearch_modal_body .woocommerce-form-coupon-toggle .showcoupon:hover { text-decoration: underline; }
+
+/* Coupon entry form: single tight line (input + apply). */
+.rbfw_bsearch_modal_body form.checkout_coupon {
+    background: #f8f9fd;
+    border: 1px solid #e4e9f2;
+    border-radius: 8px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 1fr auto;
+    margin: 0 0 10px;
+    padding: 8px;
+}
+.rbfw_bsearch_modal_body form.checkout_coupon > p { margin: 0 !important; }
+.rbfw_bsearch_modal_body form.checkout_coupon .form-row { margin: 0 !important; }
+.rbfw_bsearch_modal_body form.checkout_coupon .form-row-first { grid-column: 1; }
+.rbfw_bsearch_modal_body form.checkout_coupon .form-row-last { grid-column: 2; align-self: stretch; }
+.rbfw_bsearch_modal_body form.checkout_coupon input#coupon_code { min-height: 38px !important; }
+.rbfw_bsearch_modal_body form.checkout_coupon button {
+    background: #2b3550;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: 100%;
+    min-height: 38px;
+    padding: 8px 18px;
+    white-space: nowrap;
+}
+.rbfw_bsearch_modal_body form.checkout_coupon button:hover { filter: brightness(1.15); }
+
+/* Coupon apply/error notice: compact. */
+.rbfw_bs_coupon_notice { margin: 0 0 8px; }
+.rbfw_bs_coupon_notice .woocommerce-error,
+.rbfw_bs_coupon_notice .woocommerce-message,
+.rbfw_bs_coupon_notice .woocommerce-info,
+.rbfw_bs_coupon_notice .wc-block-components-notice-banner {
+    align-items: center;
+    border-radius: 8px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    margin: 0 !important;
+    min-height: 0 !important;
+    padding: 8px 12px !important;
+}
+.rbfw_bs_coupon_notice .wc-block-components-notice-banner > svg,
+.rbfw_bs_coupon_notice .woocommerce-error::before,
+.rbfw_bs_coupon_notice .woocommerce-message::before {
+    height: 18px;
+    margin: 0 8px 0 0;
+    width: 18px;
+    top: auto;
+    position: static;
+}
+.rbfw_bs_coupon_notice .wc-block-components-notice-banner__content { margin: 0; }
+
+/* Coupon discount + remove link inside the review table. */
+.rbfw_bsearch_modal_body #order_review .cart-discount .woocommerce-remove-coupon {
+    color: #c0392b;
+    font-size: 11px;
+    margin-left: 6px;
+    text-decoration: underline;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form h3,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review_heading {
+    font-size: 15px;
+    margin: 0 0 10px;
+    padding-bottom: 6px;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form .form-row {
+    margin-bottom: 9px !important;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form .form-row > label {
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form .input-text,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form input[type="text"],
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form input[type="email"],
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form input[type="tel"],
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form select,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form .select2-container .select2-selection {
+    font-size: 13px;
+    min-height: 38px;
+    padding: 7px 11px;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body form textarea {
+    min-height: 54px;
+    padding: 8px 11px;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #customer_details .col-2 { margin-top: 4px; }
+
+/* Pair the shorter billing fields two-up instead of full-width rows. */
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #billing_city_field,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #billing_postcode_field { grid-column: 1; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #billing_state_field,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #billing_phone_field { grid-column: 2; }
+
+/* Denser order-summary booking cards. */
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review .shop_table thead th { padding: 8px 14px; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review .shop_table tbody td { padding: 10px 14px; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review dl.variation { margin-top: 7px; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table th,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review .rbfw_room_cart_table td {
+    font-size: 11.5px;
+    padding: 5px 10px;
+}
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review .shop_table tfoot th,
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #order_review .shop_table tfoot td { padding: 9px 14px; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #payment { margin-top: 10px; padding: 4px 14px 12px; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #payment .payment_box { font-size: 12px; padding: 8px 10px; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #payment .woocommerce-privacy-policy-text p { font-size: 12px; margin: 8px 0; }
+.rbfw_bsearch_modal_wide .rbfw_bsearch_modal_body #place_order { min-height: 46px; margin-top: 4px; }
