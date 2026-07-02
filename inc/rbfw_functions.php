@@ -3686,9 +3686,16 @@ function rbfw_build_categories_meta_clause( $category_names ) {
 			$category_arr = [];
 		}
 
-		// Allow the caller ( e.g. a shortcode attribute ) to override the placeholder label.
+		// Placeholder label priority: shortcode attribute > Front-end Display
+		// setting ( Global Settings ) > hard-coded default.
 		if ( '' !== (string) $title_override ) {
 			$title = $title_override;
+		} elseif ( function_exists( 'rbfw_fd_opt' ) ) {
+			if ( 'category' === $dropdown_for ) {
+				$title = rbfw_fd_opt( 'search_type_label' );
+			} elseif ( 'location' === $dropdown_for ) {
+				$title = rbfw_fd_opt( 'search_location_label' );
+			}
 		}
 
 		$option = '';
