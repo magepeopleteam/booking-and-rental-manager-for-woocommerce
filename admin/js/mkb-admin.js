@@ -840,6 +840,108 @@
                 }
             });
         });
+
+        /* Edit Stock: opens the same modal shell with an editable form,
+           tailored per rent type (flat qty / variations / per-rent-type /
+           per-room), and saves back to the exact meta the item editor uses. */
+        jQuery(document).on('click', '.rbfw_stock_edit_details', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            jQuery("#rbfw_stock_view_result_wrap").mage_modal({
+                escapeClose: false,
+                clickClose: false,
+                showClose: true
+            });
+
+            let data_id = jQuery(this).attr('data-id');
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_edit_form',
+                    'data_id' : data_id,
+                    'nonce' : rbfw_ajax_admin.nonce_get_stock_edit_form
+                },
+                beforeSend: function() {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').empty();
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html('<i class="fas fa-spinner fa-spin rbfw_rp_loader"></i>');
+                },
+                success: function (response) {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html(response);
+                }
+            });
+        });
+
+        jQuery(document).on('submit', '.rbfw_inv_edit_stock_form', function (e) {
+            e.preventDefault();
+
+            let $form = jQuery(this);
+            let $msg = $form.find('.rbfw_inv_edit_stock_msg');
+            let $save = $form.find('.rbfw_inv_edit_stock_save');
+            let post_id = $form.data('post-id');
+
+            $msg.text('').removeClass('rbfw_inv_msg_error rbfw_inv_msg_success');
+            $save.prop('disabled', true);
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                dataType: 'json',
+                data: $form.serialize() + '&action=rbfw_update_inventory_stock&post_id=' + encodeURIComponent(post_id) + '&nonce=' + encodeURIComponent(rbfw_ajax_admin.nonce_update_inventory_stock),
+                success: function (response) {
+                    if (response && response.success) {
+                        $msg.text(rbfwInvI18n && rbfwInvI18n.stock_saved ? rbfwInvI18n.stock_saved : 'Stock updated.').addClass('rbfw_inv_msg_success');
+
+                        let $row = jQuery('.rbfw_stock_view_details[data-id="' + post_id + '"]').closest('tr.rbfw_inv_row');
+
+                        function refreshPill($pill, $soldBadge, newTotal) {
+                            if (newTotal === null || !$pill.length) { return; }
+                            let soldQty = parseFloat($soldBadge.text()) || 0;
+                            let remaining = newTotal - soldQty;
+
+                            $pill.removeClass('full zero');
+                            if (newTotal <= 0 || remaining <= 0) {
+                                $pill.addClass('zero');
+                            } else if (remaining >= newTotal) {
+                                $pill.addClass('full');
+                            }
+                            $pill.text(remaining + '/' + newTotal);
+                        }
+
+                        if ($row.length) {
+                            let newTotal = response.data && typeof response.data.total !== 'undefined' ? parseFloat(response.data.total) : null;
+                            refreshPill(
+                                $row.find('.rbfw_inv_stock_wrap .rbfw_inv_pill').first(),
+                                $row.find('.rbfw_inv_qty_badge').first(),
+                                newTotal
+                            );
+
+                            let newEsTotal = response.data && typeof response.data.es_total !== 'undefined' ? parseFloat(response.data.es_total) : null;
+                            refreshPill(
+                                $row.find('.rbfw_inv_td_es_stock .rbfw_inv_pill').first(),
+                                $row.find('.rbfw_inv_td_es_sold .rbfw_inv_qty_badge').first(),
+                                newEsTotal
+                            );
+                        }
+
+                        setTimeout(function () {
+                            if (jQuery.mage_modal && typeof jQuery.mage_modal.isActive === 'function' && jQuery.mage_modal.isActive()) {
+                                jQuery.mage_modal.close();
+                            }
+                        }, 700);
+                    } else {
+                        let errMsg = (response && response.data && typeof response.data === 'string') ? response.data : 'Something went wrong. Please try again.';
+                        $msg.text(errMsg).addClass('rbfw_inv_msg_error');
+                        $save.prop('disabled', false);
+                    }
+                },
+                error: function () {
+                    $msg.text('Something went wrong. Please try again.').addClass('rbfw_inv_msg_error');
+                    $save.prop('disabled', false);
+                }
+            });
+        });
         /* end inventory filter and view details */
 
 
