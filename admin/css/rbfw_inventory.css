@@ -373,7 +373,13 @@
     width: 94%;
     padding: 0;
     border-radius: 18px;
-    overflow: hidden;
+    /* Was overflow:hidden. That silently clipped any content taller than
+       this box's own shrink-to-fit height — with no scrollbar, so a modal
+       with many rows (e.g. Edit Stock on an item with several rent-type
+       rows + extra services) lost its footer (Save/Cancel) entirely with
+       no way to reach it. .rbfw_inv_modal now owns its own rounding +
+       clipping and scrolls its body internally instead. */
+    overflow: visible;
     background: #fff;
     box-shadow: 0 24px 60px rgba(15,23,42,.30), 0 4px 16px rgba(15,23,42,.10);
 }
@@ -405,6 +411,32 @@
     display: flex;
     flex-direction: column;
     max-height: 86vh;
+    /* Owns the rounded-corner clipping itself (rather than relying on the
+       outer #rbfw_stock_view_result_wrap to hide the square corners) so a
+       tall item (many rent-type rows / extra services) never gets silently
+       cropped past the wrapper's own hard-clipped box — see the wrapper
+       rule below and .rbfw_inv_edit_stock_form's flex rule. */
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+/* The Edit Stock modal's <form> sits directly between .rbfw_inv_modal and
+   .rbfw_inv_modal_body/_foot (form wraps body+foot together, as a sibling
+   of _head). A plain block-box form there means none of
+   .rbfw_inv_modal_body's flex/overflow rules do anything — they only take
+   effect on a flex *item*, and the form (not body/foot directly) is
+   .rbfw_inv_modal's actual flex child. That silently broke the internal
+   scroll for any item with enough rows to not fit in 86vh: the body
+   rendered at full content height regardless, pushing the footer
+   (Save/Cancel) off the bottom with no way to reach it.
+   display:contents removes the form from the box/layout tree entirely —
+   .rbfw_inv_modal_body and .rbfw_inv_modal_foot become .rbfw_inv_modal's
+   direct flex children exactly as if the <form> tag weren't there for
+   layout purposes, restoring the intended "fixed head/foot, scrollable
+   middle" behaviour. The form still fully works for submission — display:
+   contents only affects rendering/box generation, not the DOM or events. */
+.rbfw_inv_edit_stock_form {
+    display: contents;
 }
 
 /* modal header */
@@ -455,7 +487,33 @@
 .rbfw_inv_modal_close svg.rbfw_inv_ic { font-size: 16px; }
 
 /* modal body */
+/* flex-basis must stay auto (content-based) here: with only max-height (no
+   fixed height) on .rbfw_inv_modal, the container's own natural/summed
+   height comes from its flex children's basis values. A zero basis makes
+   the container's natural sum ignore this element's real content height
+   entirely, so max-height never has anything to clamp and flex-grow never
+   activates (no established "positive free space" to distribute) — the
+   modal just collapsed to the height of everything else. Auto correctly
+   reports this element's real content height into that sum, so an
+   over-tall modal properly exceeds max-height, triggering the clamp, and
+   flex-shrink (with min-height:0) then compresses this element — the only
+   flex-shrink:1 item — into whatever room remains after the shrink:0
+   head/foot, which is exactly when overflow-y:auto kicks in. */
 .rbfw_inv_modal_body { padding: 18px 20px 20px; overflow-y: auto; overflow-x: hidden; flex: 1 1 auto; min-height: 0; }
+
+/* Thin, modern scrollbar for the modal's internal scroll region, instead
+   of the browser's default bold/full-width one. */
+.rbfw_inv_modal_body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rbfw-border) transparent;
+}
+.rbfw_inv_modal_body::-webkit-scrollbar { width: 6px; }
+.rbfw_inv_modal_body::-webkit-scrollbar-track { background: transparent; }
+.rbfw_inv_modal_body::-webkit-scrollbar-thumb {
+    background-color: var(--rbfw-border);
+    border-radius: 10px;
+}
+.rbfw_inv_modal_body::-webkit-scrollbar-thumb:hover { background-color: var(--rbfw-text-3); }
 
 /* available qty hero */
 .rbfw_inv_avail_hero {
