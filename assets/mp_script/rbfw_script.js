@@ -85,6 +85,53 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 
 
+/**
+ * Per-item "Block Booking If Date Range Contains Off Days" flag, printed as a
+ * hidden input by the booking form templates. Items saved before the flag
+ * existed have no input / an empty value — both count as enabled.
+ *
+ * The flag gates ONLY rule 3 (a pickup→return range may not span an off day).
+ * Off days / off dates themselves stay unselectable as pickup or return
+ * regardless of the flag — that is the plugin's normal off-day behavior.
+ */
+function rbfw_offday_blocking_enabled() {
+    var $flag = jQuery('#rbfw_block_offday_booking');
+    return !($flag.length && $flag.val() === 'off');
+}
+
+/**
+ * Rule 3 of the off-day blocking feature: true when any weekly off day or off
+ * date range falls strictly BETWEEN the selected pickup date and a candidate
+ * return date. The endpoints themselves are covered by rules 1–2 (the normal
+ * off-day disable in rbfw_off_day_dates), so only the interior is scanned.
+ *
+ * @param {string} pickup_iso Selected pickup date, YYYY-MM-DD.
+ * @param {Date}   end_date   Candidate return date from beforeShowDay.
+ */
+function rbfw_range_contains_off_day(pickup_iso, end_date) {
+    if (!pickup_iso) return false;
+
+    var off_days = [], offday_range = [];
+    try { off_days     = JSON.parse(jQuery('#rbfw_off_days').val())     || []; } catch (e) {}
+    try { offday_range = JSON.parse(jQuery('#rbfw_offday_range').val()) || []; } catch (e) {}
+    if (!off_days.length && !offday_range.length) return false;
+
+    var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    var d = new Date(pickup_iso + 'T00:00:00');
+    if (isNaN(d.getTime())) return false;
+    d.setDate(d.getDate() + 1); // interior only — start the day after pickup
+
+    var end = new Date(end_date.getFullYear(), end_date.getMonth(), end_date.getDate());
+    var guard = 0; // hard cap so a corrupt date can never loop forever
+    while (d < end && guard++ < 1100) {
+        if (jQuery.inArray(weekday[d.getDay()], off_days) >= 0) return true;
+        var ddmmyyyy = ("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + d.getFullYear();
+        if (jQuery.inArray(ddmmyyyy, offday_range) >= 0) return true;
+        d.setDate(d.getDate() + 1);
+    }
+    return false;
+}
+
 function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 

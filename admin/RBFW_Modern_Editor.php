@@ -742,6 +742,10 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$buffer_after = isset( $_POST['rbfw_buffer_time_after'] ) ? absint( $_POST['rbfw_buffer_time_after'] ) : 0;
 			update_post_meta( $post_id, 'rbfw_buffer_time_after', $buffer_after );
 
+			/* collectFormData() posts checkboxes as their value when checked, '' when not. */
+			$block_offday = ( isset( $_POST['rbfw_block_offday_range_booking'] ) && $_POST['rbfw_block_offday_range_booking'] === 'on' ) ? 'on' : 'off';
+			update_post_meta( $post_id, 'rbfw_block_offday_range_booking', $block_offday );
+
 			$from_dates = ( isset( $_POST['off_days_start'] ) && is_array( $_POST['off_days_start'] ) )
 				? array_map( 'sanitize_text_field', wp_unslash( $_POST['off_days_start'] ) ) : [];
 			$to_dates   = ( isset( $_POST['off_days_end'] ) && is_array( $_POST['off_days_end'] ) )
