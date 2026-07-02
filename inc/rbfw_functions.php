@@ -116,6 +116,41 @@
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
 				'rel' => true, // Allows inline JavaScript
+				'title' => true,
+				'aria-label' => true,
+			),
+			// Static inline SVG icons (rbfw_inv_icon etc.). Attribute names must
+			// be lowercase here — wp_kses matches them case-insensitively, so
+			// 'viewbox' covers viewBox. No scriptable attributes are allowed.
+			'svg'     => array(
+				'class'           => true,
+				'viewbox'         => true,
+				'fill'            => true,
+				'stroke'          => true,
+				'stroke-width'    => true,
+				'stroke-linecap'  => true,
+				'stroke-linejoin' => true,
+				'aria-hidden'     => true,
+				'focusable'       => true,
+				'width'           => true,
+				'height'          => true,
+			),
+			'path'    => array(
+				'd'      => true,
+				'fill'   => true,
+				'stroke' => true,
+			),
+			'circle'  => array(
+				'cx' => true,
+				'cy' => true,
+				'r'  => true,
+			),
+			'rect'    => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+				'rx'     => true,
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
