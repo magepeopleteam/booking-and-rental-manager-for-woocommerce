@@ -967,6 +967,7 @@ function rbfw_inv_icon( $name, $extra_class = '' ) {
         'clock'    => '<circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/>',
         'plus'     => '<path d="M12 5v14"/><path d="M5 12h14"/>',
         'pencil'   => '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+        'lock'     => '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
         'trash'    => '<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/>',
         'check'    => '<path d="M5 12l5 5 9-11"/>',
         'clipboard' => '<rect x="8" y="3.5" width="8" height="4" rx="1.5"/><path d="M9 5.5H6.5A1.5 1.5 0 0 0 5 7v12.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V7a1.5 1.5 0 0 0-1.5-1.5H15"/><path d="M8.5 12h7"/><path d="M8.5 16h5"/>',
@@ -1346,19 +1347,37 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                             <span class="rbfw_inv_pill <?php echo esc_attr( $item_state ); ?>"><?php echo esc_html( $remaining_item_stock ); ?>/<?php echo esc_html( $rbfw_item_stock_quantity ); ?></span>
                             <span class="rbfw_inv_stock_actions">
                                 <a
-                                    class="rbfw_inv_view_btn rbfw_stock_view_details"
+                                    class="rbfw_inv_view_btn rbfw_inv_icon_btn rbfw_stock_view_details"
+                                    href="#"
+                                    title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    aria-label="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"
                                     data-request="closing"
                                     data-date="<?php echo esc_attr( $current_date ); ?>"
                                     data-id="<?php echo esc_attr( get_the_ID() ); ?>"
                                 >
-                                    <?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    <?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
                                 </a>
-                                <a
-                                    class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_stock_edit_details"
-                                    data-id="<?php echo esc_attr( get_the_ID() ); ?>"
-                                >
-                                    <?php echo rbfw_inv_icon('pencil'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </a>
+                                <?php if ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) : ?>
+                                    <a
+                                        class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_inv_icon_btn rbfw_stock_edit_details"
+                                        href="#"
+                                        title="<?php esc_attr_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                        aria-label="<?php esc_attr_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                        data-id="<?php echo esc_attr( get_the_ID() ); ?>"
+                                    >
+                                        <?php echo rbfw_inv_icon('pencil'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                    </a>
+                                <?php else : ?>
+                                    <a
+                                        class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_inv_icon_btn rbfw_inv_pro_lock"
+                                        href="<?php echo esc_url( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_go_pro_page' ) ); ?>"
+                                        title="<?php esc_attr_e( 'Edit Stock is a Pro feature — click to upgrade', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                        aria-label="<?php esc_attr_e( 'Edit Stock is a Pro feature — click to upgrade', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    >
+                                        <?php echo rbfw_inv_icon('lock'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                        <span class="rbfw_inv_pro_lock_badge"><?php esc_html_e( 'PRO', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </a>
+                                <?php endif; ?>
                             </span>
                         </span>
                     </td>
@@ -1785,6 +1804,13 @@ function rbfw_get_stock_edit_form() {
         wp_send_json_error( 'Unauthorized access', 403 );
     }
 
+    // Edit Stock is a Pro feature. The button is hidden client-side for
+    // free-plugin users, but that alone isn't enforcement — someone could
+    // still POST directly to this action, so gate it here too.
+    if ( ! function_exists( 'rbfw_check_pro_active' ) || ! rbfw_check_pro_active() ) {
+        wp_send_json_error( __( 'Editing stock from the Inventory page is a Pro feature.', 'booking-and-rental-manager-for-woocommerce' ), 403 );
+    }
+
     $post_id = isset( $_POST['data_id'] ) ? absint( $_POST['data_id'] ) : 0;
 
     if ( ! $post_id || get_post_type( $post_id ) !== 'rbfw_item' || ! current_user_can( 'edit_post', $post_id ) ) {
@@ -1962,6 +1988,12 @@ function rbfw_update_inventory_stock() {
 
     if ( ! current_user_can( 'edit_posts' ) ) {
         wp_send_json_error( 'Unauthorized access', 403 );
+    }
+
+    // Same Pro gate as rbfw_get_stock_edit_form() — enforced here too so the
+    // save endpoint can't be hit directly, bypassing the hidden UI.
+    if ( ! function_exists( 'rbfw_check_pro_active' ) || ! rbfw_check_pro_active() ) {
+        wp_send_json_error( __( 'Editing stock from the Inventory page is a Pro feature.', 'booking-and-rental-manager-for-woocommerce' ), 403 );
     }
 
     $post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;

@@ -373,7 +373,13 @@
     width: 94%;
     padding: 0;
     border-radius: 18px;
-    overflow: hidden;
+    /* Was overflow:hidden. That silently clipped any content taller than
+       this box's own shrink-to-fit height — with no scrollbar, so a modal
+       with many rows (e.g. Edit Stock on an item with several rent-type
+       rows + extra services) lost its footer (Save/Cancel) entirely with
+       no way to reach it. .rbfw_inv_modal now owns its own rounding +
+       clipping and scrolls its body internally instead. */
+    overflow: visible;
     background: #fff;
     box-shadow: 0 24px 60px rgba(15,23,42,.30), 0 4px 16px rgba(15,23,42,.10);
 }
@@ -405,6 +411,32 @@
     display: flex;
     flex-direction: column;
     max-height: 86vh;
+    /* Owns the rounded-corner clipping itself (rather than relying on the
+       outer #rbfw_stock_view_result_wrap to hide the square corners) so a
+       tall item (many rent-type rows / extra services) never gets silently
+       cropped past the wrapper's own hard-clipped box — see the wrapper
+       rule below and .rbfw_inv_edit_stock_form's flex rule. */
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+/* The Edit Stock modal's <form> sits directly between .rbfw_inv_modal and
+   .rbfw_inv_modal_body/_foot (form wraps body+foot together, as a sibling
+   of _head). A plain block-box form there means none of
+   .rbfw_inv_modal_body's flex/overflow rules do anything — they only take
+   effect on a flex *item*, and the form (not body/foot directly) is
+   .rbfw_inv_modal's actual flex child. That silently broke the internal
+   scroll for any item with enough rows to not fit in 86vh: the body
+   rendered at full content height regardless, pushing the footer
+   (Save/Cancel) off the bottom with no way to reach it.
+   display:contents removes the form from the box/layout tree entirely —
+   .rbfw_inv_modal_body and .rbfw_inv_modal_foot become .rbfw_inv_modal's
+   direct flex children exactly as if the <form> tag weren't there for
+   layout purposes, restoring the intended "fixed head/foot, scrollable
+   middle" behaviour. The form still fully works for submission — display:
+   contents only affects rendering/box generation, not the DOM or events. */
+.rbfw_inv_edit_stock_form {
+    display: contents;
 }
 
 /* modal header */
@@ -455,7 +487,33 @@
 .rbfw_inv_modal_close svg.rbfw_inv_ic { font-size: 16px; }
 
 /* modal body */
+/* flex-basis must stay auto (content-based) here: with only max-height (no
+   fixed height) on .rbfw_inv_modal, the container's own natural/summed
+   height comes from its flex children's basis values. A zero basis makes
+   the container's natural sum ignore this element's real content height
+   entirely, so max-height never has anything to clamp and flex-grow never
+   activates (no established "positive free space" to distribute) — the
+   modal just collapsed to the height of everything else. Auto correctly
+   reports this element's real content height into that sum, so an
+   over-tall modal properly exceeds max-height, triggering the clamp, and
+   flex-shrink (with min-height:0) then compresses this element — the only
+   flex-shrink:1 item — into whatever room remains after the shrink:0
+   head/foot, which is exactly when overflow-y:auto kicks in. */
 .rbfw_inv_modal_body { padding: 18px 20px 20px; overflow-y: auto; overflow-x: hidden; flex: 1 1 auto; min-height: 0; }
+
+/* Thin, modern scrollbar for the modal's internal scroll region, instead
+   of the browser's default bold/full-width one. */
+.rbfw_inv_modal_body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--rbfw-border) transparent;
+}
+.rbfw_inv_modal_body::-webkit-scrollbar { width: 6px; }
+.rbfw_inv_modal_body::-webkit-scrollbar-track { background: transparent; }
+.rbfw_inv_modal_body::-webkit-scrollbar-thumb {
+    background-color: var(--rbfw-border);
+    border-radius: 10px;
+}
+.rbfw_inv_modal_body::-webkit-scrollbar-thumb:hover { background-color: var(--rbfw-text-3); }
 
 /* available qty hero */
 .rbfw_inv_avail_hero {
@@ -541,6 +599,64 @@
 .rbfw_inv .rbfw_inv_edit_btn { display: inline-flex; align-items: center; gap: 4px; }
 .rbfw_inv .rbfw_inv_edit_btn svg.rbfw_inv_ic { font-size: 11px; }
 
+/* Icon-only buttons in the stock-actions group */
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_icon_btn {
+    width: 26px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    text-decoration: none;
+}
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_icon_btn svg.rbfw_inv_ic {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
+    font-size: 14px;
+    line-height: 1;
+    display: block;
+    stroke: var(--rbfw-accent);
+    stroke-width: 2;
+    fill: none;
+    color: var(--rbfw-accent);
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Edit Stock — Pro upsell lock (shown instead of the pencil button when the
+   Pro plugin isn't active). Reuses the same gold gradient as the "PRO"
+   badge already used on the Payment Settings gateway cards, so the upsell
+   language stays visually consistent across the plugin. */
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_pro_lock {
+    width: auto;
+    padding: 0 8px 0 6px;
+    gap: 4px;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    box-shadow: 0 2px 6px rgba(253, 160, 133, .35);
+}
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_pro_lock:hover {
+    opacity: .92;
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+}
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_pro_lock svg.rbfw_inv_ic {
+    stroke: #fff;
+    color: #fff;
+    width: 12px;
+    height: 12px;
+    min-width: 12px;
+    min-height: 12px;
+}
+.rbfw_inv .rbfw_inv_pro_lock_badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .4px;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
 /* Edit Stock form */
 .rbfw_inv_modal .rbfw_inv_qty_input {
     width: 90px;
@@ -593,6 +709,25 @@
 .rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary { background: var(--rbfw-accent); color: #fff; }
 .rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary:hover { opacity: .9; color: #fff; }
 .rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Save button turns unmistakably green on success, instead of relying only
+   on the small text line below it — the modal closes ~1.3s later, so this
+   needs to register at a glance. */
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary.rbfw_inv_modal_btn_saved,
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary.rbfw_inv_modal_btn_saved:disabled {
+    background: var(--rbfw-green);
+    opacity: 1;
+}
+
+/* Brief highlight on the row's stock pill(s) after a save, once the modal
+   has closed — makes the updated number impossible to miss. */
+@keyframes rbfw_inv_pill_flash {
+    0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, .55); }
+    100% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+}
+.rbfw_inv .rbfw_inv_pill.rbfw_inv_pill_flash {
+    animation: rbfw_inv_pill_flash 0.8s ease-out 2;
+}
 
 /* =========================================================================
    Responsive

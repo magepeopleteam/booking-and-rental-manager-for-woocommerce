@@ -879,6 +879,7 @@
             let $form = jQuery(this);
             let $msg = $form.find('.rbfw_inv_edit_stock_msg');
             let $save = $form.find('.rbfw_inv_edit_stock_save');
+            let saveLabel = $save.html();
             let post_id = $form.data('post-id');
 
             $msg.text('').removeClass('rbfw_inv_msg_error rbfw_inv_msg_success');
@@ -891,9 +892,18 @@
                 data: $form.serialize() + '&action=rbfw_update_inventory_stock&post_id=' + encodeURIComponent(post_id) + '&nonce=' + encodeURIComponent(rbfw_ajax_admin.nonce_update_inventory_stock),
                 success: function (response) {
                     if (response && response.success) {
-                        $msg.text(rbfwInvI18n && rbfwInvI18n.stock_saved ? rbfwInvI18n.stock_saved : 'Stock updated.').addClass('rbfw_inv_msg_success');
+                        /* Make the save unmistakable: the button itself turns into a
+                           green "Saved" state (not just a small text line easy to miss
+                           right before the modal auto-closes), and the row's pill(s)
+                           flash briefly once the modal is gone. */
+                        let savedLabel = (typeof rbfwInvI18n !== 'undefined' && rbfwInvI18n.stock_saved) ? rbfwInvI18n.stock_saved : 'Saved!';
+                        $msg.text(savedLabel).addClass('rbfw_inv_msg_success');
+                        $save.addClass('rbfw_inv_modal_btn_saved').html(
+                            '<svg class="rbfw_inv_ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-11"/></svg> ' + savedLabel
+                        );
 
                         let $row = jQuery('.rbfw_stock_view_details[data-id="' + post_id + '"]').closest('tr.rbfw_inv_row');
+                        let $flashTargets = jQuery();
 
                         function refreshPill($pill, $soldBadge, newTotal) {
                             if (newTotal === null || !$pill.length) { return; }
@@ -907,6 +917,7 @@
                                 $pill.addClass('full');
                             }
                             $pill.text(remaining + '/' + newTotal);
+                            $flashTargets = $flashTargets.add($pill);
                         }
 
                         if ($row.length) {
@@ -929,16 +940,18 @@
                             if (jQuery.mage_modal && typeof jQuery.mage_modal.isActive === 'function' && jQuery.mage_modal.isActive()) {
                                 jQuery.mage_modal.close();
                             }
-                        }, 700);
+                            $flashTargets.addClass('rbfw_inv_pill_flash');
+                            setTimeout(function () { $flashTargets.removeClass('rbfw_inv_pill_flash'); }, 1600);
+                        }, 1300);
                     } else {
                         let errMsg = (response && response.data && typeof response.data === 'string') ? response.data : 'Something went wrong. Please try again.';
                         $msg.text(errMsg).addClass('rbfw_inv_msg_error');
-                        $save.prop('disabled', false);
+                        $save.prop('disabled', false).html(saveLabel);
                     }
                 },
                 error: function () {
                     $msg.text('Something went wrong. Please try again.').addClass('rbfw_inv_msg_error');
-                    $save.prop('disabled', false);
+                    $save.prop('disabled', false).html(saveLabel);
                 }
             });
         });
