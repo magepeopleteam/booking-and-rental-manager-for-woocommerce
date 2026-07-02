@@ -1346,18 +1346,24 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                             <span class="rbfw_inv_pill <?php echo esc_attr( $item_state ); ?>"><?php echo esc_html( $remaining_item_stock ); ?>/<?php echo esc_html( $rbfw_item_stock_quantity ); ?></span>
                             <span class="rbfw_inv_stock_actions">
                                 <a
-                                    class="rbfw_inv_view_btn rbfw_stock_view_details"
+                                    class="rbfw_inv_view_btn rbfw_inv_icon_btn rbfw_stock_view_details"
+                                    href="#"
+                                    title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    aria-label="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"
                                     data-request="closing"
                                     data-date="<?php echo esc_attr( $current_date ); ?>"
                                     data-id="<?php echo esc_attr( get_the_ID() ); ?>"
                                 >
-                                    <?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    <?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
                                 </a>
                                 <a
-                                    class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_stock_edit_details"
+                                    class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_inv_icon_btn rbfw_stock_edit_details"
+                                    href="#"
+                                    title="<?php esc_attr_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    aria-label="<?php esc_attr_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>"
                                     data-id="<?php echo esc_attr( get_the_ID() ); ?>"
                                 >
-                                    <?php echo rbfw_inv_icon('pencil'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    <?php echo rbfw_inv_icon('pencil'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
                                 </a>
                             </span>
                         </span>

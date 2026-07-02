@@ -541,6 +541,32 @@
 .rbfw_inv .rbfw_inv_edit_btn { display: inline-flex; align-items: center; gap: 4px; }
 .rbfw_inv .rbfw_inv_edit_btn svg.rbfw_inv_ic { font-size: 11px; }
 
+/* Icon-only buttons in the stock-actions group */
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_icon_btn {
+    width: 26px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    text-decoration: none;
+}
+.rbfw_inv .rbfw_inv_view_btn.rbfw_inv_icon_btn svg.rbfw_inv_ic {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    min-height: 14px;
+    font-size: 14px;
+    line-height: 1;
+    display: block;
+    stroke: var(--rbfw-accent);
+    stroke-width: 2;
+    fill: none;
+    color: var(--rbfw-accent);
+    visibility: visible;
+    opacity: 1;
+}
+
 /* Edit Stock form */
 .rbfw_inv_modal .rbfw_inv_qty_input {
     width: 90px;
@@ -593,6 +619,25 @@
 .rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary { background: var(--rbfw-accent); color: #fff; }
 .rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary:hover { opacity: .9; color: #fff; }
 .rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Save button turns unmistakably green on success, instead of relying only
+   on the small text line below it — the modal closes ~1.3s later, so this
+   needs to register at a glance. */
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary.rbfw_inv_modal_btn_saved,
+.rbfw_inv_modal_foot .rbfw_inv_modal_btn_primary.rbfw_inv_modal_btn_saved:disabled {
+    background: var(--rbfw-green);
+    opacity: 1;
+}
+
+/* Brief highlight on the row's stock pill(s) after a save, once the modal
+   has closed — makes the updated number impossible to miss. */
+@keyframes rbfw_inv_pill_flash {
+    0%   { box-shadow: 0 0 0 0 rgba(16, 185, 129, .55); }
+    100% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+}
+.rbfw_inv .rbfw_inv_pill.rbfw_inv_pill_flash {
+    animation: rbfw_inv_pill_flash 0.8s ease-out 2;
+}
 
 /* =========================================================================
    Responsive

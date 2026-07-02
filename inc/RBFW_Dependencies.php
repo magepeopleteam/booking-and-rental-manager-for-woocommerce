@@ -114,6 +114,7 @@ if (! class_exists('RBFW_Dependencies')) {
 					'showing'     => __( 'Showing %1$s–%2$s of %3$s entries', 'booking-and-rental-manager-for-woocommerce' ),
 					/* translators: %s: total rows. */
 					'showing_all' => __( 'Showing %s entries', 'booking-and-rental-manager-for-woocommerce' ),
+					'stock_saved' => __( 'Saved!', 'booking-and-rental-manager-for-woocommerce' ),
 				) );
 			}
 
