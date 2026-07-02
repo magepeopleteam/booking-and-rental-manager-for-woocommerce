@@ -414,7 +414,9 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                         </div>
                         <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                     </div>
-                    
+
+                    <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+
                     <?php  if(!empty($multiple_items_info)){ ?>
 
                         <div class="item rbfw_resourse_md" style="display: none">

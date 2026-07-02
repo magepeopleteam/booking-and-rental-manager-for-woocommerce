@@ -9367,3 +9367,20 @@ textarea.rbfw-me-field-invalid {
     padding: 10px 14px;
 }
 .rbfw-me-offday-rules-note .dashicons { color: #2f5eff; flex-shrink: 0; font-size: 16px; height: 16px; width: 16px; }
+
+/* ── Location Inventory & Price (Location panel) ── */
+.rbfw-me-loc-inv-rows { margin-top: 4px; }
+.rbfw-me-loc-inv-grid {
+    align-items: center;
+    display: grid;
+    gap: 10px 14px;
+    grid-template-columns: minmax(140px, 1.4fr) 1fr 1fr;
+}
+.rbfw-me-loc-inv-head {
+    color: #6a727e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+.rbfw-me-loc-inv-name { color: #1f2733; font-size: 13px; font-weight: 600; }

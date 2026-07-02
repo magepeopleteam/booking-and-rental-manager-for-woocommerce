@@ -376,6 +376,7 @@ if (! class_exists('RBFW_Dependencies')) {
 
 				wp_localize_script('jquery', 'rbfw_ajax_front', array(
 					'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
+					'nonce_location_stock_info'        => wp_create_nonce('rbfw_location_stock_info_action'),
 					'nonce_check_resort_availibility'        => wp_create_nonce('rbfw_check_resort_availibility_action'),
 					'nonce_bikecarmd_ajax_price_calculation'        => wp_create_nonce('rbfw_bikecarmd_ajax_price_calculation_action'),
 					'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce('rbfw_multi_items_ajax_price_calculation_action'),

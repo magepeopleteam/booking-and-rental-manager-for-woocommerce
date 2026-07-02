@@ -799,3 +799,180 @@ function fee_management(sub_total_price,total_days=1,quantity=1){
         document.addEventListener('DOMContentLoaded', rbfwArrangeBookingForm);
     }
 })();
+
+/* ── Pickup-location chooser cards (Location Inventory & Price) ──
+ * The cards block (templates/forms/location-cards.php) is the first child of
+ * the booking form; CSS gates every later sibling until a card is chosen.
+ * Choosing a card writes the slug into the form's rbfw_pickup_point field
+ * (kept two-way in sync with the classic dropdown) and caps the quantity
+ * controls to the location's remaining stock. The location charge itself is
+ * applied server-side at add-to-cart (rbfw_apply_location_charge), so
+ * nothing here affects the authoritative price.
+ */
+jQuery(function ($) {
+    var $wrap = $('#rbfw_loc_cards_wrap');
+    if (!$wrap.length) return;
+    var $form = $wrap.closest('form.mp_rbfw_ticket_form');
+    if (!$form.length) return;
+
+    function rbfwLocPointField() {
+        var $select = $form.find('select[name="rbfw_pickup_point"]');
+        if ($select.length) return $select;
+        var $hidden = $form.find('input[name="rbfw_pickup_point"]');
+        if (!$hidden.length) {
+            $hidden = $('<input>', { type: 'hidden', name: 'rbfw_pickup_point' }).appendTo($form);
+        }
+        return $hidden;
+    }
+
+    function rbfwLocCapQuantity(stock) {
+        if (isNaN(stock) || stock < 1) return;
+        // select-based quantity (md and friends)
+        $form.find('#rbfw_item_quantity_md, select[name="rbfw_item_quantity"]').each(function () {
+            var $sel = $(this);
+            $sel.find('option').each(function () {
+                var v = parseInt($(this).val(), 10);
+                if (!isNaN(v)) $(this).prop('disabled', v > stock);
+            });
+            var cur = parseInt($sel.val(), 10);
+            if (!isNaN(cur) && cur > stock) $sel.val(String(stock)).trigger('change');
+        });
+        // input-based quantity
+        $form.find('input[name="rbfw_item_quantity"]').each(function () {
+            var $inp = $(this);
+            $inp.attr('max', stock);
+            var cur = parseInt($inp.val() || '1', 10);
+            if (cur > stock) $inp.val(stock).trigger('change');
+        });
+    }
+
+    $wrap.on('click', '.rbfw_loc_card', function () {
+        var $card = $(this);
+        if ($wrap.hasClass('rbfw_loc_waitdates')) return; // dates first — stock is date-wise
+        if ($card.is(':disabled') || $card.hasClass('rbfw_loc_card_soldout')) return;
+
+        $wrap.find('.rbfw_loc_card').removeClass('rbfw_loc_card_selected');
+        $card.addClass('rbfw_loc_card_selected');
+        $wrap.removeClass('rbfw_loc_pending');
+
+        var loc = String($card.data('loc'));
+        var $field = rbfwLocPointField();
+        if ($field.is('select') && !$field.find('option[value="' + loc + '"]').length) {
+            $field.append($('<option>', { value: loc, text: $card.find('.rbfw_loc_card_name').text() }));
+        }
+        if ($field.val() !== loc) $field.val(loc).trigger('change');
+
+        rbfwLocCapQuantity(parseInt($card.data('stock'), 10));
+    });
+
+    // Keep the cards in sync if the classic dropdown is used directly.
+    $form.on('change', 'select[name="rbfw_pickup_point"]', function () {
+        var $card = $wrap.find('.rbfw_loc_card[data-loc="' + String($(this).val()) + '"]');
+        if ($card.length && !$card.hasClass('rbfw_loc_card_selected')) $card.trigger('click');
+    });
+
+    /* Date-aware stock refresh: whenever the customer picks/changes booking
+     * dates, re-fetch each location's remaining stock for that exact range
+     * and update the card badges. A selected card that becomes sold out is
+     * deselected and the form re-gated. */
+    function rbfwLocApplyStock($card, left) {
+        left = parseInt(left, 10);
+        if (isNaN(left)) return;
+        var txtAvail = $wrap.data('txt-available') || '%d unit(s) available';
+        var txtSold  = $wrap.data('txt-soldout') || 'Sold out';
+        var $stockEl = $card.find('.rbfw_loc_card_stock');
+
+        $card.attr('data-stock', left).data('stock', left);
+        if (left <= 0) {
+            $card.addClass('rbfw_loc_card_soldout').prop('disabled', true);
+            $stockEl.text(txtSold);
+            if ($card.hasClass('rbfw_loc_card_selected')) {
+                $card.removeClass('rbfw_loc_card_selected');
+                $wrap.addClass('rbfw_loc_pending');
+                rbfwLocPointField().val('').trigger('change');
+            }
+        } else {
+            $card.removeClass('rbfw_loc_card_soldout').prop('disabled', false);
+            $stockEl.text(txtAvail.replace('%d', left));
+            if ($card.hasClass('rbfw_loc_card_selected')) {
+                rbfwLocCapQuantity(left);
+            }
+        }
+    }
+
+    var rbfwLocStockTimer = null;
+    function rbfwLocRefreshStocks() {
+        if (typeof rbfw_ajax_front === 'undefined' || !rbfw_ajax_front.nonce_location_stock_info) return;
+        var post_id = $wrap.data('post-id');
+        if (!post_id) return;
+
+        var start = $form.find('input[name="rbfw_pickup_start_date"]').val()
+            || $form.find('input[name="rbfw_start_datetime"]').val()
+            || $form.find('input[name="rbfw_bikecarsd_selected_date"]').val() || '';
+        var end = $form.find('input[name="rbfw_pickup_end_date"]').val()
+            || $form.find('input[name="rbfw_end_datetime"]').val() || start;
+        if (!start) return;
+
+        // Duration-based forms (multiple_items): no end-date field — derive it
+        // from the chosen duration so availability covers the whole rental.
+        if (end === start && $form.find('[name="durationType"]').length) {
+            var dType = String($form.find('[name="durationType"]').val() || 'daily');
+            var dQty  = parseInt($form.find('[name="durationQty"]').val(), 10) || 1;
+            var dDays = dType === 'hourly' ? 0 : (dType === 'daily' ? dQty : (dType === 'weekly' ? dQty * 7 : dQty * 30));
+            var dEnd  = new Date(String(start).slice(0, 10) + 'T00:00:00');
+            if (!isNaN(dEnd.getTime()) && dDays > 0) {
+                dEnd.setDate(dEnd.getDate() + dDays);
+                end = dEnd.getFullYear() + '-' + ('0' + (dEnd.getMonth() + 1)).slice(-2) + '-' + ('0' + dEnd.getDate()).slice(-2);
+            }
+        }
+
+        clearTimeout(rbfwLocStockTimer);
+        rbfwLocStockTimer = setTimeout(function () {
+            jQuery.post(rbfw_ajax_front.rbfw_ajaxurl, {
+                action: 'rbfw_location_stock_info',
+                post_id: post_id,
+                start_date: start,
+                end_date: end,
+                nonce: rbfw_ajax_front.nonce_location_stock_info
+            }, function (res) {
+                if (!res || !res.success || !res.data) return;
+                // Dates are known now — activate the cards with date-exact stock.
+                if ($wrap.hasClass('rbfw_loc_waitdates')) {
+                    $wrap.removeClass('rbfw_loc_waitdates');
+                    var chooseTxt = $wrap.data('txt-note-choose');
+                    if (chooseTxt) $wrap.find('.rbfw_loc_cards_note').text(chooseTxt);
+                }
+                $wrap.removeClass('rbfw_loc_cards_error');
+                jQuery.each(res.data, function (slug, left) {
+                    var $card = $wrap.find('.rbfw_loc_card[data-loc="' + slug + '"]');
+                    if ($card.length) rbfwLocApplyStock($card, left);
+                });
+            });
+        }, 250);
+    }
+
+    $form.on('change',
+        'input[name="rbfw_pickup_start_date"], input[name="rbfw_pickup_end_date"], ' +
+        'input[name="rbfw_start_datetime"], input[name="rbfw_end_datetime"], ' +
+        'input[name="rbfw_bikecarsd_selected_date"], ' +
+        'select[name="durationType"], input[name="durationQty"]',
+        rbfwLocRefreshStocks
+    );
+
+    /* Some pricing modes arrive with dates already known — fixed event
+     * start/end (multi-day items with the date picker disabled render them
+     * as hidden inputs) or dates carried over from the search page. Activate
+     * the cards immediately in that case; rbfwLocRefreshStocks() is a no-op
+     * when no start date exists yet. */
+    rbfwLocRefreshStocks();
+
+    // Booking without a location: block the submit and point at the cards.
+    $form.on('submit', function (e) {
+        if (!$wrap.find('.rbfw_loc_card_selected').length) {
+            e.preventDefault();
+            $wrap.addClass('rbfw_loc_cards_error');
+            $wrap[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(function () { $wrap.removeClass('rbfw_loc_cards_error'); }, 2500);
+        }
+    });
+});

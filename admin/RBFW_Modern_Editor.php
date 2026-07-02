@@ -784,6 +784,11 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 			update_post_meta( $post_id, 'rbfw_dropoff_data', $dropoff_data );
 
+			/* Location inventory & price (shared field names with the classic panel) */
+			if ( class_exists( 'RBFW_Location' ) && method_exists( 'RBFW_Location', 'save_location_inventory_from_post' ) ) {
+				RBFW_Location::save_location_inventory_from_post( $post_id );
+			}
+
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
 				$cats = rbfw_sanitize_rent_type_categories( wp_unslash( $_POST['rbfw_categories'] ) );
