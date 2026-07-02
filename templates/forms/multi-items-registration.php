@@ -290,6 +290,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+                    <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
 
 
                     <div class="rbfw_select_rental_period">

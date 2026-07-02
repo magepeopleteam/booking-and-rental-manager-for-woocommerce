@@ -116,6 +116,41 @@
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
 				'rel' => true, // Allows inline JavaScript
+				'title' => true,
+				'aria-label' => true,
+			),
+			// Static inline SVG icons (rbfw_inv_icon etc.). Attribute names must
+			// be lowercase here — wp_kses matches them case-insensitively, so
+			// 'viewbox' covers viewBox. No scriptable attributes are allowed.
+			'svg'     => array(
+				'class'           => true,
+				'viewbox'         => true,
+				'fill'            => true,
+				'stroke'          => true,
+				'stroke-width'    => true,
+				'stroke-linecap'  => true,
+				'stroke-linejoin' => true,
+				'aria-hidden'     => true,
+				'focusable'       => true,
+				'width'           => true,
+				'height'          => true,
+			),
+			'path'    => array(
+				'd'      => true,
+				'fill'   => true,
+				'stroke' => true,
+			),
+			'circle'  => array(
+				'cx' => true,
+				'cy' => true,
+				'r'  => true,
+			),
+			'rect'    => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+				'rx'     => true,
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -2743,6 +2778,14 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 		}
 
 		return wp_json_encode( $off_days );
+	}
+	/**
+	 * Per-item "Block Booking If Date Range Contains Off Days" flag ('on'/'off').
+	 * Empty meta (items saved before the flag existed) counts as 'on' so
+	 * off-day protection stays the default. Mirrors RBFW_Off_Day::block_offday_range_value().
+	 */
+	function rbfw_block_offday_range_booking( $post_id ) {
+		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'off' ? 'off' : 'on';
 	}
 	function rbfw_off_dates( $post_id ) {
 		$off_dates       = [];

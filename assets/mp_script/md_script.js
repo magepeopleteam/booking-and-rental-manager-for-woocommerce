@@ -243,8 +243,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         },
         beforeShowDay: function(date)
         {
-            return rbfw_enhanced_pickup_beforeShowDay(date);
-            //return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
+            // Return calendar: pickup checks + block ranges spanning off days (rule 3)
+            return rbfw_enhanced_dropoff_beforeShowDay(date);
         },
         onChangeMonthYear: function (year, month) {
             loadDisabledDates(post_id, year, month);
@@ -477,8 +477,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e)
         },
         beforeShowDay: function(date)
         {
-            // Use enhanced inventory checking for search dropoff calendar as well
-            return rbfw_enhanced_pickup_beforeShowDay(date);
+            // Search dropoff calendar: same rule-3 range check, against the search pickup date
+            return rbfw_enhanced_dropoff_beforeShowDay(date, jQuery('input[name="rbfw_pickup_date_search"]').val());
         }
 
     });
@@ -1573,6 +1573,35 @@ function rbfw_enhanced_pickup_beforeShowDay(date) {
 
     // Otherwise, use normal inventory checking
     return rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
+}
+
+/**
+ * beforeShowDay for RETURN calendars. On top of the pickup checks, enforces
+ * rule 3 of the off-day blocking feature: when the item's toggle is enabled,
+ * a return date whose pickup→return range would contain an off day (weekly
+ * off day or off date range) is disabled, so bookings can never span one.
+ *
+ * @param {Date}   date       Candidate return date.
+ * @param {string} pickup_iso Selected pickup date (YYYY-MM-DD). Defaults to
+ *                            the booking form's rbfw_pickup_start_date.
+ */
+function rbfw_enhanced_dropoff_beforeShowDay(date, pickup_iso) {
+    var base = rbfw_enhanced_pickup_beforeShowDay(date);
+    if (Array.isArray(base) && !base[0]) {
+        return base;
+    }
+
+    if (rbfw_offday_blocking_enabled()) {
+        if (pickup_iso === undefined) {
+            pickup_iso = jQuery('input[name="rbfw_pickup_start_date"]').val();
+        }
+        if (pickup_iso && rbfw_range_contains_off_day(pickup_iso, date)) {
+            var offLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.off_label) ? rbfw_translation.off_label : 'Off';
+            return [false, 'notav', offLabel];
+        }
+    }
+
+    return base;
 }
 
 
