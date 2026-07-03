@@ -96,7 +96,9 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
  */
 function rbfw_offday_blocking_enabled() {
     var $flag = jQuery('#rbfw_block_offday_booking');
-    return !($flag.length && $flag.val() === 'off');
+    // Opt-in: interior-range blocking only when the admin explicitly turned it
+    // on. A missing flag or any non-'on' value means blocking stays off.
+    return $flag.length > 0 && $flag.val() === 'on';
 }
 
 /**

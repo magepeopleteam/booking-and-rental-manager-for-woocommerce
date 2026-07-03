@@ -86,7 +86,7 @@ function rbfw_booking_search_item_type_label( $rbfw_id, $item_type ) {
  * Does the d-m-Y / Y-m-d range hit an off day for this item?
  * Endpoints (pickup / drop-off) are always enforced; interior days only when
  * the per-item "Block Booking If Date Range Contains Off Days" toggle is on
- * (meta empty = on, mirroring rbfw_block_offday_range_booking()).
+ * (meta empty = off, mirroring rbfw_block_offday_range_booking()).
  *
  * @return bool true when the range is blocked by off day/date rules.
  */
@@ -117,8 +117,8 @@ function rbfw_booking_search_range_blocked( $rbfw_id, $start_ts, $end_ts ) {
 	}
 
 	$interior_blocking = function_exists( 'rbfw_block_offday_range_booking' )
-		? ( rbfw_block_offday_range_booking( $rbfw_id ) !== 'off' )
-		: true;
+		? ( rbfw_block_offday_range_booking( $rbfw_id ) === 'on' )
+		: false;
 
 	$guard = 0;
 	for ( $ts = $start_ts; $ts <= $end_ts && $guard < 1100; $ts += DAY_IN_SECONDS, $guard++ ) {

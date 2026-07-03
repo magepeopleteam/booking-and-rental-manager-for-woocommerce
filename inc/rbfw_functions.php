@@ -2781,11 +2781,12 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 	}
 	/**
 	 * Per-item "Block Booking If Date Range Contains Off Days" flag ('on'/'off').
-	 * Empty meta (items saved before the flag existed) counts as 'on' so
-	 * off-day protection stays the default. Mirrors RBFW_Off_Day::block_offday_range_value().
+	 * Opt-in: empty meta (never enabled by the admin) counts as 'off' so bookings
+	 * are allowed until the admin turns the toggle on and saves.
+	 * Mirrors RBFW_Off_Day::block_offday_range_value().
 	 */
 	function rbfw_block_offday_range_booking( $post_id ) {
-		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'off' ? 'off' : 'on';
+		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'on' ? 'on' : 'off';
 	}
 
 	/**
