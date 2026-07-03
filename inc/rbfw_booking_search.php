@@ -30,6 +30,8 @@ add_action( 'wp_ajax_rbfw_booking_checkout_form', 'rbfw_booking_checkout_form_aj
 add_action( 'wp_ajax_nopriv_rbfw_booking_checkout_form', 'rbfw_booking_checkout_form_ajax' );
 add_action( 'wp_ajax_rbfw_booking_empty_cart', 'rbfw_booking_empty_cart_ajax' );
 add_action( 'wp_ajax_nopriv_rbfw_booking_empty_cart', 'rbfw_booking_empty_cart_ajax' );
+add_action( 'wp_ajax_rbfw_booking_bar_details', 'rbfw_booking_bar_details_ajax' );
+add_action( 'wp_ajax_nopriv_rbfw_booking_bar_details', 'rbfw_booking_bar_details_ajax' );
 
 /**
  * Rental types that support instant add-to-cart from a plain date range.
@@ -332,12 +334,22 @@ function rbfw_booking_search_shortcode( $atts = null ) {
 		</div>
 
 		<div class="rbfw_bsearch_bar_float" style="<?php echo $cart_count > 0 ? '' : 'display:none;'; ?>">
+			<div class="rbfw_bsearch_bar_details" hidden>
+				<div class="rbfw_bsearch_bar_details_head">
+					<span><?php esc_html_e( 'Your Booking', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					<button type="button" class="rbfw_bsearch_bar_details_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
+				</div>
+				<div class="rbfw_bsearch_bar_details_body"></div>
+			</div>
 			<div class="rbfw_bsearch_bar_info">
 				<span class="rbfw_bsearch_bar_count"><?php echo esc_html( $cart_count ); ?></span>
 				<span class="rbfw_bsearch_bar_label"><?php esc_html_e( 'item(s) in your booking', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 				<span class="rbfw_bsearch_bar_total"><?php echo wp_kses_post( $cart_total ); ?></span>
 			</div>
 			<div class="rbfw_bsearch_bar_actions">
+				<button type="button" class="rbfw_bsearch_bar_view" title="<?php esc_attr_e( 'View booking details', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'View booking details', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-expanded="false">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg>
+				</button>
 				<button type="button" class="rbfw_bsearch_bar_empty" title="<?php esc_attr_e( 'Empty booking', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Empty booking', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1l1-13M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
 				</button>
@@ -895,4 +907,56 @@ function rbfw_booking_empty_cart_ajax() {
 			'total' => WC()->cart->get_cart_total(),
 		)
 	);
+}
+
+/******************************
+ * AJAX: itemized booking details for the floating bar's "eye" popover.
+ * Reuses wc_get_formatted_cart_item_data() — the same woocommerce_get_item_data
+ * output the real cart page renders (this plugin's own hook embeds a
+ * compact dates/pricing table per item there), trusted the same way via
+ * wp_kses_post, so every rental type "just works" with no per-type parsing.
+ ******************************/
+function rbfw_booking_bar_details_ajax() {
+	check_ajax_referer( 'rbfw_booking_search_action', 'nonce' );
+
+	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+		wp_send_json_error( array( 'message' => __( 'The cart is unavailable right now. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+	}
+
+	$cart = WC()->cart->get_cart();
+	if ( empty( $cart ) ) {
+		wp_send_json_success(
+			array(
+				'html' => '<div class="rbfw_bsearch_bar_details_empty">' . esc_html__( 'Your booking is empty.', 'booking-and-rental-manager-for-woocommerce' ) . '</div>',
+			)
+		);
+	}
+
+	ob_start();
+	foreach ( $cart as $cart_item ) {
+		$product = isset( $cart_item['data'] ) ? $cart_item['data'] : null;
+		if ( ! $product ) {
+			continue;
+		}
+
+		$qty        = (int) $cart_item['quantity'];
+		$line_total = $cart_item['line_total'] + ( isset( $cart_item['line_tax'] ) ? (float) $cart_item['line_tax'] : 0 );
+		$meta_html  = wc_get_formatted_cart_item_data( $cart_item );
+		?>
+		<div class="rbfw_bsearch_bar_detail_row">
+			<div class="rbfw_bsearch_bar_detail_head">
+				<div class="rbfw_bsearch_bar_detail_thumb"><?php echo wp_kses_post( $product->get_image( array( 52, 52 ) ) ); ?></div>
+				<div class="rbfw_bsearch_bar_detail_title"><?php echo esc_html( $product->get_name() ); ?></div>
+				<div class="rbfw_bsearch_bar_detail_qty">&times;<?php echo esc_html( $qty ); ?></div>
+				<div class="rbfw_bsearch_bar_detail_price"><?php echo wp_kses_post( wc_price( $line_total ) ); ?></div>
+			</div>
+			<?php if ( '' !== trim( (string) $meta_html ) ) : ?>
+				<div class="rbfw_bsearch_bar_detail_meta"><?php echo wp_kses_post( $meta_html ); ?></div>
+			<?php endif; ?>
+		</div>
+		<?php
+	}
+	$html = ob_get_clean();
+
+	wp_send_json_success( array( 'html' => $html ) );
 }

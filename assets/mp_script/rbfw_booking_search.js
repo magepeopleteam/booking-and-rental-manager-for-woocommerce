@@ -258,6 +258,57 @@
             });
         });
 
+        /* ---------- Booking details popover (the "eye" icon) ---------- */
+        function closeBarDetails($bar) {
+            $bar.find('.rbfw_bsearch_bar_details').slideUp(140, function () { $(this).attr('hidden', true); });
+            $bar.find('.rbfw_bsearch_bar_view').attr('aria-expanded', false);
+        }
+
+        $(document).on('click', '.rbfw_bsearch_bar_view', function () {
+            var $btn = $(this);
+            var $bar = $btn.closest('.rbfw_bsearch_bar_float');
+            var $panel = $bar.find('.rbfw_bsearch_bar_details');
+
+            if (!$panel.attr('hidden')) {
+                closeBarDetails($bar);
+                return;
+            }
+
+            $panel.removeAttr('hidden').hide().slideDown(140);
+            $btn.attr('aria-expanded', true);
+
+            var $body = $panel.find('.rbfw_bsearch_bar_details_body');
+            $body.html('<div class="rbfw_bsearch_loading"><span class="rbfw_bsearch_spinner"></span>' + rbfw_bsearch_vars.txt_searching + '</div>');
+
+            $.post(rbfw_bsearch_vars.ajax_url, {
+                action: 'rbfw_booking_bar_details',
+                nonce: rbfw_bsearch_vars.nonce
+            }).done(function (res) {
+                if (res && res.success) {
+                    $body.html(res.data.html);
+                } else {
+                    $body.html('<div class="rbfw_bsearch_bar_details_empty">' + ((res && res.data && res.data.message) ? res.data.message : rbfw_bsearch_vars.txt_error) + '</div>');
+                }
+            }).fail(function () {
+                $body.html('<div class="rbfw_bsearch_bar_details_empty">' + rbfw_bsearch_vars.txt_error + '</div>');
+            });
+        });
+
+        $(document).on('click', '.rbfw_bsearch_bar_details_close', function () {
+            closeBarDetails($(this).closest('.rbfw_bsearch_bar_float'));
+        });
+
+        $(document).on('click', function (e) {
+            var $panel = $('.rbfw_bsearch_bar_details:not([hidden])');
+            if (!$panel.length) {
+                return;
+            }
+            if ($(e.target).closest('.rbfw_bsearch_bar_details, .rbfw_bsearch_bar_view').length) {
+                return;
+            }
+            closeBarDetails($panel.closest('.rbfw_bsearch_bar_float'));
+        });
+
         /* ---------- Empty the booking (clear cart) ---------- */
         $(document).on('click', '.rbfw_bsearch_bar_empty', function () {
             var $btn = $(this);
@@ -280,6 +331,7 @@
                     $bar.find('.rbfw_bsearch_bar_total').html(res.data.total);
                     if (!res.data.count) {
                         $bar.slideUp(150);
+                        closeBarDetails($bar);
                     }
                     /* Reflect the emptied booking on any visible result cards. */
                     $wrap.find('.rbfw_bsearch_add.rbfw_bsearch_added').removeClass('rbfw_bsearch_added').each(function () {
@@ -436,6 +488,25 @@
                             }
                         })();
                     }
+
+                    /* Single-day (bike/car) items: once the date-wise duration
+                       table loads, a single available duration is the obvious
+                       choice — set its quantity to 1 so "Book Now" is ready
+                       immediately instead of sitting disabled until the
+                       customer notices they must click "+" first. Left alone
+                       (still 0) whenever more than one duration is offered,
+                       since then the choice is genuinely the customer's. */
+                    var qtyTries = 0;
+                    (function autoSelectSoleQty() {
+                        var $qty = $body.find('.rbfw_bikecarsd_qty');
+                        if ($qty.length === 1) {
+                            if (parseInt($qty.val(), 10) === 0) {
+                                $qty.val(1).trigger('input');
+                            }
+                        } else if (!$qty.length && ++qtyTries < 15) {
+                            setTimeout(autoSelectSoleQty, 350);
+                        }
+                    })();
                 } else {
                     $modal.find('.rbfw_bsearch_modal_body').html('<div class="rbfw_bsearch_empty">' + ((res && res.data && res.data.message) ? res.data.message : rbfw_bsearch_vars.txt_error) + '</div>');
                 }
