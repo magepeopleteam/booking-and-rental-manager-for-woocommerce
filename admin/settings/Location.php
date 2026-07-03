@@ -354,19 +354,27 @@
 						<p class="rbfw-me-field__desc"><?php esc_html_e( 'Fill in stock/price only for the locations you offer — empty rows are ignored. Works on its own; the Pick-up/Drop-off switches above are a separate, simpler dropdown feature.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 					<?php endif; ?>
 
-					<div class="rbfw-me-offday-rules rbfw-me-loc-inv-rules">
-						<?php foreach ( self::location_inventory_rules() as $rule ) : ?>
-							<div class="rbfw-me-offday-rule">
-								<span class="rbfw-me-offday-rule__badge"><?php echo esc_html( $rule[0] ); ?></span>
-								<span class="rbfw-me-offday-rule__text"><?php echo esc_html( $rule[1] ); ?></span>
-								<span class="dashicons dashicons-yes-alt rbfw-me-offday-rule__check"></span>
+					<div class="rbfw-me-loc-inv-collapse rbfw-me-collapsible is-collapsed">
+						<button type="button" class="rbfw-me-loc-inv-collapse__head">
+							<span class="rbfw-me-card__caret dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+							<span class="rbfw-me-loc-inv-collapse__title"><?php esc_html_e( 'How Location Inventory & Price works', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</button>
+						<div class="rbfw-me-loc-inv-collapse__body">
+							<div class="rbfw-me-offday-rules rbfw-me-loc-inv-rules">
+								<?php foreach ( self::location_inventory_rules() as $rule ) : ?>
+									<div class="rbfw-me-offday-rule">
+										<span class="rbfw-me-offday-rule__badge"><?php echo esc_html( $rule[0] ); ?></span>
+										<span class="rbfw-me-offday-rule__text"><?php echo esc_html( $rule[1] ); ?></span>
+										<span class="dashicons dashicons-yes-alt rbfw-me-offday-rule__check"></span>
+									</div>
+								<?php endforeach; ?>
 							</div>
-						<?php endforeach; ?>
+							<p class="rbfw-me-offday-rules-note">
+								<span class="dashicons dashicons-info-outline"></span>
+								<?php esc_html_e( 'When disabled, the booking form works without the location step — no location stock caps and no location charge.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							</p>
+						</div>
 					</div>
-					<p class="rbfw-me-offday-rules-note">
-						<span class="dashicons dashicons-info-outline"></span>
-						<?php esc_html_e( 'When disabled, the booking form works without the location step — no location stock caps and no location charge.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</p>
 				</div>
 				<?php
 			}

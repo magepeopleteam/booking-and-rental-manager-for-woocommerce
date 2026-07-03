@@ -184,6 +184,23 @@
             }
         });
 
+        // Collapsible "How Location Inventory & Price works" rules block (starts collapsed).
+        $wrap.on('click', '.rbfw-me-loc-inv-collapse__head', function () {
+            var $box  = $(this).closest('.rbfw-me-loc-inv-collapse');
+            var $body = $box.children('.rbfw-me-loc-inv-collapse__body');
+            if ($box.hasClass('is-collapsed')) {
+                $box.removeClass('is-collapsed');
+                $body.hide().stop(true, true).slideDown(200, function () {
+                    $body.css('display', ''); // restore stylesheet display
+                });
+            } else {
+                $body.stop(true, true).slideUp(200, function () {
+                    $box.addClass('is-collapsed');
+                    $body.css('display', ''); // let the .is-collapsed CSS rule hide it
+                });
+            }
+        });
+
         // Location pick-up / drop-off: mirror the checkbox group into a hidden
         // comma-separated value (one hidden input per .rbfw-me-loc-group) that
         // the modern AJAX save reads.
@@ -1954,6 +1971,26 @@
                 selected.push($(this).data('day'));
             });
             $group.find('.rbfw-me-offday-hidden').val(selected.join(','));
+        });
+
+        // Collapsible card: click the head to expand/collapse the body. Used by the
+        // "Block Booking" off-day card, which renders collapsed by default. Clicks on
+        // the on/off switch (or any control) inside the head must not toggle collapse.
+        $wrap.on('click', '.rbfw-me-card--collapsible .rbfw-me-card__head', function (e) {
+            if ($(e.target).closest('.switch, input, button, a, select').length) return;
+            var $card = $(this).closest('.rbfw-me-card--collapsible');
+            var $body = $card.children('.rbfw-me-card__body');
+            if ($card.hasClass('is-collapsed')) {
+                $card.removeClass('is-collapsed');
+                $body.hide().stop(true, true).slideDown(200, function () {
+                    $body.css('display', ''); // restore stylesheet display (flex)
+                });
+            } else {
+                $body.stop(true, true).slideUp(200, function () {
+                    $card.addClass('is-collapsed');
+                    $body.css('display', ''); // let the .is-collapsed CSS rule hide it
+                });
+            }
         });
 
         // Add new date range row
