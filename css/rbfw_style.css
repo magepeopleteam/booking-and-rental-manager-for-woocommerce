@@ -13748,3 +13748,65 @@ body.rbfw_bsearch_noscroll { overflow: hidden; }
         width: 100% !important;
     }
 }
+
+/* ======================================================
+   Book Now — unified brand primary colour (colour only)
+   ------------------------------------------------------
+   Every "Book Now" submit across single-day, multi-day,
+   resort and multi-items shares .mp_rbfw_book_now_submit
+   and .rbfw-book-now-btn. Previously these were coloured
+   inconsistently (dusty rose #b87585, blue #005fc8, etc.)
+   with scattered !important rules. This block is the single
+   source of truth so the enabled button clearly reads as
+   the primary/brand colour once dates are selected, and the
+   disabled (pre-date-selection) state reads as neutral grey.
+   Shape/size are intentionally left to the existing rules.
+   Container selectors are repeated to out-specify the older
+   !important declarations; keep this block LAST in the file.
+   ====================================================== */
+button.rbfw-book-now-btn,
+button.mp_rbfw_book_now_submit,
+button.rbfw_resort_book_now_btn,
+.mp_right_section button.rbfw-book-now-btn,
+.rbfw_multi_items_right button.rbfw_bikecarmd_book_now_btn,
+.rbfw_bsearch_modal_body button.rbfw-book-now-btn,
+.rbfw_bsearch_modal_body button.mp_rbfw_book_now_submit {
+    background: var(--rbfw_color_primary) !important;
+    background-color: var(--rbfw_color_primary) !important;
+    border-color: var(--rbfw_color_primary) !important;
+    color: #ffffff !important;
+}
+
+/* Hover / focus — darker shade of the primary, enabled only */
+button.rbfw-book-now-btn:hover:not([disabled]):not(.rbfw_disabled_button),
+button.rbfw-book-now-btn:focus:not([disabled]):not(.rbfw_disabled_button),
+button.mp_rbfw_book_now_submit:hover:not([disabled]):not(.rbfw_disabled_button),
+button.mp_rbfw_book_now_submit:focus:not([disabled]):not(.rbfw_disabled_button),
+.mp_right_section button.rbfw-book-now-btn:hover:not([disabled]):not(.rbfw_disabled_button),
+.rbfw_multi_items_right button.rbfw_bikecarmd_book_now_btn:hover:not([disabled]):not(.rbfw_disabled_button) {
+    background: #e12d1c !important;
+    background-color: #e12d1c !important;
+    border-color: #e12d1c !important;
+    color: #ffffff !important;
+}
+
+/* Disabled (before a valid date range is chosen) — solid neutral grey */
+button.rbfw-book-now-btn[disabled],
+button.rbfw-book-now-btn.rbfw_disabled_button,
+button.mp_rbfw_book_now_submit[disabled],
+button.mp_rbfw_book_now_submit.rbfw_disabled_button,
+button.rbfw_resort_book_now_btn[disabled],
+button.rbfw_resort_book_now_btn.rbfw_disabled_button,
+.mp_right_section button.rbfw-book-now-btn[disabled],
+.mp_right_section button.rbfw-book-now-btn.rbfw_disabled_button,
+.rbfw_multi_items_right button.rbfw_bikecarmd_book_now_btn[disabled],
+.rbfw_multi_items_right button.rbfw_bikecarmd_book_now_btn.rbfw_disabled_button {
+    background: #c3c8cf !important;
+    background-color: #c3c8cf !important;
+    border-color: #c3c8cf !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
