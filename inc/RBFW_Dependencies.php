@@ -116,6 +116,12 @@ if (! class_exists('RBFW_Dependencies')) {
 					'showing_all' => __( 'Showing %s entries', 'booking-and-rental-manager-for-woocommerce' ),
 					'stock_saved' => __( 'Saved!', 'booking-and-rental-manager-for-woocommerce' ),
 				) );
+				/* "By Location" inventory tab: own AJAX date filter. */
+				wp_localize_script( 'rbfw-inventory', 'rbfwInvLoc', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'rbfw_get_location_stock_action' ),
+					'today'   => current_time( 'Y-m-d' ),
+				) );
 			}
 
 			/* Time Slots page only: modern redesign stylesheet (inline-SVG icons, primary + secondary). */

@@ -1063,6 +1063,21 @@ function rbfw_inventory_page(){
             </div>
         </div>
 
+        <?php
+        /* Remember the chosen tab across reloads: the JS mirrors the selection
+         * into the ?inv_tab= query param, which we honour here so the page
+         * re-renders on the same tab (no flash of the wrong panel). */
+        $rbfw_inv_active_tab = ( isset( $_GET['inv_tab'] ) && 'location' === sanitize_key( wp_unslash( $_GET['inv_tab'] ) ) ) ? 'location' : 'item';
+        ?>
+        <!-- Tab switcher: By Item (existing table) / By Location -->
+        <div class="rbfw_inv_tabs">
+            <button type="button" class="rbfw_inv_tab <?php echo 'item' === $rbfw_inv_active_tab ? 'active' : ''; ?>" data-tab="item"><?php esc_html_e( 'By Item', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+            <button type="button" class="rbfw_inv_tab <?php echo 'location' === $rbfw_inv_active_tab ? 'active' : ''; ?>" data-tab="location"><?php esc_html_e( 'By Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+        </div>
+
+        <!-- By Item panel -->
+        <div class="rbfw_inv_tab_panel <?php echo 'item' === $rbfw_inv_active_tab ? '' : 'rbfw_inv_hidden'; ?>" data-panel="item">
+
         <!-- Filter bar -->
         <div class="rbfw_inv_filters rbfw_inventory_page_filter">
             <div class="rbfw_inv_filter_group rbfw_inventory_filter_input_group">
@@ -1102,6 +1117,34 @@ function rbfw_inventory_page(){
                 <div class="rbfw_inv_pager"></div>
             </div>
         </div>
+        </div><!-- /By Item panel -->
+
+        <!-- By Location panel -->
+        <div class="rbfw_inv_tab_panel <?php echo 'location' === $rbfw_inv_active_tab ? '' : 'rbfw_inv_hidden'; ?>" data-panel="location">
+            <div class="rbfw_inv_filters rbfw_inv_loc_filters">
+                <div class="rbfw_inv_filter_group">
+                    <label><?php esc_html_e( 'Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                    <input type="date" class="rbfw_inv_loc_date" value="<?php echo esc_attr( current_time( 'Y-m-d' ) ); ?>">
+                </div>
+                <div class="rbfw_inv_filter_group">
+                    <label><?php esc_html_e( 'End Date (optional)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                    <input type="date" class="rbfw_inv_loc_end_date" value="">
+                </div>
+                <div class="rbfw_inv_filter_actions">
+                    <button type="button" class="rbfw_inv_btn rbfw_inv_btn_primary rbfw_inv_loc_filter_btn">
+                        <?php echo rbfw_inv_icon( 'filter' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Filter', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </button>
+                    <button type="button" class="rbfw_inv_btn rbfw_inv_btn_reset rbfw_inv_loc_reset_btn">
+                        <?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </button>
+                </div>
+            </div>
+            <div class="rbfw_inv_card">
+                <div class="rbfw_inv_loc_table_wrap">
+                    <?php echo wp_kses( rbfw_inventory_location_table( $query ), rbfw_allowed_html() ); ?>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="rbfw_stock_view_result_wrap">
         <div id="rbfw_stock_view_result_inner_wrap"></div>
@@ -1121,6 +1164,169 @@ function rbfw_inventory_page(){
         </div>
     </div>
     <?php
+}
+
+/**
+ * Location-wise inventory table for the Inventory page's "By Location" tab.
+ *
+ * Groups every rental item that has Location Inventory & Price enabled by its
+ * pickup location and shows, per location, each item's configured stock, the
+ * units booked in the selected date/range, and remaining availability. Reuses
+ * the same helpers the booking form uses so the numbers match what customers
+ * see: rbfw_get_location_inventory() (configured stock) and
+ * rbfw_location_sold_qty() (peak booked units in the window).
+ *
+ * @param WP_Query    $query All rbfw_item posts.
+ * @param string|null $date  Selected date (d-m-Y or Y-m-d); defaults to today.
+ * @param string|null $start Optional range start (used with $end).
+ * @param string|null $end   Optional range end.
+ * @return string HTML (safe for wp_kses( ..., rbfw_allowed_html() )).
+ */
+function rbfw_inventory_location_table( $query, $date = null, $start = null, $end = null ) {
+    $norm = static function ( $s ) {
+        $s = is_string( $s ) ? trim( $s ) : '';
+        if ( '' === $s ) {
+            return '';
+        }
+        $ts = strtotime( $s );
+        return $ts ? gmdate( 'Y-m-d', $ts ) : '';
+    };
+
+    $start_ymd = $norm( $start );
+    $end_ymd   = $norm( $end );
+    if ( '' === $start_ymd || '' === $end_ymd ) {
+        $single    = $norm( $date );
+        $single    = '' !== $single ? $single : current_time( 'Y-m-d' );
+        $start_ymd = $single;
+        $end_ymd   = $single;
+    }
+    if ( strtotime( $end_ymd ) < strtotime( $start_ymd ) ) {
+        $end_ymd = $start_ymd;
+    }
+
+    /* Location slug => display name. */
+    $loc_names = array();
+    $terms     = get_terms( array( 'taxonomy' => 'rbfw_item_location', 'hide_empty' => false ) );
+    if ( ! is_wp_error( $terms ) && $terms ) {
+        foreach ( $terms as $t ) {
+            /* Key by both the term slug and sanitize_title(name): location
+             * inventory rows are keyed by the sanitized name, which usually —
+             * but not always — equals the term slug. */
+            $loc_names[ $t->slug ]                    = $t->name;
+            $loc_names[ sanitize_title( $t->name ) ]  = $t->name;
+        }
+    }
+
+    /* Group items under each location they offer. Read $query->posts directly
+     * (not the have_posts() loop pointer, which the item table already consumed
+     * on initial page render). */
+    $by_location = array();
+    $items       = ( $query instanceof WP_Query ) ? (array) $query->posts : array();
+    if ( ! empty( $items ) ) {
+        foreach ( $items as $item ) {
+            $item_id = (int) $item->ID;
+            $conf    = function_exists( 'rbfw_get_location_inventory' ) ? rbfw_get_location_inventory( $item_id ) : array();
+            if ( empty( $conf ) ) {
+                continue;
+            }
+            foreach ( $conf as $slug => $row ) {
+                $stock  = (int) ( isset( $row['stock'] ) ? $row['stock'] : 0 );
+                $booked = function_exists( 'rbfw_location_sold_qty' ) ? (int) rbfw_location_sold_qty( $item_id, $slug, $start_ymd, $end_ymd ) : 0;
+                $by_location[ $slug ][] = array(
+                    'name'   => get_the_title( $item_id ),
+                    'stock'  => $stock,
+                    'booked' => $booked,
+                    'avail'  => max( 0, $stock - $booked ),
+                );
+            }
+        }
+    }
+
+    ob_start();
+
+    if ( empty( $by_location ) ) {
+        ?>
+        <div class="rbfw_inv_loc_empty">
+            <p><?php esc_html_e( 'No items have Location Inventory & Price enabled yet. Turn it on for an item (Location tab) and set per-location stock to see it here.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /* Stable, name-sorted location order. */
+    uksort( $by_location, static function ( $a, $b ) use ( $loc_names ) {
+        return strcasecmp( isset( $loc_names[ $a ] ) ? $loc_names[ $a ] : $a, isset( $loc_names[ $b ] ) ? $loc_names[ $b ] : $b );
+    } );
+
+    foreach ( $by_location as $slug => $rows ) {
+        $loc_name  = isset( $loc_names[ $slug ] ) ? $loc_names[ $slug ] : $slug;
+        $tot_stock = 0;
+        $tot_book  = 0;
+        $tot_avail = 0;
+        foreach ( $rows as $r ) {
+            $tot_stock += $r['stock'];
+            $tot_book  += $r['booked'];
+            $tot_avail += $r['avail'];
+        }
+        ?>
+        <div class="rbfw_inv_loc_group">
+            <div class="rbfw_inv_loc_head">
+                <div class="rbfw_inv_loc_head_main">
+                    <span class="rbfw_inv_loc_title"><?php echo esc_html( $loc_name ); ?></span>
+                    <span class="rbfw_inv_loc_count"><?php echo esc_html( sprintf( _n( '%s item', '%s items', count( $rows ), 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( count( $rows ) ) ) ); ?></span>
+                </div>
+                <div class="rbfw_inv_loc_head_stats">
+                    <span class="rbfw_inv_loc_stat"><?php esc_html_e( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_inv_loc_num"><?php echo esc_html( number_format_i18n( $tot_stock ) ); ?></span></span>
+                    <span class="rbfw_inv_loc_stat"><?php esc_html_e( 'Booked', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_inv_loc_num"><?php echo esc_html( number_format_i18n( $tot_book ) ); ?></span></span>
+                    <span class="rbfw_inv_loc_stat"><?php esc_html_e( 'Available', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_inv_loc_num"><?php echo esc_html( number_format_i18n( $tot_avail ) ); ?></span></span>
+                </div>
+            </div>
+            <table class="rbfw_inv_table rbfw_inv_loc_table">
+                <thead class="rbfw_inv_thead">
+                <tr class="rbfw_inv_thead_row">
+                    <th class="rbfw_inv_th_left"><?php esc_html_e( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                    <th class="rbfw_text_center"><?php esc_html_e( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                    <th class="rbfw_text_center"><?php esc_html_e( 'Booked', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                    <th class="rbfw_text_center"><?php esc_html_e( 'Available', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ( $rows as $r ) : ?>
+                    <tr>
+                        <td class="rbfw_inv_th_left"><?php echo esc_html( $r['name'] ); ?></td>
+                        <td class="rbfw_text_center"><?php echo esc_html( number_format_i18n( $r['stock'] ) ); ?></td>
+                        <td class="rbfw_text_center"><?php echo esc_html( number_format_i18n( $r['booked'] ) ); ?></td>
+                        <td class="rbfw_text_center"><span class="rbfw_inv_avail_badge <?php echo $r['avail'] > 0 ? 'is_in' : 'is_out'; ?>"><?php echo esc_html( number_format_i18n( $r['avail'] ) ); ?></span></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+
+    return ob_get_clean();
+}
+
+/* AJAX: re-render the "By Location" table for a chosen date / range. */
+add_action( 'wp_ajax_rbfw_get_location_stock_by_filter', 'rbfw_get_location_stock_by_filter' );
+function rbfw_get_location_stock_by_filter() {
+    check_ajax_referer( 'rbfw_get_location_stock_action', 'nonce' );
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+    $selected_date = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+    $start_date    = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+    $end_date      = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+    $query         = new WP_Query( array(
+        'post_type'              => 'rbfw_item',
+        'order'                  => 'DESC',
+        'posts_per_page'         => -1,
+        'update_post_meta_cache' => true,
+        'update_term_meta_cache' => true,
+    ) );
+    echo wp_kses( rbfw_inventory_location_table( $query, $selected_date, $start_date, $end_date ), rbfw_allowed_html() );
+    wp_die();
 }
 
 function rbfw_check_available_by_specific_date_md($post_id, $specific_date = null){
