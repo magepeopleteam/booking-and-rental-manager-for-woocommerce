@@ -74,7 +74,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         }else{
                             wc_add_notice(
                                 sprintf(
-                                    __('This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'woocommerce'),
+                                    __('This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'booking-and-rental-manager-for-woocommerce'),
                                     esc_url($cart_url)
                                 ),
                                 'error'

@@ -175,11 +175,11 @@
 			/**
 			 * Per-item "Block Booking If Date Range Contains Off Days" flag.
 			 *
-			 * Stored as 'on'/'off'; an empty meta (items saved before the flag
-			 * existed) counts as 'on' so off-day protection stays the default.
+			 * Stored as 'on'/'off'; opt-in, so an empty meta (never enabled by
+			 * the admin) counts as 'off' until the toggle is turned on and saved.
 			 */
 			public static function block_offday_range_value( $post_id ) {
-				return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'off' ? 'off' : 'on';
+				return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'on' ? 'on' : 'off';
 			}
 
 			public static function render_for_modern_editor( int $post_id ): void {

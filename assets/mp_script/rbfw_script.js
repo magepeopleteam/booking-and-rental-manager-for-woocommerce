@@ -96,7 +96,9 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
  */
 function rbfw_offday_blocking_enabled() {
     var $flag = jQuery('#rbfw_block_offday_booking');
-    return !($flag.length && $flag.val() === 'off');
+    // Opt-in: interior-range blocking only when the admin explicitly turned it
+    // on. A missing flag or any non-'on' value means blocking stays off.
+    return $flag.length > 0 && $flag.val() === 'on';
 }
 
 /**
@@ -809,11 +811,12 @@ function fee_management(sub_total_price,total_days=1,quantity=1){
  * applied server-side at add-to-cart (rbfw_apply_location_charge), so
  * nothing here affects the authoritative price.
  */
-jQuery(function ($) {
-    var $wrap = $('#rbfw_loc_cards_wrap');
-    if (!$wrap.length) return;
+function rbfw_loc_cards_init($wrap) {
+    var $ = jQuery;
+    if (!$wrap || !$wrap.length || $wrap.data('rbfw-loc-inited')) return;
     var $form = $wrap.closest('form.mp_rbfw_ticket_form');
     if (!$form.length) return;
+    $wrap.data('rbfw-loc-inited', true);
 
     function rbfwLocPointField() {
         var $select = $form.find('select[name="rbfw_pickup_point"]');
@@ -970,9 +973,14 @@ jQuery(function ($) {
     $form.on('submit', function (e) {
         if (!$wrap.find('.rbfw_loc_card_selected').length) {
             e.preventDefault();
+            e.stopImmediatePropagation(); // AJAX submitters must not fire either
             $wrap.addClass('rbfw_loc_cards_error');
             $wrap[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(function () { $wrap.removeClass('rbfw_loc_cards_error'); }, 2500);
         }
     });
+}
+
+jQuery(function ($) {
+    rbfw_loc_cards_init($('#rbfw_loc_cards_wrap'));
 });

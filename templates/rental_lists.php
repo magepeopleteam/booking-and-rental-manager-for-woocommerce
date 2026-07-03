@@ -159,10 +159,22 @@ $car_count = isset( $post_count_by_category['car'] ) ? $post_count_by_category['
         <div class="rbfw_rental_lists_header">
             <div class="rbfw_rental_lists_header-left">
                 <div class="rbfw_rental_lists_status-tabs">
-                    <button data-by-filter="all" class="rbfw_rental_lists_status-tab active"><?php esc_attr_e( 'All ('.$total_event.')', 'booking-and-rental-manager-for-woocommerce' );?></button>
-                    <button data-by-filter="publish" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Published ('.$post_counts['publish'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
-                    <button data-by-filter="draft" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Draft ('.$post_counts['draft'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
-                    <a href="<?php echo esc_url( $trash_url );?>"><button data-by-filter="trash" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Trash ('.$post_counts['trash'].')', 'booking-and-rental-manager-for-woocommerce' );?></button></a>
+                    <button data-by-filter="all" class="rbfw_rental_lists_status-tab active"><?php
+                        /* translators: %d: total number of items. */
+                        printf( esc_html__( 'All (%d)', 'booking-and-rental-manager-for-woocommerce' ), (int) $total_event );
+                    ?></button>
+                    <button data-by-filter="publish" class="rbfw_rental_lists_status-tab"><?php
+                        /* translators: %d: number of published items. */
+                        printf( esc_html__( 'Published (%d)', 'booking-and-rental-manager-for-woocommerce' ), (int) $post_counts['publish'] );
+                    ?></button>
+                    <button data-by-filter="draft" class="rbfw_rental_lists_status-tab"><?php
+                        /* translators: %d: number of draft items. */
+                        printf( esc_html__( 'Draft (%d)', 'booking-and-rental-manager-for-woocommerce' ), (int) $post_counts['draft'] );
+                    ?></button>
+                    <a href="<?php echo esc_url( $trash_url );?>"><button data-by-filter="trash" class="rbfw_rental_lists_status-tab"><?php
+                        /* translators: %d: number of trashed items. */
+                        printf( esc_html__( 'Trash (%d)', 'booking-and-rental-manager-for-woocommerce' ), (int) $post_counts['trash'] );
+                    ?></button></a>
                 </div>
             </div>
             <div class="rbfw_rental_lists_header-right">
@@ -198,10 +210,10 @@ $car_count = isset( $post_count_by_category['car'] ) ? $post_count_by_category['
         <!-- Load More -->
         <div class="rbfw_rental_lists_pagination">
             <div class="rbfw_rental_lists_pagination-info">
-                <?php esc_attr_e( 'Showing', 'mage-eventpress' );?> <span id="visibleCount">0</span> of <span id="totalCount">0</span> <?php esc_attr_e( ' events', 'mage-eventpress' );?>
+                <?php esc_attr_e( 'Showing', 'booking-and-rental-manager-for-woocommerce' );?> <span id="visibleCount">0</span> of <span id="totalCount">0</span> <?php esc_attr_e( ' events', 'booking-and-rental-manager-for-woocommerce' );?>
             </div>
             <button class="rbfw_rental_lists_load-more-btn" id="rbfw_loadMoreBtn">
-                <span><?php esc_attr_e( 'Load More Events', 'mage-eventpress' );?></span>
+                <span><?php esc_attr_e( 'Load More Events', 'booking-and-rental-manager-for-woocommerce' );?></span>
                 <span>↓</span>
             </button>
         </div>
