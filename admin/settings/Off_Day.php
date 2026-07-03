@@ -198,9 +198,10 @@
 			];
 			?>
 
-			<!-- Block booking on off-day ranges -->
-			<div class="rbfw-me-card">
+			<!-- Block booking on off-day ranges (collapsible, starts collapsed) -->
+			<div class="rbfw-me-card rbfw-me-card--collapsible is-collapsed">
 				<div class="rbfw-me-card__head rbfw-me-offday-block-head">
+					<span class="rbfw-me-card__caret dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
 					<div>
 						<h2><?php esc_html_e( 'Block Booking If Date Range Contains Off Days', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p><?php esc_html_e( 'Prevent bookings when the selected pickup–return range overlaps with any off day.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
