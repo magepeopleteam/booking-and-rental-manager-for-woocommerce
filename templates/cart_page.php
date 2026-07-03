@@ -356,7 +356,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
                 <th>
-                    <?php if(($start_time)){ ?>
+                    <?php if( rbfw_booking_has_time($start_time) ){ ?>
 
                         <?php
                         if($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
@@ -380,7 +380,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 </th>
                 <td>
                     <?php echo esc_html(rbfw_get_datetime($start_datetime,'date-text')) ; ?>
-                    <?php if(($start_time)){
+                    <?php if( rbfw_booking_has_time($start_time) ){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
                     } ?>
                 </td>
@@ -390,7 +390,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php if ( ! empty( $end_datetime )): ?>
             <tr>
                 <th>
-                    <?php if(($end_time)){ ?>
+                    <?php if( rbfw_booking_has_time($start_time) && rbfw_booking_has_time($end_time) ){ ?>
 
                         <?php
                         if($rbfw->get_option_trans('rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
@@ -414,7 +414,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 </th>
                 <td>
                     <?php echo esc_html(rbfw_get_datetime($end_datetime,'date-text')) ; ?>
-                    <?php if(($end_time)){
+                    <?php if( rbfw_booking_has_time($start_time) && rbfw_booking_has_time($end_time) ){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($end_time)));
                     } ?>
                 </td>
@@ -613,7 +613,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
             </tr>
         <?php } ?>
 
-        <?php if ( !empty($start_datetime) && !empty($start_time)){ ?>
+        <?php if ( !empty($start_datetime) && rbfw_booking_has_time($start_time)){ ?>
             <tr>
                 <th>
                     <?php
@@ -643,7 +643,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
 
 
-        <?php if (!empty($end_datetime) && !empty($end_time)){ ?>
+        <?php if (!empty($end_datetime) && rbfw_booking_has_time($start_time) && rbfw_booking_has_time($end_time)){ ?>
             <tr>
                 <th>
                     <?php
@@ -907,7 +907,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
                 <th>
-                    <?php if(($start_time)){ ?>
+                    <?php if( rbfw_booking_has_time($start_time) ){ ?>
 
                         <?php
                         if($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
@@ -933,7 +933,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 </th>
                 <td>
                     <?php echo esc_html(rbfw_date_format($start_datetime)) ; ?>
-                    <?php if(($start_time)){
+                    <?php if( rbfw_booking_has_time($start_time) ){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
                     } ?>
                 </td>
@@ -943,7 +943,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php if ( ! empty( $end_datetime )): ?>
             <tr>
                 <th>
-                    <?php if(($end_time)){ ?>
+                    <?php if( rbfw_booking_has_time($start_time) && rbfw_booking_has_time($end_time) ){ ?>
 
                         <?php
                         if($rbfw->get_option_trans('rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
@@ -969,7 +969,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 </th>
                 <td>
                     <?php echo esc_html(rbfw_date_format($end_datetime)) ; ?>
-                    <?php if(($end_time)){
+                    <?php if( rbfw_booking_has_time($start_time) && rbfw_booking_has_time($end_time) ){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($end_time)));
                     } ?>
                 </td>

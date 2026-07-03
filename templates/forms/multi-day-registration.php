@@ -385,21 +385,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     }
                     ?>
                     <div class="rbfw-sd-rate-box">
-                        <div class="rbfw-sd-rate-box-badges">
-                            <span class="rbfw-sd-badge rbfw-sd-badge--available">
-                                <span class="rbfw-sd-badge-dot"></span>
-                                <?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </span>
-                            <span class="rbfw-sd-badge rbfw-sd-badge--seller">
-                                <?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </span>
-                        </div>
-                        <h3 class="rbfw-sd-rate-box-title">
-                            <?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </h3>
-                        <p class="rbfw-sd-rate-box-desc">
-                            <?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </p>
+                        <?php rbfw_fd_summary_badges(); ?>
+                        <?php rbfw_fd_summary_title(); ?>
+                        <?php rbfw_fd_summary_desc(); ?>
                         <?php if ( $_rbfw_md_start > 0 ) : ?>
                         <div class="rbfw-sd-rate-box-price-row">
                             <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
@@ -463,6 +451,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+                    <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
 
                     <?php if($rbfw_enable_start_end_date == 'yes'){ ?>
                         <div class="rbfw-drp-wrapper">
@@ -545,6 +534,8 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         <input type="hidden" name="rbfw_pickup_end_date" id="dropoff_date" value="<?php echo esc_html($rbfw_event_end_date); ?>"/>
                         <input type="hidden" name="rbfw_pickup_end_time" id="dropoff_time" value="<?php echo esc_html($rbfw_event_end_time); ?>"/>
                     <?php } ?>
+
+                    <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
 
 
                     <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>

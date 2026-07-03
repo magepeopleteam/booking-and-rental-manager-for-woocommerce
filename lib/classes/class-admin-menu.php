@@ -103,6 +103,19 @@
 				// (scoped under .rbfw_ol). The legacy rbfw-order-list-modern.css was retired:
 				// it wrapped the page in a centered max-width card (margin:0 auto -> side gaps)
 				// and shipped a global "*"/"body" reset that leaked into the rest of wp-admin.
+
+				// Global Settings page — modern two-column layout (panel + sidebar cards).
+				// Scoped under .rbfw_global_settings and loaded after the base admin style
+				// ( dependency ) so its overrides win without touching the shared Settings API.
+				if ( 'rbfw_item_page_rbfw_settings_page' === $hook ) {
+					$gs_css = RBFW_PLUGIN_DIR . '/admin/css/rbfw_global_settings.css';
+					wp_enqueue_style(
+						'rbfw-global-settings',
+						RBFW_PLUGIN_URL . '/admin/css/rbfw_global_settings.css',
+						array( 'rbfw-admin-style' ),
+						file_exists( $gs_css ) ? filemtime( $gs_css ) : false
+					);
+				}
 			}
 
 			public function rbfw_time_slots() {
@@ -373,24 +386,34 @@
                                     $ticket_info_array = maybe_unserialize( $ticket_infos );
                                     $rbfw_start_datetime = '';
                                     $rbfw_end_datetime   = '';
+                                    $rbfw_start_time     = '';
+                                    $rbfw_end_time       = '';
                                     $rbfw_row_item_ids   = array();
                                     if ( ! empty( $ticket_info_array ) && is_array( $ticket_info_array ) ) {
                                         foreach ( $ticket_info_array as $ticket_info ) {
                                             $rbfw_start_datetime = isset( $ticket_info['rbfw_start_datetime'] ) ? $ticket_info['rbfw_start_datetime'] : '';
                                             $rbfw_end_datetime   = isset( $ticket_info['rbfw_end_datetime'] ) ? $ticket_info['rbfw_end_datetime'] : '';
+                                            $rbfw_start_time     = isset( $ticket_info['rbfw_start_time'] ) ? $ticket_info['rbfw_start_time'] : '';
+                                            $rbfw_end_time       = isset( $ticket_info['rbfw_end_time'] ) ? $ticket_info['rbfw_end_time'] : '';
                                             if ( ! empty( $ticket_info['rbfw_id'] ) ) {
                                                 $rbfw_row_item_ids[] = (string) $ticket_info['rbfw_id'];
                                             }
                                         }
                                     }
+                                    // Day-wise bookings carry no real time; drop it from the columns.
+                                    // The booking is "timed" only when it has a real START time — the end
+                                    // time can be a duration artifact, so gate it on the start too.
+                                    $rbfw_ol_is_timed  = rbfw_booking_has_time( $rbfw_start_time );
+                                    $rbfw_ol_start_fmt = $rbfw_ol_is_timed ? 'F j, Y g:i a' : 'F j, Y';
+                                    $rbfw_ol_end_fmt   = ( $rbfw_ol_is_timed && rbfw_booking_has_time( $rbfw_end_time ) ) ? 'F j, Y g:i a' : 'F j, Y';
                                     $rbfw_is_pro = function_exists( 'rbfw_pro_tab_menu_list' );
                                     ?>
                                     <tr class="order-row rbfw_ol_row" data-order="<?php echo esc_attr( strtolower( (string) $wc_order_id ) ); ?>" data-name="<?php echo esc_attr( strtolower( (string) $billing_name ) ); ?>" data-phone="<?php echo esc_attr( strtolower( (string) $billing_phone ) ); ?>" data-email="<?php echo esc_attr( strtolower( (string) $billing_email ) ); ?>" data-item="<?php echo esc_attr( implode( ' ', array_unique( $rbfw_row_item_ids ) ) ); ?>" data-status="<?php echo esc_attr( $status ); ?>" data-start="<?php echo esc_attr( ! empty( $rbfw_start_datetime ) ? gmdate( 'Y-m-d', strtotime( $rbfw_start_datetime ) ) : '' ); ?>">
                                         <td class="rbfw_ol_td_order" data-th="<?php esc_attr_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?>">#<?php echo esc_html( $wc_order_id ); ?></td>
                                         <td class="rbfw_ol_td_name" data-th="<?php esc_attr_e( 'Billing Name', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( $billing_name ); ?></td>
                                         <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Order Created', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
-                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_start_datetime ) ) : '—' ); ?></td>
-                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_end_datetime ) ) : '—' ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( $rbfw_ol_start_fmt, strtotime( $rbfw_start_datetime ) ) : '—' ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( $rbfw_ol_end_fmt, strtotime( $rbfw_end_datetime ) ) : '—' ); ?></td>
                                         <td data-th="<?php esc_attr_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ol_badge rbfw_ol_badge_<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst( $status ) ); ?></span></td>
                                         <td class="rbfw_ol_td_total" data-th="<?php esc_attr_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $total_price ) ); ?></td>
                                         <td class="rbfw_ol_td_action" data-th="<?php esc_attr_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>">
@@ -403,6 +426,16 @@
                                                     <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_view pro-overlay" title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
                                                     <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_edit pro-overlay" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
                                                 <?php } ?>
+                                                <?php
+                                                /**
+                                                 * Extra per-row order actions (e.g. Pro "Export PDF").
+                                                 *
+                                                 * @param int    $post_id     Booking ( rbfw_order ) post ID.
+                                                 * @param string $wc_order_id WooCommerce order number.
+                                                 * @param string $status      Current order status.
+                                                 */
+                                                do_action( 'rbfw_ol_row_actions', $post_id, $wc_order_id, $status );
+                                                ?>
                                             </div>
                                         </td>
                                     </tr>
@@ -614,21 +647,59 @@
 			}
 
 			function plugin_page() {
-				echo '<div class="wrap">';
-				settings_errors();
-				echo '</div>';
-				echo '<div class="rbfw_settings_wrapper">';
-				echo '<div class="rbfw_settings_inner_wrapper">';
-				echo '<div class="rbfw_settings_panel_header">';
-				echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) );
-				echo '<small>' . esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ) . '</small>';
-				echo '</div>';
-				echo '<div class="mage_settings_panel_wrap rbfw_settings_panel">';
-				$this->settings_api->show_navigation();
-				$this->settings_api->show_forms();
-				echo '</div>';
-				echo '</div>';
-				echo '</div>';
+				$pro_active = is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' );
+				?>
+				<div class="wrap rbfw_gs_notices"><?php settings_errors(); ?></div>
+				<div id="rbfw_content" class="rbfw_global_settings">
+					<div class="rbfw-gs-layout">
+						<div class="rbfw-gs-main">
+							<div class="rbfwPanel">
+								<div class="rbfwPanelHeader">
+									<div class="rbfw-gs-header-icon"><i class="fas fa-gear"></i></div>
+									<div class="rbfw-gs-header-text">
+										<h2><?php esc_html_e( 'Global Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+										<p><?php esc_html_e( 'Configure plugin preferences — general behaviour, styling, custom CSS, checkout, and license settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									</div>
+									<span class="rbfw-gs-version"><?php echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) ); ?> <small>v<?php echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ); ?></small></span>
+								</div>
+								<div class="rbfwPanelBody">
+									<div class="rbfw_settings_wrapper">
+										<div class="mage_settings_panel_wrap rbfw_settings_panel">
+											<?php
+												$this->settings_api->show_navigation();
+												$this->settings_api->show_forms();
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<aside class="rbfw-gs-sidebar">
+							<?php if ( ! $pro_active ) : ?>
+								<div class="rbfw-gs-card rbfw-gs-pro-card">
+									<div class="rbfw-gs-card-icon"><i class="fas fa-crown"></i></div>
+									<h4><?php esc_html_e( 'Upgrade to Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+									<p><?php esc_html_e( 'Unlock advanced pricing, security deposits, PDF invoices, backend orders, and priority support.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-pro"><?php esc_html_e( 'Get Pro Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+								</div>
+							<?php endif; ?>
+							<div class="rbfw-gs-card">
+								<h4><i class="fas fa-book"></i> <?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+								<ul class="rbfw-gs-links">
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Configuration Guide', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'View All Docs', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+								</ul>
+							</div>
+							<div class="rbfw-gs-card">
+								<h4><i class="fas fa-puzzle-piece"></i> <?php esc_html_e( 'Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+								<p><?php esc_html_e( 'Extend your plugin with our powerful addon collection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+								<a href="https://mage-people.com/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-outline"><?php esc_html_e( 'Browse Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+							</div>
+						</aside>
+					</div>
+				</div>
+				<?php
 			}
 
 			function get_pages() {

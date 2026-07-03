@@ -785,8 +785,16 @@
 
     function validateSdPricingRows(rentType, errors) {
         var $sdRows = getMainSdPriceRows();
-        var isTimely = $wrap.find('[name="manage_inventory_as_timely"]').val() === 'on';
+        // Read the live checkbox state (matches syncTimelyUI's show/hide logic) rather
+        // than the value attribute, so validation never disagrees with the visible columns.
+        var isTimely = $wrap.find('input[type="checkbox"][name="manage_inventory_as_timely"]').is(':checked');
+        var isSpecific = $wrap.find('input[type="checkbox"][name="enable_specific_duration"]').is(':checked');
         var requireQty = rentType === 'appointment' || ! isTimely;
+        // Duration columns are required only when their column is actually visible:
+        //  - Start/End Time  → hourly inventory ON + duration-based ON
+        //  - Duration        → hourly inventory ON + duration-based OFF
+        var needTimeCols = isTimely && isSpecific;
+        var needDuration = isTimely && ! isSpecific;
         var typeLabel = rentType === 'appointment' ? 'Appointment' : 'Single Day';
         var hasValidRow = false;
 
@@ -828,11 +836,28 @@
                 }).first();
             }
 
+            // Duration / Start Time / End Time live in the same row; validate them only
+            // when their column is visible for the current mode. The seasonal (_sp) copies
+            // are excluded so we check the main table row only.
+            var notSp = function () {
+                return ( $( this ).attr( 'name' ) || '' ).indexOf( 'rbfw_bike_car_sd_data_sp' ) === -1;
+            };
+            var $duration = $row.find('[name*="[duration]"]').filter( notSp ).first();
+            var $start    = $row.find('[name*="[start_time]"]').filter( notSp ).first();
+            var $end      = $row.find('[name*="[end_time]"]').filter( notSp ).first();
+
             var rentTypeVal = $.trim($title.val());
             var priceVal = $.trim($price.val());
             var stockVal = $.trim($stock.val());
+            var durationVal = $.trim($duration.val());
+            var startVal = $.trim($start.val());
+            var endVal = $.trim($end.val());
 
-            if ( ! rentTypeVal && ! priceVal && ! stockVal ) {
+            // Skip a completely untouched row (nothing relevant to the current mode filled).
+            var rowTouched = rentTypeVal || priceVal || stockVal ||
+                             ( needDuration && durationVal ) ||
+                             ( needTimeCols && ( startVal || endVal ) );
+            if ( ! rowTouched ) {
                 return;
             }
 
@@ -845,8 +870,20 @@
             if ( requireQty && stockVal === '' ) {
                 errors.push({ $field: $stock, msg: 'Row ' + (idx + 1) + ': Stock/Day is required.' });
             }
+            if ( needDuration && durationVal === '' ) {
+                errors.push({ $field: $duration, msg: 'Row ' + (idx + 1) + ': Duration is required.' });
+            }
+            if ( needTimeCols && startVal === '' ) {
+                errors.push({ $field: $start, msg: 'Row ' + (idx + 1) + ': Start Time is required.' });
+            }
+            if ( needTimeCols && endVal === '' ) {
+                errors.push({ $field: $end, msg: 'Row ' + (idx + 1) + ': End Time is required.' });
+            }
 
-            if ( rentTypeVal && priceVal !== '' && ( ! requireQty || stockVal !== '' ) ) {
+            if ( rentTypeVal && priceVal !== '' &&
+                 ( ! requireQty || stockVal !== '' ) &&
+                 ( ! needDuration || durationVal !== '' ) &&
+                 ( ! needTimeCols || ( startVal !== '' && endVal !== '' ) ) ) {
                 hasValidRow = true;
             }
         });
@@ -2011,10 +2048,9 @@
             var _invShow = (type !== 'resort' && type !== 'bike_car_sd' && type !== 'appointment');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
 
-            // Location card (Advanced step): mirror the classic editor, which hides
-            // the Location tab for resort / appointment.
-            var _locShow = (type !== 'resort' && type !== 'appointment');
-            $wrap.find('.rbfw-me-location-card').toggleClass('rbfw-me-hidden', !_locShow);
+            // Location card (Advanced step): available for every rent type
+            // ( multi-location feature ).
+            $wrap.find('.rbfw-me-location-card').removeClass('rbfw-me-hidden');
 
             if (typeof window.rbfwMdsSyncPanelForRentType === 'function') {
                 window.rbfwMdsSyncPanelForRentType(type, $pricing);

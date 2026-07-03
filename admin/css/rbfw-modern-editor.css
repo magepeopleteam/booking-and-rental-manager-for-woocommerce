@@ -7957,6 +7957,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     content: '⚠ ';
 }
 input.rbfw-me-field-invalid,
+select.rbfw-me-field-invalid,
 textarea.rbfw-me-field-invalid {
     border-color: #d63638 !important;
     box-shadow: 0 0 0 1px #d63638 !important;
@@ -9321,3 +9322,65 @@ textarea.rbfw-me-field-invalid {
 @keyframes rbfw-rt-border-move {
     to { background-position: 300% 0; }
 }
+
+/* ── Block Booking If Date Range Contains Off Days (Off Days tab) ── */
+.rbfw-me-offday-block-head {
+    align-items: center !important;
+    display: flex !important;
+    gap: 16px !important;
+    justify-content: space-between !important;
+}
+.rbfw-me-offday-block-head > div { flex: 1; min-width: 0; }
+.rbfw-me-offday-block-switch { flex-shrink: 0 !important; }
+.rbfw-me-offday-rules { display: flex; flex-direction: column; gap: 10px; }
+.rbfw-me-offday-rule {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    display: flex;
+    gap: 14px;
+    padding: 12px 16px;
+}
+.rbfw-me-offday-rule__badge {
+    background: #eef3ff;
+    border: 1px solid #dbe4ff;
+    border-radius: 7px;
+    color: #2f5eff;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    white-space: nowrap;
+}
+.rbfw-me-offday-rule__text { color: #1f2733; flex: 1; font-size: 13px; font-weight: 600; }
+.rbfw-me-offday-rule__check { color: #16a34a; flex-shrink: 0; font-size: 20px; height: 20px; width: 20px; }
+.rbfw-me-offday-rules-note {
+    align-items: center;
+    background: #eef3ff;
+    border-radius: 8px;
+    color: #4a5568;
+    display: flex;
+    font-size: 12.5px;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 10px 14px;
+}
+.rbfw-me-offday-rules-note .dashicons { color: #2f5eff; flex-shrink: 0; font-size: 16px; height: 16px; width: 16px; }
+
+/* ── Location Inventory & Price (Location panel) ── */
+.rbfw-me-loc-inv-rows { margin-top: 4px; }
+.rbfw-me-loc-inv-grid {
+    align-items: center;
+    display: grid;
+    gap: 10px 14px;
+    grid-template-columns: minmax(140px, 1.4fr) 1fr 1fr;
+}
+.rbfw-me-loc-inv-head {
+    color: #6a727e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+.rbfw-me-loc-inv-name { color: #1f2733; font-size: 13px; font-weight: 600; }

@@ -378,8 +378,8 @@
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
-                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
+                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').show();
+                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').show();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
@@ -419,8 +419,8 @@
                 jQuery('table.wprently_fee-table td:nth-child(3)').hide();
 
             } else if (item_type == 'resort') {
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
-                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
+                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').show();
+                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').show();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
@@ -837,6 +837,121 @@
                 },
                 success: function (response) {
                     jQuery('#rbfw_stock_view_result_inner_wrap').html(response);
+                }
+            });
+        });
+
+        /* Edit Stock: opens the same modal shell with an editable form,
+           tailored per rent type (flat qty / variations / per-rent-type /
+           per-room), and saves back to the exact meta the item editor uses. */
+        jQuery(document).on('click', '.rbfw_stock_edit_details', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            jQuery("#rbfw_stock_view_result_wrap").mage_modal({
+                escapeClose: false,
+                clickClose: false,
+                showClose: true
+            });
+
+            let data_id = jQuery(this).attr('data-id');
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_edit_form',
+                    'data_id' : data_id,
+                    'nonce' : rbfw_ajax_admin.nonce_get_stock_edit_form
+                },
+                beforeSend: function() {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').empty();
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html('<i class="fas fa-spinner fa-spin rbfw_rp_loader"></i>');
+                },
+                success: function (response) {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html(response);
+                }
+            });
+        });
+
+        jQuery(document).on('submit', '.rbfw_inv_edit_stock_form', function (e) {
+            e.preventDefault();
+
+            let $form = jQuery(this);
+            let $msg = $form.find('.rbfw_inv_edit_stock_msg');
+            let $save = $form.find('.rbfw_inv_edit_stock_save');
+            let saveLabel = $save.html();
+            let post_id = $form.data('post-id');
+
+            $msg.text('').removeClass('rbfw_inv_msg_error rbfw_inv_msg_success');
+            $save.prop('disabled', true);
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                dataType: 'json',
+                data: $form.serialize() + '&action=rbfw_update_inventory_stock&post_id=' + encodeURIComponent(post_id) + '&nonce=' + encodeURIComponent(rbfw_ajax_admin.nonce_update_inventory_stock),
+                success: function (response) {
+                    if (response && response.success) {
+                        /* Make the save unmistakable: the button itself turns into a
+                           green "Saved" state (not just a small text line easy to miss
+                           right before the modal auto-closes), and the row's pill(s)
+                           flash briefly once the modal is gone. */
+                        let savedLabel = (typeof rbfwInvI18n !== 'undefined' && rbfwInvI18n.stock_saved) ? rbfwInvI18n.stock_saved : 'Saved!';
+                        $msg.text(savedLabel).addClass('rbfw_inv_msg_success');
+                        $save.addClass('rbfw_inv_modal_btn_saved').html(
+                            '<svg class="rbfw_inv_ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-11"/></svg> ' + savedLabel
+                        );
+
+                        let $row = jQuery('.rbfw_stock_view_details[data-id="' + post_id + '"]').closest('tr.rbfw_inv_row');
+                        let $flashTargets = jQuery();
+
+                        function refreshPill($pill, $soldBadge, newTotal) {
+                            if (newTotal === null || !$pill.length) { return; }
+                            let soldQty = parseFloat($soldBadge.text()) || 0;
+                            let remaining = newTotal - soldQty;
+
+                            $pill.removeClass('full zero');
+                            if (newTotal <= 0 || remaining <= 0) {
+                                $pill.addClass('zero');
+                            } else if (remaining >= newTotal) {
+                                $pill.addClass('full');
+                            }
+                            $pill.text(remaining + '/' + newTotal);
+                            $flashTargets = $flashTargets.add($pill);
+                        }
+
+                        if ($row.length) {
+                            let newTotal = response.data && typeof response.data.total !== 'undefined' ? parseFloat(response.data.total) : null;
+                            refreshPill(
+                                $row.find('.rbfw_inv_stock_wrap .rbfw_inv_pill').first(),
+                                $row.find('.rbfw_inv_qty_badge').first(),
+                                newTotal
+                            );
+
+                            let newEsTotal = response.data && typeof response.data.es_total !== 'undefined' ? parseFloat(response.data.es_total) : null;
+                            refreshPill(
+                                $row.find('.rbfw_inv_td_es_stock .rbfw_inv_pill').first(),
+                                $row.find('.rbfw_inv_td_es_sold .rbfw_inv_qty_badge').first(),
+                                newEsTotal
+                            );
+                        }
+
+                        setTimeout(function () {
+                            if (jQuery.mage_modal && typeof jQuery.mage_modal.isActive === 'function' && jQuery.mage_modal.isActive()) {
+                                jQuery.mage_modal.close();
+                            }
+                            $flashTargets.addClass('rbfw_inv_pill_flash');
+                            setTimeout(function () { $flashTargets.removeClass('rbfw_inv_pill_flash'); }, 1600);
+                        }, 1300);
+                    } else {
+                        let errMsg = (response && response.data && typeof response.data === 'string') ? response.data : 'Something went wrong. Please try again.';
+                        $msg.text(errMsg).addClass('rbfw_inv_msg_error');
+                        $save.prop('disabled', false).html(saveLabel);
+                    }
+                },
+                error: function () {
+                    $msg.text('Something went wrong. Please try again.').addClass('rbfw_inv_msg_error');
+                    $save.prop('disabled', false).html(saveLabel);
                 }
             });
         });

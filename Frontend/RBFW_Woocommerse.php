@@ -10,6 +10,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_location_stock'), 25, 3 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
@@ -154,6 +155,86 @@ if (!class_exists('RBFW_Woocommerce')) {
                     wc_print_notices();
                     wp_die();
                 }
+                return false;
+            }
+
+            return $passed;
+        }
+
+        /**
+         * Location-wise stock gate at add-to-cart.
+         *
+         * Runs only for items with Location Inventory enabled: the submitted
+         * pickup location must be one of the configured locations, and the
+         * requested quantity may not exceed that location's remaining stock
+         * for the booked dates (rbfw_location_remaining_stock). Global stock
+         * is still enforced by the existing availability validators — this is
+         * an additional, per-location cap.
+         */
+        public function rbfw_validate_location_stock( $passed, $product_id, $quantity = 1 ) {
+            if ( ! $passed || ! function_exists( 'rbfw_get_location_inventory' ) ) {
+                return $passed;
+            }
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            $conf = rbfw_get_location_inventory( $rbfw_id );
+            if ( empty( $conf ) ) {
+                return $passed;
+            }
+
+            // phpcs:disable WordPress.Security.NonceVerification.Missing -- read-only look at the booking submit; nonce is enforced by the cart build.
+            $pickup_point = isset( $_POST['rbfw_pickup_point'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_point'] ) ) : '';
+            // Booked dates: md/multi-items post rbfw_pickup_(start|end)_date,
+            // resort posts rbfw_(start|end)_datetime, single-day posts
+            // rbfw_bikecarsd_selected_date.
+            $start_date   = isset( $_POST['rbfw_pickup_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_start_date'] ) ) : '';
+            if ( '' === $start_date && isset( $_POST['rbfw_start_datetime'] ) ) {
+                $start_date = sanitize_text_field( wp_unslash( $_POST['rbfw_start_datetime'] ) );
+            }
+            if ( '' === $start_date && isset( $_POST['rbfw_bikecarsd_selected_date'] ) ) {
+                $start_date = sanitize_text_field( wp_unslash( $_POST['rbfw_bikecarsd_selected_date'] ) );
+            }
+            $end_date = isset( $_POST['rbfw_pickup_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_end_date'] ) ) : '';
+            if ( '' === $end_date && isset( $_POST['rbfw_end_datetime'] ) ) {
+                $end_date = sanitize_text_field( wp_unslash( $_POST['rbfw_end_datetime'] ) );
+            }
+            if ( '' === $end_date ) {
+                $end_date = $start_date;
+            }
+            /* Duration-based forms (multiple_items) post no end date — derive
+               it from durationType/durationQty, mirroring the cart build. */
+            if ( $end_date === $start_date && isset( $_POST['durationType'] ) && '' !== $start_date ) {
+                $d_type = sanitize_text_field( wp_unslash( $_POST['durationType'] ) );
+                $d_qty  = isset( $_POST['durationQty'] ) ? max( 1, absint( wp_unslash( $_POST['durationQty'] ) ) ) : 1;
+                $d_days = 'hourly' === $d_type ? 0 : ( 'daily' === $d_type ? $d_qty : ( 'weekly' === $d_type ? $d_qty * 7 : $d_qty * 30 ) );
+                $d_ts   = strtotime( $start_date );
+                if ( $d_ts && $d_days > 0 ) {
+                    $end_date = gmdate( 'Y-m-d', $d_ts + $d_days * DAY_IN_SECONDS );
+                }
+            }
+            $qty = isset( $_POST['rbfw_item_quantity'] ) ? max( 1, absint( wp_unslash( $_POST['rbfw_item_quantity'] ) ) ) : 1;
+            // phpcs:enable WordPress.Security.NonceVerification.Missing
+
+            if ( '' === $pickup_point || ! isset( $conf[ $pickup_point ] ) ) {
+                wc_add_notice( __( 'Please choose a location before booking.', 'booking-and-rental-manager-for-woocommerce' ), 'error' );
+                return false;
+            }
+
+            $remaining = rbfw_location_remaining_stock( $rbfw_id, $pickup_point, $start_date, $end_date );
+            if ( null !== $remaining && $qty > $remaining ) {
+                $term = get_term_by( 'slug', $pickup_point, 'rbfw_item_location' );
+                $name = $term && ! is_wp_error( $term ) ? $term->name : ucwords( str_replace( '-', ' ', $pickup_point ) );
+                wc_add_notice(
+                    sprintf(
+                        /* translators: 1: location name, 2: remaining units */
+                        __( 'Only %2$d unit(s) are available at %1$s for the selected dates.', 'booking-and-rental-manager-for-woocommerce' ),
+                        $name,
+                        $remaining
+                    ),
+                    'error'
+                );
                 return false;
             }
 
@@ -666,6 +747,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
                 $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date , $rbfw_management_info , $rbfw_management_price);
 
                 $sub_total_price                                 = apply_filters( 'rbfw_cart_base_price', $sub_total_price );
@@ -743,6 +825,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $prepared_management_info = $this->rbfw_prepare_multi_item_fees_from_post( $rbfw_id, $rbfw_management_info_all, $sub_total_price );
                 $rbfw_management_info     = $prepared_management_info['items'];
                 $rbfw_management_price    = $prepared_management_info['total'];
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
 
 
 
@@ -941,6 +1024,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
+
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
 
                 $discount_amount = 0;
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
@@ -1325,7 +1410,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 endif;
                 $rbfw_bikecarsd_duration_price = $values['rbfw_bikecarsd_duration_price'] ? $values['rbfw_bikecarsd_duration_price'] : '';
                 $rbfw_bikecarsd_service_price  = $values['rbfw_bikecarsd_service_price'] ? $values['rbfw_bikecarsd_service_price'] : '';
-                if ( $rbfw_start_time != '00:00' ) {
+                if ( rbfw_booking_has_time( $rbfw_start_time ) ) {
                     $start_date_time_label = (
                         $rbfw->get_option_trans( 'rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings' )
                         && want_loco_translate() == 'no'
@@ -1351,7 +1436,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     );
                 }
                 if ( ! empty( $rbfw_end_datetime ) ) {
-                    if ( $rbfw_end_time != '00:00' ) {
+                    if ( rbfw_booking_has_time( $rbfw_start_time ) && rbfw_booking_has_time( $rbfw_end_time ) ) {
                         $end_date_time_label = (
                             $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
                             && want_loco_translate() == 'no'
@@ -1518,7 +1603,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $multiple_items_info = get_post_meta( $rbfw_id, 'multiple_items_info', true ) ? get_post_meta( $rbfw_id, 'multiple_items_info', true ) : array();
 
 
-                if ( $rbfw_start_time != '00:00' ) {
+                if ( rbfw_booking_has_time( $rbfw_start_time ) ) {
                     $start_date_time_label = (
                         $rbfw->get_option_trans( 'rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings' )
                         && want_loco_translate() == 'no'
@@ -1544,7 +1629,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     );
                 }
                 if ( ! empty( $rbfw_end_datetime ) ) {
-                    if ( $rbfw_end_time != '00:00' ) {
+                    if ( rbfw_booking_has_time( $rbfw_start_time ) && rbfw_booking_has_time( $rbfw_end_time ) ) {
                         $end_date_time_label = (
                             $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
                             && want_loco_translate() == 'no'

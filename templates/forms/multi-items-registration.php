@@ -164,21 +164,9 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
     <div class="rbfw-single-right-container">
 
         <div class="rbfw-sd-rate-box">
-            <div class="rbfw-sd-rate-box-badges">
-                <span class="rbfw-sd-badge rbfw-sd-badge--available">
-                    <span class="rbfw-sd-badge-dot"></span>
-                    <?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                </span>
-                <span class="rbfw-sd-badge rbfw-sd-badge--seller">
-                    <?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                </span>
-            </div>
-            <h3 class="rbfw-sd-rate-box-title">
-                <?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?>
-            </h3>
-            <p class="rbfw-sd-rate-box-desc">
-                <?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-            </p>
+            <?php rbfw_fd_summary_badges(); ?>
+            <?php rbfw_fd_summary_title(); ?>
+            <?php rbfw_fd_summary_desc(); ?>
             <?php if ( $_rbfw_mi_min_price > 0 ) : ?>
             <div class="rbfw-sd-rate-box-price-row">
                 <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
@@ -302,6 +290,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+                    <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
 
 
                     <div class="rbfw_select_rental_period">
@@ -425,7 +414,9 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                         </div>
                         <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                     </div>
-                    
+
+                    <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+
                     <?php  if(!empty($multiple_items_info)){ ?>
 
                         <div class="item rbfw_resourse_md" style="display: none">

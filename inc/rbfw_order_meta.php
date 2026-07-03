@@ -316,6 +316,14 @@ function rbfw_sync_attendee_meta_from_edit( $wc_order_id, $t, $billing, $billing
     $end_dt   = isset( $t['rbfw_end_datetime'] ) ? $t['rbfw_end_datetime'] : '';
     $address  = trim( $billing_fields['address_1'] . ' ' . $billing_fields['address_2'] );
 
+    // Day-wise bookings store no real time — keep the stored datetime date-only
+    // so it never surfaces a meaningless 12:00 AM anywhere it is displayed. The
+    // booking is "timed" only when it has a real START time; the end time can be
+    // a duration artifact, so gate it on the start too.
+    $rbfw_meta_is_timed = rbfw_booking_has_time( isset( $t['rbfw_start_time'] ) ? $t['rbfw_start_time'] : '' );
+    $start_dt_fmt = $rbfw_meta_is_timed ? 'Y-m-d h:i A' : 'Y-m-d';
+    $end_dt_fmt   = ( $rbfw_meta_is_timed && rbfw_booking_has_time( isset( $t['rbfw_end_time'] ) ? $t['rbfw_end_time'] : '' ) ) ? 'Y-m-d h:i A' : 'Y-m-d';
+
     $meta = array(
         'ticket_price'            => $grand_total,
         'rbfw_ticket_total_price' => $order_total,
@@ -330,8 +338,8 @@ function rbfw_sync_attendee_meta_from_edit( $wc_order_id, $t, $billing, $billing
         'end_date'                => isset( $t['rbfw_end_date'] ) ? gmdate( 'Y-m-d', strtotime( $t['rbfw_end_date'] ) ) : '',
         'start_date'              => isset( $t['rbfw_start_date'] ) ? gmdate( 'Y-m-d', strtotime( $t['rbfw_start_date'] ) ) : '',
         'rbfw_end_date'           => isset( $t['rbfw_end_date'] ) ? gmdate( 'Y-m-d', strtotime( $t['rbfw_end_date'] ) ) : '',
-        'rbfw_start_datetime'     => $start_dt ? gmdate( 'Y-m-d h:i A', strtotime( $start_dt ) ) : '',
-        'rbfw_end_datetime'       => $end_dt ? gmdate( 'Y-m-d h:i A', strtotime( $end_dt ) ) : '',
+        'rbfw_start_datetime'     => $start_dt ? gmdate( $start_dt_fmt, strtotime( $start_dt ) ) : '',
+        'rbfw_end_datetime'       => $end_dt ? gmdate( $end_dt_fmt, strtotime( $end_dt ) ) : '',
         'rbfw_billing_phone'      => $billing_fields['phone'],
         'rbfw_billing_address'    => $address,
     );
@@ -423,25 +431,52 @@ function rbfw_get_order_edit_form_callback() {
     <input type="hidden" id="rbfw_eo_post_id" value="<?php echo esc_attr( $post_id ); ?>">
     <input type="hidden" id="rbfw_eo_total_days" value="<?php echo esc_attr( (int) $get( 'total_days', 1 ) ); ?>">
 
+    <?php
+    // Day-wise (non-hourly) bookings store no meaningful time. A booking is only
+    // "timed" when it has a real START time — that is what gets set when the
+    // customer actually picks a time/slot. The end time can be a mere duration
+    // artifact (e.g. a "2 hour" rental stores 02:00 with no start), so it must
+    // never be trusted on its own. When there is no start time, hide both inputs
+    // so the Edit Order form reflects the real order data, not a bogus 12:00 am.
+    $eo_start_time    = $get( 'rbfw_start_time' );
+    $eo_end_time      = $get( 'rbfw_end_time' );
+    $eo_booking_timed = rbfw_booking_has_time( $eo_start_time );
+    $eo_has_st_time   = $eo_booking_timed;
+    $eo_has_en_time   = $eo_booking_timed && rbfw_booking_has_time( $eo_end_time );
+    ?>
     <div class="rbfw_eo_section_title"><?php esc_html_e( 'Booking Dates', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
     <div class="rbfw_eo_grid">
         <div class="rbfw_eo_field">
             <label><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
             <input type="text" id="rbfw_eo_start_date" class="rbfw_eo_fp_date" value="<?php echo esc_attr( $get( 'rbfw_start_date' ) ); ?>" autocomplete="off">
         </div>
+        <?php if ( $eo_has_st_time ) { ?>
         <div class="rbfw_eo_field">
             <label><?php esc_html_e( 'Start Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-            <input type="text" id="rbfw_eo_start_time" class="rbfw_eo_fp_time" value="<?php echo esc_attr( $get( 'rbfw_start_time' ) ); ?>" autocomplete="off">
+            <input type="text" id="rbfw_eo_start_time" class="rbfw_eo_fp_time" value="<?php echo esc_attr( $eo_start_time ); ?>" autocomplete="off">
         </div>
+        <?php } ?>
         <div class="rbfw_eo_field">
             <label><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
             <input type="text" id="rbfw_eo_end_date" class="rbfw_eo_fp_date" value="<?php echo esc_attr( $get( 'rbfw_end_date' ) ); ?>" autocomplete="off">
         </div>
+        <?php if ( $eo_has_en_time ) { ?>
         <div class="rbfw_eo_field">
             <label><?php esc_html_e( 'End Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-            <input type="text" id="rbfw_eo_end_time" class="rbfw_eo_fp_time" value="<?php echo esc_attr( $get( 'rbfw_end_time' ) ); ?>" autocomplete="off">
+            <input type="text" id="rbfw_eo_end_time" class="rbfw_eo_fp_time" value="<?php echo esc_attr( $eo_end_time ); ?>" autocomplete="off">
         </div>
+        <?php } ?>
     </div>
+    <?php
+    // Preserve the (empty/midnight) values on save without showing the inputs,
+    // so saving a day-wise order never mutates its stored time data.
+    if ( ! $eo_has_st_time ) {
+        ?><input type="hidden" id="rbfw_eo_start_time" value="<?php echo esc_attr( $eo_start_time ); ?>"><?php
+    }
+    if ( ! $eo_has_en_time ) {
+        ?><input type="hidden" id="rbfw_eo_end_time" value="<?php echo esc_attr( $eo_end_time ); ?>"><?php
+    }
+    ?>
 
     <div class="rbfw_eo_section_title"><?php esc_html_e( 'Billing Details', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
     <div class="rbfw_eo_grid">
@@ -742,8 +777,8 @@ function rbfw_save_order_edit_callback() {
         'order_total'   => (float) $order_total,
         'total_html'    => wc_price( $order_total ),
         'billing'       => $billing,
-        'start_display' => $s_ts ? date_i18n( 'F j, Y g:i a', strtotime( $t['rbfw_start_datetime'] ) ) : '',
-        'end_display'   => $e_ts ? date_i18n( 'F j, Y g:i a', strtotime( $t['rbfw_end_datetime'] ) ) : '',
+        'start_display' => $s_ts ? date_i18n( rbfw_booking_has_time( $start_time ) ? 'F j, Y g:i a' : 'F j, Y', strtotime( $t['rbfw_start_datetime'] ) ) : '',
+        'end_display'   => $e_ts ? date_i18n( ( rbfw_booking_has_time( $start_time ) && rbfw_booking_has_time( $end_time ) ) ? 'F j, Y g:i a' : 'F j, Y', strtotime( $t['rbfw_end_datetime'] ) ) : '',
     ) );
 }
 
@@ -810,7 +845,7 @@ function fetch_order_details_callback() {
                     $rbfw_management_info       = ! empty( $ticket_info['rbfw_management_info'] ) ? $ticket_info['rbfw_management_info'] : '';
                     $rbfw_management_price       = ! empty( $ticket_info['rbfw_management_price'] ) ? $ticket_info['rbfw_management_price'] : '';
 
-                    if ( $rent_type == 'resort' || ( empty( $rbfw_start_time ) && empty( $rbfw_end_time ) ) ) {
+                    if ( $rent_type == 'resort' || ! rbfw_booking_has_time( $rbfw_start_time ) ) {
                         $rbfw_start_datetime = rbfw_get_datetime( $ticket_info['rbfw_start_datetime'], 'date-text' );
                         $rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'], 'date-text' );
                     }
@@ -818,7 +853,7 @@ function fetch_order_details_callback() {
                     if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
                         $BikeCarSdClass = new RBFW_BikeCarSd_Function();
                         $rent_info      = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
-                        if($ticket_info['rbfw_end_time']){
+                        if( rbfw_booking_has_time( $rbfw_start_time ) && rbfw_booking_has_time( $rbfw_end_time ) ){
                             $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
                         }else{
                             $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-text');
@@ -1544,6 +1579,12 @@ function rbfw_order_meta_box_callback() {
                 $rent_type = $ticket_info['rbfw_rent_type'];
                 $rbfw_start_datetime = rbfw_get_datetime( $ticket_info['rbfw_start_datetime'], 'date-time-text' );
                 $rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'] ?? '', 'date-time-text' );
+                // Day-wise bookings carry no real time (the end time may be a mere
+                // duration artifact), so anchor on the start time and show date only.
+                if ( ! rbfw_booking_has_time( isset( $ticket_info['rbfw_start_time'] ) ? $ticket_info['rbfw_start_time'] : '' ) ) {
+                    $rbfw_start_datetime = rbfw_get_datetime( $ticket_info['rbfw_start_datetime'], 'date-text' );
+                    $rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'] ?? '', 'date-text' );
+                }
                 $tax        = ! empty( $ticket_info['rbfw_mps_tax'] ) ? $ticket_info['rbfw_mps_tax'] : 0;
                 $tax_status = '';
                 if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {

@@ -106,6 +106,7 @@
 			),
 			'a'       => array(
                 'href' => true,
+				'id'      => true, // needed so settings-api nav tab anchors keep their #{section}-tab id
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
@@ -115,6 +116,41 @@
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
 				'rel' => true, // Allows inline JavaScript
+				'title' => true,
+				'aria-label' => true,
+			),
+			// Static inline SVG icons (rbfw_inv_icon etc.). Attribute names must
+			// be lowercase here — wp_kses matches them case-insensitively, so
+			// 'viewbox' covers viewBox. No scriptable attributes are allowed.
+			'svg'     => array(
+				'class'           => true,
+				'viewbox'         => true,
+				'fill'            => true,
+				'stroke'          => true,
+				'stroke-width'    => true,
+				'stroke-linecap'  => true,
+				'stroke-linejoin' => true,
+				'aria-hidden'     => true,
+				'focusable'       => true,
+				'width'           => true,
+				'height'          => true,
+			),
+			'path'    => array(
+				'd'      => true,
+				'fill'   => true,
+				'stroke' => true,
+			),
+			'circle'  => array(
+				'cx' => true,
+				'cy' => true,
+				'r'  => true,
+			),
+			'rect'    => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+				'rx'     => true,
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -297,6 +333,22 @@ function rbfw_url_exclude_search_engine() {
 		global $rbfw;
 
 		return $rbfw->get_datetime( $date, $type );
+	}
+	if ( ! function_exists( 'rbfw_booking_has_time' ) ) {
+		/**
+		 * Whether a stored booking time value represents a real, meaningful time.
+		 *
+		 * Day-wise (non-hourly) rentals store no time — the value is either an
+		 * empty string or a midnight placeholder ("00:00" / "00:00:00"). Use this
+		 * to decide whether the time should be shown/edited anywhere in the UI.
+		 *
+		 * @param string $time Raw stored time value.
+		 * @return bool True when the value is a real time; false for empty/midnight.
+		 */
+		function rbfw_booking_has_time( $time ) {
+			$time = trim( (string) $time );
+			return '' !== $time && '00:00' !== $time && '00:00:00' !== $time;
+		}
 	}
 	function rbfw_check_product_exists( $id ) {
 		return is_string( get_post_status( $id ) );
@@ -2727,6 +2779,188 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 
 		return wp_json_encode( $off_days );
 	}
+	/**
+	 * Per-item "Block Booking If Date Range Contains Off Days" flag ('on'/'off').
+	 * Empty meta (items saved before the flag existed) counts as 'on' so
+	 * off-day protection stays the default. Mirrors RBFW_Off_Day::block_offday_range_value().
+	 */
+	function rbfw_block_offday_range_booking( $post_id ) {
+		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'off' ? 'off' : 'on';
+	}
+
+	/**
+	 * Location-wise inventory & price configuration for a rental item.
+	 *
+	 * Rows are stored in 'rbfw_location_inventory' keyed by the location slug
+	 * (sanitize_title of the rbfw_item_location term name — the same identity
+	 * used by rbfw_pickup_point everywhere else).
+	 *
+	 * Standalone feature: it only needs its own toggle. The classic Pick-up /
+	 * Drop-off Location switches are a separate use case (plain dropdowns
+	 * without stock/price) — when Location Inventory is on, choosing a card IS
+	 * the pickup choice, so the admin never configures the location twice.
+	 * Every saved row participates; the admin controls the offering simply by
+	 * filling in stock/price (empty rows are never saved).
+	 *
+	 * @param  int $post_id Rental item ID.
+	 * @return array<string,array> slug => [stock,price]; [] when the feature is off.
+	 */
+	function rbfw_get_location_inventory( $post_id ) {
+		if ( get_post_meta( $post_id, 'rbfw_enable_location_inventory', true ) !== 'on' ) {
+			return array();
+		}
+		$rows = get_post_meta( $post_id, 'rbfw_location_inventory', true );
+		if ( ! is_array( $rows ) || empty( $rows ) ) {
+			return array();
+		}
+
+		$out = array();
+		foreach ( $rows as $slug => $row ) {
+			$slug = sanitize_title( $slug );
+			if ( '' === $slug || ! is_array( $row ) ) {
+				continue;
+			}
+			$out[ $slug ] = array(
+				'stock' => max( 0, (int) ( $row['stock'] ?? 0 ) ),
+				'price' => max( 0, (float) ( $row['price'] ?? 0 ) ),
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * Units already booked at one pickup location over a date range.
+	 *
+	 * Walks the item's rbfw_inventory entries (which record rbfw_pickup_point
+	 * for bookings made after the location-inventory feature shipped), sums
+	 * per-day quantities for entries at $location whose booked dates overlap
+	 * the range, and returns the busiest day — the peak concurrent usage, the
+	 * same day-wise model the global stock check uses. Entries without a
+	 * recorded location (older bookings) count against global stock only.
+	 *
+	 * @param int    $post_id    Rental item ID.
+	 * @param string $location   Pickup-location slug.
+	 * @param string $start_date Y-m-d (defaults to today).
+	 * @param string $end_date   Y-m-d (defaults to $start_date).
+	 * @return int Peak booked units at that location within the range.
+	 */
+	function rbfw_location_sold_qty( $post_id, $location, $start_date = '', $end_date = '' ) {
+		$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+		if ( ! is_array( $inventory ) || empty( $inventory ) || '' === $location ) {
+			return 0;
+		}
+
+		$start = strtotime( $start_date ?: current_time( 'Y-m-d' ) );
+		$end   = strtotime( $end_date ?: ( $start_date ?: current_time( 'Y-m-d' ) ) );
+		if ( ! $start || ! $end || $end < $start ) {
+			return 0;
+		}
+		$range = array();
+		for ( $t = $start, $guard = 0; $t <= $end && $guard < 366; $t += DAY_IN_SECONDS, $guard++ ) {
+			$range[ gmdate( 'd-m-Y', $t ) ] = 0;
+		}
+
+		$managed_statuses = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+		$managed_statuses = is_array( $managed_statuses ) ? $managed_statuses : array( 'processing' => 'processing', 'completed' => 'completed' );
+		$based_on_return  = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+
+		foreach ( $inventory as $entry ) {
+			if ( ! is_array( $entry ) || empty( $entry['booked_dates'] ) || ! is_array( $entry['booked_dates'] ) ) {
+				continue;
+			}
+			if ( ( $entry['rbfw_pickup_point'] ?? '' ) !== $location ) {
+				continue;
+			}
+			$status = $entry['rbfw_order_status'] ?? '';
+			$counts = in_array( $status, $managed_statuses, true )
+				|| 'picked' === $status
+				|| ( 'yes' === $based_on_return && 'returned' === $status );
+			if ( ! $counts ) {
+				continue;
+			}
+			$qty = max( 0, (int) ( $entry['rbfw_item_quantity'] ?? 0 ) );
+			foreach ( $entry['booked_dates'] as $d ) {
+				if ( isset( $range[ $d ] ) ) {
+					$range[ $d ] += $qty;
+				}
+			}
+		}
+
+		return $range ? max( $range ) : 0;
+	}
+
+	/**
+	 * Remaining stock at one pickup location for a date range.
+	 *
+	 * @return int|null Remaining units, or null when the location has no
+	 *                  location-inventory row (feature off / unknown slug).
+	 */
+	function rbfw_location_remaining_stock( $post_id, $location, $start_date = '', $end_date = '' ) {
+		$conf = rbfw_get_location_inventory( $post_id );
+		if ( ! isset( $conf[ $location ] ) ) {
+			return null;
+		}
+		return max( 0, $conf[ $location ]['stock'] - rbfw_location_sold_qty( $post_id, $location, $start_date, $end_date ) );
+	}
+
+	/**
+	 * AJAX: date-aware remaining stock per location for the booking form's
+	 * location cards. Fired whenever the customer picks/changes dates so the
+	 * "N units available" badges reflect the actual booked range instead of
+	 * today. Public (nopriv) — read-only availability data.
+	 */
+	add_action( 'wp_ajax_rbfw_location_stock_info', 'rbfw_location_stock_info_ajax' );
+	add_action( 'wp_ajax_nopriv_rbfw_location_stock_info', 'rbfw_location_stock_info_ajax' );
+	function rbfw_location_stock_info_ajax() {
+		check_ajax_referer( 'rbfw_location_stock_info_action', 'nonce' );
+
+		$post_id    = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+		$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+		$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+
+		$conf = $post_id ? rbfw_get_location_inventory( $post_id ) : array();
+		if ( empty( $conf ) ) {
+			wp_send_json_error();
+		}
+
+		$out = array();
+		foreach ( $conf as $slug => $row ) {
+			$out[ $slug ] = rbfw_location_remaining_stock( $post_id, $slug, $start_date, $end_date );
+		}
+		wp_send_json_success( $out );
+	}
+
+	/**
+	 * Add the chosen pickup location's charge to the management-fee lines.
+	 *
+	 * Reuses the existing management-fee mechanism so the charge shows up in
+	 * the cart/checkout/receipt breakdown like any other fee line, and the
+	 * total stays server-authoritative.
+	 *
+	 * @param  int    $post_id          Rental item ID.
+	 * @param  string $pickup_point     Posted pickup-location slug.
+	 * @param  array  $management_info  Existing fee lines (label => info).
+	 * @param  float  $management_price Existing fee total.
+	 * @return array Updated [info, price].
+	 */
+	function rbfw_apply_location_charge( $post_id, $pickup_point, $management_info, $management_price ) {
+		$conf = rbfw_get_location_inventory( $post_id );
+		if ( isset( $conf[ $pickup_point ] ) && $conf[ $pickup_point ]['price'] > 0 ) {
+			$term  = get_term_by( 'slug', $pickup_point, 'rbfw_item_location' );
+			$name  = $term && ! is_wp_error( $term ) ? $term->name : ucwords( str_replace( '-', ' ', $pickup_point ) );
+			$price = $conf[ $pickup_point ]['price'];
+			$label = sprintf( /* translators: %s: pickup location name */ __( 'Location charge (%s)', 'booking-and-rental-manager-for-woocommerce' ), $name );
+
+			$management_info[ $label ] = array(
+				'price'      => $price,
+				'price_desc' => wc_price( $price ),
+				'refundable' => 'no',
+			);
+			$management_price         += $price;
+		}
+		return array( $management_info, $management_price );
+	}
+
 	function rbfw_off_dates( $post_id ) {
 		$off_dates       = [];
 		$off_date_ranges = get_post_meta( $post_id, 'rbfw_offday_range', true );
@@ -3647,10 +3881,20 @@ function rbfw_build_categories_meta_clause( $category_names ) {
 
 		return $all_locations;
 	}
-	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for ) {
+	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for, $title_override = '' ) {
+		$term_map = array();
 		if ( $dropdown_for === 'category' ) {
 			$title        = esc_html__( 'Rental Type', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_post_categories_from_meta();
+			// Map each stored ( name-based ) category to its taxonomy term's exact
+			// casing, so an item saved as "rental" still displays as the "Rental"
+			// rent-type name. Keyed by lowercased name for a case-insensitive match.
+			$terms = get_terms( array( 'taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false ) );
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $rbfw_term ) {
+					$term_map[ strtolower( $rbfw_term->name ) ] = $rbfw_term->name;
+				}
+			}
 		} elseif ( $dropdown_for === 'location' ) {
 			$title        = esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_pickup_data_wp_query();
@@ -3658,23 +3902,37 @@ function rbfw_build_categories_meta_clause( $category_names ) {
 			$title        = '';
 			$category_arr = [];
 		}
-		
+
+		// Placeholder label priority: shortcode attribute > Front-end Display
+		// setting ( Global Settings ) > hard-coded default.
+		if ( '' !== (string) $title_override ) {
+			$title = $title_override;
+		} elseif ( function_exists( 'rbfw_fd_opt' ) ) {
+			if ( 'category' === $dropdown_for ) {
+				$title = rbfw_fd_opt( 'search_type_label' );
+			} elseif ( 'location' === $dropdown_for ) {
+				$title = rbfw_fd_opt( 'search_location_label' );
+			}
+		}
+
 		$option = '';
-		
+
 		// Escape name and class attributes
 		$option .= "<select name='" . esc_attr( $name ) . "' class='" . esc_attr( $class ) . "'>";
 		$option .= "<option value=''>" . esc_html( $title ) . "</option>";
-		
+
 		if ( is_array( $category_arr ) && count( $category_arr ) > 0 ) {
 			foreach ( $category_arr as $key => $value ) {
-				// Escape each option value for security
+				// Display the taxonomy term's proper casing when we have a match; the
+				// submitted value stays the stored string so the search still matches.
+				$label         = isset( $term_map[ strtolower( (string) $value ) ] ) ? $term_map[ strtolower( (string) $value ) ] : $value;
 				$selected_text = ( ! empty( $saved_value ) && $saved_value == $value ) ? 'selected' : '';
-				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $value ) . "</option>";
+				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $label ) . "</option>";
 			}
 		}
-	
+
 		$option .= "</select>";
-		
+
 		// Use wp_kses to filter the HTML and ensure it adheres to allowed HTML rules
 		echo wp_kses( $option, rbfw_allowed_html() );
 	}

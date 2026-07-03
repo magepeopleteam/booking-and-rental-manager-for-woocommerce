@@ -113,6 +113,17 @@
                 <div class="mpStyle mp_tab_item" data-tab-item="#travel_off_days">
 					<?php $this->section_header(); ?>
 
+                    <section>
+                        <div>
+                            <label><?php esc_html_e( 'Block Booking If Date Range Contains Off Days', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <p><?php esc_html_e( 'Prevent bookings when the selected pickup–return range overlaps with any off day or off date range. When disabled, customers can place bookings even if the selected date range includes off days or off date ranges.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="rbfw_block_offday_range_booking" value="on" <?php checked( 'on', self::block_offday_range_value( $post_id ) ); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </section>
+
 					<?php $this->panel_header( 'Off Day Settings', 'Off Day Settings' ); ?>
 
                     <section class="rbfw_off_days justify-content-center">
@@ -161,6 +172,16 @@
 				<?php
 			}
 
+			/**
+			 * Per-item "Block Booking If Date Range Contains Off Days" flag.
+			 *
+			 * Stored as 'on'/'off'; an empty meta (items saved before the flag
+			 * existed) counts as 'on' so off-day protection stays the default.
+			 */
+			public static function block_offday_range_value( $post_id ) {
+				return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'off' ? 'off' : 'on';
+			}
+
 			public static function render_for_modern_editor( int $post_id ): void {
 			$days                   = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ];
 			$rbfw_off_days          = get_post_meta( $post_id, 'rbfw_off_days', true ) ?: '';
@@ -168,7 +189,43 @@
 			$rbfw_buffer_time       = get_post_meta( $post_id, 'rbfw_buffer_time', true ) ?: '';
 			$rbfw_buffer_time_after = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ?: 0;
 			$rbfw_offday_range      = get_post_meta( $post_id, 'rbfw_offday_range', true ) ?: [];
+			$block_offday_range     = self::block_offday_range_value( $post_id );
+			$block_rules            = [
+				__( 'Pickup Date cannot be an Off Day', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'Return Date cannot be an Off Day', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'Any Off Day inside the range blocks the booking', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'Admin can enable or disable this behavior', 'booking-and-rental-manager-for-woocommerce' ),
+			];
 			?>
+
+			<!-- Block booking on off-day ranges -->
+			<div class="rbfw-me-card">
+				<div class="rbfw-me-card__head rbfw-me-offday-block-head">
+					<div>
+						<h2><?php esc_html_e( 'Block Booking If Date Range Contains Off Days', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+						<p><?php esc_html_e( 'Prevent bookings when the selected pickup–return range overlaps with any off day.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<label class="switch rbfw-me-offday-block-switch">
+						<input type="checkbox" name="rbfw_block_offday_range_booking" value="on" <?php checked( 'on', $block_offday_range ); ?>>
+						<span class="slider round"></span>
+					</label>
+				</div>
+				<div class="rbfw-me-card__body">
+					<div class="rbfw-me-offday-rules">
+						<?php foreach ( $block_rules as $i => $rule ) : ?>
+							<div class="rbfw-me-offday-rule">
+								<span class="rbfw-me-offday-rule__badge"><?php echo esc_html( sprintf( /* translators: %d: rule number */ __( 'Rule %d', 'booking-and-rental-manager-for-woocommerce' ), $i + 1 ) ); ?></span>
+								<span class="rbfw-me-offday-rule__text"><?php echo esc_html( $rule ); ?></span>
+								<span class="dashicons dashicons-yes-alt rbfw-me-offday-rule__check"></span>
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<p class="rbfw-me-offday-rules-note">
+						<span class="dashicons dashicons-info-outline"></span>
+						<?php esc_html_e( 'When disabled, customers can place bookings even if the selected date range includes off days or off date ranges.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</p>
+				</div>
+			</div>
 
 			<!-- Off Day Settings -->
 			<div class="rbfw-me-card">
@@ -272,6 +329,10 @@
                     update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
                     update_post_meta( $post_id, 'rbfw_buffer_time', $rbfw_buffer_time );
                     update_post_meta( $post_id, 'rbfw_buffer_time_after', $rbfw_buffer_time_after );
+
+                    /* Unchecked checkboxes are absent from the classic form POST. */
+                    $rbfw_block_offday = ( isset( $_POST['rbfw_block_offday_range_booking'] ) && $_POST['rbfw_block_offday_range_booking'] === 'on' ) ? 'on' : 'off';
+                    update_post_meta( $post_id, 'rbfw_block_offday_range_booking', $rbfw_block_offday );
 
                     $off_schedules = [];
 					$from_dates    = $off_days_start;

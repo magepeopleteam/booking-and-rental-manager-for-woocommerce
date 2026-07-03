@@ -61,7 +61,19 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
         minDate: new Date(gYear, gMonth - 1 , parseInt(gDay) + extra_day),
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            // Checkout calendar: on top of the normal off-day disable, block
+            // check-in→checkout ranges spanning an off day (rule 3) when the
+            // item's off-day blocking toggle is enabled.
+            var base = rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            if (Array.isArray(base) && !base[0]) {
+                return base;
+            }
+            var checkin_iso = jQuery('#hidden_checkin_date').val();
+            if (rbfw_offday_blocking_enabled() && checkin_iso && rbfw_range_contains_off_day(checkin_iso, date)) {
+                var offLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.off_label) ? rbfw_translation.off_label : 'Off';
+                return [false, 'notav', offLabel];
+            }
+            return base;
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
