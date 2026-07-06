@@ -55,6 +55,16 @@ require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Post_Type.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Actions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_List_Table.php';
 
+// AI Provider System
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-provider.php';
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-openai.php';
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-anthropic.php';
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-groq.php';
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-xai.php';
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-commandcode.php';
+require_once RBFW_PLUGIN_DIR . '/inc/ai/class-rbfw-ai-manager.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_AI_Assistant.php';
+
 
 
 add_action('init', 'rbfw_new_installation_or_update');

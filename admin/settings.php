@@ -371,3 +371,287 @@ function rbfw_remove_rbfw_license_action() {
 	remove_action( 'rbfw_settings_sec_reg', 'rbfw_free_settings_sec', 100 );
 	remove_action( 'rbfw_settings_sec_reg', 'rbfw_freeb_settings_sec', 100 );
 }
+
+/**
+ * AI & SEO Settings Section
+ */
+add_filter( 'rbfw_settings_sec_reg', 'rbfw_ai_settings_section', 10 );
+function rbfw_ai_settings_section( $sections ) {
+	$sections[] = array(
+		'id'    => 'rbfw_ai_settings',
+		'title' => '<i class="fas fa-robot"></i>' . esc_html__( 'AI & SEO Settings', 'booking-and-rental-manager-for-woocommerce' ),
+	);
+	return $sections;
+}
+
+add_filter( 'rbfw_settings_sec_fields', 'rbfw_ai_settings_fields', 10 );
+function rbfw_ai_settings_fields( $fields ) {
+	// Build the provider <select> options from the manager, not a hardcoded list.
+	$provider_options = class_exists( 'RBFW_AI_Manager' )
+		? RBFW_AI_Manager::get_provider_options()
+		: array();
+
+	// Build the initial Model <select> options from the active provider's
+	// own static list. The JS will repopulate this dynamically as soon as
+	// the API responds (or the user clicks "Fetch Models").
+	$ai_settings   = get_option( 'rbfw_ai_settings', array() );
+	$active_id     = isset( $ai_settings['rbfw_ai_provider'] ) ? (string) $ai_settings['rbfw_ai_provider'] : 'openai';
+	$saved_model   = isset( $ai_settings['rbfw_ai_model'] ) ? (string) $ai_settings['rbfw_ai_model'] : '';
+	$model_options = array();
+	if ( class_exists( 'RBFW_AI_Manager' ) ) {
+		$active_provider = RBFW_AI_Manager::get_provider( $active_id );
+		if ( $active_provider ) {
+			$model_options = $active_provider->get_static_models();
+		}
+	}
+	// Preserve the saved value across reloads, even if it isn't in the
+	// provider's current list (e.g. it was a deprecated/renamed model).
+	if ( '' !== $saved_model && ! isset( $model_options[ $saved_model ] ) ) {
+		$model_options[ $saved_model ] = $saved_model;
+	}
+
+	$fields['rbfw_ai_settings'] = array(
+		array(
+			'name'    => 'rbfw_ai_provider',
+			'label'   => esc_html__( 'AI Provider', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Select which AI service to use for content generation. Only the API key field for the selected provider will be shown.', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'select',
+			'class'   => 'rbfw-ai-provider-select',
+			'default' => 'openai',
+			'options' => $provider_options,
+		),
+		array(
+			'name'    => 'rbfw_ai_openai_key',
+			'label'   => esc_html__( 'OpenAI API Key', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Get your key from platform.openai.com/api-keys', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'password',
+			'class'   => 'rbfw-ai-key-openai',
+			'default' => '',
+		),
+		array(
+			'name'    => 'rbfw_ai_anthropic_key',
+			'label'   => esc_html__( 'Anthropic API Key', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Get your key from console.anthropic.com', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'password',
+			'class'   => 'rbfw-ai-key-anthropic',
+			'default' => '',
+		),
+		array(
+			'name'    => 'rbfw_ai_groq_key',
+			'label'   => esc_html__( 'Groq API Key', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Get free key from console.groq.com (no credit card required)', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'password',
+			'class'   => 'rbfw-ai-key-groq',
+			'default' => '',
+		),
+		array(
+			'name'    => 'rbfw_ai_xai_key',
+			'label'   => esc_html__( 'xAI API Key', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Get key from x.ai/api ($25 free + $150/month with data sharing)', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'password',
+			'class'   => 'rbfw-ai-key-xai',
+			'default' => '',
+		),
+		array(
+			'name'    => 'rbfw_ai_commandcode_key',
+			'label'   => esc_html__( 'CommandCode API Key', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'CommandCode API key', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'password',
+			'class'   => 'rbfw-ai-key-commandcode',
+			'default' => '',
+		),
+		array(
+			'name'    => 'rbfw_ai_model',
+			'label'   => esc_html__( 'Model', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'The list of models is loaded automatically from the selected provider. Click "Fetch Models" to refresh it.', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'select',
+			'class'   => 'rbfw-ai-model-select',
+			'default' => $saved_model,
+			'options' => $model_options,
+		),
+		array(
+			'name'    => 'rbfw_ai_max_tokens',
+			'label'   => esc_html__( 'Max Tokens', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Maximum tokens for AI response (100-2000)', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'number',
+			'default' => '500',
+		),
+		array(
+			'name'    => 'rbfw_ai_temperature',
+			'label'   => esc_html__( 'Temperature', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Creativity level (0.0 = focused, 1.0 = creative)', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'number',
+			'default' => '0.7',
+		),
+		array(
+			'name'    => 'rbfw_seo_title_length',
+			'label'   => esc_html__( 'SEO Title Length', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Optimal character range (e.g., 50-60)', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'text',
+			'default' => '50-60',
+		),
+		array(
+			'name'    => 'rbfw_seo_description_length',
+			'label'   => esc_html__( 'SEO Description Length', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Optimal character range (e.g., 150-160)', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'text',
+			'default' => '150-160',
+		),
+		array(
+			'name'    => 'rbfw_seo_auto_score',
+			'label'   => esc_html__( 'Auto Score on Type', 'booking-and-rental-manager-for-woocommerce' ),
+			'desc'    => esc_html__( 'Automatically calculate SEO score as you type', 'booking-and-rental-manager-for-woocommerce' ),
+			'type'    => 'checkbox',
+			'default' => 'on',
+		),
+	);
+
+	return $fields;
+}
+
+/**
+ * Output inline JS for AI settings provider-based conditional field visibility
+ */
+add_action( 'admin_footer', 'rbfw_ai_settings_conditional_fields_js' );
+function rbfw_ai_settings_conditional_fields_js() {
+	$screen = get_current_screen();
+	if ( ! $screen || strpos( $screen->id, 'rbfw_settings_page' ) === false ) {
+		return;
+	}
+	$ai_admin = array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'nonce'    => wp_create_nonce( 'rbfw_ai_action' ),
+		// Registered provider ids come from the manager, not from JS.
+		'providers' => class_exists( 'RBFW_AI_Manager' ) ? RBFW_AI_Manager::get_provider_ids() : array(),
+		'i18n'     => array(
+			'fetching' => __( 'Fetching models…', 'booking-and-rental-manager-for-woocommerce' ),
+			'fetched'  => __( 'Models loaded from provider.', 'booking-and-rental-manager-for-woocommerce' ),
+			'fallback' => __( 'Could not reach the provider API. Showing the built-in list.', 'booking-and-rental-manager-for-woocommerce' ),
+			'no_key'   => __( 'Enter an API key first.', 'booking-and-rental-manager-for-woocommerce' ),
+			'no_ep'    => __( 'This provider has no remote models endpoint; showing the built-in list.', 'booking-and-rental-manager-for-woocommerce' ),
+			'error'    => __( 'Failed to fetch models.', 'booking-and-rental-manager-for-woocommerce' ),
+		),
+	);
+	?>
+	<script>
+	window.rbfwAIAdmin = <?php echo wp_json_encode( $ai_admin ); ?>;
+	jQuery(document).ready(function($) {
+		var $section = $('#rbfw_ai_settings');
+		if ( !$section.length ) return;
+
+		var providers = (window.rbfwAIAdmin && rbfwAIAdmin.providers) ? rbfwAIAdmin.providers : [];
+
+		var $modelSelect = $section.find('select[id$="[rbfw_ai_model]"]');
+		var $provider    = $section.find('select[id$="[rbfw_ai_provider]"]');
+		var $status      = $('<span class="rbfw-ai-fetch-status description" style="margin-left:8px;"></span>');
+		var initialModel = $modelSelect.val();
+		var hasUserTouched = false;
+
+		// Inject the "Fetch Models" button next to the Model field description.
+		var $modelRow = $modelSelect.closest('tr');
+		if ($modelRow.length) {
+			var $btn = $('<button type="button" class="button button-secondary rbfw-ai-fetch-models" style="margin-left:8px;"><span class="dashicons dashicons-update" style="line-height:1.3;"></span> Fetch Models</button>');
+			$modelRow.find('.description').first().append($btn).append($status);
+		}
+
+		function applyModelFilter() {
+			var selected = $provider.val();
+			var $row;
+
+			providers.forEach(function(p) {
+				$row = $section.find('tr.rbfw-ai-key-' + p);
+				if (p === selected) $row.show(); else $row.hide();
+			});
+		}
+
+		function currentApiKey() {
+			var sel = $provider.val();
+			var $keyInput = $section.find('input[type="password"][id$="[rbfw_ai_' + sel + '_key]"]');
+			return $keyInput.length ? $keyInput.val() : '';
+		}
+
+		function repopulateModels(models, source) {
+			var $select = $modelSelect;
+			if (!$select.length) return;
+
+			var previous = $select.val() || initialModel;
+			$select.empty();
+
+			Object.keys(models).forEach(function(id) {
+				$select.append($('<option>', { value: id, text: models[id] }));
+			});
+
+			// If the previous value still exists in the new list, keep it.
+			// Otherwise leave the select with no explicit selection — the
+			// user (or the next save) will pick one.
+			var exists = $select.find('option[value="' + previous + '"]').length > 0;
+			if (exists) {
+				$select.val(previous);
+			} else if (source === 'remote') {
+				$select.val(Object.keys(models)[0] || '');
+			}
+		}
+
+		function fetchModels(force) {
+			if (typeof rbfwAIAdmin === 'undefined' || !rbfwAIAdmin.ajax_url) {
+				$status.text('Configuration error: rbfwAIAdmin not loaded.');
+				return;
+			}
+
+			var provider = $provider.val();
+			var apiKey   = currentApiKey();
+
+			$status.text(rbfwAIAdmin.i18n.fetching);
+
+			$.ajax({
+				url:  rbfwAIAdmin.ajax_url,
+				method: 'POST',
+				data: {
+					action:   'rbfw_ai_get_models',
+					nonce:    rbfwAIAdmin.nonce,
+					provider: provider,
+					api_key:  apiKey,
+					force:    force ? 1 : 0
+				}
+			}).done(function(response) {
+				if (response && response.success && response.data && response.data.models) {
+					var source  = response.data.source || 'error';
+					var message = response.data.message || '';
+					repopulateModels(response.data.models, source);
+					if (source === 'remote') {
+						$status.text(rbfwAIAdmin.i18n.fetched);
+					} else if (source === 'no_endpoint') {
+						$status.text(message || rbfwAIAdmin.i18n.no_ep);
+					} else if (source === 'no_key') {
+						$status.text(rbfwAIAdmin.i18n.no_key);
+					} else {
+						$status.text(rbfwAIAdmin.i18n.fallback + (message ? ' — ' + message : ''));
+					}
+				} else {
+					$status.text((response && response.data) ? response.data : rbfwAIAdmin.i18n.error);
+				}
+			}).fail(function(xhr) {
+				var body = '';
+				try { body = (xhr.responseJSON && xhr.responseJSON.data) ? xhr.responseJSON.data : ''; } catch (e) {}
+				$status.text(rbfwAIAdmin.i18n.fallback + (body ? ' — ' + body : ' (HTTP ' + xhr.status + ')'));
+			});
+		}
+
+		$provider.on('change', function() {
+			hasUserTouched = true;
+			initialModel = '';
+			applyModelFilter();
+			fetchModels(true);
+		});
+		$section.on('click', '.rbfw-ai-fetch-models', function(e) {
+			e.preventDefault();
+			fetchModels(true);
+		});
+
+		applyModelFilter();
+		// Auto-fetch on initial load for the currently selected provider.
+		fetchModels(false);
+	});
+	</script>
+	<?php
+}

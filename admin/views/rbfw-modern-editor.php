@@ -110,11 +110,28 @@
 					<div class="rbfw-me-card__body">
 						<div class="rbfw-me-field">
 							<label class="rbfw-me-field__label" for="rbfw_me_post_title"><?php esc_html_e( 'Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-							<input class="rbfw-me-input rbfw-me-card-title-input" type="text" id="rbfw_me_post_title" name="post_title" value="<?php echo esc_attr( $post ? $post->post_title : '' ); ?>" placeholder="<?php esc_attr_e( 'Rental item name…', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off" />
+							<div class="rbfw-ai-input-wrap">
+								<input class="rbfw-me-input rbfw-me-card-title-input" type="text" id="rbfw_me_post_title" name="post_title" value="<?php echo esc_attr( $post ? $post->post_title : '' ); ?>" placeholder="<?php esc_attr_e( 'Rental item name…', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off" />
+								<button type="button" class="rbfw-ai-generate-btn rbfw-ai-icon-btn" data-type="title" title="<?php esc_attr_e( 'Generate title with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Generate title with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="dashicons dashicons-admin-customizer"></span></button>
+							</div>
+						</div>
+						<div class="rbfw-me-field">
+							<label class="rbfw-me-field__label" for="rbfw_me_post_name"><?php esc_html_e( 'Slug (URL)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-ai-input-wrap">
+								<input class="rbfw-me-input" type="text" id="rbfw_me_post_name" name="post_name" value="<?php echo esc_attr( $post ? $post->post_name : '' ); ?>" placeholder="<?php esc_attr_e( 'url-friendly-slug', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off" />
+								<button type="button" class="rbfw-ai-generate-btn rbfw-ai-icon-btn" data-type="slug" title="<?php esc_attr_e( 'Generate slug with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Generate slug with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="dashicons dashicons-admin-links"></span></button>
+							</div>
+							<p class="rbfw-me-field__hint"><?php esc_html_e( 'Leave blank to auto-generate from the title.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						</div>
+						<div class="rbfw-me-field rbfw-ai-generate-all-row">
+							<button type="button" class="rbfw-ai-generate-all-btn"><span class="dashicons dashicons-superhero"></span><?php esc_html_e( 'Generate all with AI', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 						</div>
 						<div class="rbfw-me-field">
 							<label class="rbfw-me-field__label" for="rbfw_me_subtitle"><?php esc_html_e( 'Subtitle', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-							<input class="rbfw-me-input" type="text" id="rbfw_me_subtitle" name="rbfw_item_sub_title" value="<?php echo esc_attr( $m['rbfw_item_sub_title'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'Short description shown in hero…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+							<div class="rbfw-ai-input-wrap">
+								<input class="rbfw-me-input" type="text" id="rbfw_me_subtitle" name="rbfw_item_sub_title" value="<?php echo esc_attr( $m['rbfw_item_sub_title'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'Short description shown in hero…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+								<button type="button" class="rbfw-ai-generate-btn rbfw-ai-icon-btn" data-type="subtitle" title="<?php esc_attr_e( 'Generate subtitle with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Generate subtitle with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="dashicons dashicons-shortcode"></span></button>
+							</div>
 						</div>
 						<div class="rbfw-me-field">
 							<div class="rbfw-me-editor-label-row">
@@ -139,6 +156,16 @@
 								);
 								?>
 							</div>
+						</div>
+						<div class="rbfw-me-field">
+							<div class="rbfw-me-editor-label-row">
+								<label class="rbfw-me-field__label" for="rbfw_me_meta_description"><?php esc_html_e( 'Meta Description (SEO)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<div class="rbfw-me-editor-actions-group">
+									<button type="button" class="rbfw-ai-generate-btn rbfw-ai-icon-btn" data-type="description" title="<?php esc_attr_e( 'Generate meta description with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Generate meta description with AI', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="dashicons dashicons-text"></span></button>
+								</div>
+							</div>
+							<textarea class="rbfw-me-input rbfw-me-meta-desc" id="rbfw_me_meta_description" name="rbfw_meta_description" rows="2" maxlength="200" placeholder="<?php esc_attr_e( 'Short SEO summary shown in search results (150–160 characters)…', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_textarea( $m['rbfw_meta_description'] ?? '' ); ?></textarea>
+							<p class="rbfw-me-field__hint"><?php esc_html_e( 'Used for the SEO score and the AI description generator (≈150–160 chars). The full Description above can be as long as you like.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 						</div>
 					</div>
 				</div>
@@ -594,6 +621,23 @@
 		<!-- ── Sidebar ───────────────────────────────────────────────────── -->
 		<aside class="rbfw-me-sidebar">
 
+			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-ai-seo-card">
+				<div class="rbfw-me-card__head">
+					<h3><?php esc_html_e( 'SEO Score', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+				</div>
+				<div class="rbfw-me-card__body">
+					<div id="rbfw_seo_score_circle" class="rbfw-ai-seo-circle">
+						<span id="rbfw_seo_score_value">0</span>
+						<span id="rbfw_seo_score_grade">F</span>
+					</div>
+					<ul class="rbfw-ai-seo-feedback">
+						<li><span class="rbfw-ai-seo-feedback__label"><?php esc_html_e( 'Title:', 'booking-and-rental-manager-for-woocommerce' ); ?></span> <span id="rbfw_seo_title_status">—</span></li>
+						<li><span class="rbfw-ai-seo-feedback__label"><?php esc_html_e( 'Slug:', 'booking-and-rental-manager-for-woocommerce' ); ?></span> <span id="rbfw_seo_slug_status">—</span></li>
+						<li><span class="rbfw-ai-seo-feedback__label"><?php esc_html_e( 'Description:', 'booking-and-rental-manager-for-woocommerce' ); ?></span> <span id="rbfw_seo_description_status">—</span></li>
+					</ul>
+				</div>
+			</div>
+
 			<div class="rbfw-me-card rbfw-me-card--sidebar">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Featured Image', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
@@ -753,5 +797,40 @@
 			</div>
 		</aside>
 	</div><!-- /.rbfw-me-body -->
+
+	<!-- AI Preview Modal -->
+	<div class="rbfw-ai-modal" id="rbfw_ai_modal" hidden>
+		<div class="rbfw-ai-modal__backdrop"></div>
+		<div class="rbfw-ai-modal__box">
+			<div class="rbfw-ai-modal__head">
+				<h3><?php esc_html_e( 'AI Generated Content', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+				<button type="button" class="rbfw-ai-modal__close">
+					<span class="dashicons dashicons-no-alt"></span>
+				</button>
+			</div>
+			<div class="rbfw-ai-modal__body">
+				<div class="rbfw-ai-preview-item">
+					<label><?php esc_html_e( 'Title:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<div class="rbfw-ai-preview-content" id="rbfw_ai_preview_title"></div>
+				</div>
+				<div class="rbfw-ai-preview-item">
+					<label><?php esc_html_e( 'Slug:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<div class="rbfw-ai-preview-content" id="rbfw_ai_preview_slug"></div>
+				</div>
+				<div class="rbfw-ai-preview-item">
+					<label><?php esc_html_e( 'Description:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<div class="rbfw-ai-preview-content" id="rbfw_ai_preview_description"></div>
+				</div>
+			</div>
+			<div class="rbfw-ai-modal__foot">
+				<button type="button" class="rbfw-me-btn rbfw-me-btn--ghost rbfw-ai-modal-cancel">
+					<?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+				<button type="button" class="rbfw-me-btn rbfw-me-btn--primary rbfw-ai-apply">
+					<?php esc_html_e( 'Apply to Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+			</div>
+		</div>
+	</div>
 
 </div><!-- /.rbfw-me-wrap -->

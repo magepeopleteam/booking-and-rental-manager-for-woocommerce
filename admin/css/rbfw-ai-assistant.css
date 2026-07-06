@@ -1,0 +1,446 @@
+/**
+ * AI Assistant Styles
+ *
+ * @package Booking and Rental Manager for WooCommerce
+ */
+
+/* AI Generation Buttons */
+.rbfw-me-field-with-ai {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.rbfw-me-field-with-ai .rbfw-me-input {
+    flex: 1;
+}
+
+.rbfw-ai-generate-btn {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.rbfw-ai-generate-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.rbfw-ai-generate-btn.is-loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.rbfw-ai-generate-btn.is-loading .dashicons {
+    animation: rbfw-spin 1s linear infinite;
+}
+
+@keyframes rbfw-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.rbfw-me-editor-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.rbfw-ai-btn-sm {
+    padding: 4px 12px;
+    font-size: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.rbfw-ai-btn-sm:hover {
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* SEO Score Panel */
+.rbfw-seo-panel {
+    background: #fff;
+}
+
+.rbfw-seo-score-display {
+    text-align: center;
+    padding: 16px 0;
+}
+
+.rbfw-seo-score-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    border: 4px solid #ddd;
+    transition: all 0.3s;
+}
+
+.rbfw-seo-score-circle.good {
+    border-color: #46b450;
+    background: rgba(70, 180, 80, 0.08);
+}
+
+.rbfw-seo-score-circle.ok {
+    border-color: #ffb900;
+    background: rgba(255, 185, 0, 0.08);
+}
+
+.rbfw-seo-score-circle.bad {
+    border-color: #dc3232;
+    background: rgba(220, 50, 50, 0.08);
+}
+
+.rbfw-seo-score-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.rbfw-seo-score-circle.good .rbfw-seo-score-value { color: #46b450; }
+.rbfw-seo-score-circle.ok .rbfw-seo-score-value { color: #ffb900; }
+.rbfw-seo-score-circle.bad .rbfw-seo-score-value { color: #dc3232; }
+
+.rbfw-seo-score-grade {
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.rbfw-seo-score-label {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+}
+
+.rbfw-seo-feedback {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px;
+    margin-top: 16px;
+}
+
+.rbfw-seo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.rbfw-seo-label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+}
+
+.rbfw-seo-status {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+.rbfw-seo-status.good {
+    color: #46b450;
+    background: rgba(70, 180, 80, 0.1);
+}
+
+.rbfw-seo-status.ok {
+    color: #996800;
+    background: rgba(255, 185, 0, 0.1);
+}
+
+.rbfw-seo-status.bad {
+    color: #dc3232;
+    background: rgba(220, 50, 50, 0.1);
+}
+
+/* AI Actions */
+.rbfw-ai-actions {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.rbfw-ai-generate-all-btn {
+    /* Compact, professional pill — not a full-width banner. */
+    width: auto;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.rbfw-ai-generate-all-btn .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+}
+.rbfw-ai-generate-all-row {
+    /* row that holds only the compact Generate-all button */
+    margin-top: -4px;
+}
+.rbfw-me-field__hint {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+.rbfw-me-meta-desc {
+    resize: vertical;
+    min-height: 54px;
+    line-height: 1.5;
+    width: 100%;
+}
+
+.rbfw-ai-generate-all-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.rbfw-ai-generate-all-btn.is-loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.rbfw-ai-generate-all-btn.is-loading .dashicons {
+    animation: rbfw-spin 1s linear infinite;
+}
+
+/* AI Modal */
+.rbfw-ai-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100000;
+    display: none;
+}
+
+.rbfw-ai-modal.is-visible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rbfw-ai-modal__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.rbfw-ai-modal__box {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.rbfw-ai-modal__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.rbfw-ai-modal__head h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.rbfw-ai-modal__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #666;
+}
+
+.rbfw-ai-modal__body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.rbfw-ai-preview-item {
+    margin-bottom: 16px;
+}
+
+.rbfw-ai-preview-item label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.rbfw-ai-preview-content {
+    padding: 12px;
+    background: #f7f7f7;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.rbfw-ai-modal__foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 16px 20px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* AI Notice */
+.rbfw-ai-notice {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.rbfw-ai-notice--success {
+    background: #46b450;
+    color: white;
+}
+
+.rbfw-ai-notice--error {
+    background: #dc3232;
+    color: white;
+}
+
+.rbfw-ai-field-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 4px;
+}
+.rbfw-ai-field-actions--inline {
+    margin-top: 4px;
+}
+.rbfw-ai-classic-actions {
+    margin: 10px 0;
+}
+
+/* Per-field AI icon button docked at the right edge of an input (section-wise). */
+.rbfw-ai-input-wrap {
+    position: relative;
+    display: block;
+}
+.rbfw-ai-input-wrap > .rbfw-me-input {
+    /* leave room so text never sits under the icon button */
+    padding-right: 46px;
+}
+.rbfw-ai-icon-btn {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+}
+.rbfw-ai-icon-btn .dashicons {
+    margin: 0;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+}
+.rbfw-ai-input-wrap > .rbfw-ai-icon-btn {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+}
+.rbfw-ai-input-wrap > .rbfw-ai-icon-btn:hover {
+    /* keep the vertical centering while applying the shared lift effect */
+    transform: translateY(-50%) scale(1.05);
+}
+/* Description label row: group the AI icon with the VISUAL/CODE switch on the right. */
+.rbfw-me-editor-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.rbfw-ai-seo-card {
+    margin-top: 12px;
+    padding: 12px;
+}
+.rbfw-ai-seo-card .hndle {
+    font-size: 14px;
+    padding: 8px 12px;
+}
+.rbfw-ai-seo-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    width: 92px;
+    height: 92px;
+    margin: 4px auto 6px;
+    border-radius: 50%;
+    background: #f0f0f1;
+    color: #50575e;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.rbfw-ai-seo-circle.good { background: #dff7e0; color: #1e7e34; }
+.rbfw-ai-seo-circle.ok   { background: #fff3cd; color: #8a6d3b; }
+.rbfw-ai-seo-circle.bad  { background: #fde2e1; color: #b32d2e; }
+.rbfw-ai-seo-circle #rbfw_seo_score_value { font-size: 30px; line-height: 1; font-weight: 700; }
+.rbfw-ai-seo-circle #rbfw_seo_score_grade { font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.75; }
+.rbfw-ai-seo-feedback {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 12px 0 0;
+    border-top: 1px solid #eef0f2;
+    font-size: 13px;
+}
+.rbfw-ai-seo-feedback li {
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 6px;
+    align-items: baseline;
+    margin: 7px 0;
+    line-height: 1.45;
+}
+.rbfw-ai-seo-feedback__label { font-weight: 600; color: #1e1e1e; }
+.rbfw-ai-seo-feedback .good { color: #1e7e34; }
+.rbfw-ai-seo-feedback .ok   { color: #8a6d3b; }
+.rbfw-ai-seo-feedback .bad  { color: #b32d2e; }

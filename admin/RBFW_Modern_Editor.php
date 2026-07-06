@@ -24,7 +24,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			add_action( 'load-post.php',          [ $this, 'maybe_redirect_edit_screen' ] );
 			add_action( 'load-post-new.php',      [ $this, 'maybe_redirect_new_screen' ] );
 			add_action( 'admin_enqueue_scripts',  [ $this, 'enqueue_assets' ] );
+			add_action( 'admin_enqueue_scripts',  [ $this, 'enqueue_classic_ai_assets' ] );
 			add_action( 'admin_head',             [ $this, 'hide_menu_styles' ] );
+			add_action( 'admin_footer',           [ $this, 'render_classic_ai_controls' ] );
 			add_filter( 'admin_body_class',       [ $this, 'admin_body_class' ] );
 			add_action( 'wp_ajax_rbfw_modern_editor_save',   [ $this, 'ajax_save' ] );
 			add_action( 'wp_ajax_rbfw_modern_editor_create', [ $this, 'ajax_create_draft' ] );
@@ -400,6 +402,35 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'update'       => __( 'Update', 'booking-and-rental-manager-for-woocommerce' ),
 				],
 			] );
+
+			// AI Assistant
+			$ver_ai_css = filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw-ai-assistant.css' ) ?: '1.0.0';
+			$ver_ai_js  = filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw-ai-assistant.js' )  ?: '1.0.0';
+
+			wp_enqueue_style(
+				'rbfw-ai-assistant',
+				RBFW_PLUGIN_URL . '/admin/css/rbfw-ai-assistant.css',
+				[ 'rbfw-modern-editor' ],
+				$ver_ai_css
+			);
+
+			wp_enqueue_script(
+				'rbfw-ai-assistant',
+				RBFW_PLUGIN_URL . '/admin/js/rbfw-ai-assistant.js',
+				[ 'jquery', 'rbfw-modern-editor' ],
+				$ver_ai_js,
+				true
+			);
+
+			wp_localize_script( 'rbfw-ai-assistant', 'rbfwAIAssistant', [
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'rbfw_ai_action' ),
+				'i18n'     => [
+					'generating' => __( 'Generating with AI…', 'booking-and-rental-manager-for-woocommerce' ),
+					'error'      => __( 'AI generation failed', 'booking-and-rental-manager-for-woocommerce' ),
+					'success'    => __( 'Content generated successfully', 'booking-and-rental-manager-for-woocommerce' ),
+				],
+			] );
 		}
 
 		/* ── AJAX: create draft ─────────────────────────────────────────────── */
@@ -452,12 +483,20 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				$status = 'draft';
 			}
 
-			wp_update_post( [
+			// Slug (post_name) is editable in the modern editor. Persist it when supplied;
+			// leave it out when blank so WordPress derives a unique slug from the title.
+			$slug        = isset( $_POST['post_name'] ) ? sanitize_title( wp_unslash( $_POST['post_name'] ) ) : '';
+			$post_update = [
 				'ID'           => $post_id,
 				'post_title'   => $title,
 				'post_content' => $content,
 				'post_status'  => $status,
-			] );
+			];
+			if ( '' !== $slug ) {
+				$post_update['post_name'] = $slug;
+			}
+
+			wp_update_post( $post_update );
 
 			/* ── Meta fields ── */
 			$meta_keys = [
@@ -482,6 +521,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_enable_faq_content', 'rbfw_item_terms_conditions',
 				// Location
 				'rbfw_enable_pick_point',
+				// SEO
+				'rbfw_meta_description',
 			];
 
 			foreach ( $meta_keys as $key ) {
@@ -933,6 +974,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'_tax_status', '_tax_class', 'rbfw_enable_tax_settings',
 				'rbfw_available_qty_info_switch', 'shipping_enable', 'rent_shipping_class',
 				'rbfw_enable_frontend_display', 'rbfw_enable_related_items',
+				'rbfw_meta_description',
 			];
 			$out = [];
 			foreach ( $keys as $k ) {
@@ -1064,6 +1106,118 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				});
 			})(jQuery);
 			</script>
+			<?php
+		}
+
+		/* ── Classic editor: AI Assistant assets + controls ────────────────── */
+
+		private function is_classic_edit_screen_for_rbfw(): bool {
+			if ( ! is_admin() || $this->is_edit_screen() ) {
+				return false;
+			}
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( ! $screen || $screen->base !== 'post' || $screen->post_type !== self::POST_TYPE ) {
+				return false;
+			}
+			if ( ! in_array( $screen->action, [ 'add', 'edit' ], true ) ) {
+				return false;
+			}
+			return current_user_can( 'edit_posts' );
+		}
+
+		public function enqueue_classic_ai_assets(): void {
+			if ( ! $this->is_classic_edit_screen_for_rbfw() ) {
+				return;
+			}
+
+			$ver_ai_css = file_exists( RBFW_PLUGIN_DIR . '/admin/css/rbfw-ai-assistant.css' )
+				? filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw-ai-assistant.css' )
+				: '1.0.0';
+			$ver_ai_js  = file_exists( RBFW_PLUGIN_DIR . '/admin/js/rbfw-ai-assistant.js' )
+				? filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw-ai-assistant.js' )
+				: '1.0.0';
+
+			wp_enqueue_style(
+				'rbfw-ai-assistant',
+				RBFW_PLUGIN_URL . '/admin/css/rbfw-ai-assistant.css',
+				[],
+				$ver_ai_css
+			);
+
+			wp_enqueue_script(
+				'rbfw-ai-assistant',
+				RBFW_PLUGIN_URL . '/admin/js/rbfw-ai-assistant.js',
+				[ 'jquery' ],
+				$ver_ai_js,
+				true
+			);
+
+			wp_localize_script( 'rbfw-ai-assistant', 'rbfwAIAssistant', [
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'nonce'    => wp_create_nonce( 'rbfw_ai_action' ),
+				'i18n'     => [
+					'generating' => __( 'Generating with AI…', 'booking-and-rental-manager-for-woocommerce' ),
+					'error'      => __( 'AI generation failed', 'booking-and-rental-manager-for-woocommerce' ),
+					'success'    => __( 'Content generated successfully', 'booking-and-rental-manager-for-woocommerce' ),
+				],
+			] );
+		}
+
+		public function render_classic_ai_controls(): void {
+			if ( ! $this->is_classic_edit_screen_for_rbfw() ) {
+				return;
+			}
+			?>
+			<div id="rbfw-ai-classic-wrap">
+				<div class="rbfw-ai-field-actions rbfw-ai-classic-actions">
+					<button type="button" class="rbfw-ai-generate-btn" data-type="title"><span class="dashicons dashicons-admin-customizer"></span><?php esc_html_e( 'AI Title', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					<button type="button" class="rbfw-ai-generate-btn" data-type="subtitle"><span class="dashicons dashicons-shortcode"></span><?php esc_html_e( 'AI Subtitle', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					<button type="button" class="rbfw-ai-generate-btn" data-type="slug"><span class="dashicons dashicons-admin-links"></span><?php esc_html_e( 'AI Slug', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					<button type="button" class="rbfw-ai-generate-btn" data-type="description"><span class="dashicons dashicons-text"></span><?php esc_html_e( 'AI Description', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					<button type="button" class="rbfw-ai-generate-all-btn"><span class="dashicons dashicons-superhero"></span><?php esc_html_e( 'Generate all with AI', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+				</div>
+				<div class="rbfw-ai-seo-card postbox">
+					<h2 class="hndle"><?php esc_html_e( 'SEO Score', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+					<div class="inside">
+						<div id="rbfw_seo_score_circle" class="rbfw-ai-seo-circle">
+							<span id="rbfw_seo_score_value">0</span>
+							<span id="rbfw_seo_score_grade">F</span>
+						</div>
+						<ul class="rbfw-ai-seo-feedback">
+							<li><span class="rbfw-ai-seo-feedback__label"><?php esc_html_e( 'Title:', 'booking-and-rental-manager-for-woocommerce' ); ?></span> <span id="rbfw_seo_title_status">—</span></li>
+							<li><span class="rbfw-ai-seo-feedback__label"><?php esc_html_e( 'Slug:', 'booking-and-rental-manager-for-woocommerce' ); ?></span> <span id="rbfw_seo_slug_status">—</span></li>
+							<li><span class="rbfw-ai-seo-feedback__label"><?php esc_html_e( 'Description:', 'booking-and-rental-manager-for-woocommerce' ); ?></span> <span id="rbfw_seo_description_status">—</span></li>
+						</ul>
+					</div>
+				</div>
+				<div class="rbfw-ai-modal" id="rbfw_ai_modal" hidden>
+					<div class="rbfw-ai-modal__backdrop"></div>
+					<div class="rbfw-ai-modal__box">
+						<div class="rbfw-ai-modal__head">
+							<h3><?php esc_html_e( 'AI Generated Content', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+							<button type="button" class="rbfw-ai-modal__close">&times;</button>
+						</div>
+						<div class="rbfw-ai-modal__body">
+							<div class="rbfw-ai-preview-item">
+								<strong><?php esc_html_e( 'Title', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+								<div class="rbfw-ai-preview-content" id="rbfw_ai_preview_title"></div>
+							</div>
+							<div class="rbfw-ai-preview-item">
+								<strong><?php esc_html_e( 'Slug', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+								<div class="rbfw-ai-preview-content" id="rbfw_ai_preview_slug"></div>
+							</div>
+							<div class="rbfw-ai-preview-item">
+								<strong><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+								<div class="rbfw-ai-preview-content" id="rbfw_ai_preview_description"></div>
+							</div>
+						</div>
+						<div class="rbfw-ai-modal__foot">
+							<button type="button" class="button rbfw-ai-modal-cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							<button type="button" class="button button-primary rbfw-ai-apply"><?php esc_html_e( 'Apply', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+						</div>
+					</div>
+				</div>
+			</div>
 			<?php
 		}
 	}
