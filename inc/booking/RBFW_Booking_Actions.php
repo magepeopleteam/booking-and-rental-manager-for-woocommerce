@@ -117,7 +117,7 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 				return;
 			}
 
-			self::log_status_change( $booking_id, $new_status );
+			self::log_status_change( $booking_id, $new_status, $old_status );
 
 			if ( in_array( $new_status, array( 'confirmed', 'processing', 'completed' ), true ) ) {
 				self::notify_customer( $booking_id, $new_status, true );
@@ -128,20 +128,87 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 		}
 
 		/**
-		 * Append a human-readable revision note (who / when / what).
+		 * Append a status-change entry (who / when / from / to) to the booking's timeline.
+		 * `status`/`by`/`time` are kept for back-compat with anything already reading the
+		 * pre-existing shape; `type`/`from`/`to`/`note` are the richer shape the Pro Booking
+		 * Orders page's activity log / notes UI reads via get_status_history().
 		 */
-		private static function log_status_change( $booking_id, $new_status ) {
+		private static function log_status_change( $booking_id, $new_status, $old_status = '' ) {
+			$user = wp_get_current_user();
+			self::append_history( $booking_id, array(
+				'type'   => 'status_change',
+				'status' => $new_status,
+				'from'   => $old_status,
+				'to'     => $new_status,
+				'note'   => '',
+				'by'     => $user && $user->exists() ? $user->display_name : '',
+				'time'   => current_time( 'mysql' ),
+			) );
+		}
+
+		/**
+		 * Append an admin-authored freeform note to the booking's timeline.
+		 *
+		 * @param int    $booking_id rbfw_booking post id.
+		 * @param string $note       Note text (plain text; escaped on output).
+		 * @return bool True on success, false if the note/booking was invalid.
+		 */
+		public static function add_note( $booking_id, $note ) {
+			$booking_id = absint( $booking_id );
+			$note       = trim( (string) $note );
+			if ( ! $booking_id || RBFW_Booking_Post_Type::POST_TYPE !== get_post_type( $booking_id ) || '' === $note ) {
+				return false;
+			}
+			$user = wp_get_current_user();
+			self::append_history( $booking_id, array(
+				'type'   => 'note',
+				'status' => '',
+				'from'   => '',
+				'to'     => '',
+				'note'   => $note,
+				'by'     => $user && $user->exists() ? $user->display_name : '',
+				'time'   => current_time( 'mysql' ),
+			) );
+			return true;
+		}
+
+		private static function append_history( $booking_id, $entry ) {
 			$log = get_post_meta( $booking_id, 'rbfw_status_log', true );
 			if ( ! is_array( $log ) ) {
 				$log = array();
 			}
-			$user    = wp_get_current_user();
-			$log[]   = array(
-				'status' => $new_status,
-				'by'     => $user && $user->exists() ? $user->display_name : '',
-				'time'   => current_time( 'mysql' ),
-			);
+			$log[] = $entry;
 			update_post_meta( $booking_id, 'rbfw_status_log', $log );
+		}
+
+		/**
+		 * Normalized timeline for a booking, oldest first: status changes + notes.
+		 * Legacy entries (written before `type`/`from`/`to`/`note` existed) are
+		 * backfilled so callers never have to special-case the old shape.
+		 *
+		 * @param int $booking_id rbfw_booking post id.
+		 * @return array<int,array<string,string>> Each entry has type, from, to, note, by, time.
+		 */
+		public static function get_status_history( $booking_id ) {
+			$log = get_post_meta( absint( $booking_id ), 'rbfw_status_log', true );
+			if ( ! is_array( $log ) ) {
+				return array();
+			}
+			$history = array();
+			foreach ( $log as $entry ) {
+				if ( ! is_array( $entry ) ) {
+					continue;
+				}
+				$history[] = array(
+					'type' => isset( $entry['type'] ) ? $entry['type'] : 'status_change',
+					'from' => isset( $entry['from'] ) ? $entry['from'] : '',
+					'to'   => isset( $entry['to'] ) ? $entry['to'] : ( isset( $entry['status'] ) ? $entry['status'] : '' ),
+					'note' => isset( $entry['note'] ) ? $entry['note'] : '',
+					'by'   => isset( $entry['by'] ) ? $entry['by'] : '',
+					'time' => isset( $entry['time'] ) ? $entry['time'] : '',
+				);
+			}
+			return $history;
 		}
 
 		/**
@@ -237,10 +304,11 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 
 		/**
 		 * Normalised, display-ready booking details used by the email and the PDF.
+		 * Public: reused by the Pro Booking Orders page's "Print/Download PDF" buttons.
 		 *
 		 * @return array<string,string>
 		 */
-		private static function get_booking_details( $booking_id ) {
+		public static function get_booking_details( $booking_id ) {
 			$statuses = self::get_statuses();
 			$status   = (string) get_post_meta( $booking_id, 'rbfw_status', true );
 			$start    = (string) get_post_meta( $booking_id, 'rbfw_start_date', true );
@@ -266,6 +334,126 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 			);
 		}
 
+		/** Run an action and return whatever it echoed, trimmed, instead of just whether it's hooked. */
+		private static function captured_action( $hook ) {
+			ob_start();
+			do_action( $hook );
+			return trim( ob_get_clean() );
+		}
+
+		/** Badge background/text colors per status, matching the admin list's status pills. */
+		private static function status_badge_colors( $status ) {
+			$map = array(
+				'completed'  => array( '#d1fae5', '#065f46' ),
+				'processing' => array( '#dbeafe', '#1e40af' ),
+				'confirmed'  => array( '#dbeafe', '#1e40af' ),
+				'pending'    => array( '#fef3c7', '#92400e' ),
+				'cancelled'  => array( '#fee2e2', '#991b1b' ),
+				'refunded'   => array( '#e0e7ff', '#3730a3' ),
+			);
+			return isset( $map[ $status ] ) ? $map[ $status ] : array( '#f1f5f9', '#475569' );
+		}
+
+		/**
+		 * Render the booking ticket as a standalone HTML fragment (used for both the
+		 * emailed PDF attachment and the Pro Booking Orders page's Print/Download PDF).
+		 * Layout mirrors the Pro plugin's branded WooCommerce-order PDF template
+		 * (templates/pdf-templates/default/default.php: header + bordered section tables)
+		 * so a standalone booking ticket looks consistent with the rest of the site's PDFs.
+		 * The company logo/address/phone are optional — they only render when the Pro
+		 * plugin's PDF settings hooks are attached (rbfw_pdf_logo / _company_address / _company_phone);
+		 * without Pro this quietly falls back to just the site name.
+		 *
+		 * @return string HTML markup.
+		 */
+		public static function build_ticket_html( $booking_id ) {
+			$d          = self::get_booking_details( $booking_id );
+			$site       = get_bloginfo( 'name' );
+			$status_key = sanitize_key( (string) get_post_meta( $booking_id, 'rbfw_status', true ) ?: 'pending' );
+			list( $badge_bg, $badge_color ) = self::status_badge_colors( $status_key );
+
+			// Pro's PDF settings register these hooks unconditionally, but each one echoes
+			// nothing when its own setting (logo/address/phone) hasn't been filled in — so
+			// has_action() alone would report "present" and leave a blank header. Capture
+			// the actual output instead, and only skip the site-name / address block when
+			// there's really nothing to show.
+			$logo_html = self::captured_action( 'rbfw_pdf_logo' );
+			$addr_html = self::captured_action( 'rbfw_pdf_company_address' );
+			$phone_html = self::captured_action( 'rbfw_pdf_company_phone' );
+
+			ob_start();
+			?>
+			<style>
+				body { font-family: DejaVuSans, sans-serif; color: #1e293b; }
+				.rbfw-ticket-header td { vertical-align: top; padding-bottom: 18px; }
+				.rbfw-ticket-header .rbfw-site-name { font-size: 18px; font-weight: bold; color: #0f172a; margin: 0 0 2px; }
+				.rbfw-ticket-header .rbfw-muted { color: #64748b; font-size: 10.5px; line-height: 1.5; }
+				.rbfw-ticket-title { font-size: 22px; font-weight: bold; color: #0f172a; margin: 0 0 4px; }
+				.rbfw-ticket-ref { font-size: 11px; color: #64748b; margin: 0 0 8px; }
+				.rbfw-badge { display: inline-block; padding: 4px 14px; border-radius: 14px; font-size: 10.5px; font-weight: bold; background: <?php echo esc_attr( $badge_bg ); ?>; color: <?php echo esc_attr( $badge_color ); ?>; }
+				.rbfw-section-title { background: #F12971; color: #fff; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.04em; padding: 7px 12px; margin-top: 16px; }
+				table.rbfw-info-table { width: 100%; border-collapse: collapse; border: 1px solid #e2e8f0; border-top: none; }
+				table.rbfw-info-table td { border: 1px solid #e2e8f0; padding: 8px 12px; font-size: 11.5px; vertical-align: top; }
+				table.rbfw-info-table td.rbfw-k { background: #f8fafc; font-weight: bold; width: 32%; color: #475569; }
+				table.rbfw-total-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+				table.rbfw-total-table td { padding: 10px 12px; font-size: 12.5px; border: none; }
+				table.rbfw-total-table tr.rbfw-total-row td { border-top: 2px solid #0f172a; font-weight: bold; font-size: 15px; color: #0f172a; }
+				.rbfw-footer { margin-top: 22px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 9.5px; color: #94a3b8; text-align: center; }
+			</style>
+
+			<table class="rbfw-ticket-header" width="100%">
+				<tr>
+					<td width="55%">
+						<?php if ( $logo_html ) : ?>
+							<?php echo $logo_html; // phpcs:ignore WordPress.Security.EscapeOutput -- trusted admin-configured PDF settings markup, same as the Pro order-PDF template. ?>
+						<?php else : ?>
+							<p class="rbfw-site-name"><?php echo esc_html( $site ); ?></p>
+						<?php endif; ?>
+						<?php if ( $addr_html || $phone_html ) : ?>
+							<p class="rbfw-muted">
+								<?php echo $addr_html; ?>
+								<?php if ( $addr_html && $phone_html ) : ?><br><?php endif; ?>
+								<?php echo $phone_html; ?>
+							</p>
+						<?php endif; ?>
+					</td>
+					<td width="45%" style="text-align:right;">
+						<p class="rbfw-ticket-title"><?php esc_html_e( 'Booking Ticket', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<p class="rbfw-ticket-ref">#<?php echo esc_html( $d['reference'] ); ?></p>
+						<span class="rbfw-badge"><?php echo esc_html( $d['status_label'] ); ?></span>
+					</td>
+				</tr>
+			</table>
+
+			<div class="rbfw-section-title"><?php esc_html_e( 'Booking Details', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+			<table class="rbfw-info-table">
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Reference', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['reference'] ); ?></td></tr>
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Item', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['item'] ); ?></td></tr>
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Dates', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['dates'] ); ?></td></tr>
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['quantity'] ); ?></td></tr>
+			</table>
+
+			<div class="rbfw-section-title"><?php esc_html_e( 'Customer', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+			<table class="rbfw-info-table">
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['customer'] ? $d['customer'] : '—' ); ?></td></tr>
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Email', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['email'] ? $d['email'] : '—' ); ?></td></tr>
+				<tr><td class="rbfw-k"><?php esc_html_e( 'Phone', 'booking-and-rental-manager-for-woocommerce' ); ?></td><td><?php echo esc_html( $d['phone'] ? $d['phone'] : '—' ); ?></td></tr>
+			</table>
+
+			<table class="rbfw-total-table">
+				<tr class="rbfw-total-row">
+					<td><?php esc_html_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+					<td style="text-align:right;"><?php echo esc_html( $d['total'] ); ?></td>
+				</tr>
+			</table>
+
+			<div class="rbfw-footer">
+				<?php printf( /* translators: %s: site name */ esc_html__( 'Thank you for booking with %s', 'booking-and-rental-manager-for-woocommerce' ), esc_html( $site ) ); ?>
+			</div>
+			<?php
+			return ob_get_clean();
+		}
+
 		/**
 		 * Build a PDF ticket for the booking and return its file path, or '' when
 		 * the PDF library is unavailable or generation fails (email-only fallback).
@@ -277,28 +465,8 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 				return '';
 			}
 
-			$d        = self::get_booking_details( $booking_id );
-			$site     = esc_html( get_bloginfo( 'name' ) );
-			$rows     = array(
-				esc_html__( 'Reference', 'booking-and-rental-manager-for-woocommerce' ) => $d['reference'],
-				esc_html__( 'Item', 'booking-and-rental-manager-for-woocommerce' )      => $d['item'],
-				esc_html__( 'Customer', 'booking-and-rental-manager-for-woocommerce' )  => $d['customer'],
-				esc_html__( 'Email', 'booking-and-rental-manager-for-woocommerce' )     => $d['email'],
-				esc_html__( 'Phone', 'booking-and-rental-manager-for-woocommerce' )     => $d['phone'],
-				esc_html__( 'Dates', 'booking-and-rental-manager-for-woocommerce' )     => $d['dates'],
-				esc_html__( 'Quantity', 'booking-and-rental-manager-for-woocommerce' )  => $d['quantity'],
-				esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' )     => $d['total'],
-				esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' )    => $d['status_label'],
-			);
-
-			$html  = '<style>body{font-family:sans-serif;color:#222;} h1{font-size:20px;margin:0 0 4px;} .muted{color:#777;font-size:12px;} table{width:100%;border-collapse:collapse;margin-top:18px;} td{padding:9px 12px;border:1px solid #e3e3e3;font-size:13px;} td.k{background:#f7f7f7;font-weight:bold;width:34%;}</style>';
-			$html .= '<h1>' . $site . '</h1>';
-			$html .= '<div class="muted">' . esc_html__( 'Booking Ticket', 'booking-and-rental-manager-for-woocommerce' ) . '</div>';
-			$html .= '<table>';
-			foreach ( $rows as $label => $value ) {
-				$html .= '<tr><td class="k">' . esc_html( $label ) . '</td><td>' . esc_html( $value ) . '</td></tr>';
-			}
-			$html .= '</table>';
+			$d    = self::get_booking_details( $booking_id );
+			$html = self::build_ticket_html( $booking_id );
 
 			// Write to the system temp dir (not web-accessible). The file is a
 			// throwaway attachment removed immediately after the email is sent.

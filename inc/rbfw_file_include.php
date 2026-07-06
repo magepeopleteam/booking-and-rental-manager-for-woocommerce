@@ -1,6 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Function.php';
+require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Payment_Status_Checker.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Frontend.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Super_Slider.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Style.php';
@@ -13,6 +14,7 @@ require_once RBFW_PLUGIN_DIR . '/admin/admin.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Modern_Editor.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_WC_Payment_Manager.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Settings.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Admin_Payment_Notice.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_frontend_display.php';

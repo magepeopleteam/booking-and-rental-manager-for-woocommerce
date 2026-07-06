@@ -189,6 +189,18 @@
 				return self::has_woocommerce() && self::booking_mode() === 'woocommerce';
 			}
 
+			/**
+			 * Whether the free plugin can complete a booking at all in this request.
+			 *
+			 * The free plugin needs WooCommerce's cart/checkout OR the Pro plugin's
+			 * standalone checkout to take a booking through to payment; with neither
+			 * active there is no working checkout path, so callers should disable the
+			 * "Book Now" button and explain why instead of letting it fail at submit.
+			 */
+			public static function is_booking_available(): bool {
+				return self::has_woocommerce() || ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() );
+			}
+
             public static function rbfw_rent_types( ) {
                 $item_type = [
                     'bike_car_sd'     => __('Rent item for single day', 'booking-and-rental-manager-for-woocommerce'),
