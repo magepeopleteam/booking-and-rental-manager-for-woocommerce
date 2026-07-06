@@ -807,3 +807,82 @@
     .rbfw_inv_stats { grid-template-columns: 1fr; }
     .rbfw_inv .rbfw_inv_filter_group { flex: 1 1 100%; }
 }
+
+/* ── By Item / By Location tabs ─────────────────────────────── */
+.rbfw_inv_hidden { display: none !important; }
+.rbfw_inv .rbfw_inv_tabs {
+    display: inline-flex;
+    gap: 4px;
+    margin: 0 0 18px;
+    padding: 4px;
+    background: var(--rbfw-accent-lt);
+    border-radius: var(--rbfw-radius-sm);
+}
+.rbfw_inv .rbfw_inv_tab {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    color: var(--rbfw-text-2);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    transition: background .15s ease, color .15s ease;
+}
+.rbfw_inv .rbfw_inv_tab:hover { color: var(--rbfw-accent); }
+.rbfw_inv .rbfw_inv_tab.active {
+    background: var(--rbfw-surface);
+    color: var(--rbfw-accent);
+    box-shadow: var(--rbfw-shadow-sm);
+}
+
+/* ── By Location: grouped cards ─────────────────────────────── */
+.rbfw_inv_loc_group {
+    background: var(--rbfw-surface);
+    border: 1px solid var(--rbfw-border);
+    border-radius: var(--rbfw-radius);
+    box-shadow: var(--rbfw-shadow-sm);
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+.rbfw_inv_loc_head {
+    align-items: center;
+    background: linear-gradient(180deg, #FAFBFD 0%, #FFF 100%);
+    border-bottom: 1px solid var(--rbfw-border);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    padding: 14px 18px;
+}
+.rbfw_inv_loc_head_main { align-items: center; display: flex; gap: 10px; min-width: 0; }
+.rbfw_inv_loc_title { color: var(--rbfw-text-1); font-size: 15px; font-weight: 700; }
+.rbfw_inv_loc_count {
+    background: var(--rbfw-accent-lt);
+    border-radius: 20px;
+    color: var(--rbfw-accent);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+}
+.rbfw_inv_loc_head_stats { color: var(--rbfw-text-2); display: flex; flex-wrap: wrap; font-size: 12.5px; gap: 16px; }
+.rbfw_inv_loc_num { color: var(--rbfw-text-1); font-weight: 700; margin-left: 4px; }
+.rbfw_inv_avail_badge {
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: 600;
+    min-width: 28px;
+    padding: 2px 10px;
+}
+.rbfw_inv_avail_badge.is_in  { background: var(--rbfw-green-lt); color: var(--rbfw-green); }
+.rbfw_inv_avail_badge.is_out { background: var(--rbfw-amber-lt); color: var(--rbfw-amber); }
+.rbfw_inv_loc_empty {
+    background: var(--rbfw-surface);
+    border: 1px dashed var(--rbfw-border);
+    border-radius: var(--rbfw-radius);
+    color: var(--rbfw-text-3);
+    padding: 40px 20px;
+    text-align: center;
+}
+.rbfw_inv_loc_table_wrap.rbfw_inv_loading { opacity: .5; pointer-events: none; }
