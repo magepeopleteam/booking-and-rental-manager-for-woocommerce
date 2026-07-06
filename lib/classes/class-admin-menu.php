@@ -38,7 +38,7 @@
 
 			function admin_menu() {
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ), __( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_time_slots', array( $this, 'rbfw_time_slots' ) );
-				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_order', array( $this, 'rbfw_order_list' ) );
+				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), rbfw_bookings_capability(), 'rbfw_order', array( $this, 'rbfw_order_list' ) );
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_inventory', array( $this, 'rbfw_inventory_list' ) );
 				do_action( 'rbfw_admin_menu_after_inventory' );
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_settings_page', array( $this, 'plugin_page' ) );

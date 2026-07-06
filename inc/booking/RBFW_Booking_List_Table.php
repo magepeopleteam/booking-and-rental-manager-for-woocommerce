@@ -22,14 +22,14 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 				'edit.php?post_type=rbfw_item',
 				esc_html__( 'Bookings', 'booking-and-rental-manager-for-woocommerce' ),
 				esc_html__( 'Bookings', 'booking-and-rental-manager-for-woocommerce' ),
-				'manage_options',
+				rbfw_bookings_capability(),
 				'rbfw_bookings',
 				array( $this, 'render_page' )
 			);
 		}
 
 		public function render_page() {
-			if ( ! current_user_can( 'manage_options' ) ) {
+			if ( ! current_user_can( rbfw_bookings_capability() ) ) {
 				return;
 			}
 
