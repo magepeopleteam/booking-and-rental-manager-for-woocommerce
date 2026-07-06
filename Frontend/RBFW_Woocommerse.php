@@ -18,9 +18,28 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validation_before_checkout') );
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validate_availability_before_checkout'), 20 );
             add_action( 'woocommerce_checkout_create_order_line_item', array($this ,  'rbfw_add_order_item_data'), 90, 4 );
-            add_action( 'woocommerce_before_thankyou', array($this ,  'rbfw_booking_management') );
-           // add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
+            /*
+             * Build the rbfw_order mirror + inventory + attendee records.
+             *
+             * These records must be created from server-side order lifecycle events, NOT only
+             * from the thank-you page view. Redirect/IPN gateways (Opay, PayPal, Stripe redirect,
+             * etc.) complete the order server-side and the customer frequently never lands on the
+             * WooCommerce thank-you page, so `woocommerce_before_thankyou` alone silently drops the
+             * booking from the Order List / Booking Calendar / Inventory / Attendee list even though
+             * the order is paid. rbfw_booking_management() is idempotent (it early-returns when a
+             * mirror with the same rbfw_link_order_id already exists), so firing it from several
+             * hooks is safe — whichever runs first records the booking and the rest no-op.
+             */
+            add_action( 'woocommerce_checkout_order_processed', array($this ,  'rbfw_booking_management') );           // classic checkout (all gateways, at placement)
+            add_action( 'woocommerce_store_api_checkout_order_processed', array($this ,  'rbfw_booking_management_from_order') ); // block / Store API checkout
+            add_action( 'woocommerce_payment_complete', array($this ,  'rbfw_booking_management') );                   // async payment confirmation (redirect/IPN gateways)
+            add_action( 'woocommerce_order_status_processing', array($this ,  'rbfw_booking_management') );            // safety net: any path that marks the order paid
+            add_action( 'woocommerce_order_status_completed', array($this ,  'rbfw_booking_management') );             // safety net: manual/offline/admin completion
+            add_action( 'woocommerce_before_thankyou', array($this ,  'rbfw_booking_management') );                    // legacy path (kept; harmless when already recorded)
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
+            /* Self-healing: rebuild booking records for paid orders placed before this fix
+               (e.g. redirect-gateway orders that never triggered the thank-you page). */
+            add_action( 'admin_init', array($this ,  'rbfw_backfill_missing_order_mirrors') );
         }
 
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
@@ -2209,6 +2228,84 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_post_id = $rbfw_post->ID;
                 update_post_meta( $rbfw_post_id, 'rbfw_order_status', $order_status );
                 rbfw_update_inventory( $rbfw_post_id, $order_status );
+            }
+        }
+        /**
+         * One-time reconcile that rebuilds the rbfw_order mirror / inventory / attendee
+         * records for paid orders that were placed before the server-side hooks above were
+         * wired in — most importantly redirect/IPN-gateway orders (Opay, PayPal, Stripe redirect)
+         * whose customers never landed on the thank-you page, so the booking was never recorded.
+         *
+         * rbfw_booking_management() is idempotent, so re-running it over existing orders only
+         * creates what is missing. The scan walks paid orders newest-first, a bounded batch per
+         * admin request (to avoid timeouts on large stores), advancing a date cursor until it
+         * reaches the beginning, then marks itself done. Uses wc_get_orders() so it is safe under
+         * both legacy and High-Performance Order Storage.
+         */
+        public function rbfw_backfill_missing_order_mirrors() {
+            if ( get_option( 'rbfw_order_mirror_backfill_done' ) === 'yes' ) {
+                return;
+            }
+            $cap = function_exists( 'rbfw_bookings_capability' ) ? rbfw_bookings_capability() : 'manage_options';
+            if ( ! current_user_can( $cap ) ) {
+                return;
+            }
+            if ( ! function_exists( 'wc_get_orders' ) ) {
+                return;
+            }
+
+            $batch  = 30;
+            $cursor = (int) get_option( 'rbfw_order_mirror_backfill_cursor', 0 ); // unix ts; 0 = start from newest
+            $query  = array(
+                'limit'   => $batch,
+                'status'  => array( 'processing', 'completed', 'on-hold', 'refunded' ),
+                'orderby' => 'date',
+                'order'   => 'DESC',
+                'return'  => 'ids',
+            );
+            if ( $cursor > 0 ) {
+                $query['date_created'] = '<' . $cursor;
+            }
+            $order_ids = wc_get_orders( $query );
+
+            if ( empty( $order_ids ) ) {
+                update_option( 'rbfw_order_mirror_backfill_done', 'yes' );
+                delete_option( 'rbfw_order_mirror_backfill_cursor' );
+                return;
+            }
+
+            $oldest_ts = $cursor;
+            foreach ( $order_ids as $oid ) {
+                $order = wc_get_order( $oid );
+                if ( ! $order ) {
+                    continue;
+                }
+                $created = $order->get_date_created();
+                if ( $created ) {
+                    $ts        = $created->getTimestamp();
+                    $oldest_ts = ( $oldest_ts === 0 ) ? $ts : min( $oldest_ts, $ts );
+                }
+                // Idempotent: no-ops when this order already has its mirror, and when it has no rental items.
+                $this->rbfw_booking_management( $order->get_id() );
+            }
+
+            if ( $oldest_ts > 0 ) {
+                update_option( 'rbfw_order_mirror_backfill_cursor', $oldest_ts );
+            }
+            if ( count( $order_ids ) < $batch ) {
+                update_option( 'rbfw_order_mirror_backfill_done', 'yes' );
+                delete_option( 'rbfw_order_mirror_backfill_cursor' );
+            }
+        }
+        /**
+         * Adapter for hooks that pass a WC_Order object instead of an order id
+         * (e.g. woocommerce_store_api_checkout_order_processed).
+         */
+        public function rbfw_booking_management_from_order( $order ) {
+            if ( is_a( $order, 'WC_Order' ) ) {
+                $this->rbfw_booking_management( $order->get_id() );
+            } elseif ( is_numeric( $order ) ) {
+                $this->rbfw_booking_management( (int) $order );
             }
         }
         public  function rbfw_booking_management( $wc_order_id = 0 ) {
