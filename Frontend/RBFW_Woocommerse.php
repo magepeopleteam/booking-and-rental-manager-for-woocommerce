@@ -893,6 +893,17 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_service_infos_post = isset( $sd_input_data_sabitized['rbfw_service_price_data'] ) ? $sd_input_data_sabitized['rbfw_service_price_data'] : [];
                 $rbfw_service_infos = [];
 
+                /*
+                 * SECURITY: the per-service unit price and price type are taken from the
+                 * item's stored configuration (rbfw_service_category_price), NEVER from the
+                 * request. The form posts rbfw_service_price_data[..][price], but trusting it
+                 * would let any visitor set an arbitrary/negative price and force the order
+                 * total to pennies. We only honour the customer's selection (which service +
+                 * quantity); the price is re-derived server-side and unknown services are
+                 * not charged.
+                 */
+                $rbfw_trusted_service_prices = rbfw_get_trusted_category_service_prices( $rbfw_id );
+
                 if ( ! empty( $rbfw_service_infos_post ) && is_array( $rbfw_service_infos_post ) ) {
                     foreach ( $rbfw_service_infos_post as $key_cat => $value ) {
                         if ( ! is_array( $value ) ) {
@@ -910,8 +921,18 @@ if (!class_exists('RBFW_Woocommerce')) {
                             if ( $service_qty <= 0 ) {
                                 continue; // service not selected
                             }
-                            $service_unit_price = isset( $item['price'] ) ? (float) $item['price'] : 0;
-                            $service_type       = isset( $item['service_price_type'] ) ? $item['service_price_type'] : '';
+                            $service_name = (string) $item['name'];
+                            // Trusted price/type from stored config; a service not present in the
+                            // item's configuration is never charged (posted price is ignored).
+                            if ( ! isset( $rbfw_trusted_service_prices[ $cat_title ][ $service_name ] ) ) {
+                                continue;
+                            }
+                            $service_unit_price = $rbfw_trusted_service_prices[ $cat_title ][ $service_name ]['price'];
+                            $service_type       = $rbfw_trusted_service_prices[ $cat_title ][ $service_name ]['type'];
+                            // Overwrite any request-supplied price/type so the stored order/ticket
+                            // record reflects the real, server-derived values.
+                            $item['price']              = $service_unit_price;
+                            $item['service_price_type'] = $service_type;
                             $rbfw_service_infos[ $cat_title ][] = $item;
                             if ( 'day_wise' === $service_type ) {
                                 $rbfw_service_price += $service_unit_price * $service_qty * $total_days;

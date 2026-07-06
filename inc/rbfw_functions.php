@@ -26,6 +26,52 @@
 			return ( is_string( $cap ) && '' !== $cap ) ? $cap : 'manage_options';
 		}
 	}
+
+	/**
+	 * Trusted per-service prices for the multi-day "category services" feature.
+	 *
+	 * SECURITY: the booking form posts rbfw_service_price_data[cat][ser][price], but a
+	 * price sent in the request must NEVER be trusted — it lets a visitor set an
+	 * arbitrary (even negative) service price and drive the order total to pennies.
+	 * The only source of truth is the item's stored rbfw_service_category_price config.
+	 *
+	 * @param int $post_id rbfw_item id.
+	 * @return array Map [ cat_title ][ service_title ] => [ 'price' => float>=0, 'type' => string ].
+	 */
+	if ( ! function_exists( 'rbfw_get_trusted_category_service_prices' ) ) {
+		function rbfw_get_trusted_category_service_prices( $post_id ) {
+			$raw = get_post_meta( $post_id, 'rbfw_service_category_price', true );
+			if ( ! is_array( $raw ) ) {
+				$decoded = json_decode( is_string( $raw ) ? $raw : '', true );
+				if ( is_array( $decoded ) ) {
+					$raw = $decoded;
+				} elseif ( is_string( $raw ) && is_serialized( $raw ) ) {
+					$raw = maybe_unserialize( $raw );
+				}
+			}
+			$map = array();
+			if ( is_array( $raw ) ) {
+				foreach ( $raw as $cat ) {
+					if ( ! is_array( $cat ) ) {
+						continue;
+					}
+					$cat_title = isset( $cat['cat_title'] ) ? (string) $cat['cat_title'] : '';
+					$services  = ( isset( $cat['cat_services'] ) && is_array( $cat['cat_services'] ) ) ? $cat['cat_services'] : array();
+					foreach ( $services as $svc ) {
+						if ( ! is_array( $svc ) || empty( $svc['title'] ) ) {
+							continue;
+						}
+						$map[ $cat_title ][ (string) $svc['title'] ] = array(
+							'price' => max( 0, (float) ( isset( $svc['price'] ) ? $svc['price'] : 0 ) ),
+							'type'  => isset( $svc['service_price_type'] ) ? (string) $svc['service_price_type'] : '',
+						);
+					}
+				}
+			}
+
+			return $map;
+		}
+	}
 // Language Load
 	function rbfw_allowed_html() {
 		$allowed_html = array(
