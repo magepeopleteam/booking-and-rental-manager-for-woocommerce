@@ -2081,8 +2081,9 @@
             }
 
             // Inventory card (stock + variations): mirror the classic editor, which
-            // hides inventory for resort / bike_car_sd / appointment.
-            var _invShow = (type !== 'resort' && type !== 'bike_car_sd' && type !== 'appointment');
+            // hides inventory for resort / appointment. Single Day (bike_car_sd) now
+            // supports item variations, so its inventory card stays visible.
+            var _invShow = (type !== 'resort' && type !== 'appointment');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
 
             // Location card (Advanced step): available for every rent type

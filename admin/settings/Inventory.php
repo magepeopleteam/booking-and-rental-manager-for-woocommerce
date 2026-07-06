@@ -17,7 +17,7 @@
 				$rbfw_item_type         = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 				?>
-                <li data-target-tabs="#rbfw_variations" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
+                <li data-target-tabs="#rbfw_variations" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
                     <i class="fas fa-table-cells-large"></i><?php esc_html_e( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </li>
 				<?php
@@ -260,7 +260,7 @@
                 <section>
                     <div>
                         <label><?php esc_html_e( 'Item variation', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <p><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        <p><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Single Day, Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="rbfw_enable_variations" value="<?php echo esc_attr( $rbfw_enable_variations ); ?>" <?php echo esc_attr( ( $rbfw_enable_variations == 'yes' ) ? 'checked' : '' ); ?>>
@@ -297,7 +297,7 @@
 			public function add_tabs_content( $post_id ) {
 				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : '';
 				?>
-                <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_variations" data-tab-item="#rbfw_variations" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) {
+                <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_variations" data-tab-item="#rbfw_variations" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'appointment' ) {
 					echo 'style="display:none"';
 				} ?>>
 					<?php $this->section_header(); ?>

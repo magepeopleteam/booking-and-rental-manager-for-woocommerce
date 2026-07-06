@@ -348,7 +348,8 @@
                 }
                 jQuery('.rbfw_general_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
-                jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
+                // Single Day now supports item variations: keep the Inventory/Variations tab visible.
+                jQuery('li[data-target-tabs="#rbfw_variations"]').show();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();

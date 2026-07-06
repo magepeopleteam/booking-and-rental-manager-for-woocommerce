@@ -12,6 +12,15 @@ jQuery(document).on('click','.rbfw_back_step_btn',function (e) {
     jQuery('.rbfw-bikecarsd-step[data-step="'+back_step+'"]').show();
 });
 
+// Item variations (Single Day): when the customer changes a size after a time slot is
+// already chosen, reload the rate list so its per-rate quantities reflect the new size.
+jQuery(document).on('change', '.rbfw_variation_field', function () {
+    let $selectedTime = jQuery('.rbfw_bikecarsd_time.selected').not('.disabled');
+    if ($selectedTime.length) {
+        $selectedTime.trigger('click');
+    }
+});
+
 
 jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disabled)',function (e) {
 
@@ -32,6 +41,14 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
         is_muffin_template = '0';
     }
 
+    // Item variations (Single Day): send the chosen size(s) so the rate list can cap
+    // each rate's available quantity by the selected size's remaining stock.
+    let rbfw_selected_variations = [];
+    jQuery('.rbfw_variation_field').each(function () {
+        let v = jQuery(this).val();
+        if (v) { rbfw_selected_variations.push(v); }
+    });
+
     jQuery.ajax({
         type: 'POST',
         url: rbfw_ajax_front.rbfw_ajaxurl,
@@ -41,6 +58,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
             'selected_time': gTime,
             'selected_date': selected_date,
             'is_muffin_template': is_muffin_template,
+            'rbfw_selected_variations': rbfw_selected_variations,
             'nonce' : rbfw_ajax_front.nonce_bikecarsd_type_list
         },
         beforeSend: function() {
