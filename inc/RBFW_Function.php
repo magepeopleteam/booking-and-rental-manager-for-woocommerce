@@ -166,13 +166,31 @@
 			}
 
 			/**
+			 * Whether the WooCommerce cart/checkout should own bookings.
+			 *
+			 * This is the "Enable WooCommerce Payment" toggle on the Payments settings
+			 * tab (option rbfw_payment_settings). It defaults to 'on' so existing
+			 * installs keep using WooCommerce, and is the authoritative signal that
+			 * WooCommerce — rather than the standalone / custom (Pro) payment flow —
+			 * handles checkout. When it is off, WooCommerce never owns the booking even
+			 * though WooCommerce itself may still be active.
+			 */
+			public static function wc_payment_enabled(): bool {
+				return self::get_settings( 'rbfw_enable_wc_payment', 'rbfw_payment_settings', 'on' ) !== 'off';
+			}
+
+			/**
 			 * Active booking mode: 'woocommerce' | 'standalone'.
 			 *
-			 * Reads the admin setting, but always falls back to 'standalone' when
+			 * WooCommerce mode requires all of: WooCommerce active, the "Enable
+			 * WooCommerce Payment" toggle on, and the legacy Booking Mode radio not set
+			 * to standalone. Either switch flips the whole plugin to the standalone /
+			 * custom (Pro) payment flow — so the two payment systems can never both
+			 * think they own the same booking. Falls back to 'standalone' whenever
 			 * WooCommerce is not active so the plugin never assumes WooCommerce exists.
 			 */
 			public static function booking_mode(): string {
-				if ( ! self::has_woocommerce() ) {
+				if ( ! self::has_woocommerce() || ! self::wc_payment_enabled() ) {
 					return 'standalone';
 				}
 				$mode = self::get_settings( 'rbfw_booking_mode', 'rbfw_basic_payment_settings', 'woocommerce' );
@@ -190,15 +208,39 @@
 			}
 
 			/**
-			 * Whether the free plugin can complete a booking at all in this request.
+			 * Whether the free plugin can actually complete a booking in this request.
 			 *
-			 * The free plugin needs WooCommerce's cart/checkout OR the Pro plugin's
-			 * standalone checkout to take a booking through to payment; with neither
-			 * active there is no working checkout path, so callers should disable the
-			 * "Book Now" button and explain why instead of letting it fail at submit.
+			 * A working checkout path must exist for the *current* mode, not merely a
+			 * plugin being active:
+			 *  - WooCommerce mode: WooCommerce owns checkout, so it is always available.
+			 *  - Standalone mode: at least one Pro custom payment method (PayPal / Stripe
+			 *    / Offline) must be enabled — WooCommerce being active but with its
+			 *    payment disabled, or Pro active with no gateway enabled, is NOT enough.
+			 *
+			 * When this returns false, callers disable the "Book Now" button and explain
+			 * why instead of letting the submit fail silently ("no payment method").
 			 */
 			public static function is_booking_available(): bool {
-				return self::has_woocommerce() || ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() );
+				if ( self::use_wc() ) {
+					return true;
+				}
+				return self::has_enabled_custom_payment();
+			}
+
+			/**
+			 * Whether the Pro plugin has at least one custom payment method enabled.
+			 *
+			 * The free plugin never references Pro classes directly: when Pro is active
+			 * it exposes its enabled gateways/offline method via the
+			 * `rbfw_pro_enabled_payment_methods` filter. Without Pro the filter is never
+			 * added, so this is false — there is no standalone checkout to take payment.
+			 */
+			public static function has_enabled_custom_payment(): bool {
+				if ( ! ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) ) {
+					return false;
+				}
+				$methods = apply_filters( 'rbfw_pro_enabled_payment_methods', array() );
+				return ! empty( $methods );
 			}
 
             public static function rbfw_rent_types( ) {
