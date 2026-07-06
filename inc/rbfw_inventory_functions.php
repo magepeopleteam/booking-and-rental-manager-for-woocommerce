@@ -749,6 +749,26 @@ function rbfw_sd_sold_out_dates( $post_id ) {
         }
     }
 
+    // With item variations enabled, a date is also fully sold out when every size is
+    // exhausted (no size can be booked, regardless of rate availability).
+    $variations_enabled = ( get_post_meta( $post_id, 'rbfw_enable_variations', true ) === 'yes' );
+    $variation_values   = array();
+    if ( $variations_enabled ) {
+        $vdata = get_post_meta( $post_id, 'rbfw_variations_data', true );
+        if ( is_array( $vdata ) ) {
+            foreach ( $vdata as $grp ) {
+                if ( ! empty( $grp['value'] ) && is_array( $grp['value'] ) ) {
+                    foreach ( $grp['value'] as $val ) {
+                        if ( ! empty( $val['name'] ) ) {
+                            $variation_values[] = (string) $val['name'];
+                        }
+                    }
+                }
+            }
+        }
+        $variation_values = array_values( array_unique( $variation_values ) );
+    }
+
     $sold_out = [];
     foreach ( array_keys( $candidates ) as $date_dmy ) {
         $dt = DateTime::createFromFormat( 'd-m-Y', $date_dmy );
@@ -761,6 +781,19 @@ function rbfw_sd_sold_out_dates( $post_id ) {
             if ( (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date_ymd, $type, '' ) > 0 ) {
                 $all_sold_out = false;
                 break;
+            }
+        }
+        if ( ! $all_sold_out && $variations_enabled && ! empty( $variation_values ) && function_exists( 'rbfw_sd_variation_remaining_stock' ) ) {
+            $any_size_available = false;
+            foreach ( $variation_values as $vv ) {
+                $rem = rbfw_sd_variation_remaining_stock( $post_id, array( $date_dmy ), $vv );
+                if ( null === $rem || $rem > 0 ) {
+                    $any_size_available = true;
+                    break;
+                }
+            }
+            if ( ! $any_size_available ) {
+                $all_sold_out = true;
             }
         }
         if ( $all_sold_out ) {
@@ -1779,6 +1812,34 @@ function rbfw_get_stock_details(){
                                     }
                                     $c++;
                                 }
+
+                                // Single Day item variations: also decrement per-size stock so the
+                                // closing-stock report reflects variation availability. Units = sum of
+                                // per-rate qty (single-day's real unit count), matching the booking gate.
+                                if ( $rent_type == 'bike_car_sd' && $rbfw_enable_variations == 'yes' && ! empty( $rbfw_variation_info ) ) {
+                                    $sd_units = array_sum( array_map( 'intval', $rbfw_type_info ) );
+                                    $f = 0;
+                                    foreach ( $rbfw_variations_data_closing as $key => $v_data ) {
+                                        $field_id    = isset( $rbfw_variations_data_closing[ $f ]['field_id'] ) ? $rbfw_variations_data_closing[ $f ]['field_id'] : '';
+                                        $field_value = ( isset( $rbfw_variations_data_closing[ $f ]['value'] ) && is_array( $rbfw_variations_data_closing[ $f ]['value'] ) ) ? $rbfw_variations_data_closing[ $f ]['value'] : array();
+                                        foreach ( $rbfw_variation_info as $key => $v_info ) {
+                                            $s_field_id    = $v_info['field_id'] ?? '';
+                                            $s_field_value = $v_info['field_value'] ?? '';
+                                            if ( $s_field_id == $field_id ) {
+                                                $g = 0;
+                                                foreach ( $field_value as $key => $f_value ) {
+                                                    $fv_name = $f_value['name'] ?? '';
+                                                    $fv_qty  = $f_value['quantity'] ?? '';
+                                                    if ( $s_field_value == $fv_name ) {
+                                                        $rbfw_variations_data_closing[ $f ]['value'][ $g ]['quantity'] = $fv_qty - $sd_units;
+                                                    }
+                                                    $g++;
+                                                }
+                                            }
+                                        }
+                                        $f++;
+                                    }
+                                }
                             } else {
 
                                 $sold_item_qty += $rbfw_item_quantity;
@@ -2599,6 +2660,93 @@ function rbfw_count_overlapping_cart_qty( $sibling_lines, $req_start_datetime, $
 }
 
 /**
+ * Remaining stock for a single-day item's variation value across a set of dates.
+ *
+ * Single-day availability is date-membership based (mirrors
+ * rbfw_get_bike_car_sd_available_qty() / total_variant_quantity()), NOT the datetime
+ * interval-overlap model used by rbfw_count_overlapping_booked_qty() — the latter
+ * applies a return-date "-1 day" adjustment that would mis-handle same-day bookings.
+ * Units are counted by summing rbfw_type_info (single-day's real unit count, since
+ * rbfw_item_quantity is not a reliable count for single-day), and both committed
+ * orders and competing cart lines are included.
+ *
+ * @param int      $post_id         rbfw_item id.
+ * @param string[] $date_range_dmy  Requested booking dates in 'd-m-Y'.
+ * @param string   $variation_value Variation value name (e.g. "M").
+ * @param array[]  $sibling_lines   Other cart lines for the same item.
+ * @return int|null Minimum remaining across the dates, or null if size stock unknown.
+ */
+function rbfw_sd_variation_remaining_stock( $post_id, $date_range_dmy, $variation_value, $sibling_lines = array() ) {
+	$stock = rbfw_get_variation_stock_for_value( $post_id, $variation_value );
+	if ( null === $stock ) {
+		return null;
+	}
+	if ( empty( $date_range_dmy ) || ! is_array( $date_range_dmy ) ) {
+		return $stock;
+	}
+	$inventory         = get_post_meta( $post_id, 'rbfw_inventory', true );
+	$inventory         = is_array( $inventory ) ? $inventory : array();
+	$blocking          = rbfw_get_blocking_order_statuses();
+	$mepp_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
+
+	// Pre-compute each competing cart line's per-date size units once.
+	$sibling_dates = array();
+	if ( ! empty( $sibling_lines ) && is_array( $sibling_lines ) ) {
+		foreach ( $sibling_lines as $line ) {
+			if ( ! is_array( $line ) || ! rbfw_inventory_entry_matches_variation( $line, $variation_value ) ) {
+				continue;
+			}
+			$s = ! empty( $line['rbfw_start_date'] ) ? $line['rbfw_start_date'] : '';
+			$e = ! empty( $line['rbfw_end_date'] ) ? $line['rbfw_end_date'] : $s;
+			if ( '' === $s ) {
+				continue;
+			}
+			$ti     = isset( $line['rbfw_type_info'] ) && is_array( $line['rbfw_type_info'] ) ? $line['rbfw_type_info'] : array();
+			$units  = max( 0, array_sum( array_map( 'intval', $ti ) ) );
+			$ts_end = strtotime( $e );
+			for ( $ts = strtotime( $s ); $ts && $ts_end && $ts <= $ts_end; $ts += DAY_IN_SECONDS ) {
+				$d                   = gmdate( 'd-m-Y', $ts );
+				$sibling_dates[ $d ] = ( isset( $sibling_dates[ $d ] ) ? $sibling_dates[ $d ] : 0 ) + $units;
+			}
+		}
+	}
+
+	$min_remaining = $stock;
+	foreach ( $date_range_dmy as $date ) {
+		$booked = 0;
+		foreach ( $inventory as $entry ) {
+			if ( ! is_array( $entry ) ) {
+				continue;
+			}
+			$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+			if ( ! in_array( $status, $blocking, true ) ) {
+				continue;
+			}
+			if ( 'partially-paid' === $status && 'deposit' === $mepp_reduce_stock ) {
+				continue;
+			}
+			$bdates = isset( $entry['booked_dates'] ) && is_array( $entry['booked_dates'] ) ? $entry['booked_dates'] : array();
+			if ( ! in_array( $date, $bdates, true ) ) {
+				continue;
+			}
+			if ( ! rbfw_inventory_entry_matches_variation( $entry, $variation_value ) ) {
+				continue;
+			}
+			$ti      = isset( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) ? $entry['rbfw_type_info'] : array();
+			$booked += max( 0, array_sum( array_map( 'intval', $ti ) ) );
+		}
+		if ( isset( $sibling_dates[ $date ] ) ) {
+			$booked += $sibling_dates[ $date ];
+		}
+		$remaining = $stock - $booked;
+		if ( $remaining < $min_remaining ) {
+			$min_remaining = $remaining;
+		}
+	}
+	return $min_remaining;
+}
+
+/**
  * Evaluate availability for one rental request (cart line or add-to-cart POST).
  *
  * Returns a list of per-resource checks. Each check is:
@@ -2677,6 +2825,61 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 				'requested' => $req_qty,
 				'available' => max( 0, $available ),
 				'label'     => $item_name . ' (' . $li['item_name'] . ')',
+			);
+		}
+		return $checks;
+	}
+
+	/*
+	 * Single-day with item variations: enforce per-size stock as an ADDITIONAL
+	 * constraint on top of the existing per-rate availability (which is handled by
+	 * rbfw_get_bike_car_sd_available_qty in the booking step). Reuses the same
+	 * per-value counters as the multi-day variation path below, but counts units by
+	 * summing rbfw_type_info (single-day's real unit count) instead of
+	 * rbfw_item_quantity. When variations are off we fall through to the type-filter
+	 * gate, which leaves single-day to its existing handling.
+	 */
+	if ( 'bike_car_sd' === $rent_type && get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' ) {
+		$sd_type_info = isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ? $values['rbfw_type_info'] : array();
+		$sd_requested = array_sum( array_map( 'intval', $sd_type_info ) );
+		if ( $sd_requested < 1 ) {
+			$sd_requested = 1;
+		}
+		$sd_variation_values = array();
+		$sd_vinfo            = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
+		foreach ( $sd_vinfo as $r ) {
+			if ( is_array( $r ) && ! empty( $r['field_value'] ) ) {
+				$sd_variation_values[] = (string) $r['field_value'];
+			}
+		}
+		// Variations enabled but no resolvable selection -> fail open (the per-rate
+		// stock still governs via the single-day time-table); never block a valid booking.
+		if ( empty( $sd_variation_values ) ) {
+			return $checks;
+		}
+		// Build the requested booking dates (d-m-Y) the same way single-day inventory is keyed.
+		$sd_start_ymd = ! empty( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : gmdate( 'Y-m-d', strtotime( $start_dt ) );
+		$sd_end_ymd   = ! empty( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : gmdate( 'Y-m-d', strtotime( $end_dt ) );
+		$sd_dates     = array();
+		$sd_ts_start  = strtotime( $sd_start_ymd );
+		$sd_ts_end    = strtotime( $sd_end_ymd );
+		if ( $sd_ts_start && $sd_ts_end && $sd_ts_end >= $sd_ts_start ) {
+			for ( $ts = $sd_ts_start; $ts <= $sd_ts_end; $ts += DAY_IN_SECONDS ) {
+				$sd_dates[] = gmdate( 'd-m-Y', $ts );
+			}
+		} elseif ( $sd_ts_start ) {
+			$sd_dates[] = gmdate( 'd-m-Y', $sd_ts_start );
+		}
+		foreach ( $sd_variation_values as $vv ) {
+			$available = rbfw_sd_variation_remaining_stock( $rbfw_id, $sd_dates, $vv, $sibling_lines );
+			if ( null === $available ) {
+				continue; // unknown variation stock -> fail open for this value
+			}
+			$checks[] = array(
+				'ok'        => ( $sd_requested <= $available ),
+				'requested' => $sd_requested,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $vv . ')',
 			);
 		}
 		return $checks;

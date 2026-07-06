@@ -341,11 +341,13 @@
 
 				<?php
 				// Inventory (stock quantity + variations). The classic editor hides this
-				// for resort / bike_car_sd / appointment; mirror that here, with applyType()
+				// for resort / appointment; mirror that here, with applyType()
 				// in the JS keeping it in sync when the rental type is changed live.
+				// Single Day (bike_car_sd) now supports item variations, so it is no
+				// longer hidden.
 				if ( class_exists( 'RBFW_Inventory' ) ) :
 					$rbfw_me_inv_type   = get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd';
-					$rbfw_me_inv_hidden = in_array( $rbfw_me_inv_type, [ 'resort', 'bike_car_sd', 'appointment' ], true );
+					$rbfw_me_inv_hidden = in_array( $rbfw_me_inv_type, [ 'resort', 'appointment' ], true );
 				?>
 				<div class="rbfw-me-card rbfw-me-inventory-card<?php echo $rbfw_me_inv_hidden ? ' rbfw-me-hidden' : ''; ?>">
 					<div class="rbfw-me-card__head">

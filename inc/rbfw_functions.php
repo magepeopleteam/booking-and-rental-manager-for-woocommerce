@@ -1352,7 +1352,7 @@ function rbfw_url_exclude_search_engine() {
 	/******************************************
 	 * Single Day Type: Get Available Quantity
 	 *****************************************/
-	function rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $type, $selected_time = null ) {
+	function rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $type, $selected_time = null, $variation_values = array() ) {
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $type ) ) {
 			return;
 		}
@@ -1404,6 +1404,28 @@ function rbfw_url_exclude_search_engine() {
 		}
 		$remaining_stock = $type_stock - $total_qty;
 		$remaining_stock = max( 0, $remaining_stock );
+
+		// Item variations (Single Day): additionally cap the per-rate remaining by the
+		// selected size's remaining stock, so the time-table reflects sold-out sizes.
+		// The authoritative gate is still rbfw_check_rental_availability() at add-to-cart.
+		if ( ! empty( $variation_values ) && function_exists( 'rbfw_sd_variation_remaining_stock' )
+			&& get_post_meta( $post_id, 'rbfw_enable_variations', true ) === 'yes' ) {
+			$size_remaining = null;
+			foreach ( (array) $variation_values as $vv ) {
+				$vv = (string) $vv;
+				if ( '' === $vv ) {
+					continue;
+				}
+				$r = rbfw_sd_variation_remaining_stock( $post_id, array( $selected_date ), $vv );
+				if ( null === $r ) {
+					continue;
+				}
+				$size_remaining = ( null === $size_remaining ) ? $r : min( $size_remaining, $r );
+			}
+			if ( null !== $size_remaining ) {
+				$remaining_stock = min( $remaining_stock, max( 0, $size_remaining ) );
+			}
+		}
 
 		return $remaining_stock;
 	}

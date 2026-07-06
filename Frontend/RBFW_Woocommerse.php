@@ -748,7 +748,37 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
-                $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date , $rbfw_management_info , $rbfw_management_price);
+
+                /* Item Variations (Single Day): capture the customer's size selection the
+                   same way the multi-day branch does, so per-size stock can be enforced by
+                   rbfw_check_rental_availability() and the choice is shown in cart/order.
+                   Mirrors the multi-day capture block below in this same function. */
+                $variation_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true );
+                $variation_info = [];
+                if ( ! empty( $variation_data ) && is_array( $variation_data ) ) {
+                    $i = 0;
+                    foreach ( $variation_data as $level_one_arr ) {
+                        // Skip incomplete/legacy variation rows (missing id or values).
+                        if ( ! is_array( $level_one_arr ) || empty( $level_one_arr['field_id'] ) || empty( $level_one_arr['value'] ) || ! is_array( $level_one_arr['value'] ) ) {
+                            $i ++;
+                            continue;
+                        }
+                        $field_id             = $level_one_arr['field_id'];
+                        $field_label          = isset( $level_one_arr['field_label'] ) ? $level_one_arr['field_label'] : '';
+                        $selected_field_value = ! empty( $sd_input_data_sabitized[ $field_id ] ) ? $sd_input_data_sabitized[ $field_id ] : [];
+                        foreach ( $level_one_arr['value'] as $level_two_arr_value ) {
+                            $level_two_name = isset( $level_two_arr_value['name'] ) ? $level_two_arr_value['name'] : '';
+                            if ( $selected_field_value == $level_two_name ) {
+                                $variation_info[ $i ]['field_id']    = $field_id;
+                                $variation_info[ $i ]['field_label'] = $field_label;
+                                $variation_info[ $i ]['field_value'] = $selected_field_value;
+                            }
+                        }
+                        $i ++;
+                    }
+                }
+
+                $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date , $rbfw_management_info , $rbfw_management_price, $variation_info);
 
                 $sub_total_price                                 = apply_filters( 'rbfw_cart_base_price', $sub_total_price );
                 $security_deposit                                = rbfw_security_deposit( $rbfw_id, $sub_total_price );
@@ -764,6 +794,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_end_date']                 = $end_date;
                 $cart_item_data['rbfw_end_time']                 = $end_time;
                 $cart_item_data['rbfw_type_info']                = $rbfw_type_info;
+                $cart_item_data['rbfw_variation_info']           = $variation_info;
                 $cart_item_data['rbfw_service_info']             = $rbfw_service_info;
                 $cart_item_data['rbfw_bikecarsd_duration_price'] = $rbfw_bikecarsd_duration_price;
                 $cart_item_data['rbfw_bikecarsd_service_price']  = $rbfw_bikecarsd_service_price;
@@ -1412,6 +1443,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_end_time       = $values['rbfw_end_time'] ? $values['rbfw_end_time'] : '';
                 $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
                 $rbfw_type_info      = $values['rbfw_type_info'] ? $values['rbfw_type_info'] : [];
+                $variation_info      = ! empty( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : [];
 
                 $rbfw_management_info = $values['rbfw_management_info'] ? $values['rbfw_management_info'] : [];
                 $rbfw_management_price = $values['rbfw_management_price'] ? $values['rbfw_management_price'] : [];
@@ -1488,6 +1520,17 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
                 if ( ! empty( $dropoff_location ) ) {
                     $item->add_meta_data( rbfw_string_return( 'rbfw_text_dropoff_location', esc_html__( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ) ), $dropoff_location );
+                }
+                if ( ! empty( $variation_info ) ) {
+                    $variation_content  = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                    foreach ( $variation_info as $key => $value ) {
+                        $variation_content .= '<tr>';
+                        $variation_content .= '<td style="border:1px solid #f5f5f5;"><strong>' . esc_html( $value['field_label'] ?? '' ) . '</strong></td>';
+                        $variation_content .= '<td style="border:1px solid #f5f5f5;">' . esc_html( $value['field_value'] ?? '' ) . '</td>';
+                        $variation_content .= '</tr>';
+                    }
+                    $variation_content .= '</table>';
+                    $item->add_meta_data( rbfw_string_return( 'rbfw_text_variation_information', esc_html__( 'Variation Information', 'booking-and-rental-manager-for-woocommerce' ) ), $variation_content );
                 }
 
 
