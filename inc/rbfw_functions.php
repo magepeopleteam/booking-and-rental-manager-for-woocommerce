@@ -2,6 +2,30 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
+
+	/**
+	 * Capability required to view/manage the booking admin screens
+	 * (Order List, Bookings, Booking Orders, Booking Calendar, Reports and their
+	 * order actions). Defaults to 'manage_options' so behaviour is unchanged out of
+	 * the box; filter it to delegate these screens to a non-admin role WITHOUT
+	 * granting full admin rights, e.g.:
+	 *
+	 *     add_filter( 'rbfw_bookings_capability', function () { return 'manage_woocommerce'; } );
+	 *     // or a dedicated capability granted to a custom role via a role editor:
+	 *     add_filter( 'rbfw_bookings_capability', function () { return 'rbfw_manage_bookings'; } );
+	 *
+	 * Note: the plugin's Settings/Status/Payment screens intentionally keep
+	 * 'manage_options', so a delegated user gets bookings/calendar/reports only.
+	 *
+	 * @return string A WordPress capability.
+	 */
+	if ( ! function_exists( 'rbfw_bookings_capability' ) ) {
+		function rbfw_bookings_capability() {
+			$cap = apply_filters( 'rbfw_bookings_capability', 'manage_options' );
+
+			return ( is_string( $cap ) && '' !== $cap ) ? $cap : 'manage_options';
+		}
+	}
 // Language Load
 	function rbfw_allowed_html() {
 		$allowed_html = array(
