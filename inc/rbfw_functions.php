@@ -2,6 +2,76 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
+
+	/**
+	 * Capability required to view/manage the booking admin screens
+	 * (Order List, Bookings, Booking Orders, Booking Calendar, Reports and their
+	 * order actions). Defaults to 'manage_options' so behaviour is unchanged out of
+	 * the box; filter it to delegate these screens to a non-admin role WITHOUT
+	 * granting full admin rights, e.g.:
+	 *
+	 *     add_filter( 'rbfw_bookings_capability', function () { return 'manage_woocommerce'; } );
+	 *     // or a dedicated capability granted to a custom role via a role editor:
+	 *     add_filter( 'rbfw_bookings_capability', function () { return 'rbfw_manage_bookings'; } );
+	 *
+	 * Note: the plugin's Settings/Status/Payment screens intentionally keep
+	 * 'manage_options', so a delegated user gets bookings/calendar/reports only.
+	 *
+	 * @return string A WordPress capability.
+	 */
+	if ( ! function_exists( 'rbfw_bookings_capability' ) ) {
+		function rbfw_bookings_capability() {
+			$cap = apply_filters( 'rbfw_bookings_capability', 'manage_options' );
+
+			return ( is_string( $cap ) && '' !== $cap ) ? $cap : 'manage_options';
+		}
+	}
+
+	/**
+	 * Trusted per-service prices for the multi-day "category services" feature.
+	 *
+	 * SECURITY: the booking form posts rbfw_service_price_data[cat][ser][price], but a
+	 * price sent in the request must NEVER be trusted — it lets a visitor set an
+	 * arbitrary (even negative) service price and drive the order total to pennies.
+	 * The only source of truth is the item's stored rbfw_service_category_price config.
+	 *
+	 * @param int $post_id rbfw_item id.
+	 * @return array Map [ cat_title ][ service_title ] => [ 'price' => float>=0, 'type' => string ].
+	 */
+	if ( ! function_exists( 'rbfw_get_trusted_category_service_prices' ) ) {
+		function rbfw_get_trusted_category_service_prices( $post_id ) {
+			$raw = get_post_meta( $post_id, 'rbfw_service_category_price', true );
+			if ( ! is_array( $raw ) ) {
+				$decoded = json_decode( is_string( $raw ) ? $raw : '', true );
+				if ( is_array( $decoded ) ) {
+					$raw = $decoded;
+				} elseif ( is_string( $raw ) && is_serialized( $raw ) ) {
+					$raw = maybe_unserialize( $raw );
+				}
+			}
+			$map = array();
+			if ( is_array( $raw ) ) {
+				foreach ( $raw as $cat ) {
+					if ( ! is_array( $cat ) ) {
+						continue;
+					}
+					$cat_title = isset( $cat['cat_title'] ) ? (string) $cat['cat_title'] : '';
+					$services  = ( isset( $cat['cat_services'] ) && is_array( $cat['cat_services'] ) ) ? $cat['cat_services'] : array();
+					foreach ( $services as $svc ) {
+						if ( ! is_array( $svc ) || empty( $svc['title'] ) ) {
+							continue;
+						}
+						$map[ $cat_title ][ (string) $svc['title'] ] = array(
+							'price' => max( 0, (float) ( isset( $svc['price'] ) ? $svc['price'] : 0 ) ),
+							'type'  => isset( $svc['service_price_type'] ) ? (string) $svc['service_price_type'] : '',
+						);
+					}
+				}
+			}
+
+			return $map;
+		}
+	}
 // Language Load
 	function rbfw_allowed_html() {
 		$allowed_html = array(
@@ -1282,7 +1352,7 @@ function rbfw_url_exclude_search_engine() {
 	/******************************************
 	 * Single Day Type: Get Available Quantity
 	 *****************************************/
-	function rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $type, $selected_time = null ) {
+	function rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $type, $selected_time = null, $variation_values = array() ) {
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $type ) ) {
 			return;
 		}
@@ -1334,6 +1404,28 @@ function rbfw_url_exclude_search_engine() {
 		}
 		$remaining_stock = $type_stock - $total_qty;
 		$remaining_stock = max( 0, $remaining_stock );
+
+		// Item variations (Single Day): additionally cap the per-rate remaining by the
+		// selected size's remaining stock, so the time-table reflects sold-out sizes.
+		// The authoritative gate is still rbfw_check_rental_availability() at add-to-cart.
+		if ( ! empty( $variation_values ) && function_exists( 'rbfw_sd_variation_remaining_stock' )
+			&& get_post_meta( $post_id, 'rbfw_enable_variations', true ) === 'yes' ) {
+			$size_remaining = null;
+			foreach ( (array) $variation_values as $vv ) {
+				$vv = (string) $vv;
+				if ( '' === $vv ) {
+					continue;
+				}
+				$r = rbfw_sd_variation_remaining_stock( $post_id, array( $selected_date ), $vv );
+				if ( null === $r ) {
+					continue;
+				}
+				$size_remaining = ( null === $size_remaining ) ? $r : min( $size_remaining, $r );
+			}
+			if ( null !== $size_remaining ) {
+				$remaining_stock = min( $remaining_stock, max( 0, $size_remaining ) );
+			}
+		}
 
 		return $remaining_stock;
 	}
@@ -2781,11 +2873,12 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 	}
 	/**
 	 * Per-item "Block Booking If Date Range Contains Off Days" flag ('on'/'off').
-	 * Empty meta (items saved before the flag existed) counts as 'on' so
-	 * off-day protection stays the default. Mirrors RBFW_Off_Day::block_offday_range_value().
+	 * Opt-in: empty meta (never enabled by the admin) counts as 'off' so bookings
+	 * are allowed until the admin turns the toggle on and saves.
+	 * Mirrors RBFW_Off_Day::block_offday_range_value().
 	 */
 	function rbfw_block_offday_range_booking( $post_id ) {
-		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'off' ? 'off' : 'on';
+		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'on' ? 'on' : 'off';
 	}
 
 	/**

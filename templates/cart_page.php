@@ -295,6 +295,9 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
     $rbfw_pickup_point  = isset($cart_item['rbfw_pickup_point']) ? $cart_item['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point = isset($cart_item['rbfw_dropoff_point']) ? $cart_item['rbfw_dropoff_point'] : '';
 
+    // Item Variations (Single Day): the customer's size selection, if any.
+    $variation_info = isset($cart_item['rbfw_variation_info']) ? $cart_item['rbfw_variation_info'] : [];
+
     $rbfw_item_quantity = 1;
 
     if(!empty($rbfw_bikecarsd_data)):
@@ -420,6 +423,15 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 </td>
             </tr>
         <?php endif; ?>
+
+        <?php if ( ! empty( $variation_info ) ){ ?>
+            <?php foreach ( $variation_info as $key => $value ) { ?>
+                <tr>
+                    <th><?php echo esc_html( $value['field_label'] ?? '' ); ?></th>
+                    <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
+                </tr>
+            <?php } ?>
+        <?php } ?>
 
         <?php
 

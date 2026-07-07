@@ -9332,6 +9332,40 @@ textarea.rbfw-me-field-invalid {
 }
 .rbfw-me-offday-block-head > div { flex: 1; min-width: 0; }
 .rbfw-me-offday-block-switch { flex-shrink: 0 !important; }
+/* Collapsible card: head toggles the body; caret indicates state. */
+.rbfw-me-card--collapsible > .rbfw-me-card__head { cursor: pointer; }
+.rbfw-me-card--collapsible > .rbfw-me-card__head .rbfw-me-offday-block-switch { cursor: default; }
+.rbfw-me-card--collapsible.is-collapsed > .rbfw-me-card__body { display: none; }
+.rbfw-me-card__caret {
+    color: var(--me-muted);
+    flex-shrink: 0;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+    transition: transform 0.2s ease;
+}
+.rbfw-me-card--collapsible.is-collapsed .rbfw-me-card__caret { transform: rotate(-90deg); }
+/* Collapsible rules block inside "Location Inventory & Price" (starts collapsed). */
+.rbfw-me-loc-inv-collapse { margin-top: 4px; }
+.rbfw-me-loc-inv-collapse__head {
+    align-items: center;
+    background: #f7f9fc;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
+    color: var(--me-text);
+    cursor: pointer;
+    display: flex;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 8px;
+    padding: 10px 14px;
+    text-align: left;
+    width: 100%;
+}
+.rbfw-me-loc-inv-collapse__head:hover { background: #eef3ff; }
+.rbfw-me-loc-inv-collapse__body { padding-top: 12px; }
+.rbfw-me-loc-inv-collapse.is-collapsed > .rbfw-me-loc-inv-collapse__body { display: none; }
+.rbfw-me-loc-inv-collapse.is-collapsed .rbfw-me-card__caret { transform: rotate(-90deg); }
 .rbfw-me-offday-rules { display: flex; flex-direction: column; gap: 10px; }
 .rbfw-me-offday-rule {
     align-items: center;

@@ -116,6 +116,12 @@ if (! class_exists('RBFW_Dependencies')) {
 					'showing_all' => __( 'Showing %s entries', 'booking-and-rental-manager-for-woocommerce' ),
 					'stock_saved' => __( 'Saved!', 'booking-and-rental-manager-for-woocommerce' ),
 				) );
+				/* "By Location" inventory tab: own AJAX date filter. */
+				wp_localize_script( 'rbfw-inventory', 'rbfwInvLoc', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'rbfw_get_location_stock_action' ),
+					'today'   => current_time( 'Y-m-d' ),
+				) );
 			}
 
 			/* Time Slots page only: modern redesign stylesheet (inline-SVG icons, primary + secondary). */
@@ -276,6 +282,28 @@ if (! class_exists('RBFW_Dependencies')) {
 			// only acts when rbfw_ajax_front.booking_mode === 'standalone'. Must be enqueued
 			// on the frontend (this method) — the native checkout modal lives on the item page.
 			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
+
+			// [rbfw_booking_search] multi-item booking search.
+			wp_enqueue_script('rbfw_booking_search', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_booking_search.js', array('jquery', 'jquery-ui-datepicker'), time(), true);
+			wp_localize_script('rbfw_booking_search', 'rbfw_bsearch_vars', array(
+				'ajax_url'            => admin_url('admin-ajax.php'),
+				'nonce'               => wp_create_nonce('rbfw_booking_search_action'),
+				'checkout_url'        => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('checkout') : '',
+				'apply_coupon_url'    => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('apply_coupon') : '',
+				'remove_coupon_url'   => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('remove_coupon') : '',
+				'update_review_url'   => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('update_order_review') : '',
+				'apply_coupon_nonce'  => wp_create_nonce('apply-coupon'),
+				'remove_coupon_nonce' => wp_create_nonce('remove-coupon'),
+				'update_review_nonce' => wp_create_nonce('update-order-review'),
+				'txt_choose_dates' => esc_html__('Please select your pickup and drop-off dates first.', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_searching'    => esc_html__('Searching available rentals…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_loading'      => esc_html__('Loading checkout…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_placing'      => esc_html__('Placing your order…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_adding'       => esc_html__('Adding…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_added'        => esc_html__('✓ Added to booking', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_error'        => esc_html__('Something went wrong. Please try again.', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_empty_confirm' => esc_html__('Remove all items from your booking?', 'booking-and-rental-manager-for-woocommerce'),
+			));
 
 			wp_enqueue_script('coockie-js', 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js', array('jquery'), null, true);
 

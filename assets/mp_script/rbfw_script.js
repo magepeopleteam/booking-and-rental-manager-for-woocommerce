@@ -12,6 +12,15 @@ jQuery(document).on('click','.rbfw_back_step_btn',function (e) {
     jQuery('.rbfw-bikecarsd-step[data-step="'+back_step+'"]').show();
 });
 
+// Item variations (Single Day): when the customer changes a size after a time slot is
+// already chosen, reload the rate list so its per-rate quantities reflect the new size.
+jQuery(document).on('change', '.rbfw_variation_field', function () {
+    let $selectedTime = jQuery('.rbfw_bikecarsd_time.selected').not('.disabled');
+    if ($selectedTime.length) {
+        $selectedTime.trigger('click');
+    }
+});
+
 
 jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disabled)',function (e) {
 
@@ -32,6 +41,14 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
         is_muffin_template = '0';
     }
 
+    // Item variations (Single Day): send the chosen size(s) so the rate list can cap
+    // each rate's available quantity by the selected size's remaining stock.
+    let rbfw_selected_variations = [];
+    jQuery('.rbfw_variation_field').each(function () {
+        let v = jQuery(this).val();
+        if (v) { rbfw_selected_variations.push(v); }
+    });
+
     jQuery.ajax({
         type: 'POST',
         url: rbfw_ajax_front.rbfw_ajaxurl,
@@ -41,6 +58,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
             'selected_time': gTime,
             'selected_date': selected_date,
             'is_muffin_template': is_muffin_template,
+            'rbfw_selected_variations': rbfw_selected_variations,
             'nonce' : rbfw_ajax_front.nonce_bikecarsd_type_list
         },
         beforeSend: function() {
@@ -96,7 +114,9 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
  */
 function rbfw_offday_blocking_enabled() {
     var $flag = jQuery('#rbfw_block_offday_booking');
-    return !($flag.length && $flag.val() === 'off');
+    // Opt-in: interior-range blocking only when the admin explicitly turned it
+    // on. A missing flag or any non-'on' value means blocking stays off.
+    return $flag.length > 0 && $flag.val() === 'on';
 }
 
 /**
@@ -809,11 +829,12 @@ function fee_management(sub_total_price,total_days=1,quantity=1){
  * applied server-side at add-to-cart (rbfw_apply_location_charge), so
  * nothing here affects the authoritative price.
  */
-jQuery(function ($) {
-    var $wrap = $('#rbfw_loc_cards_wrap');
-    if (!$wrap.length) return;
+function rbfw_loc_cards_init($wrap) {
+    var $ = jQuery;
+    if (!$wrap || !$wrap.length || $wrap.data('rbfw-loc-inited')) return;
     var $form = $wrap.closest('form.mp_rbfw_ticket_form');
     if (!$form.length) return;
+    $wrap.data('rbfw-loc-inited', true);
 
     function rbfwLocPointField() {
         var $select = $form.find('select[name="rbfw_pickup_point"]');
@@ -970,9 +991,14 @@ jQuery(function ($) {
     $form.on('submit', function (e) {
         if (!$wrap.find('.rbfw_loc_card_selected').length) {
             e.preventDefault();
+            e.stopImmediatePropagation(); // AJAX submitters must not fire either
             $wrap.addClass('rbfw_loc_cards_error');
             $wrap[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
             setTimeout(function () { $wrap.removeClass('rbfw_loc_cards_error'); }, 2500);
         }
     });
+}
+
+jQuery(function ($) {
+    rbfw_loc_cards_init($('#rbfw_loc_cards_wrap'));
 });

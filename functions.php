@@ -376,6 +376,10 @@ function rbfw_page_create() {
         'search-item-list' => [
             'title' => 'Search Item List',
             'content' => '[rbfw_search_ac] [search-result]'
+        ],
+        'booking-search' => [
+            'title' => 'Booking Search',
+            'content' => '[rbfw_booking_search]'
         ]
     ];
 
@@ -394,11 +398,18 @@ function rbfw_page_create() {
 
             if (!is_wp_error($page_id)) {
                 wp_cache_delete( $slug, 'posts' );
+                $created = true;
                 error_log("Page '{$page['title']}' created successfully with ID: $page_id");
             } else {
                 error_log("Failed to create page '{$page['title']}': " . $page_id->get_error_message());
             }
         }
+    }
+
+    // Newly created pages need a rewrite flush or their permalinks 404 until
+    // an admin manually re-saves Settings -> Permalinks.
+    if ( $created ) {
+        flush_rewrite_rules();
     }
 }
 

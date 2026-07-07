@@ -1657,9 +1657,13 @@
                     $has_valid_row = false;
 
                     // "Manage a single-item inventory on an hourly basis" needs the time
-                    // picker enabled so slots can be selected — enforce that pairing.
+                    // picker enabled so slots can be selected — enforce that pairing, BUT only
+                    // when duration-based rental is off. With duration-based rental on, each row
+                    // carries its own explicit Start/End Time, so the generic Time Picker is not
+                    // used; the editor UI intentionally force-disables and hides it in that mode,
+                    // which would otherwise make this requirement impossible to satisfy.
                     $time_picker_on = isset( $post_data['rbfw_enable_time_picker'] ) && $post_data['rbfw_enable_time_picker'] === 'yes';
-                    if ( $timely && ! $time_picker_on ) {
+                    if ( $timely && ! $specific && ! $time_picker_on ) {
                         $errors[] = __( 'Please enable "Enable Time Picker" — it is required when "Manage a single-item inventory on an hourly basis" is enabled.', 'booking-and-rental-manager-for-woocommerce' );
                     }
 

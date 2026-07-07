@@ -23,13 +23,14 @@ add_action( 'admin_post_rbfw_export_orders', 'rbfw_export_orders_handler' );
 /**
  * Entry point for the export download request.
  *
- * Security: verifies the dedicated nonce and the manage_options capability
- * before reading any data. All output is plain text / library-rendered PDF, so
+ * Security: verifies the dedicated nonce and the booking-management capability
+ * ( rbfw_bookings_capability(), default manage_options ) before reading any data.
+ * All output is plain text / library-rendered PDF, so
  * there is no HTML echoed into wp-admin from user input.
  */
 function rbfw_export_orders_handler() {
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( rbfw_bookings_capability() ) ) {
 		wp_die( esc_html__( 'You are not allowed to export orders.', 'booking-and-rental-manager-for-woocommerce' ), 403 );
 	}
 
@@ -186,7 +187,7 @@ add_action( 'wp_ajax_rbfw_save_export_settings', 'rbfw_save_export_settings_call
 function rbfw_save_export_settings_callback() {
 	check_ajax_referer( 'rbfw_save_export_settings_action', 'nonce' );
 
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( rbfw_bookings_capability() ) ) {
 		wp_send_json_error( array( 'message' => esc_html__( 'Unauthorized access.', 'booking-and-rental-manager-for-woocommerce' ) ), 403 );
 	}
 

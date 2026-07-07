@@ -128,6 +128,55 @@
         paginate();
         observeTable();
 
+        /* ── Inventory tabs: By Item / By Location ─────────────── */
+        var $tabs   = $('.rbfw_inv_tabs .rbfw_inv_tab');
+        var $panels = $('.rbfw_inv_tab_panel');
+        $tabs.on('click', function () {
+            var tab = $(this).data('tab');
+            $tabs.removeClass('active');
+            $(this).addClass('active');
+            $panels.each(function () {
+                $(this).toggleClass('rbfw_inv_hidden', $(this).data('panel') !== tab);
+            });
+            /* Persist the choice in the URL so a reload lands on the same tab. */
+            if (window.history && window.history.replaceState && typeof window.URL === 'function') {
+                try {
+                    var url = new URL(window.location.href);
+                    url.searchParams.set('inv_tab', tab);
+                    window.history.replaceState(null, '', url.toString());
+                } catch (e) {}
+            }
+        });
+
+        /* ── By Location: own date filter (leaves the item filter untouched) ── */
+        var LOC = (typeof window.rbfwInvLoc === 'object' && window.rbfwInvLoc) ? window.rbfwInvLoc : null;
+
+        function locFilter() {
+            if (!LOC) { return; }
+            var $wrap = $('.rbfw_inv_loc_table_wrap');
+            var date  = $('.rbfw_inv_loc_date').val() || '';
+            var end   = $('.rbfw_inv_loc_end_date').val() || '';
+            $wrap.addClass('rbfw_inv_loading');
+            $.post(LOC.ajaxurl, {
+                action: 'rbfw_get_location_stock_by_filter',
+                nonce: LOC.nonce,
+                selected_date: date,
+                start_date: end ? date : '',
+                end_date: end || ''
+            }).done(function (html) {
+                $wrap.html(html);
+            }).always(function () {
+                $wrap.removeClass('rbfw_inv_loading');
+            });
+        }
+
+        $('.rbfw_inv_loc_filter_btn').on('click', locFilter);
+        $('.rbfw_inv_loc_reset_btn').on('click', function () {
+            $('.rbfw_inv_loc_end_date').val('');
+            if (LOC && LOC.today) { $('.rbfw_inv_loc_date').val(LOC.today); }
+            locFilter();
+        });
+
         /* Custom close button inside the redesigned modal. */
         $(document).on('click', '.rbfw_inv_modal_close', function (e) {
             e.preventDefault();
