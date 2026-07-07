@@ -16,6 +16,7 @@
 				$this->settings_api = new RBFW_Setting_API;
 				add_action( 'add_meta_boxes', array( $this, 'add_meta_box_func' ) );
 				add_action( 'admin_init', array( $this, 'admin_init' ) );
+				add_action( 'admin_init', array( $this, 'rbfw_redirect_legacy_order_list' ) );
 				add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 				// Hide the Pro "Reports" submenu — its data now lives in the Order List.
 				// Runs late ( priority 999 ) so it removes the entry after Pro registers it.
@@ -38,7 +39,14 @@
 
 			function admin_menu() {
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ), __( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_time_slots', array( $this, 'rbfw_time_slots' ) );
-				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_order', array( $this, 'rbfw_order_list' ) );
+				// The legacy WooCommerce-only "Order List" has been folded into the unified
+				// "Bookings" page (which lists both WooCommerce and custom bookings). Its
+				// submenu is retired by default; the class + its AJAX handlers stay loaded so
+				// the unified page can reuse them, and the page can be re-exposed via the
+				// `rbfw_enable_legacy_order_list` filter.
+				if ( apply_filters( 'rbfw_enable_legacy_order_list', false ) ) {
+					add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_order', array( $this, 'rbfw_order_list' ) );
+				}
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_inventory', array( $this, 'rbfw_inventory_list' ) );
 				do_action( 'rbfw_admin_menu_after_inventory' );
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_settings_page', array( $this, 'plugin_page' ) );
@@ -49,6 +57,22 @@
 					add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Get PRO', 'booking-and-rental-manager-for-woocommerce' ), '<span class="rbfw_plugin_pro_menu">' . __( 'Get PRO', 'booking-and-rental-manager-for-woocommerce' ) . '</span>', 'manage_options', 'rbfw_go_pro_page', array( $this, 'rbfw_go_pro_page' ) );
 				}
 				// End PRO plugin is activated
+			}
+
+			/**
+			 * Send direct hits on the retired "Order List" page (?page=rbfw_order) to the
+			 * unified "Bookings" page, unless the legacy list has been re-enabled via the
+			 * `rbfw_enable_legacy_order_list` filter.
+			 */
+			public function rbfw_redirect_legacy_order_list() {
+				if ( apply_filters( 'rbfw_enable_legacy_order_list', false ) ) {
+					return;
+				}
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( isset( $_GET['page'] ) && 'rbfw_order' === $_GET['page'] ) {
+					wp_safe_redirect( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_booking_orders' ) );
+					exit;
+				}
 			}
 
 			/**
