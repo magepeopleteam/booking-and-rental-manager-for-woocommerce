@@ -1398,10 +1398,13 @@
                 var nameLower = String(rt.name).toLowerCase().trim();
                 var checked = current.some(function (n) { return String(n).toLowerCase().trim() === nameLower; });
                 var checkedAttr = checked ? ' checked' : '';
+                var depth  = parseInt(rt.depth, 10) || 0;
+                var indent = depth > 0 ? ' style="margin-left:' + (depth * 18) + 'px;"' : '';
+                var prefix = depth > 0 ? '<span class="rbfw-rt-sub-indicator" aria-hidden="true">↳ </span>' : '';
                 $grid.append(
-                    '<label class="rbfw-me-checkbox-label rbfw-rt-chip' + (checked ? ' is-checked' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '">' +
+                    '<label class="rbfw-me-checkbox-label rbfw-rt-chip' + (checked ? ' is-checked' : '') + (depth > 0 ? ' rbfw-rt-child' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '"' + indent + '>' +
                         '<input type="checkbox" class="rbfw-me-cat-checkbox" data-name="' + rtEsc(rt.name) + '"' + checkedAttr + ' />' +
-                        '<span>' + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
+                        '<span>' + prefix + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
                         meActionsHtml() +
                     '</label>'
                 );
@@ -1410,13 +1413,49 @@
             $wrap.find('.rbfw-me-rent-type-empty').toggleClass('rbfw-me-hidden', rentTypes.length > 0);
         }
 
-        function openRentTypeModal(mode, termId, name) {
+        // Build the parent <select> options from the currently rendered chips.
+        // Excludes the term being edited (and its descendants) to prevent cycles.
+        function mePopulateParents(excludeTermId) {
+            var $select = $wrap.find('#rbfw-me-rent-type-modal-parent');
+            if (!$select.length) { return; }
+            excludeTermId = parseInt(excludeTermId, 10) || 0;
+            var prev = String($select.val() || '0');
+
+            var excluded = {};
+            if (excludeTermId) {
+                excluded[excludeTermId] = true;
+                var changed = true;
+                while (changed) {
+                    changed = false;
+                    $wrap.find('.rbfw-me-rent-type-card .rbfw-rt-chip').each(function () {
+                        var tid = parseInt($(this).data('term-id'), 10) || 0;
+                        var pid = parseInt($(this).data('parent'), 10) || 0;
+                        if (pid && excluded[pid] && !excluded[tid]) { excluded[tid] = true; changed = true; }
+                    });
+                }
+            }
+
+            $select.find('option:not(:first)').remove();
+            $wrap.find('.rbfw-me-rent-type-card .rbfw-rt-chip').each(function () {
+                var $chip = $(this);
+                var tid   = parseInt($chip.data('term-id'), 10) || 0;
+                if (!tid || excluded[tid]) { return; }
+                var depth = parseInt($chip.data('depth'), 10) || 0;
+                var label = (depth > 0 ? new Array(depth + 1).join('— ') : '') + String($chip.data('name'));
+                $select.append('<option value="' + rtEsc(tid) + '">' + rtEsc(label) + '</option>');
+            });
+            if ($select.find('option[value="' + prev + '"]').length) { $select.val(prev); } else { $select.val('0'); }
+        }
+
+        function openRentTypeModal(mode, termId, name, parentId) {
             meEditTermId = mode === 'edit' ? (parseInt(termId, 10) || 0) : 0;
             var isEdit = meEditTermId > 0;
             var $modal = $wrap.find('#rbfw-me-rent-type-modal');
             $modal.find('.rbfw-me-faq-modal__head h3').text(isEdit ? 'Rename Rent Type' : 'Add New Rent Type');
             $modal.find('#rbfw-me-rent-type-modal-save').text(isEdit ? 'Save Changes' : 'Add Rent Type');
             $modal.find('#rbfw-me-rent-type-modal-input').val(name || '');
+            mePopulateParents(meEditTermId);
+            $modal.find('#rbfw-me-rent-type-modal-parent').val(String(parseInt(parentId, 10) || 0));
             $modal.addClass('is-open');
             setTimeout(function () { $modal.find('#rbfw-me-rent-type-modal-input').trigger('focus'); }, 50);
         }
@@ -1449,7 +1488,7 @@
         $wrap.on('click', '.rbfw-me-rent-type-card .rbfw-rt-edit', function (e) {
             e.preventDefault(); e.stopPropagation();
             var $chip = $(this).closest('.rbfw-rt-chip');
-            openRentTypeModal('edit', $chip.data('term-id'), $chip.data('name'));
+            openRentTypeModal('edit', $chip.data('term-id'), $chip.data('name'), $chip.data('parent'));
         });
 
         // Delete a rent type.
@@ -1509,7 +1548,8 @@
                 $.post(window.ajaxurl, {
                     action: 'rbfw_rent_type_add',
                     nonce:  meNonce(),
-                    name:   name
+                    name:   name,
+                    parent: parseInt($wrap.find('#rbfw-me-rent-type-modal-parent').val(), 10) || 0
                 }, function (resp) {
                     if (resp && resp.success) {
                         rebuildRentTypes(resp.data.rent_types, resp.data.added_name);

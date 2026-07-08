@@ -4379,13 +4379,24 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 			if ( '' === $label ) {
 				continue; // No label -> unusable, skip it.
 			}
-			// Keep only value entries that actually carry a name.
+			// Keep only value entries that actually carry a name; normalise quantity + price.
 			$values = array();
 			if ( ! empty( $row['value'] ) && is_array( $row['value'] ) ) {
 				foreach ( $row['value'] as $val ) {
-					if ( is_array( $val ) && isset( $val['name'] ) && '' !== trim( (string) $val['name'] ) ) {
-						$values[] = $val;
+					if ( ! is_array( $val ) || ! isset( $val['name'] ) || '' === trim( (string) $val['name'] ) ) {
+						continue;
 					}
+					$clean_val = array( 'name' => trim( (string) $val['name'] ) );
+					// Only store quantity when set; absence = unlimited/unconfigured (kept intentionally).
+					if ( isset( $val['quantity'] ) && '' !== trim( (string) $val['quantity'] ) ) {
+						$clean_val['quantity'] = (string) max( 0, (int) $val['quantity'] );
+					}
+					// Optional per-unit surcharge price; only store when a value is provided.
+					if ( isset( $val['price'] ) && '' !== trim( (string) $val['price'] ) ) {
+						$price               = function_exists( 'wc_format_decimal' ) ? wc_format_decimal( $val['price'] ) : (string) (float) $val['price'];
+						$clean_val['price']  = ( '' === $price ) ? '' : (string) max( 0, (float) $price );
+					}
+					$values[] = $clean_val;
 				}
 			}
 			$row['value'] = $values;

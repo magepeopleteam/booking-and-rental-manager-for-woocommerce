@@ -161,16 +161,17 @@
 						<input type="hidden" name="rbfw_categories[]" class="rbfw-me-cats-hidden" value="<?php echo esc_attr( $saved_cats_str ); ?>">
 						<div class="rbfw-me-checkbox-grid">
 							<?php foreach ( $all_cat_terms as $term ) :
-								$checked = in_array( strtolower( trim( $term->name ) ), $saved_cat_names, true );
+								$checked   = in_array( strtolower( trim( $term->name ) ), $saved_cat_names, true );
+								$cat_depth = isset( $term->depth ) ? (int) $term->depth : 0;
 							?>
-								<label class="rbfw-me-checkbox-label rbfw-rt-chip" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>">
+								<label class="rbfw-me-checkbox-label rbfw-rt-chip<?php echo $cat_depth > 0 ? ' rbfw-rt-chip--child' : ''; ?>" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>" data-parent="<?php echo esc_attr( (int) $term->parent ); ?>" data-depth="<?php echo esc_attr( $cat_depth ); ?>" style="--rbfw-rt-depth: <?php echo esc_attr( $cat_depth ); ?>;">
 									<input
 										type="checkbox"
 										class="rbfw-me-cat-checkbox"
 										data-name="<?php echo esc_attr( $term->name ); ?>"
 										<?php checked( $checked ); ?>
 									/>
-									<span><?php echo esc_html( ucfirst( $term->name ) ); ?></span><?php if ( current_user_can( 'manage_categories' ) ) : ?><span class="rbfw-rt-actions"><span class="rbfw-rt-edit dashicons dashicons-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span><span class="rbfw-rt-del dashicons dashicons-trash" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span></span><?php endif; ?>
+									<?php if ( $cat_depth > 0 ) : ?><span class="rbfw-rt-subarrow" aria-hidden="true">&rsaquo;</span><?php endif; ?><span><?php echo esc_html( ucfirst( $term->name ) ); ?></span><?php if ( current_user_can( 'manage_categories' ) ) : ?><span class="rbfw-rt-actions"><span class="rbfw-rt-edit dashicons dashicons-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span><span class="rbfw-rt-del dashicons dashicons-trash" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span></span><?php endif; ?>
 								</label>
 							<?php endforeach; ?>
 						</div>
@@ -195,6 +196,13 @@
 								<div class="rbfw-me-field">
 									<label class="rbfw-me-field__label" for="rbfw-me-rent-type-modal-input"><?php esc_html_e( 'Rent type name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<input class="rbfw-me-input" type="text" id="rbfw-me-rent-type-modal-input" maxlength="200" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+								</div>
+								<div class="rbfw-me-field">
+									<label class="rbfw-me-field__label" for="rbfw-me-rent-type-modal-parent"><?php esc_html_e( 'Parent category', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw-me-field__optional">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
+									<select class="rbfw-me-input" id="rbfw-me-rent-type-modal-parent">
+										<option value="0"><?php esc_html_e( '— None (top level) —', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+									</select>
+									<p class="rbfw-me-field__hint"><?php esc_html_e( 'Pick a parent to create a sub-category.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 								</div>
 							</div>
 							<div class="rbfw-me-faq-modal__foot">

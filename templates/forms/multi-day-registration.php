@@ -560,36 +560,12 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         <input type="hidden" name="rbfw_item_quantity" value="0">
                     <?php } ?>
 
-                    <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>
-                        <div class="rbfw-variations-content-wrapper">
-                            <?php foreach ($rbfw_variations_data as $data_arr_one) {
-                                // Some saved/legacy variation rows may omit one or more keys; default
-                                // them so the template never raises "Undefined array key" notices.
-                                $field_label    = isset($data_arr_one['field_label']) ? $data_arr_one['field_label'] : '';
-                                $field_id       = isset($data_arr_one['field_id']) ? $data_arr_one['field_id'] : '';
-                                $field_values   = !empty($data_arr_one['value']) && is_array($data_arr_one['value']) ? $data_arr_one['value'] : array();
-                                $selected_value = !empty($data_arr_one['selected_value']) ? $data_arr_one['selected_value'] : '';
-                                ?>
-                                <div class="item">
-                                    <div class="rbfw-single-right-heading"><?php echo esc_html($field_label); ?></div>
-                                    <div class="item-content rbfw-p-relative">
-                                        <?php if(!empty($field_values)){  ?>
-                                            <select class="rbfw-select rbfw_variation_field" required name="<?php echo esc_attr($field_id); ?>" id="<?php echo esc_attr($field_id); ?>" data-field="<?php echo esc_attr($field_label); ?>">
-                                                <?php if(empty($selected_value)){ ?>
-                                                    <option value=""><?php echo esc_html(__('Choose','booking-and-rental-manager-for-woocommerce').' '.$field_label); ?></option>
-                                                <?php } ?>
-                                                <?php foreach ($field_values as $data_arr_two) {
-                                                    $variant_name = isset($data_arr_two['name']) ? $data_arr_two['name'] : '';
-                                                    ?>
-                                                    <option class="rbfw_variant" value="<?php echo esc_attr($variant_name); ?>" <?php if($variant_name !== '' && $variant_name == $selected_value){ echo 'selected'; } ?> ><?php echo esc_html($variant_name); ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            <?php } ?>
-                        </div>
-                    <?php } ?>
+                    <?php if( $rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && function_exists( 'rbfw_render_sd_variation_field' ) ){
+                        // Per-value quantity steppers (label + N left + surcharge + −[n]+). No date is
+                        // resolved yet on the multi-day form, so counts reflect base configured stock;
+                        // JS refreshes them once a date range is chosen. phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        echo rbfw_render_sd_variation_field( $rbfw_id, $rbfw_variations_data );
+                    } ?>
 
                     <?php
 
@@ -776,6 +752,12 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                             <li class="resource-costing rbfw-cond" style="display:none;">
                                 <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
+
+                            <li class="variation-costing rbfw-cond" style="display:none;">
+                                <?php esc_html_e('Variations','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
