@@ -425,10 +425,20 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php endif; ?>
 
         <?php if ( ! empty( $variation_info ) ){ ?>
-            <?php foreach ( $variation_info as $key => $value ) { ?>
+            <?php foreach ( $variation_info as $key => $value ) {
+                $vi_qty   = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+                $vi_price = isset( $value['price'] ) ? (float) $value['price'] : 0;
+                $vi_text  = esc_html( $value['field_value'] ?? '' );
+                if ( $vi_qty > 0 ) {
+                    $vi_text .= ' &times; ' . esc_html( $vi_qty );
+                }
+                if ( $vi_price > 0 ) {
+                    $vi_text .= ' <span class="rbfw_variation_surcharge">(+' . wp_kses_post( wc_price( $vi_price ) ) . ')</span>';
+                }
+                ?>
                 <tr>
                     <th><?php echo esc_html( $value['field_label'] ?? '' ); ?></th>
-                    <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
+                    <td><?php echo wp_kses_post( $vi_text ); ?></td>
                 </tr>
             <?php } ?>
         <?php } ?>
@@ -684,10 +694,20 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php } ?>
 
         <?php if(!empty($variation_info)){ ?>
-            <?php foreach ($variation_info as $key => $value) { ?>
+            <?php foreach ($variation_info as $key => $value) {
+                $vi_qty   = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+                $vi_price = isset( $value['price'] ) ? (float) $value['price'] : 0;
+                $vi_text  = esc_html( $value['field_value'] ?? '' );
+                if ( $vi_qty > 0 ) {
+                    $vi_text .= ' &times; ' . esc_html( $vi_qty );
+                }
+                if ( $vi_price > 0 ) {
+                    $vi_text .= ' <span class="rbfw_variation_surcharge">(+' . wp_kses_post( wc_price( $vi_price ) ) . ')</span>';
+                }
+                ?>
                 <tr>
                     <th><?php echo esc_html($value['field_label'] ?? '');  ?></th>
-                    <td><?php echo esc_html($value['field_value'] ?? ''); ?></td>
+                    <td><?php echo wp_kses_post( $vi_text ); ?></td>
                 </tr>
             <?php } ?>
         <?php }  ?>

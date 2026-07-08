@@ -1626,3 +1626,89 @@
 /********************************************************************************************************************/
 @media only screen and (min-width: 10px) {
 }
+/********************************************************************************************************************/
+/* Per-value variation quantity steppers (single-day + multi-day) */
+@media only screen and (min-width: 10px) {
+    .rbfw-variation-group .rbfw-single-right-heading {
+        font-size: 13px; font-weight: 600; color: #374151;
+        margin: 14px 0 8px; padding: 0; text-transform: none;
+    }
+    .rbfw-variation-steppers { display: flex; flex-direction: column; gap: 6px; padding-top: 0; }
+    .rbfw-variation-row {
+        display: flex; -webkit-align-items: center; align-items: center; gap: 8px;
+        padding: 6px 10px; border: 1px solid var(--color_border); border-radius: 6px; background-color: var(--color_light_4);
+        min-height: 34px;
+    }
+    .rbfw-variation-label { flex: 1 1 auto; font-size: 14px; font-weight: 500; color: var(--d_color); word-break: break-word; line-height: 1.3; }
+    .rbfw-variation-meta { display: flex; flex-direction: column; -webkit-align-items: flex-end; align-items: flex-end; line-height: 1.25; text-align: right; }
+    .rbfw-variation-price { color: var(--color_theme); font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .rbfw-variation-stock { color: var(--color_light_3); font-size: 11px; white-space: nowrap; }
+    .rbfw-variation-stock-out { color: var(--color_theme); }
+    .rbfw-variation-stepper { display: flex; -webkit-align-items: center; align-items: center; flex: 0 0 auto; }
+    .rbfw-variation-stepper button {
+        width: 24px; height: 24px; padding: 0; line-height: 1; font-size: 12px; border: 1px solid var(--color_border);
+        background-color: #FFF; color: var(--d_color); cursor: pointer;
+        display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center;
+    }
+    .rbfw-variation-stepper .rbfw-qty-minus { border-radius: 4px 0 0 4px; border-right: none; }
+    .rbfw-variation-stepper .rbfw-qty-plus { border-radius: 0 4px 4px 0; border-left: none; }
+    .rbfw-variation-stepper button:hover:not(:disabled) { background-color: var(--color_theme); color: var(--color_theme_alter); border-color: var(--color_theme); }
+    .rbfw-variation-stepper button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .rbfw-variation-qty-input {
+        width: 34px; height: 24px; padding: 0; text-align: center; border: 1px solid var(--color_border);
+        border-left: none; border-right: none; font-size: 13px; color: var(--d_color); background-color: #FFF; border-radius: 0;
+        -moz-appearance: textfield; appearance: textfield;
+    }
+    .rbfw-variation-qty-input::-webkit-outer-spin-button,
+    .rbfw-variation-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .rbfw-variation-soldout { opacity: 0.6; }
+    .rbfw-variation-soldout .rbfw-variation-label { text-decoration: line-through; }
+}
+
+/* Optional Add-ons — checkmark card list (single-day) */
+@media only screen and (min-width: 10px) {
+    .rbfw_bikecarsd_es_price_table { width: 100%; }
+    .rbfw_bikecarsd_es_price_table .rbfw-single-right-heading {
+        font-size: 13px; font-weight: 600; color: #374151;
+        margin: 14px 0 8px; padding: 0; text-transform: none;
+    }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table {
+        display: block; width: 100%; border: 0; border-collapse: separate; border-spacing: 0; background: transparent;
+    }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table thead { display: none; }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody { display: block; width: 100%; }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody tr {
+        display: flex; -webkit-align-items: center; align-items: center; gap: 10px;
+        padding: 10px 12px; margin-bottom: 8px;
+        border: 1px solid #E2E8F0; border-radius: 8px; background-color: #FFF;
+    }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody tr.rbfw-es-selected { border-color: var(--color_theme); background-color: #FFF8F8; }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td { border: 0; padding: 0; background: transparent; }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_50_pc {
+        flex: 1 1 auto; display: flex; -webkit-align-items: center; align-items: center; gap: 10px;
+    }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_50_pc::before {
+        content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900;
+        width: 22px; height: 22px; border-radius: 50%; border: 2px solid #E2E8F0; color: transparent;
+        display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center;
+        font-size: 10px; flex: 0 0 auto; transition: all 0.2s ease;
+    }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody tr.rbfw-es-selected td.w_50_pc::before {
+        background-color: var(--color_theme); border-color: var(--color_theme); color: var(--color_theme_alter, #FFF);
+    }
+    .rbfw_bikecarsd_es_price_table .rbfw_bikecarsd_type_title { font-size: 14px; font-weight: 500; color: #111827; }
+    .rbfw_bikecarsd_es_price_table .rbfw_bikecarsd_type_desc,
+    .rbfw_bikecarsd_es_price_table .rbfw_available_qty_notice { font-size: 11px; color: #6B7280; }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_30_pc {
+        flex: 0 0 auto; font-size: 13px; font-weight: 600; color: var(--color_theme); white-space: nowrap;
+    }
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_20_pc { flex: 0 0 auto; }
+    .rbfw_bikecarsd_es_price_table .rbfw_qty_input a { width: 24px; height: 24px; padding: 0; display: flex; align-items: center; justify-content: center; }
+    .rbfw_bikecarsd_es_price_table .rbfw_qty_input a i { font-size: 10px; }
+    .rbfw_bikecarsd_es_price_table .rbfw_qty_input input[type="number"] {
+        width: 30px; height: 24px; padding: 0; font-size: 13px; border-left: none; border-right: none;
+    }
+    .rbfw_bikecarsd_es_price_table .rbfw_sold_out {
+        font-size: 12px; color: var(--color_theme); font-weight: 500;
+    }
+}

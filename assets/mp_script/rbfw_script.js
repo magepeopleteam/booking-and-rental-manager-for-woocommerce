@@ -41,12 +41,19 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
         is_muffin_template = '0';
     }
 
-    // Item variations (Single Day): send the chosen size(s) so the rate list can cap
-    // each rate's available quantity by the selected size's remaining stock.
-    let rbfw_selected_variations = [];
-    jQuery('.rbfw_variation_field').each(function () {
-        let v = jQuery(this).val();
-        if (v) { rbfw_selected_variations.push(v); }
+    // Item variations (Single Day): send the chosen per-value quantities so the
+    // rate list can cap each rate's available quantity by the selected size's
+    // remaining stock and preserve the visitor's choices across the reload.
+    let rbfw_variation_qty = {};
+    jQuery('.rbfw-variation-qty-input').each(function () {
+        let $input = jQuery(this);
+        let fieldId = $input.attr('data-field-id');
+        let valueName = $input.attr('data-value');
+        let qty = parseInt($input.val(), 10) || 0;
+        if (fieldId && valueName && qty > 0) {
+            if (!rbfw_variation_qty[fieldId]) rbfw_variation_qty[fieldId] = {};
+            rbfw_variation_qty[fieldId][valueName] = qty;
+        }
     });
 
     jQuery.ajax({
@@ -58,7 +65,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
             'selected_time': gTime,
             'selected_date': selected_date,
             'is_muffin_template': is_muffin_template,
-            'rbfw_selected_variations': rbfw_selected_variations,
+            'rbfw_variation_qty': rbfw_variation_qty,
             'nonce' : rbfw_ajax_front.nonce_bikecarsd_type_list
         },
         beforeSend: function() {
@@ -94,9 +101,15 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
         },
         complete:function(response) {
-            jQuery('html, body').animate({
-                scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
-            }, 100);
+            // Guard: element is absent on some templates (multi-hour/timely). An
+            // unguarded .offset().top throw here aborts the complete sequence before
+            // the global ajaxComplete fires, killing the variation-surcharge recalc.
+            var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
+            if ($hdr.length && $hdr.offset()) {
+                jQuery('html, body').animate({
+                    scrollTop: $hdr.offset().top
+                }, 100);
+            }
         }
     });
 });
@@ -1002,3 +1015,175 @@ function rbfw_loc_cards_init($wrap) {
 jQuery(function ($) {
     rbfw_loc_cards_init($('#rbfw_loc_cards_wrap'));
 });
+
+/* ── Per-variant quantity steppers (Size S/M/L… with per-value stock + price) ──
+ * Phase 4. Replaces the single variation <select>: every value gets a −[n]+ stepper
+ * capped at its per-date "N left" (the input's max attr, absent = unlimited). The
+ * SUM of all stepper quantities drives the booking Quantity — the standalone Quantity
+ * row is hidden while steppers are present — and each unit adds its per-value
+ * surcharge (data-price) on top of the duration rate for the live SD/MD total. The
+ * authoritative stock/price is re-checked server-side at add-to-cart
+ * (rbfw_check_rental_availability + per-variant pricing); this is display/UX only.
+ *
+ * Delegated handlers survive the date-change AJAX that re-renders the steppers with
+ * fresh "N left" counts. SD recalc is pure DOM math (no AJAX), so re-running it from
+ * ajaxComplete cannot loop; MD recalc is scheduled via rbfwScheduleMdPriceCalculation().
+ */
+(function () {
+    var $ = jQuery;
+
+    function rbfwStepperMax($input) {
+        var m = $input.attr('max');
+        if (m === undefined || m === '') return Infinity; // unlimited stock
+        var n = parseInt(m, 10);
+        return isNaN(n) ? Infinity : n;
+    }
+
+    // Reflect value against fresh max: clamp down if availability dropped, then set
+    // the −/+ disabled states. Never triggers change/AJAX, so it is loop-safe.
+    function rbfwSyncStepper($stepper) {
+        var $input = $stepper.find('.rbfw-variation-qty-input');
+        if (!$input.length) return;
+        var max = rbfwStepperMax($input);
+        var val = parseInt($input.val(), 10) || 0;
+        if (val > max) { val = max < 0 ? 0 : max; $input.val(val); }
+        var soldOut = $input.prop('disabled');
+        $stepper.find('.rbfw-qty-minus').prop('disabled', soldOut || val <= 0);
+        $stepper.find('.rbfw-qty-plus').prop('disabled', soldOut || val >= max);
+    }
+
+    function rbfwSyncStepperScope($scope) {
+        $($scope || document).find('.rbfw-variation-stepper').each(function () {
+            rbfwSyncStepper($(this));
+        });
+    }
+
+    function rbfwVariationRecalc($form) {
+        if (!$form || !$form.length) $form = $(document);
+        var $steppers = $form.find('.rbfw-variation-qty-input');
+        if (!$steppers.length) return; // no variations on this form → inert
+
+        var totalQty = 0, surcharge = 0;
+        $steppers.each(function () {
+            var q = parseInt($(this).val(), 10) || 0;
+            var p = parseFloat($(this).attr('data-price')) || 0;
+            totalQty += q;
+            surcharge += q * p;
+        });
+
+        // Steppers own the Quantity: hide the standalone Quantity rows (their hidden
+        // duration-rate inputs stay in the DOM and readable).
+        $form.find('.timely_quqntity_table').hide();
+        $form.find('.rbfw_quantity_md').hide();
+
+        // Mirror the summed qty into whichever quantity field the form submits so the
+        // server sees the total. Add the option when it is a <select>.
+        var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
+        if ($qty.length) {
+            if ($qty.is('select') && !$qty.find('option[value="' + totalQty + '"]').length) {
+                $qty.append($('<option>', { value: totalQty, text: totalQty }));
+            }
+            $qty.val(String(totalQty));
+        }
+
+        // Book button reflects whether anything is selected.
+        var $btn = $form.find('button.rbfw_bikecarsd_book_now_btn, button.rbfw_book_now_btn');
+        if (totalQty > 0) $btn.prop('disabled', false).removeClass('rbfw_disabled_button');
+        else $btn.prop('disabled', true).addClass('rbfw_disabled_button');
+
+        if ($form.find('.rbfw_quantiry_area_sd').length) {
+            // Timely single-day: #rbfw_service_price holds the duration cost ONLY
+            // (totalQty × rate). The per-value surcharge is summed and rendered as
+            // its own line by rbfw_price_calculation_sd().
+            var rate = parseFloat($form.find('.rbfw_sd_price_input').val()) || 0;
+            $form.find('#rbfw_service_price').val((totalQty * rate).toFixed(2));
+            if (typeof rbfw_price_calculation_sd === 'function') rbfw_price_calculation_sd();
+        } else if ($form.find('#rbfw_item_quantity_md').length) {
+            // Multi-day: schedule the AJAX price recalculation so the variation
+            // surcharge is included in the live subtotal/total.
+            if (typeof rbfwScheduleMdPriceCalculation === 'function') {
+                rbfwScheduleMdPriceCalculation();
+            }
+        } else if (typeof rbfw_price_calculation_sd === 'function') {
+            // Calendar single-day: the duration cost is already in #rbfw_service_price
+            // (set by calculateTotal). Just re-run the summary assembler so the
+            // variation surcharge is added to subtotal/total.
+            rbfw_price_calculation_sd();
+        }
+    }
+
+    // Stepper −/+ (delegated so it survives date-change re-renders).
+    $(document).on('click', '.rbfw-variation-steppers .rbfw-qty-plus, .rbfw-variation-steppers .rbfw-qty-minus', function (e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $stepper = $btn.closest('.rbfw-variation-stepper');
+        var $input = $stepper.find('.rbfw-variation-qty-input');
+        if (!$input.length || $input.prop('disabled')) return;
+
+        var val = parseInt($input.val(), 10) || 0;
+        var max = rbfwStepperMax($input);
+        if ($btn.hasClass('rbfw-qty-plus')) { if (val < max) val++; }
+        else { if (val > 0) val--; }
+        $input.val(val);
+
+        rbfwSyncStepper($stepper);
+        rbfwVariationRecalc($input.closest('form'));
+    });
+
+    // After any AJAX (notably the date-change re-render that returns fresh "N left"
+    // steppers): re-clamp/refresh buttons everywhere, and recompute SD totals — SD
+    // recalc is pure DOM so it cannot re-enter the AJAX cycle. MD is refreshed by its
+    // own date-change success path, so it is skipped here to avoid a loop.
+    $(document).ajaxComplete(function () {
+        rbfwSyncStepperScope(document);
+        $('form').each(function () {
+            var $f = $(this);
+            if (!$f.find('.rbfw-variation-qty-input').length) return;
+            // Skip multi-day forms: their totals are driven by rbfwScheduleMdPriceCalculation().
+            if ($f.find('.rbfw_bike_car_md_item_wrapper').length || $f.find('#rbfw_item_quantity_md').length) return;
+            rbfwVariationRecalc($f);
+        });
+    });
+
+    // Optional Add-ons check-list visual state: highlight the card when qty > 0.
+    function rbfwSyncExtraServiceRows(scope) {
+        $(scope || document).find('.rbfw_bikecarsd_es_price_table .rbfw_servicesd_qty').each(function () {
+            var $row = $(this).closest('tr');
+            if (parseInt($(this).val(), 10) > 0) {
+                $row.addClass('rbfw-es-selected');
+            } else {
+                $row.removeClass('rbfw-es-selected');
+            }
+        });
+    }
+
+    $(document).on('input change', '.rbfw_bikecarsd_es_price_table .rbfw_servicesd_qty', function () {
+        rbfwSyncExtraServiceRows(this);
+    });
+
+    // Non-quantity mode uses a hidden input toggled by a checkbox.
+    $(document).on('change', '.rbfw_bikecarsd_es_price_table .rbfw_extra_service_sd_checkbox', function () {
+        $(this).closest('tr').toggleClass('rbfw-es-selected', $(this).is(':checked'));
+    });
+
+    $(document).ajaxComplete(function () {
+        rbfwSyncExtraServiceRows(document);
+    });
+
+    // Initial paint: sync buttons and run a one-off recalc so any server-rendered
+    // default quantities feed into the summary immediately. MD forms are skipped in
+    // ajaxComplete to avoid loops, but the initial call is safe (empty dates abort).
+    $(function () {
+        rbfwSyncStepperScope(document);
+        rbfwSyncExtraServiceRows(document);
+        $('form').each(function () {
+            var $f = $(this);
+            if (!$f.find('.rbfw-variation-qty-input').length) return;
+            rbfwVariationRecalc($f);
+        });
+    });
+
+    // Exposed so a date-change success handler can force a resync/recalc explicitly.
+    window.rbfwVariationRecalc = rbfwVariationRecalc;
+    window.rbfwSyncStepperButtons = rbfwSyncStepperScope;
+})();

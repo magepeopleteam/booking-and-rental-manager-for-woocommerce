@@ -145,14 +145,24 @@
 					if ( $service_price > 0 ):
 						$total_service_price = (float) $service_price;
 					endif;
-					if ( $total_rent_price > 0 || $total_service_price > 0 ):
-						$subtotal_price = (float) $total_rent_price + (float) $total_service_price;
+
+					// Per-value variation surcharge (single-day steppers).
+					$total_variation_price = 0;
+					if ( ! empty( $rbfw_variation_info ) && is_array( $rbfw_variation_info ) ) {
+						foreach ( $rbfw_variation_info as $v ) {
+							$total_variation_price += (float) ( $v['price'] ?? 0 ) * (int) ( $v['qty'] ?? 0 );
+						}
+					}
+
+					if ( $total_rent_price > 0 || $total_service_price > 0 || $total_variation_price > 0 ):
+						$subtotal_price = (float) $total_rent_price + (float) $total_service_price + (float) $total_variation_price;
 					endif;
 					if ( $subtotal_price > 0 ):
 						$total_price = (float) $subtotal_price;
 					endif;
 					$security_deposit = rbfw_security_deposit( $product_id, $total_price );
 					$total_price      = $total_price + $security_deposit['security_deposit_amount'];
+					$main_array[0]['rbfw_variation_surcharge'] = $total_variation_price;
 					/* Start Tax Calculations */
 					$percent             = 0;
 					/* End Tax Calculations */
@@ -545,7 +555,34 @@
 
 
 
-                echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info));
+                // Re-render the variation selector server-side with the per-variation
+                // remaining stock for the selected date (single source of truth in
+                // rbfw_render_sd_variation_field()); the browser only swaps the markup.
+                $variation_html         = '';
+                $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true );
+                $rbfw_variations_data   = get_post_meta( $post_id, 'rbfw_variations_data', true );
+                if ( 'yes' === $rbfw_enable_variations && ! empty( $rbfw_variations_data ) && function_exists( 'rbfw_render_sd_variation_field' ) ) {
+                    $selected_variations = array();
+                    if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) ) {
+                        foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $field_id => $values ) {
+                            if ( ! is_array( $values ) ) {
+                                continue;
+                            }
+                            $field_id = sanitize_text_field( $field_id );
+                            foreach ( $values as $value_name => $qty ) {
+                                $value_name = sanitize_text_field( $value_name );
+                                $qty        = (int) $qty;
+                                if ( '' !== $value_name && $qty > 0 ) {
+                                    $selected_variations[ $field_id ][ $value_name ] = $qty;
+                                }
+                            }
+                        }
+                    }
+                    $selected_date_dmy = $start_date ? gmdate( 'd-m-Y', strtotime( $start_date ) ) : '';
+                    $variation_html    = rbfw_render_sd_variation_field( $post_id, $rbfw_variations_data, $selected_date_dmy, $selected_variations );
+                }
+
+                echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info,'variation_html'=>$variation_html));
                 wp_die();
 			}
 

@@ -30,6 +30,28 @@ if(isset($_POST['post_id'])){
         $rbfw_selected_variations = array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_selected_variations'] ) );
         $rbfw_selected_variations = array_values( array_filter( $rbfw_selected_variations, static function ( $v ) { return '' !== $v; } ) );
     }
+    // Per-value quantities posted from the stepper form (new model); used to preserve the
+    // visitor's entered quantities across the date-change AJAX reload, and (below) to also
+    // seed $rbfw_selected_variations so rate-quantity capping still sees the chosen sizes.
+    $rbfw_selected_qty_map = array();
+    if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) ) {
+        foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $rbfw_fid => $rbfw_vals ) {
+            if ( ! is_array( $rbfw_vals ) ) {
+                continue;
+            }
+            $rbfw_fid = sanitize_text_field( $rbfw_fid );
+            foreach ( $rbfw_vals as $rbfw_vname => $rbfw_vqty ) {
+                $rbfw_vname = sanitize_text_field( $rbfw_vname );
+                $rbfw_vqty  = (int) $rbfw_vqty;
+                if ( '' !== $rbfw_vname && $rbfw_vqty > 0 ) {
+                    $rbfw_selected_qty_map[ $rbfw_fid ][ $rbfw_vname ] = $rbfw_vqty;
+                    if ( ! in_array( $rbfw_vname, $rbfw_selected_variations, true ) ) {
+                        $rbfw_selected_variations[] = $rbfw_vname;
+                    }
+                }
+            }
+        }
+    }
     // Resolve, per variation group, which size is effective for the selected date and
     // which values are sold out, so (a) rate quantities are capped by an AVAILABLE size,
     // and (b) the selector rendered under the price table disables sold-out values.
@@ -37,6 +59,7 @@ if(isset($_POST['post_id'])){
     // > first available value.
     $rbfw_selected_date_dmy    = $selected_date ? gmdate( 'd-m-Y', strtotime( $selected_date ) ) : '';
     $rbfw_variation_soldout    = array(); // "field_id::name" => bool
+    $rbfw_variation_remaining  = array(); // "field_id::name" => int|null remaining qty for the selected date
     $rbfw_resolved_variation   = array(); // field_id => resolved value name
     $rbfw_effective_variations = array();
     $rbfw_vdata_sd             = get_post_meta( $id, 'rbfw_variations_data', true );
@@ -56,7 +79,8 @@ if(isset($_POST['post_id'])){
                     ? rbfw_sd_variation_remaining_stock( $id, array( $rbfw_selected_date_dmy ), $nm )
                     : null;
                 $sold = ( null !== $rem && $rem <= 0 );
-                $rbfw_variation_soldout[ $fid . '::' . $nm ] = $sold;
+                $rbfw_variation_soldout[ $fid . '::' . $nm ]   = $sold;
+                $rbfw_variation_remaining[ $fid . '::' . $nm ] = $rem;
                 if ( ! $sold ) {
                     if ( '' === $first_available ) {
                         $first_available = $nm;
@@ -238,39 +262,12 @@ if(isset($_POST['post_id'])){
             $rbfw_sd_variations_data   = get_post_meta( $id, 'rbfw_variations_data', true );
             $rbfw_sd_enable_variations = get_post_meta( $id, 'rbfw_enable_variations', true ) ? get_post_meta( $id, 'rbfw_enable_variations', true ) : 'no';
             $rbfw_sd_rent_type         = get_post_meta( $id, 'rbfw_item_type', true );
-            if ( $rbfw_sd_rent_type == 'bike_car_sd' && $rbfw_sd_enable_variations == 'yes' && ! empty( $rbfw_sd_variations_data ) ) { ?>
-                <div class="rbfw-variations-content-wrapper rbfw-bikecarsd-variations">
-                    <?php foreach ( $rbfw_sd_variations_data as $data_arr_one ) {
-                        // Default any missing keys so legacy rows never raise notices.
-                        $field_label   = isset( $data_arr_one['field_label'] ) ? $data_arr_one['field_label'] : '';
-                        $field_id      = isset( $data_arr_one['field_id'] ) ? $data_arr_one['field_id'] : '';
-                        $field_values  = ! empty( $data_arr_one['value'] ) && is_array( $data_arr_one['value'] ) ? $data_arr_one['value'] : array();
-                        // Preselect the resolved (available) value for the selected date so a
-                        // sold-out size is never auto-selected.
-                        $current_value = isset( $rbfw_resolved_variation[ $field_id ] ) ? $rbfw_resolved_variation[ $field_id ] : '';
-                        ?>
-                        <div class="item">
-                            <div class="rbfw-single-right-heading"><?php echo esc_html( $field_label ); ?></div>
-                            <div class="item-content rbfw-p-relative">
-                                <?php if ( ! empty( $field_values ) ) { ?>
-                                    <select class="rbfw-select rbfw_variation_field" required name="<?php echo esc_attr( $field_id ); ?>" id="<?php echo esc_attr( $field_id ); ?>" data-field="<?php echo esc_attr( $field_label ); ?>">
-                                        <?php if ( '' === $current_value ) { ?>
-                                            <option value=""><?php echo esc_html( __( 'Choose', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $field_label ); ?></option>
-                                        <?php } ?>
-                                        <?php foreach ( $field_values as $data_arr_two ) {
-                                            $variant_name = isset( $data_arr_two['name'] ) ? $data_arr_two['name'] : '';
-                                            $is_sold_out  = ( '' !== $variant_name ) && ! empty( $rbfw_variation_soldout[ $field_id . '::' . $variant_name ] );
-                                            $option_label = $variant_name . ( $is_sold_out ? ' (' . __( 'Sold Out', 'booking-and-rental-manager-for-woocommerce' ) . ')' : '' );
-                                            ?>
-                                            <option class="rbfw_variant" value="<?php echo esc_attr( $variant_name ); ?>" <?php disabled( $is_sold_out ); ?> <?php selected( $variant_name !== '' && $variant_name === $current_value ); ?>><?php echo esc_html( $option_label ); ?></option>
-                                        <?php } ?>
-                                    </select>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    <?php } ?>
-                </div>
-            <?php } ?>
+            if ( $rbfw_sd_rent_type == 'bike_car_sd' && $rbfw_sd_enable_variations == 'yes' && ! empty( $rbfw_sd_variations_data ) && function_exists( 'rbfw_render_sd_variation_field' ) ) {
+                // Per-value quantity steppers (label + N left + surcharge + −[n]+), date-aware
+                // for the selected date and preserving the visitor's entered quantities across
+                // this AJAX reload. phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo rbfw_render_sd_variation_field( $id, $rbfw_sd_variations_data, $rbfw_selected_date_dmy, $rbfw_selected_qty_map );
+            } ?>
 
             <?php if(!empty($rbfw_extra_service_data)){  ?>
 
@@ -454,6 +451,11 @@ if(isset($_POST['post_id'])){
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>
                         <?php } ?>
+
+                        <li class="variation-costing rbfw-cond" style="display: none">
+                            <?php echo esc_html__( 'Variations','booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                        </li>
 
                         <li class="subtotal">
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>

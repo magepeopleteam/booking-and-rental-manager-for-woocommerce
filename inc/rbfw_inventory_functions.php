@@ -1831,7 +1831,11 @@ function rbfw_get_stock_details(){
                                                     $fv_name = $f_value['name'] ?? '';
                                                     $fv_qty  = $f_value['quantity'] ?? '';
                                                     if ( $s_field_value == $fv_name ) {
-                                                        $rbfw_variations_data_closing[ $f ]['value'][ $g ]['quantity'] = $fv_qty - $sd_units;
+                                                        // Per-value qty steppers: decrement this size by its own
+                                                        // selected qty; fall back to the whole-line total for
+                                                        // legacy single-value lines that carry no per-row qty.
+                                                        $sel_units = ( isset( $v_info['qty'] ) && (int) $v_info['qty'] > 0 ) ? (int) $v_info['qty'] : $sd_units;
+                                                        $rbfw_variations_data_closing[ $f ]['value'][ $g ]['quantity'] = $fv_qty - $sel_units;
                                                     }
                                                     $g++;
                                                 }
@@ -2450,6 +2454,36 @@ function rbfw_get_variation_stock_for_value( $post_id, $value ) {
 }
 
 /**
+ * Look up the configured per-unit surcharge price for a variation value.
+ *
+ * Mirrors rbfw_get_variation_stock_for_value(). Variations are free by default;
+ * the price is an optional surcharge added on top of the duration price
+ * (line = qty x (duration_price + variation_price)). Returns 0.0 when the value
+ * has no price configured or cannot be found.
+ *
+ * @param int    $post_id rbfw_item id.
+ * @param string $value   Variation value name.
+ * @return float Surcharge amount ( >= 0 ).
+ */
+function rbfw_get_variation_price_for_value( $post_id, $value ) {
+	$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return 0.0;
+	}
+	foreach ( $data as $row ) {
+		if ( empty( $row['value'] ) || ! is_array( $row['value'] ) ) {
+			continue;
+		}
+		foreach ( $row['value'] as $single ) {
+			if ( isset( $single['name'] ) && (string) $single['name'] === (string) $value ) {
+				return ( isset( $single['price'] ) && '' !== $single['price'] ) ? max( 0, (float) $single['price'] ) : 0.0;
+			}
+		}
+	}
+	return 0.0;
+}
+
+/**
  * Whether a stored inventory entry booked a given variation value.
  *
  * @param array  $inventory Single rbfw_inventory entry.
@@ -2467,6 +2501,39 @@ function rbfw_inventory_entry_matches_variation( $inventory, $value ) {
 		}
 	}
 	return false;
+}
+
+/**
+ * Per-value booked quantity for a variation value within a stored inventory entry.
+ *
+ * With per-value quantity steppers a single line can book several sizes at once
+ * (e.g. Small×2 + Medium×3). Each rbfw_variation_info row carries its own 'qty',
+ * so a value's booked count is that row's qty — NOT the whole-line item quantity.
+ * Legacy single-select entries carried no per-row 'qty'; for those we fall back
+ * to the line's rbfw_item_quantity so historical bookings still count correctly.
+ *
+ * @param array  $inventory Stored inventory entry.
+ * @param string $value     Variation field value to match.
+ * @return int              Units of this value booked by the entry.
+ */
+function rbfw_inventory_entry_variation_qty( $inventory, $value ) {
+	$vinfo = isset( $inventory['rbfw_variation_info'] ) && is_array( $inventory['rbfw_variation_info'] ) ? $inventory['rbfw_variation_info'] : array();
+	$sum   = 0;
+	$found = false;
+	foreach ( $vinfo as $r ) {
+		if ( ! is_array( $r ) || ! isset( $r['field_value'] ) || (string) $r['field_value'] !== (string) $value ) {
+			continue;
+		}
+		$found = true;
+		if ( isset( $r['qty'] ) && (int) $r['qty'] > 0 ) {
+			$sum += (int) $r['qty'];
+		}
+	}
+	if ( $found && $sum > 0 ) {
+		return $sum;
+	}
+	// Matched but no per-row qty (legacy entry) -> the whole line was that value.
+	return isset( $inventory['rbfw_item_quantity'] ) ? max( 0, (int) $inventory['rbfw_item_quantity'] ) : 0;
 }
 
 /**
@@ -2578,6 +2645,9 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 				if ( isset( $type_info[ $type_key ] ) ) {
 					$total_booked += max( 0, (int) $type_info[ $type_key ] );
 				}
+			} elseif ( '' !== $variation_value ) {
+				// Per-value qty steppers: count only this size's units, not the whole line.
+				$total_booked += rbfw_inventory_entry_variation_qty( $entry, $variation_value );
 			} else {
 				$qty = isset( $entry['rbfw_item_quantity'] ) ? (int) $entry['rbfw_item_quantity'] : 0;
 				$total_booked += max( 0, $qty );
@@ -2635,18 +2705,11 @@ function rbfw_count_overlapping_cart_qty( $sibling_lines, $req_start_datetime, $
 		}
 
 		if ( '' !== $variation_value ) {
-			$matches = false;
-			$vinfo   = isset( $line['rbfw_variation_info'] ) && is_array( $line['rbfw_variation_info'] ) ? $line['rbfw_variation_info'] : array();
-			foreach ( $vinfo as $r ) {
-				if ( is_array( $r ) && isset( $r['field_value'] ) && (string) $r['field_value'] === $variation_value ) {
-					$matches = true;
-					break;
-				}
-			}
-			if ( ! $matches ) {
+			if ( ! rbfw_inventory_entry_matches_variation( $line, $variation_value ) ) {
 				continue;
 			}
-			$used += max( 1, isset( $line['rbfw_item_quantity'] ) ? (int) $line['rbfw_item_quantity'] : 1 );
+			// Per-value qty steppers: count only this size's units, not the whole line.
+			$used += rbfw_inventory_entry_variation_qty( $line, $variation_value );
 		} elseif ( '' !== $type_key ) {
 			$ti = isset( $line['rbfw_type_info'] ) && is_array( $line['rbfw_type_info'] ) ? $line['rbfw_type_info'] : array();
 			if ( isset( $ti[ $type_key ] ) ) {
@@ -2701,8 +2764,8 @@ function rbfw_sd_variation_remaining_stock( $post_id, $date_range_dmy, $variatio
 			if ( '' === $s ) {
 				continue;
 			}
-			$ti     = isset( $line['rbfw_type_info'] ) && is_array( $line['rbfw_type_info'] ) ? $line['rbfw_type_info'] : array();
-			$units  = max( 0, array_sum( array_map( 'intval', $ti ) ) );
+			// Per-value qty steppers: count only this size's units on this line.
+			$units  = rbfw_inventory_entry_variation_qty( $line, $variation_value );
 			$ts_end = strtotime( $e );
 			for ( $ts = strtotime( $s ); $ts && $ts_end && $ts <= $ts_end; $ts += DAY_IN_SECONDS ) {
 				$d                   = gmdate( 'd-m-Y', $ts );
@@ -2732,8 +2795,8 @@ function rbfw_sd_variation_remaining_stock( $post_id, $date_range_dmy, $variatio
 			if ( ! rbfw_inventory_entry_matches_variation( $entry, $variation_value ) ) {
 				continue;
 			}
-			$ti      = isset( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) ? $entry['rbfw_type_info'] : array();
-			$booked += max( 0, array_sum( array_map( 'intval', $ti ) ) );
+			// Per-value qty steppers: count only this size's units on this entry.
+			$booked += rbfw_inventory_entry_variation_qty( $entry, $variation_value );
 		}
 		if ( isset( $sibling_dates[ $date ] ) ) {
 			$booked += $sibling_dates[ $date ];
@@ -2744,6 +2807,111 @@ function rbfw_sd_variation_remaining_stock( $post_id, $date_range_dmy, $variatio
 		}
 	}
 	return $min_remaining;
+}
+
+/**
+ * Render the single-day item-variation selector(s) as server-side markup, with the
+ * per-variation remaining stock ("N left" / "Sold out") for a given date.
+ *
+ * Single source of truth for the variation <select> used by both the booking form
+ * (templates/forms/single-day-registration.php) and the date-change AJAX refresh
+ * (RBFW_BikeCarSd_Function::rbfw_service_type_timely_stock()). The count is computed
+ * on the server via rbfw_sd_variation_remaining_stock() — never in the browser.
+ *
+ * @param int    $post_id           Rental item ID.
+ * @param array  $variations_data   The 'rbfw_variations_data' meta array.
+ * @param string $selected_date_dmy Selected date in d-m-Y. Empty = base configured stock.
+ * @param array  $selected_values   Map of field_id => currently selected value (preserves UI state on refresh).
+ * @return string HTML for the .rbfw-variations-content-wrapper element (empty string when no variations).
+ */
+function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_date_dmy = '', $selected_values = array() ) {
+	if ( empty( $variations_data ) || ! is_array( $variations_data ) ) {
+		return '';
+	}
+	$date_range      = ( '' !== $selected_date_dmy ) ? array( $selected_date_dmy ) : array();
+	$selected_values = is_array( $selected_values ) ? $selected_values : array();
+
+	ob_start();
+	?>
+	<div class="rbfw-variations-content-wrapper rbfw-bikecarsd-variations">
+		<?php foreach ( $variations_data as $data_arr_one ) {
+			$field_label  = isset( $data_arr_one['field_label'] ) ? $data_arr_one['field_label'] : '';
+			$field_id     = isset( $data_arr_one['field_id'] ) ? $data_arr_one['field_id'] : '';
+			$field_values = ( ! empty( $data_arr_one['value'] ) && is_array( $data_arr_one['value'] ) ) ? $data_arr_one['value'] : array();
+
+			// Preserve entered per-value quantities across an AJAX (date-change) refresh.
+			// $selected_values[$field_id] may be a value=>qty map (new stepper form) or a
+			// legacy scalar select value (treated as qty 1 for backward compatibility).
+			$qty_map = array();
+			if ( isset( $selected_values[ $field_id ] ) ) {
+				if ( is_array( $selected_values[ $field_id ] ) ) {
+					$qty_map = $selected_values[ $field_id ];
+				} elseif ( '' !== $selected_values[ $field_id ] ) {
+					$qty_map = array( (string) $selected_values[ $field_id ] => 1 );
+				}
+			}
+			if ( empty( $qty_map ) && ! empty( $data_arr_one['selected_value'] ) ) {
+				$qty_map = array( (string) $data_arr_one['selected_value'] => 1 );
+			}
+			?>
+			<div class="item rbfw-variation-group" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-field-label="<?php echo esc_attr( $field_label ); ?>">
+				<div class="rbfw-single-right-heading"><?php echo esc_html( $field_label ); ?></div>
+				<div class="item-content rbfw-p-relative rbfw-variation-steppers">
+					<?php if ( ! empty( $field_values ) ) {
+						foreach ( $field_values as $data_arr_two ) {
+							$variant_name = isset( $data_arr_two['name'] ) ? $data_arr_two['name'] : '';
+							if ( '' === $variant_name ) {
+								continue;
+							}
+							// Date-aware remaining count (base configured stock when no date yet). null = unlimited/unconfigured.
+							$remaining = function_exists( 'rbfw_sd_variation_remaining_stock' )
+								? rbfw_sd_variation_remaining_stock( $post_id, $date_range, $variant_name )
+								: null;
+							$is_unlimited = ( null === $remaining );
+							$is_sold_out  = ( ! $is_unlimited && (int) $remaining <= 0 );
+							$price        = function_exists( 'rbfw_get_variation_price_for_value' )
+								? rbfw_get_variation_price_for_value( $post_id, $variant_name )
+								: 0.0;
+
+							// Clamp any preserved quantity to what is actually still available.
+							$cur_qty = isset( $qty_map[ $variant_name ] ) ? (int) $qty_map[ $variant_name ] : 0;
+							if ( $cur_qty < 0 ) {
+								$cur_qty = 0;
+							}
+							if ( $is_sold_out ) {
+								$cur_qty = 0;
+							} elseif ( ! $is_unlimited && $cur_qty > (int) $remaining ) {
+								$cur_qty = (int) $remaining;
+							}
+							?>
+							<div class="rbfw-variation-row<?php echo $is_sold_out ? ' rbfw-variation-soldout' : ''; ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" data-price="<?php echo esc_attr( $price ); ?>" data-remaining="<?php echo esc_attr( $is_unlimited ? '' : (int) $remaining ); ?>">
+								<span class="rbfw-variation-label"><?php echo esc_html( $variant_name ); ?></span>
+								<span class="rbfw-variation-meta">
+									<?php if ( $price > 0 ) { ?>
+										<span class="rbfw-variation-price">+<?php echo wp_kses_post( wc_price( $price ) ); ?></span>
+									<?php } ?>
+									<?php if ( $is_sold_out ) { ?>
+										<span class="rbfw-variation-stock rbfw-variation-stock-out"><?php esc_html_e( 'Sold out', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+									<?php } elseif ( ! $is_unlimited ) { ?>
+										<?php /* translators: %d: number of units left in stock for this variation on the selected date. */ ?>
+										<span class="rbfw-variation-stock"><?php printf( esc_html( _n( '%d left', '%d left', (int) $remaining, 'booking-and-rental-manager-for-woocommerce' ) ), (int) $remaining ); ?></span>
+									<?php } ?>
+								</span>
+								<span class="rbfw-variation-stepper">
+									<button type="button" class="rbfw-qty-minus" tabindex="-1" aria-label="<?php esc_attr_e( 'Decrease', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php disabled( $is_sold_out ); ?>>&minus;</button>
+									<input type="number" class="rbfw-variation-qty-input" name="rbfw_variation_qty[<?php echo esc_attr( $field_id ); ?>][<?php echo esc_attr( $variant_name ); ?>]" value="<?php echo esc_attr( $cur_qty ); ?>" min="0"<?php echo $is_unlimited ? '' : ' max="' . esc_attr( (int) $remaining ) . '"'; ?> data-price="<?php echo esc_attr( $price ); ?>" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" <?php disabled( $is_sold_out ); ?> readonly>
+									<button type="button" class="rbfw-qty-plus" tabindex="-1" aria-label="<?php esc_attr_e( 'Increase', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php disabled( $is_sold_out ); ?>>+</button>
+								</span>
+							</div>
+							<?php
+						}
+					} ?>
+				</div>
+			</div>
+		<?php } ?>
+	</div>
+	<?php
+	return ob_get_clean();
 }
 
 /**
@@ -2840,21 +3008,31 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	 * gate, which leaves single-day to its existing handling.
 	 */
 	if ( 'bike_car_sd' === $rent_type && get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' ) {
-		$sd_type_info = isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ? $values['rbfw_type_info'] : array();
-		$sd_requested = array_sum( array_map( 'intval', $sd_type_info ) );
-		if ( $sd_requested < 1 ) {
-			$sd_requested = 1;
+		// Per-value quantity steppers: each rbfw_variation_info entry carries its own
+		// requested qty. Sum by value name so every size is validated against its own
+		// remaining stock (anti-oversell), not the whole-line quantity. Legacy
+		// single-select entries (no 'qty') fall back to the line's unit count.
+		$sd_type_info    = isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ? $values['rbfw_type_info'] : array();
+		$sd_line_units   = array_sum( array_map( 'intval', $sd_type_info ) );
+		if ( $sd_line_units < 1 ) {
+			$sd_line_units = 1;
 		}
-		$sd_variation_values = array();
-		$sd_vinfo            = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
+		$sd_req_map = array();
+		$sd_vinfo   = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
 		foreach ( $sd_vinfo as $r ) {
-			if ( is_array( $r ) && ! empty( $r['field_value'] ) ) {
-				$sd_variation_values[] = (string) $r['field_value'];
+			if ( ! is_array( $r ) || empty( $r['field_value'] ) ) {
+				continue;
 			}
+			$vv = (string) $r['field_value'];
+			$rq = isset( $r['qty'] ) ? (int) $r['qty'] : 0;
+			if ( $rq < 1 ) {
+				$rq = $sd_line_units; // legacy single-select entry carried no per-value qty
+			}
+			$sd_req_map[ $vv ] = isset( $sd_req_map[ $vv ] ) ? $sd_req_map[ $vv ] + $rq : $rq;
 		}
 		// Variations enabled but no resolvable selection -> fail open (the per-rate
 		// stock still governs via the single-day time-table); never block a valid booking.
-		if ( empty( $sd_variation_values ) ) {
+		if ( empty( $sd_req_map ) ) {
 			return $checks;
 		}
 		// Build the requested booking dates (d-m-Y) the same way single-day inventory is keyed.
@@ -2870,14 +3048,14 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 		} elseif ( $sd_ts_start ) {
 			$sd_dates[] = gmdate( 'd-m-Y', $sd_ts_start );
 		}
-		foreach ( $sd_variation_values as $vv ) {
+		foreach ( $sd_req_map as $vv => $req_qty ) {
 			$available = rbfw_sd_variation_remaining_stock( $rbfw_id, $sd_dates, $vv, $sibling_lines );
 			if ( null === $available ) {
 				continue; // unknown variation stock -> fail open for this value
 			}
 			$checks[] = array(
-				'ok'        => ( $sd_requested <= $available ),
-				'requested' => $sd_requested,
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
 				'available' => max( 0, $available ),
 				'label'     => $item_name . ' (' . $vv . ')',
 			);
@@ -2906,23 +3084,33 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	}
 
 	$variations_enabled = ( get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' );
-	$variation_values   = array();
+	$variation_req_map  = array();
 	if ( $variations_enabled ) {
+		// Per-value quantity steppers: each rbfw_variation_info entry carries its own
+		// requested qty. Sum by value name so every size is validated against its own
+		// remaining stock (anti-oversell), not the whole-line quantity. Legacy
+		// single-select entries (no 'qty') fall back to the line's unit count.
 		$vinfo = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
 		foreach ( $vinfo as $r ) {
-			if ( is_array( $r ) && ! empty( $r['field_value'] ) ) {
-				$variation_values[] = (string) $r['field_value'];
+			if ( ! is_array( $r ) || empty( $r['field_value'] ) ) {
+				continue;
 			}
+			$vv = (string) $r['field_value'];
+			$rq = isset( $r['qty'] ) ? (int) $r['qty'] : 0;
+			if ( $rq < 1 ) {
+				$rq = $requested; // legacy single-select entry carried no per-value qty
+			}
+			$variation_req_map[ $vv ] = isset( $variation_req_map[ $vv ] ) ? $variation_req_map[ $vv ] + $rq : $rq;
 		}
 		// Variations on but the selection couldn't be resolved: fail open so a
 		// valid variation booking is never blocked by the plain single-unit path.
-		if ( empty( $variation_values ) ) {
+		if ( empty( $variation_req_map ) ) {
 			return $checks;
 		}
 	}
 
-	if ( ! empty( $variation_values ) ) {
-		foreach ( $variation_values as $vv ) {
+	if ( ! empty( $variation_req_map ) ) {
+		foreach ( $variation_req_map as $vv => $req_qty ) {
 			$stock = rbfw_get_variation_stock_for_value( $rbfw_id, $vv );
 			if ( null === $stock ) {
 				continue; // unknown variation stock -> fail open for this value
@@ -2931,8 +3119,8 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
 			$available = $stock - $booked - $used;
 			$checks[]  = array(
-				'ok'        => ( $requested <= $available ),
-				'requested' => $requested,
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
 				'available' => max( 0, $available ),
 				'label'     => $item_name . ' (' . $vv . ')',
 			);

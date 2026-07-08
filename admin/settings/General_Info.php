@@ -17,21 +17,45 @@
 			}
 
 			/**
-			 * @return array[] List of [ term_id, name ].
+			 * @return array[] Hierarchically ordered list of [ term_id, name, parent, depth ].
+			 *                 Children immediately follow their parent; depth is the nesting level.
 			 */
 			public function rbfw_get_rent_type_list() {
 				$terms = get_terms( array(
 					'taxonomy'   => 'rbfw_item_caregory',
 					'hide_empty' => false,
 				) );
-				$out   = array();
-				if ( ! is_wp_error( $terms ) ) {
-					foreach ( $terms as $term ) {
-						$out[] = array(
-							'term_id' => (int) $term->term_id,
-							'name'    => $term->name,
-						);
+				if ( is_wp_error( $terms ) || empty( $terms ) ) {
+					return array();
+				}
+				return $this->rbfw_order_terms_hierarchically( $terms );
+			}
+
+			/**
+			 * Flatten a set of terms into a parent-first ordered list carrying a depth level,
+			 * so the UI can render sub-categories indented beneath their parent.
+			 *
+			 * @param WP_Term[] $terms
+			 * @param int       $parent Parent term_id to collect children for.
+			 * @param int       $depth  Current nesting depth.
+			 * @return array[]
+			 */
+			private function rbfw_order_terms_hierarchically( $terms, $parent = 0, $depth = 0 ) {
+				$out = array();
+				foreach ( $terms as $term ) {
+					if ( (int) $term->parent !== (int) $parent ) {
+						continue;
 					}
+					$out[] = array(
+						'term_id' => (int) $term->term_id,
+						'name'    => $term->name,
+						'parent'  => (int) $term->parent,
+						'depth'   => (int) $depth,
+					);
+					$out = array_merge(
+						$out,
+						$this->rbfw_order_terms_hierarchically( $terms, $term->term_id, $depth + 1 )
+					);
 				}
 				return $out;
 			}
@@ -53,7 +77,15 @@
 				if ( mb_strlen( $name ) > 200 ) {
 					wp_send_json_error( array( 'message' => esc_html__( 'Rent type name must be 200 characters or fewer.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 				}
-				$res = wp_insert_term( $name, 'rbfw_item_caregory' );
+				// Optional parent term — lets an admin create a sub-category.
+				$parent = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : 0;
+				if ( $parent > 0 ) {
+					$parent_term = get_term( $parent, 'rbfw_item_caregory' );
+					if ( ! $parent_term || is_wp_error( $parent_term ) ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'The selected parent category no longer exists.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+				}
+				$res = wp_insert_term( $name, 'rbfw_item_caregory', array( 'parent' => $parent ) );
 				if ( is_wp_error( $res ) ) {
 					wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
 				}
@@ -220,10 +252,8 @@
 
 			public function select_category( $post_id ) {
 				$rbfw_categories = get_post_meta( $post_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_categories', true ) ) : [];
-				$terms = get_terms( array(
-                    'taxonomy'   => 'rbfw_item_caregory',
-                    'hide_empty' => false,
-                ) );
+				// Hierarchically ordered rent types ( parent first, children indented ).
+				$terms = $this->rbfw_get_rent_type_list();
                 global $rbfw;
 				$label = $rbfw->get_name();
                 $rbfw_categories_items = implode(',', $rbfw_categories);
@@ -246,10 +276,12 @@
                 <section class="rbfw_off_days justify-content-center rbfw-rent-type-checkboxes" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_rent_type_crud' ) ); ?>" data-can-manage="<?php echo $rbfw_rt_can_manage ? '1' : '0'; ?>">
                     <div class="groupCheckBox">
                         <input type="hidden" name="rbfw_categories[]" value="<?php echo esc_attr( $rbfw_categories_items ); ?>">
-                        <?php foreach ( $terms as $key => $value ) { ?>
-                            <label class="customCheckboxLabel rbfw-rt-chip" data-term-id="<?php echo esc_attr( $value->term_id ); ?>" data-name="<?php echo esc_attr( $value->name ); ?>">
-                                <input type="checkbox" <?php echo esc_attr( in_array( $value->name, $rbfw_categories_array ) ) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr( $value->name ) ?>">
-                                <span class="customCheckbox"><?php echo esc_html( ucfirst( $value->name ) ); ?></span>
+                        <?php foreach ( $terms as $key => $value ) {
+                            $rt_depth = isset( $value['depth'] ) ? (int) $value['depth'] : 0;
+                            ?>
+                            <label class="customCheckboxLabel rbfw-rt-chip<?php echo $rt_depth > 0 ? ' rbfw-rt-child' : ''; ?>" data-term-id="<?php echo esc_attr( $value['term_id'] ); ?>" data-name="<?php echo esc_attr( $value['name'] ); ?>" data-parent="<?php echo esc_attr( isset( $value['parent'] ) ? $value['parent'] : 0 ); ?>" data-depth="<?php echo esc_attr( $rt_depth ); ?>"<?php echo $rt_depth > 0 ? ' style="margin-left:' . esc_attr( $rt_depth * 22 ) . 'px;"' : ''; ?>>
+                                <input type="checkbox" <?php echo esc_attr( in_array( $value['name'], $rbfw_categories_array ) ) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr( $value['name'] ) ?>">
+                                <span class="customCheckbox"><?php echo $rt_depth > 0 ? '<span class="rbfw-rt-sub-indicator">↳</span> ' : ''; ?><?php echo esc_html( ucfirst( $value['name'] ) ); ?></span>
                                 <?php if ( $rbfw_rt_can_manage ) { ?>
                                     <span class="rbfw-rt-actions">
                                         <span class="rbfw-rt-edit dashicons dashicons-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
@@ -270,6 +302,13 @@
                         <div class="rbfw-rent-type-modal__body">
                             <label for="rbfw-rent-type-modal-input"><strong><?php esc_html_e( 'Rent type name', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></label>
                             <input type="text" id="rbfw-rent-type-modal-input" class="widefat" style="margin-top:6px;" maxlength="200" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <div class="rbfw-rent-type-parent-wrap" style="margin-top:14px;">
+                                <label for="rbfw-rent-type-modal-parent"><strong><?php esc_html_e( 'Parent category', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <span style="font-weight:400;color:#6b7280;">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
+                                <select id="rbfw-rent-type-modal-parent" class="widefat" style="margin-top:6px;">
+                                    <option value="0"><?php esc_html_e( '— None (top level) —', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                </select>
+                                <p class="description" style="margin-top:6px;"><?php esc_html_e( 'Pick a parent to create a sub-category.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                            </div>
                         </div>
                         <div class="rbfw-rent-type-modal__foot">
                             <button type="button" class="button button-primary" id="rbfw-rent-type-modal-save"><?php esc_html_e( 'Add Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
@@ -306,10 +345,13 @@
                             $group.find('label.customCheckboxLabel').remove();
                             rentTypes.forEach(function (rt) {
                                 var checked = current.indexOf(rt.name) !== -1 ? ' checked' : '';
+                                var depth   = parseInt(rt.depth, 10) || 0;
+                                var indent  = depth > 0 ? ' style="margin-left:' + (depth * 18) + 'px;"' : '';
+                                var prefix  = depth > 0 ? '<span class="rbfw-rt-sub-indicator" aria-hidden="true">↳ </span>' : '';
                                 $group.append(
-                                    '<label class="customCheckboxLabel rbfw-rt-chip" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '">' +
+                                    '<label class="customCheckboxLabel rbfw-rt-chip" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '"' + indent + '>' +
                                         '<input type="checkbox"' + checked + ' data-checked="' + rtEsc(rt.name) + '">' +
-                                        '<span class="customCheckbox">' + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
+                                        '<span class="customCheckbox">' + prefix + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
                                         rtActionsHtml() +
                                     '</label>'
                                 );
@@ -317,12 +359,49 @@
                             $group.find('input[type="hidden"]').val(current.join(','));
                         }
 
-                        function rtOpenModal(mode, termId, name) {
+                        // Build the parent <select> options from the currently rendered chips.
+                        // Excludes the term being edited (and its descendants) to prevent cycles.
+                        function rtPopulateParents(excludeTermId) {
+                            var $select = jQuery('#rbfw-rent-type-modal-parent');
+                            if (!$select.length) { return; }
+                            excludeTermId = parseInt(excludeTermId, 10) || 0;
+                            var prev = String($select.val() || '0');
+
+                            // Collect descendants of the excluded term so they can't become its parent.
+                            var excluded = {};
+                            if (excludeTermId) {
+                                excluded[excludeTermId] = true;
+                                var changed = true;
+                                while (changed) {
+                                    changed = false;
+                                    jQuery('.rbfw-rent-type-checkboxes .rbfw-rt-chip').each(function () {
+                                        var tid = parseInt(jQuery(this).data('term-id'), 10) || 0;
+                                        var pid = parseInt(jQuery(this).data('parent'), 10) || 0;
+                                        if (pid && excluded[pid] && !excluded[tid]) { excluded[tid] = true; changed = true; }
+                                    });
+                                }
+                            }
+
+                            $select.find('option:not(:first)').remove();
+                            jQuery('.rbfw-rent-type-checkboxes .rbfw-rt-chip').each(function () {
+                                var $chip = jQuery(this);
+                                var tid   = parseInt($chip.data('term-id'), 10) || 0;
+                                if (!tid || excluded[tid]) { return; }
+                                var depth = parseInt($chip.data('depth'), 10) || 0;
+                                var label = (depth > 0 ? new Array(depth + 1).join('— ') : '') + String($chip.data('name'));
+                                $select.append('<option value="' + rtEsc(tid) + '">' + rtEsc(label) + '</option>');
+                            });
+                            if ($select.find('option[value="' + prev + '"]').length) { $select.val(prev); } else { $select.val('0'); }
+                        }
+
+                        function rtOpenModal(mode, termId, name, parentId) {
                             editTermId = mode === 'edit' ? (parseInt(termId, 10) || 0) : 0;
                             var isEdit = editTermId > 0;
                             jQuery('#rbfw-rent-type-modal .rbfw-rent-type-modal__head h3').text(isEdit ? 'Rename Rent Type' : 'Add New Rent Type');
                             jQuery('#rbfw-rent-type-modal-save').text(isEdit ? 'Save Changes' : 'Add Rent Type');
                             jQuery('#rbfw-rent-type-modal-input').val(name || '');
+                            rtPopulateParents(editTermId);
+                            jQuery('#rbfw-rent-type-modal-parent').val(String(parseInt(parentId, 10) || 0));
                             jQuery('#rbfw-rent-type-modal').addClass('is-open');
                             setTimeout(function () { jQuery('#rbfw-rent-type-modal-input').trigger('focus'); }, 50);
                         }
@@ -341,7 +420,7 @@
                         jQuery(document).on('click', '.rbfw-rent-type-checkboxes .rbfw-rt-edit', function (e) {
                             e.preventDefault(); e.stopPropagation();
                             var $chip = jQuery(this).closest('.rbfw-rt-chip');
-                            rtOpenModal('edit', $chip.data('term-id'), $chip.data('name'));
+                            rtOpenModal('edit', $chip.data('term-id'), $chip.data('name'), $chip.data('parent'));
                         });
 
                         // Delete a rent type.
@@ -399,7 +478,8 @@
                                 jQuery.post(ajaxurl, {
                                     action: 'rbfw_rent_type_add',
                                     nonce: rtNonce(),
-                                    name: name
+                                    name: name,
+                                    parent: parseInt(jQuery('#rbfw-rent-type-modal-parent').val(), 10) || 0
                                 }, function (resp) {
                                     if (resp && resp.success) {
                                         rtRebuild(resp.data.rent_types, resp.data.added_name);
@@ -431,6 +511,14 @@
                     .rbfw-rent-type-checkboxes .rbfw-rt-actions .dashicons { font-size: 15px; width: 15px; height: 15px; line-height: 15px; cursor: pointer; color: #6b7280; }
                     .rbfw-rent-type-checkboxes .rbfw-rt-actions .rbfw-rt-edit:hover { color: #2271b1; }
                     .rbfw-rent-type-checkboxes .rbfw-rt-actions .rbfw-rt-del:hover { color: #d63638; }
+                    /* Sub-category (child) chips: softer dashed pill + connector elbow */
+                    .rbfw-rent-type-checkboxes .rbfw-rt-child { position: relative; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-child .customCheckbox { background: #f8fafc; border-style: dashed; border-color: #cbd5e1; color: #475569; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-child:hover .customCheckbox { background: #eef2f9; border-color: #94a3b8; color: #1e293b; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-child input:checked + .customCheckbox { border-style: solid; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-child::before { content: ""; position: absolute; left: -12px; top: 50%; width: 10px; height: 1px; background: #cbd5e1; pointer-events: none; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-sub-indicator { color: #94a3b8; font-weight: 700; margin-right: 3px; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-child input:checked + .customCheckbox .rbfw-rt-sub-indicator { color: inherit; }
                 </style>
 				<?php
 			}
