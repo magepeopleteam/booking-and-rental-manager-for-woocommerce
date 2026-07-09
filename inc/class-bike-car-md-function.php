@@ -105,8 +105,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $item_quantity = isset($_POST['item_quantity']) ? absint($_POST['item_quantity']) : 0;
-            $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
-            $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):'';
+            // Note: the multiplier must apply to the whole ternary result. The old
+            // code (`isset(...) ? floatval(...) : '' * $qty`) fataled on PHP 8
+            // ("int * string") whenever rbfw_service_price was not posted.
+            $rbfw_service_price = ( isset($_POST['rbfw_service_price']) ? floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))) : 0 ) * $item_quantity;
+            $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):0;
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'no';
 
@@ -147,7 +150,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $duration_price_display = $duration_price;
 
             $total_days = $duration_price_info['total_days'];
-            $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
+            $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):0;
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_management_price + (float)$rbfw_service_price + (float)$rbfw_variation_surcharge;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
