@@ -3581,14 +3581,15 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
 
     if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily)) !== 'not_found') {
-        return $sp_price;
+        return (float) $sp_price;
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
     // Empty day-wise field falls back to the global daily rate; explicit 0 kept.
+    // Always return a float: raw meta / empty strings fatal on "int + string" in PHP 8.
     return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
         ? (float) $custom_rate
-        : $daily_rate;
+        : (float) $daily_rate;
 }
 
 function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3596,7 +3597,7 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
         $global_half_day_rate = is_numeric( $global_half_day_rate ) ? (float) $global_half_day_rate : 0;
 
         if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily, $global_half_day_rate)) !== 'not_found') {
-            return $sp_price;
+            return (float) $sp_price;
         }
         $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
         $custom_rate = get_post_meta($post_id, "rbfw_{$day}_half_day_rate", true);

@@ -13,6 +13,58 @@ if (! class_exists('RBFW_Dependencies')) {
 			add_action('wp_enqueue_scripts', array($this, 'rbfw_enqueue_scripts'), 90);
 			add_action('admin_head', array($this, 'included_header_script'), 5);
 			add_action('wp_head', array($this, 'included_header_script'), 5);
+
+			// Cache-safe nonce refresh: page caches (LiteSpeed, WP Rocket, Cloudflare,
+			// SiteGround, etc.) can serve HTML older than the WordPress nonce lifetime,
+			// so the nonces embedded via wp_localize_script() expire and every rbfw_*
+			// AJAX call dies with 403. The frontend guard script fetches fresh nonces
+			// here and retries the failed request once.
+			add_action('wp_ajax_rbfw_refresh_frontend_nonces', array($this, 'rbfw_refresh_frontend_nonces'));
+			add_action('wp_ajax_nopriv_rbfw_refresh_frontend_nonces', array($this, 'rbfw_refresh_frontend_nonces'));
+		}
+
+		/**
+		 * Frontend AJAX nonces, keyed by their rbfw_ajax_front property names.
+		 *
+		 * Centralized so the page-load localization and the cache-safe refresh
+		 * endpoint always issue the exact same set of keys.
+		 *
+		 * @return array<string,string>
+		 */
+		public static function rbfw_frontend_nonces()
+		{
+			return array(
+				'nonce_location_stock_info'                       => wp_create_nonce('rbfw_location_stock_info_action'),
+				'nonce_check_resort_availibility'                 => wp_create_nonce('rbfw_check_resort_availibility_action'),
+				'nonce_bikecarmd_ajax_price_calculation'          => wp_create_nonce('rbfw_bikecarmd_ajax_price_calculation_action'),
+				'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce('rbfw_multi_items_ajax_price_calculation_action'),
+				'nonce_particular_time_date_dependent'            => wp_create_nonce('particular_time_date_dependent_action'),
+				'nonce_get_rent_item_category_info'               => wp_create_nonce('rbfw_get_rent_item_category_info_action'),
+				'nonce_service_type_timely_stock'                 => wp_create_nonce('rbfw_service_type_timely_stock_action'),
+				'nonce_get_left_side_filter_data'                 => wp_create_nonce('rbfw_get_left_side_filter_data_action'),
+				'nonce_get_resort_sessional_day_wise_price'       => wp_create_nonce('rbfw_get_resort_sessional_day_wise_price_action'),
+				'nonce_get_rent_item_left_filter_more_data_popup' => wp_create_nonce('rbfw_get_rent_item_left_filter_more_data_popup_action'),
+				'nonce_bikecarsd_type_list'                       => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
+				'nonce_bikecarsd_time_table'                      => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
+				'nonce_bikecarsd_sold_out_times'                  => wp_create_nonce('rbfw_bikecarsd_sold_out_times_action'),
+				'nonce_bikecarmd_ajax_min_max_and_offdays_info'   => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
+				'nonce_native_checkout'                           => wp_create_nonce('rbfw_native_checkout_action'),
+			);
+		}
+
+		/**
+		 * AJAX: issue a fresh set of frontend nonces.
+		 *
+		 * Intentionally does NOT require a nonce itself: a nonce cannot be a
+		 * prerequisite for obtaining one (that is the deadlock this endpoint
+		 * solves), issuing nonces is user/session-bound and side-effect free,
+		 * and this mirrors WordPress core's own heartbeat "nonces-expired"
+		 * refresh flow.
+		 */
+		public function rbfw_refresh_frontend_nonces()
+		{
+			nocache_headers();
+			wp_send_json_success(self::rbfw_frontend_nonces());
 		}
 
 		public function rbfw_add_admin_scripts($hook)
@@ -402,29 +454,22 @@ if (! class_exists('RBFW_Dependencies')) {
 				);
 
 
-				wp_localize_script('jquery', 'rbfw_ajax_front', array(
-					'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
-					'nonce_location_stock_info'        => wp_create_nonce('rbfw_location_stock_info_action'),
-					'nonce_check_resort_availibility'        => wp_create_nonce('rbfw_check_resort_availibility_action'),
-					'nonce_bikecarmd_ajax_price_calculation'        => wp_create_nonce('rbfw_bikecarmd_ajax_price_calculation_action'),
-					'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce('rbfw_multi_items_ajax_price_calculation_action'),
-					'nonce_particular_time_date_dependent'        => wp_create_nonce('particular_time_date_dependent_action'),
-					'nonce_get_rent_item_category_info'        => wp_create_nonce('rbfw_get_rent_item_category_info_action'),
-					'nonce_service_type_timely_stock'        => wp_create_nonce('rbfw_service_type_timely_stock_action'),
-					'nonce_get_left_side_filter_data'        => wp_create_nonce('rbfw_get_left_side_filter_data_action'),
-					'nonce_get_resort_sessional_day_wise_price'        => wp_create_nonce('rbfw_get_resort_sessional_day_wise_price_action'),
-					'nonce_get_rent_item_left_filter_more_data_popup'        => wp_create_nonce('rbfw_get_rent_item_left_filter_more_data_popup_action'),
-					'nonce_bikecarsd_type_list'        => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
-					'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
-					'nonce_bikecarsd_sold_out_times'    => wp_create_nonce('rbfw_bikecarsd_sold_out_times_action'),
-					'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
-					// WooCommerce-optional native booking flow (consumed by rbfw_native_checkout.js).
-					'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),
-					'booking_mode'                 => rbfw_booking_mode(),
-					'has_woocommerce'              => rbfw_has_woocommerce() ? '1' : '0',
-					'currency_symbol'              => get_woocommerce_currency_symbol(),
-
+				// Nonces come from rbfw_frontend_nonces() so the page-load values and the
+				// cache-safe refresh endpoint (rbfw_refresh_frontend_nonces) never drift.
+				wp_localize_script('jquery', 'rbfw_ajax_front', array_merge(
+					array(
+						'rbfw_ajaxurl'    => admin_url('admin-ajax.php'),
+						'booking_mode'    => rbfw_booking_mode(),
+						'has_woocommerce' => rbfw_has_woocommerce() ? '1' : '0',
+						'currency_symbol' => get_woocommerce_currency_symbol(),
+					),
+					self::rbfw_frontend_nonces()
 				));
+
+				// Cache-safe nonce guard: when any rbfw_* AJAX request is rejected with
+				// 403 because a page cache served HTML with an expired nonce, this
+				// script silently fetches fresh nonces and retries the request once.
+				wp_enqueue_script('rbfw_nonce_guard', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_nonce_guard.js', array('jquery'), time(), true);
 				//font awesome
 
                 wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');
