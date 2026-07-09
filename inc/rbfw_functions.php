@@ -1429,6 +1429,63 @@ function rbfw_url_exclude_search_engine() {
 
 		return $remaining_stock;
 	}
+
+	/**
+	 * Return the list of time slots that are fully sold out for a single-day / appointment
+	 * item on a given date. A time is considered sold out when every configured rent type
+	 * has zero remaining quantity for that date (and time, for appointments).
+	 *
+	 * @param int    $post_id
+	 * @param string $selected_date Date in any strtotime-compatible format.
+	 * @return string[] Sold-out time strings (same format used for data-time attributes).
+	 */
+	if ( ! function_exists( 'rbfw_get_sd_sold_out_times' ) ) {
+		function rbfw_get_sd_sold_out_times( $post_id, $selected_date ) {
+			$post_id = absint( $post_id );
+			if ( ! $post_id || empty( $selected_date ) ) {
+				return array();
+			}
+
+			$item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+			if ( ! in_array( $item_type, array( 'bike_car_sd', 'appointment' ), true ) ) {
+				return array();
+			}
+
+			$rent_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+			if ( empty( $rent_data ) || ! is_array( $rent_data ) ) {
+				return array();
+			}
+
+			$times_particulars = rbfw_get_available_times_particulars( $post_id, $selected_date, '', '' );
+			$times             = array();
+			if ( ! empty( $times_particulars[0] ) && is_array( $times_particulars[0] ) ) {
+				$times = array_keys( $times_particulars[0] );
+			}
+			$times = array_unique( array_filter( $times ) );
+
+			$sold_out = array();
+			foreach ( $times as $time ) {
+				$has_stock = false;
+				foreach ( $rent_data as $type_row ) {
+					$rent_type = $type_row['rent_type'] ?? '';
+					if ( empty( $rent_type ) ) {
+						continue;
+					}
+					$available = rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $rent_type, $time );
+					if ( $available > 0 ) {
+						$has_stock = true;
+						break;
+					}
+				}
+				if ( ! $has_stock ) {
+					$sold_out[] = $time;
+				}
+			}
+
+			return $sold_out;
+		}
+	}
+
 	/******************************************
 	 * Extra Service: Get Available Quantity
 	 *****************************************/

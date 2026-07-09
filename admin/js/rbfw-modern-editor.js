@@ -1531,7 +1531,8 @@
                     action: 'rbfw_rent_type_rename',
                     nonce:  meNonce(),
                     term_id: meEditTermId,
-                    name:   name
+                    name:   name,
+                    parent: parseInt($wrap.find('#rbfw-me-rent-type-modal-parent').val(), 10) || 0
                 }, function (resp) {
                     if (resp && resp.success) {
                         var cur = (meHidden().val() || '').split(',').filter(Boolean).map(function (n) {

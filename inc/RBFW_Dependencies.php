@@ -416,6 +416,7 @@ if (! class_exists('RBFW_Dependencies')) {
 					'nonce_get_rent_item_left_filter_more_data_popup'        => wp_create_nonce('rbfw_get_rent_item_left_filter_more_data_popup_action'),
 					'nonce_bikecarsd_type_list'        => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
 					'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
+					'nonce_bikecarsd_sold_out_times'    => wp_create_nonce('rbfw_bikecarsd_sold_out_times_action'),
 					'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
 					// WooCommerce-optional native booking flow (consumed by rbfw_native_checkout.js).
 					'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),

@@ -117,11 +117,37 @@
 					wp_send_json_error( array( 'message' => esc_html__( 'Rent type not found.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 				}
 				$old_name = $term->name;
+
+				// Optional parent change.
+				$parent = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : 0;
+				if ( $parent > 0 ) {
+					$parent_term = get_term( $parent, 'rbfw_item_caregory' );
+					if ( ! $parent_term || is_wp_error( $parent_term ) ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'The selected parent category no longer exists.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+					if ( $parent === $term_id ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'A rent type cannot be its own parent.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+					$descendants = get_term_children( $term_id, 'rbfw_item_caregory' );
+					if ( ! is_wp_error( $descendants ) && in_array( $parent, $descendants, true ) ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'A rent type cannot be moved under one of its own sub-categories.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+				}
+
+				$update_args = array();
 				if ( $old_name !== $name ) {
-					$res = wp_update_term( $term_id, 'rbfw_item_caregory', array( 'name' => $name ) );
+					$update_args['name'] = $name;
+				}
+				if ( (int) $term->parent !== (int) $parent ) {
+					$update_args['parent'] = $parent;
+				}
+				if ( ! empty( $update_args ) ) {
+					$res = wp_update_term( $term_id, 'rbfw_item_caregory', $update_args );
 					if ( is_wp_error( $res ) ) {
 						wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
 					}
+				}
+				if ( $old_name !== $name ) {
 					$this->rbfw_sync_rent_type_meta( $this->rbfw_get_items_with_term( $term_id ), $old_name, $name );
 				}
 				wp_send_json_success( array(
@@ -461,7 +487,8 @@
                                     action: 'rbfw_rent_type_rename',
                                     nonce: rtNonce(),
                                     term_id: editTermId,
-                                    name: name
+                                    name: name,
+                                    parent: parseInt(jQuery('#rbfw-rent-type-modal-parent').val(), 10) || 0
                                 }, function (resp) {
                                     if (resp && resp.success) {
                                         var cur = (rtHidden().val() || '').split(',').filter(Boolean).map(function (n) {

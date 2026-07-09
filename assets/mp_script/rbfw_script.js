@@ -625,7 +625,70 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
         });
     }
 
+    // After rendering the time slots, ask the server which ones are fully sold out
+    // and disable them so customers cannot select an unavailable slot.
+    rbfwDisableSoldOutTimes( jQuery( timeSelect ), givenDate, is_calendar );
 
+}
+
+/**
+ * Fetch sold-out time slots for the selected date and disable them in the UI.
+ */
+function rbfwDisableSoldOutTimes( $container, selectedDate, isCalendar ) {
+    if ( typeof rbfw_ajax_front === 'undefined' || ! rbfw_ajax_front.nonce_bikecarsd_sold_out_times ) {
+        return;
+    }
+
+    var postId = jQuery( '.rbfw_post_id' ).val();
+    if ( ! postId || ! selectedDate ) {
+        return;
+    }
+
+    var times = [];
+    if ( isCalendar === 'calendar' ) {
+        $container.find( 'a.rbfw_bikecarsd_time' ).each( function () {
+            var t = jQuery( this ).attr( 'data-time' );
+            if ( t ) times.push( t );
+        } );
+    } else {
+        $container.find( 'option' ).each( function () {
+            var t = jQuery( this ).val();
+            if ( t ) times.push( t );
+        } );
+    }
+
+    if ( ! times.length ) {
+        return;
+    }
+
+    jQuery.post( rbfw_ajax_front.rbfw_ajaxurl, {
+        action: 'rbfw_bikecarsd_sold_out_times',
+        nonce: rbfw_ajax_front.nonce_bikecarsd_sold_out_times,
+        post_id: postId,
+        selected_date: selectedDate,
+        times: times
+    }, function ( resp ) {
+        if ( resp && resp.success && resp.data && resp.data.sold_out_times && resp.data.sold_out_times.length ) {
+            var soldOut = resp.data.sold_out_times;
+            if ( isCalendar === 'calendar' ) {
+                $container.find( 'a.rbfw_bikecarsd_time' ).each( function () {
+                    var $a = jQuery( this );
+                    if ( soldOut.indexOf( $a.attr( 'data-time' ) ) !== -1 ) {
+                        $a.addClass( 'disabled rbfw-soldout-time' )
+                          .removeClass( 'selected' )
+                          .attr( 'title', ( typeof rbfw_translation !== 'undefined' && rbfw_translation.sold_out ) ? rbfw_translation.sold_out : 'Sold Out' );
+                    }
+                } );
+            } else {
+                $container.find( 'option' ).each( function () {
+                    var $opt = jQuery( this );
+                    if ( soldOut.indexOf( $opt.val() ) !== -1 ) {
+                        $opt.prop( 'disabled', true ).addClass( 'rbfw-soldout-time' );
+                    }
+                } );
+            }
+        }
+    } );
 }
 
 
