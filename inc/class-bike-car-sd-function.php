@@ -25,6 +25,8 @@
 				add_action( 'wp_ajax_nopriv_particular_time_date_dependent', array( $this, 'particular_time_date_dependent' ) );
 				add_action( 'wp_ajax_rbfw_service_type_timely_stock', array( $this, 'rbfw_service_type_timely_stock' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_service_type_timely_stock', array( $this, 'rbfw_service_type_timely_stock' ) );
+				add_action( 'wp_ajax_rbfw_bikecarsd_sold_out_times', array( $this, 'rbfw_bikecarsd_sold_out_times' ) );
+				add_action( 'wp_ajax_nopriv_rbfw_bikecarsd_sold_out_times', array( $this, 'rbfw_bikecarsd_sold_out_times' ) );
 			}
 
 			public function rbfw_get_bikecarsd_rent_info( $product_id, $rent_info , $booking_date = null ) {
@@ -487,6 +489,26 @@
 				$selector          = ( isset( $_POST['selector'] ) && sanitize_text_field( wp_unslash( $_POST['selector'] ) ) ) ? sanitize_text_field( wp_unslash( $_POST['selector'] ) ) : '.rbfw-select.rbfw-time-price.pickup_time';
 				$times_particulars = rbfw_get_available_times_particulars( $post_id, $selected_date, $type, $selector );
 				echo wp_json_encode( $times_particulars );
+				wp_die();
+			}
+
+			/**
+			 * AJAX: return the time slots that are fully sold out for the selected date.
+			 * Used by the single-day / appointment frontend to disable unavailable slots
+			 * before the customer clicks them.
+			 */
+			public function rbfw_bikecarsd_sold_out_times() {
+				check_ajax_referer( 'rbfw_bikecarsd_sold_out_times_action', 'nonce' );
+
+				$post_id       = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : 0;
+				$selected_date = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+
+				$sold_out_times = array();
+				if ( $post_id && $selected_date ) {
+					$sold_out_times = rbfw_get_sd_sold_out_times( $post_id, $selected_date );
+				}
+
+				echo wp_json_encode( array( 'sold_out_times' => $sold_out_times ) );
 				wp_die();
 			}
 
