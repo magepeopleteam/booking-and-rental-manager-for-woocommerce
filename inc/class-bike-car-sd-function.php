@@ -508,8 +508,7 @@
 					$sold_out_times = rbfw_get_sd_sold_out_times( $post_id, $selected_date );
 				}
 
-				echo wp_json_encode( array( 'sold_out_times' => $sold_out_times ) );
-				wp_die();
+				wp_send_json_success( array( 'sold_out_times' => $sold_out_times ) );
 			}
 
 			public function rbfw_service_type_timely_stock() {
