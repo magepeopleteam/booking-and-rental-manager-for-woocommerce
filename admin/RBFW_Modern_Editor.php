@@ -23,6 +23,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			add_action( 'admin_menu',             [ $this, 'fix_add_new_submenu_link' ], 999 );
 			add_action( 'load-post.php',          [ $this, 'maybe_redirect_edit_screen' ] );
 			add_action( 'load-post-new.php',      [ $this, 'maybe_redirect_new_screen' ] );
+			add_action( 'current_screen',         [ $this, 'maybe_create_draft_before_output' ] );
 			add_action( 'admin_enqueue_scripts',  [ $this, 'enqueue_assets' ] );
 			add_action( 'admin_head',             [ $this, 'hide_menu_styles' ] );
 			add_filter( 'admin_body_class',       [ $this, 'admin_body_class' ] );
@@ -277,6 +278,37 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			wp_safe_redirect( $this->edit_url( $post_id, 'general' ) );
 			exit;
+		}
+
+		/**
+		 * When the modern editor page is opened without an item_id (e.g. the
+		 * "Add New" submenu link), create the draft and redirect EARLY —
+		 * on `current_screen`, before admin-header.php has produced any output.
+		 * Doing this inside render_page() triggers "Cannot modify header
+		 * information — headers already sent" warnings.
+		 */
+		public function maybe_create_draft_before_output(): void {
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				return;
+			}
+
+			if ( ! $this->is_edit_screen() ) {
+				return;
+			}
+
+			if ( isset( $_GET['item_id'] ) && absint( $_GET['item_id'] ) > 0 ) {
+				return;
+			}
+
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				return;
+			}
+
+			$new_id = $this->create_draft_item();
+			if ( $new_id > 0 ) {
+				wp_safe_redirect( $this->edit_url( $new_id, 'general' ) );
+				exit;
+			}
 		}
 
 		/* ── Body class / menu highlight ────────────────────────────────────── */
@@ -541,7 +573,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 		/* ── Extra service table (service_name[], service_price[], etc.) ── */
-			$input = RBFW_Function::data_sanitize( $_POST );
+			$input = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
 			$names       = $input['service_name']  ?? [];
 			$prices      = $input['service_price'] ?? [];
 			$descs       = $input['service_desc']  ?? [];
@@ -560,16 +592,22 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 			if ( ! empty( $new_extra ) ) {
-				update_post_meta( $post_id, 'rbfw_extra_service_data', $new_extra );
+				update_post_meta( $post_id, 'rbfw_extra_service_data', wp_slash( $new_extra ) );
 			} elseif ( isset( $_POST['service_name'] ) ) {
 				delete_post_meta( $post_id, 'rbfw_extra_service_data' );
 			}
 
-			/* Extra service category price */
+			/* Extra service category price.
+			 * Stored as a native array (WP serializes it) — matching the classic
+			 * editor and both readers (Extra_Service.php / RBFW_Woocommerse.php),
+			 * which check is_array() first. Previously this was wp_json_encode()d
+			 * without JSON_UNESCAPED_UNICODE and without wp_slash(), so multibyte
+			 * chars (æ/ø/å) became "æ"-style escapes whose backslashes were then
+			 * stripped by update_post_meta(), corrupting the stored JSON. */
 			if ( isset( $_POST['rbfw_service_category_price'] ) && is_array( $_POST['rbfw_service_category_price'] ) ) {
 				$scp_raw = wp_unslash( $_POST['rbfw_service_category_price'] );
 				array_walk_recursive( $scp_raw, function ( &$v ) { $v = is_string( $v ) ? sanitize_text_field( $v ) : ''; } );
-				update_post_meta( $post_id, 'rbfw_service_category_price', wp_json_encode( $scp_raw ) );
+				update_post_meta( $post_id, 'rbfw_service_category_price', wp_slash( $scp_raw ) );
 			}
 			if ( isset( $_POST['rbfw_enable_category_service_price'] ) ) {
 				update_post_meta( $post_id, 'rbfw_enable_category_service_price', sanitize_text_field( wp_unslash( $_POST['rbfw_enable_category_service_price'] ) ) );
@@ -835,11 +873,23 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			$post    = $post_id ? get_post( $post_id ) : null;
 
-			/* Create draft if no ID yet */
+			/* Create draft if no ID yet.
+			 * Normally handled earlier by maybe_create_draft_before_output();
+			 * this fallback must never call wp_safe_redirect() once admin-header
+			 * output has started, so fall back to a JS/meta redirect. */
 			if ( ! $post_id ) {
 				$new_id = $this->create_draft_item();
 				if ( $new_id > 0 ) {
-					wp_safe_redirect( $this->edit_url( $new_id, 'general' ) );
+					$redirect_url = $this->edit_url( $new_id, 'general' );
+					if ( ! headers_sent() ) {
+						wp_safe_redirect( $redirect_url );
+					} else {
+						printf(
+							'<script>window.location.replace(%s);</script><noscript><meta http-equiv="refresh" content="0;url=%s"></noscript>',
+							wp_json_encode( esc_url_raw( $redirect_url ) ),
+							esc_url( $redirect_url )
+						);
+					}
 					exit;
 				}
 			}
