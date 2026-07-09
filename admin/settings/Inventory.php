@@ -77,6 +77,9 @@
                                                     <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?><b class="required">*</b>
                                                 </th>
                                                 <th>
+                                                    <?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                </th>
+                                                <th>
 													<?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                                 </th>
                                                 <th>
@@ -94,6 +97,9 @@
                                                             </td>
                                                             <td>
                                                                 <input type="number" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][quantity]" value="<?php echo esc_attr( $value['quantity'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" step="0.01" min="0" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][price]" value="<?php echo esc_attr( isset( $value['price'] ) ? $value['price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                                             </td>
                                                             <td>
                                                                 <input type="checkbox" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][selected_value]" value="<?php echo esc_attr( $value['name'] ); ?>" class="rbfw_variation_selected_value" <?php if ( $value['name'] == $selected_value ) {
@@ -150,6 +156,9 @@
                                                 </b>
                                             </th>
                                             <th>
+                                                <?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </th>
+                                            <th>
 												<?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>
                                             <th>
@@ -163,6 +172,9 @@
                                                 </td>
                                                 <td>
                                                     <input type="number" name="rbfw_variations_data[0][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" min="0" name="rbfw_variations_data[0][value][0][price]" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                                 </td>
                                                 <td>
                                                     <input type="checkbox" name="rbfw_variations_data[0][selected_value]" class="rbfw_variation_selected_value">

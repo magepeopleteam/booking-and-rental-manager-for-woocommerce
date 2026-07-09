@@ -9323,6 +9323,56 @@ textarea.rbfw-me-field-invalid {
     to { background-position: 300% 0; }
 }
 
+/* ── Sub-category (child) rent-type chips ─────────────────────── */
+/* Children are indented via left margin (depth * step) and get a softer,
+   dashed pill treatment plus a "corner" connector so the hierarchy reads
+   clearly even inside the flex-wrap pill grid. */
+.rbfw-me-checkbox-label.rbfw-rt-chip--child {
+    margin-left: calc(var(--rbfw-rt-depth, 1) * 22px);
+    background: #f8fafc;
+    border-style: dashed;
+    border-color: #cbd5e1;
+    color: #475569;
+    font-weight: 500;
+    padding-left: 14px;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip--child:hover {
+    background: #eef2f9;
+    border-color: #94a3b8;
+    color: #1e293b;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip--child:has(input:checked),
+.rbfw-me-checkbox-label.rbfw-rt-chip--child.is-checked {
+    background: var(--me-primary-soft);
+    border-color: var(--me-primary);
+    border-style: solid;
+    color: var(--me-primary);
+    font-weight: 600;
+}
+/* Connector elbow drawn to the left of each child chip */
+.rbfw-me-checkbox-label.rbfw-rt-chip--child::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    width: 12px;
+    height: 1px;
+    background: #cbd5e1;
+    pointer-events: none;
+}
+.rbfw-rt-subarrow {
+    color: #94a3b8;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    margin-right: 4px;
+    pointer-events: none;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip--child:has(input:checked) .rbfw-rt-subarrow,
+.rbfw-me-checkbox-label.rbfw-rt-chip--child.is-checked .rbfw-rt-subarrow {
+    color: var(--me-primary);
+}
+
 /* ── Block Booking If Date Range Contains Off Days (Off Days tab) ── */
 .rbfw-me-offday-block-head {
     align-items: center !important;

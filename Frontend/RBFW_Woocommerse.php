@@ -800,34 +800,50 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
 
-                /* Item Variations (Single Day): capture the customer's size selection the
-                   same way the multi-day branch does, so per-size stock can be enforced by
-                   rbfw_check_rental_availability() and the choice is shown in cart/order.
+                /* Item Variations (Single Day): per-value quantity steppers submit
+                   rbfw_variation_qty[field_id][value_name] = qty. Build one cart entry
+                   per chosen size (qty > 0) carrying its per-unit surcharge price -- the
+                   same flat shape rbfw_room_info uses -- so per-size stock can be enforced
+                   by rbfw_check_rental_availability() and each size shows in cart/order.
                    Mirrors the multi-day capture block below in this same function. */
-                $variation_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true );
-                $variation_info = [];
+                $variation_data           = get_post_meta( $rbfw_id, 'rbfw_variations_data', true );
+                $variation_info           = [];
+                $rbfw_variation_surcharge = 0.0;
+                $rbfw_variation_qty_input = ( isset( $sd_input_data_sabitized['rbfw_variation_qty'] ) && is_array( $sd_input_data_sabitized['rbfw_variation_qty'] ) ) ? $sd_input_data_sabitized['rbfw_variation_qty'] : [];
                 if ( ! empty( $variation_data ) && is_array( $variation_data ) ) {
                     $i = 0;
                     foreach ( $variation_data as $level_one_arr ) {
                         // Skip incomplete/legacy variation rows (missing id or values).
                         if ( ! is_array( $level_one_arr ) || empty( $level_one_arr['field_id'] ) || empty( $level_one_arr['value'] ) || ! is_array( $level_one_arr['value'] ) ) {
-                            $i ++;
                             continue;
                         }
-                        $field_id             = $level_one_arr['field_id'];
-                        $field_label          = isset( $level_one_arr['field_label'] ) ? $level_one_arr['field_label'] : '';
-                        $selected_field_value = ! empty( $sd_input_data_sabitized[ $field_id ] ) ? $sd_input_data_sabitized[ $field_id ] : [];
+                        $field_id    = $level_one_arr['field_id'];
+                        $field_label = isset( $level_one_arr['field_label'] ) ? $level_one_arr['field_label'] : '';
+                        $qty_map     = ( isset( $rbfw_variation_qty_input[ $field_id ] ) && is_array( $rbfw_variation_qty_input[ $field_id ] ) ) ? $rbfw_variation_qty_input[ $field_id ] : [];
                         foreach ( $level_one_arr['value'] as $level_two_arr_value ) {
                             $level_two_name = isset( $level_two_arr_value['name'] ) ? $level_two_arr_value['name'] : '';
-                            if ( $selected_field_value == $level_two_name ) {
-                                $variation_info[ $i ]['field_id']    = $field_id;
-                                $variation_info[ $i ]['field_label'] = $field_label;
-                                $variation_info[ $i ]['field_value'] = $selected_field_value;
+                            if ( '' === $level_two_name ) {
+                                continue;
                             }
+                            $chosen_qty = isset( $qty_map[ $level_two_name ] ) ? max( 0, (int) $qty_map[ $level_two_name ] ) : 0;
+                            if ( $chosen_qty <= 0 ) {
+                                continue;
+                            }
+                            $unit_price                = rbfw_get_variation_price_for_value( $rbfw_id, $level_two_name );
+                            $variation_info[ $i ]      = array(
+                                'field_id'    => $field_id,
+                                'field_label' => $field_label,
+                                'field_value' => $level_two_name,
+                                'qty'         => $chosen_qty,
+                                'price'       => $unit_price,
+                            );
+                            $rbfw_variation_surcharge += $unit_price * $chosen_qty;
+                            $i ++;
                         }
-                        $i ++;
                     }
                 }
+                // Per-unit variant surcharge adds on top of the quantity-scaled duration price.
+                $sub_total_price += $rbfw_variation_surcharge;
 
                 $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date , $rbfw_management_info , $rbfw_management_price, $variation_info);
 
@@ -846,6 +862,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_end_time']                 = $end_time;
                 $cart_item_data['rbfw_type_info']                = $rbfw_type_info;
                 $cart_item_data['rbfw_variation_info']           = $variation_info;
+                $cart_item_data['rbfw_variation_surcharge']      = $rbfw_variation_surcharge;
                 $cart_item_data['rbfw_service_info']             = $rbfw_service_info;
                 $cart_item_data['rbfw_bikecarsd_duration_price'] = $rbfw_bikecarsd_duration_price;
                 $cart_item_data['rbfw_bikecarsd_service_price']  = $rbfw_bikecarsd_service_price;
@@ -1053,35 +1070,52 @@ if (!class_exists('RBFW_Woocommerce')) {
                         }
                     }
                 }
-                $variation_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true );
-                $variation_info = [];
+                /* Item Variations (Multi Day): per-value quantity steppers submit
+                   rbfw_variation_qty[field_id][value_name] = qty. Mirror of the single-day
+                   capture above -- one flat entry per chosen size with its per-unit
+                   surcharge, so stock is enforced per size and each shows in cart/order. */
+                $variation_data           = get_post_meta( $rbfw_id, 'rbfw_variations_data', true );
+                $variation_info           = [];
+                $rbfw_variation_surcharge = 0.0;
+                $rbfw_variation_qty_input = ( isset( $sd_input_data_sabitized['rbfw_variation_qty'] ) && is_array( $sd_input_data_sabitized['rbfw_variation_qty'] ) ) ? $sd_input_data_sabitized['rbfw_variation_qty'] : [];
                 if ( ! empty( $variation_data ) && is_array( $variation_data ) ) {
                     $i = 0;
                     foreach ( $variation_data as $level_one_arr ) {
                         // Skip incomplete/legacy variation rows (missing id or values)
                         // so they cannot raise "Undefined array key" notices here.
                         if ( ! is_array( $level_one_arr ) || empty( $level_one_arr['field_id'] ) || empty( $level_one_arr['value'] ) || ! is_array( $level_one_arr['value'] ) ) {
-                            $i ++;
                             continue;
                         }
-                        $field_id             = $level_one_arr['field_id'];
-                        $field_label          = isset( $level_one_arr['field_label'] ) ? $level_one_arr['field_label'] : '';
-                        $selected_field_value = ! empty( $sd_input_data_sabitized[ $field_id ] ) ? $sd_input_data_sabitized[ $field_id ] : [];
+                        $field_id    = $level_one_arr['field_id'];
+                        $field_label = isset( $level_one_arr['field_label'] ) ? $level_one_arr['field_label'] : '';
+                        $qty_map     = ( isset( $rbfw_variation_qty_input[ $field_id ] ) && is_array( $rbfw_variation_qty_input[ $field_id ] ) ) ? $rbfw_variation_qty_input[ $field_id ] : [];
                         foreach ( $level_one_arr['value'] as $level_two_arr_value ) {
                             $level_two_name = isset( $level_two_arr_value['name'] ) ? $level_two_arr_value['name'] : '';
-                            if ( $selected_field_value == $level_two_name ) {
-                                $variation_info[ $i ]['field_id']    = $field_id;
-                                $variation_info[ $i ]['field_label'] = $field_label;
-                                $variation_info[ $i ]['field_value'] = $selected_field_value;
+                            if ( '' === $level_two_name ) {
+                                continue;
                             }
+                            $chosen_qty = isset( $qty_map[ $level_two_name ] ) ? max( 0, (int) $qty_map[ $level_two_name ] ) : 0;
+                            if ( $chosen_qty <= 0 ) {
+                                continue;
+                            }
+                            $unit_price                = rbfw_get_variation_price_for_value( $rbfw_id, $level_two_name );
+                            $variation_info[ $i ]      = array(
+                                'field_id'    => $field_id,
+                                'field_label' => $field_label,
+                                'field_value' => $level_two_name,
+                                'qty'         => $chosen_qty,
+                                'price'       => $unit_price,
+                            );
+                            $rbfw_variation_surcharge += $unit_price * $chosen_qty;
+                            $i ++;
                         }
-                        $i ++;
                     }
                 }
 
 
 
-                $sub_total_price = $rbfw_duration_price + $rbfw_service_price + $rbfw_extra_service_price;
+                // Per-unit variant surcharge adds on top of the quantity-scaled duration price.
+                $sub_total_price = $rbfw_duration_price + $rbfw_service_price + $rbfw_extra_service_price + $rbfw_variation_surcharge;
 
                 $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
 
@@ -1156,6 +1190,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_management_price']           = $rbfw_management_price;
                 $cart_item_data['rbfw_service_infos']             = $rbfw_service_infos;
                 $cart_item_data['rbfw_variation_info']            = $variation_info;
+                $cart_item_data['rbfw_variation_surcharge']       = $rbfw_variation_surcharge;
                 $cart_item_data['rbfw_ticket_info']               = $rbfw_ticket_info;
                 $cart_item_data['rbfw_duration_price_individual'] = $duration_price_individual;
                 $cart_item_data['rbfw_duration_price']            = $rbfw_duration_price;

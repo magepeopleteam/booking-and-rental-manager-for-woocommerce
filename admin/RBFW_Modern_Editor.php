@@ -869,6 +869,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'hide_empty' => false,
 			] );
 			$all_cat_terms   = is_wp_error( $all_cat_terms ) ? [] : $all_cat_terms;
+			// Order parent-first and stamp a `depth` on each term so the view can
+			// indent sub-categories beneath their parent.
+			$all_cat_terms   = $this->order_cat_terms_hierarchically( $all_cat_terms );
 			$saved_cat_meta  = $post_id ? get_post_meta( $post_id, 'rbfw_categories', true ) : [];
 			$saved_cat_meta  = is_array( $saved_cat_meta ) ? $saved_cat_meta : ( $saved_cat_meta ? maybe_unserialize( $saved_cat_meta ) : [] );
 			// Flatten any comma-separated values stored as a single element
@@ -909,6 +912,32 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$GLOBALS['post'] = $post;
 
 			include RBFW_PLUGIN_DIR . '/admin/views/rbfw-modern-editor.php';
+		}
+
+		/**
+		 * Flatten a set of rent-type terms into a parent-first ordered list, stamping a
+		 * `depth` property on each term so the view can indent sub-categories beneath
+		 * their parent.
+		 *
+		 * @param WP_Term[] $terms  Flat list of terms.
+		 * @param int       $parent Parent term_id to collect children for.
+		 * @param int       $depth  Current nesting depth.
+		 * @return WP_Term[]
+		 */
+		private function order_cat_terms_hierarchically( $terms, $parent = 0, $depth = 0 ) {
+			$out = [];
+			foreach ( $terms as $term ) {
+				if ( (int) $term->parent !== (int) $parent ) {
+					continue;
+				}
+				$term->depth = (int) $depth;
+				$out[]       = $term;
+				$out         = array_merge(
+					$out,
+					$this->order_cat_terms_hierarchically( $terms, $term->term_id, $depth + 1 )
+				);
+			}
+			return $out;
 		}
 
 		private function get_meta( int $post_id ): array {

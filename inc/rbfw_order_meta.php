@@ -1291,10 +1291,19 @@ function fetch_order_details_callback() {
                         <?php } ?>
                         <?php if ( ! empty( $variation_info ) ) {
                             foreach ( $variation_info as $key => $value ) {
+                                $vi_qty   = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+                                $vi_price = isset( $value['price'] ) ? (float) $value['price'] : 0;
+                                $vi_text  = esc_html( $value['field_value'] ?? '' );
+                                if ( $vi_qty > 0 ) {
+                                    $vi_text .= ' × ' . esc_html( $vi_qty );
+                                }
+                                if ( $vi_price > 0 ) {
+                                    $vi_text .= ' <span class="rbfw_variation_surcharge">(+' . wp_kses_post( wc_price( $vi_price ) ) . ')</span>';
+                                }
                                 ?>
                                 <tr>
                                     <td><strong><?php echo esc_html( $value['field_label'] ?? '' ); ?></strong></td>
-                                    <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
+                                    <td><?php echo wp_kses_post( $vi_text ); ?></td>
                                 </tr>
                             <?php }
                         } ?>
@@ -1866,10 +1875,19 @@ function rbfw_order_meta_box_callback() {
                     </tr>
                     <?php if ( ! empty( $variation_info ) ) {
                         foreach ( $variation_info as $key => $value ) {
+                            $vi_qty   = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+                            $vi_price = isset( $value['price'] ) ? (float) $value['price'] : 0;
+                            $vi_text  = esc_html( $value['field_value'] ?? '' );
+                            if ( $vi_qty > 0 ) {
+                                $vi_text .= ' × ' . esc_html( $vi_qty );
+                            }
+                            if ( $vi_price > 0 ) {
+                                $vi_text .= ' <span class="rbfw_variation_surcharge">(+' . wp_kses_post( wc_price( $vi_price ) ) . ')</span>';
+                            }
                             ?>
                             <tr>
                                 <td><strong><?php echo esc_html( $value['field_label'] ?? '' ); ?></strong></td>
-                                <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
+                                <td><?php echo wp_kses_post( $vi_text ); ?></td>
                             </tr>
                         <?php }
                     } ?>

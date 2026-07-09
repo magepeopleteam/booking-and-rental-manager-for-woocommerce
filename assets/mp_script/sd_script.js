@@ -103,9 +103,17 @@
 
                             },
                             complete:function(data) {
-                                jQuery('html, body').animate({
-                                    scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
-                                }, 100);
+                                // Guard: on some templates (e.g. multi-hour/timely) the
+                                // calendar header is absent, so .offset() is undefined.
+                                // An unguarded .top throw here aborts jQuery's complete
+                                // sequence BEFORE the global ajaxComplete fires, which
+                                // silently kills the variation-surcharge recalc bound to it.
+                                var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
+                                if ($hdr.length && $hdr.offset()) {
+                                    jQuery('html, body').animate({
+                                        scrollTop: $hdr.offset().top
+                                    }, 100);
+                                }
                             }
                     });
                 }
@@ -595,7 +603,19 @@ function rbfw_price_calculation_sd(){
     // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
     let rbfw_service_price = parseFloat(jQuery('#rbfw_service_price').val()) || 0;
     var rbfw_es_service_price = parseFloat(jQuery('#rbfw_es_service_price').val()) || 0;
-    var sub_total_price = rbfw_service_price + rbfw_es_service_price;
+
+    // Per-value variation surcharge: summed fresh from the steppers on every
+    // recalc so it survives any handler that rewrites #rbfw_service_price (which
+    // now holds the duration cost ONLY). Rendered as its own summary line, never
+    // folded into Duration Cost. Server re-computes this authoritatively at add-to-cart.
+    var rbfw_variation_surcharge = 0;
+    jQuery('.rbfw-variation-qty-input').each(function () {
+        var q = parseInt(jQuery(this).val(), 10) || 0;
+        var p = parseFloat(jQuery(this).attr('data-price')) || 0;
+        rbfw_variation_surcharge += q * p;
+    });
+
+    var sub_total_price = rbfw_service_price + rbfw_es_service_price + rbfw_variation_surcharge;
 
     let rbfw_management_price = fee_management(sub_total_price,1,1);
 
@@ -605,6 +625,14 @@ function rbfw_price_calculation_sd(){
 
     jQuery('.duration-costing span').text(wc_price_rbfw(rbfw_service_price));
     jQuery('.extra_service_cost span').text(wc_price_rbfw(rbfw_es_service_price));
+
+    // Variations surcharge line — only surfaced when a priced variant is selected.
+    if (rbfw_variation_surcharge > 0) {
+        jQuery('.variation-costing').show();
+        jQuery('.variation-costing span').text(wc_price_rbfw(rbfw_variation_surcharge));
+    } else {
+        jQuery('.variation-costing').hide();
+    }
 
 
     let rbfw_security_deposit_actual_amount = 0;
@@ -650,6 +678,24 @@ function datepicker_inline(){
 }
 
 
+// Collect the currently-selected variation quantities, keyed by field id, so
+// the server can re-render the stepper selector with the user's choices
+// preserved after a date change.
+function rbfw_get_selected_variations(){
+    var selected = {};
+    jQuery('.rbfw-variation-qty-input').each(function(){
+        var $input = jQuery(this);
+        var fieldId = $input.attr('data-field-id');
+        var valueName = $input.attr('data-value');
+        var qty = parseInt($input.val(), 10) || 0;
+        if (fieldId && valueName && qty > 0) {
+            if (!selected[fieldId]) selected[fieldId] = {};
+            selected[fieldId][valueName] = qty;
+        }
+    });
+    return selected;
+}
+
 function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',enable_specific_duration = 'off'){
     jQuery.ajax({
         type: 'POST',
@@ -661,6 +707,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             'rbfw_bikecarsd_selected_date': start_date,
             'pickup_time': start_time,
             'enable_specific_duration': enable_specific_duration,
+            'rbfw_variation_qty': rbfw_get_selected_variations(),
             'nonce' : rbfw_ajax_front.nonce_service_type_timely_stock
         },
         beforeSend: function() {
@@ -724,6 +771,12 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                 jQuery('.single-type-timely').removeClass('selected');
             });
 
+
+            // Swap in the server-rendered variation selector (with per-variation
+            // remaining-qty counts already computed for the newly selected date).
+            if (typeof response.variation_html !== 'undefined' && response.variation_html !== '') {
+                jQuery('.rbfw-variations-content-wrapper').replaceWith(response.variation_html);
+            }
 
             //jQuery('.rbfw_service_type_timely').html(response);
             jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);

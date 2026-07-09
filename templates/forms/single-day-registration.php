@@ -127,44 +127,6 @@
                     </div>
                 </div>
 
-                <?php
-                /* Item Variations (e.g. Size S/M/L/XL) — Single Day only.
-                   For the standard (non-timely) flow the size selector is rendered under
-                   the rate price table inside single_day_info.php (the AJAX step-3 content).
-                   Timely-inventory mode does not use that AJAX table, so render the selector
-                   here for timely items. Either way the choice is posted with "Book Now" and
-                   per-size stock is enforced at add-to-cart by rbfw_check_rental_availability(). */
-                if ( $rbfw_rent_type == 'bike_car_sd' && $manage_inventory_as_timely == 'on' && $rbfw_enable_variations == 'yes' && ! empty( $rbfw_variations_data ) ) { ?>
-                    <div class="rbfw-variations-content-wrapper">
-                        <?php foreach ( $rbfw_variations_data as $data_arr_one ) {
-                            // Some saved/legacy variation rows may omit one or more keys; default
-                            // them so the template never raises "Undefined array key" notices.
-                            $field_label    = isset( $data_arr_one['field_label'] ) ? $data_arr_one['field_label'] : '';
-                            $field_id       = isset( $data_arr_one['field_id'] ) ? $data_arr_one['field_id'] : '';
-                            $field_values   = ! empty( $data_arr_one['value'] ) && is_array( $data_arr_one['value'] ) ? $data_arr_one['value'] : array();
-                            $selected_value = ! empty( $data_arr_one['selected_value'] ) ? $data_arr_one['selected_value'] : '';
-                            ?>
-                            <div class="item">
-                                <div class="rbfw-single-right-heading"><?php echo esc_html( $field_label ); ?></div>
-                                <div class="item-content rbfw-p-relative">
-                                    <?php if ( ! empty( $field_values ) ) { ?>
-                                        <select class="rbfw-select rbfw_variation_field" required name="<?php echo esc_attr( $field_id ); ?>" id="<?php echo esc_attr( $field_id ); ?>" data-field="<?php echo esc_attr( $field_label ); ?>">
-                                            <?php if ( empty( $selected_value ) ) { ?>
-                                                <option value=""><?php echo esc_html( __( 'Choose', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $field_label ); ?></option>
-                                            <?php } ?>
-                                            <?php foreach ( $field_values as $data_arr_two ) {
-                                                $variant_name = isset( $data_arr_two['name'] ) ? $data_arr_two['name'] : '';
-                                                ?>
-                                                <option class="rbfw_variant" value="<?php echo esc_attr( $variant_name ); ?>" <?php if ( $variant_name !== '' && $variant_name == $selected_value ) { echo 'selected'; } ?>><?php echo esc_html( $variant_name ); ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    <?php } ?>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-                <?php } ?>
-
                 <?php  if($manage_inventory_as_timely !='on' || $rbfw_rent_type =='appointment'){ ?>
                     <div class="item rbfw-bikecarsd-step" data-step="1">
                         <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
@@ -262,6 +224,18 @@
                     </div>
 
                     <div class="rbfw_bikecarsd_pricing_table_container rbfw_quantiry_area_sd" style="display: none">
+                        <?php
+                        /* Item Variations (e.g. Size S/M/L/XL) — timely mode. Rendered inside the
+                           quantity area, which JS reveals once a Rental Duration is selected, so the
+                           size selector appears with the duration/quantity, not above the date field.
+                           The choice posts with "Book Now"; per-size stock is enforced at add-to-cart
+                           by rbfw_check_rental_availability(). */
+                        if ( $rbfw_enable_variations == 'yes' && ! empty( $rbfw_variations_data ) && function_exists( 'rbfw_render_sd_variation_field' ) ) {
+                            /* Server-rendered variation selector with per-variation "N left" counts.
+                               Shared with the date-change AJAX (rbfw_service_type_timely_stock) so the
+                               count refreshes for the chosen date. Markup is escaped inside the renderer. */
+                            echo rbfw_render_sd_variation_field( $rbfw_id, $rbfw_variations_data ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                        } ?>
                         <div class="rbfw_bikecarsd_price_table timely_quqntity_table">
                             <span class="rbfw_bikecarsd_type_title">
                                 <?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?>
@@ -455,6 +429,13 @@
                                                 </span>
                                             </li>
                                         <?php } ?>
+
+                                        <li class="variation-costing rbfw-cond" style="display: none">
+                                            <?php esc_html_e('Variations','booking-and-rental-manager-for-woocommerce'); ?>
+                                            <span>
+                                                <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
+                                            </span>
+                                        </li>
 
                                         <li class="subtotal">
                                             <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
