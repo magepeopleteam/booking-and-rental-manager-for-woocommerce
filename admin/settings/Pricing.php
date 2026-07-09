@@ -228,7 +228,6 @@
                                         <th>
 											<?php echo wp_kses( sprintf( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ), array( 'b' => array( 'class' => array() ), ) ); ?>
                                         </th>
-                                        <th><?php esc_html_e( 'Quote Mode', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th class="rbfw_without_time_inventory <?php echo esc_attr( $manage_inventory_as_timely == 'on' ) ? 'rbfw_hide' : '' ?>">
 											<?php $text = sprintf( __( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ) );
 												echo wp_kses( $text, array( 'b' => array( 'class' => array(), ), ) ); ?>
@@ -260,13 +259,6 @@
                                                     <td><input type="text" class="rbfw_type_title" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td>
-                                                        <select name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][quote_mode]">
-                                                            <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                                <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( ( isset( $value['quote_mode'] ) ? $value['quote_mode'] : 'default' ), $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </td>
                                                     <td class="rbfw_without_time_inventory <?php echo esc_attr( $manage_inventory_as_timely == 'on' ? 'rbfw_hide' : '' ); ?>">
                                                         <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
@@ -310,13 +302,6 @@
                                                 </td>
                                                 <td>
                                                     <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
-                                                </td>
-                                                <td>
-                                                    <select name="rbfw_bike_car_sd_data[0][quote_mode]">
-                                                        <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                            <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( 'default', $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
                                                 </td>
                                                 <td class="rbfw_without_time_inventory">
                                                     <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
@@ -449,7 +434,6 @@
                                 <div class="daily-field <?php echo esc_attr( $enabled_price_types['daily'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Daily ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="weekly-field <?php echo esc_attr( $enabled_price_types['weekly'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Weekly ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="monthly-field <?php echo esc_attr( $enabled_price_types['monthly'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Monthly ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div><?php esc_html_e( 'Quote Mode', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="rbfw-mi-action-head"></div>
                             </div>
 
@@ -484,15 +468,6 @@
                                         <div class="form-group monthly-field <?php echo esc_attr( $enabled_price_types['monthly'] ? '' : 'disabled-field' ); ?>">
                                             <label><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
                                             <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo esc_attr( $item_price['monthly_price'] ?? '' ); ?>" placeholder="0.00">
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label><?php esc_html_e( 'Quote Mode', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                            <select name="multiple_items_info[<?php echo esc_attr( $i ); ?>][quote_mode]">
-                                                <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                    <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( ( isset( $item_price['quote_mode'] ) ? $item_price['quote_mode'] : 'default' ), $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
                                         </div>
 
                                         <div class="form-group rbfw-mi-row-action">
@@ -661,15 +636,6 @@
                                 ${buildPriceField('weekly', itemIndex)}
                                 ${buildPriceField('monthly', itemIndex)}
 
-                                <div class="form-group">
-                                    <label><?php echo esc_js( __( 'Quote Mode', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
-                                    <select name="multiple_items_info[${itemIndex}][quote_mode]">
-                                        <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                            <option value="<?php echo esc_js( esc_attr( $qm_value ) ); ?>"><?php echo esc_js( $qm_label ); ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
                                 <div class="form-group rbfw-mi-row-action">
                                     <label>&nbsp;</label>
                                     <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" title="<?php echo esc_js( __( 'Delete', 'booking-and-rental-manager-for-woocommerce' ) ); ?>">
@@ -745,7 +711,6 @@
                                         <th><?php esc_html_e( 'Rental option name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                        <th><?php esc_html_e( 'Quote Mode', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
 											echo 'style="display:none"';
 										} ?>><?php esc_html_e( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -764,13 +729,6 @@
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td>
-                                                        <select name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][quote_mode]">
-                                                            <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                                <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( ( isset( $value['quote_mode'] ) ? $value['quote_mode'] : 'default' ), $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php echo ( $rbfw_item_type == 'appointment' )?'style="display:none"':''; ?>>
                                                         <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
@@ -790,13 +748,6 @@
                                                 <td><input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" value="" placeholder="<?php esc_attr_e( '1 hour bike rent', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td><input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" value="" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td><input type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" value="" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                <td>
-                                                    <select name="rbfw_bike_car_sd_data[0][quote_mode]">
-                                                        <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                            <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( 'default', $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </td>
                                                 <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
 													echo 'style="display:none"';
 												} ?> ><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php esc_attr_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
@@ -858,7 +809,6 @@
                                         <th class="resort_day_long_price" style="display:<?php echo esc_attr( ( $rbfw_enable_resort_daylong_price == 'yes' ) ? 'table-cell' : 'none' ); ?>"><?php esc_html_e( 'Day-long price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Day-night price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                        <th><?php esc_html_e( 'Quote Mode', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th colspan="2"><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                     </tr>
                                     </thead>
@@ -889,13 +839,6 @@
 													} ?>;"><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_daylong_rate]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_daylong_rate'] ); ?>" placeholder="<?php esc_attr_e( 'Day-long Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
                                                     <td><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_daynight_rate]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_daynight_rate'] ); ?>" placeholder="<?php esc_attr_e( 'Day-night Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
                                                     <td><input type="text" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_desc]" value="<?php echo esc_attr( $value['rbfw_room_desc'] ); ?>" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
-                                                    <td>
-                                                        <select name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][quote_mode]">
-                                                            <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                                <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( ( isset( $value['quote_mode'] ) ? $value['quote_mode'] : 'default' ), $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </td>
                                                     <td><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_available_qty]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_available_qty'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
                                                     <td>
                                                         <div class="mp_event_remove_move">
@@ -945,13 +888,6 @@
                                                         name="rbfw_resort_room_data[0][rbfw_room_desc]"
                                                         value="<?php echo esc_attr( '' ); ?>"
                                                         placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                                </td>
-                                                <td>
-                                                    <select name="rbfw_resort_room_data[0][quote_mode]">
-                                                        <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
-                                                            <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( 'default', $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
                                                 </td>
                                                 <td>
                                                     <input

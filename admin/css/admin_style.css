@@ -6407,7 +6407,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     align-items: center;
     display: grid;
     gap: 16px;
-    grid-template-columns: minmax(190px, 1.4fr) 64px repeat(var(--rbfw-mi-rate-count, 4), minmax(120px, 1fr)) minmax(120px, 1fr) 36px;
+    grid-template-columns: minmax(190px, 1.4fr) 64px repeat(var(--rbfw-mi-rate-count, 4), minmax(120px, 1fr)) 36px;
     min-width: 820px;
 }
 
@@ -7616,7 +7616,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     }
 
     #rbfw_add_meta_box .rbfw_multiple_items .item-row {
-        grid-template-columns: minmax(170px, 1fr) 64px repeat(var(--rbfw-mi-rate-count, 4), 112px) 112px 36px;
+        grid-template-columns: minmax(170px, 1fr) 64px repeat(var(--rbfw-mi-rate-count, 4), 112px) 36px;
     }
 }
 

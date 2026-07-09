@@ -499,10 +499,8 @@ if(class_exists('Rbfw_Reg_Form')){
             <button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button" disabled>
                 <?php echo esc_html__( 'Book Now','booking-and-rental-manager-for-woocommerce' ); ?>
             </button>
-            <?php rbfw_quote_reserve_button( $post_id, $rbfw_product_id, 'single_add_to_cart_button btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button' ); ?>
         <?php } ?>
     </div>
-    <?php rbfw_quote_checkout_modal( $post_id ); ?>
 <?php }else{ ?>
     <div class="rbfw_alert_warning">
         <i class="fas fa-circle-info"></i>

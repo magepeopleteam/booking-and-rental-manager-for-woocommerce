@@ -418,26 +418,13 @@ if (! class_exists('RBFW_Dependencies')) {
 					'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
 					'nonce_bikecarsd_sold_out_times'    => wp_create_nonce('rbfw_bikecarsd_sold_out_times_action'),
 					'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
-					// Quote / Reserve Your Trip flow.
-					'nonce_create_quote_order'     => wp_create_nonce('rbfw_create_quote_order_action'),
-					'rbfw_quote_mode'              => rbfw_get_quote_mode( $post_id ),
-					'rbfw_quote_rows'              => rbfw_get_frontend_quote_rows( $post_id ),
 					// WooCommerce-optional native booking flow (consumed by rbfw_native_checkout.js).
 					'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),
 					'booking_mode'                 => rbfw_booking_mode(),
 					'has_woocommerce'              => rbfw_has_woocommerce() ? '1' : '0',
-					'rbfw_item_type'               => $rent_type,
 					'currency_symbol'              => get_woocommerce_currency_symbol(),
 
 				));
-
-				wp_enqueue_script('rbfw_quote_order', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_quote_order.js', array('jquery'), time(), true);
-				wp_localize_script('rbfw_quote_order', 'rbfw_quote_i18n', array(
-					'required_fields' => esc_html__('Please enter your name and email address.', 'booking-and-rental-manager-for-woocommerce'),
-					'success'         => esc_html__('Your quote request has been submitted. Redirecting…', 'booking-and-rental-manager-for-woocommerce'),
-					'error'           => esc_html__('Something went wrong. Please try again.', 'booking-and-rental-manager-for-woocommerce'),
-				));
-
 				//font awesome
 
                 wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');

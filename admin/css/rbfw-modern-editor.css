@@ -5141,7 +5141,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     align-items: center !important;
     display: grid !important;
     gap: 12px !important;
-    grid-template-columns: minmax(160px, 1.4fr) 64px repeat(var(--rbfw-mi-rate-count, 4), minmax(100px, 1fr)) minmax(100px, 1fr) 36px !important;
+    grid-template-columns: minmax(160px, 1.4fr) 64px repeat(var(--rbfw-mi-rate-count, 4), minmax(100px, 1fr)) 36px !important;
     min-width: 720px !important;
     padding: 12px 16px !important;
 }

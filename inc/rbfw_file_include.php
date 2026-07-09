@@ -34,8 +34,6 @@ require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_export.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
-require_once RBFW_PLUGIN_DIR . '/inc/class-rbfw-quote-order.php';
-require_once RBFW_PLUGIN_DIR . '/inc/class-rbfw-quote-emails.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-thankyou-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-search-page.php';
 
