@@ -486,8 +486,10 @@
 							esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce');
 						?>
 						</button>
+						<?php rbfw_quote_reserve_button( $rbfw_id, $rbfw_product_id, 'single_add_to_cart_button btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button' ); ?>
 					<?php } ?>
 				</div>
+				<?php rbfw_quote_checkout_modal( $rbfw_id ); ?>
 
                 <?php
 

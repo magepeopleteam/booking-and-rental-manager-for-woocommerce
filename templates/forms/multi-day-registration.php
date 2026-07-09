@@ -889,6 +889,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         <button type="submit" name="<?php echo esc_attr($submit_name); ?>" value="<?php echo esc_attr($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn"  disabled >
                             <?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
                         </button>
+                        <?php rbfw_quote_reserve_button( $rbfw_id, $rbfw_product_id, 'single_add_to_cart_button btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn' ); ?>
                     </div>
                 <?php } else{ ?>
                     <div class="item">
@@ -897,8 +898,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         <button type="submit" name="<?php echo esc_attr($submit_name); ?>" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
                             <?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
                         </button>
+                        <?php rbfw_quote_reserve_button( $rbfw_id, $rbfw_product_id, 'single_add_to_cart_button btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn' ); ?>
                     </div>
                 <?php } ?>
+
+                <?php rbfw_quote_checkout_modal( $rbfw_id ); ?>
 
                 <?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
                     echo '<div class="mps_alert_warning">'.esc_html__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce').'</div>';

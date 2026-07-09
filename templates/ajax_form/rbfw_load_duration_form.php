@@ -14,6 +14,13 @@ $total_row = $total_row??'';
     <td>
         <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][price]" step=".01" value="" placeholder="<?php echo esc_attr__('Price', 'booking-and-rental-manager-for-woocommerce'); ?>">
     </td>
+    <td>
+        <select name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][quote_mode]">
+            <?php foreach ( rbfw_get_row_quote_mode_options() as $qm_value => $qm_label ) : ?>
+                <option value="<?php echo esc_attr( $qm_value ); ?>" <?php selected( 'default', $qm_value ); ?>><?php echo esc_html( $qm_label ); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </td>
 
     <td class="rbfw_without_time_inventory <?php echo esc_attr(($manage_inventory_as_timely == 'on') ? 'rbfw_hide' : ''); ?>">
         <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][qty]" placeholder="<?php echo esc_attr__('Stock Quantity', 'booking-and-rental-manager-for-woocommerce'); ?>">

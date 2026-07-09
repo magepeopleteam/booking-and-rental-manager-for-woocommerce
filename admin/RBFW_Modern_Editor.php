@@ -593,6 +593,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			/* Pricing scalar fields */
 			$pricing_scalars = [
 				'rbfw_item_type',
+				'rbfw_quote_mode',
 				'rbfw_enable_daily_rate',  'rbfw_daily_rate',
 				'rbfw_enable_hourly_rate', 'rbfw_hourly_rate',
 				'rbfw_enable_weekly_rate', 'rbfw_weekly_rate',

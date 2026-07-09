@@ -4462,3 +4462,163 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 		return $clean;
 	}
 }
+
+/* =========================================================
+ * Quote / Reserve Your Trip helpers
+ * ========================================================= */
+
+if ( ! function_exists( 'rbfw_get_quote_mode' ) ) {
+	function rbfw_get_quote_mode( $post_id ) {
+		$mode = get_post_meta( $post_id, 'rbfw_quote_mode', true );
+		return in_array( $mode, array( 'off', 'price_and_quote', 'quote_only' ), true ) ? $mode : 'off';
+	}
+}
+
+if ( ! function_exists( 'rbfw_is_quote_mode_active' ) ) {
+	function rbfw_is_quote_mode_active( $post_id ) {
+		return rbfw_get_quote_mode( $post_id ) !== 'off';
+	}
+}
+
+if ( ! function_exists( 'rbfw_is_quote_only' ) ) {
+	function rbfw_is_quote_only( $post_id ) {
+		return rbfw_get_quote_mode( $post_id ) === 'quote_only';
+	}
+}
+
+if ( ! function_exists( 'rbfw_get_row_quote_mode' ) ) {
+	function rbfw_get_row_quote_mode( $post_id, $row, $item_type = '' ) {
+		$item_mode = rbfw_get_quote_mode( $post_id );
+		if ( ! is_array( $row ) ) {
+			return $item_mode;
+		}
+		$row_mode = isset( $row['quote_mode'] ) ? sanitize_text_field( $row['quote_mode'] ) : 'default';
+		if ( 'yes' === $row_mode ) {
+			return 'quote_only';
+		}
+		if ( 'no' === $row_mode ) {
+			return 'off';
+		}
+		return $item_mode;
+	}
+}
+
+if ( ! function_exists( 'rbfw_get_quote_mode_options' ) ) {
+	function rbfw_get_quote_mode_options() {
+		return array(
+			'off'           => __( 'Off — instant booking', 'booking-and-rental-manager-for-woocommerce' ),
+			'price_and_quote' => __( 'Show price + Reserve Your Trip', 'booking-and-rental-manager-for-woocommerce' ),
+			'quote_only'    => __( 'Reserve Your Trip only (hide price)', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+	}
+}
+
+if ( ! function_exists( 'rbfw_get_row_quote_mode_options' ) ) {
+	function rbfw_get_row_quote_mode_options() {
+		return array(
+			'default' => __( 'Default (inherit item setting)', 'booking-and-rental-manager-for-woocommerce' ),
+			'no'      => __( 'Instant booking', 'booking-and-rental-manager-for-woocommerce' ),
+			'yes'     => __( 'Quote / Reserve only', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+	}
+}
+
+if ( ! function_exists( 'rbfw_get_frontend_quote_rows' ) ) {
+	function rbfw_get_frontend_quote_rows( $post_id ) {
+		$rows = array(
+			'bike_car_sd'    => array(),
+			'resort'         => array(),
+			'multiple_items' => array(),
+		);
+
+		$bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+		if ( is_array( $bike_car_sd_data ) ) {
+			foreach ( $bike_car_sd_data as $row ) {
+				if ( ! empty( $row['rent_type'] ) ) {
+					$rows['bike_car_sd'][ sanitize_text_field( $row['rent_type'] ) ] = isset( $row['quote_mode'] ) ? sanitize_text_field( $row['quote_mode'] ) : 'default';
+				}
+			}
+		}
+
+		$resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+		if ( is_array( $resort_room_data ) ) {
+			foreach ( $resort_room_data as $row ) {
+				if ( ! empty( $row['room_type'] ) ) {
+					$rows['resort'][ sanitize_text_field( $row['room_type'] ) ] = isset( $row['quote_mode'] ) ? sanitize_text_field( $row['quote_mode'] ) : 'default';
+				}
+			}
+		}
+
+		$multiple_items_info = get_post_meta( $post_id, 'multiple_items_info', true );
+		if ( is_array( $multiple_items_info ) ) {
+			foreach ( $multiple_items_info as $row ) {
+				if ( ! empty( $row['item_name'] ) ) {
+					$rows['multiple_items'][ sanitize_text_field( $row['item_name'] ) ] = isset( $row['quote_mode'] ) ? sanitize_text_field( $row['quote_mode'] ) : 'default';
+				}
+			}
+		}
+
+		return $rows;
+	}
+}
+
+if ( ! function_exists( 'rbfw_quote_reserve_button' ) ) {
+	function rbfw_quote_reserve_button( $rbfw_id, $rbfw_product_id, $classes = '' ) {
+		if ( ! rbfw_is_quote_mode_active( $rbfw_id ) ) {
+			return;
+		}
+		$classes = trim( 'rbfw_reserve_trip_btn button alt ' . $classes );
+		?>
+		<button type="button" class="<?php echo esc_attr( $classes ); ?>" data-rbfw-id="<?php echo esc_attr( $rbfw_id ); ?>" data-rbfw-product-id="<?php echo esc_attr( $rbfw_product_id ); ?>" style="display:none;">
+			<?php esc_html_e( 'Reserve Your Trip', 'booking-and-rental-manager-for-woocommerce' ); ?>
+		</button>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'rbfw_quote_checkout_modal' ) ) {
+	function rbfw_quote_checkout_modal( $rbfw_id = 0 ) {
+		if ( ! $rbfw_id ) {
+			$rbfw_id = get_the_ID();
+		}
+		if ( ! rbfw_is_quote_mode_active( $rbfw_id ) ) {
+			return;
+		}
+		?>
+		<div id="rbfw-quote-checkout-modal" class="rbfw-native-modal" aria-hidden="true" style="display:none;">
+			<div class="rbfw-native-modal__overlay" data-rbfw-quote-close></div>
+			<div class="rbfw-native-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="rbfw-quote-modal-title">
+				<button type="button" class="rbfw-native-modal__close" data-rbfw-quote-close aria-label="<?php echo esc_attr__( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
+				<h3 id="rbfw-quote-modal-title" class="rbfw-native-modal__title"><?php echo esc_html__( 'Reserve Your Trip', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+
+				<div class="rbfw-native-modal__summary">
+					<span class="rbfw-native-modal__total-label"><?php echo esc_html__( 'Estimated Total', 'booking-and-rental-manager-for-woocommerce' ); ?>:</span>
+					<span class="rbfw-native-modal__total-value" data-rbfw-quote-total></span>
+				</div>
+
+				<div class="rbfw-native-modal__fields">
+					<p class="rbfw-native-field">
+						<label for="rbfw_quote_billing_name"><?php echo esc_html__( 'Full name', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="required">*</span></label>
+						<input type="text" id="rbfw_quote_billing_name" name="rbfw_quote_billing_name" required>
+					</p>
+					<p class="rbfw-native-field">
+						<label for="rbfw_quote_billing_email"><?php echo esc_html__( 'Email address', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="required">*</span></label>
+						<input type="email" id="rbfw_quote_billing_email" name="rbfw_quote_billing_email" required>
+					</p>
+					<p class="rbfw-native-field">
+						<label for="rbfw_quote_billing_phone"><?php echo esc_html__( 'Phone', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<input type="text" id="rbfw_quote_billing_phone" name="rbfw_quote_billing_phone">
+					</p>
+				</div>
+
+				<div class="rbfw-native-modal__message" data-rbfw-quote-message aria-live="polite"></div>
+
+				<button type="button" class="rbfw-native-modal__submit button" data-rbfw-quote-submit>
+					<?php echo esc_html__( 'Submit Quote Request', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+				<p class="rbfw-native-modal__note"><?php echo esc_html__( 'We will review your request and send a payment link once confirmed.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+			</div>
+		</div>
+		<?php
+	}
+}

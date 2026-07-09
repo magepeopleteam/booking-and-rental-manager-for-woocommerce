@@ -797,6 +797,7 @@
                 <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
 					<?php $this->section_header(); ?>
                     <?php $this->sub_title( $post_id ); ?>
+                    <?php $this->quote_mode_setting( $post_id ); ?>
 					<?php $this->select_category( $post_id ); ?>
 					<?php $this->features_category( $post_id ); ?>
                 </div>
@@ -823,6 +824,29 @@
                 <?php
             }
 
+            public function quote_mode_setting( $post_id ) {
+                $quote_mode = rbfw_get_quote_mode( $post_id );
+                $options    = rbfw_get_quote_mode_options();
+                ?>
+                <section class="bg-light mt-5">
+                    <div>
+                        <label><?php esc_html_e( 'Quote / Reserve Your Trip', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <p><?php esc_html_e( 'Choose how customers can request this item.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    </div>
+                </section>
+                <section class="rbfw-quote-mode-setting">
+                    <select name="rbfw_quote_mode" style="width:100%;">
+                        <?php foreach ( $options as $value => $label ) : ?>
+                            <option value="<?php echo esc_attr( $value ); ?>" <?php selected( $quote_mode, $value ); ?>><?php echo esc_html( $label ); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <p class="description">
+                        <?php esc_html_e( '"Reserve Your Trip" creates a pending WooCommerce order so the admin can review it before sending a payment link.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </p>
+                </section>
+                <?php
+            }
+
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
@@ -844,6 +868,12 @@
 					update_post_meta( $post_id, 'rbfw_item_sub_title', $sub_title );
 					update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
 					update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
+
+					$quote_mode = isset( $_POST['rbfw_quote_mode'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_quote_mode'] ) ) : 'off';
+					if ( ! in_array( $quote_mode, array( 'off', 'price_and_quote', 'quote_only' ), true ) ) {
+						$quote_mode = 'off';
+					}
+					update_post_meta( $post_id, 'rbfw_quote_mode', $quote_mode );
 				}
 			}
 		}
