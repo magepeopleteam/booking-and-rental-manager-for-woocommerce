@@ -13,6 +13,40 @@ function rbfw_quick_setup_exit()
             wp_redirect($redirect_url);
             exit;
         }
+
+        /*
+         * Handle the "Finish" step here on admin_init — BEFORE any admin page
+         * output — instead of inside the page render callback, where the
+         * wp_redirect() would fire after headers are sent and trigger
+         * "Cannot modify header information" warnings.
+         */
+        if (isset($_POST['finish_quick_setup'])) {
+
+            if (isset($_POST['rbfw_rent_label']) && !empty($_POST['rbfw_rent_label'])) {
+                $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
+                $rbfw_basic_gen_settings = is_array($rbfw_basic_gen_settings) ? $rbfw_basic_gen_settings : [];
+                $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field(wp_unslash($_POST['rbfw_rent_label']));
+                $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
+                update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
+            }
+
+            if (isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])) {
+                $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
+                $rbfw_basic_gen_settings = is_array($rbfw_basic_gen_settings) ? $rbfw_basic_gen_settings : [];
+                $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field(wp_unslash($_POST['rbfw_rent_slug']));
+                update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
+            }
+
+            $sample_rent_items = get_option('rbfw_sample_rent_items');
+            if ($sample_rent_items !== 'yes' && class_exists('RbfwImportDemo')) {
+                $dummy_import = new RbfwImportDemo();
+                $dummy_import->rbfw_import_demo_function();
+            }
+
+            update_option('rbfw_quick_setup_done', 'yes');
+            wp_safe_redirect(admin_url('edit.php?post_type=rbfw_item'));
+            exit;
+        }
     }
 }
 
@@ -109,32 +143,11 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     </script>
             <?php
                 }
-                if (isset($_POST['finish_quick_setup'])) {
-
-                    if (isset($_POST['rbfw_rent_label']) && !empty($_POST['rbfw_rent_label'])) {
-                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
-                        $rbfw_basic_gen_settings = is_array($rbfw_basic_gen_settings) ? $rbfw_basic_gen_settings : [];
-                        $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field(wp_unslash($_POST['rbfw_rent_label']));
-                        $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
-                        update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
-                    }
-
-                    if (isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])) {
-                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
-                        $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field(wp_unslash($_POST['rbfw_rent_slug']));
-                        update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
-                    }
-
-
-                    $sample_rent_items = get_option( 'rbfw_sample_rent_items' );
-                    if ( $sample_rent_items !== 'yes' ) {
-                        $dummy_import = new RbfwImportDemo();
-                        $dummy_import->rbfw_import_demo_function();
-                    }
-
-                    update_option('rbfw_quick_setup_done', 'yes');
-                    wp_redirect(admin_url('edit.php?post_type=rbfw_item'));
-                }
+                /*
+                 * NOTE: the "finish_quick_setup" submission is handled early in
+                 * rbfw_quick_setup_exit() (admin_init, priority 99) so the redirect
+                 * happens before headers are sent. No render-time handling here.
+                 */
             }
 
             ?>
