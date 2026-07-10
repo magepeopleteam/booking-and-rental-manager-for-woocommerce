@@ -54,12 +54,20 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		 * ================================================================== */
 
 		/**
-		 * Whether WooCommerce is available in this request.
+		 * Whether WooCommerce is actually active in this request.
+		 *
+		 * NOTE: do NOT test function_exists( 'wc_get_order' ) here — the free plugin ships
+		 * WooCommerce fallback shims (inc/rbfw_wc_fallbacks.php) that define wc_get_order()
+		 * (returning false) when WooCommerce is inactive, so that test is always true. The
+		 * canonical, shim-proof check is rbfw_has_woocommerce() / class_exists( 'WooCommerce' ).
 		 *
 		 * @return bool
 		 */
 		public static function wc_active() {
-			return function_exists( 'wc_get_order' );
+			if ( function_exists( 'rbfw_has_woocommerce' ) ) {
+				return rbfw_has_woocommerce();
+			}
+			return class_exists( 'WooCommerce' );
 		}
 
 		/**
@@ -146,6 +154,30 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 			$slug = self::normalize_status( $raw );
 			$map  = self::status_map();
 			return isset( $map[ $slug ] ) ? $map[ $slug ]['class'] : 'rbfw-status-' . sanitize_html_class( $slug );
+		}
+
+		/**
+		 * Whether a booking status counts as "ticket ready" — the point at which the
+		 * customer's ticket/invoice should become downloadable and get attached to
+		 * confirmation emails.
+		 *
+		 * Driven by the existing "Inventory Managed Order Status" setting
+		 * (General Settings → rbfw_basic_gen_settings[inventory_managed_order_status]),
+		 * the same setting that decides which statuses hold inventory. Reusing it keeps
+		 * "is this booking reserved" and "can the customer get their ticket" in lockstep
+		 * everywhere a ticket can be obtained: the My Account download button, the
+		 * confirmation email's PDF attachment, and the booking confirmation page.
+		 *
+		 * @param string $raw_status
+		 * @return bool
+		 */
+		public static function is_ticket_ready( $raw_status ) {
+			$slug    = self::normalize_status( $raw_status );
+			$managed = get_option( 'rbfw_basic_gen_settings', array() );
+			$managed = ( is_array( $managed ) && isset( $managed['inventory_managed_order_status'] ) && is_array( $managed['inventory_managed_order_status'] ) )
+				? $managed['inventory_managed_order_status']
+				: array( 'processing' => 'processing', 'completed' => 'completed' ); // matches the field's own default.
+			return isset( $managed[ $slug ] );
 		}
 
 		/* ================================================================== *
@@ -348,6 +380,18 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 			);
 
 			return $out;
+		}
+
+		/**
+		 * Public accessor for a WooCommerce mirror's ticket snapshot (item id/name, booking
+		 * period, quantity) — used by the Pro detail view to show a WooCommerce order's
+		 * booking specifics in-plugin without re-parsing the serialized meta itself.
+		 *
+		 * @param int $id rbfw_order post id.
+		 * @return array{item_id:int,item_name:string,period:string,quantity:int}
+		 */
+		public static function woo_ticket_summary( $id ) {
+			return self::parse_woo_ticket( absint( $id ) );
 		}
 
 		/* ================================================================== *

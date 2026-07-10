@@ -9,8 +9,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-$status    = isset( $status ) ? $status : '';
-$reference = isset( $reference ) ? $reference : '';
+$status     = isset( $status ) ? $status : '';
+$reference  = isset( $reference ) ? $reference : '';
+$booking_id = isset( $booking_id ) ? absint( $booking_id ) : 0;
+
+// Ticket download: shown only once the booking's REAL status (not the URL hint, which
+// can go stale or be edited) reaches the admin-configured "Inventory Managed Order
+// Status" — the same gate used by the My Account download button and the confirmation
+// email's PDF attachment. RBFW_Customer_Portal (Pro) owns the download endpoint and its
+// ownership check; the free plugin only links to it when both are available.
+$rbfw_download_url = '';
+if ( $booking_id && class_exists( 'RBFW_Booking_Normalizer' ) && class_exists( 'RBFW_Customer_Portal' ) ) {
+	$rbfw_real_status = get_post_meta( $booking_id, 'rbfw_status', true );
+	if ( RBFW_Booking_Normalizer::is_ticket_ready( $rbfw_real_status ) ) {
+		$rbfw_download_url = RBFW_Customer_Portal::invoice_url( $booking_id, $reference );
+	}
+}
 
 switch ( $status ) {
 	case 'success':
@@ -37,6 +51,13 @@ switch ( $status ) {
 		<p style="margin:8px 0 0;font-size:13px;opacity:.8;">
 			<?php echo esc_html__( 'Reference:', 'booking-and-rental-manager-for-woocommerce' ); ?>
 			<strong><?php echo esc_html( $reference ); ?></strong>
+		</p>
+	<?php endif; ?>
+	<?php if ( $rbfw_download_url ) : ?>
+		<p style="margin:12px 0 0;">
+			<a href="<?php echo esc_url( $rbfw_download_url ); ?>" target="_blank" rel="noopener" class="button" style="display:inline-flex;align-items:center;gap:6px;">
+				<?php echo esc_html__( 'Download Ticket', 'booking-and-rental-manager-for-woocommerce' ); ?>
+			</a>
 		</p>
 	<?php endif; ?>
 </div>

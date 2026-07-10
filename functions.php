@@ -61,6 +61,20 @@ if ( ! function_exists( 'rbfw_use_wc' ) ) {
     }
 }
 
+if ( ! function_exists( 'rbfw_login_required' ) ) {
+    function rbfw_login_required() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::login_required();
+        }
+        if ( rbfw_use_wc() ) {
+            return false;
+        }
+        $options = get_option( 'rbfw_payment_settings' );
+        $val     = isset( $options['rbfw_require_login'] ) ? $options['rbfw_require_login'] : 'on';
+        return $val !== 'off';
+    }
+}
+
 if ( ! function_exists( 'rbfw_is_booking_available' ) ) {
     function rbfw_is_booking_available() {
         if ( class_exists( 'RBFW_Function' ) ) {

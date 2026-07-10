@@ -165,46 +165,140 @@
 				return class_exists( 'WooCommerce' );
 			}
 
+			/** Option + key the explicit Booking Mode choice is stored under. */
+			const MODE_OPTION = 'rbfw_payment_settings';
+			const MODE_KEY    = 'rbfw_booking_mode';
+
 			/**
-			 * Whether the WooCommerce cart/checkout should own bookings.
-			 *
-			 * This is the "Enable WooCommerce Payment" toggle on the Payments settings
-			 * tab (option rbfw_payment_settings). It defaults to 'on' so existing
-			 * installs keep using WooCommerce, and is the authoritative signal that
-			 * WooCommerce — rather than the standalone / custom (Pro) payment flow —
-			 * handles checkout. When it is off, WooCommerce never owns the booking even
-			 * though WooCommerce itself may still be active.
+			 * Whether the Pro plugin is active. Pro provides the standalone custom
+			 * payment gateways, so it is what makes a real WooCommerce-vs-Custom choice
+			 * possible.
 			 */
-			public static function wc_payment_enabled(): bool {
-				return self::get_settings( 'rbfw_enable_wc_payment', 'rbfw_payment_settings', 'on' ) !== 'off';
+			public static function has_pro(): bool {
+				return function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active();
+			}
+
+			/**
+			 * Which booking systems can actually process a booking right now. When only
+			 * one side is available there is nothing to choose — the mode is simply
+			 * whichever one can run (see booking_mode()).
+			 *
+			 * @return string 'both' | 'woocommerce_only' | 'custom_only' | 'none'
+			 */
+			public static function mode_availability(): string {
+				$woo = self::has_woocommerce();
+				$pro = self::has_pro();
+				if ( $woo && $pro ) {
+					return 'both';
+				}
+				if ( $woo ) {
+					return 'woocommerce_only';
+				}
+				if ( $pro ) {
+					return 'custom_only';
+				}
+				return 'none';
+			}
+
+			/** True only when a real choice exists and the admin hasn't made it yet. */
+			public static function needs_mode_selection(): bool {
+				return 'both' === self::mode_availability() && '' === self::stored_booking_mode();
+			}
+
+			/**
+			 * The admin's explicit stored choice ('woocommerce'|'standalone'), or '' if
+			 * never made. Transparently migrates the value from its two older homes so
+			 * upgrading installs keep behaving exactly as before until the admin actively
+			 * changes it.
+			 *
+			 * The legacy effective mode came from two independent signals: bookings were
+			 * standalone if the "Enable WooCommerce Payment" checkbox
+			 * (rbfw_payment_settings[rbfw_enable_wc_payment]) was off, OR if the "Booking
+			 * Mode" radio (rbfw_basic_payment_settings[rbfw_booking_mode]) was set to
+			 * standalone; otherwise WooCommerce. Migration reproduces exactly that so no
+			 * upgrading site silently flips modes.
+			 */
+			public static function stored_booking_mode(): string {
+				$opts = get_option( self::MODE_OPTION, array() );
+				$opts = is_array( $opts ) ? $opts : array();
+
+				if ( ! empty( $opts[ self::MODE_KEY ] ) && in_array( $opts[ self::MODE_KEY ], array( 'woocommerce', 'standalone' ), true ) ) {
+					return $opts[ self::MODE_KEY ];
+				}
+
+				$legacy      = get_option( 'rbfw_basic_payment_settings', array() );
+				$legacy      = is_array( $legacy ) ? $legacy : array();
+				$has_toggle  = isset( $opts['rbfw_enable_wc_payment'] );
+				$has_radio   = ! empty( $legacy['rbfw_booking_mode'] ) && in_array( $legacy['rbfw_booking_mode'], array( 'woocommerce', 'standalone' ), true );
+
+				// Nothing was ever set — no explicit choice yet.
+				if ( ! $has_toggle && ! $has_radio ) {
+					return '';
+				}
+
+				// Reproduce the old effective mode: standalone if the toggle was off OR the
+				// radio said standalone; WooCommerce otherwise.
+				$toggle_off      = $has_toggle && 'off' === $opts['rbfw_enable_wc_payment'];
+				$radio_standalone = $has_radio && 'standalone' === $legacy['rbfw_booking_mode'];
+				$migrated        = ( $toggle_off || $radio_standalone ) ? 'standalone' : 'woocommerce';
+
+				$opts[ self::MODE_KEY ] = $migrated;
+				update_option( self::MODE_OPTION, $opts );
+				return $migrated;
+			}
+
+			/**
+			 * Persist an explicit mode choice and keep the legacy "Enable WooCommerce
+			 * Payment" mirror in sync, so any older code still reading that flag agrees
+			 * with booking_mode(). Only meaningful when mode_availability() === 'both'.
+			 */
+			public static function set_booking_mode( $mode ) {
+				if ( ! in_array( $mode, array( 'woocommerce', 'standalone' ), true ) ) {
+					return false;
+				}
+				$opts                           = get_option( self::MODE_OPTION, array() );
+				$opts                           = is_array( $opts ) ? $opts : array();
+				$opts[ self::MODE_KEY ]         = $mode;
+				$opts['rbfw_enable_wc_payment'] = ( 'woocommerce' === $mode ) ? 'on' : 'off';
+				return update_option( self::MODE_OPTION, $opts );
 			}
 
 			/**
 			 * Active booking mode: 'woocommerce' | 'standalone'.
 			 *
-			 * WooCommerce mode requires all of: WooCommerce active, the "Enable
-			 * WooCommerce Payment" toggle on, and the legacy Booking Mode radio not set
-			 * to standalone. Either switch flips the whole plugin to the standalone /
-			 * custom (Pro) payment flow — so the two payment systems can never both
-			 * think they own the same booking. Falls back to 'standalone' whenever
-			 * WooCommerce is not active so the plugin never assumes WooCommerce exists.
+			 * Auto-resolves when only one system can run, so the two payment systems can
+			 * never both think they own the same booking; falls back to the admin's
+			 * stored choice (default WooCommerce) only when both are available.
 			 */
 			public static function booking_mode(): string {
-				if ( ! self::has_woocommerce() || ! self::wc_payment_enabled() ) {
-					return 'standalone';
+				switch ( self::mode_availability() ) {
+					case 'woocommerce_only':
+						return 'woocommerce';
+					case 'custom_only':
+					case 'none':
+						return 'standalone';
+					case 'both':
+					default:
+						return 'standalone' === self::stored_booking_mode() ? 'standalone' : 'woocommerce';
 				}
-				$mode = self::get_settings( 'rbfw_booking_mode', 'rbfw_basic_payment_settings', 'woocommerce' );
-				return ( $mode === 'standalone' ) ? 'standalone' : 'woocommerce';
+			}
+
+			/**
+			 * Retained for back-compat: whether the WooCommerce cart/checkout should own
+			 * bookings. Now derived from the resolved booking mode.
+			 */
+			public static function wc_payment_enabled(): bool {
+				return self::has_woocommerce() && 'woocommerce' === self::booking_mode();
 			}
 
 			/**
 			 * Whether the WooCommerce cart/checkout/order flow should be used for bookings.
 			 *
-			 * True only when WooCommerce is active AND the admin has selected WooCommerce
-			 * mode. Otherwise bookings use the native (standalone) flow.
+			 * True only when WooCommerce is active AND the resolved mode is WooCommerce.
+			 * Otherwise bookings use the native (standalone) flow.
 			 */
 			public static function use_wc(): bool {
-				return self::has_woocommerce() && self::booking_mode() === 'woocommerce';
+				return self::has_woocommerce() && 'woocommerce' === self::booking_mode();
 			}
 
 			/**
@@ -241,6 +335,22 @@
 				}
 				$methods = apply_filters( 'rbfw_pro_enabled_payment_methods', array() );
 				return ! empty( $methods );
+			}
+
+			/**
+			 * Whether a customer must be logged in to place / view a booking.
+			 *
+			 * Scoped to the standalone (custom payment) flow: in WooCommerce mode,
+			 * WooCommerce's own account / guest-checkout settings apply instead, so this
+			 * returns false there. Controlled by the "Require Account Login" toggle on the
+			 * Payments → Custom Payment tab (rbfw_payment_settings[rbfw_require_login]),
+			 * default on.
+			 */
+			public static function login_required(): bool {
+				if ( self::use_wc() ) {
+					return false;
+				}
+				return self::get_settings( 'rbfw_require_login', 'rbfw_payment_settings', 'on' ) !== 'off';
 			}
 
             public static function rbfw_rent_types( ) {

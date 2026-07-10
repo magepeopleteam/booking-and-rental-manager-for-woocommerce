@@ -19,6 +19,9 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 		public function __construct() {
 			add_action( 'wp_ajax_rbfw_native_checkout', array( $this, 'process' ) );
 			add_action( 'wp_ajax_nopriv_rbfw_native_checkout', array( $this, 'process' ) );
+			// Logged-in only: called right after a guest logs in/registers from the inline
+			// auth panel, so it never needs a nopriv counterpart.
+			add_action( 'wp_ajax_rbfw_native_checkout_fields', array( $this, 'render_fields_ajax' ) );
 			add_action( 'wp_footer', array( $this, 'render_modal' ) );
 		}
 
@@ -35,6 +38,46 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			}
 		}
 
+		/**
+		 * Re-render the modal's billing/payment fields, now that the customer is logged in.
+		 *
+		 * Called by the inline auth panel (RBFW_Customer_Portal::render_auth_panel, Pro)
+		 * right after a successful login/registration, instead of reloading the page — a
+		 * reload would wipe the item/quantity already selected in the surrounding booking
+		 * form. Returns the same markup native_checkout_modal.php renders inline, so the
+		 * client can swap it in place of the auth panel with no other DOM changes.
+		 *
+		 * Deliberately NOT nonce-protected (mirrors ecab-taxi-booking-manager's equivalent
+		 * step-rebuild endpoint, MPTBM_Transport_Search::get_mptbm_extra_service, which relies
+		 * on validate_post_access() rather than a nonce). A WordPress nonce is bound to the
+		 * session token in the `logged_in` cookie, which only becomes valid on the client's
+		 * NEXT request after login — a nonce minted anywhere in the same request/response
+		 * cycle as the login is unreliable, and there's nothing here worth that fragility to
+		 * protect: this only renders the current user's OWN profile fields (already visible to
+		 * them everywhere) and has no side effects. is_user_logged_in() is the real gate — the
+		 * action has no wp_ajax_nopriv_ counterpart, so WordPress itself rejects guests before
+		 * this method ever runs.
+		 */
+		public function render_fields_ajax() {
+			if ( ! is_user_logged_in() ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Please log in to continue.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+
+			$posted_item_id             = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
+			$rbfw_native_fields_item_id = ( $posted_item_id && get_post_type( $posted_item_id ) === 'rbfw_item' ) ? $posted_item_id : 0;
+
+			$template = RBFW_Function::get_template_path( 'layout/native_checkout_fields.php' );
+			if ( ! $template || ! file_exists( $template ) ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Could not load the booking form. Please refresh and try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+
+			ob_start();
+			include $template;
+			$html = ob_get_clean();
+
+			wp_send_json_success( array( 'html' => $html ) );
+		}
+
 		public function process() {
 			// 0. Neither WooCommerce nor Pro is active — there is no checkout path to complete
 			// this booking, so refuse it server-side even if a disabled button was bypassed.
@@ -45,6 +88,12 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			// 1. Nonce.
 			if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_native_checkout_action' ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Security check failed. Please refresh and try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+
+			// 1a. Login gate. The inline auth panel is the UX; this is the server-side gate
+			// that can't be bypassed by posting straight to the endpoint.
+			if ( function_exists( 'rbfw_login_required' ) && rbfw_login_required() && ! is_user_logged_in() ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Please log in or create an account to complete your booking.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 
 			// 2. Item.
@@ -117,9 +166,11 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			$response = apply_filters( 'rbfw_native_checkout_response', $response, $item_id, $result );
 
 			// 9. Confirmation email (best-effort). Skipped when redirecting to an external
-			// gateway — in the paid flow the booking is confirmed only after payment.
+			// gateway — in the paid flow the booking is confirmed only after payment. Also
+			// skipped when a richer handler owns booking emails (Pro's RBFW_Native_Booking_Mail
+			// listens on rbfw_native_booking_created), so a booking is never emailed twice.
 			global $rbfw;
-			if ( empty( $response['requires_redirect'] ) && $email && isset( $rbfw ) && method_exists( $rbfw, 'send_email' ) ) {
+			if ( empty( $response['requires_redirect'] ) && ! has_action( 'rbfw_native_booking_created' ) && $email && isset( $rbfw ) && method_exists( $rbfw, 'send_email' ) ) {
 				$subject = esc_html__( 'Your booking has been received', 'booking-and-rental-manager-for-woocommerce' );
 				$body    = sprintf(
 					/* translators: 1: item name, 2: booking reference */

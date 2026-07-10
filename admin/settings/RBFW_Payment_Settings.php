@@ -40,6 +40,7 @@
 				add_action( 'admin_footer', array( $this, 'payment_tabs_script' ) );
 
 				add_action( 'wp_ajax_rbfw_save_gateway_settings', array( $this, 'ajax_save_gateway_settings' ) );
+				add_action( 'wp_ajax_rbfw_save_booking_mode', array( $this, 'ajax_save_booking_mode' ) );
 				add_action( 'wp_ajax_rbfw_install_activate_wc', array( $this, 'ajax_install_activate_wc' ) );
 
 				// Gateway keys are managed by their own AJAX modals and never travel with
@@ -80,17 +81,14 @@
 			public function register_fields( $settings_fields ) {
 				$settings_fields[ self::OPTION ] = array(
 					array(
+						'name'     => 'rbfw_booking_mode_selector',
+						'label'    => '',
+						'callback' => array( $this, 'render_mode_selector' ),
+					),
+					array(
 						'name'     => 'rbfw_payment_tabs_html',
 						'label'    => '',
 						'callback' => array( $this, 'render_sub_tabs' ),
-					),
-					array(
-						'name'    => 'rbfw_enable_wc_payment',
-						'label'   => __( 'Enable WooCommerce Payment', 'booking-and-rental-manager-for-woocommerce' ),
-						'desc'    => __( 'If enabled, the WooCommerce cart/checkout flow is used for bookings.', 'booking-and-rental-manager-for-woocommerce' ),
-						'type'    => 'checkbox',
-						'default' => 'on',
-						'class'   => 'woocommerce-field woocommerce-main-toggle',
 					),
 					array(
 						'name'     => 'rbfw_wc_payment_gateways_manager',
@@ -151,6 +149,204 @@
 				return $settings_fields;
 			}
 
+			/**
+			 * The "Booking Mode" selector — the single, explicit switch that decides whether
+			 * WooCommerce or the standalone Custom Payment flow processes bookings.
+			 *
+			 * It saves in real time over its own AJAX handler (never through the main form),
+			 * so its radios are named rbfw_booking_mode_radio, NOT the option key — the real
+			 * value is written by RBFW_Function::set_booking_mode(). When only one system is
+			 * available the mode is auto-resolved, so this shows an explanatory note instead of
+			 * a choice. Modelled on ecab-taxi-booking-manager's MPTBM_Payment_Settings.
+			 */
+			public function render_mode_selector() {
+				if ( ! class_exists( 'RBFW_Function' ) ) {
+					return;
+				}
+				$availability = RBFW_Function::mode_availability();
+
+				if ( 'none' === $availability ) {
+					?>
+					<div class="rbfw-bm-auto-note rbfw-bm-auto-note--warn">
+						<span class="dashicons dashicons-warning"></span>
+						<p><?php esc_html_e( 'No booking flow is available yet: WooCommerce is not active and the Pro plugin is not active. Activate WooCommerce or the Pro plugin to start taking bookings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<?php
+					$this->booking_mode_styles();
+					return;
+				}
+
+				if ( 'woocommerce_only' === $availability ) {
+					?>
+					<div class="rbfw-bm-auto-note">
+						<span class="dashicons dashicons-yes-alt"></span>
+						<p><?php esc_html_e( 'Bookings are automatically processed through WooCommerce — it\'s the only booking flow available right now. Activate the Pro plugin to unlock the standalone Custom Payment flow (and a mode switch here).', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<?php
+					$this->booking_mode_styles();
+					return;
+				}
+
+				if ( 'custom_only' === $availability ) {
+					?>
+					<div class="rbfw-bm-auto-note">
+						<span class="dashicons dashicons-yes-alt"></span>
+						<p><?php esc_html_e( 'Bookings are automatically processed through the Custom Payment flow — WooCommerce is not active. Activate WooCommerce to unlock the WooCommerce checkout flow (and a mode switch here).', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<?php
+					$this->booking_mode_styles();
+					return;
+				}
+
+				// $availability === 'both': a real choice.
+				$mode        = RBFW_Function::booking_mode();
+				$is_wc       = ( 'woocommerce' === $mode );
+				$is_custom   = ( 'standalone' === $mode );
+				$checker     = class_exists( 'RBFW_Payment_Status_Checker' ) ? new RBFW_Payment_Status_Checker() : null;
+				$has_gateway = $checker ? $checker->has_gateway_for_active_mode() : true;
+				?>
+				<div class="rbfw-bm-wrap" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_save_booking_mode' ) ); ?>">
+					<div class="rbfw-bm-head">
+						<h3><?php esc_html_e( 'Booking Mode', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+						<p><?php esc_html_e( 'Choose exactly one flow to process bookings. This single switch decides everything below, so WooCommerce and Custom Payment never both try to handle the same booking. Your choice is saved instantly.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+
+					<div class="rbfw-bm-cards">
+						<label class="rbfw-bm-card<?php echo $is_wc ? ' is-selected' : ''; ?>" data-mode="woocommerce">
+							<input type="radio" name="rbfw_booking_mode_radio" value="woocommerce" <?php checked( $is_wc ); ?>>
+							<span class="rbfw-bm-card-icon dashicons dashicons-cart"></span>
+							<span class="rbfw-bm-card-body">
+								<span class="rbfw-bm-card-title-row">
+									<strong><?php esc_html_e( 'WooCommerce Checkout', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+									<span class="rbfw-bm-card-badge"><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+								</span>
+								<span class="rbfw-bm-card-desc"><?php esc_html_e( 'Bookings go through the WooCommerce cart, checkout, and orders.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</span>
+						</label>
+						<label class="rbfw-bm-card<?php echo $is_custom ? ' is-selected' : ''; ?>" data-mode="standalone">
+							<input type="radio" name="rbfw_booking_mode_radio" value="standalone" <?php checked( $is_custom ); ?>>
+							<span class="rbfw-bm-card-icon dashicons dashicons-money-alt"></span>
+							<span class="rbfw-bm-card-body">
+								<span class="rbfw-bm-card-title-row">
+									<strong><?php esc_html_e( 'Custom Payment (Standalone)', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+									<span class="rbfw-bm-card-badge"><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+								</span>
+								<span class="rbfw-bm-card-desc"><?php esc_html_e( 'Bookings are taken directly via PayPal, Stripe, or Offline payment — no WooCommerce.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</span>
+						</label>
+					</div>
+
+					<p class="rbfw-bm-status" role="status" aria-live="polite"></p>
+
+					<div class="rbfw-bm-gateway-warning-slot">
+						<?php if ( ! $has_gateway ) : ?>
+							<div class="rbfw-bm-gateway-warning">
+								<span class="dashicons dashicons-warning"></span>
+								<p>
+									<?php if ( $is_wc ) : ?>
+										<?php esc_html_e( 'WooCommerce mode is selected, but no WooCommerce payment gateway is enabled yet. Customers won\'t be able to complete a booking until you enable one below.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+									<?php else : ?>
+										<?php esc_html_e( 'Custom Payment mode is selected, but no gateway (PayPal, Stripe, or Offline) is enabled yet. Customers won\'t be able to complete a booking until you enable one below.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+									<?php endif; ?>
+								</p>
+							</div>
+						<?php endif; ?>
+					</div>
+				</div>
+
+				<?php $this->booking_mode_styles(); ?>
+				<script>
+				jQuery(function($){
+					var $wrap = $('.rbfw-bm-wrap');
+					if (!$wrap.length) { return; }
+					var nonce = $wrap.data('nonce');
+					var i18n = {
+						saving: <?php echo wp_json_encode( __( 'Saving…', 'booking-and-rental-manager-for-woocommerce' ) ); ?>,
+						saved:  <?php echo wp_json_encode( __( 'Booking mode saved.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>,
+						error:  <?php echo wp_json_encode( __( 'Could not save. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>,
+						wcWarn: <?php echo wp_json_encode( __( 'WooCommerce mode is selected, but no WooCommerce payment gateway is enabled yet. Customers won\'t be able to complete a booking until you enable one below.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>,
+						customWarn: <?php echo wp_json_encode( __( 'Custom Payment mode is selected, but no gateway (PayPal, Stripe, or Offline) is enabled yet. Customers won\'t be able to complete a booking until you enable one below.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+					};
+
+					$wrap.on('click', '.rbfw-bm-card', function(){
+						var $card = $(this), mode = $card.data('mode');
+						if ($card.hasClass('is-selected')) { return; }
+
+						$wrap.find('.rbfw-bm-card').removeClass('is-selected');
+						$card.addClass('is-selected').find('input[type=radio]').prop('checked', true);
+						var $status = $wrap.find('.rbfw-bm-status').show().text(i18n.saving).css('color','#6b7280');
+
+						$.post(ajaxurl, { action:'rbfw_save_booking_mode', nonce:nonce, mode:mode })
+							.done(function(res){
+								if (res && res.success) {
+									$status.text(i18n.saved).css('color','#0a7c2f');
+									setTimeout(function(){ $status.fadeOut(400, function(){ $(this).text('').show(); }); }, 1800);
+
+									// Refresh the "Active" badge on the sub-tab bar.
+									$('.rbfw-pay-subtab-badge').hide();
+									$('.rbfw-pay-subtab-badge[data-badge-for="'+mode+'"]').show();
+
+									// Jump to the matching sub-tab so it can be configured right away.
+									var targetHref = (mode === 'standalone') ? '#no-woocommerce-field' : '#woocommerce-field';
+									$('.payment-sub-tabs .nav-tab[href="'+targetHref+'"]').trigger('click');
+
+									// Refresh the "no gateway enabled" warning for the newly active mode.
+									var $slot = $wrap.find('.rbfw-bm-gateway-warning-slot').empty();
+									if (res.data && res.data.has_gateway === false) {
+										var msg = (mode === 'woocommerce') ? i18n.wcWarn : i18n.customWarn;
+										$slot.append('<div class="rbfw-bm-gateway-warning"><span class="dashicons dashicons-warning"></span><p>'+msg+'</p></div>');
+									}
+								} else {
+									$status.show().text((res && res.data) ? res.data : i18n.error).css('color','#d63638');
+								}
+							})
+							.fail(function(){ $status.show().text(i18n.error).css('color','#d63638'); });
+					});
+				});
+				</script>
+				<?php
+			}
+
+			/** Styles for the Booking Mode selector + its auto-detected notices. Printed once. */
+			private function booking_mode_styles() {
+				static $printed = false;
+				if ( $printed ) {
+					return;
+				}
+				$printed = true;
+				?>
+				<style>
+				/* Render the selector row full width (its settings-table label cell is empty). */
+				#rbfw_payment_settings tr.rbfw_booking_mode_selector > th{display:none;}
+				#rbfw_payment_settings tr.rbfw_booking_mode_selector > td{padding-left:0 !important;display:block;width:100%;}
+				.rbfw-bm-wrap,.rbfw-bm-wrap *,.rbfw-bm-auto-note,.rbfw-bm-auto-note *{box-sizing:border-box;}
+				.rbfw-bm-wrap{margin:2px 0 18px;max-width:100%;}
+				.rbfw-bm-head h3{margin:0 0 2px;font-size:15px;font-weight:700;color:#1d2327;}
+				.rbfw-bm-head p{margin:0 0 12px;font-size:12.5px;color:#6b7280;max-width:680px;line-height:1.55;}
+				.rbfw-bm-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:100%;}
+				.rbfw-bm-card{position:relative;display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid #e5e7eb;border-radius:12px;background:#fafafb;cursor:pointer;transition:border-color .15s,box-shadow .15s,background .15s;min-width:0;}
+				.rbfw-bm-card:hover{border-color:#d4b3c3;box-shadow:0 4px 14px rgba(16,24,40,0.06);}
+				.rbfw-bm-card.is-selected{border-color:#F12971;background:#fff;box-shadow:0 6px 18px rgba(241,41,113,0.12);}
+				.rbfw-bm-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
+				.rbfw-bm-card-icon{flex:0 0 auto;width:36px;height:36px;border-radius:9px;background:rgba(241,41,113,0.1);color:#F12971;display:flex !important;align-items:center !important;justify-content:center !important;font-size:18px;}
+				.rbfw-bm-card-body{display:block !important;flex:1;min-width:0;white-space:normal !important;}
+				.rbfw-bm-card-title-row{display:flex !important;align-items:center;justify-content:space-between;gap:8px;margin:0 0 4px;width:100%;}
+				.rbfw-bm-card-body strong{display:inline-block !important;font-size:14px;line-height:1.3;color:#1d2327;}
+				.rbfw-bm-card-desc{display:block !important;font-size:12px;color:#6b7280;line-height:1.5;overflow-wrap:break-word;}
+				.rbfw-bm-card-badge{flex:0 0 auto;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;background:#dcfce7;color:#166534;padding:1px 8px;border-radius:20px;display:none !important;}
+				.rbfw-bm-card.is-selected .rbfw-bm-card-badge{display:inline-block !important;}
+				.rbfw-bm-status{min-height:16px;margin:8px 2px 0;font-size:12px;font-weight:600;}
+				.rbfw-bm-gateway-warning{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;}
+				.rbfw-bm-gateway-warning p{margin:0;}
+				.rbfw-bm-auto-note{display:flex;align-items:flex-start;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:10px;padding:10px 14px;margin:4px 0 14px;font-size:12.5px;}
+				.rbfw-bm-auto-note--warn{background:#fef2f2;border-color:#fecaca;color:#991b1b;}
+				.rbfw-bm-auto-note p{margin:0;}
+				.rbfw-pay-subtab-badge{margin-left:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;background:rgba(255,255,255,0.9);color:#166534;padding:1px 7px;border-radius:20px;vertical-align:middle;}
+				@media (max-width:680px){.rbfw-bm-cards{grid-template-columns:1fr;}}
+				</style>
+				<?php
+			}
+
 			/** Sub-tab bar (WooCommerce / Custom Payment) + WC-inactive warning. */
 			public function render_sub_tabs() {
 				$wc_active    = $this->has_woo();
@@ -158,11 +354,22 @@
 				$btn_text     = $is_installed
 					? __( 'Activate WooCommerce Now', 'booking-and-rental-manager-for-woocommerce' )
 					: __( 'Install &amp; Activate Now', 'booking-and-rental-manager-for-woocommerce' );
+
+				// Default the active sub-tab to whichever flow currently owns bookings, so the
+				// Custom Payment gateways aren't the first thing shown when WooCommerce is the mode.
+				$mode           = class_exists( 'RBFW_Function' ) ? RBFW_Function::booking_mode() : 'woocommerce';
+				$custom_is_mode = ( 'standalone' === $mode );
 				?>
 				<div class="payment-sub-tabs-wrapper">
 					<h2 class="nav-tab-wrapper payment-sub-tabs">
-						<a href="#woocommerce-field" class="nav-tab nav-tab-active"><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-						<a href="#no-woocommerce-field" class="nav-tab"><?php esc_html_e( 'Custom Payment', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+						<a href="#woocommerce-field" class="nav-tab<?php echo $custom_is_mode ? '' : ' nav-tab-active'; ?>">
+							<?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<span class="rbfw-pay-subtab-badge" data-badge-for="woocommerce"<?php echo $custom_is_mode ? ' style="display:none;"' : ''; ?>><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</a>
+						<a href="#no-woocommerce-field" class="nav-tab<?php echo $custom_is_mode ? ' nav-tab-active' : ''; ?>">
+							<?php esc_html_e( 'Custom Payment', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<span class="rbfw-pay-subtab-badge" data-badge-for="standalone"<?php echo $custom_is_mode ? '' : ' style="display:none;"'; ?>><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</a>
 					</h2>
 					<?php if ( ! $wc_active ) : ?>
 						<div class="woocommerce-field">
@@ -277,6 +484,18 @@
 				</div>
 
 				<!-- Booking Confirmation Page -->
+				<?php $req_login = $this->opt( 'rbfw_require_login', 'on' ) !== 'off'; ?>
+				<div class="rbfw-conf-page">
+					<div class="rbfw-conf-page-label">
+						<label><?php esc_html_e( 'Require Account Login', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<span><?php esc_html_e( 'Require customers to log in or register before booking. When on, guests see an inline Login / Register panel; when off, guest checkout is allowed and customers can track a booking with their email and reference.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<div class="rbfw-conf-page-field">
+						<input type="hidden" name="<?php echo esc_attr( self::OPTION ); ?>[rbfw_require_login]" value="off">
+						<label class="rbfw-gw-switch"><input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[rbfw_require_login]" value="on" <?php checked( $req_login ); ?>><span class="rbfw-gw-slider"></span></label>
+					</div>
+				</div>
+
 				<div class="rbfw-conf-page">
 					<div class="rbfw-conf-page-label">
 						<label><?php esc_html_e( 'Booking Confirmation Page', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
@@ -724,8 +943,6 @@
 					var wcActive = <?php echo $wc_active; ?>;
 					if ($('.payment-sub-tabs').length === 0) { return; }
 
-					var toggleSel = '#wpuf-<?php echo esc_js( self::OPTION ); ?>\\[rbfw_enable_wc_payment\\]';
-
 					// --- WooCommerce sub-tab accordions: Payment Methods (open) + Additional Settings (collapsed) ---
 					var $methodsRows      = $('tr.wc-payment-methods-field');
 					var $additionalRows   = $('tr.wc-additional-field');
@@ -752,7 +969,10 @@
 					}
 
 					if ($methodsRows.length || $additionalRows.length) {
-						var $toggleRow = $('tr.woocommerce-main-toggle');
+						// Anchor the accordion headers on the sub-tab row (the "Enable WooCommerce
+						// Payment" toggle that used to anchor them was removed — the Booking Mode
+						// card replaces it). Captured before the sub-tab wrapper is relocated below.
+						var $toggleRow = $('.payment-sub-tabs-wrapper').closest('tr');
 						$methodsHeader    = buildAccordionHeader('rbfw-acc-methods', <?php echo wp_json_encode( __( 'WooCommerce Payment Methods', 'booking-and-rental-manager-for-woocommerce' ) ); ?>, true);
 						$additionalHeader = buildAccordionHeader('rbfw-acc-additional', <?php echo wp_json_encode( __( 'Additional Settings', 'booking-and-rental-manager-for-woocommerce' ) ); ?>, false);
 
@@ -787,20 +1007,13 @@
 						});
 					}
 
-					function toggleWcSettings(){
-						var isChecked = $(toggleSel).is(':checked');
-						var $wcFields = $('tr.woocommerce-field').not('tr.woocommerce-main-toggle');
-						if (isChecked) { $wcFields.stop(true,true).show(); refreshAccordions(); } else { $wcFields.hide(); }
-					}
-					$(toggleSel).on('change', toggleWcSettings);
-
 					function updateTabs(){
 						var activeTabId = $('.payment-sub-tabs .nav-tab-active').attr('href').replace('#','');
 						$('tr.woocommerce-field, div.woocommerce-field, tr.no-woocommerce-field').hide();
 						$('.rbfw_settings_panel .submit').show();
 						if (activeTabId === 'woocommerce-field') {
 							$('div.woocommerce-field').show();
-							if (wcActive) { $('tr.woocommerce-field').show(); toggleWcSettings(); }
+							if (wcActive) { $('tr.woocommerce-field').stop(true,true).show(); refreshAccordions(); }
 						} else {
 							$('tr.' + activeTabId).show();
 						}
@@ -868,6 +1081,36 @@
 
 				update_option( self::OPTION, $existing );
 				wp_send_json_success( __( 'Settings saved successfully!', 'booking-and-rental-manager-for-woocommerce' ) );
+			}
+
+			/** AJAX: persist the Booking Mode immediately when the card selection changes. */
+			public function ajax_save_booking_mode() {
+				check_ajax_referer( 'rbfw_save_booking_mode', 'nonce' );
+				if ( ! current_user_can( 'manage_options' ) ) {
+					wp_send_json_error( __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) );
+				}
+
+				$mode = isset( $_POST['mode'] ) ? sanitize_key( wp_unslash( $_POST['mode'] ) ) : '';
+				if ( ! in_array( $mode, array( 'woocommerce', 'standalone' ), true ) ) {
+					wp_send_json_error( __( 'Invalid booking mode.', 'booking-and-rental-manager-for-woocommerce' ) );
+				}
+
+				// The choice is only meaningful when both systems are available; otherwise the
+				// mode is auto-resolved and shouldn't be overridden.
+				if ( class_exists( 'RBFW_Function' ) && 'both' !== RBFW_Function::mode_availability() ) {
+					wp_send_json_error( __( 'Booking mode can only be changed when both WooCommerce and the Pro custom gateways are available.', 'booking-and-rental-manager-for-woocommerce' ) );
+				}
+
+				RBFW_Function::set_booking_mode( $mode );
+
+				$checker     = class_exists( 'RBFW_Payment_Status_Checker' ) ? new RBFW_Payment_Status_Checker() : null;
+				$has_gateway = $checker ? $checker->has_gateway_for_active_mode() : true;
+
+				wp_send_json_success( array(
+					'mode'        => $mode,
+					'message'     => __( 'Booking mode saved.', 'booking-and-rental-manager-for-woocommerce' ),
+					'has_gateway' => $has_gateway,
+				) );
 			}
 
 			/** AJAX: install &/or activate WooCommerce. */
@@ -939,6 +1182,18 @@
 						}
 					}
 				}
+
+				// The Booking Mode card only renders when both systems are available; on any
+				// other save keep the previously stored choice rather than dropping it.
+				if ( ! isset( $new_value['rbfw_booking_mode'] ) && is_array( $old_value ) && isset( $old_value['rbfw_booking_mode'] ) ) {
+					$new_value['rbfw_booking_mode'] = $old_value['rbfw_booking_mode'];
+				}
+				// Keep the legacy "Enable WooCommerce Payment" mirror in lock-step with the mode
+				// so any older code still reading that flag agrees with booking_mode().
+				if ( isset( $new_value['rbfw_booking_mode'] ) && in_array( $new_value['rbfw_booking_mode'], array( 'woocommerce', 'standalone' ), true ) ) {
+					$new_value['rbfw_enable_wc_payment'] = ( 'woocommerce' === $new_value['rbfw_booking_mode'] ) ? 'on' : 'off';
+				}
+
 				return $new_value;
 			}
 		}
