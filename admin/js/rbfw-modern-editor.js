@@ -1671,10 +1671,11 @@
         $wrap.on('click', '.add-new-feature', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var $items   = $(this).siblings('.rbfw_feature_category').find('.feature_category_inner_item_wrap');
+            var $row     = $(this).closest('tr');
+            var $items   = $row.find('.feature_category_inner_item_wrap').first();
             var lastKey  = parseInt($items.find('div.item:last-child input[data-key]').attr('data-key')) || 0;
             var newKey   = lastKey + 1;
-            var dataCat  = $(this).closest('tr').attr('data-cat');
+            var dataCat  = $row.attr('data-cat');
             var html = '<div class="item">'
                 + '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="' + newKey + '"><i class="fas fa-circle-plus"></i> Icon</a>'
                 + '<div class="rbfw_feature_icon_preview" data-key="' + newKey + '"></div>'
@@ -1685,6 +1686,56 @@
                 + '</div>';
             $items.append(html);
             if ($.fn.sortable) $items.sortable({ handle: '.sort' });
+        });
+
+        // Feature icon picker (FontAwesome icon modal)
+        $wrap.on('click', '.rbfw_feature_icon_btn', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var $btn     = $(this);
+            var dataKey  = $btn.attr('data-key');
+            var dataCat  = $btn.closest('tr').attr('data-cat');
+            var $modal   = $('#rbfw_features_icon_list_wrapper');
+
+            $modal.removeAttr('data-key').attr('data-key', dataKey);
+            $modal.attr('data-cat', dataCat);
+            $modal.find('label').removeClass('selected');
+            $('#rbfw_features_search_icon').val('');
+            $modal.find('.rbfw_features_icon_list_body label[data-id]').show();
+
+            if ($.fn.mage_modal) {
+                $modal.mage_modal({
+                    escapeClose: false,
+                    clickClose: false,
+                    showClose: false
+                });
+            }
+        });
+
+        // Icon selection inside the modal
+        $(document).on('click', '#rbfw_features_icon_list_wrapper label', function (e) {
+            e.stopImmediatePropagation();
+            var $label   = $(this);
+            var selected = $label.find('input').val() || '';
+            var $modal   = $('#rbfw_features_icon_list_wrapper');
+            var dataKey  = $modal.attr('data-key');
+            var dataCat  = $modal.attr('data-cat');
+
+            $modal.find('label').removeClass('selected');
+            $label.addClass('selected');
+
+            var $targetRow = $('.rbfw_feature_category_table tr[data-cat="' + dataCat + '"]');
+            $targetRow.find('.rbfw_feature_icon[data-key="' + dataKey + '"]').val(selected);
+            $targetRow.find('.rbfw_feature_icon_preview[data-key="' + dataKey + '"]').html('<i class="' + selected + '"></i>');
+        });
+
+        // Icon search filter
+        $(document).on('keyup', '#rbfw_features_search_icon', function () {
+            var value = $.trim($(this).val()).toLowerCase();
+            $('#rbfw_features_icon_list_wrapper .rbfw_features_icon_list_body label[data-id]').each(function () {
+                var id = $(this).attr('data-id') || '';
+                $(this).toggle(id.toLowerCase().indexOf(value) > -1);
+            });
         });
     }
 
