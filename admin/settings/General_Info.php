@@ -117,11 +117,37 @@
 					wp_send_json_error( array( 'message' => esc_html__( 'Rent type not found.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 				}
 				$old_name = $term->name;
+
+				// Optional parent change.
+				$parent = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : 0;
+				if ( $parent > 0 ) {
+					$parent_term = get_term( $parent, 'rbfw_item_caregory' );
+					if ( ! $parent_term || is_wp_error( $parent_term ) ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'The selected parent category no longer exists.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+					if ( $parent === $term_id ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'A rent type cannot be its own parent.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+					$descendants = get_term_children( $term_id, 'rbfw_item_caregory' );
+					if ( ! is_wp_error( $descendants ) && in_array( $parent, $descendants, true ) ) {
+						wp_send_json_error( array( 'message' => esc_html__( 'A rent type cannot be moved under one of its own sub-categories.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+					}
+				}
+
+				$update_args = array();
 				if ( $old_name !== $name ) {
-					$res = wp_update_term( $term_id, 'rbfw_item_caregory', array( 'name' => $name ) );
+					$update_args['name'] = $name;
+				}
+				if ( (int) $term->parent !== (int) $parent ) {
+					$update_args['parent'] = $parent;
+				}
+				if ( ! empty( $update_args ) ) {
+					$res = wp_update_term( $term_id, 'rbfw_item_caregory', $update_args );
 					if ( is_wp_error( $res ) ) {
 						wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
 					}
+				}
+				if ( $old_name !== $name ) {
 					$this->rbfw_sync_rent_type_meta( $this->rbfw_get_items_with_term( $term_id ), $old_name, $name );
 				}
 				wp_send_json_success( array(
@@ -284,8 +310,8 @@
                                 <span class="customCheckbox"><?php echo $rt_depth > 0 ? '<span class="rbfw-rt-sub-indicator">↳</span> ' : ''; ?><?php echo esc_html( ucfirst( $value['name'] ) ); ?></span>
                                 <?php if ( $rbfw_rt_can_manage ) { ?>
                                     <span class="rbfw-rt-actions">
-                                        <span class="rbfw-rt-edit dashicons dashicons-edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
-                                        <span class="rbfw-rt-del dashicons dashicons-trash" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
+                                        <span class="rbfw-rt-edit dashicons dashicons-edit" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
+                                        <span class="rbfw-rt-del dashicons dashicons-trash" role="button" tabindex="0" aria-label="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"></span>
                                     </span>
                                 <?php } ?>
                             </label>
@@ -327,8 +353,8 @@
                         function rtActionsHtml() {
                             if (!rtCanManage()) { return ''; }
                             return '<span class="rbfw-rt-actions">' +
-                                '<span class="rbfw-rt-edit dashicons dashicons-edit" title="Edit"></span>' +
-                                '<span class="rbfw-rt-del dashicons dashicons-trash" title="Delete"></span>' +
+                                '<span class="rbfw-rt-edit dashicons dashicons-edit" role="button" tabindex="0" aria-label="Edit"></span>' +
+                                '<span class="rbfw-rt-del dashicons dashicons-trash" role="button" tabindex="0" aria-label="Delete"></span>' +
                             '</span>';
                         }
 
@@ -349,7 +375,7 @@
                                 var indent  = depth > 0 ? ' style="margin-left:' + (depth * 18) + 'px;"' : '';
                                 var prefix  = depth > 0 ? '<span class="rbfw-rt-sub-indicator" aria-hidden="true">↳ </span>' : '';
                                 $group.append(
-                                    '<label class="customCheckboxLabel rbfw-rt-chip" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '"' + indent + '>' +
+                                    '<label class="customCheckboxLabel rbfw-rt-chip' + (depth > 0 ? ' rbfw-rt-child' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '"' + indent + '>' +
                                         '<input type="checkbox"' + checked + ' data-checked="' + rtEsc(rt.name) + '">' +
                                         '<span class="customCheckbox">' + prefix + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
                                         rtActionsHtml() +
@@ -461,7 +487,8 @@
                                     action: 'rbfw_rent_type_rename',
                                     nonce: rtNonce(),
                                     term_id: editTermId,
-                                    name: name
+                                    name: name,
+                                    parent: parseInt(jQuery('#rbfw-rent-type-modal-parent').val(), 10) || 0
                                 }, function (resp) {
                                     if (resp && resp.success) {
                                         var cur = (rtHidden().val() || '').split(',').filter(Boolean).map(function (n) {
@@ -505,10 +532,13 @@
                     .rbfw-rent-type-modal__close { background: none; border: none; font-size: 22px; line-height: 1; cursor: pointer; color: #6b7280; }
                     .rbfw-rent-type-modal__body { padding: 18px; }
                     .rbfw-rent-type-modal__foot { padding: 14px 18px; border-top: 1px solid #e2e6ee; display: flex; gap: 8px; }
-                    .rbfw-rent-type-checkboxes .rbfw-rt-chip { position: relative; }
-                    .rbfw-rent-type-checkboxes .rbfw-rt-actions { position: absolute; top: -9px; right: -7px; display: none; align-items: center; gap: 1px; background: #fff; border: 1px solid #e2e6ee; border-radius: 4px; padding: 1px 3px; box-shadow: 0 2px 6px rgba(0,0,0,.14); z-index: 3; }
-                    .rbfw-rent-type-checkboxes .rbfw-rt-chip:hover .rbfw-rt-actions { display: inline-flex; }
-                    .rbfw-rent-type-checkboxes .rbfw-rt-actions .dashicons { font-size: 15px; width: 15px; height: 15px; line-height: 15px; cursor: pointer; color: #6b7280; }
+                    /* Rent-type chips: auto width + in-flow hover action icons (no overlapping popover) */
+                    .rbfw-rent-type-checkboxes .customCheckboxLabel.rbfw-rt-chip { position: relative; display: inline-flex; align-items: center; width: auto; min-width: 130px; padding-right: 6px; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions { display: inline-flex; align-items: center; gap: 5px; margin-left: 7px; opacity: 0; visibility: hidden; transition: opacity .15s ease; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-chip:hover .rbfw-rt-actions,
+                    .rbfw-rent-type-checkboxes .rbfw-rt-chip:focus-within .rbfw-rt-actions { opacity: 1; visibility: visible; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions .dashicons { font-size: 16px; width: 16px; height: 16px; line-height: 16px; cursor: pointer; color: #6b7280 !important; transition: color .15s ease, transform .15s ease; }
+                    .rbfw-rent-type-checkboxes .rbfw-rt-actions .dashicons:hover { transform: scale(1.15); }
                     .rbfw-rent-type-checkboxes .rbfw-rt-actions .rbfw-rt-edit:hover { color: #2271b1; }
                     .rbfw-rent-type-checkboxes .rbfw-rt-actions .rbfw-rt-del:hover { color: #d63638; }
                     /* Sub-category (child) chips: softer dashed pill + connector elbow */

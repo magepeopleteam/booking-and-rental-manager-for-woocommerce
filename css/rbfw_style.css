@@ -2797,6 +2797,15 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     color: #aaa;
 }
 
+.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled.rbfw-soldout-time span.rbfw_bikecarsd_time_span,
+.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.rbfw-soldout-time span.rbfw_bikecarsd_time_span {
+    background: #f0f0f0;
+    border-color: #ddd;
+    color: #999;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
     background: var(--rbfw_color_primary);
     color: #fff;
