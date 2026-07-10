@@ -8,6 +8,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function __construct()
         {
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_location_stock'), 25, 3 );
@@ -40,6 +41,37 @@ if (!class_exists('RBFW_Woocommerce')) {
             /* Self-healing: rebuild booking records for paid orders placed before this fix
                (e.g. redirect-gateway orders that never triggered the thank-you page). */
             add_action( 'admin_init', array($this ,  'rbfw_backfill_missing_order_mirrors') );
+        }
+
+        /**
+         * Refuse to add a rental item to the WooCommerce cart when the plugin is not
+         * in WooCommerce mode (WooCommerce active but "Enable WooCommerce Payment" is
+         * off, i.e. bookings are handled by the standalone / custom-payment flow).
+         *
+         * Normally the native-checkout JS intercepts the submit before it ever reaches
+         * WooCommerce, so this only fires on the fallback path (JS disabled, or a
+         * forged/direct add-to-cart POST). It guarantees WooCommerce never quietly
+         * takes ownership of a booking that the standalone flow is supposed to own —
+         * the mirror of RBFW_Native_Checkout refusing to run while use_wc() is true.
+         */
+        public function rbfw_block_add_to_cart_when_standalone( $passed, $product_id ) {
+            if ( ! $passed ) {
+                return $passed;
+            }
+            if ( function_exists( 'rbfw_use_wc' ) && rbfw_use_wc() ) {
+                return $passed; // WooCommerce mode — nothing to block.
+            }
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            if ( get_post_type( $rbfw_id ) !== 'rbfw_item' ) {
+                return $passed; // not a rental item — leave other products alone.
+            }
+
+            wc_add_notice( esc_html__( 'This booking is handled through the site\'s own checkout, not the WooCommerce cart. Please use the "Book Now" button to complete your booking.', 'booking-and-rental-manager-for-woocommerce' ), 'error' );
+
+            return false;
         }
 
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {

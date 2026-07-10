@@ -19,12 +19,14 @@ if ( ! class_exists( 'RBFW_Payment_Status_Checker' ) ) {
 		/**
 		 * Enabled WooCommerce payment gateways.
 		 *
-		 * Empty when WooCommerce is not active, or active with no gateway enabled.
+		 * Empty when WooCommerce is not active, when the "Enable WooCommerce Payment"
+		 * toggle is off (WooCommerce no longer owns checkout, so its gateways are not
+		 * a usable path), or when active with no gateway enabled.
 		 *
 		 * @return WC_Payment_Gateway[]
 		 */
 		public function get_enabled_woocommerce_gateways() {
-			if ( ! $this->has_woocommerce() ) {
+			if ( ! $this->has_woocommerce() || ! $this->wc_payment_enabled() ) {
 				return array();
 			}
 
@@ -63,8 +65,33 @@ if ( ! class_exists( 'RBFW_Payment_Status_Checker' ) ) {
 			return $this->count_available_payment_methods() > 0;
 		}
 
+		/**
+		 * Whether the *currently active* booking mode has a usable payment method.
+		 *
+		 * A site can have (say) an enabled WooCommerce gateway while running in
+		 * Standalone mode with no custom gateway configured — customers still can't
+		 * pay. This checks only the system that actually owns bookings right now, so
+		 * the admin notice reflects the real state instead of a gateway sitting in the
+		 * mode that isn't in use.
+		 */
+		public function has_gateway_for_active_mode() {
+			if ( 'woocommerce' === $this->active_mode() ) {
+				return count( $this->get_enabled_woocommerce_gateways() ) > 0;
+			}
+			return count( $this->get_enabled_pro_payment_methods() ) > 0;
+		}
+
+		/** The active booking mode, exposed for mode-aware messaging. */
+		public function active_mode() {
+			return function_exists( 'rbfw_booking_mode' ) ? rbfw_booking_mode() : 'woocommerce';
+		}
+
 		private function has_woocommerce() {
 			return function_exists( 'rbfw_has_woocommerce' ) ? rbfw_has_woocommerce() : class_exists( 'WooCommerce' );
+		}
+
+		private function wc_payment_enabled() {
+			return function_exists( 'rbfw_wc_payment_enabled' ) ? rbfw_wc_payment_enabled() : true;
 		}
 
 		private function has_pro() {

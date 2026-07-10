@@ -27,12 +27,23 @@ if ( ! function_exists( 'rbfw_has_woocommerce' ) ) {
     }
 }
 
+if ( ! function_exists( 'rbfw_wc_payment_enabled' ) ) {
+    function rbfw_wc_payment_enabled() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::wc_payment_enabled();
+        }
+        $options = get_option( 'rbfw_payment_settings' );
+        $enabled = isset( $options['rbfw_enable_wc_payment'] ) ? $options['rbfw_enable_wc_payment'] : 'on';
+        return $enabled !== 'off';
+    }
+}
+
 if ( ! function_exists( 'rbfw_booking_mode' ) ) {
     function rbfw_booking_mode() {
         if ( class_exists( 'RBFW_Function' ) ) {
             return RBFW_Function::booking_mode();
         }
-        if ( ! rbfw_has_woocommerce() ) {
+        if ( ! rbfw_has_woocommerce() || ! rbfw_wc_payment_enabled() ) {
             return 'standalone';
         }
         $options = get_option( 'rbfw_basic_payment_settings' );
@@ -50,12 +61,33 @@ if ( ! function_exists( 'rbfw_use_wc' ) ) {
     }
 }
 
+if ( ! function_exists( 'rbfw_login_required' ) ) {
+    function rbfw_login_required() {
+        if ( class_exists( 'RBFW_Function' ) ) {
+            return RBFW_Function::login_required();
+        }
+        if ( rbfw_use_wc() ) {
+            return false;
+        }
+        $options = get_option( 'rbfw_payment_settings' );
+        $val     = isset( $options['rbfw_require_login'] ) ? $options['rbfw_require_login'] : 'on';
+        return $val !== 'off';
+    }
+}
+
 if ( ! function_exists( 'rbfw_is_booking_available' ) ) {
     function rbfw_is_booking_available() {
         if ( class_exists( 'RBFW_Function' ) ) {
             return RBFW_Function::is_booking_available();
         }
-        return rbfw_has_woocommerce() || ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() );
+        if ( rbfw_use_wc() ) {
+            return true;
+        }
+        // Standalone: need at least one enabled Pro custom payment method.
+        if ( ! ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) ) {
+            return false;
+        }
+        return ! empty( apply_filters( 'rbfw_pro_enabled_payment_methods', array() ) );
     }
 }
 

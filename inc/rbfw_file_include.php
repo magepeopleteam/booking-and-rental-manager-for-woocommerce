@@ -53,6 +53,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Standalone_Booking_Service.php
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Manager.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Post_Type.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Actions.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Normalizer.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_List_Table.php';
 
 

@@ -1177,24 +1177,12 @@ function rbfw_url_exclude_search_engine() {
 	}
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
-		$has_woo = function_exists( 'rbfw_has_woocommerce' ) ? rbfw_has_woocommerce() : class_exists( 'WooCommerce' );
-
-		$booking_mode_desc = $has_woo
-			? __( 'Choose how bookings are processed. WooCommerce uses the cart/checkout/order flow. Standalone handles bookings internally (custom payment coming soon).', 'booking-and-rental-manager-for-woocommerce' )
-			: __( 'WooCommerce is not active, so bookings are handled in Standalone mode. Activate WooCommerce to enable the WooCommerce checkout flow.', 'booking-and-rental-manager-for-woocommerce' );
-
+		// The explicit "Booking Mode" chooser now lives on the Payments tab
+		// (admin/settings/RBFW_Payment_Settings.php :: render_mode_selector), shown as a
+		// card only when both WooCommerce and Pro are active. It writes the same
+		// rbfw_booking_mode value RBFW_Function::booking_mode() reads, so the choice has a
+		// single home instead of being split across two settings tabs.
 		$booking_fields = array(
-			array(
-				'name'    => 'rbfw_booking_mode',
-				'label'   => __( 'Booking Mode', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => $booking_mode_desc,
-				'type'    => 'radio',
-				'default' => $has_woo ? 'woocommerce' : 'standalone',
-				'options' => array(
-					'woocommerce' => __( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ),
-					'standalone'  => __( 'Standalone (without WooCommerce)', 'booking-and-rental-manager-for-woocommerce' ),
-				),
-			),
 			array(
 				'name'    => 'rbfw_wps_add_to_cart_redirect',
 				'label'   => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
