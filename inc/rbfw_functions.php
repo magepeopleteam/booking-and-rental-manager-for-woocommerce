@@ -3,6 +3,118 @@
 		exit;
 	}
 
+	if ( ! function_exists( 'rbfw_regf_attendees_list' ) ) {
+		/**
+		 * Normalise a ticket/order-meta entry into a 0-indexed list of attendee
+		 * registration-info arrays.
+		 *
+		 * Prefers the per-unit `rbfw_regf_attendees` list; falls back to the
+		 * legacy flat `rbfw_regf_info` so existing orders keep rendering. Each
+		 * returned item is a flat array of field => array( 'label', 'value' ).
+		 *
+		 * @param array $data Ticket_info entry or attendee meta array.
+		 * @return array[] List of attendee info arrays.
+		 */
+		function rbfw_regf_attendees_list( $data ) {
+			if ( ! is_array( $data ) ) {
+				return array();
+			}
+			if ( ! empty( $data['rbfw_regf_attendees'] ) && is_array( $data['rbfw_regf_attendees'] ) ) {
+				$list = array();
+				foreach ( $data['rbfw_regf_attendees'] as $att ) {
+					if ( ! empty( $att ) && is_array( $att ) ) {
+						$list[] = $att;
+					}
+				}
+				if ( ! empty( $list ) ) {
+					return $list;
+				}
+			}
+			if ( ! empty( $data['rbfw_regf_info'] ) && is_array( $data['rbfw_regf_info'] ) ) {
+				return array( $data['rbfw_regf_info'] );
+			}
+			return array();
+		}
+	}
+
+	if ( ! function_exists( 'rbfw_regf_attendee_heading' ) ) {
+		/**
+		 * Heading text for an attendee block, e.g. "Attendee 2".
+		 * Returns an empty string when there is only one attendee, so single
+		 * bookings look exactly as they did before.
+		 *
+		 * @param int $index Zero-based attendee index.
+		 * @param int $total Total attendees in the ticket.
+		 * @return string
+		 */
+		function rbfw_regf_attendee_heading( $index, $total ) {
+			if ( (int) $total <= 1 ) {
+				return '';
+			}
+			$label = function_exists( 'rbfw_string_return' )
+				? rbfw_string_return( 'rbfw_text_attendee', __( 'Attendee', 'booking-and-rental-manager-for-woocommerce' ) )
+				: __( 'Attendee', 'booking-and-rental-manager-for-woocommerce' );
+			return $label . ' ' . ( (int) $index + 1 );
+		}
+	}
+
+	if ( ! function_exists( 'rbfw_regf_display_rows' ) ) {
+		/**
+		 * Flatten one ticket/order-meta entry into display rows for the existing
+		 * "label: value" renderers, so no display loop needs restructuring.
+		 *
+		 * With a single attendee the output is byte-identical to the legacy flat
+		 * list. With multiple attendees each field's label is prefixed with the
+		 * attendee heading (e.g. "Attendee 2 — Full Name") so every surface
+		 * (thank-you, emails, PDFs, admin, calendar) labels the attendees without
+		 * any structural change.
+		 *
+		 * Accepts either a container (ticket_info / attendee meta with the
+		 * rbfw_regf_* keys) or an already-flat single-attendee array.
+		 *
+		 * @param array $data Container or flat attendee array.
+		 * @return array[] List of array( 'label' => string, 'value' => mixed ).
+		 */
+		function rbfw_regf_display_rows( $data ) {
+			if ( ! is_array( $data ) ) {
+				return array();
+			}
+			if ( isset( $data['rbfw_regf_attendees'] ) || isset( $data['rbfw_regf_info'] ) ) {
+				$attendees = rbfw_regf_attendees_list( $data );
+			} elseif ( ! empty( $data ) ) {
+				$attendees = array( $data ); // already a flat single-attendee array
+			} else {
+				$attendees = array();
+			}
+
+			$total = count( $attendees );
+			$rows  = array();
+			foreach ( $attendees as $i => $att ) {
+				if ( ! is_array( $att ) ) {
+					continue;
+				}
+				// With more than one attendee, precede each block with a heading row.
+				if ( $total > 1 ) {
+					$rows[] = array(
+						'label'   => rbfw_regf_attendee_heading( $i, $total ),
+						'value'   => '',
+						'heading' => true,
+					);
+				}
+				foreach ( $att as $info ) {
+					if ( ! is_array( $info ) ) {
+						continue;
+					}
+					$rows[] = array(
+						'label' => isset( $info['label'] ) ? $info['label'] : '',
+						'value' => isset( $info['value'] ) ? $info['value'] : '',
+					);
+				}
+			}
+			return $rows;
+		}
+	}
+
 	/**
 	 * Capability required to view/manage the booking admin screens
 	 * (Order List, Bookings, Booking Orders, Booking Calendar, Reports and their

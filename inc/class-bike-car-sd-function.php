@@ -212,6 +212,7 @@
 					$main_array[0]['service_cost']   = $total_service_price;
 					$main_array[0]['rbfw_management_price']   = $rbfw_management_price;
 					$main_array[0]['rbfw_regf_info'] = $rbfw_regf_info;
+					$main_array[0]['rbfw_regf_attendees'] = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
 					return $main_array;
 				else:

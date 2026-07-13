@@ -596,11 +596,22 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             $discount_type   = '';
             $discount_amount = 0;
-            $rbfw_regf_info  = [];
+            $rbfw_regf_info      = [];
+            $rbfw_regf_attendees = [];
             if ( class_exists( 'Rbfw_Reg_Form' ) ) {
                 $ClassRegForm   = new Rbfw_Reg_Form();
-                $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
+                if ( method_exists( $ClassRegForm, 'rbfw_regf_attendees_value_array' ) ) {
+                    // One registration form per booked unit (attendee).
+                    $rbfw_regf_attendees = $ClassRegForm->rbfw_regf_attendees_value_array( $rbfw_id );
+                    $rbfw_regf_info      = ! empty( $rbfw_regf_attendees ) ? $rbfw_regf_attendees[0] : [];
+                } else {
+                    $rbfw_regf_info      = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
+                    $rbfw_regf_attendees = ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array();
+                }
             }
+            // Passed to the per-type ticket builders (which run in other classes)
+            // so each stored ticket carries the full attendee list.
+            $GLOBALS['rbfw_regf_attendees'] = $rbfw_regf_attendees;
             $cart_item_data['rbfw_id'] = $rbfw_id;
 
             if ( $rbfw_rent_type == 'resort' ) {
@@ -2122,9 +2133,13 @@ if (!class_exists('RBFW_Woocommerce')) {
             $rbfw_regf_info = isset( $values['rbfw_regf_info'] ) ? $values['rbfw_regf_info'] : [];
             if ( ! empty( $rbfw_regf_info ) ) {
                 $rbfw_regf_info_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
-                foreach ( $rbfw_regf_info as $key => $value ):
+                foreach ( rbfw_regf_display_rows( $values ) as $key => $value ):
                     $the_label = $value['label'];
                     $the_value = $value['value'];
+                    if ( ! empty( $value['heading'] ) ) {
+                        $rbfw_regf_info_content .= '<tr><td colspan="2" style="border:1px solid #f5f5f5;padding-top:6px;"><strong>' . esc_html( $the_label ) . '</strong></td></tr>';
+                        continue;
+                    }
                     if ( is_array( $the_value ) && ! empty( $the_value ) ) {
                         $new_value   = '';
                         $i           = 1;
@@ -2192,6 +2207,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $ticket_type_arr[ $i ]['rbfw_management_price']    = $rbfw_management_price;
                         $ticket_type_arr[ $i ]['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
                         $ticket_type_arr[ $i ]['rbfw_regf_info']          = $rbfw_regf_info;
+                        $ticket_type_arr[ $i ]['rbfw_regf_attendees']     = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
                         $ticket_type_arr[ $i ]['rbfw_service_infos']      = $rbfw_service_infos;
                         $ticket_type_arr[ $i ]['total_days']              = $total_days;
                     }
@@ -2240,6 +2256,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $ticket_type_arr[ $i ]['discount_amount']         = '';
                         $ticket_type_arr[ $i ]['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
                         $ticket_type_arr[ $i ]['rbfw_regf_info']          = $rbfw_regf_info;
+                        $ticket_type_arr[ $i ]['rbfw_regf_attendees']     = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
                     }
                 }

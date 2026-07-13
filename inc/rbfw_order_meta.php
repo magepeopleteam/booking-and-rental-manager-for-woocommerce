@@ -352,6 +352,11 @@ function rbfw_sync_attendee_meta_from_edit( $wc_order_id, $t, $billing, $billing
     if ( isset( $t['rbfw_regf_info'] ) ) {
         $meta['rbfw_regf_info'] = $t['rbfw_regf_info'];
     }
+    if ( ! empty( $t['rbfw_regf_attendees'] ) ) {
+        $meta['rbfw_regf_attendees'] = $t['rbfw_regf_attendees'];
+    } elseif ( ! empty( $t['rbfw_regf_info'] ) ) {
+        $meta['rbfw_regf_attendees'] = array( $t['rbfw_regf_info'] );
+    }
 
     foreach ( $query->posts as $attendee_id ) {
         foreach ( $meta as $key => $value ) {
@@ -1271,9 +1276,10 @@ function fetch_order_details_callback() {
                                 <td>
                                     <table class="wp-list-table widefat fixed striped table-view-list">
                                         <?php
-                                        foreach ( $rbfw_regf_info as $info ) {
+                                        foreach ( rbfw_regf_display_rows( $ticket_info ) as $info ) {
                                             $label = $info['label'];
                                             $value = $info['value'];
+											if ( ! empty( $info['heading'] ) ) { echo '<tr><td colspan="2" style="padding-top:8px"><strong>' . esc_html( $label ) . '</strong></td></tr>'; continue; }
                                             if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
                                                 $value = '<a href="' . esc_url( $value ) . '" target="_blank" style="text-decoration:underline">' . esc_html__( 'View File', 'booking-and-rental-manager-for-woocommerce' ) . '</a>';
                                             }
@@ -1865,9 +1871,10 @@ function rbfw_order_meta_box_callback() {
                             <td>
                                 <table class="wp-list-table widefat fixed striped table-view-list">
                                     <?php
-                                    foreach ( $rbfw_regf_info as $info ) {
+                                    foreach ( rbfw_regf_display_rows( $ticket_info ) as $info ) {
                                         $label = $info['label'];
                                         $value = $info['value'];
+											if ( ! empty( $info['heading'] ) ) { echo '<tr><td colspan="2" style="padding-top:8px"><strong>' . esc_html( $label ) . '</strong></td></tr>'; continue; }
                                         if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
                                             $value = '<a href="' . esc_url( $value ) . '" target="_blank" style="text-decoration:underline">' . esc_html__( 'View File', 'booking-and-rental-manager-for-woocommerce' ) . '</a>';
                                         }
