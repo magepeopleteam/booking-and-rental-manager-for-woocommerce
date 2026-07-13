@@ -596,11 +596,22 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             $discount_type   = '';
             $discount_amount = 0;
-            $rbfw_regf_info  = [];
+            $rbfw_regf_info      = [];
+            $rbfw_regf_attendees = [];
             if ( class_exists( 'Rbfw_Reg_Form' ) ) {
                 $ClassRegForm   = new Rbfw_Reg_Form();
-                $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
+                if ( method_exists( $ClassRegForm, 'rbfw_regf_attendees_value_array' ) ) {
+                    // One registration form per booked unit (attendee).
+                    $rbfw_regf_attendees = $ClassRegForm->rbfw_regf_attendees_value_array( $rbfw_id );
+                    $rbfw_regf_info      = ! empty( $rbfw_regf_attendees ) ? $rbfw_regf_attendees[0] : [];
+                } else {
+                    $rbfw_regf_info      = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
+                    $rbfw_regf_attendees = ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array();
+                }
             }
+            // Passed to the per-type ticket builders (which run in other classes)
+            // so each stored ticket carries the full attendee list.
+            $GLOBALS['rbfw_regf_attendees'] = $rbfw_regf_attendees;
             $cart_item_data['rbfw_id'] = $rbfw_id;
 
             if ( $rbfw_rent_type == 'resort' ) {
@@ -718,7 +729,17 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
-                if ( ! ( $end_date && $end_time ) && ! empty( $rbfw_type_info ) ) {
+                // Authoritatively derive the end date/time from the selected rent
+                // type's duration on the SERVER for duration-based single-day rentals.
+                // The browser posts rbfw_end_time, but it parsed a 12-hour pickup time
+                // as 24-hour (e.g. 1:00 PM + 1h → "02:00" instead of "14:00"), which
+                // both displayed as 2:00 am AND made the stored booking interval run
+                // backwards — silently defeating rbfw_timely_available_quantity_updated()
+                // so a fully-booked slot still showed as available. PHP's DateTime parses
+                // the pickup time correctly. Specific-duration items keep their fixed
+                // configured clock times (posted from the rate's data attributes).
+                $rbfw_sd_specific_duration = get_post_meta( $rbfw_id, 'enable_specific_duration', true );
+                if ( 'on' !== $rbfw_sd_specific_duration && ! empty( $rbfw_type_info ) ) {
                     $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
                     $selected_rent_type    = '';
                     foreach ( $rbfw_type_info as $type_name => $type_qty ) {
@@ -2122,9 +2143,13 @@ if (!class_exists('RBFW_Woocommerce')) {
             $rbfw_regf_info = isset( $values['rbfw_regf_info'] ) ? $values['rbfw_regf_info'] : [];
             if ( ! empty( $rbfw_regf_info ) ) {
                 $rbfw_regf_info_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
-                foreach ( $rbfw_regf_info as $key => $value ):
+                foreach ( rbfw_regf_display_rows( $values ) as $key => $value ):
                     $the_label = $value['label'];
                     $the_value = $value['value'];
+                    if ( ! empty( $value['heading'] ) ) {
+                        $rbfw_regf_info_content .= '<tr><td colspan="2" style="border:1px solid #f5f5f5;padding-top:6px;"><strong>' . esc_html( $the_label ) . '</strong></td></tr>';
+                        continue;
+                    }
                     if ( is_array( $the_value ) && ! empty( $the_value ) ) {
                         $new_value   = '';
                         $i           = 1;
@@ -2192,6 +2217,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $ticket_type_arr[ $i ]['rbfw_management_price']    = $rbfw_management_price;
                         $ticket_type_arr[ $i ]['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
                         $ticket_type_arr[ $i ]['rbfw_regf_info']          = $rbfw_regf_info;
+                        $ticket_type_arr[ $i ]['rbfw_regf_attendees']     = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
                         $ticket_type_arr[ $i ]['rbfw_service_infos']      = $rbfw_service_infos;
                         $ticket_type_arr[ $i ]['total_days']              = $total_days;
                     }
@@ -2240,6 +2266,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $ticket_type_arr[ $i ]['discount_amount']         = '';
                         $ticket_type_arr[ $i ]['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
                         $ticket_type_arr[ $i ]['rbfw_regf_info']          = $rbfw_regf_info;
+                        $ticket_type_arr[ $i ]['rbfw_regf_attendees']     = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
                     }
                 }

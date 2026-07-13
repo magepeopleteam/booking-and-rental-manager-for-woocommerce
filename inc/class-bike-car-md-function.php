@@ -463,6 +463,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $main_array[0]['discount_type'] = $discount_type;
                 $main_array[0]['discount_amount'] = $discount_amount;
                 $main_array[0]['rbfw_regf_info'] = $rbfw_regf_info;
+                $main_array[0]['rbfw_regf_attendees'] = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
                 return $main_array;
 

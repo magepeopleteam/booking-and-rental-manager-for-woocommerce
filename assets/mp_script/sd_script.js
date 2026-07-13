@@ -195,14 +195,30 @@
 
                 jQuery('#rbfw_start_time').val(start_time);
 
+                // Pickup times render in 12-hour form (e.g. "1:00 PM"); a naive
+                // split(':') would read that as 01:00 and drop the meridiem, so a
+                // 1:00 PM + 1h booking ended at "02:00". Parse hours/minutes with
+                // AM/PM awareness (also tolerates plain 24-hour "13:00").
+                let rbfwParseClock = function (t) {
+                    t = (t || '').toString().trim();
+                    let m = t.match(/^(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?$/);
+                    if (!m) { return { h: 0, i: 0 }; }
+                    let h = parseInt(m[1], 10) || 0;
+                    let i = parseInt(m[2], 10) || 0;
+                    let ap = m[3] ? m[3].toUpperCase() : '';
+                    if (ap === 'PM' && h < 12) { h += 12; }
+                    if (ap === 'AM' && h === 12) { h = 0; }
+                    return { h: h, i: i };
+                };
+
                 let dateParts = start_date.split('-').map(Number);
-                let timeParts = (start_time || '00:00').split(':').map(Number);
+                let tp = rbfwParseClock(start_time || '00:00');
                 let startDateTime = new Date(
                     dateParts[0],
                     dateParts[1] - 1,
                     dateParts[2],
-                    timeParts[0] || 0,
-                    timeParts[1] || 0,
+                    tp.h,
+                    tp.i,
                     0
                 );
 

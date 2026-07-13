@@ -338,9 +338,10 @@
                                             <td>
                                                 <ol>
 													<?php
-														foreach ( $rbfw_regf_info as $info ) {
+														foreach ( rbfw_regf_display_rows( $ticket_info ) as $info ) {
 															$label = $info['label'];
 															$value = $info['value'];
+											if ( ! empty( $info['heading'] ) ) { echo '<li style="list-style:none;margin-top:8px;font-weight:600">' . esc_html( $label ) . '</li>'; continue; }
 															if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
 																$value = '<a href="' . esc_url( $value ) . '" target="_blank" style="text-decoration:underline">' . esc_html__( 'View File', 'booking-and-rental-manager-for-woocommerce' ) . '</a>';
 															}
@@ -642,9 +643,10 @@
                                     <td>
                                         <ol>
 											<?php
-												foreach ( $rbfw_regf_info as $info ) {
+												foreach ( rbfw_regf_display_rows( $ticket_info ) as $info ) {
 													$label = $info['label'];
 													$value = $info['value'];
+											if ( ! empty( $info['heading'] ) ) { echo '<li style="list-style:none;margin-top:8px;font-weight:600">' . esc_html( $label ) . '</li>'; continue; }
 													if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
 														$value = '<a href="' . esc_url( $value ) . '" target="_blank" style="text-decoration:underline">' . esc_html__( 'View File', 'booking-and-rental-manager-for-woocommerce' ) . '</a>';
 													}
