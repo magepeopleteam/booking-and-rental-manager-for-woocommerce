@@ -1406,6 +1406,14 @@ function fetch_order_details_callback() {
                         <th colspan="2"><span class="rbfw_ol_sec_ico"><?php echo rbfw_inv_icon( 'calculator' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span><?php rbfw_string( 'rbfw_text_total', __( 'Summary', 'booking-and-rental-manager-for-woocommerce' ) ); ?></th>
                     </tr>
                     </thead>
+                    <?php
+                    // Coupon discount is read natively from the WooCommerce order — this covers the
+                    // unified coupon engine (our codes apply as real order coupons) and any other
+                    // WooCommerce coupon. Empty on old orders / orders without a coupon.
+                    $order_coupon_codes    = method_exists( $wc_order_details, 'get_coupon_codes' ) ? (array) $wc_order_details->get_coupon_codes() : array();
+                    $order_coupon_discount = (float) $wc_order_details->get_discount_total();
+                    $order_coupon_label    = $order_coupon_codes ? implode( ', ', array_map( 'strtoupper', $order_coupon_codes ) ) : '';
+                    ?>
                     <tbody>
                     <tr>
                         <td>
@@ -1413,8 +1421,20 @@ function fetch_order_details_callback() {
                                 <?php rbfw_string( 'rbfw_text_summary', __( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
                             </strong>
                         </td>
-                        <td><?php echo wp_kses( wc_price( $wc_order_details->get_total() - $total_security_deposit_amount - $wc_order_details->get_total_tax() ), rbfw_allowed_html() ); ?></td>
+                        <td><?php echo wp_kses( wc_price( $wc_order_details->get_total() - $total_security_deposit_amount - $wc_order_details->get_total_tax() + $order_coupon_discount ), rbfw_allowed_html() ); ?></td>
                     </tr>
+                    <?php if ( $order_coupon_discount > 0 ) { ?>
+                        <tr>
+                            <td>
+                                <strong><?php
+                                    echo esc_html( $rbfw->get_option( 'rbfw_text_coupon', 'rbfw_basic_translation_settings', __( 'Coupon', 'booking-and-rental-manager-for-woocommerce' ) ) );
+                                    if ( $order_coupon_label ) { echo ' (' . esc_html( $order_coupon_label ) . ')'; }
+                                    echo ':';
+                                ?></strong>
+                            </td>
+                            <td>&minus;<?php echo wp_kses( wc_price( $order_coupon_discount ), rbfw_allowed_html() ); ?></td>
+                        </tr>
+                    <?php } ?>
                     <?php if ( $wc_order_details->get_total_tax() ) { ?>
                         <tr>
                             <td>

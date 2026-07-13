@@ -13344,3 +13344,19 @@ msgstr ""
 #: support/blocks/js/blocks.build.js:488
 msgid "This block displays search results for rental items."
 msgstr ""
+
+#: inc/RBFW_Dependencies.php
+msgid "Please enter the date"
+msgstr ""
+
+#: inc/RBFW_Dependencies.php
+msgid "Please enter the pickup date"
+msgstr ""
+
+#: inc/RBFW_Dependencies.php
+msgid "Please enter the pickup time"
+msgstr ""
+
+#: inc/RBFW_Dependencies.php
+msgid "No Match Result Found!"
+msgstr ""

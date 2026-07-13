@@ -77,17 +77,53 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 
 			// 6. Total — computed live on the frontend and posted back. Phase 1 trusts the
 			// sanitized value; server-side recomputation/validation lands with the payment phase.
-			$total = isset( $_POST['rbfw_total'] ) ? (float) preg_replace( '/[^0-9.]/', '', wp_unslash( $_POST['rbfw_total'] ) ) : 0.0;
+			$subtotal = isset( $_POST['rbfw_total'] ) ? (float) preg_replace( '/[^0-9.]/', '', wp_unslash( $_POST['rbfw_total'] ) ) : 0.0;
+			$subtotal = max( 0, $subtotal );
+
+			// 6b. Coupon — ALWAYS authoritative server-side. Only the coupon CODE is accepted from
+			// the client; the discount value is recomputed from the coupon's own configuration, so a
+			// tampered `rbfw_coupon_discount` in the POST is ignored entirely. Automatic (no-code)
+			// rules resolve here too. (The base subtotal above remains client-derived — that is the
+			// pre-existing gap noted at step 6 and is unchanged by this feature.)
+			$coupon_code     = '';
+			$coupon_discount = 0.0;
+			$coupon_applied  = array();
+
+			if ( class_exists( 'RBFW_Coupon_Engine' ) && RBFW_Coupon_Engine::is_enabled() ) {
+				$posted_code = isset( $_POST['rbfw_coupon_code'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_coupon_code'] ) ) : '';
+				$ctx         = RBFW_Coupon_Context::from_native_post( $raw );
+				$resolution  = RBFW_Coupon_Engine::resolve( $ctx, $posted_code );
+
+				// A code was typed but is not (or no longer) valid — refuse rather than silently
+				// charging full price after the customer saw a discounted total.
+				if ( '' !== trim( $posted_code ) && '' !== $resolution['manual_error'] ) {
+					wp_send_json_error( array( 'message' => $resolution['manual_error'] ) );
+				}
+
+				$coupon_discount = min( (float) $resolution['total_discount'], $subtotal );
+				$coupon_applied  = $resolution['applied'];
+				$codes           = array();
+				foreach ( $coupon_applied as $a ) {
+					$codes[] = $a['code'];
+				}
+				$coupon_code = implode( ', ', $codes );
+			}
+
+			$total = max( 0, $subtotal - $coupon_discount );
 
 			// 7. Persist via the booking manager.
 			$result = RBFW_Booking_Manager::create_booking( $item_id, array(
-				'customer'    => array( 'name' => $name, 'email' => $email, 'phone' => $phone ),
-				'dates'       => $dates,
-				'total'       => $total,
-				'item_type'   => $item_type,
-				'quantity'    => $quantity,
-				'ticket_info' => $ticket_info,
-				'raw'         => $raw,
+				'customer'        => array( 'name' => $name, 'email' => $email, 'phone' => $phone ),
+				'dates'           => $dates,
+				'subtotal'        => $subtotal,
+				'discount'        => $coupon_discount,
+				'coupon_code'     => $coupon_code,
+				'coupon_applied'  => $coupon_applied,
+				'total'           => $total,
+				'item_type'       => $item_type,
+				'quantity'        => $quantity,
+				'ticket_info'     => $ticket_info,
+				'raw'             => $raw,
 			) );
 
 			if ( is_wp_error( $result ) ) {

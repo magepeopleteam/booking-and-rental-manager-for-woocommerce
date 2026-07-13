@@ -28,6 +28,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 	.rbfw-native-modal__submit{width:100%;padding:11px 16px;font-size:15px;cursor:pointer;}
 	.rbfw-native-modal__submit.is-loading{opacity:.6;cursor:progress;}
 	.rbfw-native-modal__note{margin:10px 0 0;font-size:12px;color:#777;text-align:center;}
+	.rbfw-native-coupon{margin:0 0 16px;padding:12px 14px;border:1px dashed #d7dae0;border-radius:8px;background:#fbfbfc;}
+	.rbfw-native-coupon__label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;}
+	.rbfw-native-coupon__row{display:flex;gap:8px;}
+	.rbfw-native-coupon__input{flex:1;min-width:0;padding:9px 11px;border:1px solid #cfd4da;border-radius:6px;box-sizing:border-box;text-transform:uppercase;}
+	.rbfw-native-coupon__apply,.rbfw-native-coupon__remove{flex:0 0 auto;cursor:pointer;border:0;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:600;color:#fff;background:var(--color_theme,#f12971);}
+	.rbfw-native-coupon__remove{background:transparent;color:#6b7280;text-decoration:underline;padding:2px 4px;font-weight:500;}
+	.rbfw-native-coupon.is-busy{opacity:.6;pointer-events:none;}
+	.rbfw-native-coupon__msg{margin-top:8px;font-size:12.5px;line-height:1.4;}
+	.rbfw-native-coupon__msg.error{color:#b32d2e;}
+	.rbfw-native-coupon__msg.success{color:#1a7f37;}
+	.rbfw-native-coupon__applied{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:8px 12px;border-radius:6px;background:#ecfdf3;border:1px solid #abefc6;font-size:13px;font-weight:600;color:#166534;}
+	.rbfw-native-coupon__applied[hidden]{display:none;}
 </style>
 <div id="rbfw-native-checkout-modal" class="rbfw-native-modal" aria-hidden="true" style="display:none;">
 	<div class="rbfw-native-modal__overlay" data-rbfw-native-close></div>
@@ -39,6 +51,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<span class="rbfw-native-modal__total-label"><?php echo esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?>:</span>
 			<span class="rbfw-native-modal__total-value" data-rbfw-native-total></span>
 		</div>
+
+		<?php
+		// Coupon field — shown here (inside the standalone checkout modal) because this is where the
+		// Total and Confirm live. Handled by rbfw_native_checkout.js against the active booking form.
+		if ( class_exists( 'RBFW_Coupon_Frontend' ) && RBFW_Coupon_Frontend::enabled() ) :
+			$rbfw_cpn_label = RBFW_Coupon_Engine::setting( 'rbfw_coupon_label', __( 'Have a coupon?', 'booking-and-rental-manager-for-woocommerce' ) );
+			$rbfw_cpn_ph    = RBFW_Coupon_Engine::setting( 'rbfw_coupon_placeholder', __( 'Enter coupon code', 'booking-and-rental-manager-for-woocommerce' ) );
+			?>
+			<div class="rbfw-native-coupon" data-rbfw-native-coupon>
+				<label class="rbfw-native-coupon__label"><?php echo esc_html( $rbfw_cpn_label ); ?></label>
+				<div class="rbfw-native-coupon__row">
+					<input type="text" class="rbfw-native-coupon__input" data-rbfw-native-coupon-input placeholder="<?php echo esc_attr( $rbfw_cpn_ph ); ?>" autocomplete="off">
+					<button type="button" class="rbfw-native-coupon__apply" data-rbfw-native-coupon-apply><?php echo esc_html__( 'Apply', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+				</div>
+				<div class="rbfw-native-coupon__msg" data-rbfw-native-coupon-msg aria-live="polite"></div>
+				<div class="rbfw-native-coupon__applied" data-rbfw-native-coupon-applied hidden>
+					<span data-rbfw-native-coupon-summary></span>
+					<button type="button" class="rbfw-native-coupon__remove" data-rbfw-native-coupon-remove><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+				</div>
+			</div>
+		<?php endif; ?>
 
 		<div class="rbfw-native-modal__fields">
 			<p class="rbfw-native-field">

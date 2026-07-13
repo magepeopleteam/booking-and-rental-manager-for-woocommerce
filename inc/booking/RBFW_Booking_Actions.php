@@ -294,6 +294,14 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 			$lines[] = esc_html__( 'Item:', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $d['item'];
 			$lines[] = esc_html__( 'Dates:', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $d['dates'];
 			$lines[] = esc_html__( 'Quantity:', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $d['quantity'];
+			if ( ! empty( $d['discount_raw'] ) || ! empty( $d['coupon_code'] ) ) {
+				$lines[] = esc_html__( 'Subtotal:', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $d['subtotal'];
+				$coupon_line = esc_html__( 'Discount:', 'booking-and-rental-manager-for-woocommerce' );
+				if ( ! empty( $d['coupon_code'] ) ) {
+					$coupon_line .= ' (' . $d['coupon_code'] . ')';
+				}
+				$lines[] = $coupon_line . ' -' . $d['discount'];
+			}
 			$lines[] = esc_html__( 'Total:', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $d['total'];
 			$lines[] = esc_html__( 'Status:', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . $d['status_label'];
 			$lines[] = '';
@@ -321,6 +329,14 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 
 			$total = (float) get_post_meta( $booking_id, 'rbfw_total', true );
 
+			$coupon_code  = (string) get_post_meta( $booking_id, 'rbfw_coupon_code', true );
+			$discount_raw = (float) get_post_meta( $booking_id, 'rbfw_discount', true );
+			$subtotal_raw = get_post_meta( $booking_id, 'rbfw_subtotal', true );
+			$subtotal_raw = ( '' === $subtotal_raw ) ? ( $total + $discount_raw ) : (float) $subtotal_raw;
+			$money        = static function ( $amount ) {
+				return html_entity_decode( wp_strip_all_tags( wc_price( $amount ) ), ENT_QUOTES, 'UTF-8' );
+			};
+
 			return array(
 				'reference'    => (string) get_post_meta( $booking_id, 'rbfw_reference', true ),
 				'item'         => (string) get_post_meta( $booking_id, 'rbfw_item_name', true ),
@@ -329,7 +345,11 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 				'phone'        => (string) get_post_meta( $booking_id, 'rbfw_customer_phone', true ),
 				'dates'        => $dates ? $dates : '—',
 				'quantity'     => (string) max( 1, absint( get_post_meta( $booking_id, 'rbfw_quantity', true ) ) ),
-				'total'        => html_entity_decode( wp_strip_all_tags( wc_price( $total ) ), ENT_QUOTES, 'UTF-8' ),
+				'subtotal'     => $money( $subtotal_raw ),
+				'discount'     => $money( $discount_raw ),
+				'discount_raw' => $discount_raw,
+				'coupon_code'  => $coupon_code,
+				'total'        => $money( $total ),
 				'status_label' => isset( $statuses[ $status ] ) ? $statuses[ $status ] : ucfirst( $status ),
 			);
 		}
@@ -441,6 +461,19 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 			</table>
 
 			<table class="rbfw-total-table">
+				<?php if ( ! empty( $d['discount_raw'] ) || ! empty( $d['coupon_code'] ) ) : ?>
+				<tr>
+					<td><?php esc_html_e( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+					<td style="text-align:right;"><?php echo esc_html( $d['subtotal'] ); ?></td>
+				</tr>
+				<tr>
+					<td>
+						<?php esc_html_e( 'Discount', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						<?php if ( ! empty( $d['coupon_code'] ) ) : ?><small>(<?php echo esc_html( $d['coupon_code'] ); ?>)</small><?php endif; ?>
+					</td>
+					<td style="text-align:right;">&minus;<?php echo esc_html( $d['discount'] ); ?></td>
+				</tr>
+				<?php endif; ?>
 				<tr class="rbfw-total-row">
 					<td><?php esc_html_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
 					<td style="text-align:right;"><?php echo esc_html( $d['total'] ); ?></td>
