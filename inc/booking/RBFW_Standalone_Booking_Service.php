@@ -75,6 +75,17 @@ if ( ! class_exists( 'RBFW_Standalone_Booking_Service' ) ) {
 			update_post_meta( $post_id, 'rbfw_start_time', isset( $dates['start_time'] ) ? sanitize_text_field( $dates['start_time'] ) : '' );
 			update_post_meta( $post_id, 'rbfw_end_time', isset( $dates['end_time'] ) ? sanitize_text_field( $dates['end_time'] ) : '' );
 			update_post_meta( $post_id, 'rbfw_quantity', $quantity );
+
+			// Money breakdown. `rbfw_total` stays the payable grand total (what the payment phase
+			// charges); subtotal/discount record how it was reached. Values are computed
+			// server-side in RBFW_Native_Checkout::process() — never taken from the client.
+			$subtotal    = isset( $payload['subtotal'] ) ? max( 0, (float) $payload['subtotal'] ) : $total;
+			$discount    = isset( $payload['discount'] ) ? max( 0, (float) $payload['discount'] ) : 0.0;
+			$coupon_code = isset( $payload['coupon_code'] ) ? sanitize_text_field( $payload['coupon_code'] ) : '';
+
+			update_post_meta( $post_id, 'rbfw_subtotal', $subtotal );
+			update_post_meta( $post_id, 'rbfw_discount', $discount );
+			update_post_meta( $post_id, 'rbfw_coupon_code', $coupon_code );
 			update_post_meta( $post_id, 'rbfw_total', $total );
 			update_post_meta( $post_id, 'rbfw_currency', get_woocommerce_currency() );
 			update_post_meta( $post_id, 'rbfw_status', $status );
@@ -91,6 +102,25 @@ if ( ! class_exists( 'RBFW_Standalone_Booking_Service' ) ) {
 			$ticket_info = isset( $payload['ticket_info'] ) && is_array( $payload['ticket_info'] ) ? $payload['ticket_info'] : array();
 			if ( ! empty( $ticket_info ) && function_exists( 'rbfw_create_inventory_meta' ) ) {
 				rbfw_create_inventory_meta( $ticket_info, $item_id, $post_id, $status );
+			}
+
+			// Record coupon redemptions. Done at creation (like the inventory reservation above) so
+			// usage limits cannot be bypassed by never completing payment. RBFW_Coupon_Usage::record()
+			// is idempotent per (coupon, booking), so re-entry can never double count.
+			$coupon_applied = isset( $payload['coupon_applied'] ) && is_array( $payload['coupon_applied'] ) ? $payload['coupon_applied'] : array();
+			if ( $coupon_applied && class_exists( 'RBFW_Coupon_Usage' ) ) {
+				foreach ( $coupon_applied as $applied ) {
+					$cid = isset( $applied['id'] ) ? absint( $applied['id'] ) : 0;
+					if ( $cid ) {
+						RBFW_Coupon_Usage::record(
+							$cid,
+							array( 'type' => 'booking', 'id' => $post_id ),
+							get_current_user_id(),
+							$email,
+							isset( $applied['amount'] ) ? (float) $applied['amount'] : 0.0
+						);
+					}
+				}
 			}
 
 			/**

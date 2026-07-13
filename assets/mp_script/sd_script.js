@@ -137,12 +137,12 @@
 
             if (time_slot_switch === 'yes') {
                 if (start_date === '' || start_time === '') {
-                    alert('please enter date');
+                    alert((window.rbfw_translation||{}).enter_date || 'Please enter the date');
                     return;
                 }
             } else {
                 if (start_date === '') {
-                    alert('please enter date');
+                    alert((window.rbfw_translation||{}).enter_date || 'Please enter the date');
                     return;
                 }
             }
@@ -162,7 +162,7 @@
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             if(rbfw_bikecarsd_selected_date==''){
-                alert("please enter pickup date");
+                alert((window.rbfw_translation||{}).enter_pickup_date || 'Please enter the pickup date');
                 return;
             }
 
@@ -188,7 +188,7 @@
                 if(time_slot_switch == 'yes'){
                     start_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
                     if(start_time == ''){
-                        alert("Please enter pickup time");
+                        alert((window.rbfw_translation||{}).enter_pickup_time || 'Please enter the pickup time');
                         return;
                     }
                 }

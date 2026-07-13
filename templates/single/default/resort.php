@@ -60,7 +60,7 @@
 								<?php endif; ?>
 								<?php if ( $rbfw_default_hero_price > 0 ) : ?>
 								<div class="rbfw_default_hero_price_wrap">
-									<div class="rbfw_default_hero_price_label"><?php esc_html_e( 'Prices Start At', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+									<div class="rbfw_default_hero_price_label"><?php esc_html_e( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 									<div class="rbfw_default_hero_price_amount"><?php echo wp_kses( wc_price( $rbfw_default_hero_price ), rbfw_allowed_html() ); ?></div>
 								</div>
 								<?php endif; ?>

@@ -49,6 +49,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_bikecarsd_sold_out_times'                  => wp_create_nonce('rbfw_bikecarsd_sold_out_times_action'),
 				'nonce_bikecarmd_ajax_min_max_and_offdays_info'   => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
 				'nonce_native_checkout'                           => wp_create_nonce('rbfw_native_checkout_action'),
+				'nonce_apply_coupon'                              => wp_create_nonce('rbfw_apply_coupon_action'),
 			);
 		}
 
@@ -207,6 +208,8 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
 				// WooCommerce-optional booking flow.
 				'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),
+				// Unified coupon engine (both modes).
+				'nonce_apply_coupon'           => wp_create_nonce('rbfw_apply_coupon_action'),
 				'booking_mode'                 => rbfw_booking_mode(),
 				'has_woocommerce'              => rbfw_has_woocommerce() ? '1' : '0',
 				'currency_symbol'              => get_woocommerce_currency_symbol(),
@@ -317,6 +320,12 @@ if (! class_exists('RBFW_Dependencies')) {
 				'number_of' => __('Number of', 'booking-and-rental-manager-for-woocommerce'),
 				'duration' => __('Duration', 'booking-and-rental-manager-for-woocommerce'),
 				'pickup_dropoff_date' => __('Please enter pickup date and dropoff date', 'booking-and-rental-manager-for-woocommerce'),
+				// Previously hard-coded in sd_script.js / js/rbfw_script.js (now translatable).
+				'enter_date' => __('Please enter the date', 'booking-and-rental-manager-for-woocommerce'),
+				'enter_pickup_date' => __('Please enter the pickup date', 'booking-and-rental-manager-for-woocommerce'),
+				'enter_pickup_time' => __('Please enter the pickup time', 'booking-and-rental-manager-for-woocommerce'),
+				'no_data_found' => __('Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce'),
+				'no_match_found' => __('No Match Result Found!', 'booking-and-rental-manager-for-woocommerce'),
 			));
 
 
@@ -334,6 +343,22 @@ if (! class_exists('RBFW_Dependencies')) {
 			// only acts when rbfw_ajax_front.booking_mode === 'standalone'. Must be enqueued
 			// on the frontend (this method) — the native checkout modal lives on the item page.
 			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
+
+			// Unified coupon field (works in both booking modes; the script picks its endpoint
+			// from rbfw_ajax_front.booking_mode).
+			if (class_exists('RBFW_Coupon_Frontend') && RBFW_Coupon_Frontend::enabled()) {
+				wp_enqueue_style('rbfw_coupon', RBFW_PLUGIN_URL . '/css/rbfw_coupon.css', array(), time(), 'all');
+				wp_enqueue_script('rbfw_coupon', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_coupon.js', array('jquery'), time(), true);
+				wp_localize_script('rbfw_coupon', 'rbfw_coupon_vars', array(
+					'ajaxurl'         => admin_url('admin-ajax.php'),
+					'nonce'           => wp_create_nonce('rbfw_apply_coupon_action'),
+					'has_auto'        => RBFW_Coupon_Frontend::has_auto_coupons() ? '1' : '0',
+					'i18n_enter_code' => __('Please enter a coupon code.', 'booking-and-rental-manager-for-woocommerce'),
+					/* translators: 1: coupon code, 2: discount amount */
+					'i18n_saved'      => __('Coupon %1$s applied — you save %2$s', 'booking-and-rental-manager-for-woocommerce'),
+					'i18n_new_total'  => __('New total:', 'booking-and-rental-manager-for-woocommerce'),
+				));
+			}
 
 			// [rbfw_booking_search] multi-item booking search.
 			wp_enqueue_script('rbfw_booking_search', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_booking_search.js', array('jquery', 'jquery-ui-datepicker'), time(), true);

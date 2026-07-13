@@ -29,6 +29,19 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 
+// ---- Unified coupon engine (mode-agnostic core; loads in every mode) ----
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Post_Type.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Usage.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Context.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Engine.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Frontend.php';
+if ( is_admin() ) {
+    // Coupons manager page + the "Coupons" tab on the global settings page.
+    require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Admin.php';
+    require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Coupon_Settings.php';
+}
+
 
 
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
@@ -109,6 +122,9 @@ function rbfw_free_woocommerce_integrate(){
         require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
         require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
         require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+        // Coupon engine: WooCommerce application layer. Hook bodies additionally gate on use_wc(),
+        // so it stays inert when WooCommerce is active but Booking Mode = Standalone.
+        require_once(RBFW_PLUGIN_DIR . "/inc/coupon/RBFW_Coupon_WC.php");
     }
 
     // Native checkout + booking confirmation run whenever the WooCommerce flow is not in
@@ -116,6 +132,9 @@ function rbfw_free_woocommerce_integrate(){
     if ( ! RBFW_Function::use_wc() ) {
         require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Native_Checkout.php");
         require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Confirmation.php");
+        // Coupon engine: standalone application layer (live preview endpoint). The authoritative
+        // recompute happens inside RBFW_Native_Checkout::process().
+        require_once(RBFW_PLUGIN_DIR . "/inc/coupon/RBFW_Coupon_Native.php");
     }
 
 }

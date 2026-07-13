@@ -98,6 +98,8 @@ function rbfw_export_columns() {
 		'duration_cost'    => __( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ),
 		'service_cost'     => __( 'Service Cost', 'booking-and-rental-manager-for-woocommerce' ),
 		'discount'         => __( 'Discount', 'booking-and-rental-manager-for-woocommerce' ),
+		'coupon'           => __( 'Coupon', 'booking-and-rental-manager-for-woocommerce' ),
+		'coupon_discount'  => __( 'Coupon Discount', 'booking-and-rental-manager-for-woocommerce' ),
 		'security_deposit' => __( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ),
 		'status'           => __( 'Status', 'booking-and-rental-manager-for-woocommerce' ),
 		'order_total'      => __( 'Order Total', 'booking-and-rental-manager-for-woocommerce' ),
@@ -126,7 +128,7 @@ function rbfw_export_column_groups() {
 		),
 		'pricing'  => array(
 			'label'   => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
-			'columns' => array( 'duration_cost', 'service_cost', 'discount', 'security_deposit' ),
+			'columns' => array( 'duration_cost', 'service_cost', 'discount', 'coupon', 'coupon_discount', 'security_deposit' ),
 		),
 	);
 }
@@ -327,6 +329,8 @@ function rbfw_collect_export_rows( $filters ) {
 				'duration_cost'    => isset( $ticket['duration_cost'] ) ? (float) $ticket['duration_cost'] : 0,
 				'service_cost'     => isset( $ticket['service_cost'] ) ? (float) $ticket['service_cost'] : 0,
 				'discount'         => isset( $ticket['discount_amount'] ) ? (float) $ticket['discount_amount'] : 0,
+				'coupon'           => isset( $ticket['rbfw_coupon_code'] ) ? (string) $ticket['rbfw_coupon_code'] : '',
+				'coupon_discount'  => isset( $ticket['rbfw_coupon_discount'] ) ? (float) $ticket['rbfw_coupon_discount'] : 0,
 				'security_deposit' => isset( $ticket['security_deposit_amount'] ) ? (float) $ticket['security_deposit_amount'] : 0,
 				'status'           => ucfirst( str_replace( 'wc-', '', $order_status ) ),
 				// The WC order total belongs to the whole order; only attribute it
@@ -568,7 +572,7 @@ function rbfw_export_orders_csv( $rows, $filters ) {
 	// Header row.
 	fputcsv( $out, array_values( $columns ) );
 
-	$money_keys = array( 'duration_cost', 'service_cost', 'discount', 'security_deposit', 'order_total' );
+	$money_keys = array( 'duration_cost', 'service_cost', 'discount', 'coupon_discount', 'security_deposit', 'order_total' );
 
 	foreach ( $rows as $row ) {
 		$line = array();
@@ -715,7 +719,7 @@ function rbfw_export_pdf_footer_html() {
  */
 function rbfw_export_pdf_body_html( $rows, $filters ) {
 	$columns    = rbfw_export_enabled_columns();
-	$money_keys = array( 'duration_cost', 'service_cost', 'discount', 'security_deposit', 'order_total' );
+	$money_keys = array( 'duration_cost', 'service_cost', 'discount', 'coupon_discount', 'security_deposit', 'order_total' );
 	$num_keys   = array( 'qty', 'total_days' );
 
 	$html  = '<style>' . rbfw_export_pdf_css() . '</style>';

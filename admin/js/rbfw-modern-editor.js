@@ -2178,6 +2178,14 @@
             var _invShow = (type !== 'resort' && type !== 'appointment');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
 
+            // Inventory sub-sections that only apply to specific rent types:
+            //  - Return-date release: date-range rentals only (hide for Single Day & Appointment).
+            //  - Multiple-item selection: multi-day Bike/Car, Dress, Equipment & Others only.
+            $pricing.find('.rbfw_stock_return_date_section').toggle(type !== 'bike_car_sd' && type !== 'appointment');
+            $pricing.find('.rbfw_switch_md_type_item_qty').toggle(
+                type === 'bike_car_md' || type === 'dress' || type === 'equipment' || type === 'others'
+            );
+
             // Location card (Advanced step): available for every rent type
             // ( multi-location feature ).
             $wrap.find('.rbfw-me-location-card').removeClass('rbfw-me-hidden');
