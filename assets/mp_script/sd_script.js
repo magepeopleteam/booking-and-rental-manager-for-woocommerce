@@ -51,6 +51,8 @@
                         getAvailableTimes(rbfw_particulars_data , start_date_ymd,rdfw_available_time,'pickup_time');
                         //particular_time_date_dependent_ajax(post_id,start_date_ymd,'time_enable',time_slot_switch,'');
                         // Listener registered once at document-ready level below — do NOT re-bind here.
+                        // Grey out pickup times that are sold out (see helper below).
+                        rbfwFetchPickupSoldOut(post_id, start_date_ymd);
 
                     }
                 }
@@ -272,6 +274,10 @@
             jQuery('#rbfw_service_price').val(rbfw_service_price);
 
             jQuery('#rbfw_service_type_for_st').val(service_type);
+
+            // Duration-aware: refine the pickup dropdown for the chosen rent type so
+            // times whose [start, start + this duration] window is full are disabled.
+            rbfwApplyPickupSoldOut(service_type);
 
             jQuery('.single-type-timely').each(function(index, element) {
                 jQuery('.single-type-timely').removeClass('selected');
@@ -710,6 +716,103 @@ function rbfw_get_selected_variations(){
         }
     });
     return selected;
+}
+
+/* =========================================================================
+ * Sold-out Pickup Time dropdown
+ *
+ * Fetches per-time / per-rent-type remaining stock for the selected date, then
+ * disables sold-out <option>s in #pickup_time. Before a duration is chosen a
+ * time is disabled only when EVERY rent type is full there (nothing bookable);
+ * once a rent type is selected the dropdown is refined for that duration's
+ * booked window. Cached per (post, date) so switching durations never re-fetches.
+ * ========================================================================= */
+var rbfwPickupState = { key: '', avail: {}, type: null };
+
+function rbfwPickupSoldOutLabel() {
+    return (window.rbfw_translation && rbfw_translation.sold_out) ? rbfw_translation.sold_out : 'Sold out';
+}
+
+// Apply the cached availability to #pickup_time. `type` = selected rent type, or
+// null/undefined to use the "fully sold out across all rent types" rule.
+function rbfwApplyPickupSoldOut(type) {
+    if (type !== undefined) { rbfwPickupState.type = type || null; }
+    var avail = rbfwPickupState.avail || {};
+    var label = rbfwPickupSoldOutLabel();
+    var $sel  = jQuery('#pickup_time');
+    if (!$sel.length) { return; }
+
+    $sel.find('option').each(function () {
+        var opt = this;
+        if (!opt.value) { return; } // skip the "Pickup Time" placeholder
+        var perType = avail[opt.value];
+        if (!perType) { return; }   // unknown time — leave as-is (no false mark)
+
+        var soldOut;
+        if (rbfwPickupState.type && perType.hasOwnProperty(rbfwPickupState.type)) {
+            soldOut = (parseInt(perType[rbfwPickupState.type], 10) || 0) <= 0;
+        } else {
+            var maxRemaining = -1;
+            for (var k in perType) {
+                if (perType.hasOwnProperty(k)) {
+                    maxRemaining = Math.max(maxRemaining, parseInt(perType[k], 10) || 0);
+                }
+            }
+            soldOut = maxRemaining <= 0;
+        }
+
+        if (opt.getAttribute('data-rbfw-base-label') === null) {
+            opt.setAttribute('data-rbfw-base-label', opt.textContent);
+        }
+        var base = opt.getAttribute('data-rbfw-base-label');
+
+        // Never override the past-time disabling done in getAvailableTimes().
+        var pastDisabled = (opt.title === 'Past time' || opt.title === 'Past Time');
+        if (soldOut) {
+            opt.disabled = true;
+            opt.classList.add('rbfw-pickup-sold-out');
+            opt.textContent = base + ' (' + label + ')';
+        } else if (!pastDisabled) {
+            opt.disabled = false;
+            opt.classList.remove('rbfw-pickup-sold-out');
+            opt.textContent = base;
+        }
+    });
+}
+
+function rbfwFetchPickupSoldOut(post_id, start_date) {
+    var $sel = jQuery('#pickup_time');
+    if (!$sel.length || !post_id || !start_date) { return; }
+
+    var times = [];
+    $sel.find('option').each(function () {
+        if (this.value) { times.push(this.value); }
+    });
+    if (!times.length) { return; }
+
+    var key = post_id + '|' + start_date;
+    rbfwPickupState.key  = key;
+    rbfwPickupState.type = null; // date changed → reset the selected duration
+
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        data: {
+            'action': 'rbfw_sd_pickup_times_availability',
+            'post_id': post_id,
+            'selected_date': start_date,
+            'times': times,
+            'nonce': rbfw_ajax_front.nonce_service_type_timely_stock
+        },
+        success: function (res) {
+            if (rbfwPickupState.key !== key) { return; } // a newer date won the race
+            if (res && res.success && res.data && res.data.avail) {
+                rbfwPickupState.avail = res.data.avail;
+                rbfwApplyPickupSoldOut(rbfwPickupState.type);
+            }
+        }
+    });
 }
 
 function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',enable_specific_duration = 'off'){
