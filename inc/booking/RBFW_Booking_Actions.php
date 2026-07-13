@@ -554,7 +554,7 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 			$url = add_query_arg(
 				array(
 					'post_type'             => 'rbfw_item',
-					'page'                  => 'rbfw_bookings',
+					'page'                  => 'rbfw_booking_orders',
 					'paged'                 => isset( $_POST['paged'] ) ? absint( $_POST['paged'] ) : 1,
 					'rbfw_status_updated'   => $ok ? 1 : 0,
 				),

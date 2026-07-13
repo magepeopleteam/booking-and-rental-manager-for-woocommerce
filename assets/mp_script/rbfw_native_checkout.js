@@ -176,9 +176,15 @@
 		$.post(rbfw_ajax_front.rbfw_ajaxurl, data)
 			.done(function (res) {
 				if (res && res.success) {
-					$msg.addClass('success').text(res.data.message || 'Booking received.');
-					if (res.data.redirect) {
-						window.location.href = res.data.redirect;
+					$msg.addClass('success').text((res.data && res.data.message) || 'Booking received.');
+					// Only navigate when the server returned a real URL to send the
+					// customer to (e.g. a gateway hosted checkout or confirmation page).
+					// Otherwise stop the loader so the button never hangs on a spinner.
+					var redirect = res.data && res.data.redirect ? String(res.data.redirect) : '';
+					if (/^(https?:)?\/\//i.test(redirect) || redirect.charAt(0) === '/') {
+						window.location.href = redirect;
+					} else {
+						$btn.prop('disabled', false).removeClass('is-loading');
 					}
 				} else {
 					var m = res && res.data && res.data.message ? res.data.message : 'Something went wrong. Please try again.';

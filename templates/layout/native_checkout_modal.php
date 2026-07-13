@@ -25,8 +25,41 @@ if ( ! defined( 'ABSPATH' ) ) {
 	.rbfw-native-modal__message{min-height:18px;margin:0 0 10px;font-size:13px;}
 	.rbfw-native-modal__message.error{color:#b32d2e;}
 	.rbfw-native-modal__message.success{color:#1a7f37;}
-	.rbfw-native-modal__submit{width:100%;padding:11px 16px;font-size:15px;cursor:pointer;}
-	.rbfw-native-modal__submit.is-loading{opacity:.6;cursor:progress;}
+	.rbfw-native-modal__submit{
+		position:relative;
+		display:flex;
+		align-items:center;
+		justify-content:center;
+		gap:8px;
+		width:100%;
+		margin:4px 0 0;
+		padding:13px 18px;
+		border:none;
+		border-radius:8px;
+		background:var(--rbfw_color_primary,#ff3726);
+		color:#fff;
+		font-size:15px;
+		font-weight:700;
+		line-height:1.2;
+		letter-spacing:.2px;
+		cursor:pointer;
+		box-shadow:0 8px 20px -6px rgba(0,0,0,.35);
+		transition:background-color .2s ease,box-shadow .2s ease,transform .05s ease;
+	}
+	.rbfw-native-modal__submit .dashicons{font-size:18px;width:18px;height:18px;}
+	.rbfw-native-modal__submit:hover,
+	.rbfw-native-modal__submit:focus-visible{
+		background:var(--rbfw_single_page_secondary_color,#333);
+		box-shadow:0 10px 24px -6px rgba(0,0,0,.4);
+	}
+	.rbfw-native-modal__submit:focus-visible{outline:2px solid var(--rbfw_color_primary,#ff3726);outline-offset:2px;}
+	.rbfw-native-modal__submit:active{transform:translateY(1px);box-shadow:0 4px 10px -4px rgba(0,0,0,.35);}
+	.rbfw-native-modal__submit:disabled{cursor:default;}
+	.rbfw-native-modal__spinner{display:none;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rbfw-native-spin .6s linear infinite;}
+	.rbfw-native-modal__submit.is-loading{background:var(--rbfw_single_page_secondary_color,#333);}
+	.rbfw-native-modal__submit.is-loading .rbfw-native-modal__spinner{display:inline-block;}
+	.rbfw-native-modal__submit.is-loading .rbfw-native-modal__submit-icon{display:none;}
+	@keyframes rbfw-native-spin{to{transform:rotate(360deg);}}
 	.rbfw-native-modal__note{margin:10px 0 0;font-size:12px;color:#777;text-align:center;}
 	.rbfw-native-coupon{margin:0 0 16px;padding:12px 14px;border:1px dashed #d7dae0;border-radius:8px;background:#fbfbfc;}
 	.rbfw-native-coupon__label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;}
@@ -53,56 +86,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<?php
-		// Coupon field — shown here (inside the standalone checkout modal) because this is where the
-		// Total and Confirm live. Handled by rbfw_native_checkout.js against the active booking form.
-		if ( class_exists( 'RBFW_Coupon_Frontend' ) && RBFW_Coupon_Frontend::enabled() ) :
-			$rbfw_cpn_label = RBFW_Coupon_Engine::setting( 'rbfw_coupon_label', __( 'Have a coupon?', 'booking-and-rental-manager-for-woocommerce' ) );
-			$rbfw_cpn_ph    = RBFW_Coupon_Engine::setting( 'rbfw_coupon_placeholder', __( 'Enter coupon code', 'booking-and-rental-manager-for-woocommerce' ) );
+		// Login gate (standalone mode): when login is required and the visitor is a guest,
+		// show the inline Login / Register panel (Pro) instead of the booking form. On
+		// success its JS swaps this auth panel for the real fields in place (see
+		// RBFW_Native_Checkout::render_fields_ajax()) — it never reloads the page, so the
+		// item/quantity already selected in the surrounding booking form is preserved.
+		$rbfw_login_gate = function_exists( 'rbfw_login_required' ) && rbfw_login_required() && ! is_user_logged_in();
+		if ( $rbfw_login_gate ) :
 			?>
-			<div class="rbfw-native-coupon" data-rbfw-native-coupon>
-				<label class="rbfw-native-coupon__label"><?php echo esc_html( $rbfw_cpn_label ); ?></label>
-				<div class="rbfw-native-coupon__row">
-					<input type="text" class="rbfw-native-coupon__input" data-rbfw-native-coupon-input placeholder="<?php echo esc_attr( $rbfw_cpn_ph ); ?>" autocomplete="off">
-					<button type="button" class="rbfw-native-coupon__apply" data-rbfw-native-coupon-apply><?php echo esc_html__( 'Apply', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-				</div>
-				<div class="rbfw-native-coupon__msg" data-rbfw-native-coupon-msg aria-live="polite"></div>
-				<div class="rbfw-native-coupon__applied" data-rbfw-native-coupon-applied hidden>
-					<span data-rbfw-native-coupon-summary></span>
-					<button type="button" class="rbfw-native-coupon__remove" data-rbfw-native-coupon-remove><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-				</div>
+			<div class="rbfw-native-modal__auth">
+				<?php
+				/** Pro renders the inline login/register panel here. */
+				do_action( 'rbfw_native_checkout_auth_panel', get_queried_object_id() );
+				if ( ! has_action( 'rbfw_native_checkout_auth_panel' ) ) {
+					printf(
+						'<p style="text-align:center;">%s</p>',
+						wp_kses_post( sprintf(
+							/* translators: %s: login URL */
+							__( 'Please <a href="%s">log in</a> to complete your booking.', 'booking-and-rental-manager-for-woocommerce' ),
+							esc_url( wp_login_url( get_permalink() ) )
+						) )
+					);
+				}
+				?>
 			</div>
-		<?php endif; ?>
-
-		<div class="rbfw-native-modal__fields">
-			<p class="rbfw-native-field">
-				<label for="rbfw_billing_name"><?php echo esc_html__( 'Full name', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="required">*</span></label>
-				<input type="text" id="rbfw_billing_name" name="rbfw_billing_name" required>
-			</p>
-			<p class="rbfw-native-field">
-				<label for="rbfw_billing_email"><?php echo esc_html__( 'Email address', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="required">*</span></label>
-				<input type="email" id="rbfw_billing_email" name="rbfw_billing_email" required>
-			</p>
-			<p class="rbfw-native-field">
-				<label for="rbfw_billing_phone"><?php echo esc_html__( 'Phone', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-				<input type="text" id="rbfw_billing_phone" name="rbfw_billing_phone">
-			</p>
-			<?php
-			/**
-			 * Payment gateway selector / fields. The Pro plugin hooks this to render the
-			 * PayPal / Stripe / Offline method picker; with no gateway configured nothing
-			 * is rendered and the booking stays pending (free behaviour).
-			 *
-			 * @param int $item_id The rental item id.
-			 */
-			do_action( 'rbfw_native_checkout_payment_fields', get_queried_object_id() );
-			?>
-		</div>
+		<?php else :
+			// Coupon field — shown alongside the real booking form (not the login gate),
+			// right by the Total/Confirm. Handled by rbfw_native_checkout.js.
+			if ( class_exists( 'RBFW_Coupon_Frontend' ) && RBFW_Coupon_Frontend::enabled() ) :
+				$rbfw_cpn_label = RBFW_Coupon_Engine::setting( 'rbfw_coupon_label', __( 'Have a coupon?', 'booking-and-rental-manager-for-woocommerce' ) );
+				$rbfw_cpn_ph    = RBFW_Coupon_Engine::setting( 'rbfw_coupon_placeholder', __( 'Enter coupon code', 'booking-and-rental-manager-for-woocommerce' ) );
+				?>
+				<div class="rbfw-native-coupon" data-rbfw-native-coupon>
+					<label class="rbfw-native-coupon__label"><?php echo esc_html( $rbfw_cpn_label ); ?></label>
+					<div class="rbfw-native-coupon__row">
+						<input type="text" class="rbfw-native-coupon__input" data-rbfw-native-coupon-input placeholder="<?php echo esc_attr( $rbfw_cpn_ph ); ?>" autocomplete="off">
+						<button type="button" class="rbfw-native-coupon__apply" data-rbfw-native-coupon-apply><?php echo esc_html__( 'Apply', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					</div>
+					<div class="rbfw-native-coupon__msg" data-rbfw-native-coupon-msg aria-live="polite"></div>
+					<div class="rbfw-native-coupon__applied" data-rbfw-native-coupon-applied hidden>
+						<span data-rbfw-native-coupon-summary></span>
+						<button type="button" class="rbfw-native-coupon__remove" data-rbfw-native-coupon-remove><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					</div>
+				</div>
+				<?php
+			endif;
+			$rbfw_fields_template = RBFW_Function::get_template_path( 'layout/native_checkout_fields.php' );
+			if ( $rbfw_fields_template && file_exists( $rbfw_fields_template ) ) {
+				include $rbfw_fields_template;
+			}
+		?>
 
 		<div class="rbfw-native-modal__message" data-rbfw-native-message aria-live="polite"></div>
 
-		<button type="button" class="rbfw-native-modal__submit button" data-rbfw-native-submit>
-			<?php echo esc_html__( 'Confirm booking', 'booking-and-rental-manager-for-woocommerce' ); ?>
+		<button type="button" class="rbfw-native-modal__submit" data-rbfw-native-submit>
+			<span class="dashicons dashicons-yes-alt rbfw-native-modal__submit-icon" aria-hidden="true"></span>
+			<span class="rbfw-native-modal__spinner" aria-hidden="true"></span>
+			<span><?php echo esc_html__( 'Confirm booking', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 		</button>
 		<p class="rbfw-native-modal__note"><?php echo esc_html__( 'Payment will be arranged after your booking is received.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+		<?php endif; ?>
 	</div>
 </div>

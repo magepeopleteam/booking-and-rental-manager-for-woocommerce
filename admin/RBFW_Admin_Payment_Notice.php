@@ -29,14 +29,21 @@ if ( ! class_exists( 'RBFW_Admin_Payment_Notice' ) ) {
 				return;
 			}
 
-			if ( $this->checker->has_available_payment_method() ) {
+			// Mode-aware: warn when the system that actually owns bookings right now has
+			// no usable gateway — even if the other (inactive) system does.
+			if ( $this->checker->has_gateway_for_active_mode() ) {
 				return;
 			}
+
+			$mode = $this->checker->active_mode();
+			$msg  = ( 'woocommerce' === $mode )
+				? esc_html__( 'Bookings run through WooCommerce, but no WooCommerce payment gateway is enabled. Customers will not be able to complete bookings until you enable at least one.', 'booking-and-rental-manager-for-woocommerce' )
+				: esc_html__( 'Bookings run through Custom Payment (Standalone), but no custom payment method is enabled. Customers will not be able to complete bookings until you enable at least one.', 'booking-and-rental-manager-for-woocommerce' );
 			?>
 			<div class="notice notice-warning">
 				<p>
 					<strong><?php esc_html_e( 'Booking & Rental Manager:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-					<?php esc_html_e( 'No payment method is currently available. Customers will not be able to complete bookings until at least one payment method is enabled.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<?php echo $msg; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- pre-escaped above. ?>
 				</p>
 				<p><?php echo wp_kses_post( $this->action_links() ); ?></p>
 			</div>
