@@ -27,6 +27,86 @@
 				add_action( 'wp_ajax_nopriv_rbfw_service_type_timely_stock', array( $this, 'rbfw_service_type_timely_stock' ) );
 				add_action( 'wp_ajax_rbfw_bikecarsd_sold_out_times', array( $this, 'rbfw_bikecarsd_sold_out_times' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_bikecarsd_sold_out_times', array( $this, 'rbfw_bikecarsd_sold_out_times' ) );
+				add_action( 'wp_ajax_rbfw_sd_pickup_times_availability', array( $this, 'rbfw_sd_pickup_times_availability' ) );
+				add_action( 'wp_ajax_nopriv_rbfw_sd_pickup_times_availability', array( $this, 'rbfw_sd_pickup_times_availability' ) );
+			}
+
+			/**
+			 * AJAX: per-pickup-time availability for single-day items, so the Pickup
+			 * Time dropdown can disable sold-out times.
+			 *
+			 * For each posted time it returns the remaining stock of every rent type,
+			 * evaluated against that rent type's real booked window:
+			 *   - timely inventory (non-specific-duration): the interval
+			 *     [time, time + duration] via rbfw_timely_available_quantity_updated();
+			 *   - appointment: the exact (date, time) slot via
+			 *     rbfw_get_bike_car_sd_available_qty().
+			 * Other configurations (date-based, specific-duration) are not time-gated,
+			 * so every type is reported available (no false "sold out" marks).
+			 *
+			 * The client keys the response by the exact option value it sent, so
+			 * 12-hour ("2:30 PM") and 24-hour ("14:30") formats both work — PHP's
+			 * DateTime/strtotime normalises either.
+			 */
+			public function rbfw_sd_pickup_times_availability() {
+				check_ajax_referer( 'rbfw_service_type_timely_stock_action', 'nonce' );
+
+				$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+				$date    = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+				$times   = ( isset( $_POST['times'] ) && is_array( $_POST['times'] ) )
+					? array_map( 'sanitize_text_field', wp_unslash( $_POST['times'] ) )
+					: array();
+
+				if ( ! $post_id || '' === $date || empty( $times ) ) {
+					wp_send_json_success( array( 'avail' => array() ) );
+				}
+
+				$item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+				$is_timely = 'on' === get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+				$specific  = 'on' === get_post_meta( $post_id, 'enable_specific_duration', true );
+				$sd_data   = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+				$sd_data   = is_array( $sd_data ) ? $sd_data : array();
+
+				$avail = array();
+				foreach ( $times as $time ) {
+					if ( '' === $time ) {
+						continue;
+					}
+					$per_type = array();
+					foreach ( $sd_data as $row ) {
+						$type = isset( $row['rent_type'] ) ? $row['rent_type'] : '';
+						if ( '' === $type ) {
+							continue;
+						}
+
+						if ( $is_timely && ! $specific ) {
+							$duration = ! empty( $row['duration'] ) ? (int) $row['duration'] : 0;
+							$d_type   = ! empty( $row['d_type'] ) ? $row['d_type'] : 'Hours';
+							if ( $duration <= 0 ) {
+								continue;
+							}
+							try {
+								$start_dt = new DateTime( $date . ' ' . $time );
+							} catch ( Exception $e ) {
+								continue;
+							}
+							$hours  = ( 'Hours' === $d_type ? $duration : ( 'Days' === $d_type ? $duration * 24 : ( 'Weeks' === $d_type ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
+							$end_dt = clone $start_dt;
+							$end_dt->modify( "+$hours hours" );
+							$per_type[ $type ] = (int) rbfw_timely_available_quantity_updated(
+								$post_id, $date, $time, $end_dt->format( 'Y-m-d' ), $end_dt->format( 'H:i:s' )
+							);
+						} elseif ( 'appointment' === $item_type ) {
+							$per_type[ $type ] = (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date, $type, $time );
+						} else {
+							// Time is not a stock axis for this configuration.
+							$per_type[ $type ] = 1;
+						}
+					}
+					$avail[ $time ] = $per_type;
+				}
+
+				wp_send_json_success( array( 'avail' => $avail ) );
 			}
 
 			public function rbfw_get_bikecarsd_rent_info( $product_id, $rent_info , $booking_date = null ) {
