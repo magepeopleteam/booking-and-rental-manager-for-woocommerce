@@ -729,7 +729,17 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
-                if ( ! ( $end_date && $end_time ) && ! empty( $rbfw_type_info ) ) {
+                // Authoritatively derive the end date/time from the selected rent
+                // type's duration on the SERVER for duration-based single-day rentals.
+                // The browser posts rbfw_end_time, but it parsed a 12-hour pickup time
+                // as 24-hour (e.g. 1:00 PM + 1h → "02:00" instead of "14:00"), which
+                // both displayed as 2:00 am AND made the stored booking interval run
+                // backwards — silently defeating rbfw_timely_available_quantity_updated()
+                // so a fully-booked slot still showed as available. PHP's DateTime parses
+                // the pickup time correctly. Specific-duration items keep their fixed
+                // configured clock times (posted from the rate's data attributes).
+                $rbfw_sd_specific_duration = get_post_meta( $rbfw_id, 'enable_specific_duration', true );
+                if ( 'on' !== $rbfw_sd_specific_duration && ! empty( $rbfw_type_info ) ) {
                     $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
                     $selected_rent_type    = '';
                     foreach ( $rbfw_type_info as $type_name => $type_qty ) {
