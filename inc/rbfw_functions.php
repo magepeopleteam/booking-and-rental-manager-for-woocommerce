@@ -205,6 +205,7 @@
 				'data-rbfw-form' => true,       // conditional logic: form id
 				'data-rbfw-item' => true,       // conditional logic: rental item id
 				'data-rbfw-rent-type' => true,  // conditional logic: rent type token
+				'data-rbfw-attendee-mode' => true, // per-item attendee form mode (same|per_qty)
 			),
 			'table'   => array(
                 'class' => true,
