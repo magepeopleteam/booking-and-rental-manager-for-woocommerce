@@ -522,6 +522,11 @@
 
             }
 
+            // Return-date release applies only to date-range rentals; hide it for
+            // Single Day and Appointment. (The multiple-item section is handled per
+            // branch above via .rbfw_switch_md_type_item_qty.)
+            jQuery('.rbfw_stock_return_date_section').toggle(item_type !== 'bike_car_sd' && item_type !== 'appointment');
+
             // Extra service sections: one category per rental type (on type change).
             window.rbfwUpdateExtraServiceSectionVisibility(item_type);
 

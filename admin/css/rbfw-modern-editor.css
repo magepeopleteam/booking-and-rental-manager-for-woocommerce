@@ -3992,6 +3992,20 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     justify-content: space-between !important;
     gap: 20px !important;
 }
+/* Hide inventory toggle rows that don't apply to the current rent type.
+   These override the generic `display:flex !important` rule above (higher
+   specificity + driven by the pricing panel's data-item-type, which
+   applyType() keeps in sync on live type changes).
+   - Return-date release: not for Single Day / Appointment.
+   - Multiple-item selection: only multi-day Bike/Car, Dress, Equipment, Others. */
+.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
+.rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
+.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
+.rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
+.rbfw-me-panel[data-item-type="resort"]         .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
+.rbfw-me-panel[data-item-type="multiple_items"] .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty {
+    display: none !important;
+}
 .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section > div:first-child {
     flex: 1 1 auto !important;
     min-width: 0 !important;

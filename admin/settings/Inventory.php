@@ -230,9 +230,13 @@
 
                 $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
 
+                // Return-date inventory release only applies to date-range (multi-day) rentals.
+                // Hide it for Single Day and Appointment, which have no scheduled return date.
+                $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+                $hide_return    = in_array( $rbfw_item_type, array( 'bike_car_sd', 'appointment' ), true );
 
                 ?>
-                    <section>
+                    <section class="rbfw_stock_return_date_section"<?php echo $hide_return ? ' style="display:none"' : ''; ?>>
                         <div>
                             <label for="">Inventory Management by Return Date</label>
                             <p>(Items become available for booking again on the scheduled return date.)</p>
@@ -252,8 +256,13 @@
 
 			public function quantity_box_toggle( $post_id ) {
 				$rbfw_enable_md_type_item_qty = get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
+
+				// Multiple-item selection only works for multi-day Bike/Car, Dress, Equipment & Others.
+				// Hide it for every other type (Single Day, Appointment, Resort, Multiple Items).
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$show_multi     = in_array( $rbfw_item_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true );
 				?>
-                <section>
+                <section class="rbfw_switch_md_type_item_qty"<?php echo $show_multi ? '' : ' style="display:none"'; ?>>
                     <div>
                         <label><?php esc_html_e( 'Enable Multiple Item Choosing Option', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                         <p><?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
