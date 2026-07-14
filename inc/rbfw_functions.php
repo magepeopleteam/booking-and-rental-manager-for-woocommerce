@@ -1629,8 +1629,15 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         return;
     }
 
-    $end_date_time   = new DateTime( $end_date . ' ' . $end_time );
-    $start_date_time = new DateTime( $start_date . ' ' . $start_time ); // Original date and time
+    try {
+        $end_date_time   = new DateTime( $end_date . ' ' . $end_time );
+        $start_date_time = new DateTime( $start_date . ' ' . $start_time );
+    } catch ( Exception $e ) {
+        return 0;
+    }
+    if ( $end_date_time <= $start_date_time ) {
+        return 0;
+    }
     $rbfw_inventory  = get_post_meta( $post_id, 'rbfw_inventory', true );
     $total_stock     = (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
     $total_booked    = 0;
@@ -1688,7 +1695,9 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 
 
 
-                if ( $date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end ) {
+                // Treat reservations as half-open intervals [start, end). An item
+                // returned at 10:00 is available to a new customer at 10:00.
+                if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
                     $total_booked += $rbfw_item_quantity;
                 }
             }
