@@ -816,6 +816,12 @@ function rbfwFetchPickupSoldOut(post_id, start_date) {
 }
 
 function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',enable_specific_duration = 'off'){
+    // Preserve the customer's selected rental option while refreshing stock for
+    // a different pickup time. The response will re-apply this option with the
+    // new window's quantity instead of leaving the previous dropdown visible.
+    var $selectedServiceType = jQuery('.single-type-timely.selected').first();
+    var selectedServiceType = $selectedServiceType.length ? $selectedServiceType.data('text') : '';
+
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
@@ -900,6 +906,25 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             //jQuery('.rbfw_service_type_timely').html(response);
             jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
             jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
+
+            if (selectedServiceType) {
+                var $refreshedServiceType = jQuery('.single-type-timely').filter(function() {
+                    return jQuery(this).data('text') === selectedServiceType;
+                }).first();
+
+                if ($refreshedServiceType.length && !$refreshedServiceType.hasClass('rbfw-sold-out')) {
+                    // Reuse the normal selection handler so quantity, end time,
+                    // price summary, and Book Now all refresh together.
+                    $refreshedServiceType.trigger('click');
+                } else {
+                    // The selected option is unavailable in the new window. Do
+                    // not leave the previous window's quantity visible.
+                    jQuery('#rbfw_service_type_for_st').val('');
+                    jQuery('#rbfw_item_quantity').empty();
+                    jQuery('.rbfw_quantiry_area_sd, .rbfw_extra_service_sd').hide();
+                    rbfwHideSingleDayDurationSummary();
+                }
+            }
         },
         error: function () {
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
@@ -907,6 +932,5 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
         }
     });
 }
-
 
 
