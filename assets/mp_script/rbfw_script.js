@@ -639,6 +639,14 @@ function rbfwDisableSoldOutTimes( $container, selectedDate, isCalendar ) {
         return;
     }
 
+    // Timely single-day rentals are checked by rbfwFetchPickupSoldOut(), which
+    // evaluates each option's real [pickup, pickup + duration) window. The legacy
+    // endpoint below is date-based for bike_car_sd and would therefore disable
+    // every pickup time after any booking exhausts the shared stock on that date.
+    if ( jQuery( '#rbfw_rent_type' ).val() === 'bike_car_sd' && jQuery( '#manage_inventory_as_timely' ).val() === 'on' ) {
+        return;
+    }
+
     var postId = jQuery( '.rbfw_post_id' ).val();
     if ( ! postId || ! selectedDate ) {
         return;

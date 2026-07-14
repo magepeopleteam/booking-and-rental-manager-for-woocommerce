@@ -714,9 +714,9 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
  * Unlike multi-day (one shared stock), a single-day item has per-option stock,
  * so a date is sold out only when EVERY rental option has zero remaining
  * quantity. Only dates that actually have bookings can be sold out, so we test
- * just those — O(booked dates x options), not a full-calendar scan — using the
- * same rbfw_get_bike_car_sd_available_qty() the booking step uses, so the
- * calendar and the step-3 availability always agree.
+ * just those rather than a full calendar. Date-based inventory uses the normal
+ * per-option counter; timely inventory evaluates every configured pickup window
+ * against the same overlap engine used by the booking form.
  *
  * @param int $post_id Rental item ID.
  * @return array<string,int> Map of sold-out dates ( value 0 ), keyed 'd-m-Y' to
@@ -769,18 +769,27 @@ function rbfw_sd_sold_out_dates( $post_id ) {
         $variation_values = array_values( array_unique( $variation_values ) );
     }
 
+    $manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
     $sold_out = [];
     foreach ( array_keys( $candidates ) as $date_dmy ) {
         $dt = DateTime::createFromFormat( 'd-m-Y', $date_dmy );
         if ( ! $dt ) {
             continue;
         }
-        $date_ymd     = $dt->format( 'Y-m-d' );
-        $all_sold_out = true;
-        foreach ( $types as $type ) {
-            if ( (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date_ymd, $type, '' ) > 0 ) {
-                $all_sold_out = false;
-                break;
+        $date_ymd = $dt->format( 'Y-m-d' );
+
+        if ( 'on' === $manage_inventory_as_timely ) {
+            // Hourly inventory is shared across rental options and must be checked
+            // against their real time windows. A booking that exhausts 08:00-10:00
+            // must not make the whole date unavailable when a later window is free.
+            $all_sold_out = ! rbfw_sd_timely_date_has_availability( $post_id, $date_ymd, $sd_data );
+        } else {
+            $all_sold_out = true;
+            foreach ( $types as $type ) {
+                if ( (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date_ymd, $type, '' ) > 0 ) {
+                    $all_sold_out = false;
+                    break;
+                }
             }
         }
         if ( ! $all_sold_out && $variations_enabled && ! empty( $variation_values ) && function_exists( 'rbfw_sd_variation_remaining_stock' ) ) {
@@ -802,6 +811,93 @@ function rbfw_sd_sold_out_dates( $post_id ) {
     }
 
     return $sold_out;
+}
+
+/**
+ * Determine whether a timely single-day item has at least one bookable window.
+ *
+ * @param int    $post_id Rental item ID.
+ * @param string $date_ymd Date in Y-m-d format.
+ * @param array  $sd_data Configured rental option rows.
+ * @return bool
+ */
+function rbfw_sd_timely_date_has_availability( $post_id, $date_ymd, $sd_data ) {
+    $specific_duration = 'on' === get_post_meta( $post_id, 'enable_specific_duration', true );
+    $time_picker       = 'yes' === get_post_meta( $post_id, 'rbfw_enable_time_picker', true );
+    $start_times       = [];
+
+    if ( ! $specific_duration ) {
+        if ( $time_picker ) {
+            $available_times = get_post_meta( $post_id, 'rdfw_available_time', true );
+            $available_times = is_array( $available_times ) ? $available_times : [];
+            $particulars     = get_post_meta( $post_id, 'rbfw_particulars_data', true );
+            $particulars     = is_array( $particulars ) ? $particulars : [];
+
+            if ( 'on' === get_post_meta( $post_id, 'rbfw_particular_switch', true ) ) {
+                foreach ( $particulars as $particular ) {
+                    $range_start = isset( $particular['start_date'] ) ? strtotime( $particular['start_date'] ) : false;
+                    $range_end   = isset( $particular['end_date'] ) ? strtotime( $particular['end_date'] ) : false;
+                    $date        = strtotime( $date_ymd );
+                    if ( $date && $range_start && $range_end && $date >= $range_start && $date <= $range_end ) {
+                        $available_times = isset( $particular['available_time'] ) && is_array( $particular['available_time'] ) ? $particular['available_time'] : [];
+                        break;
+                    }
+                }
+            }
+
+            foreach ( $available_times as $time ) {
+                if ( is_array( $time ) ) {
+                    if ( isset( $time['status'] ) && 'enabled' !== $time['status'] ) {
+                        continue;
+                    }
+                    $time = isset( $time['time'] ) ? $time['time'] : '';
+                }
+                if ( '' !== $time ) {
+                    $start_times[] = $time;
+                }
+            }
+        } else {
+            $start_times[] = '00:00';
+        }
+    }
+
+    foreach ( $sd_data as $row ) {
+        if ( $specific_duration ) {
+            $start_time = isset( $row['start_time'] ) ? $row['start_time'] : '';
+            $end_time   = isset( $row['end_time'] ) ? $row['end_time'] : '';
+            if ( '' === $start_time || '' === $end_time ) {
+                continue;
+            }
+            $end_date = $date_ymd;
+            if ( strtotime( $date_ymd . ' ' . $end_time ) <= strtotime( $date_ymd . ' ' . $start_time ) ) {
+                $end_date = gmdate( 'Y-m-d', strtotime( $date_ymd . ' +1 day' ) );
+            }
+            if ( rbfw_timely_available_quantity_updated( $post_id, $date_ymd, $start_time, $end_date, $end_time ) > 0 ) {
+                return true;
+            }
+            continue;
+        }
+
+        $duration = isset( $row['duration'] ) ? (int) $row['duration'] : 0;
+        $d_type   = isset( $row['d_type'] ) ? $row['d_type'] : 'Hours';
+        if ( $duration <= 0 ) {
+            continue;
+        }
+        $total_hours = ( 'Hours' === $d_type ? $duration : ( 'Days' === $d_type ? $duration * 24 : ( 'Weeks' === $d_type ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
+        foreach ( $start_times as $start_time ) {
+            try {
+                $end = new DateTime( $date_ymd . ' ' . $start_time );
+            } catch ( Exception $e ) {
+                continue;
+            }
+            $end->modify( '+' . $total_hours . ' hours' );
+            if ( rbfw_timely_available_quantity_updated( $post_id, $date_ymd, $start_time, $end->format( 'Y-m-d' ), $end->format( 'H:i:s' ) ) > 0 ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return,$start_time = null, $end_time = null){
     $total_single_service = 0;
@@ -2939,6 +3035,56 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 
 	$item_name = get_the_title( $rbfw_id );
 
+	/* ---- Single-day timely inventory: validate the exact requested window. ---- */
+	if ( 'bike_car_sd' === $rent_type && 'on' === get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true ) ) {
+		$start_date = isset( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '';
+		$start_time = isset( $values['rbfw_start_time'] ) ? $values['rbfw_start_time'] : '';
+		$end_date   = isset( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : '';
+		$end_time   = isset( $values['rbfw_end_time'] ) ? $values['rbfw_end_time'] : '';
+		$requested  = isset( $values['rbfw_item_quantity'] ) ? max( 1, (int) $values['rbfw_item_quantity'] ) : 1;
+
+		if ( '' !== $start_date && '' !== $end_date && '' !== $end_time ) {
+			$remaining = (int) rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $end_date, $end_time );
+			try {
+				$req_start = new DateTime( $start_date . ' ' . $start_time );
+				$req_end   = new DateTime( $end_date . ' ' . $end_time );
+			} catch ( Exception $e ) {
+				return $checks;
+			}
+			$cart_used = 0;
+
+			foreach ( $sibling_lines as $line ) {
+				if ( ! is_array( $line ) ) {
+					continue;
+				}
+				$line_start_date = isset( $line['rbfw_start_date'] ) ? $line['rbfw_start_date'] : '';
+				$line_start_time = isset( $line['rbfw_start_time'] ) ? $line['rbfw_start_time'] : '';
+				$line_end_date   = isset( $line['rbfw_end_date'] ) ? $line['rbfw_end_date'] : '';
+				$line_end_time   = isset( $line['rbfw_end_time'] ) ? $line['rbfw_end_time'] : '';
+				if ( '' === $line_start_date || '' === $line_end_date || '' === $line_end_time ) {
+					continue;
+				}
+				try {
+					$line_start = new DateTime( $line_start_date . ' ' . $line_start_time );
+					$line_end   = new DateTime( $line_end_date . ' ' . $line_end_time );
+				} catch ( Exception $e ) {
+					continue;
+				}
+				if ( $line_start < $req_end && $req_start < $line_end ) {
+					$cart_used += isset( $line['rbfw_item_quantity'] ) ? max( 1, (int) $line['rbfw_item_quantity'] ) : 1;
+				}
+			}
+
+			$available = max( 0, $remaining - $cart_used );
+			$checks[]  = array(
+				'ok'        => ( $requested <= $available ),
+				'requested' => $requested,
+				'available' => $available,
+				'label'     => $item_name,
+			);
+		}
+	}
+
 	/* ---- Resort: one check per booked room type ---- */
 	if ( 'resort' === $rent_type ) {
 		$room_info = isset( $values['rbfw_room_info'] ) && is_array( $values['rbfw_room_info'] ) ? $values['rbfw_room_info'] : array();
@@ -3205,4 +3351,3 @@ function rbfw_count_overlapping_multi_item_qty( $post_id, $start_dt, $end_dt, $i
 	}
 	return $booked;
 }
-
