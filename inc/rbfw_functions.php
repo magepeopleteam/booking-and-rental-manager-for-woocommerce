@@ -3339,11 +3339,12 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
                         if($rbfw_enable_hourly_threshold=='yes' && $hours >= $rbfw_hourly_threshold){
                             $actual_days = $days+1;
-                            $duration_price += $rbfw_daily_rate * $actual_days;
+                            // Leftover days (day-wise aware; flat daily when day-wise is off).
+                            $duration_price += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $days, $actual_days, $rbfw_daily_rate );
                         }else{
                             $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
                             $day_slug         = strtolower( gmdate( 'D', strtotime( $start_date ) ) );
-                            $duration_price  += (float) $rbfw_daily_rate * (float) $days;
+                            $duration_price  += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $days, $days, $rbfw_daily_rate );
                             $duration_price  += rbfw_md_price_for_hours_period(
                                 $post_id,
                                 $hours,
@@ -3391,11 +3392,12 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
                 if($rbfw_enable_hourly_threshold=='yes' && $hours >= $rbfw_hourly_threshold){
                     $thresold_days = $daysWeeks+1;
-                    $duration_price += $rbfw_daily_rate * $thresold_days;
+                    // Leftover days (day-wise aware; flat daily when day-wise is off).
+                    $duration_price += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $daysWeeks, $thresold_days, $rbfw_daily_rate );
                 }else{
                     $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
                     $day_slug         = strtolower( gmdate( 'D', strtotime( $start_date ) ) );
-                    $duration_price  += (float) $rbfw_daily_rate * (float) $daysWeeks;
+                    $duration_price  += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $daysWeeks, $daysWeeks, $rbfw_daily_rate );
                     $duration_price  += rbfw_md_price_for_hours_period(
                         $post_id,
                         $hours,
@@ -3700,6 +3702,35 @@ function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date,
     return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
         ? (float) $custom_rate
         : (float) $daily_rate;
+}
+
+/**
+ * Sum the daily rate for a run of $count consecutive days starting $offset days
+ * after $start_date, honouring day-wise (per-weekday) pricing.
+ *
+ * The monthly / weekly price branches bill whole months and weeks at their bulk
+ * rate and were pricing the *leftover* days at the flat daily rate — so a
+ * per-weekday (day-wise) price never applied once a weekly/monthly rate was on.
+ * This helper prices those leftover days per weekday instead.
+ *
+ * Backward compatible: rbfw_get_day_rate() returns the flat daily rate for any
+ * weekday without a day-wise override, so for an item with day-wise pricing OFF
+ * the total equals $daily_rate * $count exactly — identical to the old code.
+ *
+ * @return float
+ */
+function rbfw_daywise_days_sum( $post_id, $start_date, $offset, $count, $daily_rate ) {
+    $sum = 0.0;
+    for ( $j = 0; $j < (int) $count; $j++ ) {
+        $day_offset = (int) $offset + $j;
+        $date       = gmdate( 'Y-m-d', strtotime( "+{$day_offset} day", strtotime( $start_date ) ) );
+        $slug       = strtolower( gmdate( 'D', strtotime( $date ) ) );
+        // Seasonal pricing is intentionally not applied here — the monthly/weekly
+        // leftover path never applied it before, so passing '' keeps behaviour
+        // identical for non-day-wise items.
+        $sum += rbfw_get_day_rate( $post_id, $slug, $daily_rate, '', $date );
+    }
+    return $sum;
 }
 
 function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -4302,10 +4333,11 @@ function numberToOrdinal($number) {
 
 if (!function_exists('rbfw_day_row_md')) {
     function rbfw_day_row_md( $day_name, $day_slug ) {
-        $hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
-        $daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
-        $enable      = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
-        return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate);
+        $hourly_rate   = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
+        $daily_rate    = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
+        $half_day_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) : '';
+        $enable        = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
+        return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate,'half_day_rate'=>$half_day_rate);
     }
 }
 

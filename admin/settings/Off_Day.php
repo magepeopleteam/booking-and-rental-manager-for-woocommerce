@@ -148,7 +148,7 @@
                             </p>
                         </div>
                         <div class="item_stock_quantity">
-                            <input type="number" name="rbfw_buffer_time" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
+                            <input type="number" name="rbfw_buffer_time" id="rbfw_buffer_time" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
                         </div>
                     </section>
 
@@ -182,12 +182,35 @@
 				return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'on' ? 'on' : 'off';
 			}
 
+			/**
+			 * Buffer time fields (modern editor).
+			 *
+			 * Rendered from the Pricing panel rather than Off Days — buffer hours are a
+			 * turnaround/availability setting, not an off-day rule. The inputs keep their
+			 * original names so RBFW_Modern_Editor::save() picks them up unchanged
+			 * (collectFormData() scans the whole .rbfw-me-wrap, not one panel).
+			 */
+			public static function render_buffer_for_modern_editor( int $post_id ): void {
+				$rbfw_buffer_time       = get_post_meta( $post_id, 'rbfw_buffer_time', true ) ?: '';
+				$rbfw_buffer_time_after = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ?: 0;
+				?>
+				<div class="rbfw-me-row rbfw-me-row--2 rbfw-me-offday-buffer">
+					<div class="rbfw-me-field">
+						<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time Before (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<input type="number" name="rbfw_buffer_time" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
+					</div>
+					<div class="rbfw-me-field">
+						<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
+					</div>
+				</div>
+				<?php
+			}
+
 			public static function render_for_modern_editor( int $post_id ): void {
 			$days                   = [ 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' ];
 			$rbfw_off_days          = get_post_meta( $post_id, 'rbfw_off_days', true ) ?: '';
 			$off_day_array          = $rbfw_off_days ? explode( ',', $rbfw_off_days ) : [];
-			$rbfw_buffer_time       = get_post_meta( $post_id, 'rbfw_buffer_time', true ) ?: '';
-			$rbfw_buffer_time_after = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ?: 0;
 			$rbfw_offday_range      = get_post_meta( $post_id, 'rbfw_offday_range', true ) ?: [];
 			$block_offday_range     = self::block_offday_range_value( $post_id );
 			$block_rules            = [
@@ -243,17 +266,6 @@
 								<span><?php echo esc_html( ucfirst( $day ) ); ?></span>
 							</label>
 						<?php endforeach; ?>
-					</div>
-
-					<div class="rbfw-me-row rbfw-me-row--2 rbfw-me-offday-buffer">
-						<div class="rbfw-me-field">
-							<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time Before (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-							<input type="number" name="rbfw_buffer_time" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
-						</div>
-						<div class="rbfw-me-field">
-							<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-							<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
-						</div>
 					</div>
 				</div>
 			</div>

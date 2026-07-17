@@ -3997,7 +3997,10 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
    specificity + driven by the pricing panel's data-item-type, which
    applyType() keeps in sync on live type changes).
    - Return-date release: not for Single Day / Appointment.
-   - Multiple-item selection: only multi-day Bike/Car, Dress, Equipment, Others. */
+   - Multiple-item selection: only multi-day Bike/Car, Dress, Equipment, Others.
+   - Stock Quantity: not for Single Day — its stock comes from the per-type rows
+     in the pricing table, so only Item variation applies here. */
+.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_quantity_section,
 .rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
 .rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
 .rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,

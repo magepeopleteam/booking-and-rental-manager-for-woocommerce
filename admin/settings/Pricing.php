@@ -203,7 +203,7 @@
                                 <p><?php esc_html_e( 'Add stock quantity that you want allow to rent, add total stock', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                             </div>
                             <div class="item_stock_quantity">
-                                <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ) ?>" placeholder="<?php esc_html_e( 'Ex: 10', '' ); ?>">
+                                <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity_timely" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ) ?>" placeholder="<?php esc_html_e( 'Ex: 10', '' ); ?>">
                             </div>
                         </section>
                         <section class="rbfw_item_quantiry_duration">
@@ -1103,8 +1103,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Monthly Price</div>
-                                    <div class="description">Pricing will be calculated based on number of Month.</div>
+                                    <div class="label"><?php esc_html_e( 'Monthly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Pricing will be calculated based on number of Month.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-price-input-wrap">
@@ -1121,8 +1121,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Monthly Threshold</div>
-                                    <div class="description">Number of days to consider as a month. If total days exceed this threshold it will calculate as month.</div>
+                                    <div class="label"><?php esc_html_e( 'Monthly Threshold', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Number of days to consider as a month. If total days exceed this threshold it will calculate as month.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-threshold-input-wrap">
@@ -1139,8 +1139,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Weekly Price</div>
-                                    <div class="description">Pricing will be calculated based on number of week.</div>
+                                    <div class="label"><?php esc_html_e( 'Weekly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Pricing will be calculated based on number of week.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-price-input-wrap">
@@ -1157,8 +1157,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Weekly Threshold</div>
-                                    <div class="description">If total hours are more than <span id="hour-threshold-display">x</span>, count as full day. If less, day will not count.</div>
+                                    <div class="label"><?php esc_html_e( 'Weekly Threshold', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php echo wp_kses_post( sprintf( /* translators: %s: the hour threshold value. */ __( 'If total hours are more than %s, count as full day. If less, day will not count.', 'booking-and-rental-manager-for-woocommerce' ), '<span id="hour-threshold-display">x</span>' ) ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-threshold-input-wrap">
@@ -1175,8 +1175,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Daily Price</div>
-                                    <div class="description">Pricing will be calculated based on number of day.</div>
+                                    <div class="label"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Pricing will be calculated based on number of day.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-price-input-wrap">
@@ -1197,8 +1197,8 @@
                                 <div class="item-left">
                                     <span class="dashicons dashicons-clock"></span>
                                     <div>
-                                        <div class="label">Enable Time Picker</div>
-                                        <div class="description">Toggle to enable time selection for more precise rental periods.</div>
+                                        <div class="label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div class="description"><?php esc_html_e( 'Toggle to enable time selection for more precise rental periods.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                     </div>
                                 </div>
                                 <div class="item-right">
@@ -1215,8 +1215,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Half-Day Price</div>
-                                    <div class="description">Pricing will be calculated as half-day when rental hours fall within the specified range.</div>
+                                    <div class="label"><?php esc_html_e( 'Half-Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Pricing will be calculated as half-day when rental hours fall within the specified range.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-price-input-wrap">
@@ -1230,8 +1230,8 @@
                             <!-- Half-Day Hour Threshold (conditional) -->
                             <div class="item half-day-price-item" style="display: <?php echo esc_attr( ( $rbfw_enable_half_day_rate === 'yes' && $rbfw_enable_time_picker === 'yes' ) ? 'flex' : 'none' ); ?>;">
                                 <div class="item-left">
-                                    <div class="label">Half-Day Hour Threshold</div>
-                                    <div class="description">Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.</div>
+                                    <div class="label"><?php esc_html_e( 'Half-Day Hour Threshold', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="threshold-inputs">
@@ -1250,8 +1250,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Hourly Price</div>
-                                    <div class="description">Pricing will be calculated as per hour.</div>
+                                    <div class="label"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Pricing will be calculated as per hour.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-price-input-wrap">
@@ -1268,8 +1268,8 @@
                                     <div class="toggle-knob"></div>
                                 </div>
                                 <div class="item-left">
-                                    <div class="label">Hour Threshold</div>
-                                    <div class="description">If total hours are more than <span id="hour-threshold-display">X</span>, count as full day. If less, day will not count.</div>
+                                    <div class="label"><?php esc_html_e( 'Full Day Threshold', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php echo wp_kses_post( sprintf( /* translators: %s: the hour threshold value. */ __( 'If total hours are more than %s, count as full day. If less, day will not count.', 'booking-and-rental-manager-for-woocommerce' ), '<span id="hour-threshold-display">X</span>' ) ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="md-threshold-input-wrap">
@@ -1362,10 +1362,8 @@
                 <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>"<?php echo ( $rbfw_item_type === 'bike_car_sd' && $manage_inventory_as_timely === 'on' && $enable_specific_duration === 'on' ) ? ' style="display:none"' : ''; ?>>
                     <div class="item">
                         <div class="item-left">
-                            <div class="label">Enable Time Picker</div>
-                            <div class="description">
-                                Toggle to enable time selection for more precise rental periods.
-                            </div>
+                            <div class="label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            <div class="description"><?php esc_html_e( 'Toggle to enable time selection for more precise rental periods.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                         </div>
                         <div class="item-right">
                             <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">

@@ -414,28 +414,60 @@ CSS for Single Page Template
     right: 15px;
 }
 
+/* "Click to view" accent chip, pushed to the right of the bar */
 .pricing-info-view{
-    color:  var(--rbfw_color_primary);
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 4px 11px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--rbfw_color_primary);
+    background: #f3f4f6;
+    background: color-mix(in srgb, var(--rbfw_color_primary) 10%, #ffffff);
+    border-radius: 20px;
     cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+}
+.rbfw-pricing-info-heading:hover .pricing-info-view,
+.rbfw-pricing-info-heading.open .pricing-info-view{
+    color: #ffffff;
+    background: var(--rbfw_color_primary);
+}
+/* pure-CSS chevron (no icon-font dependency); flips when open */
+.pricing-info-view::after{
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
     position: relative;
-    transition: all 0.3s ease-in-out;
+    top: -1px;
+    transition: transform .2s ease, top .2s ease;
+}
+.rbfw-pricing-info-heading.open .pricing-info-view::after{
+    transform: rotate(-135deg);
+    top: 1px;
 }
 
 .price-item-container {
     display: none;
     position: absolute;
-    width:100%;
-    max-width: 400px;
-    border-radius:5px;
+    width: 100%;
+    max-width: 420px;
+    border-radius: 14px;
     background-color: #fff;
-    padding: 10px;
-    padding-top: 25px;
-    top:50%;
-    left:50%;
+    padding: 18px 18px 16px;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%,-50%);
-    z-index: 1;
-    box-shadow: 0 0px 5px #5b5b5b;
-    border: 1px solid var(--rbfw_color_primary);
+    z-index: 5;
+    box-shadow: 0 18px 45px rgba(17, 24, 39, .20);
+    border: 1px solid #e5e7eb;
 }
 .mp_rbfw_ticket_form.overlay{
     position: relative;
@@ -452,27 +484,210 @@ CSS for Single Page Template
 }
 .close-price-container{
     position: absolute;
-    right: 0px;
-    top: 0px;
-    font-size: 12px;
-    color: #fff;
-    background: #333;
-    padding: 2px 4px;
-    height: 20px;
-    border-radius: 4px;
+    right: 14px;
+    top: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+    color: #6b7280;
+    background: #f3f4f6;
+    border-radius: 50%;
     cursor: pointer;
-    line-height: 1.54;
+    line-height: 1;
+    transition: background .2s ease, color .2s ease;
+}
+.close-price-container:hover{
+    background: var(--rbfw_color_primary);
+    color: #fff;
+}
+/* Popup title + per-section labels */
+.price-item-container .rbfw-pi-title{
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 14px;
+    padding-right: 30px;
+    line-height: 1.3;
+}
+.price-item-container .rbfw-pi-section-label{
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: #9ca3af;
+    margin: 14px 0 6px;
+}
+.price-item-container .rbfw-pi-section-label:first-of-type{
+    margin-top: 0;
+}
+/* Day-wise weekday grid — compact, scrolls horizontally if tight */
+.price-item-container .rbfw-pi-daywise{
+    overflow-x: auto;
+}
+.price-item-container .rbfw-pi-daywise table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: center;
+}
+.price-item-container .rbfw-pi-daywise th{
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    padding: 6px 4px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+.price-item-container .rbfw-pi-daywise td{
+    font-size: 12px !important;
+    padding: 8px 4px !important;
+    text-align: center;
+    color: #374151;
+    border-bottom: 1px solid #f0f1f3;
+    white-space: nowrap;
+}
+.price-item-container .rbfw-pi-daywise td:first-child,
+.price-item-container .rbfw-pi-daywise th:first-child{
+    text-align: left;
+    font-weight: 600;
+    color: #111827;
+}
+.price-item-container .rbfw-pi-daywise tr:last-child td{
+    border-bottom: none;
+}
+/* Inline hour-range hint next to the half-day rate */
+.price-item-container .rbfw-pi-hint{
+    font-size: 11px;
+    font-weight: 500;
+    color: #9ca3af;
+    white-space: nowrap;
+}
+/* Time-based rules (half-day window / full-day threshold) */
+.price-item-container .rbfw-pi-rules{
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 8px;
+}
+.price-item-container .rbfw-pi-rules li{
+    position: relative;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #4b5563;
+    padding-left: 16px;
+    margin: 0;
+}
+.price-item-container .rbfw-pi-rules li + li{
+    margin-top: 4px;
+}
+.price-item-container .rbfw-pi-rules li::before{
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--rbfw_color_primary, #ff3726);
+}
+/* Add-on pricing blocks */
+.price-item-container .mp_item_insert{
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 8px;
+}
+.price-item-container .mp_item_insert table{
+    width: 100%;
+    margin: 0;
+}
+.price-item-container .mp_item_insert td{
+    font-size: 12px !important;
+    padding: 4px 2px !important;
+    border: none;
+    color: #374151;
+}
+/* Price table inside the popup — clean, aligned rows */
+.price-item-container .rbfw_day_wise_price table{
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+}
+.price-item-container .rbfw_day_wise_price td{
+    padding: 9px 2px !important;
+    font-size: 13px !important;
+    color: #374151;
+    border-bottom: 1px solid #f0f1f3;
+}
+.price-item-container .rbfw_day_wise_price tr:last-child td{
+    border-bottom: none;
+}
+.price-item-container .rbfw_day_wise_price td:last-child{
+    text-align: right;
+    font-weight: 700;
+    color: #111827;
+    white-space: nowrap;
+}
+.price-item-container .rbfw_day_wise_price td strong{
+    font-weight: 600;
+    color: #6b7280;
+}
+/* the weekday grid keeps every price cell uniform (override the 2-col rule) */
+.price-item-container .rbfw-pi-daywise td:last-child{
+    text-align: center;
+    font-weight: 400;
+    color: #374151;
+    white-space: nowrap;
 }
 .rbfw-related-products-wrapper .owl-carousel{
     z-index: 0;
 }
+/* ── Pricing Info toggle bar — modern, matches the booking-summary card ── */
 .rbfw-pricing-info-heading{
-    padding: 5px;
-    border: 1px solid #ddd;
-    background: #f8f8f8;
-    border-radius: 5px;
-    margin-bottom: 10px;  
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.rbfw-pricing-info-heading:hover{
+    border-color: var(--rbfw_color_primary);
+    box-shadow: 0 4px 14px rgba(17, 24, 39, .07);
+}
+.rbfw-pricing-info-heading.open{
+    border-color: var(--rbfw_color_primary);
+    background: #fbfbfc;
+}
+/* leading info icon inside a soft tinted circle */
+.rbfw-pricing-info-heading > i.fa-info-circle{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    font-size: 13px;
+    color: var(--rbfw_color_primary);
+    background: #f3f4f6;
+    background: color-mix(in srgb, var(--rbfw_color_primary) 12%, #ffffff);
 }
 
 
@@ -9005,14 +9220,17 @@ i.fas.fa-minus {
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-col {
-    align-items: flex-start;
+    /* stretch (not flex-start) so the label/value boxes are bounded by the
+       column width; with flex-start they size to fit-content and spill over
+       the next column once the text is wider than the column. */
+    align-items: stretch;
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: 5px;
     justify-content: center;
     min-width: 0;
-    padding: 14px 18px;
+    padding: 14px 14px;
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-sep {
@@ -9027,11 +9245,15 @@ i.fas.fa-minus {
     display: block;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    line-height: 1;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
     margin: 0;
+    min-width: 0;
+    /* wrap rather than nowrap: labels are translated ("Start Date and Time"
+       is far longer in some locales) and must never overlap the next column. */
+    overflow-wrap: break-word;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-value {
@@ -9039,11 +9261,13 @@ i.fas.fa-minus {
     display: block;
     font-size: 14px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.3;
     margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    min-width: 0;
+    /* wrap at the space between date and time instead of clipping — a
+       truncated date ("July 18, 2026 7:0…") is unreadable, so never ellipsize. */
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-date {

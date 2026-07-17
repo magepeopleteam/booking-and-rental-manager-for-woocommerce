@@ -194,7 +194,6 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
    jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
         let $this = jQuery(this);
-        console.log($this.attr('title'));
         if ($this.find(".date-label").length === 0) {
             let dateText = $this.attr('title');
 
@@ -680,7 +679,9 @@ function rbfwAppendMultipleItemsSummaryTime(dateText, timeText) {
         return dateText;
     }
 
-    return dateText + ' ' + timeText;
+    // Non-breaking space inside the time so a narrow column wraps between the
+    // date and the time ("July 18, 2026" / "7:00 AM") and never mid-time.
+    return dateText + ' ' + timeText.replace(/\s+/g, "\u00A0");
 }
 
 function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
