@@ -1227,7 +1227,20 @@
     }
 
     function doSave(status) {
-        if ( ! validateBeforeSave() ) return;
+        // Never abort the request on a validation failure — doing so used to
+        // silently discard every Advanced-tab change (Template, FAQ toggle, Tax,
+        // Security Deposit, Terms, Related, Front-end Display, …) whenever the
+        // pricing/description/time-slots were still incomplete.
+        //
+        //   • A draft may legitimately be incomplete, so it always saves as-is.
+        //   • Publishing still runs the full client-side checks so the exact
+        //     problems are highlighted inline; but instead of blocking, an
+        //     incomplete item is saved as a *draft* so nothing the user entered
+        //     is lost. This mirrors the server, which keeps an incomplete item
+        //     out of "publish" status and returns the pricing errors.
+        if ( status === 'publish' && ! validateBeforeSave() ) {
+            status = 'draft';
+        }
 
         setSaveIndicator('saving', cfg.i18n && cfg.i18n.saving || 'Saving your changes…');
 
@@ -1239,18 +1252,28 @@
 
         $.post(cfg.ajax_url, data, function (res) {
             if (res.success) {
-                setSaveIndicator('saved', cfg.i18n && cfg.i18n.saved || 'All changes saved');
+                var savedStatus = (res.data && res.data.post_status) || status;
+                var pricingErrors = (res.data && res.data.pricing_errors) || [];
+
+                if (status === 'publish' && pricingErrors.length && savedStatus !== 'publish') {
+                    // Everything was saved, but the item couldn't go live because the
+                    // pricing setup is incomplete — surface that without discarding input.
+                    setSaveIndicator('error', pricingErrors.join(' '));
+                } else {
+                    setSaveIndicator('saved', cfg.i18n && cfg.i18n.saved || 'All changes saved');
+                    setTimeout(function () { setSaveIndicator('', ''); }, 4500);
+                }
+
                 // Update publish button label if status changed
-                if (status === 'publish') {
+                if (savedStatus === 'publish') {
                     $wrap.find('.rbfw-me-publish').text(cfg.i18n && cfg.i18n.update || 'Update').data('published', '1');
                 }
                 // Update status dot
                 var $dot   = $wrap.find('.rbfw-me-status-dot');
                 var $label = $wrap.find('.rbfw-me-status-label');
-                $dot.attr('class', 'rbfw-me-status-dot rbfw-me-status-dot--' + status);
-                $label.text(status.charAt(0).toUpperCase() + status.slice(1));
-
-                setTimeout(function () { setSaveIndicator('', ''); }, 4500);
+                $dot.attr('class', 'rbfw-me-status-dot rbfw-me-status-dot--' + savedStatus);
+                $label.text(savedStatus.charAt(0).toUpperCase() + savedStatus.slice(1));
+                $wrap.find('select.rbfw-me-select[name="post_status"]').val(savedStatus);
             } else {
                 var errorMsg = cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again';
                 if (res.data && res.data.message) {

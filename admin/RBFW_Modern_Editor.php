@@ -461,16 +461,18 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				wp_send_json_error( 'Forbidden', 403 );
 			}
 
-			$item_type = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+			// Pricing completeness is only a *publish* gate. Previously any pricing
+			// validation error aborted the whole request via wp_send_json_error()
+			// before a single field was written, which silently discarded every
+			// other tab's changes (Advanced, FAQ, Template, Terms, Tax, etc.) even
+			// though those sections have nothing to do with pricing. Now the errors
+			// are collected but saving continues unconditionally; they are only used
+			// below to keep an incomplete item out of "publish" status.
+			$item_type      = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+			$pricing_errors = [];
 			if ( class_exists( 'RBFW_Pricing' ) ) {
 				$pricing_validator = new RBFW_Pricing();
 				$pricing_errors    = $pricing_validator->get_pricing_validation_errors( $item_type, wp_unslash( $_POST ) );
-				if ( ! empty( $pricing_errors ) ) {
-					wp_send_json_error( [
-						'message' => implode( ' ', $pricing_errors ),
-						'errors'  => $pricing_errors,
-					] );
-				}
 			}
 
 			/* ── Post fields ── */
@@ -481,6 +483,11 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				: get_post_status( $post_id );
 			// First save of a freshly-opened item promotes the auto-draft to a real draft.
 			if ( $status === 'auto-draft' ) {
+				$status = 'draft';
+			}
+			// Never let an item go live with incomplete pricing — keep it as a draft
+			// and let the rest of the save proceed normally so nothing else is lost.
+			if ( $status === 'publish' && ! empty( $pricing_errors ) ) {
 				$status = 'draft';
 			}
 
@@ -859,10 +866,11 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$this->set_edit_mode( $post_id, 'modern' );
 
 			wp_send_json_success( [
-				'post_id'      => $post_id,
-				'post_status'  => get_post_status( $post_id ),
-				'permalink'    => get_permalink( $post_id ),
-				'edit_url'     => $this->edit_url( $post_id, 'general' ),
+				'post_id'         => $post_id,
+				'post_status'     => get_post_status( $post_id ),
+				'permalink'       => get_permalink( $post_id ),
+				'edit_url'        => $this->edit_url( $post_id, 'general' ),
+				'pricing_errors'  => $pricing_errors,
 			] );
 		}
 

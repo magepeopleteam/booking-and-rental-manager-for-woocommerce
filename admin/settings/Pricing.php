@@ -172,7 +172,11 @@
 				$rbfw_bike_car_sd_data           = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
 				$manage_inventory_as_timely      = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
 				$manage_inventory_as_timely      = $manage_inventory_as_timely ? $manage_inventory_as_timely : 'off';
-				$rbfw_item_stock_quantity_timely = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) : 'off';
+				// Stock quantity is a number field — default to '' (not the string
+				// 'off', which the browser rejects on a type="number" input with
+				// "The specified value 'off' cannot be parsed", blanking the field).
+				$rbfw_item_stock_quantity_timely = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
+				$rbfw_item_stock_quantity_timely = ( $rbfw_item_stock_quantity_timely !== '' && $rbfw_item_stock_quantity_timely !== false ) ? $rbfw_item_stock_quantity_timely : '';
 				$enable_specific_duration        = get_post_meta( $post_id, 'enable_specific_duration', true ) ? get_post_meta( $post_id, 'enable_specific_duration', true ) : 'off';
 				$enable_specific_duration        = $enable_specific_duration ? $enable_specific_duration : 'off';
 				?>
@@ -1067,8 +1071,13 @@
                 $rbfw_enable_half_day_rate   = get_post_meta( $post_id, 'rbfw_enable_half_day_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_half_day_rate', true ) : 'no';
                 $rbfw_half_day_rate          = get_post_meta( $post_id, 'rbfw_half_day_rate', true ) ? get_post_meta( $post_id, 'rbfw_half_day_rate', true ) : 0;
 
-                $half_day_hour_threshold_start   = get_post_meta( $post_id, 'half_day_hour_threshold_start', true ) ? get_post_meta( $post_id, 'half_day_hour_threshold_start', true ) : 'no';
-                $half_day_hour_threshold_end   = get_post_meta( $post_id, 'half_day_hour_threshold_end', true ) ? get_post_meta( $post_id, 'half_day_hour_threshold_end', true ) : 'no';
+                // Hour values feed type="number" inputs — default to '' (not the
+                // string 'no', which the browser rejects with "cannot be parsed"
+                // and blanks the field).
+                $half_day_hour_threshold_start   = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
+                $half_day_hour_threshold_start   = ( $half_day_hour_threshold_start !== '' && $half_day_hour_threshold_start !== false ) ? $half_day_hour_threshold_start : '';
+                $half_day_hour_threshold_end     = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
+                $half_day_hour_threshold_end     = ( $half_day_hour_threshold_end !== '' && $half_day_hour_threshold_end !== false ) ? $half_day_hour_threshold_end : '';
 
                 $rbfw_hourly_threshold   = get_post_meta( $post_id, 'rbfw_hourly_threshold', true ) ? get_post_meta( $post_id, 'rbfw_hourly_threshold', true ) : '0';
                 $rbfw_enable_hourly_threshold    = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true ) : 'no';
