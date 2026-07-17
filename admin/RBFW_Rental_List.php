@@ -722,17 +722,28 @@ if (!class_exists('RBFW_Rental_List')) {
                                                 </span>
                                             <?php endif; ?>
                                         </span>
+                                        <?php
+                                        // Detail line: keyword text, then icon-only warnings. Icons rather
+                                        // than words because this column is narrow — the tooltip carries
+                                        // the explanation, so the cell stays one line at any table width.
+                                        ?>
                                         <span class="rbfw-seo-sub">
                                             <?php if ('' !== $seo['keyword']) : ?>
                                                 <span class="rbfw-seo-kw" title="<?php echo esc_attr(sprintf(/* translators: %s: focus keyword */ __('Focus keyword: %s', 'booking-and-rental-manager-for-woocommerce'), $seo['keyword'])); ?>"><?php echo esc_html($seo['keyword']); ?></span>
                                             <?php else : ?>
-                                                <span class="rbfw-seo-flag" title="<?php esc_attr_e('No focus keyword set — the plugin cannot score this item.', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php esc_html_e('No keyword', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                <span class="rbfw-seo-ico" title="<?php esc_attr_e('No focus keyword set — the plugin cannot score this item.', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('No focus keyword', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2"/><path d="m17 6 3 3"/></svg>
+                                                </span>
                                             <?php endif; ?>
                                             <?php if (! $seo['has_desc']) : ?>
-                                                <span class="rbfw-seo-flag" title="<?php esc_attr_e('No meta description — search engines will invent one.', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php esc_html_e('No description', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                <span class="rbfw-seo-ico" title="<?php esc_attr_e('No meta description — search engines will invent one.', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('No meta description', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h5"/><path d="M8 17h8"/></svg>
+                                                </span>
                                             <?php endif; ?>
                                             <?php if ($seo['noindex']) : ?>
-                                                <span class="rbfw-seo-flag is-noindex" title="<?php esc_attr_e('Excluded from search engines (noindex).', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php esc_html_e('noindex', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                <span class="rbfw-seo-ico is-noindex" title="<?php esc_attr_e('Excluded from search engines (noindex).', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Excluded from search engines', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.9 4.2A10.9 10.9 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.2 3.2"/><path d="M6.6 6.6A18.4 18.4 0 0 0 2 12s3 8 10 8a10.9 10.9 0 0 0 5.4-1.4"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="m2 2 20 20"/></svg>
+                                                </span>
                                             <?php endif; ?>
                                         </span>
                                     </td>
