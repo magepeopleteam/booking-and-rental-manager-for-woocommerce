@@ -140,15 +140,25 @@
 .rbfw-table td:first-child a:hover{color:var(--rb-red) !important;}
 .rbfw-t-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;}
 .rbfw-t-badge.type{background:var(--rb-red-soft);color:var(--rb-red);}
-/* SEO score badge — rendered only while an SEO plugin is active. Colours follow
-   that plugin's own good/ok/bad thresholds so the badge agrees with its UI. */
-.rbfw-th-seo{width:88px;}
-.rbfw-seo-badge{display:inline-flex;align-items:baseline;gap:1px;padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap;}
+/* SEO cell — rendered only while an SEO plugin is active. Badge colours follow
+   that plugin's own good/ok/bad thresholds so they agree with its own UI.
+   Layout mirrors the Name cell: a strong first line, muted detail beneath. */
+.rbfw-th-seo{width:150px;}
+.rbfw-seo-line{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.rbfw-seo-badge{display:inline-flex;align-items:baseline;gap:2px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;white-space:nowrap;}
 .rbfw-seo-badge i{font-style:normal;font-weight:600;opacity:.6;font-size:10px;}
+.rbfw-seo-badge b{font-weight:800;opacity:.65;font-size:9px;letter-spacing:.02em;}
 .rbfw-seo-badge.is-good{background:var(--rb-green-soft);color:var(--rb-green);}
 .rbfw-seo-badge.is-ok{background:var(--rb-orange-soft);color:var(--rb-orange);}
 .rbfw-seo-badge.is-bad{background:var(--rb-red-soft);color:var(--rb-red);}
 .rbfw-seo-badge.is-none{background:transparent;color:var(--rb-muted);font-weight:600;padding-left:0;}
+/* Detail line: focus keyword plus only the things that need attention. */
+.rbfw-seo-sub{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:4px;font-size:10px;font-weight:600;line-height:1.4;}
+.rbfw-seo-kw{color:var(--rb-ink2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rbfw-seo-kw::before{content:'\201C';opacity:.5;}
+.rbfw-seo-kw::after{content:'\201D';opacity:.5;}
+.rbfw-seo-flag{color:var(--rb-muted);background:var(--rb-bg);border:1px solid var(--rb-border);border-radius:4px;padding:1px 5px;white-space:nowrap;}
+.rbfw-seo-flag.is-noindex{color:var(--rb-red);background:var(--rb-red-soft);border-color:transparent;}
 /* Action icon buttons (table/list view) */
 .rbfw-table-acts{display:flex;align-items:center;gap:6px;}
 .rbfw-table-act{width:30px;height:30px;border-radius:7px;border:1px solid var(--rb-border);background:var(--rb-white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;color:var(--rb-ink2) !important;transition:all .15s;flex-shrink:0;}
