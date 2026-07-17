@@ -10,6 +10,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_buffer_lead_time'), 15, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_location_stock'), 25, 3 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
@@ -160,6 +161,111 @@ if (!class_exists('RBFW_Woocommerce')) {
          * @param int  $quantity   Quantity (unused; rental qty travels in the booking POST).
          * @return bool
          */
+        /**
+         * Buffer Time Before (lead time) gate at add-to-cart.
+         *
+         * The buffer was previously enforced only in the browser (the datepicker /
+         * time dropdown read #rbfw_buffer_time), so a request that skipped the JS
+         * could book inside the lead-time window. This re-checks it server-side
+         * against WordPress' own clock — nothing posted by the client is trusted.
+         *
+         * Deliberately fails open. It only rejects when the pickup datetime is
+         * unambiguous, i.e. the booking carries a real pickup time. Date-only
+         * bookings are skipped: their pickup would parse as midnight, and an
+         * hours-based buffer compared against midnight would wrongly reject a
+         * same-day booking that the day-level datepicker gate allows. Blocking a
+         * paying customer by mistake is worse than the bypass this closes.
+         *
+         * @param bool $passed
+         * @param int  $product_id
+         * @param int  $quantity
+         * @return bool
+         */
+        public function rbfw_validate_buffer_lead_time( $passed, $product_id, $quantity = 1 ) {
+            if ( ! $passed ) {
+                return $passed; // already rejected by another validator
+            }
+            global $rbfw;
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            if ( get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+                return $passed;
+            }
+
+            $buffer_hours = absint( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) );
+            if ( $buffer_hours < 1 ) {
+                return $passed; // no lead time configured -> nothing to enforce
+            }
+
+            // Parse the submitted booking exactly the way the cart build does.
+            $values = $this->rbfw_add_cart_item_func( array(), $rbfw_id );
+            if ( ! is_array( $values ) ) {
+                return $passed; // nonce missing / not a booking submit -> fail open
+            }
+
+            // Resolve the pickup datetime like rbfw_check_rental_availability():
+            // prefer the normalised key, fall back to date + time.
+            $start_raw  = ! empty( $values['rbfw_start_datetime'] ) ? $values['rbfw_start_datetime'] : '';
+            if ( '' === $start_raw ) {
+                $start_raw = isset( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '';
+            }
+            $start_time = isset( $values['rbfw_start_time'] ) ? trim( (string) $values['rbfw_start_time'] ) : '';
+
+            if ( '' === trim( (string) $start_raw ) ) {
+                return $passed; // nothing to compare -> fail open
+            }
+
+            // rbfw_start_datetime is a plain date for some rent types, with the time
+            // carried separately — join them before parsing.
+            $has_time = (bool) preg_match( '/\d{1,2}:\d{2}/', $start_raw );
+            if ( ! $has_time && '' !== $start_time ) {
+                $start_raw .= ' ' . $start_time;
+                $has_time   = (bool) preg_match( '/\d{1,2}:\d{2}/', $start_raw );
+            }
+
+            if ( ! $has_time ) {
+                return $passed; // date-only booking -> see docblock, fail open
+            }
+
+            try {
+                $timezone = wp_timezone();
+                $pickup   = new DateTime( $start_raw, $timezone );
+                $earliest = new DateTime( 'now', $timezone );
+                $earliest->modify( '+' . $buffer_hours . ' hours' );
+            } catch ( Exception $e ) {
+                return $passed; // unparseable -> fail open
+            }
+
+            if ( $pickup >= $earliest ) {
+                return $passed;
+            }
+
+            wc_add_notice(
+                sprintf(
+                    /* translators: 1: item name, 2: buffer hours, 3: earliest pickup date and time */
+                    _n(
+                        '%1$s needs at least %2$s hour of notice. The earliest available pickup is %3$s.',
+                        '%1$s needs at least %2$s hours of notice. The earliest available pickup is %3$s.',
+                        $buffer_hours,
+                        'booking-and-rental-manager-for-woocommerce'
+                    ),
+                    esc_html( get_the_title( $rbfw_id ) ),
+                    esc_html( number_format_i18n( $buffer_hours ) ),
+                    esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $earliest->getTimestamp() ) )
+                ),
+                'error'
+            );
+
+            if ( wp_doing_ajax() ) {
+                wc_print_notices();
+                wp_die();
+            }
+
+            return false;
+        }
+
         public function rbfw_validate_availability_add_to_cart( $passed, $product_id, $quantity = 1 ) {
             if ( ! $passed ) {
                 return $passed; // already rejected by another validator
