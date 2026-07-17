@@ -123,6 +123,19 @@ if (! class_exists('RBFW_Dependencies')) {
                 'filed_label' => __('Field Label', 'booking-and-rental-manager-for-woocommerce'),
                 'actions' => __('Action', 'booking-and-rental-manager-for-woocommerce'),
                 'add_new_value' => __('Add New Value', 'booking-and-rental-manager-for-woocommerce'),
+                // Previously hard-coded inside admin/js/mkb-admin.js (now translatable).
+                'room_type' => __('Room type', 'booking-and-rental-manager-for-woocommerce'),
+                'day_long_rate' => __('Day-long Rate', 'booking-and-rental-manager-for-woocommerce'),
+                'day_night_rate' => __('Day-night Rate', 'booking-and-rental-manager-for-woocommerce'),
+                'short_description' => __('Short Description', 'booking-and-rental-manager-for-woocommerce'),
+                'available_qty' => __('Available Qty', 'booking-and-rental-manager-for-woocommerce'),
+                'price' => __('Price', 'booking-and-rental-manager-for-woocommerce'),
+                'remove_time_slot' => __('Remove time slot', 'booking-and-rental-manager-for-woocommerce'),
+                'confirm_remove_row' => __("Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .", 'booking-and-rental-manager-for-woocommerce'),
+                'confirm_delete_row' => __('Are you sure you want to delete this row?', 'booking-and-rental-manager-for-woocommerce'),
+                'select_event_start_date' => __('Please select the event start date!', 'booking-and-rental-manager-for-woocommerce'),
+                'select_the_date' => __('Please select the date', 'booking-and-rental-manager-for-woocommerce'),
+                'select_end_time' => __('Please select the end time', 'booking-and-rental-manager-for-woocommerce'),
             ));
 
 

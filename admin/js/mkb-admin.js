@@ -2,6 +2,14 @@
     "use strict";
 
     /**
+     * Localised admin string with an English fallback.
+     * Values come from wp_localize_script( 'rbfw_script', 'rbfw_translation', ... ).
+     */
+    function rbfw_admin_i18n(key, fallback) {
+        return (window.rbfw_translation && window.rbfw_translation[key]) ? window.rbfw_translation[key] : fallback;
+    }
+
+    /**
      * Extra Service admin sections — only one visible at a time.
      *
      * Category 1 (.rbfw_es_price_config_wrapper):
@@ -165,7 +173,7 @@
         });
 
         jQuery(document).on('click', '.remove-row',function(e){
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr').remove();
                 jQuery(this).parents('.rbfw_pdwt_row').remove();
             } else {
@@ -176,7 +184,7 @@
 
 
         jQuery('.remove-row-size,.remove-rbfw_variations_table_row').on('click', function() {
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr').remove();
             } else {
                 return false;
@@ -186,7 +194,7 @@
         jQuery('.remove-rbfw_variations_value_table_row').on('click', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr.rbfw_variations_value_table_row').remove();
             } else {
                 return false;
@@ -201,7 +209,7 @@
         });
 
         jQuery('.remove-row-dropoff').on('click', function() {
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr').remove();
             } else {
                 return false;
@@ -546,7 +554,7 @@
         });
 
         jQuery('.remove-row-pickup').on('click', function() {
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr').remove();
             } else {
                 return false;
@@ -562,7 +570,7 @@
         });
 
         jQuery('.remove-row-d').on('click', function() {
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr').remove();
             } else {
                 return false;
@@ -683,7 +691,7 @@
         jQuery('#rbfw_event_end_date').click(function(e) {
             let event_start_date = jQuery('#rbfw_event_start_date').val();
             if (event_start_date == '') {
-                alert('Please select the event start date!');
+                alert(rbfw_admin_i18n('select_event_start_date', 'Please select the event start date!'));
             }
         });
 
@@ -753,11 +761,11 @@
             let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
 
             if(selected_date == ''){
-                alert('Please select the date');
+                alert(rbfw_admin_i18n('select_the_date', 'Please select the date'));
                 return;
             }
             if(start_date && !end_date){
-                alert('Please select the end time');
+                alert(rbfw_admin_i18n('select_end_time', 'Please select the end time'));
                 return;
             }
 
@@ -1316,7 +1324,7 @@
 		e.stopPropagation();
 		var itemId = $(this).closest('.rbfw-faq-item').data('id');
 
-		var isConfirmed = confirm('Are you sure you want to delete this row?');
+		var isConfirmed = confirm(rbfw_admin_i18n('confirm_delete_row', 'Are you sure you want to delete this row?'));
 		if (isConfirmed) {
 			delete_faq_item(itemId);
 		} else {
@@ -1493,7 +1501,7 @@
         e.stopPropagation();
         var itemId = $(this).closest('.rbfw-term-item').data('id');
 
-        var isConfirmed = confirm('Are you sure you want to delete this row?');
+        var isConfirmed = confirm(rbfw_admin_i18n('confirm_delete_row', 'Are you sure you want to delete this row?'));
         if (isConfirmed) {
             delete_term_item(itemId);
         } else {
@@ -1751,24 +1759,24 @@
             let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
             let resort_type_new_data_key = resort_type_last_data_key + 1;
             let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
-                + '<td><input class="rbfw_room_title" type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                + '<td><input class="rbfw_room_title" type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="' + rbfw_admin_i18n('room_type', 'Room type') + '"></td>'
                 + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
-                + '<td class="resort_day_long_price"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
-                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
-                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
-                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                + '<td class="resort_day_long_price"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="' + rbfw_admin_i18n('day_long_rate', 'Day-long Rate') + '"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="' + rbfw_admin_i18n('day_night_rate', 'Day-night Rate') + '"></td>'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="' + rbfw_admin_i18n('short_description', 'Short Description') + '"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="' + rbfw_admin_i18n('available_qty', 'Available Qty') + '"></td>'
                 + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
                 + '</tr>';
                 $('.rbfw_resort_price_table').append(resort_type_row);
         } else {
             let resort_type_new_data_key = 0;
             let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
-                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="' + rbfw_admin_i18n('room_type', 'Room type') + '"></td>'
                 + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
-                + '<td class="resort_day_long_price"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
-                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
-                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
-                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                + '<td class="resort_day_long_price"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="' + rbfw_admin_i18n('day_long_rate', 'Day-long Rate') + '"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="' + rbfw_admin_i18n('day_night_rate', 'Day-night Rate') + '"></td>'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="' + rbfw_admin_i18n('short_description', 'Short Description') + '"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="' + rbfw_admin_i18n('available_qty', 'Available Qty') + '"></td>'
                 + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
                 + '</tr>';
                 $('.rbfw_resort_price_table').append(resort_type_row);
@@ -1776,7 +1784,7 @@
         $('.remove-row.' + current_time + '').on('click', function () {
             e.preventDefault();
             e.stopImmediatePropagation();
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 $(this).parents('tr').remove();
             } else {
                 return false;
@@ -1936,7 +1944,7 @@
           <input type="hidden" name="${name_attr}[${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${index}][status]" value="enabled">
 
-          <div class="time-slot-remove" title="Remove time slot">×</div>
+          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
         </div>
       `;
             }else if(rent_type=='mi'){
@@ -1947,7 +1955,7 @@
           <input type="hidden" name="rdfw_available_time_mi[${index}][time]" value="${time}">
           <input type="hidden" name="rdfw_available_time_mi[${index}][status]" value="enabled">
 
-          <div class="time-slot-remove" title="Remove time slot">×</div>
+          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
         </div>
       `;
             }else{
@@ -1958,7 +1966,7 @@
           <input type="hidden" name="rdfw_available_time_sd[${index}][time]" value="${time}">
           <input type="hidden" name="rdfw_available_time_sd[${index}][status]" value="enabled">
 
-          <div class="time-slot-remove" title="Remove time slot">×</div>
+          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
         </div>
       `;
             }
@@ -1976,7 +1984,7 @@
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][status]" value="enabled">
 
-          <div class="time-slot-remove" title="Remove time slot">×</div>
+          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
         </div>
            `;
             }else if(rent_type=='mi'){
@@ -1987,7 +1995,7 @@
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][status]" value="enabled">
 
-          <div class="time-slot-remove" title="Remove time slot">×</div>
+          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
         </div>
            `;
             }else{
@@ -1998,7 +2006,7 @@
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][status]" value="enabled">
 
-          <div class="time-slot-remove" title="Remove time slot">×</div>
+          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
         </div>
            `;
             }
@@ -2142,11 +2150,11 @@ jQuery(document).ready(function () {
             let rbfw_variations_table_last_row = jQuery('.rbfw_variations_table .rbfw_variations_table_row:last-child');
             let rbfw_variations_table_last_data_key = parseInt(rbfw_variations_table_last_row.attr('data-key'));
             let rbfw_variations_table_new_data_key = rbfw_variations_table_last_data_key + 1;
-            let rbfw_variations_table_row = '<div class=rbfw_variations_table_row data-key="' + rbfw_variations_table_new_data_key + '"><header><label for="">Field Label</label><div><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]"placeholder="' + rbfw_translation.filed_label + '"> <input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]"type=hidden value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></div></header><div class=variations-inner-table><table class="rbfw_variations_value_table form-table w-100"><thead><th>' + rbfw_translation.variation_name + '<th>' + rbfw_translation.stock_quantity + '<b class="required">*</b><th>' + rbfw_translation.is_default + '<th>' + rbfw_translation.actions + '<tbody class=rbfw_variations_value_table_tbody><tr class=rbfw_variations_value_table_row data-key=0><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]"placeholder="' + rbfw_translation.variation_name + '" class=rbfw_variation_value><td><input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]"placeholder="' + rbfw_translation.stock_quantity + '" type=number><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="Price"></td><td><input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]"type=checkbox class=rbfw_variation_selected_value><td><div class=mp_event_remove_move><button class="button remove-rbfw_variations_value_table_row"type=button><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fa-arrows-alt fas"></i></div></div></table><button class="add-new-variation-value mt-2 ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></div><div class=mp_event_remove_move><button class=remove-rbfw_variations_table_row type=button><i class="fas fa-trash-can"></i></button></div></div>';
+            let rbfw_variations_table_row = '<div class=rbfw_variations_table_row data-key="' + rbfw_variations_table_new_data_key + '"><header><label for="">' + rbfw_admin_i18n('filed_label', 'Field Label') + '</label><div><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]"placeholder="' + rbfw_translation.filed_label + '"> <input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]"type=hidden value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></div></header><div class=variations-inner-table><table class="rbfw_variations_value_table form-table w-100"><thead><th>' + rbfw_translation.variation_name + '<th>' + rbfw_translation.stock_quantity + '<b class="required">*</b><th>' + rbfw_translation.is_default + '<th>' + rbfw_translation.actions + '<tbody class=rbfw_variations_value_table_tbody><tr class=rbfw_variations_value_table_row data-key=0><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]"placeholder="' + rbfw_translation.variation_name + '" class=rbfw_variation_value><td><input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]"placeholder="' + rbfw_translation.stock_quantity + '" type=number><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]"type=checkbox class=rbfw_variation_selected_value><td><div class=mp_event_remove_move><button class="button remove-rbfw_variations_value_table_row"type=button><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fa-arrows-alt fas"></i></div></div></table><button class="add-new-variation-value mt-2 ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></div><div class=mp_event_remove_move><button class=remove-rbfw_variations_table_row type=button><i class="fas fa-trash-can"></i></button></div></div>';
             jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
         } else {
             let rbfw_variations_table_new_data_key = 0;
-            let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="' + rbfw_variations_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]" placeholder="' + rbfw_translation.filed_label + '"><input type="hidden" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]" value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></td><td><table class="rbfw_variations_value_table"><thead><th>' + rbfw_translation.stock_quantity + '</th><th>' + rbfw_translation.stock_quantity + '<b class="required">*</b></th><th> ' + rbfw_translation.is_default + '</th><th>' + rbfw_translation.actions + '</th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="Price"></td><td><input type="checkbox" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
+            let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="' + rbfw_variations_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]" placeholder="' + rbfw_translation.filed_label + '"><input type="hidden" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]" value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></td><td><table class="rbfw_variations_value_table"><thead><th>' + rbfw_translation.stock_quantity + '</th><th>' + rbfw_translation.stock_quantity + '<b class="required">*</b></th><th> ' + rbfw_translation.is_default + '</th><th>' + rbfw_translation.actions + '</th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
             jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
         }
         rbfw_variation_table_action_btns_func();
@@ -2165,11 +2173,11 @@ jQuery(document).ready(function () {
                 let rbfw_variations_value_table_last_row = jQuery(this_btn).siblings('.rbfw_variations_value_table').find('.rbfw_variations_value_table_row:last-child');
                 let rbfw_variations_value_table_last_data_key = parseInt(rbfw_variations_value_table_last_row.attr('data-key'));
                 let rbfw_variations_value_table_new_data_key = rbfw_variations_value_table_last_data_key + 1;
-                let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="Price"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
+                let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
                 jQuery(this_btn).siblings('.rbfw_variations_value_table').append(rbfw_variations_value_table_row);
             } else {
                 let rbfw_variations_value_table_new_data_key = 0;
-                let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="Price"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
+                let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
                 jQuery(this_btn).siblings('.rbfw_variations_value_table').append(rbfw_variations_value_table_row);
             }
             rbfw_variation_table_action_btns_func();
@@ -2196,7 +2204,7 @@ jQuery(document).ready(function () {
         jQuery('.remove-rbfw_variations_table_row').on('click', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parent().parent().remove();
             } else {
                 return false;
@@ -2205,7 +2213,7 @@ jQuery(document).ready(function () {
         jQuery('.remove-rbfw_variations_value_table_row').on('click', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
                 jQuery(this).parents('tr.rbfw_variations_value_table_row').remove();
             } else {
                 return false;

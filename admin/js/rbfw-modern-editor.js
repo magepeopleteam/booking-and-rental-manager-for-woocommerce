@@ -226,7 +226,7 @@
                 } else {
                     window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
                 }
-            }).fail(function () { window.alert('Request failed.'); });
+            }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
         }
 
         // Rebuild the manage list + every pick-up/drop-off checkbox group from the
@@ -240,8 +240,8 @@
                     '<li class="rbfw-me-loc-row" data-term-id="' + loc.term_id + '" data-value="' + locEsc(loc.value) + '">' +
                         '<span class="rbfw-me-loc-row__name">' + locEsc(loc.name) + '</span>' +
                         '<span class="rbfw-me-loc-row__actions">' +
-                            '<button type="button" class="rbfw-me-loc-edit" title="Rename"><i class="fas fa-pen" aria-hidden="true"></i></button>' +
-                            '<button type="button" class="rbfw-me-loc-delete" title="Delete"><i class="fas fa-trash-can" aria-hidden="true"></i></button>' +
+                            '<button type="button" class="rbfw-me-loc-edit" title="' + (rbfwModernEditor_i18n('Rename') || 'Rename') + '"><i class="fas fa-pen" aria-hidden="true"></i></button>' +
+                            '<button type="button" class="rbfw-me-loc-delete" title="' + (rbfwModernEditor_i18n('Delete') || 'Delete') + '"><i class="fas fa-trash-can" aria-hidden="true"></i></button>' +
                         '</span>' +
                     '</li>'
                 );
@@ -315,7 +315,7 @@
         $wrap.on('click', '.rbfw-me-loc-delete', function () {
             var $row    = $(this).closest('.rbfw-me-loc-row');
             var $manage = $(this).closest('.rbfw-me-loc-manage');
-            if (! window.confirm('Delete this location? Items using it will no longer reference it.')) return;
+            if (! window.confirm((rbfwModernEditor_i18n('Delete this location? Items using it will no longer reference it.') || 'Delete this location? Items using it will no longer reference it.'))) return;
             locAjax('rbfw_location_delete', { term_id: $row.data('term-id') }, $manage);
         });
 
@@ -591,7 +591,7 @@
             var $img = $(this).find('img');
             if (!$img.length || $(this).find('.rbfw-me-tpl-preview-btn').length) return;
             $(this).append(
-                '<button type="button" class="rbfw-me-tpl-preview-btn" title="Preview">' +
+                '<button type="button" class="rbfw-me-tpl-preview-btn" title="' + (rbfwModernEditor_i18n('Preview') || 'Preview') + '">' +
                     '<span class="dashicons dashicons-visibility"></span>' +
                 '</button>'
             );
@@ -1378,8 +1378,8 @@
         function meActionsHtml() {
             if (!meCanManage()) { return ''; }
             return '<span class="rbfw-rt-actions">' +
-                '<span class="rbfw-rt-edit dashicons dashicons-edit" title="Edit"></span>' +
-                '<span class="rbfw-rt-del dashicons dashicons-trash" title="Delete"></span>' +
+                '<span class="rbfw-rt-edit dashicons dashicons-edit" title="' + (rbfwModernEditor_i18n('Edit') || 'Edit') + '"></span>' +
+                '<span class="rbfw-rt-del dashicons dashicons-trash" title="' + (rbfwModernEditor_i18n('Delete') || 'Delete') + '"></span>' +
             '</span>';
         }
 
@@ -1498,7 +1498,7 @@
             var termId = parseInt($chip.data('term-id'), 10) || 0;
             var name   = $chip.data('name');
             if (!termId) { return; }
-            if (!window.confirm('Delete rent type "' + name + '"? Items using it will have this type removed.')) { return; }
+            if (!window.confirm((rbfwModernEditor_i18n('Delete rent type "%s"? Items using it will have this type removed.') || 'Delete rent type "%s"? Items using it will have this type removed.').replace('%s', name))) { return; }
             $.post(window.ajaxurl, {
                 action: 'rbfw_rent_type_delete',
                 nonce:  meNonce(),
@@ -1513,7 +1513,7 @@
                 } else {
                     window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
                 }
-            }).fail(function () { window.alert('Request failed.'); });
+            }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
         });
 
         $wrap.on('click', '#rbfw-me-rent-type-modal .rbfw-me-faq-modal__close, #rbfw-me-rent-type-modal .rbfw-me-faq-modal__backdrop, .rbfw-me-rent-type-modal-cancel', function () {
@@ -1544,7 +1544,7 @@
                     } else {
                         window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
                     }
-                }).fail(function () { window.alert('Request failed.'); });
+                }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
             } else {
                 $.post(window.ajaxurl, {
                     action: 'rbfw_rent_type_add',
@@ -1558,7 +1558,7 @@
                     } else {
                         window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
                     }
-                }).fail(function () { window.alert('Request failed.'); });
+                }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
             }
         });
 
@@ -1639,8 +1639,8 @@
                 + '<td><div class="features_category_wrapper">'
                 + '<div class="field-list rbfw_feature_category">'
                 + '<div class="feature_category_inner_wrap">'
-                + '<div class="feature_category_title"><label>Feature Category Title</label>'
-                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_title]" data-key="' + nextCat + '" placeholder="Feature Category Label" />'
+                + '<div class="feature_category_title"><label>' + (rbfwModernEditor_i18n('Feature Category Title') || 'Feature Category Title') + '</label>'
+                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_title]" data-key="' + nextCat + '" placeholder="' + (rbfwModernEditor_i18n('Feature Category Label') || 'Feature Category Label') + '" />'
                 + '<div class="rbfw-me-features-actions"><span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span><span class="button tr_remove"><i class="fas fa-trash-can"></i></span></div>'
                 + '</div>'
                 + '<div class="feature_category_inner_item_wrap sortable">'
@@ -1648,7 +1648,7 @@
                 + '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fas fa-circle-plus"></i> Icon</a>'
                 + '<div class="rbfw_feature_icon_preview" data-key="0"></div>'
                 + '<input type="hidden" name="rbfw_feature_category[' + nextCat + '][cat_features][0][icon]" data-key="0" class="rbfw_feature_icon" />'
-                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_features][0][title]" placeholder="Features Name" data-key="0" />'
+                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_features][0][title]" placeholder="' + (rbfwModernEditor_i18n('Features Name') || 'Features Name') + '" data-key="0" />'
                 + '<div><span class="button sort"><i class="fas fa-arrows-alt"></i></span>'
                 + '<span class="button remove" onclick="jQuery(this).parent().parent().remove()"><i class="fas fa-trash-can"></i></span></div>'
                 + '</div></div></div></div>'
@@ -1680,7 +1680,7 @@
                 + '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="' + newKey + '"><i class="fas fa-circle-plus"></i> Icon</a>'
                 + '<div class="rbfw_feature_icon_preview" data-key="' + newKey + '"></div>'
                 + '<input type="hidden" name="rbfw_feature_category[' + dataCat + '][cat_features][' + newKey + '][icon]" data-key="' + newKey + '" class="rbfw_feature_icon" />'
-                + '<input type="text" name="rbfw_feature_category[' + dataCat + '][cat_features][' + newKey + '][title]" placeholder="Features Name" data-key="' + newKey + '" />'
+                + '<input type="text" name="rbfw_feature_category[' + dataCat + '][cat_features][' + newKey + '][title]" placeholder="' + (rbfwModernEditor_i18n('Features Name') || 'Features Name') + '" data-key="' + newKey + '" />'
                 + '<div><span class="button sort"><i class="fas fa-arrows-alt"></i></span>'
                 + '<span class="button remove" onclick="jQuery(this).parent().parent().remove()"><i class="fas fa-trash-can"></i></span></div>'
                 + '</div>';
@@ -1765,7 +1765,7 @@
 
         /* Delete */
         $wrap.on('click', '.rbfw-me-faq-delete', function () {
-            if (!confirm('Are you sure you want to delete this FAQ?')) return;
+            if (!confirm((rbfwModernEditor_i18n('Are you sure you want to delete this FAQ?') || 'Are you sure you want to delete this FAQ?'))) return;
             var id     = $(this).closest('.rbfw-me-faq-item').data('id');
             var postId = $wrap.find('.rbfw-me-faq-post-id').val();
             $.post(ajaxUrl, {
@@ -1893,7 +1893,7 @@
 
         /* Delete */
         $wrap.on('click', '.rbfw-me-term-delete', function () {
-            if (!confirm('Are you sure you want to delete this term?')) return;
+            if (!confirm((rbfwModernEditor_i18n('Are you sure you want to delete this term?') || 'Are you sure you want to delete this term?'))) return;
             var id     = $(this).closest('.rbfw-me-faq-item').data('id');
             var postId = $wrap.find('.rbfw-me-term-post-id').val();
             $.post(ajaxUrl, {
@@ -2091,14 +2091,14 @@
             var $row = $(
                 '<div class="rbfw-me-offdate-row">' +
                     '<div class="rbfw-me-field">' +
-                        '<label class="rbfw-me-label">Start Date</label>' +
+                        '<label class="rbfw-me-label">' + (rbfwModernEditor_i18n('Start Date') || 'Start Date') + '</label>' +
                         '<input type="date" name="off_days_start[]" class="rbfw-me-input">' +
                     '</div>' +
                     '<div class="rbfw-me-field">' +
-                        '<label class="rbfw-me-label">End Date</label>' +
+                        '<label class="rbfw-me-label">' + (rbfwModernEditor_i18n('End Date') || 'End Date') + '</label>' +
                         '<input type="date" name="off_days_end[]" class="rbfw-me-input">' +
                     '</div>' +
-                    '<button type="button" class="rbfw-me-offdate-remove" title="Remove">' +
+                    '<button type="button" class="rbfw-me-offdate-remove" title="' + (rbfwModernEditor_i18n('Remove') || 'Remove') + '">' +
                         '<span class="dashicons dashicons-trash"></span>' +
                     '</button>' +
                 '</div>'
@@ -2529,7 +2529,7 @@
                     '<input type="hidden" name="rdfw_available_time[' + index + '][id]" value="' + index + '">' +
                     '<input type="hidden" name="rdfw_available_time[' + index + '][time]" value="' + time + '">' +
                     '<input type="hidden" name="rdfw_available_time[' + index + '][status]" value="enabled">' +
-                    '<div class="time-slot-remove" title="Remove time slot">×</div>' +
+                    '<div class="time-slot-remove" title="' + (rbfwModernEditor_i18n('Remove time slot') || 'Remove time slot') + '">×</div>' +
                     '</div>';
             }
 

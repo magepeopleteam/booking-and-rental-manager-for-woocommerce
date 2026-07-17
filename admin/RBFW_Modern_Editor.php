@@ -423,6 +423,11 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'ajax_url'   => admin_url( 'admin-ajax.php' ),
 				'nonce_save' => wp_create_nonce( self::NONCE_SAVE ),
 				'list_url'   => admin_url( 'edit.php?post_type=' . self::POST_TYPE ),
+				/*
+				 * Keyed by the English source string: the editor JS looks strings up
+				 * with rbfwModernEditor_i18n( 'English text' ) and falls back to that
+				 * same text, so a missing key degrades gracefully.
+				 */
 				'i18n'       => [
 					'loading'      => __( 'Loading editor…', 'booking-and-rental-manager-for-woocommerce' ),
 					'saving'       => __( 'Saving your changes…', 'booking-and-rental-manager-for-woocommerce' ),
@@ -430,6 +435,26 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'save_error'   => __( 'Save failed — please try again', 'booking-and-rental-manager-for-woocommerce' ),
 					'publish'      => __( 'Publish', 'booking-and-rental-manager-for-woocommerce' ),
 					'update'       => __( 'Update', 'booking-and-rental-manager-for-woocommerce' ),
+					// Previously hard-coded inside admin/js/rbfw-modern-editor.js.
+					'Rename'                 => __( 'Rename', 'booking-and-rental-manager-for-woocommerce' ),
+					'Delete'                 => __( 'Delete', 'booking-and-rental-manager-for-woocommerce' ),
+					'Edit'                   => __( 'Edit', 'booking-and-rental-manager-for-woocommerce' ),
+					'Preview'                => __( 'Preview', 'booking-and-rental-manager-for-woocommerce' ),
+					'Remove'                 => __( 'Remove', 'booking-and-rental-manager-for-woocommerce' ),
+					'Remove time slot'       => __( 'Remove time slot', 'booking-and-rental-manager-for-woocommerce' ),
+					'Start Date'             => __( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ),
+					'End Date'               => __( 'End Date', 'booking-and-rental-manager-for-woocommerce' ),
+					'Feature Category Title' => __( 'Feature Category Title', 'booking-and-rental-manager-for-woocommerce' ),
+					'Feature Category Label' => __( 'Feature Category Label', 'booking-and-rental-manager-for-woocommerce' ),
+					'Features Name'          => __( 'Features Name', 'booking-and-rental-manager-for-woocommerce' ),
+					'Set Featured Image'     => __( 'Set Featured Image', 'booking-and-rental-manager-for-woocommerce' ),
+					'Use this image'         => __( 'Use this image', 'booking-and-rental-manager-for-woocommerce' ),
+					'Request failed.'        => __( 'Request failed.', 'booking-and-rental-manager-for-woocommerce' ),
+					'Are you sure you want to delete this FAQ?'  => __( 'Are you sure you want to delete this FAQ?', 'booking-and-rental-manager-for-woocommerce' ),
+					'Are you sure you want to delete this term?' => __( 'Are you sure you want to delete this term?', 'booking-and-rental-manager-for-woocommerce' ),
+					'Delete this location? Items using it will no longer reference it.' => __( 'Delete this location? Items using it will no longer reference it.', 'booking-and-rental-manager-for-woocommerce' ),
+					/* translators: %s: the rent type name. */
+					'Delete rent type "%s"? Items using it will have this type removed.' => __( 'Delete rent type "%s"? Items using it will have this type removed.', 'booking-and-rental-manager-for-woocommerce' ),
 				],
 			] );
 		}
