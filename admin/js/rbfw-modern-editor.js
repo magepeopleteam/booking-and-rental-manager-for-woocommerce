@@ -2175,7 +2175,9 @@
             // Inventory card (stock + variations): mirror the classic editor, which
             // hides inventory for resort / appointment. Single Day (bike_car_sd) now
             // supports item variations, so its inventory card stays visible.
-            var _invShow = (type !== 'resort' && type !== 'appointment');
+            // Multiple Items carries per-item stock in its own pricing table, so the
+            // card-level inventory does not apply to it.
+            var _invShow = (type !== 'resort' && type !== 'appointment' && type !== 'multiple_items');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
 
             // Inventory sub-sections that only apply to specific rent types:

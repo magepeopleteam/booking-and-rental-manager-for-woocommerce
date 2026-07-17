@@ -352,10 +352,11 @@
 				// for resort / appointment; mirror that here, with applyType()
 				// in the JS keeping it in sync when the rental type is changed live.
 				// Single Day (bike_car_sd) now supports item variations, so it is no
-				// longer hidden.
+				// longer hidden. Multiple Items carries its own per-item stock in the
+				// pricing table, so the card-level inventory does not apply to it.
 				if ( class_exists( 'RBFW_Inventory' ) ) :
 					$rbfw_me_inv_type   = get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd';
-					$rbfw_me_inv_hidden = in_array( $rbfw_me_inv_type, [ 'resort', 'appointment' ], true );
+					$rbfw_me_inv_hidden = in_array( $rbfw_me_inv_type, [ 'resort', 'appointment', 'multiple_items' ], true );
 				?>
 				<div class="rbfw-me-card rbfw-me-inventory-card<?php echo $rbfw_me_inv_hidden ? ' rbfw-me-hidden' : ''; ?>">
 					<div class="rbfw-me-card__head">
@@ -364,6 +365,22 @@
 					</div>
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
 						<?php RBFW_Inventory::render_for_modern_editor( $post_id ); ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
+				<?php
+				// Buffer Time — moved here from the Off Days step. The fields keep their
+				// original names, and collectFormData() scans the whole editor wrap, so
+				// saving is unaffected by which panel renders them.
+				if ( class_exists( 'RBFW_Off_Day' ) ) : ?>
+				<div class="rbfw-me-card rbfw-me-buffer-card">
+					<div class="rbfw-me-card__head">
+						<h2><?php esc_html_e( 'Buffer Time', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+						<p><?php esc_html_e( 'Reserve extra hours before and after each booking for cleaning, preparation or turnaround.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<div class="rbfw-me-card__body">
+						<?php RBFW_Off_Day::render_buffer_for_modern_editor( $post_id ); ?>
 					</div>
 				</div>
 				<?php endif; ?>

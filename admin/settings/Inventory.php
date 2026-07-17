@@ -17,7 +17,7 @@
 				$rbfw_item_type         = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 				?>
-                <li data-target-tabs="#rbfw_variations" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
+                <li data-target-tabs="#rbfw_variations" <?php echo in_array( $rbfw_item_type, [ 'resort', 'appointment', 'multiple_items' ], true ) ? 'style="display:none"' : ''; ?>>
                     <i class="fas fa-table-cells-large"></i><?php esc_html_e( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </li>
 				<?php
@@ -210,7 +210,7 @@
 				$rbfw_item_stock_quantity = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
 				$rbfw_enable_variations   = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 				?>
-                <section>
+                <section class="rbfw_stock_quantity_section">
                     <div>
                         <label>
 							<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
