@@ -174,17 +174,18 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
     var date_today = new Date();
-    var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val());
+    var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val()) || 0;
 
-
+    // Buffer (lead time) and "today booking enabled" are independent settings and
+    // must compose. Previously a non-zero buffer always took the -1 day branch,
+    // which silently ignored today_enable='no' and left today bookable. The -1 day
+    // is what allows today, so it must depend on today_enable alone.
+    // Mirrors the composition already used in md_script.js.
     if(rbfw_buffer_time){
-        date_today = new Date(date_today);
         date_today.setHours(date_today.getHours() + rbfw_buffer_time);
+    }
+    if(today_enable=='yes'){
         date_today.setDate(date_today.getDate() - 1);
-    }else{
-        if(today_enable=='yes'){
-            date_today.setDate(date_today.getDate() - 1);
-        }
     }
 
     //alert(date_today);
