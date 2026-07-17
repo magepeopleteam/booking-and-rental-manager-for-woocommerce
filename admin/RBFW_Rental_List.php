@@ -170,6 +170,8 @@ if (!class_exists('RBFW_Rental_List')) {
                 'update_term_meta_cache' => true,
             ));
             $rent_types = RBFW_Function::rbfw_rent_types();
+            // Resolved in one pass so AIOSEO needs a single query rather than one per row.
+            $seo_scores = $this->seo_scores(wp_list_pluck($query->posts, 'ID'));
             $items = array();
             foreach ($query->posts as $post) {
                 $pid       = $post->ID;
@@ -184,6 +186,7 @@ if (!class_exists('RBFW_Rental_List')) {
                     'type_label' => $type_lbl,
                     'cats'       => $cats,
                     'price'      => $this->get_price_label($pid),
+                    'seo_score'  => isset($seo_scores[$pid]) ? $seo_scores[$pid] : null,
                     'status'     => $post->post_status,
                     'thumb'      => get_the_post_thumbnail_url($pid, 'medium_large'),
                     'author'     => get_the_author_meta('display_name', $post->post_author),
@@ -199,6 +202,156 @@ if (!class_exists('RBFW_Rental_List')) {
             }
 
             return $items;
+        }
+
+        /**
+         * Which SEO plugin is currently ACTIVE, if any.
+         *
+         * Detection is by runtime constant, not by the plugin being present on
+         * disk: an installed-but-deactivated plugin stores no scores, so the
+         * column must stay hidden for it.
+         *
+         * @return string '' | 'yoast' | 'rankmath' | 'aioseo' | 'seopress'
+         */
+        private function seo_plugin(): string
+        {
+            static $plugin = null;
+            if (null !== $plugin) {
+                return $plugin;
+            }
+
+            if (defined('WPSEO_VERSION')) {
+                $plugin = 'yoast';
+            } elseif (defined('RANK_MATH_VERSION')) {
+                $plugin = 'rankmath';
+            } elseif (defined('AIOSEO_VERSION')) {
+                $plugin = 'aioseo';
+            } elseif (defined('SEOPRESS_VERSION')) {
+                $plugin = 'seopress';
+            } else {
+                $plugin = '';
+            }
+
+            /**
+             * Let an unsupported SEO plugin declare itself; pair with
+             * `rbfw_item_seo_scores` to supply the numbers.
+             */
+            $plugin = (string) apply_filters('rbfw_item_seo_plugin', $plugin);
+
+            return $plugin;
+        }
+
+        /**
+         * Human name of the active SEO plugin, for the column tooltip.
+         */
+        private function seo_plugin_label(): string
+        {
+            switch ($this->seo_plugin()) {
+                case 'yoast':
+                    return __('Yoast SEO', 'booking-and-rental-manager-for-woocommerce');
+                case 'rankmath':
+                    return __('Rank Math', 'booking-and-rental-manager-for-woocommerce');
+                case 'aioseo':
+                    return __('All in One SEO', 'booking-and-rental-manager-for-woocommerce');
+                case 'seopress':
+                    return __('SEOPress', 'booking-and-rental-manager-for-woocommerce');
+            }
+
+            return __('SEO', 'booking-and-rental-manager-for-woocommerce');
+        }
+
+        /**
+         * SEO scores for a set of items, keyed by post ID.
+         *
+         * Read in bulk rather than per row: the meta-backed plugins ride the
+         * WP_Query meta cache, and AIOSEO (which stores scores in its own table)
+         * gets a single query instead of one per item.
+         *
+         * A value of null means "not analysed" and renders as a dash. Both Yoast
+         * and Rank Math store 0 for an unanalysed post, so 0 is treated the same
+         * way their own UIs treat it.
+         *
+         * @param int[] $post_ids
+         * @return array<int, int|null> 0-100 per post, or null
+         */
+        private function seo_scores(array $post_ids): array
+        {
+            $plugin = $this->seo_plugin();
+            $scores = array();
+
+            if ('' === $plugin || empty($post_ids)) {
+                return $scores;
+            }
+
+            switch ($plugin) {
+                case 'yoast':
+                case 'rankmath':
+                    $key = ('yoast' === $plugin) ? '_yoast_wpseo_linkdex' : 'rank_math_seo_score';
+                    foreach ($post_ids as $pid) {
+                        $raw           = get_post_meta($pid, $key, true);
+                        $scores[$pid]  = ('' === $raw || null === $raw) ? null : (int) $raw;
+                    }
+                    break;
+
+                case 'aioseo':
+                    global $wpdb;
+                    $table = $wpdb->prefix . 'aioseo_posts';
+                    // The constant can exist before the table does (fresh install).
+                    if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table) {
+                        $ids = implode(',', array_map('absint', $post_ids));
+                        // $ids is a sanitised integer list; the table name is prefix-derived.
+                        $rows = $wpdb->get_results("SELECT post_id, seo_score FROM {$table} WHERE post_id IN ({$ids})"); // phpcs:ignore WordPress.DB.PreparedSQL
+                        foreach ((array) $rows as $row) {
+                            $scores[(int) $row->post_id] = (null === $row->seo_score) ? null : (int) $row->seo_score;
+                        }
+                    }
+                    break;
+
+                case 'seopress':
+                    foreach ($post_ids as $pid) {
+                        $data         = get_post_meta($pid, '_seopress_analysis_data', true);
+                        $scores[$pid] = (is_array($data) && isset($data['score']['value'])) ? (int) $data['score']['value'] : null;
+                    }
+                    break;
+            }
+
+            /**
+             * Filter the resolved scores, keyed by post ID (0-100, or null when
+             * not analysed). Use with `rbfw_item_seo_plugin` to add support for
+             * an SEO plugin this list does not know about.
+             */
+            return (array) apply_filters('rbfw_item_seo_scores', $scores, $post_ids, $plugin);
+        }
+
+        /**
+         * Bucket a score using the active plugin's own thresholds, so the badge
+         * agrees with what that plugin shows on the edit screen.
+         *
+         * @param int $score 0-100
+         * @return string 'good' | 'ok' | 'bad'
+         */
+        private function seo_rank(int $score): string
+        {
+            switch ($this->seo_plugin()) {
+                case 'rankmath':
+                    if ($score >= 81) {
+                        return 'good';
+                    }
+                    return ($score >= 51) ? 'ok' : 'bad';
+
+                case 'aioseo':
+                    if ($score >= 80) {
+                        return 'good';
+                    }
+                    return ($score >= 50) ? 'ok' : 'bad';
+            }
+
+            // Yoast / SEOPress / default — mirrors WPSEO_Rank: 71+ good, 41-70 ok.
+            if ($score >= 71) {
+                return 'good';
+            }
+
+            return ($score >= 41) ? 'ok' : 'bad';
         }
 
         private function get_price_label($pid): string
@@ -256,6 +409,10 @@ if (!class_exists('RBFW_Rental_List')) {
             $name = self::cpt_label();
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $is_trash = isset($_GET['rbfw_status']) && sanitize_text_field(wp_unslash($_GET['rbfw_status'])) === 'trash';
+
+            // SEO column is opt-in on the active SEO plugin: no plugin, no column.
+            $seo_active = '' !== $this->seo_plugin();
+            $seo_label  = $this->seo_plugin_label();
 
             $active    = $this->get_items();
             $total     = count($active);
@@ -450,6 +607,10 @@ if (!class_exists('RBFW_Rental_List')) {
                                 <th><?php esc_html_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <?php // SEO column appears only while an SEO plugin is active — header and cell are gated together. ?>
+                                <?php if ($seo_active) : ?>
+                                <th class="rbfw-th-seo" title="<?php echo esc_attr(sprintf(/* translators: %s: SEO plugin name */ __('SEO score from %s', 'booking-and-rental-manager-for-woocommerce'), $seo_label)); ?>"><?php esc_html_e('SEO', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <?php endif; ?>
                                 <th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                             </tr>
@@ -473,6 +634,17 @@ if (!class_exists('RBFW_Rental_List')) {
                                     </td>
                                     <td data-label="<?php esc_attr_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['type_label'] ? '<span class="rbfw-t-badge type">' . esc_html($it['type_label']) . '</span>' : '-'; ?></td>
                                     <td data-label="<?php esc_attr_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html($it['price'] ?: '-'); ?></td>
+                                    <?php if ($seo_active) : ?>
+                                    <td class="rbfw-td-seo" data-label="<?php esc_attr_e('SEO', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                        <?php if (null === $it['seo_score'] || 0 === $it['seo_score']) : ?>
+                                            <span class="rbfw-seo-badge is-none" title="<?php esc_attr_e('Not analysed yet — open the item and set a focus keyword.', 'booking-and-rental-manager-for-woocommerce'); ?>">&mdash;</span>
+                                        <?php else : ?>
+                                            <span class="rbfw-seo-badge is-<?php echo esc_attr($this->seo_rank((int) $it['seo_score'])); ?>" title="<?php echo esc_attr(sprintf(/* translators: 1: score 0-100, 2: SEO plugin name */ __('SEO score %1$s/100 (%2$s)', 'booking-and-rental-manager-for-woocommerce'), number_format_i18n((int) $it['seo_score']), $seo_label)); ?>">
+                                                <?php echo esc_html(number_format_i18n((int) $it['seo_score'])); ?><i>/100</i>
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <?php endif; ?>
                                     <td data-label="<?php esc_attr_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-status-dot status-<?php echo esc_attr($it['status']); ?>"><?php echo esc_html($this->status_label($it['status'])); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                         <div class="rbfw-table-acts">
