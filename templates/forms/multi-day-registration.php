@@ -94,6 +94,17 @@ $rbfw_enable_security_deposit = get_post_meta($rbfw_id, 'rbfw_enable_security_de
 $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
 $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
 
+// Time-based rates (Time Configuration section) — surfaced in the Pricing Info modal.
+$rbfw_enable_half_day_rate     = get_post_meta( $rbfw_id, 'rbfw_enable_half_day_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_half_day_rate', true ) : 'no';
+$rbfw_half_day_rate            = get_post_meta( $rbfw_id, 'rbfw_half_day_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_half_day_rate', true ) : 0;
+$rbfw_half_day_threshold_start = get_post_meta( $rbfw_id, 'half_day_hour_threshold_start', true );
+$rbfw_half_day_threshold_end   = get_post_meta( $rbfw_id, 'half_day_hour_threshold_end', true );
+$rbfw_enable_hourly_threshold  = get_post_meta( $rbfw_id, 'rbfw_enable_hourly_threshold', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_hourly_threshold', true ) : 'no';
+$rbfw_hourly_threshold         = get_post_meta( $rbfw_id, 'rbfw_hourly_threshold', true );
+// The half-day window only applies (in the price engine) when both bounds are a valid positive range.
+$rbfw_half_day_window_valid    = ( is_numeric( $rbfw_half_day_threshold_start ) && is_numeric( $rbfw_half_day_threshold_end )
+    && (float) $rbfw_half_day_threshold_start > 0 && (float) $rbfw_half_day_threshold_end >= (float) $rbfw_half_day_threshold_start );
+
 $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off';
 
 
@@ -132,9 +143,10 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 // day-wise grid and all add-on pricing.) Flat Daily/Hourly are
                                 // omitted here when day-wise pricing is on — the grid lists them
                                 // per weekday below.
-                                $rbfw_pi_flat_daily  = ( $enable_daily_rate == 'yes'  && $rbfw_enable_daywise_price != 'yes' );
-                                $rbfw_pi_flat_hourly = ( $enable_hourly_rate == 'yes' && $rbfw_enable_daywise_price != 'yes' );
-                                if ( $rbfw_enable_monthly_rate == 'yes' || $rbfw_enable_weekly_rate == 'yes' || $rbfw_pi_flat_daily || $rbfw_pi_flat_hourly ) :
+                                $rbfw_pi_flat_daily    = ( $enable_daily_rate == 'yes'  && $rbfw_enable_daywise_price != 'yes' );
+                                $rbfw_pi_flat_hourly   = ( $enable_hourly_rate == 'yes' && $rbfw_enable_daywise_price != 'yes' );
+                                $rbfw_pi_flat_half_day = ( $rbfw_enable_half_day_rate == 'yes' && (float) $rbfw_half_day_rate > 0 && $rbfw_enable_daywise_price != 'yes' );
+                                if ( $rbfw_enable_monthly_rate == 'yes' || $rbfw_enable_weekly_rate == 'yes' || $rbfw_pi_flat_daily || $rbfw_pi_flat_hourly || $rbfw_pi_flat_half_day ) :
                                 ?>
                                 <div class="rbfw-pi-section-label"><?php esc_html_e( 'Duration Rates', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="rbfw_day_wise_price">
@@ -151,6 +163,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                         <?php endif; ?>
                                         <?php if ( $rbfw_pi_flat_hourly ) : ?>
                                             <tr><td><strong><?php esc_html_e( 'Hourly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td><td><?php echo wp_kses_post( wc_price( $hourly_rate ) ); ?> / <?php esc_html_e( 'Hour', 'booking-and-rental-manager-for-woocommerce' ); ?></td></tr>
+                                        <?php endif; ?>
+                                        <?php if ( $rbfw_pi_flat_half_day ) : ?>
+                                            <tr><td><strong><?php esc_html_e( 'Half-Day Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td><td><?php echo wp_kses_post( wc_price( $rbfw_half_day_rate ) ); ?><?php if ( $rbfw_half_day_window_valid ) : ?> <span class="rbfw-pi-hint">(<?php echo esc_html( (float) $rbfw_half_day_threshold_start ); ?>&ndash;<?php echo esc_html( (float) $rbfw_half_day_threshold_end ); ?> <?php esc_html_e( 'hrs', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span><?php endif; ?></td></tr>
                                         <?php endif; ?>
                                         </tbody>
                                     </table>
@@ -215,8 +230,48 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                             <td><?php echo esc_html( ( $satday['enable'] == 'yes' && $satday['hourly_rate'] ) ? $satday['hourly_rate'] : $hourly_rate ); ?></td>
                                         </tr>
                                         <?php endif; ?>
+                                        <?php if ( $rbfw_enable_half_day_rate == 'yes' && (float) $rbfw_half_day_rate > 0 ) : ?>
+                                        <tr>
+                                            <td><?php esc_html_e( 'Half-Day', 'booking-and-rental-manager-for-woocommerce' ); ?> (<?php echo esc_html( get_woocommerce_currency_symbol() ); ?>)</td>
+                                            <td><?php echo esc_html( ( $sunday['enable'] == 'yes' && $sunday['half_day_rate'] ) ? $sunday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                            <td><?php echo esc_html( ( $monday['enable'] == 'yes' && $monday['half_day_rate'] ) ? $monday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                            <td><?php echo esc_html( ( $tueday['enable'] == 'yes' && $tueday['half_day_rate'] ) ? $tueday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                            <td><?php echo esc_html( ( $wedday['enable'] == 'yes' && $wedday['half_day_rate'] ) ? $wedday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                            <td><?php echo esc_html( ( $thuday['enable'] == 'yes' && $thuday['half_day_rate'] ) ? $thuday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                            <td><?php echo esc_html( ( $friday['enable'] == 'yes' && $friday['half_day_rate'] ) ? $friday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                            <td><?php echo esc_html( ( $satday['enable'] == 'yes' && $satday['half_day_rate'] ) ? $satday['half_day_rate'] : $rbfw_half_day_rate ); ?></td>
+                                        </tr>
+                                        <?php endif; ?>
                                     </table>
                                 </div>
+                                <?php endif; ?>
+
+                                <?php
+                                // Time-based rules: explain when the half-day / full-day rates kick in.
+                                $rbfw_pi_show_half_rule = ( $rbfw_enable_half_day_rate == 'yes' && (float) $rbfw_half_day_rate > 0 && $rbfw_half_day_window_valid );
+                                $rbfw_pi_show_hour_rule = ( $rbfw_enable_hourly_threshold == 'yes' && is_numeric( $rbfw_hourly_threshold ) && (float) $rbfw_hourly_threshold > 0 );
+                                if ( $rbfw_pi_show_half_rule || $rbfw_pi_show_hour_rule ) : ?>
+                                    <ul class="rbfw-pi-rules">
+                                        <?php if ( $rbfw_pi_show_half_rule ) : ?>
+                                            <li><?php
+                                                printf(
+                                                    /* translators: 1: start hours, 2: end hours. */
+                                                    esc_html__( 'Rentals of %1$s–%2$s hours are charged the half-day rate.', 'booking-and-rental-manager-for-woocommerce' ),
+                                                    esc_html( (float) $rbfw_half_day_threshold_start ),
+                                                    esc_html( (float) $rbfw_half_day_threshold_end )
+                                                );
+                                            ?></li>
+                                        <?php endif; ?>
+                                        <?php if ( $rbfw_pi_show_hour_rule ) : ?>
+                                            <li><?php
+                                                printf(
+                                                    /* translators: %s: number of hours. */
+                                                    esc_html__( 'Rentals of %s hours or more are charged as a full day.', 'booking-and-rental-manager-for-woocommerce' ),
+                                                    esc_html( (float) $rbfw_hourly_threshold )
+                                                );
+                                            ?></li>
+                                        <?php endif; ?>
+                                    </ul>
                                 <?php endif; ?>
 
                                 <?php

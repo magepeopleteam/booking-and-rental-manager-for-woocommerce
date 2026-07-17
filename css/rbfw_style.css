@@ -558,6 +558,43 @@ CSS for Single Page Template
 .price-item-container .rbfw-pi-daywise tr:last-child td{
     border-bottom: none;
 }
+/* Inline hour-range hint next to the half-day rate */
+.price-item-container .rbfw-pi-hint{
+    font-size: 11px;
+    font-weight: 500;
+    color: #9ca3af;
+    white-space: nowrap;
+}
+/* Time-based rules (half-day window / full-day threshold) */
+.price-item-container .rbfw-pi-rules{
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 10px 12px;
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 8px;
+}
+.price-item-container .rbfw-pi-rules li{
+    position: relative;
+    font-size: 12px;
+    line-height: 1.5;
+    color: #4b5563;
+    padding-left: 16px;
+    margin: 0;
+}
+.price-item-container .rbfw-pi-rules li + li{
+    margin-top: 4px;
+}
+.price-item-container .rbfw-pi-rules li::before{
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--rbfw_color_primary, #ff3726);
+}
 /* Add-on pricing blocks */
 .price-item-container .mp_item_insert{
     background: #f9fafb;
