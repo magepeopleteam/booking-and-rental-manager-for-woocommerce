@@ -10,6 +10,19 @@
     }
 
     /**
+     * Some legacy click handlers below flip a checkbox's `value` attribute
+     * instead of relying on the native `checked` state. That was fine for
+     * the classic editor, but the modern editor (.rbfw-me-wrap) reads the
+     * value attribute when serialising form data — so the legacy handlers
+     * would flip the value to the OPPOSITE of what the user just clicked
+     * and the AJAX save would persist the inverse of the user's intent.
+     * Helper to skip those handlers inside the modern editor wrap.
+     */
+    var rbfwIsLegacyEditorTarget = function (target) {
+        return ! $(target).closest('.rbfw-me-wrap').length;
+    };
+
+    /**
      * Extra Service admin sections — only one visible at a time.
      *
      * Category 1 (.rbfw_es_price_config_wrapper):
@@ -1461,6 +1474,7 @@
     }
 
     $(document).on('click', 'input[name=rbfw_enable_term_content]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no')
@@ -1620,6 +1634,7 @@
 
 
     $(document).on('click', 'input[name=rbfw_term_condition_required]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no')
@@ -1639,6 +1654,7 @@
      */
      // Toggle visibility for category service price
     $(document).on('click', 'input[name=rbfw_enable_category_service_price]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'on') {
             $(this).val('off')
@@ -1654,6 +1670,7 @@
 
 
     $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no');
@@ -1665,7 +1682,17 @@
     });
 
 
+    // Legacy "value-flip" click handlers. These were written for the classic
+    // editor, where the checkbox's value attribute (not its checked state) was
+    // the source of truth. They run on every admin page and would also fire on
+    // the modern editor's toggles, flipping the value attribute to the OPPOSITE
+    // of what the user just clicked — so collectFormData() would read the wrong
+    // value and the AJAX save would write the inverse of the user's intent.
+    // The modern editor manages these toggles through rbfw-modern-editor.js
+    // (initToggles() + collectFormData()) and does not need these handlers, so
+    // skip them whenever the click target lives inside the modern editor wrap.
     $(document).on('click', 'input[name=shipping_enable]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no')
@@ -1675,6 +1702,7 @@
         }
     });
     $(document).on('click', 'input[name=rbfw_enable_faq_content]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no')
@@ -1687,6 +1715,7 @@
     });
 
     $(document).on('click', 'input[name=rbfw_enable_additional_gallary]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'on') {
             $(this).val('off');
@@ -1698,6 +1727,7 @@
         }
     });
     $(document).on('click', 'input[name=rbfw_dt_sidebar_switch]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'on') {
             $(this).val('off')
@@ -1708,6 +1738,7 @@
     });
     // Daily price
     $(document).on('click', 'input[name=rbfw_enable_daily_rate]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no');
@@ -1720,6 +1751,7 @@
     });
     // Hourly price
     $(document).on('click', 'input[name=rbfw_enable_hourly_rate]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no');
@@ -1738,6 +1770,7 @@
     });
     // Day long price
     $(document).on('click', 'input[name=rbfw_enable_resort_daylong_price]', function (e) {
+        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
         var status = jQuery(this).val();
         if (status === 'yes') {
             jQuery(this).val('no');
