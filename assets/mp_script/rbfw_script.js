@@ -297,7 +297,9 @@ function rbfwTimeToMinutes(t) {
 
 function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
-    var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val());
+    // Fall back to 0 when the buffer field is absent/empty: NaN here would make
+    // setHours() below produce an Invalid Date, silently disabling the past-time check.
+    var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val()) || 0;
 
 
     var scheduleJson = [];
@@ -343,7 +345,12 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
     if(is_calendar=='calendar'){
         timeSelect.innerHTML = '';
     }else{
-        timeSelect.innerHTML = '<option value="">'+ rbfw_translation.pickup_time +'</option>'; // reset options
+        // This function fills both #pickup_time and #dropoff_time, so the placeholder
+        // must follow the field being filled — otherwise Return Time reads "Pickup Time".
+        var rbfw_time_placeholder = (pickup_time_particular === 'dropoff_time')
+            ? (rbfw_translation.return_time || rbfw_translation.pickup_time)
+            : rbfw_translation.pickup_time;
+        timeSelect.innerHTML = '<option value="">'+ rbfw_time_placeholder +'</option>'; // reset options
     }
 
 

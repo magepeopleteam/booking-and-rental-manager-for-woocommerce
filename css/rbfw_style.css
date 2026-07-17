@@ -9220,14 +9220,17 @@ i.fas.fa-minus {
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-col {
-    align-items: flex-start;
+    /* stretch (not flex-start) so the label/value boxes are bounded by the
+       column width; with flex-start they size to fit-content and spill over
+       the next column once the text is wider than the column. */
+    align-items: stretch;
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: 5px;
     justify-content: center;
     min-width: 0;
-    padding: 14px 18px;
+    padding: 14px 14px;
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-sep {
@@ -9242,11 +9245,15 @@ i.fas.fa-minus {
     display: block;
     font-size: 10px;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    line-height: 1;
+    letter-spacing: 0.06em;
+    line-height: 1.25;
     margin: 0;
+    min-width: 0;
+    /* wrap rather than nowrap: labels are translated ("Start Date and Time"
+       is far longer in some locales) and must never overlap the next column. */
+    overflow-wrap: break-word;
     text-transform: uppercase;
-    white-space: nowrap;
+    white-space: normal;
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-value {
@@ -9254,11 +9261,13 @@ i.fas.fa-minus {
     display: block;
     font-size: 14px;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.3;
     margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    min-width: 0;
+    /* wrap at the space between date and time instead of clipping — a
+       truncated date ("July 18, 2026 7:0…") is unreadable, so never ellipsize. */
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-date {
