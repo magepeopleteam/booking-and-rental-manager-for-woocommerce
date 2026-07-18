@@ -13312,6 +13312,29 @@ i.fas.fa-minus {
     min-height: 44px;
     width: 100%;
 }
+/* Mobile: the base .rbfw_search_container is flex-direction:column below 768px,
+   so the row-oriented "flex: 1 1 160px" above turns 160px into a *vertical*
+   flex-basis (each field ~160px tall) and "align-items:flex-end" right-aligns
+   the button. Stack every field/button full width with natural height. */
+@media (max-width: 767px) {
+    .rbfw_bsearch_bar .rbfw_search_container {
+        align-items: stretch;
+    }
+    .rbfw_bsearch_bar .rbfw_search_item {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: 100%;
+    }
+    .rbfw_bsearch_btn_field {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    /* The button field's spacer label ("&nbsp;") only exists to align the
+       button with the inputs on the desktop row; it wastes space when stacked. */
+    .rbfw_bsearch_btn_field .rbfw_bsearch_label {
+        display: none;
+    }
+}
 
 /* results header: count + grid/list toggle */
 .rbfw_bsearch_results_head {
