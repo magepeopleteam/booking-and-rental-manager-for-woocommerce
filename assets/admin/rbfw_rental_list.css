@@ -140,6 +140,31 @@
 .rbfw-table td:first-child a:hover{color:var(--rb-red) !important;}
 .rbfw-t-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;}
 .rbfw-t-badge.type{background:var(--rb-red-soft);color:var(--rb-red);}
+/* SEO cell — rendered only while an SEO plugin is active. Badge colours follow
+   that plugin's own good/ok/bad thresholds so they agree with its own UI.
+   Layout mirrors the Name cell: a strong first line, muted detail beneath.
+   The table is table-layout:auto, so `width` alone is only a hint and the long
+   Name column steals it — min-width is what actually holds this column open. */
+.rbfw-th-seo{width:128px;min-width:128px;}
+.rbfw-td-seo{min-width:128px;}
+.rbfw-seo-line{display:flex;align-items:center;gap:4px;}
+.rbfw-seo-badge{display:inline-flex;align-items:baseline;gap:2px;padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;line-height:1.5;white-space:nowrap;}
+.rbfw-seo-badge i{font-style:normal;font-weight:600;opacity:.55;font-size:9px;}
+.rbfw-seo-badge b{font-weight:800;opacity:.6;font-size:9px;letter-spacing:.02em;}
+.rbfw-seo-badge.is-good{background:var(--rb-green-soft);color:var(--rb-green);}
+.rbfw-seo-badge.is-ok{background:var(--rb-orange-soft);color:var(--rb-orange);}
+.rbfw-seo-badge.is-bad{background:var(--rb-red-soft);color:var(--rb-red);}
+.rbfw-seo-badge.is-none{background:transparent;color:var(--rb-muted);font-weight:700;padding-left:2px;}
+/* Detail line: focus keyword, then icon-only warnings (tooltips carry the
+   wording) so the cell stays on one line however narrow the column gets. */
+.rbfw-seo-sub{display:flex;align-items:center;gap:5px;margin-top:4px;min-height:14px;}
+.rbfw-seo-kw{font-size:10px;font-weight:600;color:var(--rb-muted);max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rbfw-seo-kw::before{content:'\201C';opacity:.55;}
+.rbfw-seo-kw::after{content:'\201D';opacity:.55;}
+.rbfw-seo-ico{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:5px;flex-shrink:0;color:var(--rb-muted);background:var(--rb-bg);border:1px solid var(--rb-border);cursor:help;transition:all .15s;}
+.rbfw-seo-ico:hover{color:var(--rb-ink2);border-color:var(--rb-muted);}
+.rbfw-seo-ico.is-noindex{color:var(--rb-red);background:var(--rb-red-soft);border-color:transparent;}
+.rbfw-seo-ico.is-noindex:hover{color:var(--rb-red);border-color:var(--rb-red);}
 /* Action icon buttons (table/list view) */
 .rbfw-table-acts{display:flex;align-items:center;gap:6px;}
 .rbfw-table-act{width:30px;height:30px;border-radius:7px;border:1px solid var(--rb-border);background:var(--rb-white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;color:var(--rb-ink2) !important;transition:all .15s;flex-shrink:0;}
@@ -207,6 +232,13 @@ a.rbfw-cell-name:hover{color:var(--rb-red) !important;}
 
   /* Actions: buttons aligned right */
   .rbfw-table-acts{justify-content:flex-end;}
+
+  /* SEO: cells become label-left / value-right flex rows here, so drop the
+     desktop min-width and keep the badge + warnings on one right-aligned row. */
+  .rbfw-table td.rbfw-td-seo{min-width:0;flex-wrap:wrap;}
+  .rbfw-td-seo .rbfw-seo-line{margin-left:auto;}
+  .rbfw-td-seo .rbfw-seo-sub{margin-top:0;}
+  .rbfw-td-seo .rbfw-seo-kw{max-width:120px;}
 }
 @media (max-width:480px){
   .rbfw-fleet{padding:14px;}
