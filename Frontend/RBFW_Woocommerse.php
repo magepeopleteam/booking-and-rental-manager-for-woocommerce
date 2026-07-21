@@ -624,8 +624,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
 
         private function rbfw_prepare_multi_item_fees_from_post( $rbfw_id, $submitted_fees, $sub_total_price ) {
-            $stored_fees = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
-            $stored_fees = is_array( $stored_fees ) ? $stored_fees : array();
+            $stored_fees = rbfw_get_enabled_fee_data( $rbfw_id );
             $fee_info    = array();
             $fee_total   = 0;
 
@@ -927,8 +926,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
-                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
-                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                $rbfw_fee_data = rbfw_get_enabled_fee_data( $rbfw_id );
                 foreach ( $rbfw_fee_data as $fee ) {
                     $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
                     $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
@@ -1286,8 +1284,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
-                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
-                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                $rbfw_fee_data = rbfw_get_enabled_fee_data( $rbfw_id );
                 foreach ( $rbfw_fee_data as $fee ) {
                     $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
                     $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
@@ -1490,7 +1487,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_ticket_info = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
                 $rbfw_room_info = $values['rbfw_room_info'] ? $values['rbfw_room_info'] : [];
                 $rbfw_management_info = $values['rbfw_management_info'] ? $values['rbfw_management_info'] : [];
-                $rbfw_fee_data = get_post_meta($rbfw_id, 'rbfw_fee_data', true) ? get_post_meta($rbfw_id, 'rbfw_fee_data', true) : array();
+                $rbfw_fee_data = rbfw_get_enabled_fee_data( $rbfw_id );
 
 
 
@@ -2730,7 +2727,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             // Get extra service pricing
             $service_data = get_post_meta($product_id, 'rbfw_extra_service_data', true) ?: array();
-            $rbfw_fee_data = get_post_meta($product_id, 'rbfw_fee_data', true) ?: array();
+            $rbfw_fee_data = rbfw_get_enabled_fee_data( $product_id );
             $extra_services = !empty($service_data) ? array_column($service_data, 'service_price', 'service_name') : array();
 
             // Loop through selected rooms

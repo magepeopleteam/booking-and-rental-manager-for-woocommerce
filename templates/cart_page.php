@@ -4,7 +4,7 @@ global $rbfw;
 $rbfw_rent_type 	= get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
 $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
-$rbfw_fee_data 	= get_post_meta( $rbfw_id, 'rbfw_fee_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_fee_data', true ) : array();
+$rbfw_fee_data 	= rbfw_get_enabled_fee_data( $rbfw_id );
 
 ?>
 <?php

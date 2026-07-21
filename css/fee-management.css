@@ -127,3 +127,129 @@
 .rbfw_daily_booking_section .rbfw-fee-summary h4 {
     color: var(--rbfw-primary-color, #e91e63);
 }
+
+/* ==========================================================================
+   Modern Fee Management — booking-form summary section
+   Scoped to .rbfw-fee-management-section so the shared .rbfw_resourse_md /
+   .rbfw_bikecarmd_es_table / .resource-title-qty classes used by other
+   sections are untouched. Selectors key on cell POSITION (first = toggle,
+   last = price, middle = title) so it works across the single-day, multi-day
+   and multi-items templates whose cells carry different helper classes.
+   ========================================================================== */
+.rbfw-fee-management-section {
+    --rbfw-fee-accent: var(--rbfw_color_primary, #ff3726);
+    margin-top: 18px;
+}
+
+/* Heading with a small accent bar */
+.rbfw-fee-management-section .rbfw-single-right-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.rbfw-fee-management-section .rbfw-single-right-heading::before {
+    content: "";
+    flex: 0 0 auto;
+    width: 4px;
+    height: 15px;
+    border-radius: 4px;
+    background: var(--rbfw-fee-accent);
+}
+
+/* Turn the layout table into a stack of card rows */
+.rbfw-fee-management-section .item-content.rbfw-resource,
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table,
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table > tbody {
+    display: block;
+    width: 100%;
+}
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table {
+    border-collapse: collapse;
+    margin: 0;
+}
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table tr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    margin-bottom: 10px;
+    background: #fff;
+    border: 1px solid #e7e9ee;
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+    transition: border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table tr:last-child {
+    margin-bottom: 0;
+}
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table tr:hover {
+    border-color: color-mix(in srgb, var(--rbfw-fee-accent) 40%, #e7e9ee);
+    box-shadow: 0 5px 16px rgba(16, 24, 40, .08);
+}
+/* Highlight a fee that is switched on */
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table tr:has(.rbfw-management-price:checked) {
+    border-color: var(--rbfw-fee-accent);
+    background: color-mix(in srgb, var(--rbfw-fee-accent) 6%, #fff);
+}
+
+/* Reset the table cells and lay them out in the row */
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table td {
+    display: block;
+    flex: 0 0 auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    vertical-align: middle;
+}
+/* Toggle cell (first) */
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table td:first-child {
+    line-height: 0;
+}
+.rbfw-fee-management-section .label.rbfw-checkbox {
+    margin: 0;
+    padding: 0;
+}
+/* Title cell (middle) — grows and pushes the price to the right */
+.rbfw-fee-management-section .resource-title-qty {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.35;
+    color: #1f2733;
+    word-break: break-word;
+}
+.rbfw-fee-management-section .rbfw-refundable {
+    font-weight: 500;
+    font-size: 11.5px;
+    color: #6b7280;
+    letter-spacing: .1px;
+}
+/* Price cell (last) */
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table td:last-child {
+    margin-left: auto;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--rbfw-fee-accent);
+}
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table td:last-child .amount,
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table td:last-child bdi {
+    color: inherit;
+    font-weight: inherit;
+}
+
+@media (max-width: 480px) {
+    .rbfw-fee-management-section .rbfw_bikecarmd_es_table tr {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .rbfw-fee-management-section .resource-title-qty {
+        font-size: 13.5px;
+    }
+}
