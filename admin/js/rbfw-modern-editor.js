@@ -334,6 +334,21 @@
             $(this).val(this.checked ? 'on' : 'off');
             syncTimelyUI($(this).closest('.rbfw-me-panel'));
         });
+
+        // Category-wise extra services toggle. Old-style toggle: the value attribute
+        // ('on'/'off') is what collectFormData() persists, and the classic
+        // mkb-admin.js handler self-disables inside .rbfw-me-wrap — so sync the value
+        // here and reveal/hide the service-category fields, mirroring the classic UI.
+        $wrap.on('click', '[name="rbfw_enable_category_service_price"]', function (e) {
+            e.stopPropagation();
+            $(this).val(this.checked ? 'on' : 'off');
+            var $fields = $wrap.find('#field-wrapper-rbfw_service_category_price');
+            if (this.checked) {
+                $fields.stop(true, true).slideDown(200).removeClass('hide').addClass('show');
+            } else {
+                $fields.stop(true, true).slideUp(200).removeClass('show').addClass('hide');
+            }
+        });
     }
 
     // Sync all timely-dependent UI elements based on current toggle states.
@@ -2586,6 +2601,15 @@
             if (type === 'checkbox' && $(this).hasClass('rbfw-me-cat-checkbox')) return;
             if (type === 'checkbox') {
                 data[name] = this.checked ? $(this).val() : '';
+            } else if (type === 'radio') {
+                // A radio group shares one name; only the *selected* option may
+                // contribute its value. Without this guard the loop overwrites
+                // data[name] with every radio's value in DOM order, so the last
+                // option always won — e.g. the service_price_type radios always
+                // saved "day_wise" no matter which the user actually picked.
+                if (this.checked) {
+                    data[name] = $(this).val();
+                }
             } else if (name.slice(-2) === '[]') {
                 var baseName = name.slice(0, -2);
                 if (!Array.isArray(data[baseName])) data[baseName] = [];

@@ -159,7 +159,7 @@
 
 
 
-                    $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true );
+                    $rbfw_fee_data = rbfw_get_enabled_fee_data( $post_id );
 
                     //echo '<pre>';print_r($rbfw_fee_data);echo '</pre>';exit;
 

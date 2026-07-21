@@ -334,12 +334,12 @@
 
 
                             <?php
-                            $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true );
+                            $rbfw_fee_data = rbfw_get_enabled_fee_data( $post_id );
                             $fee_management_cost_enable = false;
                             ?>
 
                             <?php if(!empty($rbfw_fee_data)){ ?>
-                                <div class="item rbfw_resourse_md">
+                                <div class="item rbfw_resourse_md rbfw-fee-management-section">
                                     <div class="rbfw-single-right-heading">
                                         <?php esc_html_e('Fee Management','booking-and-rental-manager-for-woocommerce'); ?>
                                     </div>

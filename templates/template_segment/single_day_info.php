@@ -358,7 +358,7 @@ if(isset($_POST['post_id'])){
 
 
             <?php
-            $rbfw_fee_data = get_post_meta( $id, 'rbfw_fee_data', true );
+            $rbfw_fee_data = rbfw_get_enabled_fee_data( $id );
             $fee_management_cost_enable = false;
             ?>
 

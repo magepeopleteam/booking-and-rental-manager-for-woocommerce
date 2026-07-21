@@ -65,7 +65,8 @@
 			public function enqueue_frontend_scripts() {
 				// Enqueue CSS on single rental item pages
 				if ( is_singular( 'rbfw_item' ) || is_cart() || is_checkout() ) {
-					wp_enqueue_style( 'rbfw-fee-management-frontend', RBFW_PLUGIN_URL . '/css/fee-management.css', array(), '1.0.0' );
+					$fee_css_ver = file_exists( RBFW_PLUGIN_DIR . '/css/fee-management.css' ) ? filemtime( RBFW_PLUGIN_DIR . '/css/fee-management.css' ) : '1.0.0';
+					wp_enqueue_style( 'rbfw-fee-management-frontend', RBFW_PLUGIN_URL . '/css/fee-management.css', array(), $fee_css_ver );
 				}
 			}
 
