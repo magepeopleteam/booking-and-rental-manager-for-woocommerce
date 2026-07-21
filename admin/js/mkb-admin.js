@@ -8,6 +8,10 @@
     function rbfw_admin_i18n(key, fallback) {
         return (window.rbfw_translation && window.rbfw_translation[key]) ? window.rbfw_translation[key] : fallback;
     }
+    // Also expose globally: the variation repeater handlers live OUTSIDE this IIFE
+    // (below, after `}(jQuery));`) and call rbfw_admin_i18n() — without this they throw
+    // "rbfw_admin_i18n is not defined" on click and the Add buttons silently do nothing.
+    window.rbfw_admin_i18n = rbfw_admin_i18n;
 
     /**
      * Some legacy click handlers below flip a checkbox's `value` attribute
@@ -2177,7 +2181,7 @@ jQuery(document).ready(function () {
 
 
 
-    jQuery('#add-new-variation').click(function (e) {
+    jQuery(document).on('click', '#add-new-variation', function (e) {
         e.preventDefault();
         if (jQuery('.rbfw_variations_table .rbfw_variations_table_row').length > 0) {
             let rbfw_variations_table_last_row = jQuery('.rbfw_variations_table .rbfw_variations_table_row:last-child');
@@ -2190,14 +2194,11 @@ jQuery(document).ready(function () {
             let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="' + rbfw_variations_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]" placeholder="' + rbfw_translation.filed_label + '"><input type="hidden" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]" value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></td><td><table class="rbfw_variations_value_table"><thead><th>' + rbfw_translation.stock_quantity + '</th><th>' + rbfw_translation.stock_quantity + '<b class="required">*</b></th><th> ' + rbfw_translation.is_default + '</th><th>' + rbfw_translation.actions + '</th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
             jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
         }
-        rbfw_variation_table_action_btns_func();
-        rbfw_add_new_variation_value();
-        rbfw_variation_selected_value_func();
+        initVariationSortables();
     });
-    /* Start: Add New Variation Value */
-    rbfw_add_new_variation_value();
-    function rbfw_add_new_variation_value() {
-        jQuery('.add-new-variation-value').click(function (e) {
+    /* Add New Variation Value — delegated so buttons added later (modern editor / new
+       variations) fire too. Previously a direct .click() that never bound in the SPA. */
+    jQuery(document).on('click', '.add-new-variation-value', function (e) {
             let this_btn = jQuery(this);
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -2213,48 +2214,41 @@ jQuery(document).ready(function () {
                 let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
                 jQuery(this_btn).siblings('.rbfw_variations_value_table').append(rbfw_variations_value_table_row);
             }
-            rbfw_variation_table_action_btns_func();
-            rbfw_variation_selected_value_func();
-        });
+            initVariationSortables();
+    });
+    /* Variation Default Value (delegated). Note: It works for frontend select box */
+    jQuery(document).on('change', '.rbfw_variation_selected_value', function () {
+        jQuery(this).closest('.rbfw_variations_value_table_tbody').find('.rbfw_variation_selected_value').not(this).prop('checked', false);
+    });
+    jQuery(document).on('keyup', '.rbfw_variation_value', function () {
+        let this_val = jQuery(this).val();
+        jQuery(this).closest('td').siblings('td').find('.rbfw_variation_selected_value').val(this_val);
+    });
+    /* Variation remove buttons (delegated so newly-added rows work too). */
+    jQuery(document).on('click', '.remove-rbfw_variations_table_row', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
+            jQuery(this).closest('.rbfw_variations_table_row').remove();
+        } else {
+            return false;
+        }
+    });
+    jQuery(document).on('click', '.remove-rbfw_variations_value_table_row', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
+            jQuery(this).closest('tr.rbfw_variations_value_table_row').remove();
+        } else {
+            return false;
+        }
+    });
+    /* Sortable handles — (re)initialised for existing and newly-added variation tables. */
+    function initVariationSortables() {
+        if (!jQuery.fn.sortable) { return; }
+        jQuery(".rbfw_variations_table_body").sortable({ handle: ".mp_event_type_sortable_button" });
+        jQuery(".rbfw_variations_value_table_tbody").sortable({ handle: ".rbfw_variations_value_table_row_sortable" });
     }
-    /* End: Add New Variation Value */
-    /* Start: Variation Default Value: Note: It works for frontend select box */
-    rbfw_variation_selected_value_func();
-    function rbfw_variation_selected_value_func() {
-        jQuery('.rbfw_variation_selected_value').on('change', function () {
-            jQuery(this).parents('.rbfw_variations_value_table_tbody').find('.rbfw_variation_selected_value').not(this).prop('checked', false);
-        });
-        jQuery('.rbfw_variation_value').keyup(function () {
-            let this_field = jQuery(this);
-            let this_val = jQuery(this).val();
-            jQuery(this_field).parent('td').siblings('td').find('.rbfw_variation_selected_value').val(this_val);
-        });
-    }
-    /* End: Variation Default Value */
-    /* Start: variation table action buttons function */
-    rbfw_variation_table_action_btns_func();
-    function rbfw_variation_table_action_btns_func() {
-        jQuery('.remove-rbfw_variations_table_row').on('click', function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
-                jQuery(this).parent().parent().remove();
-            } else {
-                return false;
-            }
-        });
-        jQuery('.remove-rbfw_variations_value_table_row').on('click', function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
-                jQuery(this).parents('tr.rbfw_variations_value_table_row').remove();
-            } else {
-                return false;
-            }
-        });
-        jQuery(".rbfw_variations_table_body").sortable({handle: ".mp_event_type_sortable_button"});
-        jQuery(".rbfw_variations_value_table_tbody").sortable({handle: ".rbfw_variations_value_table_row_sortable"});
-    }
-    /* End: variation table action buttons function */
+    initVariationSortables();
 });
 

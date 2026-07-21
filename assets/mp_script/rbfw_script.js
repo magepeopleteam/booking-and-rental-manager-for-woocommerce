@@ -1155,14 +1155,21 @@ jQuery(function ($) {
         $form.find('.timely_quqntity_table').hide();
         $form.find('.rbfw_quantity_md').hide();
 
-        // Mirror the summed qty into whichever quantity field the form submits so the
-        // server sees the total. Add the option when it is a <select>.
+        // Single-day variations charge the base rental rate ONCE: a value's price is
+        // added separately as a surcharge, so its quantity must NOT multiply the
+        // duration rate. Keep the submitted base quantity at 1 for the timely
+        // single-day form; multi-day still lets the steppers own the quantity.
+        var isSdTimely = $form.find('.rbfw_quantiry_area_sd').length > 0;
+        var qtyToSet   = isSdTimely ? 1 : totalQty;
+
+        // Mirror the base quantity into whichever quantity field the form submits so
+        // the server sees it. Add the option when it is a <select>.
         var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
         if ($qty.length) {
-            if ($qty.is('select') && !$qty.find('option[value="' + totalQty + '"]').length) {
-                $qty.append($('<option>', { value: totalQty, text: totalQty }));
+            if ($qty.is('select') && !$qty.find('option[value="' + qtyToSet + '"]').length) {
+                $qty.append($('<option>', { value: qtyToSet, text: qtyToSet }));
             }
-            $qty.val(String(totalQty));
+            $qty.val(String(qtyToSet));
         }
 
         // Book button reflects whether anything is selected.
@@ -1170,12 +1177,12 @@ jQuery(function ($) {
         if (totalQty > 0) $btn.prop('disabled', false).removeClass('rbfw_disabled_button');
         else $btn.prop('disabled', true).addClass('rbfw_disabled_button');
 
-        if ($form.find('.rbfw_quantiry_area_sd').length) {
-            // Timely single-day: #rbfw_service_price holds the duration cost ONLY
-            // (totalQty × rate). The per-value surcharge is summed and rendered as
-            // its own line by rbfw_price_calculation_sd().
+        if (isSdTimely) {
+            // Timely single-day: #rbfw_service_price holds the duration cost ONLY, and
+            // the base rental is charged once (rate × 1). The per-value surcharge is
+            // summed and rendered as its own line by rbfw_price_calculation_sd().
             var rate = parseFloat($form.find('.rbfw_sd_price_input').val()) || 0;
-            $form.find('#rbfw_service_price').val((totalQty * rate).toFixed(2));
+            $form.find('#rbfw_service_price').val(rate.toFixed(2));
             if (typeof rbfw_price_calculation_sd === 'function') rbfw_price_calculation_sd();
         } else if ($form.find('#rbfw_item_quantity_md').length) {
             // Multi-day: schedule the AJAX price recalculation so the variation
