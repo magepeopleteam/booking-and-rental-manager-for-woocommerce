@@ -369,7 +369,14 @@
 											?>
                                             <tr>
                                                 <td><strong><?php echo esc_html( $value['field_label'] ?? '' ); ?></strong></td>
-                                                <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
+                                                <td><?php
+													$vi_text  = esc_html( $value['field_value'] ?? '' );
+													$vi_qty   = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+													$vi_price = isset( $value['price'] ) ? (float) $value['price'] : 0;
+													if ( $vi_qty > 0 ) { $vi_text .= ' &times; ' . esc_html( $vi_qty ); }
+													if ( $vi_price > 0 ) { $vi_text .= ' <span class="rbfw_variation_surcharge">(+' . wp_kses_post( wc_price( $vi_price ) ) . ')</span>'; }
+													echo wp_kses_post( $vi_text );
+												?></td>
                                             </tr>
 										<?php }
 									} ?>
@@ -674,7 +681,14 @@
 									?>
                                     <tr>
                                         <td><strong><?php echo esc_html( $value['field_label'] ?? '' ); ?></strong></td>
-                                        <td><?php echo esc_html( $value['field_value'] ?? '' ); ?></td>
+                                        <td><?php
+													$vi_text  = esc_html( $value['field_value'] ?? '' );
+													$vi_qty   = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+													$vi_price = isset( $value['price'] ) ? (float) $value['price'] : 0;
+													if ( $vi_qty > 0 ) { $vi_text .= ' &times; ' . esc_html( $vi_qty ); }
+													if ( $vi_price > 0 ) { $vi_text .= ' <span class="rbfw_variation_surcharge">(+' . wp_kses_post( wc_price( $vi_price ) ) . ')</span>'; }
+													echo wp_kses_post( $vi_text );
+												?></td>
                                     </tr>
 								<?php }
 							} ?>
