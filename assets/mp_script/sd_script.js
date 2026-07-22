@@ -51,6 +51,8 @@
                         getAvailableTimes(rbfw_particulars_data , start_date_ymd,rdfw_available_time,'pickup_time');
                         //particular_time_date_dependent_ajax(post_id,start_date_ymd,'time_enable',time_slot_switch,'');
                         // Listener registered once at document-ready level below — do NOT re-bind here.
+                        // Grey out pickup times that are sold out (see helper below).
+                        rbfwFetchPickupSoldOut(post_id, start_date_ymd);
 
                     }
                 }
@@ -103,9 +105,17 @@
 
                             },
                             complete:function(data) {
-                                jQuery('html, body').animate({
-                                    scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
-                                }, 100);
+                                // Guard: on some templates (e.g. multi-hour/timely) the
+                                // calendar header is absent, so .offset() is undefined.
+                                // An unguarded .top throw here aborts jQuery's complete
+                                // sequence BEFORE the global ajaxComplete fires, which
+                                // silently kills the variation-surcharge recalc bound to it.
+                                var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
+                                if ($hdr.length && $hdr.offset()) {
+                                    jQuery('html, body').animate({
+                                        scrollTop: $hdr.offset().top
+                                    }, 100);
+                                }
                             }
                     });
                 }
@@ -129,12 +139,12 @@
 
             if (time_slot_switch === 'yes') {
                 if (start_date === '' || start_time === '') {
-                    alert('please enter date');
+                    alert((window.rbfw_translation||{}).enter_date || 'Please enter the date');
                     return;
                 }
             } else {
                 if (start_date === '') {
-                    alert('please enter date');
+                    alert((window.rbfw_translation||{}).enter_date || 'Please enter the date');
                     return;
                 }
             }
@@ -154,7 +164,7 @@
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             if(rbfw_bikecarsd_selected_date==''){
-                alert("please enter pickup date");
+                alert((window.rbfw_translation||{}).enter_pickup_date || 'Please enter the pickup date');
                 return;
             }
 
@@ -180,21 +190,37 @@
                 if(time_slot_switch == 'yes'){
                     start_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
                     if(start_time == ''){
-                        alert("Please enter pickup time");
+                        alert((window.rbfw_translation||{}).enter_pickup_time || 'Please enter the pickup time');
                         return;
                     }
                 }
 
                 jQuery('#rbfw_start_time').val(start_time);
 
+                // Pickup times render in 12-hour form (e.g. "1:00 PM"); a naive
+                // split(':') would read that as 01:00 and drop the meridiem, so a
+                // 1:00 PM + 1h booking ended at "02:00". Parse hours/minutes with
+                // AM/PM awareness (also tolerates plain 24-hour "13:00").
+                let rbfwParseClock = function (t) {
+                    t = (t || '').toString().trim();
+                    let m = t.match(/^(\d{1,2}):(\d{2})(?::\d{2})?\s*([AaPp][Mm])?$/);
+                    if (!m) { return { h: 0, i: 0 }; }
+                    let h = parseInt(m[1], 10) || 0;
+                    let i = parseInt(m[2], 10) || 0;
+                    let ap = m[3] ? m[3].toUpperCase() : '';
+                    if (ap === 'PM' && h < 12) { h += 12; }
+                    if (ap === 'AM' && h === 12) { h = 0; }
+                    return { h: h, i: i };
+                };
+
                 let dateParts = start_date.split('-').map(Number);
-                let timeParts = (start_time || '00:00').split(':').map(Number);
+                let tp = rbfwParseClock(start_time || '00:00');
                 let startDateTime = new Date(
                     dateParts[0],
                     dateParts[1] - 1,
                     dateParts[2],
-                    timeParts[0] || 0,
-                    timeParts[1] || 0,
+                    tp.h,
+                    tp.i,
                     0
                 );
 
@@ -248,6 +274,10 @@
             jQuery('#rbfw_service_price').val(rbfw_service_price);
 
             jQuery('#rbfw_service_type_for_st').val(service_type);
+
+            // Duration-aware: refine the pickup dropdown for the chosen rent type so
+            // times whose [start, start + this duration] window is full are disabled.
+            rbfwApplyPickupSoldOut(service_type);
 
             jQuery('.single-type-timely').each(function(index, element) {
                 jQuery('.single-type-timely').removeClass('selected');
@@ -595,7 +625,19 @@ function rbfw_price_calculation_sd(){
     // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
     let rbfw_service_price = parseFloat(jQuery('#rbfw_service_price').val()) || 0;
     var rbfw_es_service_price = parseFloat(jQuery('#rbfw_es_service_price').val()) || 0;
-    var sub_total_price = rbfw_service_price + rbfw_es_service_price;
+
+    // Per-value variation surcharge: summed fresh from the steppers on every
+    // recalc so it survives any handler that rewrites #rbfw_service_price (which
+    // now holds the duration cost ONLY). Rendered as its own summary line, never
+    // folded into Duration Cost. Server re-computes this authoritatively at add-to-cart.
+    var rbfw_variation_surcharge = 0;
+    jQuery('.rbfw-variation-qty-input').each(function () {
+        var q = parseInt(jQuery(this).val(), 10) || 0;
+        var p = parseFloat(jQuery(this).attr('data-price')) || 0;
+        rbfw_variation_surcharge += q * p;
+    });
+
+    var sub_total_price = rbfw_service_price + rbfw_es_service_price + rbfw_variation_surcharge;
 
     let rbfw_management_price = fee_management(sub_total_price,1,1);
 
@@ -605,6 +647,14 @@ function rbfw_price_calculation_sd(){
 
     jQuery('.duration-costing span').text(wc_price_rbfw(rbfw_service_price));
     jQuery('.extra_service_cost span').text(wc_price_rbfw(rbfw_es_service_price));
+
+    // Variations surcharge line — only surfaced when a priced variant is selected.
+    if (rbfw_variation_surcharge > 0) {
+        jQuery('.variation-costing').show();
+        jQuery('.variation-costing span').text(wc_price_rbfw(rbfw_variation_surcharge));
+    } else {
+        jQuery('.variation-costing').hide();
+    }
 
 
     let rbfw_security_deposit_actual_amount = 0;
@@ -650,7 +700,128 @@ function datepicker_inline(){
 }
 
 
+// Collect the currently-selected variation quantities, keyed by field id, so
+// the server can re-render the stepper selector with the user's choices
+// preserved after a date change.
+function rbfw_get_selected_variations(){
+    var selected = {};
+    jQuery('.rbfw-variation-qty-input').each(function(){
+        var $input = jQuery(this);
+        var fieldId = $input.attr('data-field-id');
+        var valueName = $input.attr('data-value');
+        var qty = parseInt($input.val(), 10) || 0;
+        if (fieldId && valueName && qty > 0) {
+            if (!selected[fieldId]) selected[fieldId] = {};
+            selected[fieldId][valueName] = qty;
+        }
+    });
+    return selected;
+}
+
+/* =========================================================================
+ * Sold-out Pickup Time dropdown
+ *
+ * Fetches per-time / per-rent-type remaining stock for the selected date, then
+ * disables sold-out <option>s in #pickup_time. Before a duration is chosen a
+ * time is disabled only when EVERY rent type is full there (nothing bookable);
+ * once a rent type is selected the dropdown is refined for that duration's
+ * booked window. Cached per (post, date) so switching durations never re-fetches.
+ * ========================================================================= */
+var rbfwPickupState = { key: '', avail: {}, type: null };
+
+function rbfwPickupSoldOutLabel() {
+    return (window.rbfw_translation && rbfw_translation.sold_out) ? rbfw_translation.sold_out : 'Sold out';
+}
+
+// Apply the cached availability to #pickup_time. `type` = selected rent type, or
+// null/undefined to use the "fully sold out across all rent types" rule.
+function rbfwApplyPickupSoldOut(type) {
+    if (type !== undefined) { rbfwPickupState.type = type || null; }
+    var avail = rbfwPickupState.avail || {};
+    var label = rbfwPickupSoldOutLabel();
+    var $sel  = jQuery('#pickup_time');
+    if (!$sel.length) { return; }
+
+    $sel.find('option').each(function () {
+        var opt = this;
+        if (!opt.value) { return; } // skip the "Pickup Time" placeholder
+        var perType = avail[opt.value];
+        if (!perType) { return; }   // unknown time — leave as-is (no false mark)
+
+        var soldOut;
+        if (rbfwPickupState.type && perType.hasOwnProperty(rbfwPickupState.type)) {
+            soldOut = (parseInt(perType[rbfwPickupState.type], 10) || 0) <= 0;
+        } else {
+            var maxRemaining = -1;
+            for (var k in perType) {
+                if (perType.hasOwnProperty(k)) {
+                    maxRemaining = Math.max(maxRemaining, parseInt(perType[k], 10) || 0);
+                }
+            }
+            soldOut = maxRemaining <= 0;
+        }
+
+        if (opt.getAttribute('data-rbfw-base-label') === null) {
+            opt.setAttribute('data-rbfw-base-label', opt.textContent);
+        }
+        var base = opt.getAttribute('data-rbfw-base-label');
+
+        // Never override the past-time disabling done in getAvailableTimes().
+        var pastDisabled = (opt.title === 'Past time' || opt.title === 'Past Time');
+        if (soldOut) {
+            opt.disabled = true;
+            opt.classList.add('rbfw-pickup-sold-out');
+            opt.textContent = base + ' (' + label + ')';
+        } else if (!pastDisabled) {
+            opt.disabled = false;
+            opt.classList.remove('rbfw-pickup-sold-out');
+            opt.textContent = base;
+        }
+    });
+}
+
+function rbfwFetchPickupSoldOut(post_id, start_date) {
+    var $sel = jQuery('#pickup_time');
+    if (!$sel.length || !post_id || !start_date) { return; }
+
+    var times = [];
+    $sel.find('option').each(function () {
+        if (this.value) { times.push(this.value); }
+    });
+    if (!times.length) { return; }
+
+    var key = post_id + '|' + start_date;
+    rbfwPickupState.key  = key;
+    rbfwPickupState.type = null; // date changed → reset the selected duration
+
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        data: {
+            'action': 'rbfw_sd_pickup_times_availability',
+            'post_id': post_id,
+            'selected_date': start_date,
+            'times': times,
+            'nonce': rbfw_ajax_front.nonce_service_type_timely_stock
+        },
+        success: function (res) {
+            if (rbfwPickupState.key !== key) { return; } // a newer date won the race
+            if (res && res.success && res.data && res.data.avail) {
+                rbfwPickupState.avail = res.data.avail;
+                rbfwApplyPickupSoldOut(rbfwPickupState.type);
+            }
+        }
+    });
+}
+
 function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',enable_specific_duration = 'off'){
+    // Preserve the customer's selected rental option while refreshing stock for
+    // a different pickup time. The response will re-apply this option with the
+    // new window's quantity instead of leaving the previous dropdown visible.
+    var $selectedServiceType = jQuery('.single-type-timely.selected').first();
+    var selectedServiceType = $selectedServiceType.length ? $selectedServiceType.data('text') : '';
+
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
@@ -661,6 +832,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             'rbfw_bikecarsd_selected_date': start_date,
             'pickup_time': start_time,
             'enable_specific_duration': enable_specific_duration,
+            'rbfw_variation_qty': rbfw_get_selected_variations(),
             'nonce' : rbfw_ajax_front.nonce_service_type_timely_stock
         },
         beforeSend: function() {
@@ -725,9 +897,34 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             });
 
 
+            // Swap in the server-rendered variation selector (with per-variation
+            // remaining-qty counts already computed for the newly selected date).
+            if (typeof response.variation_html !== 'undefined' && response.variation_html !== '') {
+                jQuery('.rbfw-variations-content-wrapper').replaceWith(response.variation_html);
+            }
+
             //jQuery('.rbfw_service_type_timely').html(response);
             jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
             jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
+
+            if (selectedServiceType) {
+                var $refreshedServiceType = jQuery('.single-type-timely').filter(function() {
+                    return jQuery(this).data('text') === selectedServiceType;
+                }).first();
+
+                if ($refreshedServiceType.length && !$refreshedServiceType.hasClass('rbfw-sold-out')) {
+                    // Reuse the normal selection handler so quantity, end time,
+                    // price summary, and Book Now all refresh together.
+                    $refreshedServiceType.trigger('click');
+                } else {
+                    // The selected option is unavailable in the new window. Do
+                    // not leave the previous window's quantity visible.
+                    jQuery('#rbfw_service_type_for_st').val('');
+                    jQuery('#rbfw_item_quantity').empty();
+                    jQuery('.rbfw_quantiry_area_sd, .rbfw_extra_service_sd').hide();
+                    rbfwHideSingleDayDurationSummary();
+                }
+            }
         },
         error: function () {
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
@@ -735,6 +932,5 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
         }
     });
 }
-
 
 

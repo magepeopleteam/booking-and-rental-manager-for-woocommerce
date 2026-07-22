@@ -1,0 +1,113 @@
+/* Unified coupon field — booking form (standalone) + WooCommerce cart/checkout. */
+.rbfw-coupon {
+	margin: 14px 0;
+	padding: 14px 16px;
+	border: 1px dashed #d7dae0;
+	border-radius: 10px;
+	background: #fbfbfc;
+}
+
+.rbfw-coupon__label {
+	display: block;
+	font-size: 13px;
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 8px;
+}
+
+.rbfw-coupon__row {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.rbfw-coupon__input {
+	flex: 1 1 160px;
+	min-width: 0;
+	border: 1.5px solid #d1d5db;
+	border-radius: 8px;
+	padding: 9px 12px;
+	font-size: 14px;
+	background: #fff;
+	text-transform: uppercase;
+}
+
+.rbfw-coupon__input:focus {
+	outline: none;
+	border-color: var(--color_theme, #f12971);
+	box-shadow: 0 0 0 3px rgba(241, 41, 113, 0.12);
+}
+
+.rbfw-coupon__apply,
+.rbfw-coupon__remove {
+	flex: 0 0 auto;
+	cursor: pointer;
+	border: none;
+	border-radius: 8px;
+	padding: 9px 18px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #fff;
+	background: var(--color_theme, #f12971);
+	transition: opacity 0.15s ease;
+}
+
+.rbfw-coupon__remove {
+	background: transparent;
+	color: #6b7280;
+	text-decoration: underline;
+	padding: 2px 4px;
+	font-weight: 500;
+}
+
+.rbfw-coupon__apply:hover,
+.rbfw-coupon__remove:hover {
+	opacity: 0.85;
+}
+
+.rbfw-coupon.is-busy {
+	opacity: 0.65;
+	pointer-events: none;
+}
+
+.rbfw-coupon__msg {
+	margin-top: 8px;
+	font-size: 12.5px;
+	line-height: 1.5;
+	min-height: 0;
+}
+
+.rbfw-coupon__msg:empty {
+	margin-top: 0;
+}
+
+.rbfw-coupon__msg.is-error {
+	color: #b42318;
+}
+
+.rbfw-coupon__msg.is-success {
+	color: #166534;
+}
+
+.rbfw-coupon__summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
+	flex-wrap: wrap;
+	margin-top: 10px;
+	padding: 9px 12px;
+	border-radius: 8px;
+	background: #ecfdf3;
+	border: 1px solid #abefc6;
+}
+
+.rbfw-coupon__summary[hidden] {
+	display: none;
+}
+
+.rbfw-coupon__applied {
+	font-size: 13px;
+	font-weight: 600;
+	color: #166534;
+}

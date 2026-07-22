@@ -38,7 +38,6 @@
         initPublishDropdown();
         initSave();
         initPageLoader();
-        initHashNav();
     });
 
     function initPageLoader() {
@@ -73,8 +72,56 @@
     function initTabs() {
         var $tabs = $wrap.find('.rbfw-me-tab');
         var total = $tabs.length;
+        var storageKey = 'rbfw_me_active_tab_' + (postId || 'new');
 
-        function goToStep(idx) {
+        function parseTabFromHash() {
+            var hash = window.location.hash || '';
+            var match = hash.match(/#\/rental\/(?:edit\/(\d+)|new)\/(\w+)/);
+            if (!match || !match[2]) {
+                return null;
+            }
+            var hashPostId = match[1] ? parseInt(match[1], 10) : 0;
+            if (postId && hashPostId && hashPostId !== postId) {
+                return null;
+            }
+            return match[2];
+        }
+
+        function tabIndexFromKey(tabKey) {
+            if (!tabKey) {
+                return -1;
+            }
+            return $tabs.index($tabs.filter('[data-tab="' + tabKey + '"]'));
+        }
+
+        function updateHash(tabKey) {
+            var hash = postId
+                ? '#/rental/edit/' + postId + '/' + tabKey
+                : '#/rental/new/' + tabKey;
+            if (window.location.hash !== hash) {
+                history.replaceState(null, '', hash);
+            }
+        }
+
+        function getInitialTabIndex() {
+            var idx = tabIndexFromKey(parseTabFromHash());
+            if (idx >= 0) {
+                return idx;
+            }
+
+            try {
+                idx = tabIndexFromKey(localStorage.getItem(storageKey));
+                if (idx >= 0) {
+                    return idx;
+                }
+            } catch (e) {}
+
+            var activeIdx = $tabs.index($tabs.filter('.is-active'));
+            return activeIdx >= 0 ? activeIdx : 0;
+        }
+
+        function goToStep(idx, options) {
+            options = options || {};
             if (idx < 0 || idx >= total) return;
             $tabs.each(function (i) {
                 $(this)
@@ -93,8 +140,11 @@
             } else {
                 $next.html('Next <span class="dashicons dashicons-arrow-right-alt2"></span>');
             }
-            if (postId) {
-                history.replaceState(null, '', '#/rental/edit/' + postId + '/' + tabKey);
+            if (options.updateHash !== false) {
+                updateHash(tabKey);
+                try {
+                    localStorage.setItem(storageKey, tabKey);
+                } catch (e) {}
             }
         }
 
@@ -108,17 +158,14 @@
             goToStep($tabs.index($tabs.filter('.is-active')) - 1);
         });
 
-        goToStep($tabs.index($tabs.filter('.is-active')));
-    }
+        $(window).on('hashchange.rbfwMeTabs', function () {
+            var idx = tabIndexFromKey(parseTabFromHash());
+            if (idx >= 0) {
+                goToStep(idx, { updateHash: false });
+            }
+        });
 
-    /* ── Restore tab from URL hash ───────────────────────────── */
-    function initHashNav() {
-        var hash = window.location.hash;
-        var match = hash.match(/#\/rental\/(?:edit|new)\/\d+\/(\w+)/);
-        if (match && match[1]) {
-            var $tab = $wrap.find('.rbfw-me-tab[data-tab="' + match[1] + '"]');
-            if ($tab.length) $tab.trigger('click');
-        }
+        goToStep(getInitialTabIndex());
     }
 
     /* ── Rate rows (enable/disable with toggle) ──────────────── */
@@ -137,6 +184,141 @@
             }
         });
 
+        // Collapsible "How Location Inventory & Price works" rules block (starts collapsed).
+        $wrap.on('click', '.rbfw-me-loc-inv-collapse__head', function () {
+            var $box  = $(this).closest('.rbfw-me-loc-inv-collapse');
+            var $body = $box.children('.rbfw-me-loc-inv-collapse__body');
+            if ($box.hasClass('is-collapsed')) {
+                $box.removeClass('is-collapsed');
+                $body.hide().stop(true, true).slideDown(200, function () {
+                    $body.css('display', ''); // restore stylesheet display
+                });
+            } else {
+                $body.stop(true, true).slideUp(200, function () {
+                    $box.addClass('is-collapsed');
+                    $body.css('display', ''); // let the .is-collapsed CSS rule hide it
+                });
+            }
+        });
+
+        // Location pick-up / drop-off: mirror the checkbox group into a hidden
+        // comma-separated value (one hidden input per .rbfw-me-loc-group) that
+        // the modern AJAX save reads.
+        $wrap.on('change', '.rbfw-me-loc-checkbox', function () {
+            var $group = $(this).closest('.rbfw-me-loc-group');
+            var selected = [];
+            $group.find('.rbfw-me-loc-checkbox:checked').each(function () {
+                selected.push($(this).data('loc'));
+            });
+            $group.find('.rbfw-me-loc-hidden').val(selected.join(','));
+        });
+
+        /* ── Inline location CRUD (add / rename / delete taxonomy terms) ── */
+        function locEsc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
+
+        function locAjax(action, data, $manage, cb) {
+            data.action = action;
+            data.nonce  = $manage.data('nonce');
+            $.post(window.ajaxurl, data, function (resp) {
+                if (resp && resp.success) {
+                    rebuildLocations(resp.data.locations);
+                    if (cb) cb();
+                } else {
+                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                }
+            }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
+        }
+
+        // Rebuild the manage list + every pick-up/drop-off checkbox group from the
+        // authoritative location list returned by the server, preserving the
+        // current per-item selection (and dropping any deleted values).
+        function rebuildLocations(locations) {
+            locations = locations || [];
+            var $list = $wrap.find('.rbfw-me-loc-list').empty();
+            locations.forEach(function (loc) {
+                $list.append(
+                    '<li class="rbfw-me-loc-row" data-term-id="' + loc.term_id + '" data-value="' + locEsc(loc.value) + '">' +
+                        '<span class="rbfw-me-loc-row__name">' + locEsc(loc.name) + '</span>' +
+                        '<span class="rbfw-me-loc-row__actions">' +
+                            '<button type="button" class="rbfw-me-loc-edit" title="' + (rbfwModernEditor_i18n('Rename') || 'Rename') + '"><i class="fas fa-pen" aria-hidden="true"></i></button>' +
+                            '<button type="button" class="rbfw-me-loc-delete" title="' + (rbfwModernEditor_i18n('Delete') || 'Delete') + '"><i class="fas fa-trash-can" aria-hidden="true"></i></button>' +
+                        '</span>' +
+                    '</li>'
+                );
+            });
+
+            $wrap.find('.rbfw-me-loc-group').each(function () {
+                var $group  = $(this);
+                var current = ($group.find('.rbfw-me-loc-hidden').val() || '').split(',').filter(Boolean);
+                var values  = [];
+                var $cb     = $group.find('.rbfw-me-loc-checkboxes').empty();
+                locations.forEach(function (loc) {
+                    values.push(loc.value);
+                    var checked = current.indexOf(loc.value) !== -1 ? ' checked' : '';
+                    $cb.append(
+                        '<label class="rbfw-me-loc-label">' +
+                            '<input type="checkbox" class="rbfw-me-loc-checkbox" data-loc="' + locEsc(loc.value) + '"' + checked + ' />' +
+                            '<span>' + locEsc(loc.name) + '</span>' +
+                        '</label>'
+                    );
+                });
+                // Keep the hidden CSV in sync (remove values whose location is gone).
+                $group.find('.rbfw-me-loc-hidden').val(current.filter(function (v) { return values.indexOf(v) !== -1; }).join(','));
+                $group.find('.rbfw-me-loc-empty').toggleClass('rbfw-me-hidden', locations.length > 0);
+            });
+        }
+
+        $wrap.on('click', '.rbfw-me-loc-add-btn', function () {
+            var $manage = $(this).closest('.rbfw-me-loc-manage');
+            var $input  = $manage.find('.rbfw-me-loc-new');
+            var name    = $.trim($input.val());
+            if (! name) { $input.trigger('focus'); return; }
+            locAjax('rbfw_location_add', { name: name }, $manage, function () { $input.val(''); });
+        });
+
+        $wrap.on('keypress', '.rbfw-me-loc-new', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                $(this).closest('.rbfw-me-loc-manage').find('.rbfw-me-loc-add-btn').trigger('click');
+            }
+        });
+
+        // Edit → open the rename modal (no browser prompt).
+        $wrap.on('click', '.rbfw-me-loc-edit', function () {
+            var $row   = $(this).closest('.rbfw-me-loc-row');
+            var $modal = $wrap.find('#rbfw-me-loc-modal');
+            $modal.find('#rbfw-me-loc-modal-term-id').val($row.data('term-id'));
+            $modal.find('#rbfw-me-loc-modal-input').val($row.find('.rbfw-me-loc-row__name').text());
+            $modal.addClass('is-open');
+            setTimeout(function () { $modal.find('#rbfw-me-loc-modal-input').trigger('focus').select(); }, 50);
+        });
+
+        $wrap.on('click', '#rbfw-me-loc-modal .rbfw-me-faq-modal__close, #rbfw-me-loc-modal .rbfw-me-faq-modal__backdrop', function () {
+            $wrap.find('#rbfw-me-loc-modal').removeClass('is-open');
+        });
+
+        $wrap.on('click', '#rbfw-me-loc-modal-save', function () {
+            var $modal  = $wrap.find('#rbfw-me-loc-modal');
+            var $manage = $wrap.find('.rbfw-me-loc-manage');
+            var termId  = $modal.find('#rbfw-me-loc-modal-term-id').val();
+            var name    = $.trim($modal.find('#rbfw-me-loc-modal-input').val());
+            if (! name) { $modal.find('#rbfw-me-loc-modal-input').trigger('focus'); return; }
+            locAjax('rbfw_location_update', { term_id: termId, name: name }, $manage, function () {
+                $modal.removeClass('is-open');
+            });
+        });
+
+        $wrap.on('keypress', '#rbfw-me-loc-modal-input', function (e) {
+            if (e.which === 13) { e.preventDefault(); $wrap.find('#rbfw-me-loc-modal-save').trigger('click'); }
+        });
+
+        $wrap.on('click', '.rbfw-me-loc-delete', function () {
+            var $row    = $(this).closest('.rbfw-me-loc-row');
+            var $manage = $(this).closest('.rbfw-me-loc-manage');
+            if (! window.confirm((rbfwModernEditor_i18n('Delete this location? Items using it will no longer reference it.') || 'Delete this location? Items using it will no longer reference it.'))) return;
+            locAjax('rbfw_location_delete', { term_id: $row.data('term-id') }, $manage);
+        });
+
         // Old-style toggle: value attribute stores DB state ('on'/'off'); sync it then
         // delegate all show/hide to syncTimelyUI scoped to the containing panel.
         // stopPropagation prevents rbfw-admin-input.js (loaded globally) from reading
@@ -151,6 +333,21 @@
             e.stopPropagation();
             $(this).val(this.checked ? 'on' : 'off');
             syncTimelyUI($(this).closest('.rbfw-me-panel'));
+        });
+
+        // Category-wise extra services toggle. Old-style toggle: the value attribute
+        // ('on'/'off') is what collectFormData() persists, and the classic
+        // mkb-admin.js handler self-disables inside .rbfw-me-wrap — so sync the value
+        // here and reveal/hide the service-category fields, mirroring the classic UI.
+        $wrap.on('click', '[name="rbfw_enable_category_service_price"]', function (e) {
+            e.stopPropagation();
+            $(this).val(this.checked ? 'on' : 'off');
+            var $fields = $wrap.find('#field-wrapper-rbfw_service_category_price');
+            if (this.checked) {
+                $fields.stop(true, true).slideDown(200).removeClass('hide').addClass('show');
+            } else {
+                $fields.stop(true, true).slideUp(200).removeClass('show').addClass('hide');
+            }
         });
     }
 
@@ -409,7 +606,7 @@
             var $img = $(this).find('img');
             if (!$img.length || $(this).find('.rbfw-me-tpl-preview-btn').length) return;
             $(this).append(
-                '<button type="button" class="rbfw-me-tpl-preview-btn" title="Preview">' +
+                '<button type="button" class="rbfw-me-tpl-preview-btn" title="' + (rbfwModernEditor_i18n('Preview') || 'Preview') + '">' +
                     '<span class="dashicons dashicons-visibility"></span>' +
                 '</button>'
             );
@@ -620,8 +817,16 @@
 
     function validateSdPricingRows(rentType, errors) {
         var $sdRows = getMainSdPriceRows();
-        var isTimely = $wrap.find('[name="manage_inventory_as_timely"]').val() === 'on';
+        // Read the live checkbox state (matches syncTimelyUI's show/hide logic) rather
+        // than the value attribute, so validation never disagrees with the visible columns.
+        var isTimely = $wrap.find('input[type="checkbox"][name="manage_inventory_as_timely"]').is(':checked');
+        var isSpecific = $wrap.find('input[type="checkbox"][name="enable_specific_duration"]').is(':checked');
         var requireQty = rentType === 'appointment' || ! isTimely;
+        // Duration columns are required only when their column is actually visible:
+        //  - Start/End Time  → hourly inventory ON + duration-based ON
+        //  - Duration        → hourly inventory ON + duration-based OFF
+        var needTimeCols = isTimely && isSpecific;
+        var needDuration = isTimely && ! isSpecific;
         var typeLabel = rentType === 'appointment' ? 'Appointment' : 'Single Day';
         var hasValidRow = false;
 
@@ -663,11 +868,28 @@
                 }).first();
             }
 
+            // Duration / Start Time / End Time live in the same row; validate them only
+            // when their column is visible for the current mode. The seasonal (_sp) copies
+            // are excluded so we check the main table row only.
+            var notSp = function () {
+                return ( $( this ).attr( 'name' ) || '' ).indexOf( 'rbfw_bike_car_sd_data_sp' ) === -1;
+            };
+            var $duration = $row.find('[name*="[duration]"]').filter( notSp ).first();
+            var $start    = $row.find('[name*="[start_time]"]').filter( notSp ).first();
+            var $end      = $row.find('[name*="[end_time]"]').filter( notSp ).first();
+
             var rentTypeVal = $.trim($title.val());
             var priceVal = $.trim($price.val());
             var stockVal = $.trim($stock.val());
+            var durationVal = $.trim($duration.val());
+            var startVal = $.trim($start.val());
+            var endVal = $.trim($end.val());
 
-            if ( ! rentTypeVal && ! priceVal && ! stockVal ) {
+            // Skip a completely untouched row (nothing relevant to the current mode filled).
+            var rowTouched = rentTypeVal || priceVal || stockVal ||
+                             ( needDuration && durationVal ) ||
+                             ( needTimeCols && ( startVal || endVal ) );
+            if ( ! rowTouched ) {
                 return;
             }
 
@@ -680,8 +902,20 @@
             if ( requireQty && stockVal === '' ) {
                 errors.push({ $field: $stock, msg: 'Row ' + (idx + 1) + ': Stock/Day is required.' });
             }
+            if ( needDuration && durationVal === '' ) {
+                errors.push({ $field: $duration, msg: 'Row ' + (idx + 1) + ': Duration is required.' });
+            }
+            if ( needTimeCols && startVal === '' ) {
+                errors.push({ $field: $start, msg: 'Row ' + (idx + 1) + ': Start Time is required.' });
+            }
+            if ( needTimeCols && endVal === '' ) {
+                errors.push({ $field: $end, msg: 'Row ' + (idx + 1) + ': End Time is required.' });
+            }
 
-            if ( rentTypeVal && priceVal !== '' && ( ! requireQty || stockVal !== '' ) ) {
+            if ( rentTypeVal && priceVal !== '' &&
+                 ( ! requireQty || stockVal !== '' ) &&
+                 ( ! needDuration || durationVal !== '' ) &&
+                 ( ! needTimeCols || ( startVal !== '' && endVal !== '' ) ) ) {
                 hasValidRow = true;
             }
         });
@@ -1008,7 +1242,20 @@
     }
 
     function doSave(status) {
-        if ( ! validateBeforeSave() ) return;
+        // Never abort the request on a validation failure — doing so used to
+        // silently discard every Advanced-tab change (Template, FAQ toggle, Tax,
+        // Security Deposit, Terms, Related, Front-end Display, …) whenever the
+        // pricing/description/time-slots were still incomplete.
+        //
+        //   • A draft may legitimately be incomplete, so it always saves as-is.
+        //   • Publishing still runs the full client-side checks so the exact
+        //     problems are highlighted inline; but instead of blocking, an
+        //     incomplete item is saved as a *draft* so nothing the user entered
+        //     is lost. This mirrors the server, which keeps an incomplete item
+        //     out of "publish" status and returns the pricing errors.
+        if ( status === 'publish' && ! validateBeforeSave() ) {
+            status = 'draft';
+        }
 
         setSaveIndicator('saving', cfg.i18n && cfg.i18n.saving || 'Saving your changes…');
 
@@ -1020,18 +1267,28 @@
 
         $.post(cfg.ajax_url, data, function (res) {
             if (res.success) {
-                setSaveIndicator('saved', cfg.i18n && cfg.i18n.saved || 'All changes saved');
+                var savedStatus = (res.data && res.data.post_status) || status;
+                var pricingErrors = (res.data && res.data.pricing_errors) || [];
+
+                if (status === 'publish' && pricingErrors.length && savedStatus !== 'publish') {
+                    // Everything was saved, but the item couldn't go live because the
+                    // pricing setup is incomplete — surface that without discarding input.
+                    setSaveIndicator('error', pricingErrors.join(' '));
+                } else {
+                    setSaveIndicator('saved', cfg.i18n && cfg.i18n.saved || 'All changes saved');
+                    setTimeout(function () { setSaveIndicator('', ''); }, 4500);
+                }
+
                 // Update publish button label if status changed
-                if (status === 'publish') {
+                if (savedStatus === 'publish') {
                     $wrap.find('.rbfw-me-publish').text(cfg.i18n && cfg.i18n.update || 'Update').data('published', '1');
                 }
                 // Update status dot
                 var $dot   = $wrap.find('.rbfw-me-status-dot');
                 var $label = $wrap.find('.rbfw-me-status-label');
-                $dot.attr('class', 'rbfw-me-status-dot rbfw-me-status-dot--' + status);
-                $label.text(status.charAt(0).toUpperCase() + status.slice(1));
-
-                setTimeout(function () { setSaveIndicator('', ''); }, 4500);
+                $dot.attr('class', 'rbfw-me-status-dot rbfw-me-status-dot--' + savedStatus);
+                $label.text(savedStatus.charAt(0).toUpperCase() + savedStatus.slice(1));
+                $wrap.find('select.rbfw-me-select[name="post_status"]').val(savedStatus);
             } else {
                 var errorMsg = cfg.i18n && cfg.i18n.save_error || 'Save failed — please try again';
                 if (res.data && res.data.message) {
@@ -1147,6 +1404,105 @@
             $cb.closest('.rbfw-me-checkbox-label').toggleClass('is-checked', $cb.is(':checked'));
         }
 
+        function rtEsc(s) { return $('<div>').text(s == null ? '' : String(s)).html(); }
+
+        var meEditTermId = 0; // 0 = add mode, >0 = rename mode
+
+        function meCard()      { return $wrap.find('.rbfw-me-rent-type-card'); }
+        function meNonce()     { return meCard().data('nonce'); }
+        function meCanManage() { return String(meCard().data('can-manage')) === '1'; }
+        function meHidden()    { return $wrap.find('.rbfw-me-cats-hidden'); }
+
+        function meActionsHtml() {
+            if (!meCanManage()) { return ''; }
+            return '<span class="rbfw-rt-actions">' +
+                '<span class="rbfw-rt-edit dashicons dashicons-edit" title="' + (rbfwModernEditor_i18n('Edit') || 'Edit') + '"></span>' +
+                '<span class="rbfw-rt-del dashicons dashicons-trash" title="' + (rbfwModernEditor_i18n('Delete') || 'Delete') + '"></span>' +
+            '</span>';
+        }
+
+        function rebuildRentTypes(rentTypes, selectName) {
+            rentTypes = rentTypes || [];
+            var current = (meHidden().val() || '').split(',').filter(Boolean);
+            if (selectName) {
+                var selectLower = String(selectName).toLowerCase().trim();
+                var has = current.some(function (n) { return String(n).toLowerCase().trim() === selectLower; });
+                if (!has) {
+                    current.push(selectName);
+                }
+            }
+            var $grid = $wrap.find('.rbfw-me-checkbox-grid').empty();
+            rentTypes.forEach(function (rt) {
+                var nameLower = String(rt.name).toLowerCase().trim();
+                var checked = current.some(function (n) { return String(n).toLowerCase().trim() === nameLower; });
+                var checkedAttr = checked ? ' checked' : '';
+                var depth  = parseInt(rt.depth, 10) || 0;
+                var indent = depth > 0 ? ' style="margin-left:' + (depth * 18) + 'px;"' : '';
+                var prefix = depth > 0 ? '<span class="rbfw-rt-sub-indicator" aria-hidden="true">↳ </span>' : '';
+                $grid.append(
+                    '<label class="rbfw-me-checkbox-label rbfw-rt-chip' + (checked ? ' is-checked' : '') + (depth > 0 ? ' rbfw-rt-child' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '"' + indent + '>' +
+                        '<input type="checkbox" class="rbfw-me-cat-checkbox" data-name="' + rtEsc(rt.name) + '"' + checkedAttr + ' />' +
+                        '<span>' + prefix + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
+                        meActionsHtml() +
+                    '</label>'
+                );
+            });
+            meHidden().val(current.join(','));
+            $wrap.find('.rbfw-me-rent-type-empty').toggleClass('rbfw-me-hidden', rentTypes.length > 0);
+        }
+
+        // Build the parent <select> options from the currently rendered chips.
+        // Excludes the term being edited (and its descendants) to prevent cycles.
+        function mePopulateParents(excludeTermId) {
+            var $select = $wrap.find('#rbfw-me-rent-type-modal-parent');
+            if (!$select.length) { return; }
+            excludeTermId = parseInt(excludeTermId, 10) || 0;
+            var prev = String($select.val() || '0');
+
+            var excluded = {};
+            if (excludeTermId) {
+                excluded[excludeTermId] = true;
+                var changed = true;
+                while (changed) {
+                    changed = false;
+                    $wrap.find('.rbfw-me-rent-type-card .rbfw-rt-chip').each(function () {
+                        var tid = parseInt($(this).data('term-id'), 10) || 0;
+                        var pid = parseInt($(this).data('parent'), 10) || 0;
+                        if (pid && excluded[pid] && !excluded[tid]) { excluded[tid] = true; changed = true; }
+                    });
+                }
+            }
+
+            $select.find('option:not(:first)').remove();
+            $wrap.find('.rbfw-me-rent-type-card .rbfw-rt-chip').each(function () {
+                var $chip = $(this);
+                var tid   = parseInt($chip.data('term-id'), 10) || 0;
+                if (!tid || excluded[tid]) { return; }
+                var depth = parseInt($chip.data('depth'), 10) || 0;
+                var label = (depth > 0 ? new Array(depth + 1).join('— ') : '') + String($chip.data('name'));
+                $select.append('<option value="' + rtEsc(tid) + '">' + rtEsc(label) + '</option>');
+            });
+            if ($select.find('option[value="' + prev + '"]').length) { $select.val(prev); } else { $select.val('0'); }
+        }
+
+        function openRentTypeModal(mode, termId, name, parentId) {
+            meEditTermId = mode === 'edit' ? (parseInt(termId, 10) || 0) : 0;
+            var isEdit = meEditTermId > 0;
+            var $modal = $wrap.find('#rbfw-me-rent-type-modal');
+            $modal.find('.rbfw-me-faq-modal__head h3').text(isEdit ? 'Rename Rent Type' : 'Add New Rent Type');
+            $modal.find('#rbfw-me-rent-type-modal-save').text(isEdit ? 'Save Changes' : 'Add Rent Type');
+            $modal.find('#rbfw-me-rent-type-modal-input').val(name || '');
+            mePopulateParents(meEditTermId);
+            $modal.find('#rbfw-me-rent-type-modal-parent').val(String(parseInt(parentId, 10) || 0));
+            $modal.addClass('is-open');
+            setTimeout(function () { $modal.find('#rbfw-me-rent-type-modal-input').trigger('focus'); }, 50);
+        }
+
+        function closeRentTypeModal() {
+            $wrap.find('#rbfw-me-rent-type-modal').removeClass('is-open');
+            meEditTermId = 0;
+        }
+
         // Set initial pill state for pre-checked boxes
         $wrap.find('.rbfw-me-cat-checkbox').each(function () {
             syncPill($(this));
@@ -1158,7 +1514,94 @@
             $wrap.find('.rbfw-me-cat-checkbox:checked').each(function () {
                 selected.push($(this).data('name'));
             });
-            $wrap.find('.rbfw-me-cats-hidden').val(selected.join(','));
+            meHidden().val(selected.join(','));
+        });
+
+        $wrap.on('click', '.rbfw-rent-type-add-trigger', function (e) {
+            e.preventDefault();
+            openRentTypeModal('add');
+        });
+
+        // Edit (rename) a rent type.
+        $wrap.on('click', '.rbfw-me-rent-type-card .rbfw-rt-edit', function (e) {
+            e.preventDefault(); e.stopPropagation();
+            var $chip = $(this).closest('.rbfw-rt-chip');
+            openRentTypeModal('edit', $chip.data('term-id'), $chip.data('name'), $chip.data('parent'));
+        });
+
+        // Delete a rent type.
+        $wrap.on('click', '.rbfw-me-rent-type-card .rbfw-rt-del', function (e) {
+            e.preventDefault(); e.stopPropagation();
+            var $chip  = $(this).closest('.rbfw-rt-chip');
+            var termId = parseInt($chip.data('term-id'), 10) || 0;
+            var name   = $chip.data('name');
+            if (!termId) { return; }
+            if (!window.confirm((rbfwModernEditor_i18n('Delete rent type "%s"? Items using it will have this type removed.') || 'Delete rent type "%s"? Items using it will have this type removed.').replace('%s', name))) { return; }
+            $.post(window.ajaxurl, {
+                action: 'rbfw_rent_type_delete',
+                nonce:  meNonce(),
+                term_id: termId
+            }, function (resp) {
+                if (resp && resp.success) {
+                    var cur = (meHidden().val() || '').split(',').filter(Boolean).filter(function (n) {
+                        return n.toLowerCase() !== String(resp.data.deleted_name).toLowerCase();
+                    });
+                    meHidden().val(cur.join(','));
+                    rebuildRentTypes(resp.data.rent_types);
+                } else {
+                    window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                }
+            }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
+        });
+
+        $wrap.on('click', '#rbfw-me-rent-type-modal .rbfw-me-faq-modal__close, #rbfw-me-rent-type-modal .rbfw-me-faq-modal__backdrop, .rbfw-me-rent-type-modal-cancel', function () {
+            closeRentTypeModal();
+        });
+
+        $wrap.on('click', '#rbfw-me-rent-type-modal-save', function () {
+            var $input = $wrap.find('#rbfw-me-rent-type-modal-input');
+            var name   = $.trim($input.val());
+            if (!name) { $input.trigger('focus'); return; }
+            if (name.length > 200) { name = name.substring(0, 200); }
+
+            if (meEditTermId > 0) {
+                $.post(window.ajaxurl, {
+                    action: 'rbfw_rent_type_rename',
+                    nonce:  meNonce(),
+                    term_id: meEditTermId,
+                    name:   name,
+                    parent: parseInt($wrap.find('#rbfw-me-rent-type-modal-parent').val(), 10) || 0
+                }, function (resp) {
+                    if (resp && resp.success) {
+                        var cur = (meHidden().val() || '').split(',').filter(Boolean).map(function (n) {
+                            return n.toLowerCase() === String(resp.data.old_name).toLowerCase() ? resp.data.new_name : n;
+                        });
+                        meHidden().val(cur.join(','));
+                        rebuildRentTypes(resp.data.rent_types);
+                        closeRentTypeModal();
+                    } else {
+                        window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                    }
+                }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
+            } else {
+                $.post(window.ajaxurl, {
+                    action: 'rbfw_rent_type_add',
+                    nonce:  meNonce(),
+                    name:   name,
+                    parent: parseInt($wrap.find('#rbfw-me-rent-type-modal-parent').val(), 10) || 0
+                }, function (resp) {
+                    if (resp && resp.success) {
+                        rebuildRentTypes(resp.data.rent_types, resp.data.added_name);
+                        closeRentTypeModal();
+                    } else {
+                        window.alert((resp && resp.data && resp.data.message) || 'Action failed.');
+                    }
+                }).fail(function () { window.alert((rbfwModernEditor_i18n('Request failed.') || 'Request failed.')); });
+            }
+        });
+
+        $wrap.on('keypress', '#rbfw-me-rent-type-modal-input', function (e) {
+            if (e.which === 13) { e.preventDefault(); $wrap.find('#rbfw-me-rent-type-modal-save').trigger('click'); }
         });
     }
 
@@ -1234,8 +1677,8 @@
                 + '<td><div class="features_category_wrapper">'
                 + '<div class="field-list rbfw_feature_category">'
                 + '<div class="feature_category_inner_wrap">'
-                + '<div class="feature_category_title"><label>Feature Category Title</label>'
-                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_title]" data-key="' + nextCat + '" placeholder="Feature Category Label" />'
+                + '<div class="feature_category_title"><label>' + (rbfwModernEditor_i18n('Feature Category Title') || 'Feature Category Title') + '</label>'
+                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_title]" data-key="' + nextCat + '" placeholder="' + (rbfwModernEditor_i18n('Feature Category Label') || 'Feature Category Label') + '" />'
                 + '<div class="rbfw-me-features-actions"><span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span><span class="button tr_remove"><i class="fas fa-trash-can"></i></span></div>'
                 + '</div>'
                 + '<div class="feature_category_inner_item_wrap sortable">'
@@ -1243,7 +1686,7 @@
                 + '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fas fa-circle-plus"></i> Icon</a>'
                 + '<div class="rbfw_feature_icon_preview" data-key="0"></div>'
                 + '<input type="hidden" name="rbfw_feature_category[' + nextCat + '][cat_features][0][icon]" data-key="0" class="rbfw_feature_icon" />'
-                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_features][0][title]" placeholder="Features Name" data-key="0" />'
+                + '<input type="text" name="rbfw_feature_category[' + nextCat + '][cat_features][0][title]" placeholder="' + (rbfwModernEditor_i18n('Features Name') || 'Features Name') + '" data-key="0" />'
                 + '<div><span class="button sort"><i class="fas fa-arrows-alt"></i></span>'
                 + '<span class="button remove" onclick="jQuery(this).parent().parent().remove()"><i class="fas fa-trash-can"></i></span></div>'
                 + '</div></div></div></div>'
@@ -1266,20 +1709,71 @@
         $wrap.on('click', '.add-new-feature', function (e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            var $items   = $(this).siblings('.rbfw_feature_category').find('.feature_category_inner_item_wrap');
+            var $row     = $(this).closest('tr');
+            var $items   = $row.find('.feature_category_inner_item_wrap').first();
             var lastKey  = parseInt($items.find('div.item:last-child input[data-key]').attr('data-key')) || 0;
             var newKey   = lastKey + 1;
-            var dataCat  = $(this).closest('tr').attr('data-cat');
+            var dataCat  = $row.attr('data-cat');
             var html = '<div class="item">'
                 + '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="' + newKey + '"><i class="fas fa-circle-plus"></i> Icon</a>'
                 + '<div class="rbfw_feature_icon_preview" data-key="' + newKey + '"></div>'
                 + '<input type="hidden" name="rbfw_feature_category[' + dataCat + '][cat_features][' + newKey + '][icon]" data-key="' + newKey + '" class="rbfw_feature_icon" />'
-                + '<input type="text" name="rbfw_feature_category[' + dataCat + '][cat_features][' + newKey + '][title]" placeholder="Features Name" data-key="' + newKey + '" />'
+                + '<input type="text" name="rbfw_feature_category[' + dataCat + '][cat_features][' + newKey + '][title]" placeholder="' + (rbfwModernEditor_i18n('Features Name') || 'Features Name') + '" data-key="' + newKey + '" />'
                 + '<div><span class="button sort"><i class="fas fa-arrows-alt"></i></span>'
                 + '<span class="button remove" onclick="jQuery(this).parent().parent().remove()"><i class="fas fa-trash-can"></i></span></div>'
                 + '</div>';
             $items.append(html);
             if ($.fn.sortable) $items.sortable({ handle: '.sort' });
+        });
+
+        // Feature icon picker (FontAwesome icon modal)
+        $wrap.on('click', '.rbfw_feature_icon_btn', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            var $btn     = $(this);
+            var dataKey  = $btn.attr('data-key');
+            var dataCat  = $btn.closest('tr').attr('data-cat');
+            var $modal   = $('#rbfw_features_icon_list_wrapper');
+
+            $modal.removeAttr('data-key').attr('data-key', dataKey);
+            $modal.attr('data-cat', dataCat);
+            $modal.find('label').removeClass('selected');
+            $('#rbfw_features_search_icon').val('');
+            $modal.find('.rbfw_features_icon_list_body label[data-id]').show();
+
+            if ($.fn.mage_modal) {
+                $modal.mage_modal({
+                    escapeClose: false,
+                    clickClose: false,
+                    showClose: false
+                });
+            }
+        });
+
+        // Icon selection inside the modal
+        $(document).on('click', '#rbfw_features_icon_list_wrapper label', function (e) {
+            e.stopImmediatePropagation();
+            var $label   = $(this);
+            var selected = $label.find('input').val() || '';
+            var $modal   = $('#rbfw_features_icon_list_wrapper');
+            var dataKey  = $modal.attr('data-key');
+            var dataCat  = $modal.attr('data-cat');
+
+            $modal.find('label').removeClass('selected');
+            $label.addClass('selected');
+
+            var $targetRow = $('.rbfw_feature_category_table tr[data-cat="' + dataCat + '"]');
+            $targetRow.find('.rbfw_feature_icon[data-key="' + dataKey + '"]').val(selected);
+            $targetRow.find('.rbfw_feature_icon_preview[data-key="' + dataKey + '"]').html('<i class="' + selected + '"></i>');
+        });
+
+        // Icon search filter
+        $(document).on('keyup', '#rbfw_features_search_icon', function () {
+            var value = $.trim($(this).val()).toLowerCase();
+            $('#rbfw_features_icon_list_wrapper .rbfw_features_icon_list_body label[data-id]').each(function () {
+                var id = $(this).attr('data-id') || '';
+                $(this).toggle(id.toLowerCase().indexOf(value) > -1);
+            });
         });
     }
 
@@ -1309,7 +1803,7 @@
 
         /* Delete */
         $wrap.on('click', '.rbfw-me-faq-delete', function () {
-            if (!confirm('Are you sure you want to delete this FAQ?')) return;
+            if (!confirm((rbfwModernEditor_i18n('Are you sure you want to delete this FAQ?') || 'Are you sure you want to delete this FAQ?'))) return;
             var id     = $(this).closest('.rbfw-me-faq-item').data('id');
             var postId = $wrap.find('.rbfw-me-faq-post-id').val();
             $.post(ajaxUrl, {
@@ -1437,7 +1931,7 @@
 
         /* Delete */
         $wrap.on('click', '.rbfw-me-term-delete', function () {
-            if (!confirm('Are you sure you want to delete this term?')) return;
+            if (!confirm((rbfwModernEditor_i18n('Are you sure you want to delete this term?') || 'Are you sure you want to delete this term?'))) return;
             var id     = $(this).closest('.rbfw-me-faq-item').data('id');
             var postId = $wrap.find('.rbfw-me-term-post-id').val();
             $.post(ajaxUrl, {
@@ -1609,20 +2103,40 @@
             $group.find('.rbfw-me-offday-hidden').val(selected.join(','));
         });
 
+        // Collapsible card: click the head to expand/collapse the body. Used by the
+        // "Block Booking" off-day card, which renders collapsed by default. Clicks on
+        // the on/off switch (or any control) inside the head must not toggle collapse.
+        $wrap.on('click', '.rbfw-me-card--collapsible .rbfw-me-card__head', function (e) {
+            if ($(e.target).closest('.switch, input, button, a, select').length) return;
+            var $card = $(this).closest('.rbfw-me-card--collapsible');
+            var $body = $card.children('.rbfw-me-card__body');
+            if ($card.hasClass('is-collapsed')) {
+                $card.removeClass('is-collapsed');
+                $body.hide().stop(true, true).slideDown(200, function () {
+                    $body.css('display', ''); // restore stylesheet display (flex)
+                });
+            } else {
+                $body.stop(true, true).slideUp(200, function () {
+                    $card.addClass('is-collapsed');
+                    $body.css('display', ''); // let the .is-collapsed CSS rule hide it
+                });
+            }
+        });
+
         // Add new date range row
         $wrap.on('click', '.rbfw-me-offdate-add', function () {
             var $list = $(this).closest('.rbfw-me-card__body').find('.rbfw-me-offdate-list');
             var $row = $(
                 '<div class="rbfw-me-offdate-row">' +
                     '<div class="rbfw-me-field">' +
-                        '<label class="rbfw-me-label">Start Date</label>' +
+                        '<label class="rbfw-me-label">' + (rbfwModernEditor_i18n('Start Date') || 'Start Date') + '</label>' +
                         '<input type="date" name="off_days_start[]" class="rbfw-me-input">' +
                     '</div>' +
                     '<div class="rbfw-me-field">' +
-                        '<label class="rbfw-me-label">End Date</label>' +
+                        '<label class="rbfw-me-label">' + (rbfwModernEditor_i18n('End Date') || 'End Date') + '</label>' +
                         '<input type="date" name="off_days_end[]" class="rbfw-me-input">' +
                     '</div>' +
-                    '<button type="button" class="rbfw-me-offdate-remove" title="Remove">' +
+                    '<button type="button" class="rbfw-me-offdate-remove" title="' + (rbfwModernEditor_i18n('Remove') || 'Remove') + '">' +
                         '<span class="dashicons dashicons-trash"></span>' +
                     '</button>' +
                 '</div>'
@@ -1661,11 +2175,17 @@
 
             if (type === 'bike_car_sd') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                if (typeof window.rbfwSetTimelyInventorySection === 'function') {
+                    window.rbfwSetTimelyInventorySection($pricing, true);
+                }
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                if (typeof window.rbfwSetTimelyInventorySection === 'function') {
+                    window.rbfwSetTimelyInventorySection($pricing, false);
+                }
                 $pricing.find('.rbfw_time_inventory').hide();
                 $pricing.find('.rbfw_item_stock_quantity').hide();
                 $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
@@ -1689,6 +2209,26 @@
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
                 $pricing.find('.mds_price_md').show();
             }
+
+            // Inventory card (stock + variations): mirror the classic editor, which
+            // hides inventory for resort / appointment. Single Day (bike_car_sd) now
+            // supports item variations, so its inventory card stays visible.
+            // Multiple Items carries per-item stock in its own pricing table, so the
+            // card-level inventory does not apply to it.
+            var _invShow = (type !== 'resort' && type !== 'appointment' && type !== 'multiple_items');
+            $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
+
+            // Inventory sub-sections that only apply to specific rent types:
+            //  - Return-date release: date-range rentals only (hide for Single Day & Appointment).
+            //  - Multiple-item selection: multi-day Bike/Car, Dress, Equipment & Others only.
+            $pricing.find('.rbfw_stock_return_date_section').toggle(type !== 'bike_car_sd' && type !== 'appointment');
+            $pricing.find('.rbfw_switch_md_type_item_qty').toggle(
+                type === 'bike_car_md' || type === 'dress' || type === 'equipment' || type === 'others'
+            );
+
+            // Location card (Advanced step): available for every rent type
+            // ( multi-location feature ).
+            $wrap.find('.rbfw-me-location-card').removeClass('rbfw-me-hidden');
 
             if (typeof window.rbfwMdsSyncPanelForRentType === 'function') {
                 window.rbfwMdsSyncPanelForRentType(type, $pricing);
@@ -1817,6 +2357,16 @@
             $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
 
+            // Half-day / hourly / hour-threshold all require the time picker. When it is
+            // off, force those dependent toggles off so the saved data stays consistent
+            // (otherwise a previously-enabled hourly/half-day stays "yes" while hidden).
+            if (!timePickerEnabled) {
+                hourlyPriceEnabled   = false;
+                halfDayPriceEnabled  = false;
+                hourThresholdEnabled = false;
+                $md.find('#rbfw_enable_hourly_rate, #rbfw_enable_half_day_rate, #rbfw_enable_hourly_threshold').val('no');
+            }
+
             // Hourly price
             $md.find('.hourly-price-toggle').toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
@@ -1886,6 +2436,15 @@
         $md.on('click', '.time-picker-toggle', function () {
             timePickerEnabled = !timePickerEnabled;
             $(this).toggleClass('active', timePickerEnabled);
+            // Time Picker off → force every dependent toggle off & disabled.
+            if (!timePickerEnabled) {
+                hourlyPriceEnabled   = false;
+                halfDayPriceEnabled  = false;
+                hourThresholdEnabled = false;
+                $md.find('.hourly-price-toggle, .half-day-price-toggle, .hour-threshold-toggle').removeClass('active');
+                $md.find('#rbfw_enable_hourly_rate, #rbfw_enable_half_day_rate, #rbfw_enable_hourly_threshold').val('no');
+                $md.find('#hourly-price-input, #half-day-price-input, #hour-threshold-input').prop('disabled', true);
+            }
             $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
             // Sub-rows also depend on time picker being active
@@ -1899,6 +2458,7 @@
         });
 
         $md.on('click', '.hourly-price-toggle', function () {
+            if (!timePickerEnabled) { return; } // requires Time Picker
             hourlyPriceEnabled = !hourlyPriceEnabled;
             $(this).toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
@@ -1909,6 +2469,7 @@
         });
 
         $md.on('click', '.half-day-price-toggle', function () {
+            if (!timePickerEnabled) { return; } // requires Time Picker
             halfDayPriceEnabled = !halfDayPriceEnabled;
             $(this).toggleClass('active', halfDayPriceEnabled);
             $md.find('#half-day-price-input').prop('disabled', !halfDayPriceEnabled);
@@ -1919,6 +2480,7 @@
         });
 
         $md.on('click', '.hour-threshold-toggle', function () {
+            if (!timePickerEnabled) { return; } // requires Time Picker
             hourThresholdEnabled = !hourThresholdEnabled;
             $(this).toggleClass('active', hourThresholdEnabled);
             $md.find('#hour-threshold-input').prop('disabled', !hourThresholdEnabled);
@@ -2007,7 +2569,7 @@
                     '<input type="hidden" name="rdfw_available_time[' + index + '][id]" value="' + index + '">' +
                     '<input type="hidden" name="rdfw_available_time[' + index + '][time]" value="' + time + '">' +
                     '<input type="hidden" name="rdfw_available_time[' + index + '][status]" value="enabled">' +
-                    '<div class="time-slot-remove" title="Remove time slot">×</div>' +
+                    '<div class="time-slot-remove" title="' + (rbfwModernEditor_i18n('Remove time slot') || 'Remove time slot') + '">×</div>' +
                     '</div>';
             }
 
@@ -2039,6 +2601,15 @@
             if (type === 'checkbox' && $(this).hasClass('rbfw-me-cat-checkbox')) return;
             if (type === 'checkbox') {
                 data[name] = this.checked ? $(this).val() : '';
+            } else if (type === 'radio') {
+                // A radio group shares one name; only the *selected* option may
+                // contribute its value. Without this guard the loop overwrites
+                // data[name] with every radio's value in DOM order, so the last
+                // option always won — e.g. the service_price_type radios always
+                // saved "day_wise" no matter which the user actually picked.
+                if (this.checked) {
+                    data[name] = $(this).val();
+                }
             } else if (name.slice(-2) === '[]') {
                 var baseName = name.slice(0, -2);
                 if (!Array.isArray(data[baseName])) data[baseName] = [];

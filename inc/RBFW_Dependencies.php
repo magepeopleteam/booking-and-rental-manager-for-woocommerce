@@ -13,6 +13,59 @@ if (! class_exists('RBFW_Dependencies')) {
 			add_action('wp_enqueue_scripts', array($this, 'rbfw_enqueue_scripts'), 90);
 			add_action('admin_head', array($this, 'included_header_script'), 5);
 			add_action('wp_head', array($this, 'included_header_script'), 5);
+
+			// Cache-safe nonce refresh: page caches (LiteSpeed, WP Rocket, Cloudflare,
+			// SiteGround, etc.) can serve HTML older than the WordPress nonce lifetime,
+			// so the nonces embedded via wp_localize_script() expire and every rbfw_*
+			// AJAX call dies with 403. The frontend guard script fetches fresh nonces
+			// here and retries the failed request once.
+			add_action('wp_ajax_rbfw_refresh_frontend_nonces', array($this, 'rbfw_refresh_frontend_nonces'));
+			add_action('wp_ajax_nopriv_rbfw_refresh_frontend_nonces', array($this, 'rbfw_refresh_frontend_nonces'));
+		}
+
+		/**
+		 * Frontend AJAX nonces, keyed by their rbfw_ajax_front property names.
+		 *
+		 * Centralized so the page-load localization and the cache-safe refresh
+		 * endpoint always issue the exact same set of keys.
+		 *
+		 * @return array<string,string>
+		 */
+		public static function rbfw_frontend_nonces()
+		{
+			return array(
+				'nonce_location_stock_info'                       => wp_create_nonce('rbfw_location_stock_info_action'),
+				'nonce_check_resort_availibility'                 => wp_create_nonce('rbfw_check_resort_availibility_action'),
+				'nonce_bikecarmd_ajax_price_calculation'          => wp_create_nonce('rbfw_bikecarmd_ajax_price_calculation_action'),
+				'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce('rbfw_multi_items_ajax_price_calculation_action'),
+				'nonce_particular_time_date_dependent'            => wp_create_nonce('particular_time_date_dependent_action'),
+				'nonce_get_rent_item_category_info'               => wp_create_nonce('rbfw_get_rent_item_category_info_action'),
+				'nonce_service_type_timely_stock'                 => wp_create_nonce('rbfw_service_type_timely_stock_action'),
+				'nonce_get_left_side_filter_data'                 => wp_create_nonce('rbfw_get_left_side_filter_data_action'),
+				'nonce_get_resort_sessional_day_wise_price'       => wp_create_nonce('rbfw_get_resort_sessional_day_wise_price_action'),
+				'nonce_get_rent_item_left_filter_more_data_popup' => wp_create_nonce('rbfw_get_rent_item_left_filter_more_data_popup_action'),
+				'nonce_bikecarsd_type_list'                       => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
+				'nonce_bikecarsd_time_table'                      => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
+				'nonce_bikecarsd_sold_out_times'                  => wp_create_nonce('rbfw_bikecarsd_sold_out_times_action'),
+				'nonce_bikecarmd_ajax_min_max_and_offdays_info'   => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
+				'nonce_native_checkout'                           => wp_create_nonce('rbfw_native_checkout_action'),
+				'nonce_apply_coupon'                              => wp_create_nonce('rbfw_apply_coupon_action'),
+			);
+		}
+
+		/**
+		 * AJAX: issue a fresh set of frontend nonces.
+		 *
+		 * Intentionally does NOT require a nonce itself: a nonce cannot be a
+		 * prerequisite for obtaining one (that is the deadlock this endpoint
+		 * solves), issuing nonces is user/session-bound and side-effect free,
+		 * and this mirrors WordPress core's own heartbeat "nonces-expired"
+		 * refresh flow.
+		 */
+		public function rbfw_refresh_frontend_nonces()
+		{
+			nocache_headers();
+			wp_send_json_success(self::rbfw_frontend_nonces());
 		}
 
 		public function rbfw_add_admin_scripts($hook)
@@ -43,13 +96,17 @@ if (! class_exists('RBFW_Dependencies')) {
 			// loading popup css
 			wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
 			// loading popup js
-			wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array());
+			wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), filemtime( RBFW_PLUGIN_DIR . '/css/rbfw_style.css' ));
 			wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array());
 			wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 			wp_enqueue_script('rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true);
 			wp_enqueue_script('md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true);
 
 			wp_enqueue_script('sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true);
+
+			// Standalone (non-WooCommerce) checkout interception. Loads in every mode but
+			// only acts when rbfw_ajax_front.booking_mode === 'standalone'.
+			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
 
 			wp_enqueue_style('select2css', RBFW_PLUGIN_URL . '/admin/css/select2.min.css', false, '1.0', 'all');
 			wp_enqueue_script('select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array('jquery'), null, true);
@@ -66,6 +123,19 @@ if (! class_exists('RBFW_Dependencies')) {
                 'filed_label' => __('Field Label', 'booking-and-rental-manager-for-woocommerce'),
                 'actions' => __('Action', 'booking-and-rental-manager-for-woocommerce'),
                 'add_new_value' => __('Add New Value', 'booking-and-rental-manager-for-woocommerce'),
+                // Previously hard-coded inside admin/js/mkb-admin.js (now translatable).
+                'room_type' => __('Room type', 'booking-and-rental-manager-for-woocommerce'),
+                'day_long_rate' => __('Day-long Rate', 'booking-and-rental-manager-for-woocommerce'),
+                'day_night_rate' => __('Day-night Rate', 'booking-and-rental-manager-for-woocommerce'),
+                'short_description' => __('Short Description', 'booking-and-rental-manager-for-woocommerce'),
+                'available_qty' => __('Available Qty', 'booking-and-rental-manager-for-woocommerce'),
+                'price' => __('Price', 'booking-and-rental-manager-for-woocommerce'),
+                'remove_time_slot' => __('Remove time slot', 'booking-and-rental-manager-for-woocommerce'),
+                'confirm_remove_row' => __("Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .", 'booking-and-rental-manager-for-woocommerce'),
+                'confirm_delete_row' => __('Are you sure you want to delete this row?', 'booking-and-rental-manager-for-woocommerce'),
+                'select_event_start_date' => __('Please select the event start date!', 'booking-and-rental-manager-for-woocommerce'),
+                'select_the_date' => __('Please select the date', 'booking-and-rental-manager-for-woocommerce'),
+                'select_end_time' => __('Please select the end time', 'booking-and-rental-manager-for-woocommerce'),
             ));
 
 
@@ -99,6 +169,42 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('form-field-dependency', plugins_url('admin/js/form-field-dependency.js', __DIR__), array('jquery'), null, false);
 			wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker', 'wp-tinymce'), time(), false);
 
+			/* Inventory page only: modern redesign assets (font, icons, layout, pagination). */
+			if ( isset( $hook ) && $hook === 'rbfw_item_page_rbfw_inventory' ) {
+				wp_enqueue_style( 'rbfw-jakarta-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', array(), null );
+				/* Icons are inline SVG (rbfw_inv_icon) – no icon-font dependency. */
+				wp_enqueue_style( 'rbfw-inventory', plugins_url( 'admin/css/rbfw_inventory.css', __DIR__ ), array( 'rbfw-admin-style' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_inventory.css' ) );
+				wp_enqueue_script( 'rbfw-inventory', plugins_url( 'admin/js/rbfw_inventory.js', __DIR__ ), array( 'jquery', 'rbfw-script', 'jquery.modal.min' ), filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw_inventory.js' ), true );
+				wp_localize_script( 'rbfw-inventory', 'rbfwInvI18n', array(
+					/* translators: 1: first row number, 2: last row number, 3: total rows. */
+					'showing'     => __( 'Showing %1$s–%2$s of %3$s entries', 'booking-and-rental-manager-for-woocommerce' ),
+					/* translators: %s: total rows. */
+					'showing_all' => __( 'Showing %s entries', 'booking-and-rental-manager-for-woocommerce' ),
+					'stock_saved' => __( 'Saved!', 'booking-and-rental-manager-for-woocommerce' ),
+				) );
+				/* "By Location" inventory tab: own AJAX date filter. */
+				wp_localize_script( 'rbfw-inventory', 'rbfwInvLoc', array(
+					'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'rbfw_get_location_stock_action' ),
+					'today'   => current_time( 'Y-m-d' ),
+				) );
+			}
+
+			/* Time Slots page only: modern redesign stylesheet (inline-SVG icons, primary + secondary). */
+			if ( isset( $hook ) && $hook === 'rbfw_item_page_rbfw_time_slots' ) {
+				wp_enqueue_style( 'rbfw-jakarta-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap', array(), null );
+				wp_enqueue_style( 'rbfw-timeslots', plugins_url( 'admin/css/rbfw_timeslots.css', __DIR__ ), array( 'rbfw-admin-style' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_timeslots.css' ) );
+			}
+
+			/* Order List page only: modern redesign (stat cards, search, animated detail panel). */
+			if ( isset( $hook ) && $hook === 'rbfw_item_page_rbfw_order' ) {
+				wp_enqueue_style( 'rbfw-jakarta-font', 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap', array(), null );
+				wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/assets/flatpickr.min.css', array(), null );
+				wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js', array(), null, true );
+				wp_enqueue_style( 'rbfw-order', plugins_url( 'admin/css/rbfw_order.css', __DIR__ ), array( 'rbfw-admin-style', 'flatpickr-css' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_order.css' ) );
+				wp_enqueue_script( 'rbfw-order', plugins_url( 'admin/js/rbfw_order.js', __DIR__ ), array( 'jquery', 'flatpickr-js' ), filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw_order.js' ), true );
+			}
+
 			wp_localize_script('jquery', 'rbfw_ajax_front', array(
 				'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
 				'nonce_check_resort_availibility'        => wp_create_nonce('rbfw_check_resort_availibility_action'),
@@ -113,22 +219,39 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_bikecarsd_type_list'        => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
 				'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
 				'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
+				// WooCommerce-optional booking flow.
+				'nonce_native_checkout'        => wp_create_nonce('rbfw_native_checkout_action'),
+				// Unified coupon engine (both modes).
+				'nonce_apply_coupon'           => wp_create_nonce('rbfw_apply_coupon_action'),
+				'booking_mode'                 => rbfw_booking_mode(),
+				'has_woocommerce'              => rbfw_has_woocommerce() ? '1' : '0',
+				'currency_symbol'              => get_woocommerce_currency_symbol(),
 
 			));
 
 			wp_localize_script('jquery', 'rbfw_ajax_admin', array(
 				'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
+				'admin_post_url' => admin_url('admin-post.php'),
+				'currency_symbol' => function_exists('get_woocommerce_currency_symbol') ? html_entity_decode( get_woocommerce_currency_symbol() ) : '',
+				'nonce_export_orders'        => wp_create_nonce('rbfw_export_orders_action'),
+				'nonce_save_export_settings'        => wp_create_nonce('rbfw_save_export_settings_action'),
 				'nonce_time_slot'        => wp_create_nonce('rbfw_time_slot_action'),
 				'nonce_duration_form'        => wp_create_nonce('rbfw_duration_form_action'),
 				'nonce_room_types_with_sd_price'        => wp_create_nonce('rbfw_room_types_with_sd_price_action'),
 				'nonce_room_types_with_sessional_price'        => wp_create_nonce('rbfw_room_types_with_sessional_price_action'),
 				'nonce_room_types_with_resort_price_mds'        => wp_create_nonce('rbfw_room_types_with_resort_price_mds_action'),
 				'nonce_fetch_order_details'        => wp_create_nonce('rbfw_fetch_order_details_action'),
+				'nonce_update_order_status'        => wp_create_nonce('rbfw_update_order_status_action'),
+				'nonce_delete_order'        => wp_create_nonce('rbfw_delete_order_action'),
+				'nonce_get_order_edit_form'        => wp_create_nonce('rbfw_get_order_edit_form_action'),
+				'nonce_save_order_edit'        => wp_create_nonce('rbfw_save_order_edit_action'),
 				'nonce_load_more_icons'        => wp_create_nonce('rbfw_load_more_icons_action'),
 				'nonce_update_time_slot'        => wp_create_nonce('rbfw_update_time_slot_action'),
 				'nonce_delete_time_slot'        => wp_create_nonce('rbfw_delete_time_slot_action'),
 				'nonce_get_stock_by_filter'        => wp_create_nonce('rbfw_get_stock_by_filter_action'),
 				'nonce_get_stock_details'        => wp_create_nonce('rbfw_get_stock_details_action'),
+				'nonce_get_stock_edit_form'        => wp_create_nonce('rbfw_get_stock_edit_form_action'),
+				'nonce_update_inventory_stock'        => wp_create_nonce('rbfw_update_inventory_stock_action'),
 				'nonce_faq_data_save'        => wp_create_nonce('rbfw_faq_data_save_action'),
 				'nonce_faq_delete_item'        => wp_create_nonce('rbfw_faq_delete_item_action'),
 				'nonce_faq_data_update'        => wp_create_nonce('rbfw_faq_data_update_action'),
@@ -146,7 +269,7 @@ if (! class_exists('RBFW_Dependencies')) {
             $timezone = wp_timezone(); // WP 5.3+
             $datetime = new DateTime('now', $timezone);
 
-            if (rbfw_woo_install_check() == 'Yes') {
+            if ( true ) { // WooCommerce optional: frontend booking variables are needed in all modes.
                 wp_localize_script(
                     'jquery',
                     'rbfw_js_variables',
@@ -187,7 +310,7 @@ if (! class_exists('RBFW_Dependencies')) {
 			// loading popup css
 			wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
 			// loading popup js
-			wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array());
+			wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), filemtime( RBFW_PLUGIN_DIR . '/css/rbfw_style.css' ));
 			wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array());
 			wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 			// mage icon
@@ -210,6 +333,12 @@ if (! class_exists('RBFW_Dependencies')) {
 				'number_of' => __('Number of', 'booking-and-rental-manager-for-woocommerce'),
 				'duration' => __('Duration', 'booking-and-rental-manager-for-woocommerce'),
 				'pickup_dropoff_date' => __('Please enter pickup date and dropoff date', 'booking-and-rental-manager-for-woocommerce'),
+				// Previously hard-coded in sd_script.js / js/rbfw_script.js (now translatable).
+				'enter_date' => __('Please enter the date', 'booking-and-rental-manager-for-woocommerce'),
+				'enter_pickup_date' => __('Please enter the pickup date', 'booking-and-rental-manager-for-woocommerce'),
+				'enter_pickup_time' => __('Please enter the pickup time', 'booking-and-rental-manager-for-woocommerce'),
+				'no_data_found' => __('Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce'),
+				'no_match_found' => __('No Match Result Found!', 'booking-and-rental-manager-for-woocommerce'),
 			));
 
 
@@ -222,6 +351,49 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true);
 			wp_enqueue_script('sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true);
 			wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
+
+			// Standalone (non-WooCommerce) checkout interception. Loads in every mode but
+			// only acts when rbfw_ajax_front.booking_mode === 'standalone'. Must be enqueued
+			// on the frontend (this method) — the native checkout modal lives on the item page.
+			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
+
+			// Unified coupon field (works in both booking modes; the script picks its endpoint
+			// from rbfw_ajax_front.booking_mode).
+			if (class_exists('RBFW_Coupon_Frontend') && RBFW_Coupon_Frontend::enabled()) {
+				wp_enqueue_style('rbfw_coupon', RBFW_PLUGIN_URL . '/css/rbfw_coupon.css', array(), time(), 'all');
+				wp_enqueue_script('rbfw_coupon', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_coupon.js', array('jquery'), time(), true);
+				wp_localize_script('rbfw_coupon', 'rbfw_coupon_vars', array(
+					'ajaxurl'         => admin_url('admin-ajax.php'),
+					'nonce'           => wp_create_nonce('rbfw_apply_coupon_action'),
+					'has_auto'        => RBFW_Coupon_Frontend::has_auto_coupons() ? '1' : '0',
+					'i18n_enter_code' => __('Please enter a coupon code.', 'booking-and-rental-manager-for-woocommerce'),
+					/* translators: 1: coupon code, 2: discount amount */
+					'i18n_saved'      => __('Coupon %1$s applied — you save %2$s', 'booking-and-rental-manager-for-woocommerce'),
+					'i18n_new_total'  => __('New total:', 'booking-and-rental-manager-for-woocommerce'),
+				));
+			}
+
+			// [rbfw_booking_search] multi-item booking search.
+			wp_enqueue_script('rbfw_booking_search', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_booking_search.js', array('jquery', 'jquery-ui-datepicker'), time(), true);
+			wp_localize_script('rbfw_booking_search', 'rbfw_bsearch_vars', array(
+				'ajax_url'            => admin_url('admin-ajax.php'),
+				'nonce'               => wp_create_nonce('rbfw_booking_search_action'),
+				'checkout_url'        => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('checkout') : '',
+				'apply_coupon_url'    => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('apply_coupon') : '',
+				'remove_coupon_url'   => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('remove_coupon') : '',
+				'update_review_url'   => class_exists('WC_AJAX') ? WC_AJAX::get_endpoint('update_order_review') : '',
+				'apply_coupon_nonce'  => wp_create_nonce('apply-coupon'),
+				'remove_coupon_nonce' => wp_create_nonce('remove-coupon'),
+				'update_review_nonce' => wp_create_nonce('update-order-review'),
+				'txt_choose_dates' => esc_html__('Please select your pickup and drop-off dates first.', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_searching'    => esc_html__('Searching available rentals…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_loading'      => esc_html__('Loading checkout…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_placing'      => esc_html__('Placing your order…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_adding'       => esc_html__('Adding…', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_added'        => esc_html__('✓ Added to booking', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_error'        => esc_html__('Something went wrong. Please try again.', 'booking-and-rental-manager-for-woocommerce'),
+				'txt_empty_confirm' => esc_html__('Remove all items from your booking?', 'booking-and-rental-manager-for-woocommerce'),
+			));
 
 			wp_enqueue_script('coockie-js', 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js', array('jquery'), null, true);
 
@@ -255,7 +427,7 @@ if (! class_exists('RBFW_Dependencies')) {
 
 
 
-			if (rbfw_woo_install_check() == 'Yes') {
+			if ( true ) { // WooCommerce optional: render in all modes.
 				$view_more_feature_btn_text = (
 					($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings') && want_loco_translate() == 'no')
 					? esc_html($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings'))
@@ -320,22 +492,22 @@ if (! class_exists('RBFW_Dependencies')) {
 				);
 
 
-				wp_localize_script('jquery', 'rbfw_ajax_front', array(
-					'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
-					'nonce_check_resort_availibility'        => wp_create_nonce('rbfw_check_resort_availibility_action'),
-					'nonce_bikecarmd_ajax_price_calculation'        => wp_create_nonce('rbfw_bikecarmd_ajax_price_calculation_action'),
-					'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce('rbfw_multi_items_ajax_price_calculation_action'),
-					'nonce_particular_time_date_dependent'        => wp_create_nonce('particular_time_date_dependent_action'),
-					'nonce_get_rent_item_category_info'        => wp_create_nonce('rbfw_get_rent_item_category_info_action'),
-					'nonce_service_type_timely_stock'        => wp_create_nonce('rbfw_service_type_timely_stock_action'),
-					'nonce_get_left_side_filter_data'        => wp_create_nonce('rbfw_get_left_side_filter_data_action'),
-					'nonce_get_resort_sessional_day_wise_price'        => wp_create_nonce('rbfw_get_resort_sessional_day_wise_price_action'),
-					'nonce_get_rent_item_left_filter_more_data_popup'        => wp_create_nonce('rbfw_get_rent_item_left_filter_more_data_popup_action'),
-					'nonce_bikecarsd_type_list'        => wp_create_nonce('rbfw_bikecarsd_type_list_action'),
-					'nonce_bikecarsd_time_table'        => wp_create_nonce('rbfw_bikecarsd_time_table_action'),
-					'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
-
+				// Nonces come from rbfw_frontend_nonces() so the page-load values and the
+				// cache-safe refresh endpoint (rbfw_refresh_frontend_nonces) never drift.
+				wp_localize_script('jquery', 'rbfw_ajax_front', array_merge(
+					array(
+						'rbfw_ajaxurl'    => admin_url('admin-ajax.php'),
+						'booking_mode'    => rbfw_booking_mode(),
+						'has_woocommerce' => rbfw_has_woocommerce() ? '1' : '0',
+						'currency_symbol' => get_woocommerce_currency_symbol(),
+					),
+					self::rbfw_frontend_nonces()
 				));
+
+				// Cache-safe nonce guard: when any rbfw_* AJAX request is rejected with
+				// 403 because a page cache served HTML with an expired nonce, this
+				// script silently fetches fresh nonces and retries the request once.
+				wp_enqueue_script('rbfw_nonce_guard', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_nonce_guard.js', array('jquery'), time(), true);
 				//font awesome
 
                 wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');
@@ -397,7 +569,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				};
 			</script>
 			<?php
-			if (rbfw_woo_install_check() == 'Yes') {
+			if ( true ) { // WooCommerce optional: render in all modes.
 				global $rbfw;
 				$custom_cost = $rbfw->get_option_trans('rbfw_custom_css', 'rbfw_custom_style_settings');
 			?>

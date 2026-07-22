@@ -25,6 +25,88 @@
 				add_action( 'wp_ajax_nopriv_particular_time_date_dependent', array( $this, 'particular_time_date_dependent' ) );
 				add_action( 'wp_ajax_rbfw_service_type_timely_stock', array( $this, 'rbfw_service_type_timely_stock' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_service_type_timely_stock', array( $this, 'rbfw_service_type_timely_stock' ) );
+				add_action( 'wp_ajax_rbfw_bikecarsd_sold_out_times', array( $this, 'rbfw_bikecarsd_sold_out_times' ) );
+				add_action( 'wp_ajax_nopriv_rbfw_bikecarsd_sold_out_times', array( $this, 'rbfw_bikecarsd_sold_out_times' ) );
+				add_action( 'wp_ajax_rbfw_sd_pickup_times_availability', array( $this, 'rbfw_sd_pickup_times_availability' ) );
+				add_action( 'wp_ajax_nopriv_rbfw_sd_pickup_times_availability', array( $this, 'rbfw_sd_pickup_times_availability' ) );
+			}
+
+			/**
+			 * AJAX: per-pickup-time availability for single-day items, so the Pickup
+			 * Time dropdown can disable sold-out times.
+			 *
+			 * For each posted time it returns the remaining stock of every rent type,
+			 * evaluated against that rent type's real booked window:
+			 *   - timely inventory (non-specific-duration): the interval
+			 *     [time, time + duration] via rbfw_timely_available_quantity_updated();
+			 *   - appointment: the exact (date, time) slot via
+			 *     rbfw_get_bike_car_sd_available_qty().
+			 * Other configurations (date-based, specific-duration) are not time-gated,
+			 * so every type is reported available (no false "sold out" marks).
+			 *
+			 * The client keys the response by the exact option value it sent, so
+			 * 12-hour ("2:30 PM") and 24-hour ("14:30") formats both work — PHP's
+			 * DateTime/strtotime normalises either.
+			 */
+			public function rbfw_sd_pickup_times_availability() {
+				check_ajax_referer( 'rbfw_service_type_timely_stock_action', 'nonce' );
+
+				$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+				$date    = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+				$times   = ( isset( $_POST['times'] ) && is_array( $_POST['times'] ) )
+					? array_map( 'sanitize_text_field', wp_unslash( $_POST['times'] ) )
+					: array();
+
+				if ( ! $post_id || '' === $date || empty( $times ) ) {
+					wp_send_json_success( array( 'avail' => array() ) );
+				}
+
+				$item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+				$is_timely = 'on' === get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+				$specific  = 'on' === get_post_meta( $post_id, 'enable_specific_duration', true );
+				$sd_data   = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+				$sd_data   = is_array( $sd_data ) ? $sd_data : array();
+
+				$avail = array();
+				foreach ( $times as $time ) {
+					if ( '' === $time ) {
+						continue;
+					}
+					$per_type = array();
+					foreach ( $sd_data as $row ) {
+						$type = isset( $row['rent_type'] ) ? $row['rent_type'] : '';
+						if ( '' === $type ) {
+							continue;
+						}
+
+						if ( $is_timely && ! $specific ) {
+							$duration = ! empty( $row['duration'] ) ? (int) $row['duration'] : 0;
+							$d_type   = ! empty( $row['d_type'] ) ? $row['d_type'] : 'Hours';
+							if ( $duration <= 0 ) {
+								continue;
+							}
+							try {
+								$start_dt = new DateTime( $date . ' ' . $time );
+							} catch ( Exception $e ) {
+								continue;
+							}
+							$hours  = ( 'Hours' === $d_type ? $duration : ( 'Days' === $d_type ? $duration * 24 : ( 'Weeks' === $d_type ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
+							$end_dt = clone $start_dt;
+							$end_dt->modify( "+$hours hours" );
+							$per_type[ $type ] = (int) rbfw_timely_available_quantity_updated(
+								$post_id, $date, $time, $end_dt->format( 'Y-m-d' ), $end_dt->format( 'H:i:s' )
+							);
+						} elseif ( 'appointment' === $item_type ) {
+							$per_type[ $type ] = (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date, $type, $time );
+						} else {
+							// Time is not a stock axis for this configuration.
+							$per_type[ $type ] = 1;
+						}
+					}
+					$avail[ $time ] = $per_type;
+				}
+
+				wp_send_json_success( array( 'avail' => $avail ) );
 			}
 
 			public function rbfw_get_bikecarsd_rent_info( $product_id, $rent_info , $booking_date = null ) {
@@ -81,7 +163,7 @@
 				return $main_array;
 			}
 
-			public function rbfw_bikecarsd_ticket_info( $product_id, $rbfw_start_datetime = null, $rbfw_end_date = null, $rbfw_type_info = array(), $rbfw_service_info = array(), $selected_time = null, $rbfw_regf_info = array(), $rbfw_pickup_point = null, $rbfw_dropoff_point = null, $end_time = null, $rbfw_item_quantity = null , $booking_date = null, $rbfw_management_info=[] , $rbfw_management_price=0) {
+			public function rbfw_bikecarsd_ticket_info( $product_id, $rbfw_start_datetime = null, $rbfw_end_date = null, $rbfw_type_info = array(), $rbfw_service_info = array(), $selected_time = null, $rbfw_regf_info = array(), $rbfw_pickup_point = null, $rbfw_dropoff_point = null, $end_time = null, $rbfw_item_quantity = null , $booking_date = null, $rbfw_management_info=[] , $rbfw_management_price=0, $rbfw_variation_info = array()) {
 				global $rbfw;
 				if ( ! empty( $product_id ) && ! empty( $rbfw_type_info ) ):
 					$rent_price          = 0;
@@ -145,14 +227,24 @@
 					if ( $service_price > 0 ):
 						$total_service_price = (float) $service_price;
 					endif;
-					if ( $total_rent_price > 0 || $total_service_price > 0 ):
-						$subtotal_price = (float) $total_rent_price + (float) $total_service_price;
+
+					// Per-value variation surcharge (single-day steppers).
+					$total_variation_price = 0;
+					if ( ! empty( $rbfw_variation_info ) && is_array( $rbfw_variation_info ) ) {
+						foreach ( $rbfw_variation_info as $v ) {
+							$total_variation_price += (float) ( $v['price'] ?? 0 ) * (int) ( $v['qty'] ?? 0 );
+						}
+					}
+
+					if ( $total_rent_price > 0 || $total_service_price > 0 || $total_variation_price > 0 ):
+						$subtotal_price = (float) $total_rent_price + (float) $total_service_price + (float) $total_variation_price;
 					endif;
 					if ( $subtotal_price > 0 ):
 						$total_price = (float) $subtotal_price;
 					endif;
 					$security_deposit = rbfw_security_deposit( $product_id, $total_price );
 					$total_price      = $total_price + $security_deposit['security_deposit_amount'];
+					$main_array[0]['rbfw_variation_surcharge'] = $total_variation_price;
 					/* Start Tax Calculations */
 					$percent             = 0;
 					/* End Tax Calculations */
@@ -169,6 +261,7 @@
 					$main_array[0]['rbfw_start_datetime']     = $rbfw_start_datetime . ' ' . $selected_time;
 					$main_array[0]['rbfw_end_datetime']       = $rbfw_end_date . ' ' . $end_time;
 					$main_array[0]['rbfw_type_info']          = $rbfw_type_info;
+					$main_array[0]['rbfw_variation_info']     = $rbfw_variation_info;
 					$main_array[0]['rbfw_service_info']       = $rbfw_service_info;
 					$main_array[0]['rbfw_management_info']    = $rbfw_management_info;
 					$main_array[0]['rbfw_rent_type']          = $rbfw_rent_type;
@@ -199,6 +292,7 @@
 					$main_array[0]['service_cost']   = $total_service_price;
 					$main_array[0]['rbfw_management_price']   = $rbfw_management_price;
 					$main_array[0]['rbfw_regf_info'] = $rbfw_regf_info;
+					$main_array[0]['rbfw_regf_attendees'] = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
 					return $main_array;
 				else:
@@ -479,6 +573,25 @@
 				wp_die();
 			}
 
+			/**
+			 * AJAX: return the time slots that are fully sold out for the selected date.
+			 * Used by the single-day / appointment frontend to disable unavailable slots
+			 * before the customer clicks them.
+			 */
+			public function rbfw_bikecarsd_sold_out_times() {
+				check_ajax_referer( 'rbfw_bikecarsd_sold_out_times_action', 'nonce' );
+
+				$post_id       = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : 0;
+				$selected_date = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+
+				$sold_out_times = array();
+				if ( $post_id && $selected_date ) {
+					$sold_out_times = rbfw_get_sd_sold_out_times( $post_id, $selected_date );
+				}
+
+				wp_send_json_success( array( 'sold_out_times' => $sold_out_times ) );
+			}
+
 			public function rbfw_service_type_timely_stock() {
 				/*if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 					return;
@@ -544,7 +657,34 @@
 
 
 
-                echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info));
+                // Re-render the variation selector server-side with the per-variation
+                // remaining stock for the selected date (single source of truth in
+                // rbfw_render_sd_variation_field()); the browser only swaps the markup.
+                $variation_html         = '';
+                $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true );
+                $rbfw_variations_data   = get_post_meta( $post_id, 'rbfw_variations_data', true );
+                if ( 'yes' === $rbfw_enable_variations && ! empty( $rbfw_variations_data ) && function_exists( 'rbfw_render_sd_variation_field' ) ) {
+                    $selected_variations = array();
+                    if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) ) {
+                        foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $field_id => $values ) {
+                            if ( ! is_array( $values ) ) {
+                                continue;
+                            }
+                            $field_id = sanitize_text_field( $field_id );
+                            foreach ( $values as $value_name => $qty ) {
+                                $value_name = sanitize_text_field( $value_name );
+                                $qty        = (int) $qty;
+                                if ( '' !== $value_name && $qty > 0 ) {
+                                    $selected_variations[ $field_id ][ $value_name ] = $qty;
+                                }
+                            }
+                        }
+                    }
+                    $selected_date_dmy = $start_date ? gmdate( 'd-m-Y', strtotime( $start_date ) ) : '';
+                    $variation_html    = rbfw_render_sd_variation_field( $post_id, $rbfw_variations_data, $selected_date_dmy, $selected_variations );
+                }
+
+                echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info,'variation_html'=>$variation_html));
                 wp_die();
 			}
 

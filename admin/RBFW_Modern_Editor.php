@@ -23,6 +23,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			add_action( 'admin_menu',             [ $this, 'fix_add_new_submenu_link' ], 999 );
 			add_action( 'load-post.php',          [ $this, 'maybe_redirect_edit_screen' ] );
 			add_action( 'load-post-new.php',      [ $this, 'maybe_redirect_new_screen' ] );
+			add_action( 'current_screen',         [ $this, 'maybe_create_draft_before_output' ] );
 			add_action( 'admin_enqueue_scripts',  [ $this, 'enqueue_assets' ] );
 			add_action( 'admin_head',             [ $this, 'hide_menu_styles' ] );
 			add_filter( 'admin_body_class',       [ $this, 'admin_body_class' ] );
@@ -138,10 +139,14 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 		}
 
 		private function create_draft_item(): int {
+			// "auto-draft" (not "draft") so an item the user opens but never saves
+			// stays out of the list and is auto-purged by WordPress, exactly like
+			// the classic "Add New" screen. The first real save promotes it to
+			// draft/publish via ajax_save().
 			$post_id = wp_insert_post(
 				[
 					'post_type'   => self::POST_TYPE,
-					'post_status' => 'draft',
+					'post_status' => 'auto-draft',
 					'post_title'  => __( 'New Rental Item', 'booking-and-rental-manager-for-woocommerce' ),
 				],
 				true
@@ -169,9 +174,35 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 		}
 
 		private function switch_url( string $mode, int $post_id = 0 ): string {
-			$args = [ 'action' => self::NONCE_SWITCH, 'mode' => $mode ];
-			if ( $post_id > 0 ) $args['post_id'] = $post_id;
-			return wp_nonce_url( add_query_arg( $args, admin_url( 'admin-post.php' ) ), self::NONCE_SWITCH );
+			$args = [
+				'action'   => self::NONCE_SWITCH,
+				'mode'     => $mode,
+				'_wpnonce' => wp_create_nonce( self::NONCE_SWITCH ),
+			];
+			if ( $post_id > 0 ) {
+				$args['post_id'] = $post_id;
+			}
+			return add_query_arg( $args, admin_url( 'admin-post.php' ) );
+		}
+
+		private function modern_editor_switch_url( int $post_id = 0, string $tab = 'general' ): string {
+			$tab = sanitize_key( $tab ) ?: 'general';
+			$base = admin_url(
+				'edit.php?post_type=' . self::POST_TYPE
+				. '&page=' . self::PAGE_SLUG
+			);
+
+			if ( $post_id > 0 ) {
+				return add_query_arg(
+					[
+						'item_id'          => $post_id,
+						'rbfw_editor_mode' => 'modern',
+					],
+					$base
+				) . '#/rental/edit/' . $post_id . '/' . $tab;
+			}
+
+			return $base . '#/rental/new/' . $tab;
 		}
 
 		/* ── Redirects ──────────────────────────────────────────────────────── */
@@ -182,6 +213,16 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 			if ( ! is_admin() || $this->is_edit_screen() || $this->is_classic_bypass() ) {
+				return;
+			}
+
+			// Only intercept the actual edit screen. post.php also handles trash,
+			// untrash, delete and preview; load-post.php fires before those run, so
+			// redirecting here for every action would bounce "Trash"/"Delete" to the
+			// editor and the item would never be deleted.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$action = isset( $_GET['action'] ) ? sanitize_key( wp_unslash( $_GET['action'] ) ) : '';
+			if ( $action !== '' && $action !== 'edit' ) {
 				return;
 			}
 
@@ -237,6 +278,37 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			wp_safe_redirect( $this->edit_url( $post_id, 'general' ) );
 			exit;
+		}
+
+		/**
+		 * When the modern editor page is opened without an item_id (e.g. the
+		 * "Add New" submenu link), create the draft and redirect EARLY —
+		 * on `current_screen`, before admin-header.php has produced any output.
+		 * Doing this inside render_page() triggers "Cannot modify header
+		 * information — headers already sent" warnings.
+		 */
+		public function maybe_create_draft_before_output(): void {
+			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+				return;
+			}
+
+			if ( ! $this->is_edit_screen() ) {
+				return;
+			}
+
+			if ( isset( $_GET['item_id'] ) && absint( $_GET['item_id'] ) > 0 ) {
+				return;
+			}
+
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				return;
+			}
+
+			$new_id = $this->create_draft_item();
+			if ( $new_id > 0 ) {
+				wp_safe_redirect( $this->edit_url( $new_id, 'general' ) );
+				exit;
+			}
 		}
 
 		/* ── Body class / menu highlight ────────────────────────────────────── */
@@ -300,7 +372,19 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 		/* ── Editor switch handler ──────────────────────────────────────────── */
 
 		public function handle_editor_switch(): void {
-			check_admin_referer( self::NONCE_SWITCH );
+			if ( ! is_user_logged_in() ) {
+				auth_redirect();
+			}
+
+			$nonce = isset( $_REQUEST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['_wpnonce'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, self::NONCE_SWITCH ) ) {
+				wp_die(
+					esc_html__( 'The link you followed has expired.', 'booking-and-rental-manager-for-woocommerce' ),
+					esc_html__( 'Link expired', 'booking-and-rental-manager-for-woocommerce' ),
+					[ 'response' => 403, 'back_link' => true ]
+				);
+			}
+
 			$mode    = isset( $_GET['mode'] ) && 'classic' === $_GET['mode'] ? 'classic' : 'modern';
 			$post_id = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : 0;
 			if ( $post_id && current_user_can( 'edit_post', $post_id ) ) {
@@ -339,6 +423,11 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'ajax_url'   => admin_url( 'admin-ajax.php' ),
 				'nonce_save' => wp_create_nonce( self::NONCE_SAVE ),
 				'list_url'   => admin_url( 'edit.php?post_type=' . self::POST_TYPE ),
+				/*
+				 * Keyed by the English source string: the editor JS looks strings up
+				 * with rbfwModernEditor_i18n( 'English text' ) and falls back to that
+				 * same text, so a missing key degrades gracefully.
+				 */
 				'i18n'       => [
 					'loading'      => __( 'Loading editor…', 'booking-and-rental-manager-for-woocommerce' ),
 					'saving'       => __( 'Saving your changes…', 'booking-and-rental-manager-for-woocommerce' ),
@@ -346,6 +435,26 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'save_error'   => __( 'Save failed — please try again', 'booking-and-rental-manager-for-woocommerce' ),
 					'publish'      => __( 'Publish', 'booking-and-rental-manager-for-woocommerce' ),
 					'update'       => __( 'Update', 'booking-and-rental-manager-for-woocommerce' ),
+					// Previously hard-coded inside admin/js/rbfw-modern-editor.js.
+					'Rename'                 => __( 'Rename', 'booking-and-rental-manager-for-woocommerce' ),
+					'Delete'                 => __( 'Delete', 'booking-and-rental-manager-for-woocommerce' ),
+					'Edit'                   => __( 'Edit', 'booking-and-rental-manager-for-woocommerce' ),
+					'Preview'                => __( 'Preview', 'booking-and-rental-manager-for-woocommerce' ),
+					'Remove'                 => __( 'Remove', 'booking-and-rental-manager-for-woocommerce' ),
+					'Remove time slot'       => __( 'Remove time slot', 'booking-and-rental-manager-for-woocommerce' ),
+					'Start Date'             => __( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ),
+					'End Date'               => __( 'End Date', 'booking-and-rental-manager-for-woocommerce' ),
+					'Feature Category Title' => __( 'Feature Category Title', 'booking-and-rental-manager-for-woocommerce' ),
+					'Feature Category Label' => __( 'Feature Category Label', 'booking-and-rental-manager-for-woocommerce' ),
+					'Features Name'          => __( 'Features Name', 'booking-and-rental-manager-for-woocommerce' ),
+					'Set Featured Image'     => __( 'Set Featured Image', 'booking-and-rental-manager-for-woocommerce' ),
+					'Use this image'         => __( 'Use this image', 'booking-and-rental-manager-for-woocommerce' ),
+					'Request failed.'        => __( 'Request failed.', 'booking-and-rental-manager-for-woocommerce' ),
+					'Are you sure you want to delete this FAQ?'  => __( 'Are you sure you want to delete this FAQ?', 'booking-and-rental-manager-for-woocommerce' ),
+					'Are you sure you want to delete this term?' => __( 'Are you sure you want to delete this term?', 'booking-and-rental-manager-for-woocommerce' ),
+					'Delete this location? Items using it will no longer reference it.' => __( 'Delete this location? Items using it will no longer reference it.', 'booking-and-rental-manager-for-woocommerce' ),
+					/* translators: %s: the rent type name. */
+					'Delete rent type "%s"? Items using it will have this type removed.' => __( 'Delete rent type "%s"? Items using it will have this type removed.', 'booking-and-rental-manager-for-woocommerce' ),
 				],
 			] );
 		}
@@ -357,7 +466,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			if ( ! current_user_can( 'edit_posts' ) ) wp_send_json_error( 'Forbidden', 403 );
 			$post_id = wp_insert_post( [
 				'post_type'   => self::POST_TYPE,
-				'post_status' => 'draft',
+				'post_status' => 'auto-draft',
 				'post_title'  => __( 'New Rental Item', 'booking-and-rental-manager-for-woocommerce' ),
 			], true );
 			if ( is_wp_error( $post_id ) ) wp_send_json_error( $post_id->get_error_message() );
@@ -377,16 +486,18 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				wp_send_json_error( 'Forbidden', 403 );
 			}
 
-			$item_type = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+			// Pricing completeness is only a *publish* gate. Previously any pricing
+			// validation error aborted the whole request via wp_send_json_error()
+			// before a single field was written, which silently discarded every
+			// other tab's changes (Advanced, FAQ, Template, Terms, Tax, etc.) even
+			// though those sections have nothing to do with pricing. Now the errors
+			// are collected but saving continues unconditionally; they are only used
+			// below to keep an incomplete item out of "publish" status.
+			$item_type      = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+			$pricing_errors = [];
 			if ( class_exists( 'RBFW_Pricing' ) ) {
 				$pricing_validator = new RBFW_Pricing();
 				$pricing_errors    = $pricing_validator->get_pricing_validation_errors( $item_type, wp_unslash( $_POST ) );
-				if ( ! empty( $pricing_errors ) ) {
-					wp_send_json_error( [
-						'message' => implode( ' ', $pricing_errors ),
-						'errors'  => $pricing_errors,
-					] );
-				}
 			}
 
 			/* ── Post fields ── */
@@ -395,6 +506,15 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$status  = isset( $_POST['post_status'] ) && in_array( $_POST['post_status'], [ 'publish', 'draft', 'private' ], true )
 				? sanitize_key( wp_unslash( $_POST['post_status'] ) )
 				: get_post_status( $post_id );
+			// First save of a freshly-opened item promotes the auto-draft to a real draft.
+			if ( $status === 'auto-draft' ) {
+				$status = 'draft';
+			}
+			// Never let an item go live with incomplete pricing — keep it as a draft
+			// and let the rest of the save proceed normally so nothing else is lost.
+			if ( $status === 'publish' && ! empty( $pricing_errors ) ) {
+				$status = 'draft';
+			}
 
 			wp_update_post( [
 				'ID'           => $post_id,
@@ -485,7 +605,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 		/* ── Extra service table (service_name[], service_price[], etc.) ── */
-			$input = RBFW_Function::data_sanitize( $_POST );
+			$input = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
 			$names       = $input['service_name']  ?? [];
 			$prices      = $input['service_price'] ?? [];
 			$descs       = $input['service_desc']  ?? [];
@@ -504,16 +624,22 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 			if ( ! empty( $new_extra ) ) {
-				update_post_meta( $post_id, 'rbfw_extra_service_data', $new_extra );
+				update_post_meta( $post_id, 'rbfw_extra_service_data', wp_slash( $new_extra ) );
 			} elseif ( isset( $_POST['service_name'] ) ) {
 				delete_post_meta( $post_id, 'rbfw_extra_service_data' );
 			}
 
-			/* Extra service category price */
+			/* Extra service category price.
+			 * Stored as a native array (WP serializes it) — matching the classic
+			 * editor and both readers (Extra_Service.php / RBFW_Woocommerse.php),
+			 * which check is_array() first. Previously this was wp_json_encode()d
+			 * without JSON_UNESCAPED_UNICODE and without wp_slash(), so multibyte
+			 * chars (æ/ø/å) became "æ"-style escapes whose backslashes were then
+			 * stripped by update_post_meta(), corrupting the stored JSON. */
 			if ( isset( $_POST['rbfw_service_category_price'] ) && is_array( $_POST['rbfw_service_category_price'] ) ) {
 				$scp_raw = wp_unslash( $_POST['rbfw_service_category_price'] );
 				array_walk_recursive( $scp_raw, function ( &$v ) { $v = is_string( $v ) ? sanitize_text_field( $v ) : ''; } );
-				update_post_meta( $post_id, 'rbfw_service_category_price', wp_json_encode( $scp_raw ) );
+				update_post_meta( $post_id, 'rbfw_service_category_price', wp_slash( $scp_raw ) );
 			}
 			if ( isset( $_POST['rbfw_enable_category_service_price'] ) ) {
 				update_post_meta( $post_id, 'rbfw_enable_category_service_price', sanitize_text_field( wp_unslash( $_POST['rbfw_enable_category_service_price'] ) ) );
@@ -525,14 +651,27 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_resort_room_data',
 				'multiple_items_info',
 				'pricing_types',
-				'rbfw_particulars_data',
-				'rdfw_available_time',
 			];
 			foreach ( $array_meta as $key ) {
 				if ( isset( $_POST[ $key ] ) ) {
 					update_post_meta( $post_id, $key, RBFW_Function::data_sanitize( wp_unslash( $_POST[ $key ] ) ) );
 				}
 			}
+
+			/* ── Time slots and particulars (type-specific field names) ── */
+			$input_data_sanitized = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
+			if ( in_array( $item_type, [ 'bike_car_md', 'equipment', 'dress', 'others' ], true ) ) {
+				$rdfw_available_time = isset( $input_data_sanitized['rdfw_available_time'] ) ? $input_data_sanitized['rdfw_available_time'] : [];
+				$particulars_data    = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_particulars'] ) ) : [];
+			} elseif ( $item_type === 'multiple_items' ) {
+				$rdfw_available_time = isset( $input_data_sanitized['rdfw_available_time_mi'] ) ? $input_data_sanitized['rdfw_available_time_mi'] : [];
+				$particulars_data    = isset( $_POST['rbfw_particulars_mi'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_particulars_mi'] ) ) : [];
+			} else {
+				$rdfw_available_time = isset( $input_data_sanitized['rdfw_available_time_sd'] ) ? $input_data_sanitized['rdfw_available_time_sd'] : [];
+				$particulars_data    = isset( $_POST['rbfw_particulars_sd'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_particulars_sd'] ) ) : [];
+			}
+			update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
+			update_post_meta( $post_id, 'rbfw_particulars_data', $particulars_data );
 
 			/* Pricing scalar fields */
 			$pricing_scalars = [
@@ -562,8 +701,12 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 
-			// rbfw_particular_switch is posted under a type-specific name
 			$_ps_item_type = sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ?? '' ) );
+			if ( $_ps_item_type === 'appointment' ) {
+				update_post_meta( $post_id, 'manage_inventory_as_timely', 'off' );
+			}
+
+			// rbfw_particular_switch is posted under a type-specific name
 			if ( in_array( $_ps_item_type, [ 'bike_car_md', 'equipment', 'dress', 'others' ], true ) ) {
 				$_ps_key = 'rbfw_particular_switch_md';
 			} elseif ( $_ps_item_type === 'multiple_items' ) {
@@ -575,8 +718,13 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
 
 			/* ── Inventory ── */
-			$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? absint( $_POST['rbfw_item_stock_quantity'] ) : 0;
-			update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity ?: 1000 );
+			// Store the entered stock as-is (blank stays blank so it is consistently
+			// treated as a single unit, like the classic editor). Previously a blank
+			// value was silently saved as 1000, which made "one vehicle" items
+			// effectively unlimited and allowed double-booking.
+			$rbfw_item_stock_raw      = isset( $_POST['rbfw_item_stock_quantity'] ) ? trim( wp_unslash( $_POST['rbfw_item_stock_quantity'] ) ) : '';
+			$rbfw_item_stock_quantity = ( '' === $rbfw_item_stock_raw ) ? '' : absint( $rbfw_item_stock_raw );
+			update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
 			$stock_manage_on_return_date = ( isset( $_POST['stock_manage_on_return_date'] ) && $_POST['stock_manage_on_return_date'] === 'yes' ) ? 'yes' : 'no';
 			update_post_meta( $post_id, 'stock_manage_on_return_date', $stock_manage_on_return_date );
@@ -586,7 +734,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			$rbfw_variations_data = [];
 			if ( isset( $_POST['rbfw_variations_data'] ) && is_array( $_POST['rbfw_variations_data'] ) ) {
-				$rbfw_variations_data = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) );
+				$rbfw_variations_data = rbfw_clean_variations_data( RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) ) );
 			}
 			update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
 
@@ -677,6 +825,10 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$buffer_after = isset( $_POST['rbfw_buffer_time_after'] ) ? absint( $_POST['rbfw_buffer_time_after'] ) : 0;
 			update_post_meta( $post_id, 'rbfw_buffer_time_after', $buffer_after );
 
+			/* collectFormData() posts checkboxes as their value when checked, '' when not. */
+			$block_offday = ( isset( $_POST['rbfw_block_offday_range_booking'] ) && $_POST['rbfw_block_offday_range_booking'] === 'on' ) ? 'on' : 'off';
+			update_post_meta( $post_id, 'rbfw_block_offday_range_booking', $block_offday );
+
 			$from_dates = ( isset( $_POST['off_days_start'] ) && is_array( $_POST['off_days_start'] ) )
 				? array_map( 'sanitize_text_field', wp_unslash( $_POST['off_days_start'] ) ) : [];
 			$to_dates   = ( isset( $_POST['off_days_end'] ) && is_array( $_POST['off_days_end'] ) )
@@ -689,9 +841,40 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 			update_post_meta( $post_id, 'rbfw_offday_range', $off_schedules );
 
+			/* ── Location (pick-up / drop-off) ──
+			 * Enable flags plus the selected location slugs (posted as a hidden,
+			 * comma-separated value). Stored in the same shape the classic editor
+			 * and the front end expect: array( array( 'loc_pickup_name' => slug ) ). */
+			$enable_pick = ( isset( $_POST['rbfw_enable_pick_point'] ) && $_POST['rbfw_enable_pick_point'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_pick_point', $enable_pick );
+
+			$enable_dropoff = ( isset( $_POST['rbfw_enable_dropoff_point'] ) && $_POST['rbfw_enable_dropoff_point'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $enable_dropoff );
+
+			$pickup_csv   = isset( $_POST['rbfw_pickup_locations'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_locations'] ) ) : '';
+			$pickup_slugs = array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $pickup_csv ) ) ) );
+			$pickup_data  = [];
+			foreach ( array_values( $pickup_slugs ) as $slug ) {
+				$pickup_data[] = [ 'loc_pickup_name' => $slug ];
+			}
+			update_post_meta( $post_id, 'rbfw_pickup_data', $pickup_data );
+
+			$dropoff_csv   = isset( $_POST['rbfw_dropoff_locations'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_dropoff_locations'] ) ) : '';
+			$dropoff_slugs = array_filter( array_map( 'sanitize_title', array_map( 'trim', explode( ',', $dropoff_csv ) ) ) );
+			$dropoff_data  = [];
+			foreach ( array_values( $dropoff_slugs ) as $slug ) {
+				$dropoff_data[] = [ 'loc_dropoff_name' => $slug ];
+			}
+			update_post_meta( $post_id, 'rbfw_dropoff_data', $dropoff_data );
+
+			/* Location inventory & price (shared field names with the classic panel) */
+			if ( class_exists( 'RBFW_Location' ) && method_exists( 'RBFW_Location', 'save_location_inventory_from_post' ) ) {
+				RBFW_Location::save_location_inventory_from_post( $post_id );
+			}
+
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
-				$cats = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) );
+				$cats = rbfw_sanitize_rent_type_categories( wp_unslash( $_POST['rbfw_categories'] ) );
 				wp_set_object_terms( $post_id, $cats, 'rbfw_item_caregory' );
 				update_post_meta( $post_id, 'rbfw_categories', $cats );
 			}
@@ -708,10 +891,11 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$this->set_edit_mode( $post_id, 'modern' );
 
 			wp_send_json_success( [
-				'post_id'      => $post_id,
-				'post_status'  => get_post_status( $post_id ),
-				'permalink'    => get_permalink( $post_id ),
-				'edit_url'     => $this->edit_url( $post_id, 'general' ),
+				'post_id'         => $post_id,
+				'post_status'     => get_post_status( $post_id ),
+				'permalink'       => get_permalink( $post_id ),
+				'edit_url'        => $this->edit_url( $post_id, 'general' ),
+				'pricing_errors'  => $pricing_errors,
 			] );
 		}
 
@@ -723,13 +907,35 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 			$post_id = isset( $_GET['item_id'] ) ? absint( $_GET['item_id'] ) : 0;
+
+			if (
+				$post_id
+				&& isset( $_GET['rbfw_editor_mode'] )
+				&& sanitize_key( wp_unslash( $_GET['rbfw_editor_mode'] ) ) === 'modern'
+				&& current_user_can( 'edit_post', $post_id )
+			) {
+				$this->set_edit_mode( $post_id, 'modern' );
+			}
+
 			$post    = $post_id ? get_post( $post_id ) : null;
 
-			/* Create draft if no ID yet */
+			/* Create draft if no ID yet.
+			 * Normally handled earlier by maybe_create_draft_before_output();
+			 * this fallback must never call wp_safe_redirect() once admin-header
+			 * output has started, so fall back to a JS/meta redirect. */
 			if ( ! $post_id ) {
 				$new_id = $this->create_draft_item();
 				if ( $new_id > 0 ) {
-					wp_safe_redirect( $this->edit_url( $new_id, 'general' ) );
+					$redirect_url = $this->edit_url( $new_id, 'general' );
+					if ( ! headers_sent() ) {
+						wp_safe_redirect( $redirect_url );
+					} else {
+						printf(
+							'<script>window.location.replace(%s);</script><noscript><meta http-equiv="refresh" content="0;url=%s"></noscript>',
+							wp_json_encode( esc_url_raw( $redirect_url ) ),
+							esc_url( $redirect_url )
+						);
+					}
 					exit;
 				}
 			}
@@ -746,6 +952,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			$screen_title  = $post && trim( $post->post_title ) ? $post->post_title : __( 'New Rental Item', 'booking-and-rental-manager-for-woocommerce' );
 			$is_published  = $post && $post->post_status === 'publish';
+			// A brand-new item is an auto-draft under the hood; show it as "Draft" in the UI.
+			$editor_status = ( $post && $post->post_status !== 'auto-draft' ) ? $post->post_status : 'draft';
 			$permalink     = $post_id ? get_permalink( $post_id ) : '';
 			$classic_url   = $post_id ? $this->switch_url( 'classic', $post_id ) : '';
 			$thumb_id      = $post_id ? (int) get_post_thumbnail_id( $post_id ) : 0;
@@ -757,6 +965,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'hide_empty' => false,
 			] );
 			$all_cat_terms   = is_wp_error( $all_cat_terms ) ? [] : $all_cat_terms;
+			// Order parent-first and stamp a `depth` on each term so the view can
+			// indent sub-categories beneath their parent.
+			$all_cat_terms   = $this->order_cat_terms_hierarchically( $all_cat_terms );
 			$saved_cat_meta  = $post_id ? get_post_meta( $post_id, 'rbfw_categories', true ) : [];
 			$saved_cat_meta  = is_array( $saved_cat_meta ) ? $saved_cat_meta : ( $saved_cat_meta ? maybe_unserialize( $saved_cat_meta ) : [] );
 			// Flatten any comma-separated values stored as a single element
@@ -799,6 +1010,32 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			include RBFW_PLUGIN_DIR . '/admin/views/rbfw-modern-editor.php';
 		}
 
+		/**
+		 * Flatten a set of rent-type terms into a parent-first ordered list, stamping a
+		 * `depth` property on each term so the view can indent sub-categories beneath
+		 * their parent.
+		 *
+		 * @param WP_Term[] $terms  Flat list of terms.
+		 * @param int       $parent Parent term_id to collect children for.
+		 * @param int       $depth  Current nesting depth.
+		 * @return WP_Term[]
+		 */
+		private function order_cat_terms_hierarchically( $terms, $parent = 0, $depth = 0 ) {
+			$out = [];
+			foreach ( $terms as $term ) {
+				if ( (int) $term->parent !== (int) $parent ) {
+					continue;
+				}
+				$term->depth = (int) $depth;
+				$out[]       = $term;
+				$out         = array_merge(
+					$out,
+					$this->order_cat_terms_hierarchically( $terms, $term->term_id, $depth + 1 )
+				);
+			}
+			return $out;
+		}
+
 		private function get_meta( int $post_id ): array {
 			if ( ! $post_id ) return [];
 			$keys = [
@@ -831,54 +1068,127 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 		/* ── Classic editor: "Switch to Modern Editor" button ──────────────── */
 
-		public function render_classic_switch_button(): void {
-			if ( ! is_admin() ) return;
+		private function is_classic_admin_screen(): bool {
+			if ( ! is_admin() || $this->is_edit_screen() ) {
+				return false;
+			}
+
 			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-			if ( ! $screen || $screen->base !== 'post' || $screen->post_type !== self::POST_TYPE ) return;
-			if ( $this->is_classic_bypass() ) return;
+			if ( ! $screen ) {
+				return false;
+			}
+
+			if ( $screen->id === 'edit-' . self::POST_TYPE ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$view = isset( $_GET['rbfw_view'] ) ? sanitize_key( wp_unslash( $_GET['rbfw_view'] ) ) : '';
+				return $view === 'classic';
+			}
+
+			if ( $screen->post_type !== self::POST_TYPE || $screen->base !== 'post' ) {
+				return false;
+			}
+
+			if ( $screen->action === 'add' ) {
+				return $this->is_classic_bypass() || ! $this->is_modern_mode_enabled();
+			}
 
 			$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
-			if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) return;
+			if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+				return false;
+			}
 
-			$modern_url = esc_url( $this->switch_url( 'modern', $post_id ) );
+			return $this->is_classic_bypass() || ! $this->is_modern_mode_enabled( $post_id );
+		}
+
+		private function get_modern_switch_url(): string {
+			$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( ! $screen ) {
+				return '';
+			}
+
+			if ( $screen->id === 'edit-' . self::POST_TYPE ) {
+				// On the list screen this button is a view toggle (mirrors the modern
+				// list's "Classic view" link), so it must go to the modern LIST — not
+				// the modern editor, which would open/create a single item.
+				if ( class_exists( 'RBFW_Rental_List' ) ) {
+					return admin_url( 'admin.php?page=' . RBFW_Rental_List::PAGE_SLUG );
+				}
+				return admin_url( 'edit.php?post_type=' . self::POST_TYPE . '&page=' . self::PAGE_SLUG );
+			}
+
+			$post_id = isset( $_GET['post'] ) ? absint( $_GET['post'] ) : 0;
+			if ( ! $post_id && isset( $GLOBALS['post'] ) && $GLOBALS['post'] instanceof WP_Post ) {
+				$post_id = (int) $GLOBALS['post']->ID;
+			}
+
+			if ( $post_id > 0 ) {
+				return $this->modern_editor_switch_url( $post_id, 'general' );
+			}
+
+			return self::add_new_url();
+		}
+
+		public function render_classic_switch_button(): void {
+			if ( ! $this->is_classic_admin_screen() ) {
+				return;
+			}
+
+			$modern_url = $this->get_modern_switch_url();
+			if ( ! $modern_url ) {
+				return;
+			}
+
+			// On the list screen the button switches the list view ("Modern view");
+			// on a single item it opens the modern editor ("Modern Editor").
+			$screen  = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			$is_list = $screen && $screen->id === 'edit-' . self::POST_TYPE;
+			$label   = $is_list
+				? __( 'Modern view', 'booking-and-rental-manager-for-woocommerce' )
+				: __( 'Modern Editor', 'booking-and-rental-manager-for-woocommerce' );
 			?>
-			<style>
-				#rbfw-switch-to-modern {
-					display: inline-flex;
-					align-items: center;
-					gap: 6px;
-					position: fixed;
-					bottom: 24px;
-					right: 24px;
-					z-index: 9999;
-					background: #2271b1;
-					color: #fff;
-					border: none;
-					border-radius: 8px;
-					padding: 10px 18px;
-					font-size: 13px;
-					font-weight: 600;
-					cursor: pointer;
-					text-decoration: none;
-					box-shadow: 0 4px 12px rgba(0,0,0,.2);
-					transition: background .15s, transform .15s, box-shadow .15s;
-				}
-				#rbfw-switch-to-modern:hover {
-					background: #135e96;
-					color: #fff;
-					transform: translateY(-1px);
-					box-shadow: 0 6px 16px rgba(0,0,0,.25);
-				}
-				#rbfw-switch-to-modern .dashicons {
-					font-size: 16px;
-					width: 16px;
-					height: 16px;
-				}
-			</style>
-			<a id="rbfw-switch-to-modern" href="<?php echo $modern_url; ?>">
-				<span class="dashicons dashicons-layout"></span>
-				<?php esc_html_e( 'Switch to Modern Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>
-			</a>
+			<script>
+			(function ($) {
+				$(function () {
+					var $wrap = $('.wrap').first();
+					if (!$wrap.length || $wrap.find('.rbfw-switch-to-modern').length) {
+						return;
+					}
+
+					var $anchor = $wrap.children('.page-title-action').last();
+					if (!$anchor.length) {
+						$anchor = $wrap.find('.page-title-action').last();
+					}
+					if (!$anchor.length) {
+						$anchor = $wrap.find('h1.wp-heading-inline, h1').first();
+					}
+
+					var $titleActions = $wrap.children('.page-title-action');
+					var $group;
+
+					if ($titleActions.length) {
+						if (!$titleActions.first().parent().hasClass('rbfw-classic-title-actions')) {
+							$titleActions.wrapAll('<div class="rbfw-classic-title-actions"></div>');
+						}
+						$group = $wrap.children('.rbfw-classic-title-actions').first();
+					}
+
+					var $btn = $('<a>', {
+						href: <?php echo wp_json_encode( $modern_url ); ?>,
+						class: 'rbfw-switch-to-modern page-title-action',
+						title: <?php echo wp_json_encode( $label ); ?>
+					}).append(
+						$('<span>', { class: 'rbfw-switch-to-modern__icon dashicons dashicons-welcome-view-site', 'aria-hidden': 'true' }),
+						$('<span>', { class: 'rbfw-switch-to-modern__label', text: <?php echo wp_json_encode( $label ); ?> })
+					);
+
+					if ($group && $group.length) {
+						$group.append($btn);
+					} else {
+						$anchor.after($btn);
+					}
+				});
+			})(jQuery);
+			</script>
 			<?php
 		}
 	}

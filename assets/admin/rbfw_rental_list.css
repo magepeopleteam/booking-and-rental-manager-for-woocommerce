@@ -9,6 +9,7 @@
   --rb-muted:#8b93b0;--rb-border:#e4e7f0;--rb-red:#e63946;--rb-red-soft:#fdedef;
   --rb-green:#16a34a;--rb-green-soft:#dcfce7;--rb-blue:#1d4ed8;--rb-blue-soft:#dbeafe;
   --rb-orange:#ea580c;--rb-orange-soft:#ffedd5;
+  --rb-violet:#7c3aed;--rb-violet-soft:#ede9fe;
   --rb-shadow:0 2px 16px rgba(15,21,35,.08);--rb-shadow-hover:0 8px 32px rgba(15,21,35,.14);
   font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   background:var(--rb-bg);color:var(--rb-ink);
@@ -106,6 +107,8 @@
 .rbfw-act-btn.restore:hover{background:var(--rb-green);}
 .rbfw-act-btn.view{background:rgba(37,99,235,.95);color:#fff;}
 .rbfw-act-btn.view:hover{background:var(--rb-blue);color:#fff;}
+.rbfw-act-btn.dup{background:rgba(124,58,237,.95);color:#fff;}
+.rbfw-act-btn.dup:hover{background:var(--rb-violet);color:#fff;}
 .rbfw-body{padding:16px;}
 .rbfw-name{display:block;font-size:15px;font-weight:700;color:var(--rb-ink) !important;margin-bottom:10px;line-height:1.3;text-decoration:none;}
 .rbfw-name:hover{color:var(--rb-red) !important;}
@@ -137,12 +140,38 @@
 .rbfw-table td:first-child a:hover{color:var(--rb-red) !important;}
 .rbfw-t-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;}
 .rbfw-t-badge.type{background:var(--rb-red-soft);color:var(--rb-red);}
+/* SEO cell — rendered only while an SEO plugin is active. Badge colours follow
+   that plugin's own good/ok/bad thresholds so they agree with its own UI.
+   Layout mirrors the Name cell: a strong first line, muted detail beneath.
+   The table is table-layout:auto, so `width` alone is only a hint and the long
+   Name column steals it — min-width is what actually holds this column open. */
+.rbfw-th-seo{width:128px;min-width:128px;}
+.rbfw-td-seo{min-width:128px;}
+.rbfw-seo-line{display:flex;align-items:center;gap:4px;}
+.rbfw-seo-badge{display:inline-flex;align-items:baseline;gap:2px;padding:3px 7px;border-radius:6px;font-size:11px;font-weight:700;line-height:1.5;white-space:nowrap;}
+.rbfw-seo-badge i{font-style:normal;font-weight:600;opacity:.55;font-size:9px;}
+.rbfw-seo-badge b{font-weight:800;opacity:.6;font-size:9px;letter-spacing:.02em;}
+.rbfw-seo-badge.is-good{background:var(--rb-green-soft);color:var(--rb-green);}
+.rbfw-seo-badge.is-ok{background:var(--rb-orange-soft);color:var(--rb-orange);}
+.rbfw-seo-badge.is-bad{background:var(--rb-red-soft);color:var(--rb-red);}
+.rbfw-seo-badge.is-none{background:transparent;color:var(--rb-muted);font-weight:700;padding-left:2px;}
+/* Detail line: focus keyword, then icon-only warnings (tooltips carry the
+   wording) so the cell stays on one line however narrow the column gets. */
+.rbfw-seo-sub{display:flex;align-items:center;gap:5px;margin-top:4px;min-height:14px;}
+.rbfw-seo-kw{font-size:10px;font-weight:600;color:var(--rb-muted);max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.rbfw-seo-kw::before{content:'\201C';opacity:.55;}
+.rbfw-seo-kw::after{content:'\201D';opacity:.55;}
+.rbfw-seo-ico{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:5px;flex-shrink:0;color:var(--rb-muted);background:var(--rb-bg);border:1px solid var(--rb-border);cursor:help;transition:all .15s;}
+.rbfw-seo-ico:hover{color:var(--rb-ink2);border-color:var(--rb-muted);}
+.rbfw-seo-ico.is-noindex{color:var(--rb-red);background:var(--rb-red-soft);border-color:transparent;}
+.rbfw-seo-ico.is-noindex:hover{color:var(--rb-red);border-color:var(--rb-red);}
 /* Action icon buttons (table/list view) */
 .rbfw-table-acts{display:flex;align-items:center;gap:6px;}
 .rbfw-table-act{width:30px;height:30px;border-radius:7px;border:1px solid var(--rb-border);background:var(--rb-white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;color:var(--rb-ink2) !important;transition:all .15s;flex-shrink:0;}
 .rbfw-table-act:hover{transform:translateY(-1px);}
 .rbfw-table-act.view:hover{border-color:var(--rb-blue);background:var(--rb-blue);color:#fff !important;}
 .rbfw-table-act.edit:hover{border-color:var(--rb-blue);background:var(--rb-blue);color:#fff !important;}
+.rbfw-table-act.dup:hover{border-color:var(--rb-violet);background:var(--rb-violet);color:#fff !important;}
 .rbfw-table-act.del:hover{border-color:var(--rb-red);background:var(--rb-red);color:#fff !important;}
 .rbfw-table-act.restore:hover{border-color:var(--rb-green);background:var(--rb-green);color:#fff !important;}
 
@@ -203,6 +232,13 @@ a.rbfw-cell-name:hover{color:var(--rb-red) !important;}
 
   /* Actions: buttons aligned right */
   .rbfw-table-acts{justify-content:flex-end;}
+
+  /* SEO: cells become label-left / value-right flex rows here, so drop the
+     desktop min-width and keep the badge + warnings on one right-aligned row. */
+  .rbfw-table td.rbfw-td-seo{min-width:0;flex-wrap:wrap;}
+  .rbfw-td-seo .rbfw-seo-line{margin-left:auto;}
+  .rbfw-td-seo .rbfw-seo-sub{margin-top:0;}
+  .rbfw-td-seo .rbfw-seo-kw{max-width:120px;}
 }
 @media (max-width:480px){
   .rbfw-fleet{padding:14px;}

@@ -63,17 +63,14 @@ $rbfw_default_hero_subtitle = get_post_meta( $post_id, 'rbfw_item_sub_title', tr
 						<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
 						<div class="rbfw_default_hero_overlay">
 							<div class="rbfw_default_hero_content">
-								<div class="rbfw_default_hero_badge">
-									<i class="fas fa-star"></i>
-									<?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
-								</div>
+								<?php rbfw_fd_hero_badge(); ?>
 								<h1 class="rbfw_default_hero_title"><?php echo esc_html( $post_title ); ?></h1>
 								<?php if ( ! empty( $rbfw_default_hero_subtitle ) ) : ?>
 								<p class="rbfw_default_hero_desc"><?php echo esc_html( $rbfw_default_hero_subtitle ); ?></p>
 								<?php endif; ?>
 								<?php if ( $rbfw_default_hero_price > 0 ) : ?>
 								<div class="rbfw_default_hero_price_wrap">
-									<div class="rbfw_default_hero_price_label"><?php esc_html_e( 'Prices Start At', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+									<div class="rbfw_default_hero_price_label"><?php esc_html_e( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 									<div class="rbfw_default_hero_price_amount"><?php echo wp_kses( wc_price( $rbfw_default_hero_price ), rbfw_allowed_html() ); ?></div>
 								</div>
 								<?php endif; ?>

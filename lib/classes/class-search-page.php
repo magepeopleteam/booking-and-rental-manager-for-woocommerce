@@ -348,16 +348,16 @@
 				if ( ! is_array( $categories ) || count( $categories ) === 0 ) {
 					return '';
 				}
-				$group = array( 'relation' => 'OR' );
-				foreach ( $categories as $category_name ) {
-					$clause = rbfw_build_category_meta_clause( $category_name );
-					if ( ! empty( $clause ) ) {
-						$group[] = $clause;
-					}
-				}
+				// Flatten every selected category into ONE OR group so the query
+				// uses a single wp_postmeta JOIN regardless of how many
+				// categories are chosen. Building a nested group per category
+				// (the previous approach) forced a separate self-JOIN each, and
+				// the base + active category filters together were slow enough
+				// to hit the nginx/php-fpm timeout (504 Gateway Time-out).
+				$group = rbfw_build_categories_meta_clause( $categories );
 
 				// Only return a usable group when at least one clause was added.
-				return ( count( $group ) > 1 ) ? $group : '';
+				return ! empty( $group ) ? $group : '';
 			}
 
 			public function display_filter_rent_items( $post_id, $post_title, $the_content, $style, $d ) {

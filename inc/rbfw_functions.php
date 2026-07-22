@@ -2,6 +2,188 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
+
+	if ( ! function_exists( 'rbfw_regf_attendees_list' ) ) {
+		/**
+		 * Normalise a ticket/order-meta entry into a 0-indexed list of attendee
+		 * registration-info arrays.
+		 *
+		 * Prefers the per-unit `rbfw_regf_attendees` list; falls back to the
+		 * legacy flat `rbfw_regf_info` so existing orders keep rendering. Each
+		 * returned item is a flat array of field => array( 'label', 'value' ).
+		 *
+		 * @param array $data Ticket_info entry or attendee meta array.
+		 * @return array[] List of attendee info arrays.
+		 */
+		function rbfw_regf_attendees_list( $data ) {
+			if ( ! is_array( $data ) ) {
+				return array();
+			}
+			if ( ! empty( $data['rbfw_regf_attendees'] ) && is_array( $data['rbfw_regf_attendees'] ) ) {
+				$list = array();
+				foreach ( $data['rbfw_regf_attendees'] as $att ) {
+					if ( ! empty( $att ) && is_array( $att ) ) {
+						$list[] = $att;
+					}
+				}
+				if ( ! empty( $list ) ) {
+					return $list;
+				}
+			}
+			if ( ! empty( $data['rbfw_regf_info'] ) && is_array( $data['rbfw_regf_info'] ) ) {
+				return array( $data['rbfw_regf_info'] );
+			}
+			return array();
+		}
+	}
+
+	if ( ! function_exists( 'rbfw_regf_attendee_heading' ) ) {
+		/**
+		 * Heading text for an attendee block, e.g. "Attendee 2".
+		 * Returns an empty string when there is only one attendee, so single
+		 * bookings look exactly as they did before.
+		 *
+		 * @param int $index Zero-based attendee index.
+		 * @param int $total Total attendees in the ticket.
+		 * @return string
+		 */
+		function rbfw_regf_attendee_heading( $index, $total ) {
+			if ( (int) $total <= 1 ) {
+				return '';
+			}
+			$label = function_exists( 'rbfw_string_return' )
+				? rbfw_string_return( 'rbfw_text_attendee', __( 'Attendee', 'booking-and-rental-manager-for-woocommerce' ) )
+				: __( 'Attendee', 'booking-and-rental-manager-for-woocommerce' );
+			return $label . ' ' . ( (int) $index + 1 );
+		}
+	}
+
+	if ( ! function_exists( 'rbfw_regf_display_rows' ) ) {
+		/**
+		 * Flatten one ticket/order-meta entry into display rows for the existing
+		 * "label: value" renderers, so no display loop needs restructuring.
+		 *
+		 * With a single attendee the output is byte-identical to the legacy flat
+		 * list. With multiple attendees each field's label is prefixed with the
+		 * attendee heading (e.g. "Attendee 2 — Full Name") so every surface
+		 * (thank-you, emails, PDFs, admin, calendar) labels the attendees without
+		 * any structural change.
+		 *
+		 * Accepts either a container (ticket_info / attendee meta with the
+		 * rbfw_regf_* keys) or an already-flat single-attendee array.
+		 *
+		 * @param array $data Container or flat attendee array.
+		 * @return array[] List of array( 'label' => string, 'value' => mixed ).
+		 */
+		function rbfw_regf_display_rows( $data ) {
+			if ( ! is_array( $data ) ) {
+				return array();
+			}
+			if ( isset( $data['rbfw_regf_attendees'] ) || isset( $data['rbfw_regf_info'] ) ) {
+				$attendees = rbfw_regf_attendees_list( $data );
+			} elseif ( ! empty( $data ) ) {
+				$attendees = array( $data ); // already a flat single-attendee array
+			} else {
+				$attendees = array();
+			}
+
+			$total = count( $attendees );
+			$rows  = array();
+			foreach ( $attendees as $i => $att ) {
+				if ( ! is_array( $att ) ) {
+					continue;
+				}
+				// With more than one attendee, precede each block with a heading row.
+				if ( $total > 1 ) {
+					$rows[] = array(
+						'label'   => rbfw_regf_attendee_heading( $i, $total ),
+						'value'   => '',
+						'heading' => true,
+					);
+				}
+				foreach ( $att as $info ) {
+					if ( ! is_array( $info ) ) {
+						continue;
+					}
+					$rows[] = array(
+						'label' => isset( $info['label'] ) ? $info['label'] : '',
+						'value' => isset( $info['value'] ) ? $info['value'] : '',
+					);
+				}
+			}
+			return $rows;
+		}
+	}
+
+	/**
+	 * Capability required to view/manage the booking admin screens
+	 * (Order List, Bookings, Booking Orders, Booking Calendar, Reports and their
+	 * order actions). Defaults to 'manage_options' so behaviour is unchanged out of
+	 * the box; filter it to delegate these screens to a non-admin role WITHOUT
+	 * granting full admin rights, e.g.:
+	 *
+	 *     add_filter( 'rbfw_bookings_capability', function () { return 'manage_woocommerce'; } );
+	 *     // or a dedicated capability granted to a custom role via a role editor:
+	 *     add_filter( 'rbfw_bookings_capability', function () { return 'rbfw_manage_bookings'; } );
+	 *
+	 * Note: the plugin's Settings/Status/Payment screens intentionally keep
+	 * 'manage_options', so a delegated user gets bookings/calendar/reports only.
+	 *
+	 * @return string A WordPress capability.
+	 */
+	if ( ! function_exists( 'rbfw_bookings_capability' ) ) {
+		function rbfw_bookings_capability() {
+			$cap = apply_filters( 'rbfw_bookings_capability', 'manage_options' );
+
+			return ( is_string( $cap ) && '' !== $cap ) ? $cap : 'manage_options';
+		}
+	}
+
+	/**
+	 * Trusted per-service prices for the multi-day "category services" feature.
+	 *
+	 * SECURITY: the booking form posts rbfw_service_price_data[cat][ser][price], but a
+	 * price sent in the request must NEVER be trusted — it lets a visitor set an
+	 * arbitrary (even negative) service price and drive the order total to pennies.
+	 * The only source of truth is the item's stored rbfw_service_category_price config.
+	 *
+	 * @param int $post_id rbfw_item id.
+	 * @return array Map [ cat_title ][ service_title ] => [ 'price' => float>=0, 'type' => string ].
+	 */
+	if ( ! function_exists( 'rbfw_get_trusted_category_service_prices' ) ) {
+		function rbfw_get_trusted_category_service_prices( $post_id ) {
+			$raw = get_post_meta( $post_id, 'rbfw_service_category_price', true );
+			if ( ! is_array( $raw ) ) {
+				$decoded = json_decode( is_string( $raw ) ? $raw : '', true );
+				if ( is_array( $decoded ) ) {
+					$raw = $decoded;
+				} elseif ( is_string( $raw ) && is_serialized( $raw ) ) {
+					$raw = maybe_unserialize( $raw );
+				}
+			}
+			$map = array();
+			if ( is_array( $raw ) ) {
+				foreach ( $raw as $cat ) {
+					if ( ! is_array( $cat ) ) {
+						continue;
+					}
+					$cat_title = isset( $cat['cat_title'] ) ? (string) $cat['cat_title'] : '';
+					$services  = ( isset( $cat['cat_services'] ) && is_array( $cat['cat_services'] ) ) ? $cat['cat_services'] : array();
+					foreach ( $services as $svc ) {
+						if ( ! is_array( $svc ) || empty( $svc['title'] ) ) {
+							continue;
+						}
+						$map[ $cat_title ][ (string) $svc['title'] ] = array(
+							'price' => max( 0, (float) ( isset( $svc['price'] ) ? $svc['price'] : 0 ) ),
+							'type'  => isset( $svc['service_price_type'] ) ? (string) $svc['service_price_type'] : '',
+						);
+					}
+				}
+			}
+
+			return $map;
+		}
+	}
 // Language Load
 	function rbfw_allowed_html() {
 		$allowed_html = array(
@@ -18,6 +200,12 @@
 				'onclick' => true, // Allows inline JavaScript
 				'data-step' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
+				'data-rbfw-field' => true,      // conditional logic: field wrapper key
+				'data-rbfw-rules' => true,      // conditional logic: base64 rules JSON
+				'data-rbfw-form' => true,       // conditional logic: form id
+				'data-rbfw-item' => true,       // conditional logic: rental item id
+				'data-rbfw-rent-type' => true,  // conditional logic: rent type token
+				'data-rbfw-attendee-mode' => true, // per-item attendee form mode (same|per_qty)
 			),
 			'table'   => array(
                 'class' => true,
@@ -28,6 +216,16 @@
 				'div'   => true,
 				'a'     => true
 			),
+            'thead'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
+            'tfoot'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
             'tbody'     => array(
                 'style'   => true, // Allows inline styles
                 'class'   => true,
@@ -43,6 +241,8 @@
                 'style'   => true, // Allows inline styles
                 'class'   => true,
                 'id'   => true,
+                'colspan' => true,
+                'data-th' => true,
             ),
             'th'     => array(
                 'style'   => true, // Allows inline styles
@@ -62,6 +262,7 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'for' => true, // Allows inline JavaScript
+				'data-rbfw-field' => true, // conditional logic: field wrapper key
 			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles
@@ -88,6 +289,7 @@
 			),
 			'a'       => array(
                 'href' => true,
+				'id'      => true, // needed so settings-api nav tab anchors keep their #{section}-tab id
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
@@ -97,6 +299,41 @@
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
 				'rel' => true, // Allows inline JavaScript
+				'title' => true,
+				'aria-label' => true,
+			),
+			// Static inline SVG icons (rbfw_inv_icon etc.). Attribute names must
+			// be lowercase here — wp_kses matches them case-insensitively, so
+			// 'viewbox' covers viewBox. No scriptable attributes are allowed.
+			'svg'     => array(
+				'class'           => true,
+				'viewbox'         => true,
+				'fill'            => true,
+				'stroke'          => true,
+				'stroke-width'    => true,
+				'stroke-linecap'  => true,
+				'stroke-linejoin' => true,
+				'aria-hidden'     => true,
+				'focusable'       => true,
+				'width'           => true,
+				'height'          => true,
+			),
+			'path'    => array(
+				'd'      => true,
+				'fill'   => true,
+				'stroke' => true,
+			),
+			'circle'  => array(
+				'cx' => true,
+				'cy' => true,
+				'r'  => true,
+			),
+			'rect'    => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+				'rx'     => true,
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -279,6 +516,22 @@ function rbfw_url_exclude_search_engine() {
 		global $rbfw;
 
 		return $rbfw->get_datetime( $date, $type );
+	}
+	if ( ! function_exists( 'rbfw_booking_has_time' ) ) {
+		/**
+		 * Whether a stored booking time value represents a real, meaningful time.
+		 *
+		 * Day-wise (non-hourly) rentals store no time — the value is either an
+		 * empty string or a midnight placeholder ("00:00" / "00:00:00"). Use this
+		 * to decide whether the time should be shown/edited anywhere in the UI.
+		 *
+		 * @param string $time Raw stored time value.
+		 * @return bool True when the value is a real time; false for empty/midnight.
+		 */
+		function rbfw_booking_has_time( $time ) {
+			$time = trim( (string) $time );
+			return '' !== $time && '00:00' !== $time && '00:00:00' !== $time;
+		}
 	}
 	function rbfw_check_product_exists( $id ) {
 		return is_string( get_post_status( $id ) );
@@ -826,8 +1079,8 @@ function rbfw_url_exclude_search_engine() {
 							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').empty();
 							jQuery(selected_label).addClass('selected');
 							// Escape values for attributes and DOM
-							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon[data-key="' + selected_data_key + '"]').val(esc_attr(selected_val));
-							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + esc_attr(selected_val) + '"></i>');
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon[data-key="' + selected_data_key + '"]').val(selected_val);
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + selected_val + '"></i>');
 						});
 					},
 					error: function (response) {
@@ -1037,22 +1290,68 @@ function rbfw_url_exclude_search_engine() {
 	}
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
-		$settings_fields['rbfw_basic_payment_settings'] = array(
+		// The explicit "Booking Mode" chooser now lives on the Payments tab
+		// (admin/settings/RBFW_Payment_Settings.php :: render_mode_selector), shown as a
+		// card only when both WooCommerce and Pro are active. It writes the same
+		// rbfw_booking_mode value RBFW_Function::booking_mode() reads, so the choice has a
+		// single home instead of being split across two settings tabs.
+		$booking_fields = array(
 			array(
-				'name' => 'rbfw_wps_add_to_cart_redirect',
-				'label' => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-				'type' => 'select',
+				'name'    => 'rbfw_wps_add_to_cart_redirect',
+				'label'   => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Used in WooCommerce mode only.', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'select',
 				'default' => 'checkout',
 				'options' => array(
 					'checkout' => 'Checkout',
-					'cart'  => 'Cart',
+					'cart'     => 'Cart',
 				),
 			),
-
 		);
 
+		// Standalone currency group — drives the wc_price() fallback when WooCommerce is
+		// inactive. Reuses the existing rbfw_mps_currency* option keys.
+		$currency_fields = array(
+			array(
+				'name'    => 'rbfw_mps_currency',
+				'label'   => __( 'Currency (Standalone)', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Currency code used when WooCommerce is inactive, e.g. USD, EUR, GBP, BDT.', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'USD',
+			),
+			array(
+				'name'    => 'rbfw_mps_currency_position',
+				'label'   => __( 'Currency Position (Standalone)', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'select',
+				'default' => 'left',
+				'options' => array(
+					'left'        => __( 'Left ($99.99)', 'booking-and-rental-manager-for-woocommerce' ),
+					'right'       => __( 'Right (99.99$)', 'booking-and-rental-manager-for-woocommerce' ),
+					'left_space'  => __( 'Left with space ($ 99.99)', 'booking-and-rental-manager-for-woocommerce' ),
+					'right_space' => __( 'Right with space (99.99 $)', 'booking-and-rental-manager-for-woocommerce' ),
+				),
+			),
+			array(
+				'name'    => 'rbfw_mps_currency_thousand_sep',
+				'label'   => __( 'Thousand Separator (Standalone)', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => ',',
+			),
+			array(
+				'name'    => 'rbfw_mps_currency_decimal_sep',
+				'label'   => __( 'Decimal Separator (Standalone)', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => '.',
+			),
+			array(
+				'name'    => 'rbfw_mps_currency_decimal_number',
+				'label'   => __( 'Number of Decimals (Standalone)', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => '2',
+			),
+		);
 
+		$settings_fields['rbfw_basic_payment_settings'] = array_merge( $booking_fields, $currency_fields );
 
 		return apply_filters( 'rbfw_payment_settings_fields', $settings_fields );
 	}
@@ -1154,7 +1453,7 @@ function rbfw_url_exclude_search_engine() {
 	/******************************************
 	 * Single Day Type: Get Available Quantity
 	 *****************************************/
-	function rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $type, $selected_time = null ) {
+	function rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $type, $selected_time = null, $variation_values = array() ) {
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $type ) ) {
 			return;
 		}
@@ -1207,8 +1506,87 @@ function rbfw_url_exclude_search_engine() {
 		$remaining_stock = $type_stock - $total_qty;
 		$remaining_stock = max( 0, $remaining_stock );
 
+		// Item variations (Single Day): additionally cap the per-rate remaining by the
+		// selected size's remaining stock, so the time-table reflects sold-out sizes.
+		// The authoritative gate is still rbfw_check_rental_availability() at add-to-cart.
+		if ( ! empty( $variation_values ) && function_exists( 'rbfw_sd_variation_remaining_stock' )
+			&& get_post_meta( $post_id, 'rbfw_enable_variations', true ) === 'yes' ) {
+			$size_remaining = null;
+			foreach ( (array) $variation_values as $vv ) {
+				$vv = (string) $vv;
+				if ( '' === $vv ) {
+					continue;
+				}
+				$r = rbfw_sd_variation_remaining_stock( $post_id, array( $selected_date ), $vv );
+				if ( null === $r ) {
+					continue;
+				}
+				$size_remaining = ( null === $size_remaining ) ? $r : min( $size_remaining, $r );
+			}
+			if ( null !== $size_remaining ) {
+				$remaining_stock = min( $remaining_stock, max( 0, $size_remaining ) );
+			}
+		}
+
 		return $remaining_stock;
 	}
+
+	/**
+	 * Return the list of time slots that are fully sold out for a single-day / appointment
+	 * item on a given date. A time is considered sold out when every configured rent type
+	 * has zero remaining quantity for that date (and time, for appointments).
+	 *
+	 * @param int    $post_id
+	 * @param string $selected_date Date in any strtotime-compatible format.
+	 * @return string[] Sold-out time strings (same format used for data-time attributes).
+	 */
+	if ( ! function_exists( 'rbfw_get_sd_sold_out_times' ) ) {
+		function rbfw_get_sd_sold_out_times( $post_id, $selected_date ) {
+			$post_id = absint( $post_id );
+			if ( ! $post_id || empty( $selected_date ) ) {
+				return array();
+			}
+
+			$item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+			if ( ! in_array( $item_type, array( 'bike_car_sd', 'appointment' ), true ) ) {
+				return array();
+			}
+
+			$rent_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+			if ( empty( $rent_data ) || ! is_array( $rent_data ) ) {
+				return array();
+			}
+
+			$times_particulars = rbfw_get_available_times_particulars( $post_id, $selected_date, '', '' );
+			$times             = array();
+			if ( ! empty( $times_particulars[0] ) && is_array( $times_particulars[0] ) ) {
+				$times = array_keys( $times_particulars[0] );
+			}
+			$times = array_unique( array_filter( $times ) );
+
+			$sold_out = array();
+			foreach ( $times as $time ) {
+				$has_stock = false;
+				foreach ( $rent_data as $type_row ) {
+					$rent_type = $type_row['rent_type'] ?? '';
+					if ( empty( $rent_type ) ) {
+						continue;
+					}
+					$available = rbfw_get_bike_car_sd_available_qty( $post_id, $selected_date, $rent_type, $time );
+					if ( $available > 0 ) {
+						$has_stock = true;
+						break;
+					}
+				}
+				if ( ! $has_stock ) {
+					$sold_out[] = $time;
+				}
+			}
+
+			return $sold_out;
+		}
+	}
+
 	/******************************************
 	 * Extra Service: Get Available Quantity
 	 *****************************************/
@@ -1251,8 +1629,15 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         return;
     }
 
-    $end_date_time   = new DateTime( $end_date . ' ' . $end_time );
-    $start_date_time = new DateTime( $start_date . ' ' . $start_time ); // Original date and time
+    try {
+        $end_date_time   = new DateTime( $end_date . ' ' . $end_time );
+        $start_date_time = new DateTime( $start_date . ' ' . $start_time );
+    } catch ( Exception $e ) {
+        return 0;
+    }
+    if ( $end_date_time <= $start_date_time ) {
+        return 0;
+    }
     $rbfw_inventory  = get_post_meta( $post_id, 'rbfw_inventory', true );
     $total_stock     = (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
     $total_booked    = 0;
@@ -1310,7 +1695,9 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 
 
 
-                if ( $date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end ) {
+                // Treat reservations as half-open intervals [start, end). An item
+                // returned at 10:00 is available to a new customer at 10:00.
+                if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
                     $total_booked += $rbfw_item_quantity;
                 }
             }
@@ -2470,13 +2857,15 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 
 
                     }
-	
+
+					uksort( $the_array, function ( $a, $b ) { return strtotime( $a ) <=> strtotime( $b ); } );
+
 					return array( $the_array, $selector );
 				}
 			}
 
 		}
-		
+
 
         $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 
@@ -2500,6 +2889,8 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
                 $the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
             }
         }
+
+		uksort( $the_array, function ( $a, $b ) { return strtotime( $a ) <=> strtotime( $b ); } );
 
 		return array( $the_array, $selector );
 	}
@@ -2647,6 +3038,189 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 
 		return wp_json_encode( $off_days );
 	}
+	/**
+	 * Per-item "Block Booking If Date Range Contains Off Days" flag ('on'/'off').
+	 * Opt-in: empty meta (never enabled by the admin) counts as 'off' so bookings
+	 * are allowed until the admin turns the toggle on and saves.
+	 * Mirrors RBFW_Off_Day::block_offday_range_value().
+	 */
+	function rbfw_block_offday_range_booking( $post_id ) {
+		return get_post_meta( $post_id, 'rbfw_block_offday_range_booking', true ) === 'on' ? 'on' : 'off';
+	}
+
+	/**
+	 * Location-wise inventory & price configuration for a rental item.
+	 *
+	 * Rows are stored in 'rbfw_location_inventory' keyed by the location slug
+	 * (sanitize_title of the rbfw_item_location term name — the same identity
+	 * used by rbfw_pickup_point everywhere else).
+	 *
+	 * Standalone feature: it only needs its own toggle. The classic Pick-up /
+	 * Drop-off Location switches are a separate use case (plain dropdowns
+	 * without stock/price) — when Location Inventory is on, choosing a card IS
+	 * the pickup choice, so the admin never configures the location twice.
+	 * Every saved row participates; the admin controls the offering simply by
+	 * filling in stock/price (empty rows are never saved).
+	 *
+	 * @param  int $post_id Rental item ID.
+	 * @return array<string,array> slug => [stock,price]; [] when the feature is off.
+	 */
+	function rbfw_get_location_inventory( $post_id ) {
+		if ( get_post_meta( $post_id, 'rbfw_enable_location_inventory', true ) !== 'on' ) {
+			return array();
+		}
+		$rows = get_post_meta( $post_id, 'rbfw_location_inventory', true );
+		if ( ! is_array( $rows ) || empty( $rows ) ) {
+			return array();
+		}
+
+		$out = array();
+		foreach ( $rows as $slug => $row ) {
+			$slug = sanitize_title( $slug );
+			if ( '' === $slug || ! is_array( $row ) ) {
+				continue;
+			}
+			$out[ $slug ] = array(
+				'stock' => max( 0, (int) ( $row['stock'] ?? 0 ) ),
+				'price' => max( 0, (float) ( $row['price'] ?? 0 ) ),
+			);
+		}
+		return $out;
+	}
+
+	/**
+	 * Units already booked at one pickup location over a date range.
+	 *
+	 * Walks the item's rbfw_inventory entries (which record rbfw_pickup_point
+	 * for bookings made after the location-inventory feature shipped), sums
+	 * per-day quantities for entries at $location whose booked dates overlap
+	 * the range, and returns the busiest day — the peak concurrent usage, the
+	 * same day-wise model the global stock check uses. Entries without a
+	 * recorded location (older bookings) count against global stock only.
+	 *
+	 * @param int    $post_id    Rental item ID.
+	 * @param string $location   Pickup-location slug.
+	 * @param string $start_date Y-m-d (defaults to today).
+	 * @param string $end_date   Y-m-d (defaults to $start_date).
+	 * @return int Peak booked units at that location within the range.
+	 */
+	function rbfw_location_sold_qty( $post_id, $location, $start_date = '', $end_date = '' ) {
+		$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+		if ( ! is_array( $inventory ) || empty( $inventory ) || '' === $location ) {
+			return 0;
+		}
+
+		$start = strtotime( $start_date ?: current_time( 'Y-m-d' ) );
+		$end   = strtotime( $end_date ?: ( $start_date ?: current_time( 'Y-m-d' ) ) );
+		if ( ! $start || ! $end || $end < $start ) {
+			return 0;
+		}
+		$range = array();
+		for ( $t = $start, $guard = 0; $t <= $end && $guard < 366; $t += DAY_IN_SECONDS, $guard++ ) {
+			$range[ gmdate( 'd-m-Y', $t ) ] = 0;
+		}
+
+		$managed_statuses = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+		$managed_statuses = is_array( $managed_statuses ) ? $managed_statuses : array( 'processing' => 'processing', 'completed' => 'completed' );
+		$based_on_return  = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+
+		foreach ( $inventory as $entry ) {
+			if ( ! is_array( $entry ) || empty( $entry['booked_dates'] ) || ! is_array( $entry['booked_dates'] ) ) {
+				continue;
+			}
+			if ( ( $entry['rbfw_pickup_point'] ?? '' ) !== $location ) {
+				continue;
+			}
+			$status = $entry['rbfw_order_status'] ?? '';
+			$counts = in_array( $status, $managed_statuses, true )
+				|| 'picked' === $status
+				|| ( 'yes' === $based_on_return && 'returned' === $status );
+			if ( ! $counts ) {
+				continue;
+			}
+			$qty = max( 0, (int) ( $entry['rbfw_item_quantity'] ?? 0 ) );
+			foreach ( $entry['booked_dates'] as $d ) {
+				if ( isset( $range[ $d ] ) ) {
+					$range[ $d ] += $qty;
+				}
+			}
+		}
+
+		return $range ? max( $range ) : 0;
+	}
+
+	/**
+	 * Remaining stock at one pickup location for a date range.
+	 *
+	 * @return int|null Remaining units, or null when the location has no
+	 *                  location-inventory row (feature off / unknown slug).
+	 */
+	function rbfw_location_remaining_stock( $post_id, $location, $start_date = '', $end_date = '' ) {
+		$conf = rbfw_get_location_inventory( $post_id );
+		if ( ! isset( $conf[ $location ] ) ) {
+			return null;
+		}
+		return max( 0, $conf[ $location ]['stock'] - rbfw_location_sold_qty( $post_id, $location, $start_date, $end_date ) );
+	}
+
+	/**
+	 * AJAX: date-aware remaining stock per location for the booking form's
+	 * location cards. Fired whenever the customer picks/changes dates so the
+	 * "N units available" badges reflect the actual booked range instead of
+	 * today. Public (nopriv) — read-only availability data.
+	 */
+	add_action( 'wp_ajax_rbfw_location_stock_info', 'rbfw_location_stock_info_ajax' );
+	add_action( 'wp_ajax_nopriv_rbfw_location_stock_info', 'rbfw_location_stock_info_ajax' );
+	function rbfw_location_stock_info_ajax() {
+		check_ajax_referer( 'rbfw_location_stock_info_action', 'nonce' );
+
+		$post_id    = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+		$start_date = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+		$end_date   = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+
+		$conf = $post_id ? rbfw_get_location_inventory( $post_id ) : array();
+		if ( empty( $conf ) ) {
+			wp_send_json_error();
+		}
+
+		$out = array();
+		foreach ( $conf as $slug => $row ) {
+			$out[ $slug ] = rbfw_location_remaining_stock( $post_id, $slug, $start_date, $end_date );
+		}
+		wp_send_json_success( $out );
+	}
+
+	/**
+	 * Add the chosen pickup location's charge to the management-fee lines.
+	 *
+	 * Reuses the existing management-fee mechanism so the charge shows up in
+	 * the cart/checkout/receipt breakdown like any other fee line, and the
+	 * total stays server-authoritative.
+	 *
+	 * @param  int    $post_id          Rental item ID.
+	 * @param  string $pickup_point     Posted pickup-location slug.
+	 * @param  array  $management_info  Existing fee lines (label => info).
+	 * @param  float  $management_price Existing fee total.
+	 * @return array Updated [info, price].
+	 */
+	function rbfw_apply_location_charge( $post_id, $pickup_point, $management_info, $management_price ) {
+		$conf = rbfw_get_location_inventory( $post_id );
+		if ( isset( $conf[ $pickup_point ] ) && $conf[ $pickup_point ]['price'] > 0 ) {
+			$term  = get_term_by( 'slug', $pickup_point, 'rbfw_item_location' );
+			$name  = $term && ! is_wp_error( $term ) ? $term->name : ucwords( str_replace( '-', ' ', $pickup_point ) );
+			$price = $conf[ $pickup_point ]['price'];
+			$label = sprintf( /* translators: %s: pickup location name */ __( 'Location charge (%s)', 'booking-and-rental-manager-for-woocommerce' ), $name );
+
+			$management_info[ $label ] = array(
+				'price'      => $price,
+				'price_desc' => wc_price( $price ),
+				'refundable' => 'no',
+			);
+			$management_price         += $price;
+		}
+		return array( $management_info, $management_price );
+	}
+
 	function rbfw_off_dates( $post_id ) {
 		$off_dates       = [];
 		$off_date_ranges = get_post_meta( $post_id, 'rbfw_offday_range', true );
@@ -2765,11 +3339,12 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
                         if($rbfw_enable_hourly_threshold=='yes' && $hours >= $rbfw_hourly_threshold){
                             $actual_days = $days+1;
-                            $duration_price += $rbfw_daily_rate * $actual_days;
+                            // Leftover days (day-wise aware; flat daily when day-wise is off).
+                            $duration_price += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $days, $actual_days, $rbfw_daily_rate );
                         }else{
                             $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
                             $day_slug         = strtolower( gmdate( 'D', strtotime( $start_date ) ) );
-                            $duration_price  += (float) $rbfw_daily_rate * (float) $days;
+                            $duration_price  += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $days, $days, $rbfw_daily_rate );
                             $duration_price  += rbfw_md_price_for_hours_period(
                                 $post_id,
                                 $hours,
@@ -2817,11 +3392,12 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
                 if($rbfw_enable_hourly_threshold=='yes' && $hours >= $rbfw_hourly_threshold){
                     $thresold_days = $daysWeeks+1;
-                    $duration_price += $rbfw_daily_rate * $thresold_days;
+                    // Leftover days (day-wise aware; flat daily when day-wise is off).
+                    $duration_price += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $daysWeeks, $thresold_days, $rbfw_daily_rate );
                 }else{
                     $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
                     $day_slug         = strtolower( gmdate( 'D', strtotime( $start_date ) ) );
-                    $duration_price  += (float) $rbfw_daily_rate * (float) $daysWeeks;
+                    $duration_price  += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $daysWeeks, $daysWeeks, $rbfw_daily_rate );
                     $duration_price  += rbfw_md_price_for_hours_period(
                         $post_id,
                         $hours,
@@ -3117,14 +3693,44 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
 
     if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily)) !== 'not_found') {
-        return $sp_price;
+        return (float) $sp_price;
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
     // Empty day-wise field falls back to the global daily rate; explicit 0 kept.
+    // Always return a float: raw meta / empty strings fatal on "int + string" in PHP 8.
     return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
         ? (float) $custom_rate
-        : $daily_rate;
+        : (float) $daily_rate;
+}
+
+/**
+ * Sum the daily rate for a run of $count consecutive days starting $offset days
+ * after $start_date, honouring day-wise (per-weekday) pricing.
+ *
+ * The monthly / weekly price branches bill whole months and weeks at their bulk
+ * rate and were pricing the *leftover* days at the flat daily rate — so a
+ * per-weekday (day-wise) price never applied once a weekly/monthly rate was on.
+ * This helper prices those leftover days per weekday instead.
+ *
+ * Backward compatible: rbfw_get_day_rate() returns the flat daily rate for any
+ * weekday without a day-wise override, so for an item with day-wise pricing OFF
+ * the total equals $daily_rate * $count exactly — identical to the old code.
+ *
+ * @return float
+ */
+function rbfw_daywise_days_sum( $post_id, $start_date, $offset, $count, $daily_rate ) {
+    $sum = 0.0;
+    for ( $j = 0; $j < (int) $count; $j++ ) {
+        $day_offset = (int) $offset + $j;
+        $date       = gmdate( 'Y-m-d', strtotime( "+{$day_offset} day", strtotime( $start_date ) ) );
+        $slug       = strtolower( gmdate( 'D', strtotime( $date ) ) );
+        // Seasonal pricing is intentionally not applied here — the monthly/weekly
+        // leftover path never applied it before, so passing '' keeps behaviour
+        // identical for non-day-wise items.
+        $sum += rbfw_get_day_rate( $post_id, $slug, $daily_rate, '', $date );
+    }
+    return $sum;
 }
 
 function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3132,7 +3738,7 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
         $global_half_day_rate = is_numeric( $global_half_day_rate ) ? (float) $global_half_day_rate : 0;
 
         if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily, $global_half_day_rate)) !== 'not_found') {
-            return $sp_price;
+            return (float) $sp_price;
         }
         $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
         $custom_rate = get_post_meta($post_id, "rbfw_{$day}_half_day_rate", true);
@@ -3392,6 +3998,54 @@ function rbfw_build_category_meta_clause( $category_name ) {
 	);
 }
 
+/**
+ * Build a SINGLE flat meta_query OR group matching any of the supplied
+ * category names against the rbfw_categories meta.
+ *
+ * PERF / 504 FIX: rbfw_build_category_meta_clause() returns a nested OR group
+ * per category. WP_Meta_Query only reuses a wp_postmeta JOIN between clauses
+ * that share the SAME immediate parent, so adding one nested group per selected
+ * category forced a separate self-JOIN on wp_postmeta for every category. With
+ * several categories selected (and leading-wildcard LIKEs that cannot use an
+ * index) the resulting multi-JOIN query was slow enough to exceed the
+ * nginx/php-fpm timeout, surfacing as a "504 Gateway Time-out" in the Elementor
+ * editor and on the front end.
+ *
+ * Flattening every leaf condition into one OR group that all share the
+ * rbfw_categories key lets WP_Meta_Query collapse them onto a single JOIN,
+ * regardless of how many categories are selected, while preserving the exact
+ * same matching (an item is shown when it belongs to ANY selected category).
+ *
+ * @param array|string $category_names One or more category display names.
+ * @return array Flat meta_query OR group, or array() when nothing is usable.
+ */
+function rbfw_build_categories_meta_clause( $category_names ) {
+	if ( ! is_array( $category_names ) ) {
+		$category_names = ( '' === $category_names || null === $category_names ) ? array() : array( $category_names );
+	}
+
+	$group = array( 'relation' => 'OR' );
+
+	foreach ( $category_names as $category_name ) {
+		$clause = rbfw_build_category_meta_clause( $category_name );
+		if ( empty( $clause ) ) {
+			continue;
+		}
+		// Merge the per-category leaf conditions up into the single flat OR
+		// group (dropping the nested 'relation' key) so every leaf shares one
+		// JOIN alias instead of forcing a JOIN per category.
+		foreach ( $clause as $clause_key => $leaf ) {
+			if ( 'relation' === $clause_key || ! is_array( $leaf ) ) {
+				continue;
+			}
+			$group[] = $leaf;
+		}
+	}
+
+	// Only return a usable group when at least one leaf was added.
+	return ( count( $group ) > 1 ) ? $group : array();
+}
+
 
 
 
@@ -3519,10 +4173,20 @@ function rbfw_build_category_meta_clause( $category_name ) {
 
 		return $all_locations;
 	}
-	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for ) {
+	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for, $title_override = '' ) {
+		$term_map = array();
 		if ( $dropdown_for === 'category' ) {
 			$title        = esc_html__( 'Rental Type', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_post_categories_from_meta();
+			// Map each stored ( name-based ) category to its taxonomy term's exact
+			// casing, so an item saved as "rental" still displays as the "Rental"
+			// rent-type name. Keyed by lowercased name for a case-insensitive match.
+			$terms = get_terms( array( 'taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false ) );
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $rbfw_term ) {
+					$term_map[ strtolower( $rbfw_term->name ) ] = $rbfw_term->name;
+				}
+			}
 		} elseif ( $dropdown_for === 'location' ) {
 			$title        = esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_pickup_data_wp_query();
@@ -3530,23 +4194,37 @@ function rbfw_build_category_meta_clause( $category_name ) {
 			$title        = '';
 			$category_arr = [];
 		}
-		
+
+		// Placeholder label priority: shortcode attribute > Front-end Display
+		// setting ( Global Settings ) > hard-coded default.
+		if ( '' !== (string) $title_override ) {
+			$title = $title_override;
+		} elseif ( function_exists( 'rbfw_fd_opt' ) ) {
+			if ( 'category' === $dropdown_for ) {
+				$title = rbfw_fd_opt( 'search_type_label' );
+			} elseif ( 'location' === $dropdown_for ) {
+				$title = rbfw_fd_opt( 'search_location_label' );
+			}
+		}
+
 		$option = '';
-		
+
 		// Escape name and class attributes
 		$option .= "<select name='" . esc_attr( $name ) . "' class='" . esc_attr( $class ) . "'>";
 		$option .= "<option value=''>" . esc_html( $title ) . "</option>";
-		
+
 		if ( is_array( $category_arr ) && count( $category_arr ) > 0 ) {
 			foreach ( $category_arr as $key => $value ) {
-				// Escape each option value for security
+				// Display the taxonomy term's proper casing when we have a match; the
+				// submitted value stays the stored string so the search still matches.
+				$label         = isset( $term_map[ strtolower( (string) $value ) ] ) ? $term_map[ strtolower( (string) $value ) ] : $value;
 				$selected_text = ( ! empty( $saved_value ) && $saved_value == $value ) ? 'selected' : '';
-				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $value ) . "</option>";
+				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $label ) . "</option>";
 			}
 		}
-	
+
 		$option .= "</select>";
-		
+
 		// Use wp_kses to filter the HTML and ensure it adheres to allowed HTML rules
 		echo wp_kses( $option, rbfw_allowed_html() );
 	}
@@ -3655,10 +4333,11 @@ function numberToOrdinal($number) {
 
 if (!function_exists('rbfw_day_row_md')) {
     function rbfw_day_row_md( $day_name, $day_slug ) {
-        $hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
-        $daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
-        $enable      = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
-        return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate);
+        $hourly_rate   = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
+        $daily_rate    = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
+        $half_day_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) : '';
+        $enable        = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
+        return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate,'half_day_rate'=>$half_day_rate);
     }
 }
 
@@ -3871,4 +4550,58 @@ function rbfw_enqueue_reset_orders_assets( $hook ) {
 			'unknown_error' => __( 'An unknown error occurred.', 'booking-and-rental-manager-for-woocommerce' )
 		)
 	) );
+}
+
+if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
+	/**
+	 * Normalise saved product-variation rows before they are persisted.
+	 *
+	 * The variations repeater can submit blank or partial rows — an untouched
+	 * "add new" row, or a row whose label was cleared. Persisting those leads to
+	 * "Undefined array key 'field_label'" notices wherever the data is rendered
+	 * later (single-item form, cart, checkout, thank-you page, order meta). This
+	 * drops any row without a usable label and strips value entries that have no
+	 * name, fixing the problem at the source.
+	 *
+	 * @param mixed $rows raw (already sanitised) variations data.
+	 * @return array cleaned, re-indexed rows.
+	 */
+	function rbfw_clean_variations_data( $rows ) {
+		if ( empty( $rows ) || ! is_array( $rows ) ) {
+			return array();
+		}
+		$clean = array();
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$label = isset( $row['field_label'] ) ? trim( (string) $row['field_label'] ) : '';
+			if ( '' === $label ) {
+				continue; // No label -> unusable, skip it.
+			}
+			// Keep only value entries that actually carry a name; normalise quantity + price.
+			$values = array();
+			if ( ! empty( $row['value'] ) && is_array( $row['value'] ) ) {
+				foreach ( $row['value'] as $val ) {
+					if ( ! is_array( $val ) || ! isset( $val['name'] ) || '' === trim( (string) $val['name'] ) ) {
+						continue;
+					}
+					$clean_val = array( 'name' => trim( (string) $val['name'] ) );
+					// Only store quantity when set; absence = unlimited/unconfigured (kept intentionally).
+					if ( isset( $val['quantity'] ) && '' !== trim( (string) $val['quantity'] ) ) {
+						$clean_val['quantity'] = (string) max( 0, (int) $val['quantity'] );
+					}
+					// Optional per-unit surcharge price; only store when a value is provided.
+					if ( isset( $val['price'] ) && '' !== trim( (string) $val['price'] ) ) {
+						$price               = function_exists( 'wc_format_decimal' ) ? wc_format_decimal( $val['price'] ) : (string) (float) $val['price'];
+						$clean_val['price']  = ( '' === $price ) ? '' : (string) max( 0, (float) $price );
+					}
+					$values[] = $clean_val;
+				}
+			}
+			$row['value'] = $values;
+			$clean[]      = $row;
+		}
+		return $clean;
+	}
 }
