@@ -11,6 +11,7 @@
 	 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
 	 * Domain Path: /languages/
 	 */
+	
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
 	}
@@ -78,12 +79,12 @@
 				if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
 					if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
 						$rbfw_links = array(
-							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/rent-and-booking-manager/" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
+							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/plugins/wprently/overview" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
 							'support' => '<a href="' . esc_url( "https://mage-people.com/my-account" ) . '" target="_blank">' . __( 'Support', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
 						);
 					} else {
 						$rbfw_links = array(
-							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/rent-and-booking-manager/" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
+							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/plugins/wprently/overview" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
 							'support' => '<a href="' . esc_url( "https://mage-people.com/my-account" ) . '" target="_blank">' . __( 'Support', 'booking-and-rental-manager-for-woocommerce' ) . '</a>'
 						);
 					}

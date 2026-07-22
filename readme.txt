@@ -20,7 +20,7 @@ Use it for car rentals, bike rentals, equipment rentals, dress rentals, appointm
 = Demo and documentation =
 
 * [Frontend live demo](https://wprently.com/)
-* [Documentation](https://www.wprently.com/docs/)
+* [Documentation](https://docs.mage-people.com/plugins/wprently/overview)
 * [Pro version](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
 
 = What you can build =
