@@ -32,7 +32,6 @@ if (!class_exists('RBFWProPage')) {
 					'items' => array(
 						__( 'Built-in PayPal & Stripe checkout — accept cards and PayPal directly, no separate gateway setup.', 'booking-and-rental-manager-for-woocommerce' ),
 						__( 'Dedicated booking confirmation page with the booking reference and status.', 'booking-and-rental-manager-for-woocommerce' ),
-						__( 'Offline / manual payment option — reserve now, pay later.', 'booking-and-rental-manager-for-woocommerce' ),
 					),
 				),
 				array(

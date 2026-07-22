@@ -91,189 +91,177 @@ if (!class_exists('RbfwImportDemo')) {
 			if (!$this->is_eligible()) {
 				return;
 			}
-			// If a previous import was interrupted, resume it automatically.
-			$resume        = is_array(get_option(self::STATE_OPTION)) ? 1 : 0;
-			$display_style = ($resume || $this->should_auto_show_popup()) ? '' : 'display: none;';
+			// Non-blocking corner widget: only ever surfaces on the plugin's own admin
+			// screens, never while the admin is working elsewhere in wp-admin.
+			if (!$this->is_plugin_screen()) {
+				return;
+			}
+			// An interrupted import (state persisted) always resumes; otherwise respect an
+			// explicit dismissal so the auto-import can be opted out of.
+			$resume = is_array(get_option(self::STATE_OPTION)) ? 1 : 0;
+			if (!$resume && get_option('rbfw_dummy_import_dismissed') === 'yes') {
+				return;
+			}
+
+			$import_nonce  = wp_create_nonce('rbfw_import_dummy');
+			$dismiss_nonce = wp_create_nonce('rbfw_dismiss_dummy');
 			?>
-			<!-- RBFW Dummy Import Popup Overlay -->
-			<div id="rbfw-woo-overlay" class="rbfw-woo-overlay rbfw-dummy-overlay" data-resume="<?php echo esc_attr($resume); ?>" style="<?php echo esc_attr($display_style); ?>">
-				<div class="rbfw-woo-popup">
-					<div class="rbfw-woo-header">
-						<div class="rbfw-woo-header-icon">
-							<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-								<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-							</svg>
-						</div>
-						<span class="rbfw-woo-header-text"><?php esc_html_e('Booking & Rental Manager', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-					</div>
-
-					<div class="rbfw-woo-icon-wrapper">
-						<div class="rbfw-woo-icon">
-							<svg width="40" height="40" viewBox="0 0 24 24" fill="none">
-								<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>
-								<path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-							</svg>
-						</div>
-					</div>
-
-					<div class="rbfw-woo-content">
-						<h2 class="rbfw-woo-title"><?php esc_html_e('Import Sample Rental Items?', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
-						<p class="rbfw-woo-desc">
-							<?php esc_html_e('Would you like to import sample rental items with categories, pricing, and settings to see how Booking & Rental Manager works?', 'booking-and-rental-manager-for-woocommerce'); ?>
-						</p>
-					</div>
-
-					<div id="rbfw-woo-progress" class="rbfw-woo-progress" style="display:none;">
-						<div class="rbfw-woo-progress-bar">
-							<div id="rbfw-woo-progress-fill" class="rbfw-woo-progress-fill"></div>
-						</div>
-						<p id="rbfw-woo-status-text" class="rbfw-woo-status-text"></p>
-					</div>
-
-					<div class="rbfw-woo-actions">
-						<button type="button" id="rbfw-dummy-install-btn" class="rbfw-woo-btn rbfw-woo-btn-primary">
-							<span class="rbfw-woo-btn-icon">
-								<svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-									<path d="M10 3v10m0 0l-4-4m4 4l4-4M3 17h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
-							</span>
-							<span class="rbfw-woo-btn-text"><?php esc_html_e('Yes, Import Data', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-						</button>
-						<button type="button" id="rbfw-dummy-dismiss-btn" class="rbfw-woo-btn rbfw-woo-btn-secondary">
-							<?php esc_html_e('No, Skip', 'booking-and-rental-manager-for-woocommerce'); ?>
-						</button>
-					</div>
+			<!-- RBFW auto sample-data import — non-blocking circular-progress widget -->
+			<div id="rbfw-import-widget" class="rbfw-iw" role="status" aria-live="polite" data-resume="<?php echo esc_attr($resume); ?>">
+				<button type="button" class="rbfw-iw-close" aria-label="<?php esc_attr_e('Dismiss', 'booking-and-rental-manager-for-woocommerce'); ?>">&times;</button>
+				<div class="rbfw-iw-ring">
+					<svg viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">
+						<circle class="rbfw-iw-track" cx="22" cy="22" r="19"></circle>
+						<circle class="rbfw-iw-bar" cx="22" cy="22" r="19"></circle>
+					</svg>
+					<span class="rbfw-iw-pct">0%</span>
+					<span class="rbfw-iw-check" aria-hidden="true">
+						<svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M5 12l4 4L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					</span>
+				</div>
+				<div class="rbfw-iw-body">
+					<strong class="rbfw-iw-title"><?php esc_html_e('Setting up sample data', 'booking-and-rental-manager-for-woocommerce'); ?></strong>
+					<span class="rbfw-iw-status"><?php esc_html_e('Preparing…', 'booking-and-rental-manager-for-woocommerce'); ?></span>
 				</div>
 			</div>
-
+			<style>
+				#rbfw-import-widget.rbfw-iw{position:fixed;right:24px;bottom:24px;z-index:99998;display:flex;align-items:center;gap:14px;width:300px;max-width:calc(100vw - 32px);padding:16px 18px;background:#fff;border:1px solid #ececf0;border-radius:14px;box-shadow:0 16px 40px rgba(16,24,40,.18);box-sizing:border-box;}
+				#rbfw-import-widget .rbfw-iw-close{position:absolute;top:7px;right:9px;border:none;background:none;font-size:17px;line-height:1;color:#9ca3af;cursor:pointer;padding:2px 4px;}
+				#rbfw-import-widget .rbfw-iw-close:hover{color:#4b5563;}
+				#rbfw-import-widget .rbfw-iw-ring{position:relative;flex:0 0 auto;width:44px;height:44px;}
+				#rbfw-import-widget .rbfw-iw-ring svg:first-child{transform:rotate(-90deg);display:block;}
+				#rbfw-import-widget .rbfw-iw-track{fill:none;stroke:#f3e1ea;stroke-width:4;}
+				#rbfw-import-widget .rbfw-iw-bar{fill:none;stroke:#F12971;stroke-width:4;stroke-linecap:round;stroke-dasharray:119.38;stroke-dashoffset:119.38;transition:stroke-dashoffset .4s ease;}
+				#rbfw-import-widget .rbfw-iw-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#9d174d;}
+				#rbfw-import-widget .rbfw-iw-check{position:absolute;inset:0;display:none;align-items:center;justify-content:center;color:#16a34a;}
+				#rbfw-import-widget .rbfw-iw-body{display:flex;flex-direction:column;gap:2px;min-width:0;}
+				#rbfw-import-widget .rbfw-iw-title{font-size:13px;font-weight:700;color:#111827;line-height:1.35;}
+				#rbfw-import-widget .rbfw-iw-status{font-size:12px;color:#6b7280;line-height:1.4;overflow-wrap:break-word;}
+				#rbfw-import-widget.is-done .rbfw-iw-pct{display:none;}
+				#rbfw-import-widget.is-done .rbfw-iw-check{display:flex;}
+				#rbfw-import-widget.is-done .rbfw-iw-bar{stroke:#16a34a;}
+				#rbfw-import-widget.is-error .rbfw-iw-bar{stroke:#dc2626;}
+				#rbfw-import-widget.is-error .rbfw-iw-status{color:#dc2626;}
+				#rbfw-import-widget.is-error{cursor:pointer;}
+				@media (max-width:600px){#rbfw-import-widget.rbfw-iw{right:12px;left:12px;bottom:12px;width:auto;}}
+				@media (prefers-reduced-motion:reduce){#rbfw-import-widget .rbfw-iw-bar{transition:none;}}
+			</style>
 			<script>
-			(function($) {
-				$(document).ready(function() {
-					var $overlay = $('#rbfw-woo-overlay.rbfw-dummy-overlay');
-					if (!$overlay.length) return;
+			(function($){
+				$(function(){
+					var $w = $('#rbfw-import-widget');
+					if (!$w.length) { return; }
+					var $bar    = $w.find('.rbfw-iw-bar');
+					var $pct    = $w.find('.rbfw-iw-pct');
+					var $status = $w.find('.rbfw-iw-status');
+					var $title  = $w.find('.rbfw-iw-title');
 
-					var $popup      = $overlay.find('.rbfw-woo-popup');
-					var $btn        = $('#rbfw-dummy-install-btn');
-					var $dismissBtn = $('#rbfw-dummy-dismiss-btn');
-					var $progress   = $('#rbfw-woo-progress');
-					var $fill       = $('#rbfw-woo-progress-fill');
-					var $status     = $('#rbfw-woo-status-text');
-					var $actions    = $overlay.find('.rbfw-woo-actions');
-					var isWorking   = false;
+					var CIRC = 119.38; // 2·π·r, r=19
+					var running = false, stopped = false, errCount = 0;
+					var MAX_ERR = 5, STEP_GAP = 180; // gentle pacing between chunks (ms)
 
-					var importNonce  = '<?php echo esc_js(wp_create_nonce("rbfw_import_dummy")); ?>';
-					var dismissNonce = '<?php echo esc_js(wp_create_nonce("rbfw_dismiss_dummy")); ?>';
-					var redirectUrl  = '<?php echo esc_js(admin_url("edit.php?post_type=rbfw_item")); ?>';
+					var importNonce  = <?php echo wp_json_encode($import_nonce); ?>;
+					var dismissNonce = <?php echo wp_json_encode($dismiss_nonce); ?>;
 					var i18n = {
-						working: '<?php echo esc_js(__("Importing sample data. This may take a moment...", "booking-and-rental-manager-for-woocommerce")); ?>',
-						failed:  '<?php echo esc_js(__("Failed to import. Please try again.", "booking-and-rental-manager-for-woocommerce")); ?>',
-						success: '<?php echo esc_js(__("Success!", "booking-and-rental-manager-for-woocommerce")); ?>',
-						done:    '<?php echo esc_js(__("Sample data imported successfully. Redirecting to Rental List...", "booking-and-rental-manager-for-woocommerce")); ?>'
+						done:   <?php echo wp_json_encode(__('Sample data ready', 'booking-and-rental-manager-for-woocommerce')); ?>,
+						ready:  <?php echo wp_json_encode(__('Refreshing your rental list…', 'booking-and-rental-manager-for-woocommerce')); ?>,
+						failed: <?php echo wp_json_encode(__('Import paused', 'booking-and-rental-manager-for-woocommerce')); ?>,
+						retry:  <?php echo wp_json_encode(__('Click to resume the import.', 'booking-and-rental-manager-for-woocommerce')); ?>
 					};
 
-					// Manual trigger from other pages — just open the popup; the
-					// user confirms with "Yes, Import Data".
-					$(document).on('click', '#rbfw-trigger-dummy-import-btn', function(e) {
-						e.preventDefault();
-						$overlay.css('display', 'flex').hide().fadeIn(300);
-					});
+					function setProgress(p){
+						p = Math.max(0, Math.min(100, p));
+						$bar.css('stroke-dashoffset', CIRC * (1 - p / 100));
+						$pct.text(Math.round(p) + '%');
+					}
 
-					$btn.on('click', function(e) {
-						e.preventDefault();
-						startImport();
-					});
-
-					$dismissBtn.on('click', function(e) {
-						e.preventDefault();
-						if (isWorking) return;
-						isWorking = true;
-						$overlay.css('opacity', '0.5');
+					// Each request processes ONE small unit and frees its memory when it ends,
+					// so the import stays safe on tiny memory limits and never blocks the page.
+					function step(){
+						if (stopped) { return; }
 						$.ajax({
-							url: ajaxurl,
-							type: 'POST',
-							data: { action: 'rbfw_dismiss_dummy_import', nonce: dismissNonce },
-							complete: function() {
-								$overlay.fadeOut(300, function() { $(this).remove(); });
+							url: ajaxurl, type: 'POST', dataType: 'json',
+							data: { action: 'rbfw_import_dummy_step', nonce: importNonce }
+						}).done(function(res){
+							if (stopped) { return; }
+							if (res && res.success && res.data) {
+								errCount = 0;
+								var d = res.data;
+								setProgress(d.progress || 0);
+								if (d.message) { $status.text(d.message); }
+								if (d.done) { finish(); }
+								else { setTimeout(step, STEP_GAP); }
+							} else {
+								onError((res && res.data && res.data.message) ? res.data.message : i18n.failed);
 							}
-						});
+						}).fail(function(){ onError(i18n.failed); });
+					}
+
+					function finish(){
+						setProgress(100);
+						$w.addClass('is-done');
+						$title.text(i18n.done);
+						$status.text(i18n.ready);
+						setTimeout(function(){ window.location.reload(); }, 1600);
+					}
+
+					function onError(msg){
+						if (stopped) { return; }
+						errCount++;
+						if (errCount <= MAX_ERR) {
+							// Transient hiccup — back off and resume (the import is resumable).
+							$status.text(msg + ' (' + errCount + '/' + MAX_ERR + ')');
+							setTimeout(step, 3000);
+						} else {
+							running = false;
+							$w.addClass('is-error');
+							$title.text(i18n.failed);
+							$status.text(i18n.retry);
+						}
+					}
+
+					function start(){
+						if (running || stopped) { return; }
+						running = true; errCount = 0;
+						$w.removeClass('is-error');
+						step();
+					}
+
+					// Dismiss: stop the loop for good and remember the choice.
+					$w.on('click', '.rbfw-iw-close', function(e){
+						e.stopPropagation();
+						stopped = true;
+						$.post(ajaxurl, { action: 'rbfw_dismiss_dummy_import', nonce: dismissNonce });
+						$w.fadeOut(200, function(){ $(this).remove(); });
 					});
 
-					function startImport() {
-						if (isWorking) return;
-						isWorking = true;
-						$btn.prop('disabled', true);
-						$dismissBtn.prop('disabled', true);
-						$actions.slideUp(250);
-						$progress.slideDown(300);
-						$status.text(i18n.working).removeClass('rbfw-success rbfw-error');
-						runStep();
-					}
+					// In the paused/error state, clicking the widget resumes.
+					$w.on('click', function(){
+						if ($w.hasClass('is-error')) { $w.removeClass('is-error'); running = false; start(); }
+					});
 
-					// Each call processes ONE small chunk on the server. PHP frees all
-					// its memory when the request ends, so the next chunk starts fresh —
-					// this is what keeps the import safe on tiny memory limits.
-					function runStep() {
-						$.ajax({
-							url: ajaxurl,
-							type: 'POST',
-							dataType: 'json',
-							data: { action: 'rbfw_import_dummy_step', nonce: importNonce },
-							success: function(response) {
-								if (response && response.success && response.data) {
-									var d = response.data;
-									$fill.css('width', (d.progress || 0) + '%');
-									if (d.message) { $status.text(d.message); }
-									if (d.done) {
-										finishImport();
-									} else {
-										runStep();
-									}
-								} else {
-									showError(response && response.data && response.data.message ? response.data.message : i18n.failed);
-								}
-							},
-							error: function() {
-								showError(i18n.failed);
-							}
-						});
-					}
-
-					function finishImport() {
-						$fill.css('width', '100%');
-						$status.addClass('rbfw-success');
-						$popup.addClass('rbfw-state-success');
-						$popup.find('.rbfw-woo-icon').html(
-							'<svg width="40" height="40" viewBox="0 0 24 24" fill="none">' +
-							'<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>' +
-							'<path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-							'</svg>'
-						);
-						$popup.find('.rbfw-woo-title').text(i18n.success);
-						$popup.find('.rbfw-woo-desc').text(i18n.done);
-						setTimeout(function() { window.location.href = redirectUrl; }, 1500);
-					}
-
-					function showError(message) {
-						isWorking = false;
-						$popup.addClass('rbfw-state-error');
-						$status.text(message).addClass('rbfw-error');
-						$btn.prop('disabled', false);
-						$dismissBtn.prop('disabled', false);
-						$actions.slideDown(250);
-						// The import is resumable — clicking again continues where it stopped.
-						setTimeout(function() {
-							$popup.removeClass('rbfw-state-error');
-						}, 4000);
-					}
-
-					// Resume an import that was interrupted on a previous page load.
-					if ($overlay.data('resume') === 1) {
-						startImport();
-					}
+					start(); // auto-run (fresh import, or resume an interrupted one)
 				});
 			})(jQuery);
 			</script>
 			<?php
+		}
+
+		/**
+		 * Only surface the auto-import widget on the plugin's own admin screens, so it
+		 * never starts an import while the admin is working elsewhere in wp-admin.
+		 */
+		private function is_plugin_screen() {
+			$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+			if ($screen && strpos($screen->id, 'rbfw_item') !== false) {
+				return true;
+			}
+			$page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen gate, no state change.
+			if (strpos($page, 'rbfw') === 0) {
+				return true;
+			}
+			$post_type = isset($_GET['post_type']) ? sanitize_key(wp_unslash($_GET['post_type'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen gate, no state change.
+			return 'rbfw_item' === $post_type;
 		}
 
 		/**

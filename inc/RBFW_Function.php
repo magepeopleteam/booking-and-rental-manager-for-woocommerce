@@ -188,13 +188,19 @@
 			public static function mode_availability(): string {
 				$woo = self::has_woocommerce();
 				$pro = self::has_pro();
+				// The standalone/custom flow can run whenever the Pro gateways are active OR
+				// the built-in free Offline method is enabled (Offline needs no online
+				// processor, so it works in the free plugin on its own).
+				$custom = $pro || self::offline_payment_enabled();
+				// A real two-way choice (the mode switcher) still requires the Pro gateways;
+				// otherwise the single available flow is auto-resolved by booking_mode().
 				if ( $woo && $pro ) {
 					return 'both';
 				}
 				if ( $woo ) {
 					return 'woocommerce_only';
 				}
-				if ( $pro ) {
+				if ( $custom ) {
 					return 'custom_only';
 				}
 				return 'none';
@@ -307,9 +313,9 @@
 			 * A working checkout path must exist for the *current* mode, not merely a
 			 * plugin being active:
 			 *  - WooCommerce mode: WooCommerce owns checkout, so it is always available.
-			 *  - Standalone mode: at least one Pro custom payment method (PayPal / Stripe
-			 *    / Offline) must be enabled — WooCommerce being active but with its
-			 *    payment disabled, or Pro active with no gateway enabled, is NOT enough.
+			 *  - Standalone mode: at least one custom payment method must be enabled — the
+			 *    built-in free Offline method, or a Pro gateway (PayPal / Stripe). WooCommerce
+			 *    being active but with its payment disabled, or no gateway enabled, is NOT enough.
 			 *
 			 * When this returns false, callers disable the "Book Now" button and explain
 			 * why instead of letting the submit fail silently ("no payment method").
@@ -322,19 +328,37 @@
 			}
 
 			/**
-			 * Whether the Pro plugin has at least one custom payment method enabled.
+			 * Whether the standalone flow has at least one usable custom payment method.
 			 *
-			 * The free plugin never references Pro classes directly: when Pro is active
-			 * it exposes its enabled gateways/offline method via the
-			 * `rbfw_pro_enabled_payment_methods` filter. Without Pro the filter is never
-			 * added, so this is false — there is no standalone checkout to take payment.
+			 * Two independent sources qualify:
+			 *  - The built-in free Offline method (see offline_payment_enabled()), which
+			 *    needs no online processor — the native checkout records a pending booking
+			 *    to be paid on pickup / by bank transfer.
+			 *  - Any Pro custom gateway (PayPal / Stripe / …), exposed via the
+			 *    `rbfw_pro_enabled_payment_methods` filter only when Pro is active.
 			 */
 			public static function has_enabled_custom_payment(): bool {
+				if ( self::offline_payment_enabled() ) {
+					return true;
+				}
 				if ( ! ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) ) {
 					return false;
 				}
 				$methods = apply_filters( 'rbfw_pro_enabled_payment_methods', array() );
 				return ! empty( $methods );
+			}
+
+			/**
+			 * Whether the built-in Offline payment method is enabled on the Payments tab.
+			 *
+			 * Offline is the one custom payment method that works in the free plugin: it
+			 * requires no online gateway, so the native standalone checkout can complete a
+			 * booking (as pending, paid on pickup / by transfer) without Pro. PayPal &
+			 * Stripe remain Pro-only. Stored under rbfw_payment_settings[rbfw_offline_enable].
+			 */
+			public static function offline_payment_enabled(): bool {
+				$opts = get_option( 'rbfw_payment_settings', array() );
+				return is_array( $opts ) && isset( $opts['rbfw_offline_enable'] ) && 'on' === $opts['rbfw_offline_enable'];
 			}
 
 			/**

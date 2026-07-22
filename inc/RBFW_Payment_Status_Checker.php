@@ -78,7 +78,22 @@ if ( ! class_exists( 'RBFW_Payment_Status_Checker' ) ) {
 			if ( 'woocommerce' === $this->active_mode() ) {
 				return count( $this->get_enabled_woocommerce_gateways() ) > 0;
 			}
-			return count( $this->get_enabled_pro_payment_methods() ) > 0;
+			// Standalone: the built-in free Offline method, or any enabled Pro gateway.
+			return $this->offline_payment_enabled() || count( $this->get_enabled_pro_payment_methods() ) > 0;
+		}
+
+		/**
+		 * Whether the built-in Offline payment method is enabled. Works in the free
+		 * plugin (no online processor needed). Delegates to RBFW_Function as the single
+		 * source of truth, with a direct option read as a hook-free fallback so this
+		 * class stays testable in isolation.
+		 */
+		public function offline_payment_enabled() {
+			if ( class_exists( 'RBFW_Function' ) && method_exists( 'RBFW_Function', 'offline_payment_enabled' ) ) {
+				return RBFW_Function::offline_payment_enabled();
+			}
+			$opts = get_option( 'rbfw_payment_settings', array() );
+			return is_array( $opts ) && isset( $opts['rbfw_offline_enable'] ) && 'on' === $opts['rbfw_offline_enable'];
 		}
 
 		/** The active booking mode, exposed for mode-aware messaging. */
