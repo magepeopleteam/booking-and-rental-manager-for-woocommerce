@@ -83,7 +83,11 @@ if ( ! function_exists( 'rbfw_is_booking_available' ) ) {
         if ( rbfw_use_wc() ) {
             return true;
         }
-        // Standalone: need at least one enabled Pro custom payment method.
+        // Standalone: the built-in free Offline method, or an enabled Pro custom method.
+        $options = get_option( 'rbfw_payment_settings', array() );
+        if ( is_array( $options ) && isset( $options['rbfw_offline_enable'] ) && 'on' === $options['rbfw_offline_enable'] ) {
+            return true;
+        }
         if ( ! ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) ) {
             return false;
         }
@@ -92,9 +96,10 @@ if ( ! function_exists( 'rbfw_is_booking_available' ) ) {
 }
 
 /**
- * Helpful, dismissible admin notice shown when WooCommerce is inactive, explaining that the
- * plugin has switched to Standalone booking mode. Replaces the old forced "install WooCommerce"
- * error now that WooCommerce is optional.
+ * Handles dismissal of the Standalone-mode heads-up. The notice itself is rendered
+ * by RBFW_Admin_Payment_Notice, which unifies the "running in Standalone mode" info
+ * and the "no payment method enabled" warning into a single adaptive admin notice.
+ * This stays here because the dismiss link fires on admin_init, before that class loads.
  */
 add_action( 'admin_init', 'rbfw_handle_standalone_notice_dismiss' );
 function rbfw_handle_standalone_notice_dismiss() {
@@ -105,28 +110,51 @@ function rbfw_handle_standalone_notice_dismiss() {
     }
 }
 
-add_action( 'admin_notices', 'rbfw_standalone_mode_notice' );
-function rbfw_standalone_mode_notice() {
-    if ( rbfw_has_woocommerce() ) {
+/**
+ * Shared, self-contained styling for the plugin's modern admin notices
+ * (Standalone-mode info card + "no payment method" warning card). Printed once
+ * per request via a static guard, so both notices can safely call it. Kept inline
+ * (rather than an enqueued stylesheet) because admin_notices fire on every admin
+ * screen and this avoids registering a global asset just for two occasional cards.
+ * Uses the plugin brand accent (#F12971) so the notices match the Payments tab.
+ */
+function rbfw_admin_notice_styles() {
+    static $printed = false;
+    if ( $printed ) {
         return;
     }
-    if ( get_option( 'rbfw_standalone_dismissed' ) === 'yes' ) {
-        return;
-    }
-    if ( ! current_user_can( 'manage_options' ) ) {
-        return;
-    }
-    $dismiss_url = wp_nonce_url( add_query_arg( 'rbfw_dismiss_standalone', '1' ), 'rbfw_dismiss_standalone' );
+    $printed = true;
     ?>
-    <div class="notice notice-info is-dismissible">
-        <p>
-            <strong><?php esc_html_e( 'Booking & Rental Manager is running in Standalone mode.', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-            <?php esc_html_e( 'WooCommerce is not active, so bookings are handled internally. Activate WooCommerce any time to use its cart, checkout and order flow.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-            <a href="<?php echo esc_url( $dismiss_url ); ?>"><?php esc_html_e( 'Continue without WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-        </p>
-    </div>
+    <style id="rbfw-admin-notice-styles">
+        .rbfw-admin-notice{position:relative;border:1px solid #e5e7eb !important;border-left-width:4px !important;border-radius:12px !important;background:#fff !important;box-shadow:0 6px 20px rgba(16,24,40,0.08) !important;padding:0 !important;margin:14px 0 !important;}
+        .rbfw-admin-notice .rbfw-an-inner{display:flex;align-items:flex-start;gap:14px;padding:16px 44px 16px 18px;}
+        .rbfw-admin-notice .rbfw-an-icon{flex:0 0 auto;width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;}
+        .rbfw-admin-notice .rbfw-an-icon .dashicons{font-size:22px;width:22px;height:22px;line-height:1;}
+        .rbfw-admin-notice .rbfw-an-content{flex:1 1 auto;min-width:0;}
+        .rbfw-admin-notice .rbfw-an-eyebrow{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#F12971;margin:0 0 4px;}
+        .rbfw-admin-notice .rbfw-an-title{font-size:15px;font-weight:700;color:#111827;line-height:1.4;margin:0 0 3px;}
+        .rbfw-admin-notice .rbfw-an-text{margin:0;padding:0;font-size:13px;color:#4b5563;line-height:1.6;}
+        .rbfw-admin-notice .rbfw-an-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:13px;}
+        .rbfw-admin-notice .rbfw-an-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:600;line-height:1.4;text-decoration:none;cursor:pointer;border:1.5px solid transparent;transition:transform .15s ease,box-shadow .15s ease,background .15s ease,color .15s ease,border-color .15s ease;}
+        .rbfw-admin-notice .rbfw-an-btn:focus{box-shadow:0 0 0 2px #fff,0 0 0 4px rgba(241,41,113,.5);outline:none;}
+        .rbfw-admin-notice .rbfw-an-btn .dashicons{font-size:15px;width:15px;height:15px;line-height:1;}
+        .rbfw-admin-notice .rbfw-an-btn-primary{background:linear-gradient(135deg,#F12971 0%,#d31e5e 100%);color:#fff !important;box-shadow:0 4px 12px rgba(241,41,113,0.28);}
+        .rbfw-admin-notice .rbfw-an-btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(241,41,113,0.36);color:#fff !important;}
+        .rbfw-admin-notice .rbfw-an-btn-secondary{background:#fff;color:#374151 !important;border-color:#d1d5db;}
+        .rbfw-admin-notice .rbfw-an-btn-secondary:hover{border-color:#F12971;color:#F12971 !important;background:#fdf2f7;}
+        .rbfw-admin-notice .rbfw-an-btn-ghost{background:transparent;color:#6b7280 !important;border-color:transparent;padding-left:8px;padding-right:8px;}
+        .rbfw-admin-notice .rbfw-an-btn-ghost:hover{color:#374151 !important;background:#f3f4f6;}
+        .rbfw-admin-notice--info{border-left-color:#6366f1 !important;}
+        .rbfw-admin-notice--info .rbfw-an-icon{background:rgba(99,102,241,0.12);color:#4f46e5;}
+        .rbfw-admin-notice--warning{border-left-color:#f59e0b !important;}
+        .rbfw-admin-notice--warning .rbfw-an-icon{background:rgba(245,158,11,0.15);color:#b45309;}
+        .rbfw-admin-notice.is-dismissible .notice-dismiss{top:9px;right:7px;padding:8px;}
+        .rbfw-admin-notice.is-dismissible .notice-dismiss:before{color:#9ca3af;}
+        @media (max-width:600px){.rbfw-admin-notice .rbfw-an-inner{padding-right:38px;}.rbfw-admin-notice .rbfw-an-actions .rbfw-an-btn{flex:1 1 auto;justify-content:center;}}
+    </style>
     <?php
 }
+
 
 /**
  * Detect dangerous serialized payloads (objects/custom classes).
