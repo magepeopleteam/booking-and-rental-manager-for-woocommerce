@@ -26,6 +26,29 @@ function rbfw_get_fee_data( $item_id ) {
 }
 
 /**
+ * Fee data honouring the per-item master switch.
+ *
+ * The "Fee Configuration Settings" toggle (rbfw_enable_fee_management) is the
+ * master on/off for this item's fees. When it is off we must behave as if no
+ * fees are configured — on the booking form, in the cart and during price
+ * calculation — even though the rows stay stored so the admin keeps them when
+ * toggling back on. Use this instead of reading rbfw_fee_data directly on any
+ * front-end / pricing path; the admin editor still reads the raw meta so it can
+ * display and re-save the configured rows.
+ *
+ * @param int $item_id
+ * @return array Stored fee rows when enabled, empty array when disabled.
+ * @since 1.0.0
+ */
+function rbfw_get_enabled_fee_data( $item_id ) {
+	if ( 'on' !== get_post_meta( $item_id, 'rbfw_enable_fee_management', true ) ) {
+		return array();
+	}
+	$fee_data = get_post_meta( $item_id, 'rbfw_fee_data', true );
+	return is_array( $fee_data ) ? $fee_data : array();
+}
+
+/**
  * Get active fees for a specific item
  * @param int $item_id
  * @return array

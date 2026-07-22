@@ -84,6 +84,12 @@ if ( ! class_exists( 'RBFW_Woo_Installer' ) ) {
 		 * @return bool
 		 */
 		private function should_show_popup() {
+			// WooCommerce is now optional: do not force the installer popup once the admin
+			// has chosen to continue in Standalone mode (dismissed the notice). The plugin
+			// is fully usable without WooCommerce.
+			if ( get_option( 'rbfw_standalone_dismissed' ) === 'yes' ) {
+				return false;
+			}
 			return ! $this->is_woo_active();
 		}
 
@@ -132,6 +138,7 @@ if ( ! class_exists( 'RBFW_Woo_Installer' ) ) {
 		 * Render the popup HTML in admin footer.
 		 */
 		public function render_popup() {
+			return false;
 			if ( ! $this->should_show_popup() ) {
 				return;
 			}

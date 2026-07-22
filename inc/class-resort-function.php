@@ -159,7 +159,7 @@
 
 
 
-                    $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true );
+                    $rbfw_fee_data = rbfw_get_enabled_fee_data( $post_id );
 
                     //echo '<pre>';print_r($rbfw_fee_data);echo '</pre>';exit;
 
@@ -317,6 +317,7 @@
 					$main_array[0]['discount_type']   = $discount_type;
 					$main_array[0]['discount_amount'] = $discount_amount;
 					$main_array[0]['rbfw_regf_info']  = $rbfw_regf_info;
+					$main_array[0]['rbfw_regf_attendees'] = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
 					return $main_array;
 				else:

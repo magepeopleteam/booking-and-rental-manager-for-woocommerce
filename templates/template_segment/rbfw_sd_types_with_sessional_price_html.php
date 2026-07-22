@@ -55,13 +55,13 @@ if(isset($_POST['post_id'])){
                             <div class="w-100 me-5">
                                 <div class=" d-flex justify-content-between mb-2">
                                     <div class="w-50 d-flex justify-content-between align-items-center">
-                                        <label for=""><?php esc_html_e( 'Start Date', 'rbfw-sp' ); ?></label>
+                                        <label for=""><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                         <div class=" d-flex justify-content-between align-items-center">
                                             <input class="formControl date_type" name="rbfw_bike_car_sd_data_sp[<?php echo $key ?>][start_date]" value="<?php echo isset($single_item['start_date'])?$single_item['start_date']:'' ?>"  placeholder="<?php echo current_time( 'Y-m-d' ); ?>"/>
                                         </div>
                                     </div>
                                     <div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-                                        <label for=""><?php esc_html_e( 'End Date', 'rbfw-sp' ); ?></label>
+                                        <label for=""><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                         <div class=" d-flex justify-content-between align-items-center">
                                             <input class="formControl date_type" name="rbfw_bike_car_sd_data_sp[<?php echo $key ?>][end_date]" value="<?php echo isset($single_item['end_date'])?$single_item['end_date']:'' ?>"  placeholder="<?php echo current_time( 'Y-m-d' ); ?>"/>
                                         </div>
@@ -109,7 +109,7 @@ if(isset($_POST['post_id'])){
             <p>
                 <span class="ppof-button mp_add_item_sessional_sd">
                     <i class="fa-solid fa-circle-plus"></i>&nbsp;
-                    <?php esc_html_e( 'Add New Seasonal Pricing', 'rbfw-sp' ); ?>
+                    <?php esc_html_e( 'Add New Seasonal Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </span>
             </p>
         </div>
@@ -121,13 +121,13 @@ if(isset($_POST['post_id'])){
                     <div class="w-100 me-5">
                         <div class=" d-flex justify-content-between mb-2">
                             <div class="w-50 d-flex justify-content-between align-items-center">
-                                <label for=""><?php esc_html_e( 'Start Date', 'rbfw-sp' ); ?></label>
+                                <label for=""><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                 <div class=" d-flex justify-content-between align-items-center">
                                     <input class="formControl sp_start_date date_type" placeholder="<?php echo current_time( 'Y-m-d' ); ?>"/>
                                 </div>
                             </div>
                             <div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-                                <label for=""><?php esc_html_e( 'End Date', 'rbfw-sp' ); ?></label>
+                                <label for=""><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                 <div class=" d-flex justify-content-between align-items-center">
                                     <input class="formControl sp_end_date date_type"   placeholder="<?php echo current_time( 'Y-m-d' ); ?>"/>
                                 </div>

@@ -2,6 +2,8 @@
 
 add_action('wp_ajax_rbfw_get_stock_details', 'rbfw_get_stock_details');
 add_action('wp_ajax_rbfw_get_stock_by_filter', 'rbfw_get_stock_by_filter');
+add_action('wp_ajax_rbfw_get_stock_edit_form', 'rbfw_get_stock_edit_form');
+add_action('wp_ajax_rbfw_update_inventory_stock', 'rbfw_update_inventory_stock');
 
 
 function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
@@ -65,7 +67,7 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 }
 
 
-function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
+function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id, $order_status = null){
 
     global $rbfw;
     $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
@@ -75,8 +77,18 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         $rbfw_inventory_info = [];
     }
 
-    $order = wc_get_order( $order_id );
-    $rbfw_order_status = $order->get_status();
+    // When an explicit status is supplied (native/standalone booking) use it; otherwise
+    // resolve it from the WooCommerce order. This lets the inventory writer be reused
+    // without WooCommerce.
+    if ( $order_status !== null ) {
+        $rbfw_order_status = $order_status;
+    } else {
+        $order = wc_get_order( $order_id );
+        if ( ! $order ) {
+            return false;
+        }
+        $rbfw_order_status = $order->get_status();
+    }
 
     $start_date = !empty($ticket_info['rbfw_start_date']) ? $ticket_info['rbfw_start_date'] : '';
     $end_date = !empty($ticket_info['rbfw_end_date']) ? $ticket_info['rbfw_end_date'] : '';
@@ -184,6 +196,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     $order_array['rbfw_service_infos'] = $rbfw_service_infos;
     $order_array['rbfw_item_quantity'] = $rbfw_item_quantity;
     $order_array['rbfw_order_status'] = $rbfw_order_status;
+    /* Pickup location — lets rbfw_location_sold_qty() track location-wise stock. */
+    $order_array['rbfw_pickup_point'] = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
 
     $rbfw_inventory_info[$order_id] = $order_array;
 
@@ -406,10 +420,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
         $variant_q = [];
         foreach($rbfw_variations_data as $key=>$item1){
-            $field_label = $item1['field_label'];
-            if($field_label){
+            $field_label = isset($item1['field_label']) ? $item1['field_label'] : '';
+            if($field_label && !empty($item1['value']) && is_array($item1['value'])){
                 foreach ($item1['value'] as $key1=>$single){
-                    if($single['name']){
+                    if(!empty($single['name'])){
                         foreach($date_range as $date){
                             $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                         }
@@ -670,10 +684,10 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
             $variant_q = [];
             foreach($rbfw_variations_data as $key=>$item1){
-                $field_label = $item1['field_label'];
-                if($field_label){
+                $field_label = isset($item1['field_label']) ? $item1['field_label'] : '';
+                if($field_label && !empty($item1['value']) && is_array($item1['value'])){
                     foreach ($item1['value'] as $key1=>$single){
-                        if($single['name']){
+                        if(!empty($single['name'])){
                             foreach($date_range as $date1){
                                 $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                             }
@@ -693,6 +707,197 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
     return $day_wise_inventory;
 
+}
+/**
+ * Single-day (bike_car_sd / appointment) fully-sold-out dates.
+ *
+ * Unlike multi-day (one shared stock), a single-day item has per-option stock,
+ * so a date is sold out only when EVERY rental option has zero remaining
+ * quantity. Only dates that actually have bookings can be sold out, so we test
+ * just those rather than a full calendar. Date-based inventory uses the normal
+ * per-option counter; timely inventory evaluates every configured pickup window
+ * against the same overlap engine used by the booking form.
+ *
+ * @param int $post_id Rental item ID.
+ * @return array<string,int> Map of sold-out dates ( value 0 ), keyed 'd-m-Y' to
+ *                           match the datepicker's date_in.
+ */
+function rbfw_sd_sold_out_dates( $post_id ) {
+    if ( empty( $post_id ) ) {
+        return [];
+    }
+    $sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+    if ( empty( $sd_data ) || ! is_array( $sd_data ) ) {
+        return [];
+    }
+    $types = array_filter( array_column( $sd_data, 'rent_type' ) );
+    if ( empty( $types ) ) {
+        return [];
+    }
+    $inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+    if ( empty( $inventory ) || ! is_array( $inventory ) ) {
+        return [];
+    }
+
+    // Candidate dates = every booked date; a date with no bookings can't be sold out.
+    $candidates = [];
+    foreach ( $inventory as $inv ) {
+        if ( ! empty( $inv['booked_dates'] ) && is_array( $inv['booked_dates'] ) ) {
+            foreach ( $inv['booked_dates'] as $d ) {
+                $candidates[ $d ] = true;
+            }
+        }
+    }
+
+    // With item variations enabled, a date is also fully sold out when every size is
+    // exhausted (no size can be booked, regardless of rate availability).
+    $variations_enabled = ( get_post_meta( $post_id, 'rbfw_enable_variations', true ) === 'yes' );
+    $variation_values   = array();
+    if ( $variations_enabled ) {
+        $vdata = get_post_meta( $post_id, 'rbfw_variations_data', true );
+        if ( is_array( $vdata ) ) {
+            foreach ( $vdata as $grp ) {
+                if ( ! empty( $grp['value'] ) && is_array( $grp['value'] ) ) {
+                    foreach ( $grp['value'] as $val ) {
+                        if ( ! empty( $val['name'] ) ) {
+                            $variation_values[] = (string) $val['name'];
+                        }
+                    }
+                }
+            }
+        }
+        $variation_values = array_values( array_unique( $variation_values ) );
+    }
+
+    $manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+    $sold_out = [];
+    foreach ( array_keys( $candidates ) as $date_dmy ) {
+        $dt = DateTime::createFromFormat( 'd-m-Y', $date_dmy );
+        if ( ! $dt ) {
+            continue;
+        }
+        $date_ymd = $dt->format( 'Y-m-d' );
+
+        if ( 'on' === $manage_inventory_as_timely ) {
+            // Hourly inventory is shared across rental options and must be checked
+            // against their real time windows. A booking that exhausts 08:00-10:00
+            // must not make the whole date unavailable when a later window is free.
+            $all_sold_out = ! rbfw_sd_timely_date_has_availability( $post_id, $date_ymd, $sd_data );
+        } else {
+            $all_sold_out = true;
+            foreach ( $types as $type ) {
+                if ( (int) rbfw_get_bike_car_sd_available_qty( $post_id, $date_ymd, $type, '' ) > 0 ) {
+                    $all_sold_out = false;
+                    break;
+                }
+            }
+        }
+        if ( ! $all_sold_out && $variations_enabled && ! empty( $variation_values ) && function_exists( 'rbfw_sd_variation_remaining_stock' ) ) {
+            $any_size_available = false;
+            foreach ( $variation_values as $vv ) {
+                $rem = rbfw_sd_variation_remaining_stock( $post_id, array( $date_dmy ), $vv );
+                if ( null === $rem || $rem > 0 ) {
+                    $any_size_available = true;
+                    break;
+                }
+            }
+            if ( ! $any_size_available ) {
+                $all_sold_out = true;
+            }
+        }
+        if ( $all_sold_out ) {
+            $sold_out[ $date_dmy ] = 0;
+        }
+    }
+
+    return $sold_out;
+}
+
+/**
+ * Determine whether a timely single-day item has at least one bookable window.
+ *
+ * @param int    $post_id Rental item ID.
+ * @param string $date_ymd Date in Y-m-d format.
+ * @param array  $sd_data Configured rental option rows.
+ * @return bool
+ */
+function rbfw_sd_timely_date_has_availability( $post_id, $date_ymd, $sd_data ) {
+    $specific_duration = 'on' === get_post_meta( $post_id, 'enable_specific_duration', true );
+    $time_picker       = 'yes' === get_post_meta( $post_id, 'rbfw_enable_time_picker', true );
+    $start_times       = [];
+
+    if ( ! $specific_duration ) {
+        if ( $time_picker ) {
+            $available_times = get_post_meta( $post_id, 'rdfw_available_time', true );
+            $available_times = is_array( $available_times ) ? $available_times : [];
+            $particulars     = get_post_meta( $post_id, 'rbfw_particulars_data', true );
+            $particulars     = is_array( $particulars ) ? $particulars : [];
+
+            if ( 'on' === get_post_meta( $post_id, 'rbfw_particular_switch', true ) ) {
+                foreach ( $particulars as $particular ) {
+                    $range_start = isset( $particular['start_date'] ) ? strtotime( $particular['start_date'] ) : false;
+                    $range_end   = isset( $particular['end_date'] ) ? strtotime( $particular['end_date'] ) : false;
+                    $date        = strtotime( $date_ymd );
+                    if ( $date && $range_start && $range_end && $date >= $range_start && $date <= $range_end ) {
+                        $available_times = isset( $particular['available_time'] ) && is_array( $particular['available_time'] ) ? $particular['available_time'] : [];
+                        break;
+                    }
+                }
+            }
+
+            foreach ( $available_times as $time ) {
+                if ( is_array( $time ) ) {
+                    if ( isset( $time['status'] ) && 'enabled' !== $time['status'] ) {
+                        continue;
+                    }
+                    $time = isset( $time['time'] ) ? $time['time'] : '';
+                }
+                if ( '' !== $time ) {
+                    $start_times[] = $time;
+                }
+            }
+        } else {
+            $start_times[] = '00:00';
+        }
+    }
+
+    foreach ( $sd_data as $row ) {
+        if ( $specific_duration ) {
+            $start_time = isset( $row['start_time'] ) ? $row['start_time'] : '';
+            $end_time   = isset( $row['end_time'] ) ? $row['end_time'] : '';
+            if ( '' === $start_time || '' === $end_time ) {
+                continue;
+            }
+            $end_date = $date_ymd;
+            if ( strtotime( $date_ymd . ' ' . $end_time ) <= strtotime( $date_ymd . ' ' . $start_time ) ) {
+                $end_date = gmdate( 'Y-m-d', strtotime( $date_ymd . ' +1 day' ) );
+            }
+            if ( rbfw_timely_available_quantity_updated( $post_id, $date_ymd, $start_time, $end_date, $end_time ) > 0 ) {
+                return true;
+            }
+            continue;
+        }
+
+        $duration = isset( $row['duration'] ) ? (int) $row['duration'] : 0;
+        $d_type   = isset( $row['d_type'] ) ? $row['d_type'] : 'Hours';
+        if ( $duration <= 0 ) {
+            continue;
+        }
+        $total_hours = ( 'Hours' === $d_type ? $duration : ( 'Days' === $d_type ? $duration * 24 : ( 'Weeks' === $d_type ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
+        foreach ( $start_times as $start_time ) {
+            try {
+                $end = new DateTime( $date_ymd . ' ' . $start_time );
+            } catch ( Exception $e ) {
+                continue;
+            }
+            $end->modify( '+' . $total_hours . ' hours' );
+            if ( rbfw_timely_available_quantity_updated( $post_id, $date_ymd, $start_time, $end->format( 'Y-m-d' ), $end->format( 'H:i:s' ) ) > 0 ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return,$start_time = null, $end_time = null){
     $total_single_service = 0;
@@ -771,6 +976,154 @@ function total_variant_quantity($field_label,$variation,$date,$inventory,$invent
 }
 
 
+/**
+ * Compute an rbfw_item's total purchasable stock and total extra-service stock.
+ *
+ * This mirrors the totals logic used by the inventory table so the summary cards
+ * and each table row stay in sync. It is read-only (no side effects).
+ *
+ * @param int $post_id rbfw_item post ID.
+ * @return array{rent_type:string, item_stock:float, es_qty:float}
+ */
+function rbfw_inventory_item_stock_totals( $post_id ) {
+
+    $rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+    $rent_type = ! empty( $rent_type ) ? $rent_type : '';
+
+    $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true );
+    $rbfw_enable_variations = ! empty( $rbfw_enable_variations ) ? $rbfw_enable_variations : 'no';
+
+    $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+    $rbfw_variations_data = ! empty( $rbfw_variations_data ) ? $rbfw_variations_data : array();
+
+    $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+    $rbfw_resort_room_data = ! empty( $rbfw_resort_room_data ) ? $rbfw_resort_room_data : array();
+
+    $rbfw_bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+    $rbfw_bike_car_sd_data = ! empty( $rbfw_bike_car_sd_data ) ? $rbfw_bike_car_sd_data : array();
+
+    $manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+    $manage_inventory_as_timely = ! empty( $manage_inventory_as_timely ) ? $manage_inventory_as_timely : '';
+
+    $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true );
+    $rbfw_extra_service_data = ! empty( $rbfw_extra_service_data ) ? $rbfw_extra_service_data : array();
+
+    $es_qty = 0;
+    foreach ( $rbfw_extra_service_data as $value ) {
+        $es_qty += ! empty( $value['service_qty'] ) ? $value['service_qty'] : 0;
+    }
+
+    $item_stock = 0;
+    if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
+        if ( $manage_inventory_as_timely == 'on' ) {
+            $timely     = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
+            $item_stock = ! empty( $timely ) ? $timely : 0;
+        } else {
+            foreach ( $rbfw_bike_car_sd_data as $bike_car_sd_data ) {
+                $item_stock += ! empty( $bike_car_sd_data['qty'] ) ? $bike_car_sd_data['qty'] : 0;
+            }
+        }
+    } elseif ( $rent_type == 'resort' ) {
+        foreach ( $rbfw_resort_room_data as $resort_room_data ) {
+            $item_stock += ! empty( $resort_room_data['rbfw_room_available_qty'] ) ? $resort_room_data['rbfw_room_available_qty'] : 0;
+        }
+    } else {
+        if ( $rbfw_enable_variations == 'yes' ) {
+            foreach ( $rbfw_variations_data as $_variations_data ) {
+                if ( ! empty( $_variations_data['value'] ) ) {
+                    foreach ( $_variations_data['value'] as $value ) {
+                        if ( ! ( empty( $value['quantity'] ) || $value['quantity'] <= 0 ) ) {
+                            $item_stock = $value['quantity'] + $item_stock;
+                        }
+                    }
+                }
+            }
+        } else {
+            $stock      = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+            $item_stock = ! empty( $stock ) ? $stock : 0;
+        }
+    }
+
+    return array(
+        'rent_type'  => $rent_type,
+        'item_stock' => (float) $item_stock,
+        'es_qty'     => (float) $es_qty,
+    );
+}
+
+/**
+ * Visual state for a stock pill: 'full' (green), 'zero' (red) or '' (neutral).
+ *
+ * @param float $remain Remaining/available quantity.
+ * @param float $total  Total quantity.
+ * @return string
+ */
+function rbfw_inv_stock_state( $remain, $total ) {
+    $remain = (float) $remain;
+    $total  = (float) $total;
+    if ( $total <= 0 || $remain <= 0 ) {
+        return 'zero';
+    }
+    if ( $remain >= $total ) {
+        return 'full';
+    }
+    return '';
+}
+
+/**
+ * Return an inline SVG icon (self-contained — no icon font / CDN dependency).
+ *
+ * The plugin's bundled Font Awesome ships without its webfont files, so icon
+ * fonts do not render in this admin. Inline SVG removes that dependency
+ * entirely. Icons inherit colour via `currentColor` and size via `1em`.
+ *
+ * @param string $name        Icon key.
+ * @param string $extra_class Optional extra class on the <svg>.
+ * @return string Safe, static SVG markup.
+ */
+function rbfw_inv_icon( $name, $extra_class = '' ) {
+    $paths = array(
+        'box'      => '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5"/><path d="M12 12v9"/><path d="M12 12L4 7.5"/>',
+        'filter'   => '<path d="M4 5h16l-6.5 8v5.5l-3 1.5V13z"/>',
+        'x'        => '<path d="M18 6L6 18"/><path d="M6 6l12 12"/>',
+        'refresh'  => '<path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/>',
+        'layers'   => '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+        'sparkles' => '<path d="M12 3l1.7 4.6L18 9l-4.3 1.4L12 15l-1.7-4.6L6 9l4.3-1.4z"/><path d="M18 14l.8 2.2L21 17l-2.2.8L18 20l-.8-2.2L15 17l2.2-.8z"/>',
+        'tag'      => '<path d="M3 4h8l9 9-7 7-9-9z"/><circle cx="7.5" cy="8.5" r="1.5"/>',
+        'bed'      => '<path d="M3 7v12"/><path d="M3 13h18v6"/><path d="M21 13v-1a3 3 0 0 0-3-3H8v4"/><circle cx="6.5" cy="10.5" r="1.5"/>',
+        'car'      => '<path d="M5 13l1.6-4.4A2 2 0 0 1 8.5 7h7a2 2 0 0 1 1.9 1.6L19 13"/><path d="M4 13h16v4H4z"/><circle cx="7.5" cy="17.5" r="1.5"/><circle cx="16.5" cy="17.5" r="1.5"/>',
+        'clone'    => '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M4 16V6a2 2 0 0 1 2-2h10"/>',
+        'chev_l'   => '<path d="M15 6l-6 6 6 6"/>',
+        'chev_r'   => '<path d="M9 6l6 6-6 6"/>',
+        'clock'    => '<circle cx="12" cy="12" r="9"/><path d="M12 7.5V12l3 2"/>',
+        'plus'     => '<path d="M12 5v14"/><path d="M5 12h14"/>',
+        'pencil'   => '<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+        'lock'     => '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+        'trash'    => '<path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13h10l1-13"/><path d="M9 7V4h6v3"/>',
+        'check'    => '<path d="M5 12l5 5 9-11"/>',
+        'clipboard' => '<rect x="8" y="3.5" width="8" height="4" rx="1.5"/><path d="M9 5.5H6.5A1.5 1.5 0 0 0 5 7v12.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V7a1.5 1.5 0 0 0-1.5-1.5H15"/><path d="M8.5 12h7"/><path d="M8.5 16h5"/>',
+        'file'     => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M9 13h6"/><path d="M9 17h5"/>',
+        'search'   => '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+        'eye'      => '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+        'calendar' => '<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16"/><path d="M8 3v4"/><path d="M16 3v4"/>',
+        'receipt'  => '<path d="M6 3h12v18l-2.2-1.5L13.5 21 12 19.5 10.5 21 8.2 19.5 6 21z"/><path d="M9 8h6"/><path d="M9 12h6"/>',
+        'calculator' => '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6"/><path d="M8.5 12h.01"/><path d="M12 12h.01"/><path d="M15.5 12h.01"/><path d="M8.5 16h.01"/><path d="M12 16h.01"/><path d="M15.5 16h.01"/>',
+        'download' => '<path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/>',
+        'file_csv' => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M8.5 14h2"/><path d="M13.5 14h2"/><path d="M8.5 17h2"/><path d="M13.5 17h2"/>',
+        'file_pdf' => '<path d="M14 3v5h5"/><path d="M14 3H6.5A1.5 1.5 0 0 0 5 4.5v15A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V8z"/><path d="M8.5 13v4"/><path d="M8.5 13h1.2a1.2 1.2 0 0 1 0 2.4H8.5"/><path d="M13 13v4h1a1.5 1.5 0 0 0 1.5-1.5v-1A1.5 1.5 0 0 0 14 13z"/>',
+        'sliders'  => '<path d="M4 6h10"/><path d="M18 6h2"/><circle cx="16" cy="6" r="2"/><path d="M4 12h2"/><path d="M10 12h10"/><circle cx="8" cy="12" r="2"/><path d="M4 18h10"/><path d="M18 18h2"/><circle cx="16" cy="18" r="2"/>',
+        'chevron_down' => '<path d="M6 9l6 6 6-6"/>',
+    );
+
+    if ( ! isset( $paths[ $name ] ) ) {
+        return '';
+    }
+
+    $class = 'rbfw_inv_ic' . ( $extra_class ? ' ' . $extra_class : '' );
+
+    return '<svg class="' . esc_attr( $class ) . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">' . $paths[ $name ] . '</svg>';
+}
+
 function rbfw_inventory_page(){
     $args = array(
         'post_type'              => 'rbfw_item',
@@ -780,46 +1133,146 @@ function rbfw_inventory_page(){
         'update_term_meta_cache' => true,
     );
     $query = new WP_Query( $args );
-    $total_items = $query->found_posts;
+    $total_items = (int) $query->found_posts;
+
+    /* Summary stats for the cards (read-only). */
+    $in_stock     = 0;
+    $out_of_stock = 0;
+    $with_extra   = 0;
+    if ( ! empty( $query->posts ) ) {
+        foreach ( $query->posts as $inv_post ) {
+            $totals = rbfw_inventory_item_stock_totals( $inv_post->ID );
+            if ( $totals['item_stock'] > 0 ) {
+                $in_stock++;
+            } else {
+                $out_of_stock++;
+            }
+            if ( $totals['es_qty'] > 0 ) {
+                $with_extra++;
+            }
+        }
+    }
     ?>
-    <div class="rbfw_inventory_page_wrap wrap">
-        <h1><?php esc_html_e('Inventory','booking-and-rental-manager-for-woocommerce'); ?></h1>
-        <div class="rbfw_inventory_page_filter">
-            <div class="rbfw_inventory_filter_input_group">
+    <div class="rbfw_inv rbfw_inventory_page_wrap wrap">
+
+        <!-- Header -->
+        <div class="rbfw_inv_header">
+            <div class="rbfw_inv_title">
+                <?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                <h1><?php esc_html_e('Inventory','booking-and-rental-manager-for-woocommerce'); ?></h1>
+                <span class="rbfw_inv_badge"><?php
+                    /* translators: %s: number of inventory items. */
+                    echo esc_html( sprintf( _n( '%s Item', '%s Items', $total_items, 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( $total_items ) ) );
+                ?></span>
+            </div>
+        </div>
+        <hr class="wp-header-end">
+
+        <!-- Stat cards -->
+        <div class="rbfw_inv_stats">
+            <div class="rbfw_inv_stat_card">
+                <div class="rbfw_inv_stat_label"><?php esc_html_e('Total Items','booking-and-rental-manager-for-woocommerce'); ?></div>
+                <div class="rbfw_inv_stat_value"><?php echo esc_html( number_format_i18n( $total_items ) ); ?></div>
+                <div class="rbfw_inv_stat_sub"><?php esc_html_e('As of today','booking-and-rental-manager-for-woocommerce'); ?></div>
+            </div>
+            <div class="rbfw_inv_stat_card rbfw_inv_green">
+                <div class="rbfw_inv_stat_label"><?php esc_html_e('In Stock','booking-and-rental-manager-for-woocommerce'); ?></div>
+                <div class="rbfw_inv_stat_value"><?php echo esc_html( number_format_i18n( $in_stock ) ); ?></div>
+                <div class="rbfw_inv_stat_sub"><?php esc_html_e('Items available','booking-and-rental-manager-for-woocommerce'); ?></div>
+            </div>
+            <div class="rbfw_inv_stat_card">
+                <div class="rbfw_inv_stat_label"><?php esc_html_e('Out of Stock','booking-and-rental-manager-for-woocommerce'); ?></div>
+                <div class="rbfw_inv_stat_value"><?php echo esc_html( number_format_i18n( $out_of_stock ) ); ?></div>
+                <div class="rbfw_inv_stat_sub"><?php esc_html_e('Needs restock','booking-and-rental-manager-for-woocommerce'); ?></div>
+            </div>
+            <div class="rbfw_inv_stat_card rbfw_inv_blue">
+                <div class="rbfw_inv_stat_label"><?php esc_html_e('Extra Services','booking-and-rental-manager-for-woocommerce'); ?></div>
+                <div class="rbfw_inv_stat_value"><?php echo esc_html( number_format_i18n( $with_extra ) ); ?></div>
+                <div class="rbfw_inv_stat_sub"><?php esc_html_e('With extra stock','booking-and-rental-manager-for-woocommerce'); ?></div>
+            </div>
+        </div>
+
+        <?php
+        /* Remember the chosen tab across reloads: the JS mirrors the selection
+         * into the ?inv_tab= query param, which we honour here so the page
+         * re-renders on the same tab (no flash of the wrong panel). */
+        $rbfw_inv_active_tab = ( isset( $_GET['inv_tab'] ) && 'location' === sanitize_key( wp_unslash( $_GET['inv_tab'] ) ) ) ? 'location' : 'item';
+        ?>
+        <!-- Tab switcher: By Item (existing table) / By Location -->
+        <div class="rbfw_inv_tabs">
+            <button type="button" class="rbfw_inv_tab <?php echo 'item' === $rbfw_inv_active_tab ? 'active' : ''; ?>" data-tab="item"><?php esc_html_e( 'By Item', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+            <button type="button" class="rbfw_inv_tab <?php echo 'location' === $rbfw_inv_active_tab ? 'active' : ''; ?>" data-tab="location"><?php esc_html_e( 'By Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+        </div>
+
+        <!-- By Item panel -->
+        <div class="rbfw_inv_tab_panel <?php echo 'item' === $rbfw_inv_active_tab ? '' : 'rbfw_inv_hidden'; ?>" data-panel="item">
+
+        <!-- Filter bar -->
+        <div class="rbfw_inv_filters rbfw_inventory_page_filter">
+            <div class="rbfw_inv_filter_group rbfw_inventory_filter_input_group">
                 <label><?php esc_html_e('Date','booking-and-rental-manager-for-woocommerce'); ?></label>
                 <input type="text" class="rbfw_inventory_filter_date" placeholder="dd-mm-yyyy"/>
             </div>
-            <div class="rbfw_inventory_filter_input_group">
-                <div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-                    <label for="">Start Time:</label>
-                    <div class=" d-flex justify-content-between align-items-center">
-                        <input type="time"  id="rbfw_inventory_event_start_time" value="">
-                    </div>
-                </div>
+            <div class="rbfw_inv_filter_group rbfw_inventory_filter_input_group">
+                <label><?php esc_html_e('Start Time','booking-and-rental-manager-for-woocommerce'); ?></label>
+                <input type="time" id="rbfw_inventory_event_start_time" value="">
             </div>
-            <div class="rbfw_inventory_filter_input_group">
-                <div class="w-50 d-flex justify-content-between align-items-center">
-                    <label for="">End Time:</label>
-                    <div class=" d-flex justify-content-between align-items-center">
-                        <input type="time" id="rbfw_inventory_event_end_time" value="">
-                    </div>
-                </div>
+            <div class="rbfw_inv_filter_group rbfw_inventory_filter_input_group">
+                <label><?php esc_html_e('End Time','booking-and-rental-manager-for-woocommerce'); ?></label>
+                <input type="time" id="rbfw_inventory_event_end_time" value="">
             </div>
-            <div class="rbfw_inventory_filter_input_group">
-                <label></label>
-                <button class="rbfw_inventory_filter_btn"><?php esc_html_e('Filter','booking-and-rental-manager-for-woocommerce'); ?></button>
-            </div>
-            <div class="rbfw_inventory_filter_input_group">
-                <label></label>
-                <button class="rbfw_inventory_reset_btn"><?php esc_html_e('Reset Filter','booking-and-rental-manager-for-woocommerce'); ?></button>
-            </div>
-            <div class="rbfw_inventory_filter_input_group">
-                <label></label>
-                <button class="rbfw_inventory_refresh_btn"><?php esc_html_e('Refresh Page','booking-and-rental-manager-for-woocommerce'); ?></button>
+            <div class="rbfw_inv_filter_actions">
+                <button type="button" class="rbfw_inv_btn rbfw_inv_btn_primary rbfw_inventory_filter_btn">
+                    <?php echo rbfw_inv_icon('filter'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Filter','booking-and-rental-manager-for-woocommerce'); ?>
+                </button>
+                <button type="button" class="rbfw_inv_btn rbfw_inv_btn_reset rbfw_inventory_reset_btn">
+                    <?php echo rbfw_inv_icon('x'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Reset','booking-and-rental-manager-for-woocommerce'); ?>
+                </button>
+                <button type="button" class="rbfw_inv_btn rbfw_inv_btn_refresh rbfw_inventory_refresh_btn">
+                    <?php echo rbfw_inv_icon('refresh'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Refresh','booking-and-rental-manager-for-woocommerce'); ?>
+                </button>
             </div>
         </div>
-        <div class="rbfw_inventory_page_table_wrap">
-            <?php echo wp_kses(rbfw_inventory_page_table($query),rbfw_allowed_html()); ?>
+
+        <!-- Table card -->
+        <div class="rbfw_inv_card">
+            <div class="rbfw_inv_table_scroll">
+                <div class="rbfw_inventory_page_table_wrap">
+                    <?php echo wp_kses(rbfw_inventory_page_table($query),rbfw_allowed_html()); ?>
+                </div>
+            </div>
+            <div class="rbfw_inv_footer">
+                <span class="rbfw_inv_row_info"></span>
+                <div class="rbfw_inv_pager"></div>
+            </div>
+        </div>
+        </div><!-- /By Item panel -->
+
+        <!-- By Location panel -->
+        <div class="rbfw_inv_tab_panel <?php echo 'location' === $rbfw_inv_active_tab ? '' : 'rbfw_inv_hidden'; ?>" data-panel="location">
+            <div class="rbfw_inv_filters rbfw_inv_loc_filters">
+                <div class="rbfw_inv_filter_group">
+                    <label><?php esc_html_e( 'Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                    <input type="date" class="rbfw_inv_loc_date" value="<?php echo esc_attr( current_time( 'Y-m-d' ) ); ?>">
+                </div>
+                <div class="rbfw_inv_filter_group">
+                    <label><?php esc_html_e( 'End Date (optional)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                    <input type="date" class="rbfw_inv_loc_end_date" value="">
+                </div>
+                <div class="rbfw_inv_filter_actions">
+                    <button type="button" class="rbfw_inv_btn rbfw_inv_btn_primary rbfw_inv_loc_filter_btn">
+                        <?php echo rbfw_inv_icon( 'filter' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Filter', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </button>
+                    <button type="button" class="rbfw_inv_btn rbfw_inv_btn_reset rbfw_inv_loc_reset_btn">
+                        <?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </button>
+                </div>
+            </div>
+            <div class="rbfw_inv_card">
+                <div class="rbfw_inv_loc_table_wrap">
+                    <?php echo wp_kses( rbfw_inventory_location_table( $query ), rbfw_allowed_html() ); ?>
+                </div>
+            </div>
         </div>
     </div>
     <div id="rbfw_stock_view_result_wrap">
@@ -840,6 +1293,169 @@ function rbfw_inventory_page(){
         </div>
     </div>
     <?php
+}
+
+/**
+ * Location-wise inventory table for the Inventory page's "By Location" tab.
+ *
+ * Groups every rental item that has Location Inventory & Price enabled by its
+ * pickup location and shows, per location, each item's configured stock, the
+ * units booked in the selected date/range, and remaining availability. Reuses
+ * the same helpers the booking form uses so the numbers match what customers
+ * see: rbfw_get_location_inventory() (configured stock) and
+ * rbfw_location_sold_qty() (peak booked units in the window).
+ *
+ * @param WP_Query    $query All rbfw_item posts.
+ * @param string|null $date  Selected date (d-m-Y or Y-m-d); defaults to today.
+ * @param string|null $start Optional range start (used with $end).
+ * @param string|null $end   Optional range end.
+ * @return string HTML (safe for wp_kses( ..., rbfw_allowed_html() )).
+ */
+function rbfw_inventory_location_table( $query, $date = null, $start = null, $end = null ) {
+    $norm = static function ( $s ) {
+        $s = is_string( $s ) ? trim( $s ) : '';
+        if ( '' === $s ) {
+            return '';
+        }
+        $ts = strtotime( $s );
+        return $ts ? gmdate( 'Y-m-d', $ts ) : '';
+    };
+
+    $start_ymd = $norm( $start );
+    $end_ymd   = $norm( $end );
+    if ( '' === $start_ymd || '' === $end_ymd ) {
+        $single    = $norm( $date );
+        $single    = '' !== $single ? $single : current_time( 'Y-m-d' );
+        $start_ymd = $single;
+        $end_ymd   = $single;
+    }
+    if ( strtotime( $end_ymd ) < strtotime( $start_ymd ) ) {
+        $end_ymd = $start_ymd;
+    }
+
+    /* Location slug => display name. */
+    $loc_names = array();
+    $terms     = get_terms( array( 'taxonomy' => 'rbfw_item_location', 'hide_empty' => false ) );
+    if ( ! is_wp_error( $terms ) && $terms ) {
+        foreach ( $terms as $t ) {
+            /* Key by both the term slug and sanitize_title(name): location
+             * inventory rows are keyed by the sanitized name, which usually —
+             * but not always — equals the term slug. */
+            $loc_names[ $t->slug ]                    = $t->name;
+            $loc_names[ sanitize_title( $t->name ) ]  = $t->name;
+        }
+    }
+
+    /* Group items under each location they offer. Read $query->posts directly
+     * (not the have_posts() loop pointer, which the item table already consumed
+     * on initial page render). */
+    $by_location = array();
+    $items       = ( $query instanceof WP_Query ) ? (array) $query->posts : array();
+    if ( ! empty( $items ) ) {
+        foreach ( $items as $item ) {
+            $item_id = (int) $item->ID;
+            $conf    = function_exists( 'rbfw_get_location_inventory' ) ? rbfw_get_location_inventory( $item_id ) : array();
+            if ( empty( $conf ) ) {
+                continue;
+            }
+            foreach ( $conf as $slug => $row ) {
+                $stock  = (int) ( isset( $row['stock'] ) ? $row['stock'] : 0 );
+                $booked = function_exists( 'rbfw_location_sold_qty' ) ? (int) rbfw_location_sold_qty( $item_id, $slug, $start_ymd, $end_ymd ) : 0;
+                $by_location[ $slug ][] = array(
+                    'name'   => get_the_title( $item_id ),
+                    'stock'  => $stock,
+                    'booked' => $booked,
+                    'avail'  => max( 0, $stock - $booked ),
+                );
+            }
+        }
+    }
+
+    ob_start();
+
+    if ( empty( $by_location ) ) {
+        ?>
+        <div class="rbfw_inv_loc_empty">
+            <p><?php esc_html_e( 'No items have Location Inventory & Price enabled yet. Turn it on for an item (Location tab) and set per-location stock to see it here.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /* Stable, name-sorted location order. */
+    uksort( $by_location, static function ( $a, $b ) use ( $loc_names ) {
+        return strcasecmp( isset( $loc_names[ $a ] ) ? $loc_names[ $a ] : $a, isset( $loc_names[ $b ] ) ? $loc_names[ $b ] : $b );
+    } );
+
+    foreach ( $by_location as $slug => $rows ) {
+        $loc_name  = isset( $loc_names[ $slug ] ) ? $loc_names[ $slug ] : $slug;
+        $tot_stock = 0;
+        $tot_book  = 0;
+        $tot_avail = 0;
+        foreach ( $rows as $r ) {
+            $tot_stock += $r['stock'];
+            $tot_book  += $r['booked'];
+            $tot_avail += $r['avail'];
+        }
+        ?>
+        <div class="rbfw_inv_loc_group">
+            <div class="rbfw_inv_loc_head">
+                <div class="rbfw_inv_loc_head_main">
+                    <span class="rbfw_inv_loc_title"><?php echo esc_html( $loc_name ); ?></span>
+                    <span class="rbfw_inv_loc_count"><?php echo esc_html( sprintf( _n( '%s item', '%s items', count( $rows ), 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( count( $rows ) ) ) ); ?></span>
+                </div>
+                <div class="rbfw_inv_loc_head_stats">
+                    <span class="rbfw_inv_loc_stat"><?php esc_html_e( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_inv_loc_num"><?php echo esc_html( number_format_i18n( $tot_stock ) ); ?></span></span>
+                    <span class="rbfw_inv_loc_stat"><?php esc_html_e( 'Booked', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_inv_loc_num"><?php echo esc_html( number_format_i18n( $tot_book ) ); ?></span></span>
+                    <span class="rbfw_inv_loc_stat"><?php esc_html_e( 'Available', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_inv_loc_num"><?php echo esc_html( number_format_i18n( $tot_avail ) ); ?></span></span>
+                </div>
+            </div>
+            <table class="rbfw_inv_table rbfw_inv_loc_table">
+                <thead class="rbfw_inv_thead">
+                <tr class="rbfw_inv_thead_row">
+                    <th class="rbfw_inv_th_left"><?php esc_html_e( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                    <th class="rbfw_text_center"><?php esc_html_e( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                    <th class="rbfw_text_center"><?php esc_html_e( 'Booked', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                    <th class="rbfw_text_center"><?php esc_html_e( 'Available', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ( $rows as $r ) : ?>
+                    <tr>
+                        <td class="rbfw_inv_th_left"><?php echo esc_html( $r['name'] ); ?></td>
+                        <td class="rbfw_text_center"><?php echo esc_html( number_format_i18n( $r['stock'] ) ); ?></td>
+                        <td class="rbfw_text_center"><?php echo esc_html( number_format_i18n( $r['booked'] ) ); ?></td>
+                        <td class="rbfw_text_center"><span class="rbfw_inv_avail_badge <?php echo $r['avail'] > 0 ? 'is_in' : 'is_out'; ?>"><?php echo esc_html( number_format_i18n( $r['avail'] ) ); ?></span></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php
+    }
+
+    return ob_get_clean();
+}
+
+/* AJAX: re-render the "By Location" table for a chosen date / range. */
+add_action( 'wp_ajax_rbfw_get_location_stock_by_filter', 'rbfw_get_location_stock_by_filter' );
+function rbfw_get_location_stock_by_filter() {
+    check_ajax_referer( 'rbfw_get_location_stock_action', 'nonce' );
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+    $selected_date = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+    $start_date    = isset( $_POST['start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['start_date'] ) ) : '';
+    $end_date      = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
+    $query         = new WP_Query( array(
+        'post_type'              => 'rbfw_item',
+        'order'                  => 'DESC',
+        'posts_per_page'         => -1,
+        'update_post_meta_cache' => true,
+        'update_term_meta_cache' => true,
+    ) );
+    echo wp_kses( rbfw_inventory_location_table( $query, $selected_date, $start_date, $end_date ), rbfw_allowed_html() );
+    wp_die();
 }
 
 function rbfw_check_available_by_specific_date_md($post_id, $specific_date = null){
@@ -912,11 +1528,11 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
     ob_start();
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
     ?>
-    <table class="rbfw_inventory_page_table">
-        <thead  class="rbfw_inventory_page_table_head">
-        <tr>
+    <table class="rbfw_inv_table">
+        <thead  class="rbfw_inv_thead">
+        <tr class="rbfw_inv_thead_row">
             <th><?php esc_html_e('Date','booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?></th>
+            <th class="rbfw_inv_th_left"><?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?></th>
             <th class="rbfw_text_center"><?php esc_html_e('Item Stock','booking-and-rental-manager-for-woocommerce'); ?></th>
             <th class="rbfw_text_center"><?php esc_html_e('Item Sold Qty','booking-and-rental-manager-for-woocommerce'); ?></th>
             <th class="rbfw_text_center"><?php esc_html_e('Extra Service Stock','booking-and-rental-manager-for-woocommerce'); ?></th>
@@ -940,62 +1556,11 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 global $post;
                 $post_id = $post->ID;
 
-                $_raw = get_post_meta( $post_id, 'rbfw_item_type', true );
-                $rent_type = ! empty( $_raw ) ? $_raw : '';
-
-                $_raw = get_post_meta( $post_id, 'rbfw_enable_variations', true );
-                $rbfw_enable_variations = ! empty( $_raw ) ? $_raw : 'no';
-                $_raw = get_post_meta( $post_id, 'rbfw_variations_data', true );
-                $rbfw_variations_data = ! empty( $_raw ) ? $_raw : [];
-                $_raw = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
-                $rbfw_resort_room_data = ! empty( $_raw ) ? $_raw : [];
-                $_raw = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
-                $rbfw_bike_car_sd_data = ! empty( $_raw ) ? $_raw : [];
-                $_raw = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
-                $manage_inventory_as_timely = ! empty( $_raw ) ? $_raw : [];
-
-                $_raw = get_post_meta( $post_id, 'rbfw_extra_service_data', true );
-                $rbfw_extra_service_data = ! empty( $_raw ) ? $_raw : [];
-                $total_es_qty = 0;
-                foreach ($rbfw_extra_service_data as $value) {
-                    $total_es_qty += !empty($value['service_qty']) ? $value['service_qty'] : 0;
-                }
-
-                $rbfw_item_stock_quantity = 0;
-
-                if ($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
-                    if($manage_inventory_as_timely=='on'){
-                        $_raw = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
-                        $rbfw_item_stock_quantity = ! empty( $_raw ) ? $_raw : 0;
-                    }else{
-                        foreach ($rbfw_bike_car_sd_data as $key => $bike_car_sd_data) {
-                            $rbfw_item_stock_quantity += !empty($bike_car_sd_data['qty']) ? $bike_car_sd_data['qty'] : 0;
-                        }
-                    }
-
-                } elseif ($rent_type == 'resort'){
-                    foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
-                        $rbfw_item_stock_quantity += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;
-                    }
-                } else {
-
-                    if($rbfw_enable_variations=='yes'){
-                        foreach ($rbfw_variations_data as $_variations_data) {
-                            if(!empty($_variations_data['value'])){
-                                foreach ($_variations_data['value'] as $value) {
-                                    if(empty($value['quantity']) || $value['quantity'] <= 0){
-                                        ////
-                                    } else{
-                                        $rbfw_item_stock_quantity =  $value['quantity'] + $rbfw_item_stock_quantity;
-                                    }
-                                }
-                            }
-                        }
-                    }else{
-                        $_raw = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
-                        $rbfw_item_stock_quantity = ! empty( $_raw ) ? $_raw : 0;
-                    }
-                }
+                /* Total item stock + total extra-service stock (shared with the summary cards). */
+                $stock_totals             = rbfw_inventory_item_stock_totals( $post_id );
+                $rent_type                = $stock_totals['rent_type'];
+                $rbfw_item_stock_quantity = $stock_totals['item_stock'];
+                $total_es_qty             = $stock_totals['es_qty'];
 
                 if ( !empty($date) ){
                     $current_date = $date;
@@ -1100,39 +1665,73 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 }
 
 
+                $cat_total = (float) array_sum( $service_quantity );
+                $cat_stock = (float) array_sum( $service_stock );
+                $cat_sold  = $cat_total - $cat_stock;
+
+                $item_state = rbfw_inv_stock_state( $remaining_item_stock, $rbfw_item_stock_quantity );
+                $es_state   = rbfw_inv_stock_state( $remaining_es_stock, $total_es_qty );
+                /* Category column stays neutral when no category stock is configured. */
+                $cat_state  = $cat_total > 0 ? rbfw_inv_stock_state( $cat_stock, $cat_total ) : '';
                 ?>
-                <tr>
-                    <td><?php echo esc_html(gmdate(get_option('date_format'),strtotime($current_date))); ?></td>
+                <tr class="rbfw_inv_row">
+                    <td class="rbfw_inv_td_date" data-th="<?php esc_attr_e('Date','booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html(gmdate(get_option('date_format'),strtotime($current_date))); ?></td>
 
-                    <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
+                    <td class="rbfw_inv_td_name" data-th="<?php esc_attr_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?>"><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
 
-                    <td class="rbfw_text_center">
-                        <span class="rbfw_s_qty_span">
-                            <?php echo esc_html( $remaining_item_stock ); ?>/<?php echo esc_html( $rbfw_item_stock_quantity ); ?>
+                    <td class="rbfw_text_center" data-th="<?php esc_attr_e('Item Stock','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <span class="rbfw_inv_stock_wrap">
+                            <span class="rbfw_inv_pill <?php echo esc_attr( $item_state ); ?>"><?php echo esc_html( $remaining_item_stock ); ?>/<?php echo esc_html( $rbfw_item_stock_quantity ); ?></span>
+                            <span class="rbfw_inv_stock_actions">
+                                <a
+                                    class="rbfw_inv_view_btn rbfw_inv_icon_btn rbfw_stock_view_details"
+                                    href="#"
+                                    title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    aria-label="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    data-request="closing"
+                                    data-date="<?php echo esc_attr( $current_date ); ?>"
+                                    data-id="<?php echo esc_attr( get_the_ID() ); ?>"
+                                >
+                                    <?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                </a>
+                                <?php if ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) : ?>
+                                    <a
+                                        class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_inv_icon_btn rbfw_stock_edit_details"
+                                        href="#"
+                                        title="<?php esc_attr_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                        aria-label="<?php esc_attr_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                        data-id="<?php echo esc_attr( get_the_ID() ); ?>"
+                                    >
+                                        <?php echo rbfw_inv_icon('pencil'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                    </a>
+                                <?php else : ?>
+                                    <a
+                                        class="rbfw_inv_view_btn rbfw_inv_edit_btn rbfw_inv_icon_btn rbfw_inv_pro_lock"
+                                        href="<?php echo esc_url( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_go_pro_page' ) ); ?>"
+                                        title="<?php esc_attr_e( 'Edit Stock is a Pro feature — click to upgrade', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                        aria-label="<?php esc_attr_e( 'Edit Stock is a Pro feature — click to upgrade', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                    >
+                                        <?php echo rbfw_inv_icon('lock'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                        <span class="rbfw_inv_pro_lock_badge"><?php esc_html_e( 'PRO', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </a>
+                                <?php endif; ?>
+                            </span>
                         </span>
-                        <a 
-                            class="rbfw_stock_view_details" 
-                            data-request="closing" 
-                            data-date="<?php echo esc_attr( $current_date ); ?>" 
-                            data-id="<?php echo esc_attr( get_the_ID() ); ?>"
-                        >
-                            <?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </a>
                     </td>
 
 
-                    <td class="rbfw_text_center"><?php  echo esc_html($sold_item_qty); ?></td>
-                    <td class="rbfw_text_center"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></td>
-                    <td class="rbfw_text_center"><?php echo esc_html($sold_es_qty); ?></td>
-                    <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_stock)); ?>/<?php echo esc_html(array_sum($service_quantity)); ?></td>
-                    <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_quantity)-array_sum($service_stock)); ?></td>
+                    <td class="rbfw_text_center" data-th="<?php esc_attr_e('Item Sold Qty','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_qty_badge <?php echo esc_attr( $sold_item_qty > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html($sold_item_qty); ?></span></td>
+                    <td class="rbfw_text_center rbfw_inv_td_es_stock" data-th="<?php esc_attr_e('Extra Service Stock','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_pill <?php echo esc_attr( $es_state ); ?>"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></span></td>
+                    <td class="rbfw_text_center rbfw_inv_td_es_sold" data-th="<?php esc_attr_e('Extra Service Sold Qty','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_qty_badge <?php echo esc_attr( $sold_es_qty > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html($sold_es_qty); ?></span></td>
+                    <td class="rbfw_text_center" data-th="<?php esc_attr_e('Category Service','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_pill <?php echo esc_attr( $cat_state ); ?>"><?php echo esc_html( $cat_stock ); ?>/<?php echo esc_html( $cat_total ); ?></span></td>
+                    <td class="rbfw_text_center" data-th="<?php esc_attr_e('Category Service Sold Qty','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_qty_badge <?php echo esc_attr( $cat_sold > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html( $cat_sold ); ?></span></td>
                 </tr>
                 <?php
             }
         }else{
             ?>
-            <tr>
-                <td colspan="20"><?php esc_html_e( 'Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+            <tr class="rbfw_inv_empty_tr">
+                <td colspan="20" class="rbfw_inv_empty_cell"><?php esc_html_e( 'Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
             </tr>
             <?php
         }
@@ -1309,26 +1908,58 @@ function rbfw_get_stock_details(){
                                     }
                                     $c++;
                                 }
+
+                                // Single Day item variations: also decrement per-size stock so the
+                                // closing-stock report reflects variation availability. Units = sum of
+                                // per-rate qty (single-day's real unit count), matching the booking gate.
+                                if ( $rent_type == 'bike_car_sd' && $rbfw_enable_variations == 'yes' && ! empty( $rbfw_variation_info ) ) {
+                                    $sd_units = array_sum( array_map( 'intval', $rbfw_type_info ) );
+                                    $f = 0;
+                                    foreach ( $rbfw_variations_data_closing as $key => $v_data ) {
+                                        $field_id    = isset( $rbfw_variations_data_closing[ $f ]['field_id'] ) ? $rbfw_variations_data_closing[ $f ]['field_id'] : '';
+                                        $field_value = ( isset( $rbfw_variations_data_closing[ $f ]['value'] ) && is_array( $rbfw_variations_data_closing[ $f ]['value'] ) ) ? $rbfw_variations_data_closing[ $f ]['value'] : array();
+                                        foreach ( $rbfw_variation_info as $key => $v_info ) {
+                                            $s_field_id    = $v_info['field_id'] ?? '';
+                                            $s_field_value = $v_info['field_value'] ?? '';
+                                            if ( $s_field_id == $field_id ) {
+                                                $g = 0;
+                                                foreach ( $field_value as $key => $f_value ) {
+                                                    $fv_name = $f_value['name'] ?? '';
+                                                    $fv_qty  = $f_value['quantity'] ?? '';
+                                                    if ( $s_field_value == $fv_name ) {
+                                                        // Per-value qty steppers: decrement this size by its own
+                                                        // selected qty; fall back to the whole-line total for
+                                                        // legacy single-value lines that carry no per-row qty.
+                                                        $sel_units = ( isset( $v_info['qty'] ) && (int) $v_info['qty'] > 0 ) ? (int) $v_info['qty'] : $sd_units;
+                                                        $rbfw_variations_data_closing[ $f ]['value'][ $g ]['quantity'] = $fv_qty - $sel_units;
+                                                    }
+                                                    $g++;
+                                                }
+                                            }
+                                        }
+                                        $f++;
+                                    }
+                                }
                             } else {
 
                                 $sold_item_qty += $rbfw_item_quantity;
                                 $f = 0;
                                 foreach ($rbfw_variations_data_closing as $key => $v_data) {
-                                    $field_id = $rbfw_variations_data_closing[$f]['field_id'];
-                                    $field_label = $rbfw_variations_data_closing[$f]['field_label'];
-                                    $field_value = $rbfw_variations_data_closing[$f]['value'];
+                                    $field_id = isset($rbfw_variations_data_closing[$f]['field_id']) ? $rbfw_variations_data_closing[$f]['field_id'] : '';
+                                    $field_label = isset($rbfw_variations_data_closing[$f]['field_label']) ? $rbfw_variations_data_closing[$f]['field_label'] : '';
+                                    $field_value = ( isset($rbfw_variations_data_closing[$f]['value']) && is_array($rbfw_variations_data_closing[$f]['value']) ) ? $rbfw_variations_data_closing[$f]['value'] : array();
 
                                     if(!empty($rbfw_variation_info)){
                                         foreach ($rbfw_variation_info as $key => $v_info) {
-                                            $s_field_id = $v_info['field_id'];
-                                            $s_field_label = $v_info['field_label'];
-                                            $s_field_value = $v_info['field_value'];
+                                            $s_field_id = $v_info['field_id'] ?? '';
+                                            $s_field_label = $v_info['field_label'] ?? '';
+                                            $s_field_value = $v_info['field_value'] ?? '';
                                             if($s_field_id == $field_id){
                                                 $g = 0;
                                                 foreach ($field_value as $key => $f_value) {
 
-                                                    $fv_name = $f_value['name'];
-                                                    $fv_qty = $f_value['quantity'];
+                                                    $fv_name = $f_value['name'] ?? '';
+                                                    $fv_qty = $f_value['quantity'] ?? '';
 
                                                     if ($s_field_value == $fv_name) {
                                                         $rbfw_variations_data_closing[$f]['value'][$g]['quantity'] = $fv_qty - $rbfw_item_quantity;
@@ -1369,189 +2000,1354 @@ function rbfw_get_stock_details(){
 
             }
 
+            $modal_title    = get_the_title( $data_id );
+            $modal_date_fmt = $data_date ? gmdate( get_option( 'date_format' ), strtotime( $data_date ) ) : '';
+            $avail_zero     = ( empty( $remaining_item_stock ) || $remaining_item_stock <= 0 );
             ?>
-            <table class="rbfw_inventory_page_inner_table">
-                <thead>
-                    <tr>
-                        <td class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity:','booking-and-rental-manager-for-woocommerce'); ?></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td <?php if(empty($remaining_item_stock) || $remaining_item_stock <= 0){ echo "data-status=empty"; } ?>><?php echo esc_html($remaining_item_stock); ?></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <?php if(!empty($rbfw_resort_room_data) && $rent_type == 'resort'){ ?>
-                <div class="rbfw_inventory_vf_label"><?php esc_html_e('Room Info:','booking-and-rental-manager-for-woocommerce'); ?></div>
-                <table class="rbfw_inventory_page_inner_table">
-                    <thead>
-                        <tr>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Room Type','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($rbfw_resort_room_data as $resort_room_data) { ?>
-                        <tr>
-                            <td><?php echo esc_html($resort_room_data['room_type']); ?></td>
-                            <td><?php echo esc_html($resort_room_data['rbfw_room_available_qty']); ?></td>
-                        </tr>
+            <div class="rbfw_inv_modal">
+                <div class="rbfw_inv_modal_head">
+                    <div class="rbfw_inv_modal_icon"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                    <div class="rbfw_inv_modal_title_wrap">
+                        <div class="rbfw_inv_modal_title"><?php echo esc_html( $modal_title ); ?></div>
+                        <?php if ( $modal_date_fmt ) { ?>
+                            <div class="rbfw_inv_modal_sub"><?php echo esc_html( $modal_date_fmt ); ?></div>
                         <?php } ?>
-                    </tbody>
-                </table>
-            <?php } ?>
+                    </div>
+                    <a href="#" class="rbfw_inv_modal_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon('x'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                </div>
 
-            <?php if(!empty($rbfw_bike_car_sd_data) && ($rent_type == 'bike_car_sd' || $rent_type == 'appointment')){ ?>
-                <div class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Info:','booking-and-rental-manager-for-woocommerce'); ?></div>
-                <table class="rbfw_inventory_page_inner_table">
-                    <thead>
-                        <tr>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($rbfw_bike_car_sd_data as $bike_car_sd_data) { ?>
-                        <tr>
-                            <td><?php echo esc_html($bike_car_sd_data['rent_type']); ?></td>
-                            <td><?php echo esc_html($bike_car_sd_data['qty']); ?></td>
-                        </tr>
+                <div class="rbfw_inv_modal_body">
+
+                    <!-- Available qty hero -->
+                    <div class="rbfw_inv_avail_hero">
+                        <div>
+                            <div class="rbfw_inv_avail_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <div class="rbfw_inv_avail_qty <?php echo esc_attr( $avail_zero ? 'rbfw_inv_avail_zero' : '' ); ?>"><?php echo esc_html( $remaining_item_stock ); ?></div>
+                        </div>
+                        <?php echo rbfw_inv_icon('layers','rbfw_inv_avail_icon'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                    </div>
+
+                    <?php if(!empty($rbfw_resort_room_data) && $rent_type == 'resort'){ ?>
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('bed'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Room Info','booking-and-rental-manager-for-woocommerce'); ?></div>
+                        <table class="rbfw_inv_mini_table">
+                            <thead><tr><th><?php esc_html_e('Room Type','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
+                            <tbody>
+                            <?php foreach ($rbfw_resort_room_data as $resort_room_data) { ?>
+                                <tr><td><?php echo esc_html($resort_room_data['room_type']); ?></td><td class="rbfw_inv_qty_cell"><?php echo esc_html($resort_room_data['rbfw_room_available_qty']); ?></td></tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php } ?>
+
+                    <?php if(!empty($rbfw_bike_car_sd_data) && ($rent_type == 'bike_car_sd' || $rent_type == 'appointment')){ ?>
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('car'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Rent Info','booking-and-rental-manager-for-woocommerce'); ?></div>
+                        <table class="rbfw_inv_mini_table">
+                            <thead><tr><th><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
+                            <tbody>
+                            <?php foreach ($rbfw_bike_car_sd_data as $bike_car_sd_data) { ?>
+                                <tr><td><?php echo esc_html($bike_car_sd_data['rent_type']); ?></td><td class="rbfw_inv_qty_cell"><?php echo esc_html($bike_car_sd_data['qty']); ?></td></tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php } ?>
+
+                    <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){ ?>
+                        <?php foreach ($rbfw_variations_data as $_variations_data) { ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clone'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html( $_variations_data['field_label'] ?? '' ); ?></div>
+                            <?php if(!empty($_variations_data['value'])){ ?>
+                            <table class="rbfw_inv_mini_table">
+                                <thead><tr><th><?php esc_html_e('Name','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
+                                <tbody>
+                                <?php foreach ($_variations_data['value'] as $value) {
+                                    $v_zero = ( empty( $value['quantity'] ) || $value['quantity'] <= 0 ); ?>
+                                    <tr><td><?php echo esc_html($value['name']); ?></td><td class="rbfw_inv_qty_cell <?php echo esc_attr( $v_zero ? 'rbfw_inv_qty_cell_zero' : '' ); ?>"><?php echo esc_html( $value['quantity'] ); ?></td></tr>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <?php } ?>
+                        </div>
                         <?php } ?>
-                    </tbody>
-                </table>
+                    <?php } ?>
 
-           <?php } ?>
-<?php
+                    <!-- Extra services -->
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('sparkles'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Extra Services','booking-and-rental-manager-for-woocommerce'); ?></div>
+                        <table class="rbfw_inv_mini_table">
+                            <thead><tr><th><?php esc_html_e('Service Name','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
+                            <tbody>
+                            <?php if(!empty($rbfw_extra_service_data)){
+                                foreach ($rbfw_extra_service_data as $extra_service_data) { ?>
+                                <tr><td><?php echo esc_html($extra_service_data['service_name']); ?></td><td class="rbfw_inv_qty_cell"><?php echo esc_html($extra_service_data['service_qty']); ?></td></tr>
+                            <?php }
+                            } else { ?>
+                                <tr><td colspan="2" class="rbfw_inv_empty_modal"><?php esc_html_e('No extra services available','booking-and-rental-manager-for-woocommerce'); ?></td></tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
 
-if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){
-
-    ?>
-            <table class="rbfw_inventory_page_inner_table">
-                <thead>
-                    <tr>
-                        <td class="rbfw_inventory_vf_label"><?php esc_html_e('Variation Stock:','booking-and-rental-manager-for-woocommerce'); ?></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-
-                           <table class="rbfw_inventory_page_inner_table rbfw_border_none">
-
-
-                              <?php foreach ($rbfw_variations_data as $_variations_data) {   ?>
-
-                                       <tr>
-                                            <th class="rbfw_inventory_page_inner_vf_th">
-                                                <div class="rbfw_inventory_vf_label">
-                                                   <?php echo esc_html($_variations_data['field_label']).':' ?>
-                                                </div>
-                                                <?php if(!empty($_variations_data['value'])){ ?>
-                                                    <table class="rbfw_inventory_page_inner_table">
-                                                        <thead>
-                                                           <tr>
-                                                                <th class="rbfw_inventory_vf_label">
-                                                                    <?php esc_html_e('Name','booking-and-rental-manager-for-woocommerce'); ?>
-                                                                </th>
-                                                                <th class="rbfw_inventory_vf_label">
-                                                                    <?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?>
-                                                               </th>
-                                                            </tr>
-                                                       </thead>
-
-                                                    <?php foreach ($_variations_data['value'] as $value) { ?>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                   <?php echo esc_html($value['name']); ?>
-                                                                </td>
-                                                                <td data-status="<?php echo esc_attr( ( empty( $value['quantity'] ) || $value['quantity'] <= 0 ) ? 'empty' : '' ); ?>">
-                                                                    <?php echo esc_html( $value['quantity'] ); ?>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                   <?php } ?>
-                                                    </table>
-                                                <?php } ?>
-                                            </th>
-                                        </tr>
-                                    <?php } ?>
-                                </table>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <?php } ?>
-
-            <?php if(!empty($rbfw_extra_service_data)){ ?>
-                <div class="rbfw_inventory_vf_label"><?php esc_html_e('Extra Services:','booking-and-rental-manager-for-woocommerce'); ?></div>
-                <table class="rbfw_inventory_page_inner_table">
-                    <thead>
-                        <tr>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Service Name','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($rbfw_extra_service_data as $extra_service_data) { ?>
-                        <tr>
-                            <td><?php echo esc_html($extra_service_data['service_name']); ?></td>
-                            <td><?php echo esc_html($extra_service_data['service_qty']); ?></td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            <?php } ?>
-
-            <?php
-
-            $rbfw_service_category_price = get_post_meta($data_id, 'rbfw_service_category_price', true);
-
-            if(!is_array($rbfw_service_category_price)){
-                $rbfw_service_category_price = json_decode($rbfw_service_category_price, true);
-            }
-
-
-            $service_stock = [];
-            if (!empty($rbfw_service_category_price)) { ?>
-                <div class="rbfw_inventory_vf_label"><?php esc_html_e('Category wise service:','booking-and-rental-manager-for-woocommerce'); ?></div>
-                <table class="rbfw_inventory_page_inner_table">
-                <?php
-                foreach($rbfw_service_category_price as $key=>$item1){
-                    $cat_title = $item1['cat_title'];
-                    ?>
-                    <tr><th colspan="2" class="rbfw_inventory_vf_label"> <?php echo esc_html($cat_title); ?></th></tr>
-
+                    <!-- Category wise -->
                     <?php
-                    $service_q = [];
-                    foreach ($item1['cat_services'] as $key1=>$single){
-                        if($single['title']){
-                            ?>
-                            <tr>
-                            <td><?php echo esc_html($single['title']); ?></td>
-                            <?php
-                            $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_return));
-                            ?>
-                            <td>
-                            <?php echo esc_html($single['stock_quantity'] - max(array_column($service_q, $single['title']))); ?>
-                            </td>
-                            </tr>
-                           <?php
-                        }
+                    $rbfw_service_category_price = get_post_meta($data_id, 'rbfw_service_category_price', true);
+                    if(!is_array($rbfw_service_category_price)){
+                        $rbfw_service_category_price = json_decode($rbfw_service_category_price, true);
                     }
                     ?>
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Category Wise Service','booking-and-rental-manager-for-woocommerce'); ?></div>
+                        <?php if (!empty($rbfw_service_category_price)) {
+                            foreach($rbfw_service_category_price as $key=>$item1){
+                                $cat_title = $item1['cat_title'];
+                                ?>
+                                <div class="rbfw_inv_cat_block">
+                                    <div class="rbfw_inv_cat_title"><?php echo rbfw_inv_icon('tag'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html($cat_title); ?></div>
+                                    <table class="rbfw_inv_mini_table">
+                                        <tbody>
+                                        <?php
+                                        $service_q = [];
+                                        foreach ($item1['cat_services'] as $key1=>$single){
+                                            if($single['title']){
+                                                $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_return));
+                                                ?>
+                                                <tr><td><?php echo esc_html($single['title']); ?></td><td class="rbfw_inv_qty_cell"><?php echo esc_html($single['stock_quantity'] - max(array_column($service_q, $single['title']))); ?></td></tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php }
+                        } else { ?>
+                            <div class="rbfw_inv_empty_modal_note"><?php esc_html_e('No category services configured','booking-and-rental-manager-for-woocommerce'); ?></div>
+                        <?php } ?>
+                    </div>
 
-                    <?php
-                }
-                ?>
-                <table>
-                <?php
-            }
-            ?>
-             <?php
+                </div><!-- /.rbfw_inv_modal_body -->
+            </div><!-- /.rbfw_inv_modal -->
+            <?php
             wp_die();
         }
 
+/**
+ * Sanitize a posted stock-quantity value.
+ *
+ * Mirrors what the classic item editor accepts (plain sanitize_text_field,
+ * no forced int-cast — rbfw_resort_room_data's qty field ships with
+ * step=".01", so it can legitimately be a decimal). Non-numeric input and
+ * negative numbers are clamped to 0.
+ *
+ * @param mixed $value Raw posted value.
+ * @return int|float
+ */
+function rbfw_inv_sanitize_qty( $value ) {
+    $value = sanitize_text_field( wp_unslash( (string) $value ) );
+    if ( ! is_numeric( $value ) ) {
+        return 0;
+    }
+    $number = $value + 0; // Numeric string -> int or float, matching its precision.
+    return $number < 0 ? 0 : $number;
+}
+
+/**
+ * AJAX: render the "Edit Stock" form for the Inventory admin page.
+ *
+ * The Item Stock column shows one merged number, but the underlying meta
+ * shape differs per rent type (a single flat quantity, a per-variation-value
+ * quantity, a per-rent-type quantity for bike_car_sd/appointment, or a
+ * per-room quantity for resort). This renders the correct editable shape for
+ * the item so saving here writes to the exact same meta keys/indexes the
+ * classic + modern item editors read — the item editor and this page never
+ * fall out of sync.
+ */
+function rbfw_get_stock_edit_form() {
+
+    check_ajax_referer( 'rbfw_get_stock_edit_form_action', 'nonce' );
+
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+
+    // Edit Stock is a Pro feature. The button is hidden client-side for
+    // free-plugin users, but that alone isn't enforcement — someone could
+    // still POST directly to this action, so gate it here too.
+    if ( ! function_exists( 'rbfw_check_pro_active' ) || ! rbfw_check_pro_active() ) {
+        wp_send_json_error( __( 'Editing stock from the Inventory page is a Pro feature.', 'booking-and-rental-manager-for-woocommerce' ), 403 );
+    }
+
+    $post_id = isset( $_POST['data_id'] ) ? absint( $_POST['data_id'] ) : 0;
+
+    if ( ! $post_id || get_post_type( $post_id ) !== 'rbfw_item' || ! current_user_can( 'edit_post', $post_id ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+
+    $rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+    $rent_type = ! empty( $rent_type ) ? $rent_type : '';
+
+    $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true );
+    $rbfw_enable_variations = ! empty( $rbfw_enable_variations ) ? $rbfw_enable_variations : 'no';
+
+    $manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+    $manage_inventory_as_timely = ! empty( $manage_inventory_as_timely ) ? $manage_inventory_as_timely : 'off';
+
+    $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+    $rbfw_variations_data = ! empty( $rbfw_variations_data ) ? $rbfw_variations_data : [];
+
+    $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+    $rbfw_resort_room_data = ! empty( $rbfw_resort_room_data ) ? $rbfw_resort_room_data : [];
+
+    $rbfw_bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+    $rbfw_bike_car_sd_data = ! empty( $rbfw_bike_car_sd_data ) ? $rbfw_bike_car_sd_data : [];
+
+    $rbfw_item_stock_quantity = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+    $rbfw_item_stock_quantity = ( $rbfw_item_stock_quantity !== '' && $rbfw_item_stock_quantity !== false ) ? $rbfw_item_stock_quantity : 0;
+
+    $rbfw_item_stock_quantity_timely = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
+    $rbfw_item_stock_quantity_timely = ( $rbfw_item_stock_quantity_timely !== '' && $rbfw_item_stock_quantity_timely !== false ) ? $rbfw_item_stock_quantity_timely : 0;
+
+    $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true );
+    $rbfw_extra_service_data = ! empty( $rbfw_extra_service_data ) ? $rbfw_extra_service_data : [];
+
+    $modal_title = get_the_title( $post_id );
+    ?>
+    <div class="rbfw_inv_modal">
+        <div class="rbfw_inv_modal_head">
+            <div class="rbfw_inv_modal_icon"><?php echo rbfw_inv_icon('pencil'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+            <div class="rbfw_inv_modal_title_wrap">
+                <div class="rbfw_inv_modal_title"><?php echo esc_html( $modal_title ); ?></div>
+                <div class="rbfw_inv_modal_sub"><?php esc_html_e( 'Edit Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+            </div>
+            <a href="#" class="rbfw_inv_modal_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon('x'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+        </div>
+
+        <form class="rbfw_inv_edit_stock_form" data-post-id="<?php echo esc_attr( $post_id ); ?>">
+            <div class="rbfw_inv_modal_body">
+
+                <?php if ( $rent_type === 'resort' ) : ?>
+
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('bed'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Room Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <?php if ( ! empty( $rbfw_resort_room_data ) ) : ?>
+                            <table class="rbfw_inv_mini_table">
+                                <thead><tr><th><?php esc_html_e( 'Room Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e( 'Stock Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></th></tr></thead>
+                                <tbody>
+                                <?php foreach ( $rbfw_resort_room_data as $i => $room ) : ?>
+                                    <tr>
+                                        <td><?php echo esc_html( $room['room_type'] ?? '' ); ?></td>
+                                        <td class="rbfw_inv_qty_cell"><input type="number" min="0" step="any" class="rbfw_inv_qty_input" name="qty[room][<?php echo esc_attr( $i ); ?>]" value="<?php echo esc_attr( $room['rbfw_room_available_qty'] ?? 0 ); ?>"></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php else : ?>
+                            <div class="rbfw_inv_empty_modal_note"><?php esc_html_e( 'No rooms configured. Add rooms in the item editor first.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <?php endif; ?>
+                    </div>
+
+                <?php elseif ( $rent_type === 'bike_car_sd' || $rent_type === 'appointment' ) : ?>
+
+                    <?php if ( $manage_inventory_as_timely === 'on' ) : ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clock'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Timely Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            <input type="number" min="0" step="any" class="rbfw_inv_qty_input rbfw_inv_qty_input_flat" name="qty[timely]" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ); ?>">
+                        </div>
+                    <?php else : ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('car'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Rent Type Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            <?php if ( ! empty( $rbfw_bike_car_sd_data ) ) : ?>
+                                <table class="rbfw_inv_mini_table">
+                                    <thead><tr><th><?php esc_html_e( 'Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e( 'Stock Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></th></tr></thead>
+                                    <tbody>
+                                    <?php foreach ( $rbfw_bike_car_sd_data as $i => $sd ) : ?>
+                                        <tr>
+                                            <td><?php echo esc_html( $sd['rent_type'] ?? '' ); ?></td>
+                                            <td class="rbfw_inv_qty_cell"><input type="number" min="0" step="any" class="rbfw_inv_qty_input" name="qty[sd][<?php echo esc_attr( $i ); ?>]" value="<?php echo esc_attr( $sd['qty'] ?? 0 ); ?>"></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            <?php else : ?>
+                                <div class="rbfw_inv_empty_modal_note"><?php esc_html_e( 'No rent types configured. Add them in the item editor first.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                <?php elseif ( $rbfw_enable_variations === 'yes' ) : ?>
+
+                    <?php if ( ! empty( $rbfw_variations_data ) ) : ?>
+                        <?php foreach ( $rbfw_variations_data as $field_i => $group ) : ?>
+                            <div class="rbfw_inv_modal_section">
+                                <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clone'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html( $group['field_label'] ?? '' ); ?></div>
+                                <?php if ( ! empty( $group['value'] ) ) : ?>
+                                    <table class="rbfw_inv_mini_table">
+                                        <thead><tr><th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e( 'Stock Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></th></tr></thead>
+                                        <tbody>
+                                        <?php foreach ( $group['value'] as $value_i => $value ) : ?>
+                                            <tr>
+                                                <td><?php echo esc_html( $value['name'] ?? '' ); ?></td>
+                                                <td class="rbfw_inv_qty_cell"><input type="number" min="0" step="any" class="rbfw_inv_qty_input" name="qty[variation][<?php echo esc_attr( $field_i ); ?>][<?php echo esc_attr( $value_i ); ?>]" value="<?php echo esc_attr( $value['quantity'] ?? 0 ); ?>"></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <div class="rbfw_inv_empty_modal_note"><?php esc_html_e( 'No variations configured. Add them in the item editor first.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                    <?php endif; ?>
+
+                <?php else : ?>
+
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <input type="number" min="0" step="any" class="rbfw_inv_qty_input rbfw_inv_qty_input_flat" name="qty[flat]" value="<?php echo esc_attr( $rbfw_item_stock_quantity ); ?>">
+                    </div>
+
+                <?php endif; ?>
+
+                <?php if ( ! empty( $rbfw_extra_service_data ) ) : ?>
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('sparkles'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Extra Services', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <table class="rbfw_inv_mini_table">
+                            <thead><tr><th><?php esc_html_e( 'Service Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e( 'Stock Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></th></tr></thead>
+                            <tbody>
+                            <?php foreach ( $rbfw_extra_service_data as $i => $service ) : ?>
+                                <tr>
+                                    <td><?php echo esc_html( $service['service_name'] ?? '' ); ?></td>
+                                    <td class="rbfw_inv_qty_cell"><input type="number" min="0" step="any" class="rbfw_inv_qty_input" name="qty[extra_service][<?php echo esc_attr( $i ); ?>]" value="<?php echo esc_attr( $service['service_qty'] ?? 0 ); ?>"></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php endif; ?>
+
+                <p class="rbfw_inv_edit_stock_msg" role="alert" aria-live="polite"></p>
+            </div>
+            <div class="rbfw_inv_modal_foot">
+                <button type="button" class="rbfw_inv_modal_btn rbfw_inv_modal_btn_ghost rbfw_inv_modal_close"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                <button type="submit" class="rbfw_inv_modal_btn rbfw_inv_modal_btn_primary rbfw_inv_edit_stock_save"><?php echo rbfw_inv_icon('check'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Save Changes', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+            </div>
+        </form>
+    </div>
+    <?php
+    wp_die();
+}
+
+/**
+ * AJAX: persist stock quantities edited from the Inventory admin page.
+ *
+ * Re-derives the rent type / variations / timely flags from post meta
+ * (never trusts the client for that), then writes only the quantity field
+ * inside the existing stored row for that shape — every other field on the
+ * row (rent_type, price, room description, variation name, etc.) is left
+ * untouched, so this can never corrupt data the item editor owns. This keeps
+ * the Inventory page and the item editor reading/writing the exact same
+ * meta, so a change here always reflects on the item and vice versa.
+ */
+function rbfw_update_inventory_stock() {
+
+    check_ajax_referer( 'rbfw_update_inventory_stock_action', 'nonce' );
+
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+
+    // Same Pro gate as rbfw_get_stock_edit_form() — enforced here too so the
+    // save endpoint can't be hit directly, bypassing the hidden UI.
+    if ( ! function_exists( 'rbfw_check_pro_active' ) || ! rbfw_check_pro_active() ) {
+        wp_send_json_error( __( 'Editing stock from the Inventory page is a Pro feature.', 'booking-and-rental-manager-for-woocommerce' ), 403 );
+    }
+
+    $post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+
+    if ( ! $post_id || get_post_type( $post_id ) !== 'rbfw_item' || ! current_user_can( 'edit_post', $post_id ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+
+    $rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+    $rent_type = ! empty( $rent_type ) ? $rent_type : '';
+
+    $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true );
+    $rbfw_enable_variations = ! empty( $rbfw_enable_variations ) ? $rbfw_enable_variations : 'no';
+
+    $manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+    $manage_inventory_as_timely = ! empty( $manage_inventory_as_timely ) ? $manage_inventory_as_timely : 'off';
+
+    $qty = isset( $_POST['qty'] ) && is_array( $_POST['qty'] ) ? $_POST['qty'] : [];
+
+    if ( $rent_type === 'resort' ) {
+
+        $room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+        $room_data = is_array( $room_data ) ? $room_data : [];
+        $posted    = isset( $qty['room'] ) && is_array( $qty['room'] ) ? $qty['room'] : [];
+
+        foreach ( $posted as $i => $value ) {
+            $i = absint( $i );
+            if ( isset( $room_data[ $i ] ) ) {
+                $room_data[ $i ]['rbfw_room_available_qty'] = rbfw_inv_sanitize_qty( $value );
+            }
+        }
+        update_post_meta( $post_id, 'rbfw_resort_room_data', $room_data );
+
+    } elseif ( $rent_type === 'bike_car_sd' || $rent_type === 'appointment' ) {
+
+        if ( $manage_inventory_as_timely === 'on' ) {
+            $timely = isset( $qty['timely'] ) ? rbfw_inv_sanitize_qty( $qty['timely'] ) : 0;
+            update_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', $timely );
+        } else {
+            $sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+            $sd_data = is_array( $sd_data ) ? $sd_data : [];
+            $posted  = isset( $qty['sd'] ) && is_array( $qty['sd'] ) ? $qty['sd'] : [];
+
+            foreach ( $posted as $i => $value ) {
+                $i = absint( $i );
+                if ( isset( $sd_data[ $i ] ) ) {
+                    $sd_data[ $i ]['qty'] = rbfw_inv_sanitize_qty( $value );
+                }
+            }
+            update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $sd_data );
+        }
+    } elseif ( $rbfw_enable_variations === 'yes' ) {
+
+        $variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+        $variations_data = is_array( $variations_data ) ? $variations_data : [];
+        $posted          = isset( $qty['variation'] ) && is_array( $qty['variation'] ) ? $qty['variation'] : [];
+
+        foreach ( $posted as $field_i => $values ) {
+            $field_i = absint( $field_i );
+            if ( ! is_array( $values ) || ! isset( $variations_data[ $field_i ]['value'] ) || ! is_array( $variations_data[ $field_i ]['value'] ) ) {
+                continue;
+            }
+            foreach ( $values as $value_i => $value ) {
+                $value_i = absint( $value_i );
+                if ( isset( $variations_data[ $field_i ]['value'][ $value_i ] ) ) {
+                    $variations_data[ $field_i ]['value'][ $value_i ]['quantity'] = rbfw_inv_sanitize_qty( $value );
+                }
+            }
+        }
+        update_post_meta( $post_id, 'rbfw_variations_data', $variations_data );
+
+    } else {
+        $flat = isset( $qty['flat'] ) ? rbfw_inv_sanitize_qty( $qty['flat'] ) : 0;
+        update_post_meta( $post_id, 'rbfw_item_stock_quantity', $flat );
+    }
+
+    /* Extra services are a flat, rent-type-independent list, so this always
+     * runs alongside whichever item-stock shape applied above. */
+    if ( isset( $qty['extra_service'] ) && is_array( $qty['extra_service'] ) ) {
+        $extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true );
+        $extra_service_data = is_array( $extra_service_data ) ? $extra_service_data : [];
+
+        foreach ( $qty['extra_service'] as $i => $value ) {
+            $i = absint( $i );
+            if ( isset( $extra_service_data[ $i ] ) ) {
+                $extra_service_data[ $i ]['service_qty'] = rbfw_inv_sanitize_qty( $value );
+            }
+        }
+        update_post_meta( $post_id, 'rbfw_extra_service_data', $extra_service_data );
+    }
+
+    $totals = rbfw_inventory_item_stock_totals( $post_id );
+
+    wp_send_json_success( array(
+        'total'    => $totals['item_stock'],
+        'es_total' => $totals['es_qty'],
+    ) );
+}
+
+/* =====================================================================
+ * Server-side availability validation (prevents double-booking).
+ *
+ * The pricing/availability engine above is only consumed by the AJAX
+ * price-calculation endpoints to *draw* the booking form; nothing on the
+ * server re-checked availability when an item was added to the cart or when
+ * the order was placed, so an overlapping booking could still be completed
+ * (race, stale cart, bypassed JS, or an item with no stock configured).
+ *
+ * The helpers below add the missing server-side gate. They reuse the exact
+ * same interval-overlap + buffer + return-date model as
+ * rbfw_get_multiple_date_available_qty(), so a booking the form shows as
+ * available stays bookable — only genuine over-capacity overlaps are blocked.
+ * ===================================================================== */
+
+/**
+ * Order statuses that occupy a rental slot for *server-side validation*.
+ *
+ * Starts from the admin-configured managed statuses
+ * (rbfw_basic_gen_settings → inventory_managed_order_status, default
+ * processing + completed), always includes picked, and — per the configured
+ * overbooking policy — also pending + on-hold, so an unpaid reservation still
+ * holds its dates during checkout. Honors "inventory based on return".
+ *
+ * @return string[] Status slugs (without the wc- prefix).
+ */
+function rbfw_get_blocking_order_statuses() {
+	$managed = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+	$managed = is_array( $managed ) ? array_values( $managed ) : array( 'processing', 'completed' );
+
+	$blocking = array_merge( $managed, array( 'processing', 'completed', 'picked', 'pending', 'on-hold' ) );
+
+	if ( rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' ) === 'yes' ) {
+		$blocking[] = 'returned';
+	}
+
+	/**
+	 * Filter the order statuses that reserve a rental slot during validation.
+	 *
+	 * @param string[] $blocking Status slugs.
+	 */
+	return apply_filters( 'rbfw_blocking_order_statuses', array_values( array_unique( $blocking ) ) );
+}
+
+/**
+ * Effective main stock for a rental item.
+ *
+ * An item with a blank/unset stock quantity is treated as a single unit (1),
+ * so a forgotten stock field can never silently allow double-booking. A value
+ * the admin explicitly set (including 0) is respected as-is.
+ *
+ * @param int $post_id rbfw_item id.
+ * @return int
+ */
+function rbfw_get_effective_item_stock( $post_id ) {
+	$raw = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+	if ( '' === $raw || null === $raw || false === $raw ) {
+		return 1;
+	}
+	return max( 0, (int) $raw );
+}
+
+/**
+ * Stock configured for a single variation value (e.g. "Red", "Large").
+ *
+ * @param int    $post_id rbfw_item id.
+ * @param string $value   Variation value name.
+ * @return int|null Quantity, or null when the value can't be resolved (caller fails open).
+ */
+function rbfw_get_variation_stock_for_value( $post_id, $value ) {
+	$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return null;
+	}
+	foreach ( $data as $row ) {
+		if ( empty( $row['value'] ) || ! is_array( $row['value'] ) ) {
+			continue;
+		}
+		foreach ( $row['value'] as $single ) {
+			if ( isset( $single['name'] ) && (string) $single['name'] === (string) $value ) {
+				return isset( $single['quantity'] ) ? max( 0, (int) $single['quantity'] ) : null;
+			}
+		}
+	}
+	return null;
+}
+
+/**
+ * Look up the configured per-unit surcharge price for a variation value.
+ *
+ * Mirrors rbfw_get_variation_stock_for_value(). Variations are free by default;
+ * the price is an optional surcharge added on top of the duration price
+ * (line = qty x (duration_price + variation_price)). Returns 0.0 when the value
+ * has no price configured or cannot be found.
+ *
+ * @param int    $post_id rbfw_item id.
+ * @param string $value   Variation value name.
+ * @return float Surcharge amount ( >= 0 ).
+ */
+function rbfw_get_variation_price_for_value( $post_id, $value ) {
+	$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return 0.0;
+	}
+	foreach ( $data as $row ) {
+		if ( empty( $row['value'] ) || ! is_array( $row['value'] ) ) {
+			continue;
+		}
+		foreach ( $row['value'] as $single ) {
+			if ( isset( $single['name'] ) && (string) $single['name'] === (string) $value ) {
+				return ( isset( $single['price'] ) && '' !== $single['price'] ) ? max( 0, (float) $single['price'] ) : 0.0;
+			}
+		}
+	}
+	return 0.0;
+}
+
+/**
+ * Whether a stored inventory entry booked a given variation value.
+ *
+ * @param array  $inventory Single rbfw_inventory entry.
+ * @param string $value     Variation value name.
+ * @return bool
+ */
+function rbfw_inventory_entry_matches_variation( $inventory, $value ) {
+	$vinfo = isset( $inventory['rbfw_variation_info'] ) ? $inventory['rbfw_variation_info'] : array();
+	if ( empty( $vinfo ) || ! is_array( $vinfo ) ) {
+		return false;
+	}
+	foreach ( $vinfo as $r ) {
+		if ( is_array( $r ) && isset( $r['field_value'] ) && (string) $r['field_value'] === (string) $value ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Per-value booked quantity for a variation value within a stored inventory entry.
+ *
+ * With per-value quantity steppers a single line can book several sizes at once
+ * (e.g. Small×2 + Medium×3). Each rbfw_variation_info row carries its own 'qty',
+ * so a value's booked count is that row's qty — NOT the whole-line item quantity.
+ * Legacy single-select entries carried no per-row 'qty'; for those we fall back
+ * to the line's rbfw_item_quantity so historical bookings still count correctly.
+ *
+ * @param array  $inventory Stored inventory entry.
+ * @param string $value     Variation field value to match.
+ * @return int              Units of this value booked by the entry.
+ */
+function rbfw_inventory_entry_variation_qty( $inventory, $value ) {
+	$vinfo = isset( $inventory['rbfw_variation_info'] ) && is_array( $inventory['rbfw_variation_info'] ) ? $inventory['rbfw_variation_info'] : array();
+	$sum   = 0;
+	$found = false;
+	foreach ( $vinfo as $r ) {
+		if ( ! is_array( $r ) || ! isset( $r['field_value'] ) || (string) $r['field_value'] !== (string) $value ) {
+			continue;
+		}
+		$found = true;
+		if ( isset( $r['qty'] ) && (int) $r['qty'] > 0 ) {
+			$sum += (int) $r['qty'];
+		}
+	}
+	if ( $found && $sum > 0 ) {
+		return $sum;
+	}
+	// Matched but no per-row qty (legacy entry) -> the whole line was that value.
+	return isset( $inventory['rbfw_item_quantity'] ) ? max( 0, (int) $inventory['rbfw_item_quantity'] ) : 0;
+}
+
+/**
+ * Count units already booked (from existing orders) that overlap a datetime range.
+ *
+ * Mirrors the interval-overlap + buffer-time + return-date handling used by
+ * rbfw_get_multiple_date_available_qty(), but counts across the blocking status
+ * set and can be filtered to a single variation value or a rbfw_type_info key
+ * (room type / single-day type).
+ *
+ * @param int    $post_id            rbfw_item id.
+ * @param string $req_start_datetime Requested pickup (strtotime-parsable).
+ * @param string $req_end_datetime   Requested dropoff.
+ * @param array  $args {
+ *     @type string $variation_value  Only count bookings of this variation value.
+ *     @type string $type_key         Only count bookings of this rbfw_type_info key.
+ *     @type int    $exclude_order_id Skip this WC order id.
+ * }
+ * @return int Booked quantity overlapping the requested range.
+ */
+function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_end_datetime, $args = array() ) {
+	$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+	if ( empty( $inventory ) || ! is_array( $inventory ) ) {
+		return 0;
+	}
+
+	$variation_value  = isset( $args['variation_value'] ) ? (string) $args['variation_value'] : '';
+	$type_key         = isset( $args['type_key'] ) ? (string) $args['type_key'] : '';
+	$exclude_order_id = isset( $args['exclude_order_id'] ) ? (int) $args['exclude_order_id'] : 0;
+
+	$blocking          = rbfw_get_blocking_order_statuses();
+	$mepp_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
+
+	$stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
+	$stock_manage_on_return_date = $stock_manage_on_return_date ? $stock_manage_on_return_date : 'no';
+	$buffer_after                = (int) get_post_meta( $post_id, 'rbfw_buffer_time_after', true );
+
+	try {
+		$req_start = new DateTime( $req_start_datetime );
+		$req_end   = new DateTime( $req_end_datetime );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	$total_booked = 0;
+
+	foreach ( $inventory as $order_id => $entry ) {
+		if ( ! is_array( $entry ) ) {
+			continue;
+		}
+		if ( $exclude_order_id && (int) $order_id === $exclude_order_id ) {
+			continue;
+		}
+
+		$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+		if ( ! in_array( $status, $blocking, true ) ) {
+			continue;
+		}
+		if ( 'partially-paid' === $status && 'deposit' === $mepp_reduce_stock ) {
+			continue;
+		}
+
+		if ( '' !== $variation_value && ! rbfw_inventory_entry_matches_variation( $entry, $variation_value ) ) {
+			continue;
+		}
+
+		$inv_start_date = isset( $entry['rbfw_start_date_ymd'] ) ? $entry['rbfw_start_date_ymd'] : '';
+		$inv_end_date   = isset( $entry['rbfw_end_date_ymd'] ) ? $entry['rbfw_end_date_ymd'] : '';
+		$inv_start_time = isset( $entry['rbfw_start_time_24'] ) ? $entry['rbfw_start_time_24'] : '';
+		$inv_end_time   = isset( $entry['rbfw_end_time_24'] ) ? $entry['rbfw_end_time_24'] : '';
+
+		if ( empty( $inv_start_date ) || empty( $inv_end_date ) ) {
+			continue;
+		}
+		if ( false !== strpos( $inv_start_date . $inv_end_date . $inv_start_time . $inv_end_time, 'NaN' ) ) {
+			continue;
+		}
+
+		// Buffer / return-date end adjustment — identical to the display engine.
+		if ( $buffer_after ) {
+			try {
+				$dt = new DateTime( $inv_end_date . ' ' . $inv_end_time );
+				$dt->modify( '+' . $buffer_after . ' hours' );
+				$inv_end_date = $dt->format( 'Y-m-d' );
+				$inv_end_time = $dt->format( 'H:i' );
+			} catch ( Exception $e ) {
+				continue;
+			}
+		} elseif ( 'no' === $stock_manage_on_return_date ) {
+			try {
+				$dt = new DateTime( $inv_end_date );
+				$dt->modify( '-1 day' );
+				$inv_end_date = $dt->format( 'Y-m-d' );
+			} catch ( Exception $e ) {
+				continue;
+			}
+		}
+
+		try {
+			$inv_start = new DateTime( $inv_start_date . ' ' . $inv_start_time );
+			$inv_end   = new DateTime( $inv_end_date . ' ' . $inv_end_time );
+		} catch ( Exception $e ) {
+			continue;
+		}
+
+		if ( $inv_start <= $req_end && $req_start <= $inv_end ) {
+			if ( '' !== $type_key ) {
+				$type_info = isset( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) ? $entry['rbfw_type_info'] : array();
+				if ( isset( $type_info[ $type_key ] ) ) {
+					$total_booked += max( 0, (int) $type_info[ $type_key ] );
+				}
+			} elseif ( '' !== $variation_value ) {
+				// Per-value qty steppers: count only this size's units, not the whole line.
+				$total_booked += rbfw_inventory_entry_variation_qty( $entry, $variation_value );
+			} else {
+				$qty = isset( $entry['rbfw_item_quantity'] ) ? (int) $entry['rbfw_item_quantity'] : 0;
+				$total_booked += max( 0, $qty );
+			}
+		}
+	}
+
+	return $total_booked;
+}
+
+/**
+ * Count units booked by OTHER cart lines of the same item that overlap a range.
+ *
+ * Lets checkout validation account for several cart lines competing for the
+ * same finite stock, in a date-aware way (non-overlapping lines don't compete).
+ *
+ * @param array  $sibling_lines     List of cart-item value arrays (excluding the current line).
+ * @param string $req_start_datetime Requested pickup.
+ * @param string $req_end_datetime   Requested dropoff.
+ * @param array  $args               'variation_value' / 'type_key' filters (see counter above).
+ * @return int
+ */
+function rbfw_count_overlapping_cart_qty( $sibling_lines, $req_start_datetime, $req_end_datetime, $args = array() ) {
+	if ( empty( $sibling_lines ) || ! is_array( $sibling_lines ) ) {
+		return 0;
+	}
+	$variation_value = isset( $args['variation_value'] ) ? (string) $args['variation_value'] : '';
+	$type_key        = isset( $args['type_key'] ) ? (string) $args['type_key'] : '';
+
+	try {
+		$req_start = new DateTime( $req_start_datetime );
+		$req_end   = new DateTime( $req_end_datetime );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	$used = 0;
+	foreach ( $sibling_lines as $line ) {
+		if ( ! is_array( $line ) ) {
+			continue;
+		}
+		$ls = ! empty( $line['rbfw_start_datetime'] ) ? $line['rbfw_start_datetime'] : '';
+		$le = ! empty( $line['rbfw_end_datetime'] ) ? $line['rbfw_end_datetime'] : '';
+		if ( empty( $ls ) || empty( $le ) ) {
+			continue;
+		}
+		try {
+			$lstart = new DateTime( $ls );
+			$lend   = new DateTime( $le );
+		} catch ( Exception $e ) {
+			continue;
+		}
+		if ( ! ( $lstart <= $req_end && $req_start <= $lend ) ) {
+			continue; // sibling does not overlap this request
+		}
+
+		if ( '' !== $variation_value ) {
+			if ( ! rbfw_inventory_entry_matches_variation( $line, $variation_value ) ) {
+				continue;
+			}
+			// Per-value qty steppers: count only this size's units, not the whole line.
+			$used += rbfw_inventory_entry_variation_qty( $line, $variation_value );
+		} elseif ( '' !== $type_key ) {
+			$ti = isset( $line['rbfw_type_info'] ) && is_array( $line['rbfw_type_info'] ) ? $line['rbfw_type_info'] : array();
+			if ( isset( $ti[ $type_key ] ) ) {
+				$used += max( 0, (int) $ti[ $type_key ] );
+			}
+		} else {
+			$used += max( 1, isset( $line['rbfw_item_quantity'] ) ? (int) $line['rbfw_item_quantity'] : 1 );
+		}
+	}
+	return $used;
+}
+
+/**
+ * Remaining stock for a single-day item's variation value across a set of dates.
+ *
+ * Single-day availability is date-membership based (mirrors
+ * rbfw_get_bike_car_sd_available_qty() / total_variant_quantity()), NOT the datetime
+ * interval-overlap model used by rbfw_count_overlapping_booked_qty() — the latter
+ * applies a return-date "-1 day" adjustment that would mis-handle same-day bookings.
+ * Units are counted by summing rbfw_type_info (single-day's real unit count, since
+ * rbfw_item_quantity is not a reliable count for single-day), and both committed
+ * orders and competing cart lines are included.
+ *
+ * @param int      $post_id         rbfw_item id.
+ * @param string[] $date_range_dmy  Requested booking dates in 'd-m-Y'.
+ * @param string   $variation_value Variation value name (e.g. "M").
+ * @param array[]  $sibling_lines   Other cart lines for the same item.
+ * @return int|null Minimum remaining across the dates, or null if size stock unknown.
+ */
+function rbfw_sd_variation_remaining_stock( $post_id, $date_range_dmy, $variation_value, $sibling_lines = array() ) {
+	$stock = rbfw_get_variation_stock_for_value( $post_id, $variation_value );
+	if ( null === $stock ) {
+		return null;
+	}
+	if ( empty( $date_range_dmy ) || ! is_array( $date_range_dmy ) ) {
+		return $stock;
+	}
+	$inventory         = get_post_meta( $post_id, 'rbfw_inventory', true );
+	$inventory         = is_array( $inventory ) ? $inventory : array();
+	$blocking          = rbfw_get_blocking_order_statuses();
+	$mepp_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
+
+	// Pre-compute each competing cart line's per-date size units once.
+	$sibling_dates = array();
+	if ( ! empty( $sibling_lines ) && is_array( $sibling_lines ) ) {
+		foreach ( $sibling_lines as $line ) {
+			if ( ! is_array( $line ) || ! rbfw_inventory_entry_matches_variation( $line, $variation_value ) ) {
+				continue;
+			}
+			$s = ! empty( $line['rbfw_start_date'] ) ? $line['rbfw_start_date'] : '';
+			$e = ! empty( $line['rbfw_end_date'] ) ? $line['rbfw_end_date'] : $s;
+			if ( '' === $s ) {
+				continue;
+			}
+			// Per-value qty steppers: count only this size's units on this line.
+			$units  = rbfw_inventory_entry_variation_qty( $line, $variation_value );
+			$ts_end = strtotime( $e );
+			for ( $ts = strtotime( $s ); $ts && $ts_end && $ts <= $ts_end; $ts += DAY_IN_SECONDS ) {
+				$d                   = gmdate( 'd-m-Y', $ts );
+				$sibling_dates[ $d ] = ( isset( $sibling_dates[ $d ] ) ? $sibling_dates[ $d ] : 0 ) + $units;
+			}
+		}
+	}
+
+	$min_remaining = $stock;
+	foreach ( $date_range_dmy as $date ) {
+		$booked = 0;
+		foreach ( $inventory as $entry ) {
+			if ( ! is_array( $entry ) ) {
+				continue;
+			}
+			$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+			if ( ! in_array( $status, $blocking, true ) ) {
+				continue;
+			}
+			if ( 'partially-paid' === $status && 'deposit' === $mepp_reduce_stock ) {
+				continue;
+			}
+			$bdates = isset( $entry['booked_dates'] ) && is_array( $entry['booked_dates'] ) ? $entry['booked_dates'] : array();
+			if ( ! in_array( $date, $bdates, true ) ) {
+				continue;
+			}
+			if ( ! rbfw_inventory_entry_matches_variation( $entry, $variation_value ) ) {
+				continue;
+			}
+			// Per-value qty steppers: count only this size's units on this entry.
+			$booked += rbfw_inventory_entry_variation_qty( $entry, $variation_value );
+		}
+		if ( isset( $sibling_dates[ $date ] ) ) {
+			$booked += $sibling_dates[ $date ];
+		}
+		$remaining = $stock - $booked;
+		if ( $remaining < $min_remaining ) {
+			$min_remaining = $remaining;
+		}
+	}
+	return $min_remaining;
+}
+
+/**
+ * Render the single-day item-variation selector(s) as server-side markup, with the
+ * per-variation remaining stock ("N left" / "Sold out") for a given date.
+ *
+ * Single source of truth for the variation <select> used by both the booking form
+ * (templates/forms/single-day-registration.php) and the date-change AJAX refresh
+ * (RBFW_BikeCarSd_Function::rbfw_service_type_timely_stock()). The count is computed
+ * on the server via rbfw_sd_variation_remaining_stock() — never in the browser.
+ *
+ * @param int    $post_id           Rental item ID.
+ * @param array  $variations_data   The 'rbfw_variations_data' meta array.
+ * @param string $selected_date_dmy Selected date in d-m-Y. Empty = base configured stock.
+ * @param array  $selected_values   Map of field_id => currently selected value (preserves UI state on refresh).
+ * @return string HTML for the .rbfw-variations-content-wrapper element (empty string when no variations).
+ */
+function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_date_dmy = '', $selected_values = array() ) {
+	if ( empty( $variations_data ) || ! is_array( $variations_data ) ) {
+		return '';
+	}
+	$date_range      = ( '' !== $selected_date_dmy ) ? array( $selected_date_dmy ) : array();
+	$selected_values = is_array( $selected_values ) ? $selected_values : array();
+
+	ob_start();
+	?>
+	<div class="rbfw-variations-content-wrapper rbfw-bikecarsd-variations">
+		<?php foreach ( $variations_data as $data_arr_one ) {
+			$field_label  = isset( $data_arr_one['field_label'] ) ? $data_arr_one['field_label'] : '';
+			$field_id     = isset( $data_arr_one['field_id'] ) ? $data_arr_one['field_id'] : '';
+			$field_values = ( ! empty( $data_arr_one['value'] ) && is_array( $data_arr_one['value'] ) ) ? $data_arr_one['value'] : array();
+
+			// Preserve entered per-value quantities across an AJAX (date-change) refresh.
+			// $selected_values[$field_id] may be a value=>qty map (new stepper form) or a
+			// legacy scalar select value (treated as qty 1 for backward compatibility).
+			$qty_map = array();
+			if ( isset( $selected_values[ $field_id ] ) ) {
+				if ( is_array( $selected_values[ $field_id ] ) ) {
+					$qty_map = $selected_values[ $field_id ];
+				} elseif ( '' !== $selected_values[ $field_id ] ) {
+					$qty_map = array( (string) $selected_values[ $field_id ] => 1 );
+				}
+			}
+			if ( empty( $qty_map ) && ! empty( $data_arr_one['selected_value'] ) ) {
+				$qty_map = array( (string) $data_arr_one['selected_value'] => 1 );
+			}
+			?>
+			<div class="item rbfw-variation-group" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-field-label="<?php echo esc_attr( $field_label ); ?>">
+				<div class="rbfw-single-right-heading"><?php echo esc_html( $field_label ); ?></div>
+				<div class="item-content rbfw-p-relative rbfw-variation-steppers">
+					<?php if ( ! empty( $field_values ) ) {
+						foreach ( $field_values as $data_arr_two ) {
+							$variant_name = isset( $data_arr_two['name'] ) ? $data_arr_two['name'] : '';
+							if ( '' === $variant_name ) {
+								continue;
+							}
+							// Date-aware remaining count (base configured stock when no date yet). null = unlimited/unconfigured.
+							$remaining = function_exists( 'rbfw_sd_variation_remaining_stock' )
+								? rbfw_sd_variation_remaining_stock( $post_id, $date_range, $variant_name )
+								: null;
+							$is_unlimited = ( null === $remaining );
+							$is_sold_out  = ( ! $is_unlimited && (int) $remaining <= 0 );
+							$price        = function_exists( 'rbfw_get_variation_price_for_value' )
+								? rbfw_get_variation_price_for_value( $post_id, $variant_name )
+								: 0.0;
+
+							// Clamp any preserved quantity to what is actually still available.
+							$cur_qty = isset( $qty_map[ $variant_name ] ) ? (int) $qty_map[ $variant_name ] : 0;
+							if ( $cur_qty < 0 ) {
+								$cur_qty = 0;
+							}
+							if ( $is_sold_out ) {
+								$cur_qty = 0;
+							} elseif ( ! $is_unlimited && $cur_qty > (int) $remaining ) {
+								$cur_qty = (int) $remaining;
+							}
+							?>
+							<div class="rbfw-variation-row<?php echo $is_sold_out ? ' rbfw-variation-soldout' : ''; ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" data-price="<?php echo esc_attr( $price ); ?>" data-remaining="<?php echo esc_attr( $is_unlimited ? '' : (int) $remaining ); ?>">
+								<span class="rbfw-variation-label"><?php echo esc_html( $variant_name ); ?></span>
+								<span class="rbfw-variation-meta">
+									<?php if ( $price > 0 ) { ?>
+										<span class="rbfw-variation-price">+<?php echo wp_kses_post( wc_price( $price ) ); ?></span>
+									<?php } ?>
+									<?php if ( $is_sold_out ) { ?>
+										<span class="rbfw-variation-stock rbfw-variation-stock-out"><?php esc_html_e( 'Sold out', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+									<?php } elseif ( ! $is_unlimited ) { ?>
+										<?php /* translators: %d: number of units left in stock for this variation on the selected date. */ ?>
+										<span class="rbfw-variation-stock"><?php printf( esc_html( _n( '%d left', '%d left', (int) $remaining, 'booking-and-rental-manager-for-woocommerce' ) ), (int) $remaining ); ?></span>
+									<?php } ?>
+								</span>
+								<span class="rbfw-variation-stepper">
+									<button type="button" class="rbfw-qty-minus" tabindex="-1" aria-label="<?php esc_attr_e( 'Decrease', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php disabled( $is_sold_out ); ?>>&minus;</button>
+									<input type="number" class="rbfw-variation-qty-input" name="rbfw_variation_qty[<?php echo esc_attr( $field_id ); ?>][<?php echo esc_attr( $variant_name ); ?>]" value="<?php echo esc_attr( $cur_qty ); ?>" min="0"<?php echo $is_unlimited ? '' : ' max="' . esc_attr( (int) $remaining ) . '"'; ?> data-price="<?php echo esc_attr( $price ); ?>" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" <?php disabled( $is_sold_out ); ?> readonly>
+									<button type="button" class="rbfw-qty-plus" tabindex="-1" aria-label="<?php esc_attr_e( 'Increase', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php disabled( $is_sold_out ); ?>>+</button>
+								</span>
+							</div>
+							<?php
+						}
+					} ?>
+				</div>
+			</div>
+		<?php } ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Evaluate availability for one rental request (cart line or add-to-cart POST).
+ *
+ * Returns a list of per-resource checks. Each check is:
+ *   array( 'ok' => bool, 'requested' => int, 'available' => int, 'label' => string )
+ * An empty list means "nothing to enforce" (fail-open) — e.g. dates missing or
+ * an unsupported configuration, so a valid booking is never wrongly blocked.
+ *
+ * @param int   $rbfw_id       rbfw_item id.
+ * @param array $values        Cart-item value array (rbfw_start_datetime, rbfw_item_quantity, …).
+ * @param array $sibling_lines Other cart lines competing for the same stock.
+ * @return array[]
+ */
+function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = array() ) {
+	$checks    = array();
+	$rent_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+
+	$start_dt = ! empty( $values['rbfw_start_datetime'] ) ? $values['rbfw_start_datetime'] : '';
+	$end_dt   = ! empty( $values['rbfw_end_datetime'] ) ? $values['rbfw_end_datetime'] : '';
+	if ( empty( $start_dt ) || empty( $end_dt ) ) {
+		return $checks; // can't evaluate -> fail open
+	}
+
+	$item_name = get_the_title( $rbfw_id );
+
+	/* ---- Single-day timely inventory: validate the exact requested window. ---- */
+	if ( 'bike_car_sd' === $rent_type && 'on' === get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true ) ) {
+		$start_date = isset( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '';
+		$start_time = isset( $values['rbfw_start_time'] ) ? $values['rbfw_start_time'] : '';
+		$end_date   = isset( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : '';
+		$end_time   = isset( $values['rbfw_end_time'] ) ? $values['rbfw_end_time'] : '';
+		$requested  = isset( $values['rbfw_item_quantity'] ) ? max( 1, (int) $values['rbfw_item_quantity'] ) : 1;
+
+		if ( '' !== $start_date && '' !== $end_date && '' !== $end_time ) {
+			$remaining = (int) rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $end_date, $end_time );
+			try {
+				$req_start = new DateTime( $start_date . ' ' . $start_time );
+				$req_end   = new DateTime( $end_date . ' ' . $end_time );
+			} catch ( Exception $e ) {
+				return $checks;
+			}
+			$cart_used = 0;
+
+			foreach ( $sibling_lines as $line ) {
+				if ( ! is_array( $line ) ) {
+					continue;
+				}
+				$line_start_date = isset( $line['rbfw_start_date'] ) ? $line['rbfw_start_date'] : '';
+				$line_start_time = isset( $line['rbfw_start_time'] ) ? $line['rbfw_start_time'] : '';
+				$line_end_date   = isset( $line['rbfw_end_date'] ) ? $line['rbfw_end_date'] : '';
+				$line_end_time   = isset( $line['rbfw_end_time'] ) ? $line['rbfw_end_time'] : '';
+				if ( '' === $line_start_date || '' === $line_end_date || '' === $line_end_time ) {
+					continue;
+				}
+				try {
+					$line_start = new DateTime( $line_start_date . ' ' . $line_start_time );
+					$line_end   = new DateTime( $line_end_date . ' ' . $line_end_time );
+				} catch ( Exception $e ) {
+					continue;
+				}
+				if ( $line_start < $req_end && $req_start < $line_end ) {
+					$cart_used += isset( $line['rbfw_item_quantity'] ) ? max( 1, (int) $line['rbfw_item_quantity'] ) : 1;
+				}
+			}
+
+			$available = max( 0, $remaining - $cart_used );
+			$checks[]  = array(
+				'ok'        => ( $requested <= $available ),
+				'requested' => $requested,
+				'available' => $available,
+				'label'     => $item_name,
+			);
+		}
+	}
+
+	/* ---- Resort: one check per booked room type ---- */
+	if ( 'resort' === $rent_type ) {
+		$room_info = isset( $values['rbfw_room_info'] ) && is_array( $values['rbfw_room_info'] ) ? $values['rbfw_room_info'] : array();
+		if ( empty( $room_info ) && isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ) {
+			$room_info = $values['rbfw_type_info'];
+		}
+		$room_data = get_post_meta( $rbfw_id, 'rbfw_resort_room_data', true );
+		$room_data = is_array( $room_data ) ? $room_data : array();
+		$stock_map = array();
+		foreach ( $room_data as $rd ) {
+			if ( isset( $rd['room_type'] ) ) {
+				$stock_map[ $rd['room_type'] ] = isset( $rd['rbfw_room_available_qty'] ) ? (int) $rd['rbfw_room_available_qty'] : 0;
+			}
+		}
+		foreach ( $room_info as $room_type => $req_qty ) {
+			$req_qty = (int) $req_qty;
+			if ( $req_qty < 1 || ! isset( $stock_map[ $room_type ] ) ) {
+				continue;
+			}
+			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'type_key' => $room_type ) );
+			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'type_key' => $room_type ) );
+			$available = $stock_map[ $room_type ] - $booked - $used;
+			$checks[]  = array(
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $room_type . ')',
+			);
+		}
+		return $checks;
+	}
+
+	/* ---- Multiple items: one check per chosen item ---- */
+	if ( 'multiple_items' === $rent_type ) {
+		$lines = isset( $values['multiple_items_info'] ) && is_array( $values['multiple_items_info'] ) ? $values['multiple_items_info'] : array();
+		foreach ( $lines as $li ) {
+			if ( ! is_array( $li ) || empty( $li['item_name'] ) ) {
+				continue;
+			}
+			$req_qty = isset( $li['item_qty'] ) ? (int) $li['item_qty'] : 0;
+			if ( $req_qty < 1 ) {
+				continue;
+			}
+			$stock     = isset( $li['available_qty'] ) ? (int) $li['available_qty'] : null;
+			if ( null === $stock ) {
+				continue; // unknown -> fail open
+			}
+			$booked    = rbfw_count_overlapping_multi_item_qty( $rbfw_id, $start_dt, $end_dt, $li['item_name'] );
+			$available = $stock - $booked;
+			$checks[]  = array(
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $li['item_name'] . ')',
+			);
+		}
+		return $checks;
+	}
+
+	/*
+	 * Single-day with item variations: enforce per-size stock as an ADDITIONAL
+	 * constraint on top of the existing per-rate availability (which is handled by
+	 * rbfw_get_bike_car_sd_available_qty in the booking step). Reuses the same
+	 * per-value counters as the multi-day variation path below, but counts units by
+	 * summing rbfw_type_info (single-day's real unit count) instead of
+	 * rbfw_item_quantity. When variations are off we fall through to the type-filter
+	 * gate, which leaves single-day to its existing handling.
+	 */
+	if ( 'bike_car_sd' === $rent_type && get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' ) {
+		// Per-value quantity steppers: each rbfw_variation_info entry carries its own
+		// requested qty. Sum by value name so every size is validated against its own
+		// remaining stock (anti-oversell), not the whole-line quantity. Legacy
+		// single-select entries (no 'qty') fall back to the line's unit count.
+		$sd_type_info    = isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ? $values['rbfw_type_info'] : array();
+		$sd_line_units   = array_sum( array_map( 'intval', $sd_type_info ) );
+		if ( $sd_line_units < 1 ) {
+			$sd_line_units = 1;
+		}
+		$sd_req_map = array();
+		$sd_vinfo   = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
+		foreach ( $sd_vinfo as $r ) {
+			if ( ! is_array( $r ) || empty( $r['field_value'] ) ) {
+				continue;
+			}
+			$vv = (string) $r['field_value'];
+			$rq = isset( $r['qty'] ) ? (int) $r['qty'] : 0;
+			if ( $rq < 1 ) {
+				$rq = $sd_line_units; // legacy single-select entry carried no per-value qty
+			}
+			$sd_req_map[ $vv ] = isset( $sd_req_map[ $vv ] ) ? $sd_req_map[ $vv ] + $rq : $rq;
+		}
+		// Variations enabled but no resolvable selection -> fail open (the per-rate
+		// stock still governs via the single-day time-table); never block a valid booking.
+		if ( empty( $sd_req_map ) ) {
+			return $checks;
+		}
+		// Build the requested booking dates (d-m-Y) the same way single-day inventory is keyed.
+		$sd_start_ymd = ! empty( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : gmdate( 'Y-m-d', strtotime( $start_dt ) );
+		$sd_end_ymd   = ! empty( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : gmdate( 'Y-m-d', strtotime( $end_dt ) );
+		$sd_dates     = array();
+		$sd_ts_start  = strtotime( $sd_start_ymd );
+		$sd_ts_end    = strtotime( $sd_end_ymd );
+		if ( $sd_ts_start && $sd_ts_end && $sd_ts_end >= $sd_ts_start ) {
+			for ( $ts = $sd_ts_start; $ts <= $sd_ts_end; $ts += DAY_IN_SECONDS ) {
+				$sd_dates[] = gmdate( 'd-m-Y', $ts );
+			}
+		} elseif ( $sd_ts_start ) {
+			$sd_dates[] = gmdate( 'd-m-Y', $sd_ts_start );
+		}
+		foreach ( $sd_req_map as $vv => $req_qty ) {
+			$available = rbfw_sd_variation_remaining_stock( $rbfw_id, $sd_dates, $vv, $sibling_lines );
+			if ( null === $available ) {
+				continue; // unknown variation stock -> fail open for this value
+			}
+			$checks[] = array(
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $vv . ')',
+			);
+		}
+		return $checks;
+	}
+
+	/*
+	 * Main single-unit date-range types: bike_car_md / dress / equipment / others.
+	 * Single-day & appointment types use a different stock model
+	 * (rbfw_item_stock_quantity_timely / per-session / per-type capacity), so they
+	 * are intentionally left to their existing handling to avoid wrongly blocking
+	 * valid time-slot bookings.
+	 */
+	$supported_main_types = apply_filters(
+		'rbfw_availability_main_unit_types',
+		array( 'bike_car_md', 'dress', 'equipment', 'others' )
+	);
+	if ( ! in_array( $rent_type, $supported_main_types, true ) ) {
+		return $checks; // unsupported type -> fail open
+	}
+
+	$requested = isset( $values['rbfw_item_quantity'] ) ? (int) $values['rbfw_item_quantity'] : 1;
+	if ( $requested < 1 ) {
+		$requested = 1;
+	}
+
+	$variations_enabled = ( get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' );
+	$variation_req_map  = array();
+	if ( $variations_enabled ) {
+		// Per-value quantity steppers: each rbfw_variation_info entry carries its own
+		// requested qty. Sum by value name so every size is validated against its own
+		// remaining stock (anti-oversell), not the whole-line quantity. Legacy
+		// single-select entries (no 'qty') fall back to the line's unit count.
+		$vinfo = isset( $values['rbfw_variation_info'] ) && is_array( $values['rbfw_variation_info'] ) ? $values['rbfw_variation_info'] : array();
+		foreach ( $vinfo as $r ) {
+			if ( ! is_array( $r ) || empty( $r['field_value'] ) ) {
+				continue;
+			}
+			$vv = (string) $r['field_value'];
+			$rq = isset( $r['qty'] ) ? (int) $r['qty'] : 0;
+			if ( $rq < 1 ) {
+				$rq = $requested; // legacy single-select entry carried no per-value qty
+			}
+			$variation_req_map[ $vv ] = isset( $variation_req_map[ $vv ] ) ? $variation_req_map[ $vv ] + $rq : $rq;
+		}
+		// Variations on but the selection couldn't be resolved: fail open so a
+		// valid variation booking is never blocked by the plain single-unit path.
+		if ( empty( $variation_req_map ) ) {
+			return $checks;
+		}
+	}
+
+	if ( ! empty( $variation_req_map ) ) {
+		foreach ( $variation_req_map as $vv => $req_qty ) {
+			$stock = rbfw_get_variation_stock_for_value( $rbfw_id, $vv );
+			if ( null === $stock ) {
+				continue; // unknown variation stock -> fail open for this value
+			}
+			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
+			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
+			$available = $stock - $booked - $used;
+			$checks[]  = array(
+				'ok'        => ( $req_qty <= $available ),
+				'requested' => $req_qty,
+				'available' => max( 0, $available ),
+				'label'     => $item_name . ' (' . $vv . ')',
+			);
+		}
+		return $checks;
+	}
+
+	// Plain single-unit stock (blank treated as 1).
+	$stock     = rbfw_get_effective_item_stock( $rbfw_id );
+	$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt );
+	$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt );
+	$available = $stock - $booked - $used;
+	$checks[]  = array(
+		'ok'        => ( $requested <= $available ),
+		'requested' => $requested,
+		'available' => max( 0, $available ),
+		'label'     => $item_name,
+	);
+
+	return $checks;
+}
+
+/**
+ * Count booked quantity of a single "multiple items" sub-item overlapping a range.
+ *
+ * Multiple-items inventory stores each chosen item under rbfw_service_info as
+ * { item_name, item_qty } against the booking's date list; this mirrors
+ * total_multi_items_quantity() but restricted to the blocking status set and a
+ * datetime overlap with the requested range.
+ *
+ * @param int    $post_id   rbfw_item id.
+ * @param string $start_dt  Requested pickup.
+ * @param string $end_dt    Requested dropoff.
+ * @param string $item_name Sub-item name.
+ * @return int
+ */
+function rbfw_count_overlapping_multi_item_qty( $post_id, $start_dt, $end_dt, $item_name ) {
+	$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
+	if ( empty( $inventory ) || ! is_array( $inventory ) ) {
+		return 0;
+	}
+	$blocking = rbfw_get_blocking_order_statuses();
+
+	try {
+		$req_start = new DateTime( $start_dt );
+		$req_end   = new DateTime( $end_dt );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	$booked = 0;
+	foreach ( $inventory as $entry ) {
+		if ( ! is_array( $entry ) ) {
+			continue;
+		}
+		$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+		if ( ! in_array( $status, $blocking, true ) ) {
+			continue;
+		}
+		$is = isset( $entry['rbfw_start_date_ymd'] ) ? $entry['rbfw_start_date_ymd'] : '';
+		$ie = isset( $entry['rbfw_end_date_ymd'] ) ? $entry['rbfw_end_date_ymd'] : '';
+		$it = isset( $entry['rbfw_start_time_24'] ) ? $entry['rbfw_start_time_24'] : '';
+		$et = isset( $entry['rbfw_end_time_24'] ) ? $entry['rbfw_end_time_24'] : '';
+		if ( empty( $is ) || empty( $ie ) ) {
+			continue;
+		}
+		try {
+			$inv_start = new DateTime( $is . ' ' . $it );
+			$inv_end   = new DateTime( $ie . ' ' . $et );
+		} catch ( Exception $e ) {
+			continue;
+		}
+		if ( ! ( $inv_start <= $req_end && $req_start <= $inv_end ) ) {
+			continue;
+		}
+		$items = isset( $entry['rbfw_service_info'] ) && is_array( $entry['rbfw_service_info'] ) ? $entry['rbfw_service_info'] : array();
+		foreach ( $items as $single ) {
+			if ( is_array( $single ) && isset( $single['item_name'] ) && (string) $single['item_name'] === (string) $item_name ) {
+				$booked += isset( $single['item_qty'] ) ? max( 0, (int) $single['item_qty'] ) : 0;
+			}
+		}
+	}
+	return $booked;
+}

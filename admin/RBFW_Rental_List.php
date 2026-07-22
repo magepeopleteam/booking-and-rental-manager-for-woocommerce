@@ -22,7 +22,6 @@ if (!class_exists('RBFW_Rental_List')) {
         public function __construct()
         {
             add_action('admin_menu', array($this, 'register_page'));
-            add_action('admin_action_rbfw_duplicate_post', [$this, 'rbfw_duplicate_post_function']);
             // New design wiring.
             add_filter('rbfw_settings_field', [$this, 'register_setting']);
             add_action('load-edit.php', [$this, 'maybe_redirect_to_new_design']);
@@ -171,6 +170,8 @@ if (!class_exists('RBFW_Rental_List')) {
                 'update_term_meta_cache' => true,
             ));
             $rent_types = RBFW_Function::rbfw_rent_types();
+            // Resolved in one pass so AIOSEO needs a single query rather than one per row.
+            $seo_data = $this->seo_data(wp_list_pluck($query->posts, 'ID'));
             $items = array();
             foreach ($query->posts as $post) {
                 $pid       = $post->ID;
@@ -185,6 +186,7 @@ if (!class_exists('RBFW_Rental_List')) {
                     'type_label' => $type_lbl,
                     'cats'       => $cats,
                     'price'      => $this->get_price_label($pid),
+                    'seo'        => isset($seo_data[$pid]) ? $seo_data[$pid] : null,
                     'status'     => $post->post_status,
                     'thumb'      => get_the_post_thumbnail_url($pid, 'medium_large'),
                     'author'     => get_the_author_meta('display_name', $post->post_author),
@@ -193,10 +195,234 @@ if (!class_exists('RBFW_Rental_List')) {
                     'trash_link' => get_delete_post_link($pid),
                     'restore_link' => wp_nonce_url(admin_url(sprintf('post.php?post=%d&action=untrash', $pid)), 'untrash-post_' . $pid),
                     'delete_link'  => get_delete_post_link($pid, '', true),
+                    // Reuses the existing secure duplicator (RBFW_Rent_Manager::duplicate_post_link /
+                    // rbfw_duplicate_post on admin_init): capability-checked and resets inventory on the copy.
+                    'duplicate_link' => wp_nonce_url(admin_url('edit.php?post_type=rbfw_item&rbfw_duplicate=' . $pid), 'duplicate_post_action', 'nonce'),
                 );
             }
 
             return $items;
+        }
+
+        /**
+         * Which SEO plugin is currently ACTIVE, if any.
+         *
+         * Detection is by runtime constant, not by the plugin being present on
+         * disk: an installed-but-deactivated plugin stores no scores, so the
+         * column must stay hidden for it.
+         *
+         * @return string '' | 'yoast' | 'rankmath' | 'aioseo' | 'seopress'
+         */
+        private function seo_plugin(): string
+        {
+            static $plugin = null;
+            if (null !== $plugin) {
+                return $plugin;
+            }
+
+            if (defined('WPSEO_VERSION')) {
+                $plugin = 'yoast';
+            } elseif (defined('RANK_MATH_VERSION')) {
+                $plugin = 'rankmath';
+            } elseif (defined('AIOSEO_VERSION')) {
+                $plugin = 'aioseo';
+            } elseif (defined('SEOPRESS_VERSION')) {
+                $plugin = 'seopress';
+            } else {
+                $plugin = '';
+            }
+
+            /**
+             * Let an unsupported SEO plugin declare itself; pair with
+             * `rbfw_item_seo_data` to supply the signals.
+             */
+            $plugin = (string) apply_filters('rbfw_item_seo_plugin', $plugin);
+
+            return $plugin;
+        }
+
+        /**
+         * Human name of the active SEO plugin, for the column tooltip.
+         */
+        private function seo_plugin_label(): string
+        {
+            switch ($this->seo_plugin()) {
+                case 'yoast':
+                    return __('Yoast SEO', 'booking-and-rental-manager-for-woocommerce');
+                case 'rankmath':
+                    return __('Rank Math', 'booking-and-rental-manager-for-woocommerce');
+                case 'aioseo':
+                    return __('All in One SEO', 'booking-and-rental-manager-for-woocommerce');
+                case 'seopress':
+                    return __('SEOPress', 'booking-and-rental-manager-for-woocommerce');
+            }
+
+            return __('SEO', 'booking-and-rental-manager-for-woocommerce');
+        }
+
+        /**
+         * SEO signals for a set of items, keyed by post ID.
+         *
+         * Read in bulk rather than per row: the meta-backed plugins ride the
+         * WP_Query meta cache, and AIOSEO (which stores its data in its own
+         * table) gets a single query instead of one per item.
+         *
+         * Every entry has the same shape:
+         *   score       int|null  0-100, null when not analysed
+         *   readability int|null  0-100, null when the plugin has no such score
+         *   keyword     string    primary focus keyword ('' when unset)
+         *   has_desc    bool      a meta description is set
+         *   noindex     bool      excluded from search engines
+         *
+         * Both Yoast and Rank Math store 0 for an unanalysed post, so 0 is
+         * treated as "not analysed", the way their own UIs treat it.
+         *
+         * Meta keys are taken from each plugin's source, not guessed:
+         * Yoast builds keys from $meta_prefix '_yoast_wpseo_' + field name, and
+         * its meta-robots-noindex is '1' = no-index ('0' post-type default,
+         * '2' = index).
+         *
+         * @param int[] $post_ids
+         * @return array<int, array<string, mixed>>
+         */
+        private function seo_data(array $post_ids): array
+        {
+            $plugin = $this->seo_plugin();
+            $out    = array();
+            $blank  = array(
+                'score'       => null,
+                'readability' => null,
+                'keyword'     => '',
+                'has_desc'    => false,
+                'noindex'     => false,
+            );
+
+            if ('' === $plugin || empty($post_ids)) {
+                return $out;
+            }
+
+            switch ($plugin) {
+                case 'yoast':
+                    foreach ($post_ids as $pid) {
+                        $score = get_post_meta($pid, '_yoast_wpseo_linkdex', true);
+                        $read  = get_post_meta($pid, '_yoast_wpseo_content_score', true);
+                        $out[$pid] = array(
+                            'score'       => ('' === $score || null === $score) ? null : (int) $score,
+                            'readability' => ('' === $read || null === $read) ? null : (int) $read,
+                            'keyword'     => (string) get_post_meta($pid, '_yoast_wpseo_focuskw', true),
+                            'has_desc'    => '' !== trim((string) get_post_meta($pid, '_yoast_wpseo_metadesc', true)),
+                            'noindex'     => '1' === (string) get_post_meta($pid, '_yoast_wpseo_meta-robots-noindex', true),
+                        );
+                    }
+                    break;
+
+                case 'rankmath':
+                    foreach ($post_ids as $pid) {
+                        $score  = get_post_meta($pid, 'rank_math_seo_score', true);
+                        $kw     = (string) get_post_meta($pid, 'rank_math_focus_keyword', true);
+                        $robots = get_post_meta($pid, 'rank_math_robots', true);
+                        $kw     = explode(',', $kw); // comma-separated; first entry is the primary keyword
+                        $out[$pid] = array(
+                            'score'       => ('' === $score || null === $score) ? null : (int) $score,
+                            'readability' => null, // Rank Math reports one combined score, no separate readability
+                            'keyword'     => trim((string) reset($kw)),
+                            'has_desc'    => '' !== trim((string) get_post_meta($pid, 'rank_math_description', true)),
+                            'noindex'     => is_array($robots) && in_array('noindex', $robots, true),
+                        );
+                    }
+                    break;
+
+                case 'aioseo':
+                    global $wpdb;
+                    $table = $wpdb->prefix . 'aioseo_posts';
+                    // The constant can exist before the table does (fresh install).
+                    if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $table)) === $table) {
+                        $ids = implode(',', array_map('absint', $post_ids));
+                        // $ids is a sanitised integer list; the table name is prefix-derived.
+                        $rows = $wpdb->get_results("SELECT post_id, seo_score, description, keyphrases, robots_noindex FROM {$table} WHERE post_id IN ({$ids})"); // phpcs:ignore WordPress.DB.PreparedSQL
+                        foreach ((array) $rows as $row) {
+                            $kw         = '';
+                            $keyphrases = json_decode((string) $row->keyphrases, true);
+                            if (isset($keyphrases['focus']['keyphrase'])) {
+                                $kw = (string) $keyphrases['focus']['keyphrase'];
+                            }
+                            $out[(int) $row->post_id] = array(
+                                'score'       => (null === $row->seo_score) ? null : (int) $row->seo_score,
+                                'readability' => null,
+                                'keyword'     => $kw,
+                                'has_desc'    => '' !== trim((string) $row->description),
+                                'noindex'     => ! empty($row->robots_noindex),
+                            );
+                        }
+                    }
+                    break;
+
+                case 'seopress':
+                    foreach ($post_ids as $pid) {
+                        $data = get_post_meta($pid, '_seopress_analysis_data', true);
+                        $out[$pid] = array(
+                            'score'       => (is_array($data) && isset($data['score']['value'])) ? (int) $data['score']['value'] : null,
+                            'readability' => null,
+                            'keyword'     => (string) get_post_meta($pid, '_seopress_analysis_target_kw', true),
+                            'has_desc'    => '' !== trim((string) get_post_meta($pid, '_seopress_titles_desc', true)),
+                            'noindex'     => 'yes' === (string) get_post_meta($pid, '_seopress_robots_index', true),
+                        );
+                    }
+                    break;
+            }
+
+            // Normalise: every requested id gets the full shape, so the view never
+            // has to guard for a missing key.
+            foreach ($post_ids as $pid) {
+                $out[$pid] = isset($out[$pid]) ? array_merge($blank, $out[$pid]) : $blank;
+            }
+
+            /**
+             * Filter the resolved SEO signals, keyed by post ID. Use with
+             * `rbfw_item_seo_plugin` to support an SEO plugin this list does not
+             * know about; keep the array shape documented above.
+             */
+            return (array) apply_filters('rbfw_item_seo_data', $out, $post_ids, $plugin);
+        }
+
+        /**
+         * Bucket a score using the active plugin's own thresholds, so the badge
+         * agrees with what that plugin shows on the edit screen.
+         *
+         * @param int  $score          0-100
+         * @param bool $is_readability Readability is graded on its own 71/41
+         *                             bands, independent of the plugin's SEO bands.
+         * @return string 'good' | 'ok' | 'bad'
+         */
+        private function seo_rank(int $score, bool $is_readability = false): string
+        {
+            if ($is_readability) {
+                if ($score >= 71) {
+                    return 'good';
+                }
+                return ($score >= 41) ? 'ok' : 'bad';
+            }
+
+            switch ($this->seo_plugin()) {
+                case 'rankmath':
+                    if ($score >= 81) {
+                        return 'good';
+                    }
+                    return ($score >= 51) ? 'ok' : 'bad';
+
+                case 'aioseo':
+                    if ($score >= 80) {
+                        return 'good';
+                    }
+                    return ($score >= 50) ? 'ok' : 'bad';
+            }
+
+            // Yoast / SEOPress / default — mirrors WPSEO_Rank: 71+ good, 41-70 ok.
+            if ($score >= 71) {
+                return 'good';
+            }
+
+            return ($score >= 41) ? 'ok' : 'bad';
         }
 
         private function get_price_label($pid): string
@@ -255,6 +481,10 @@ if (!class_exists('RBFW_Rental_List')) {
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $is_trash = isset($_GET['rbfw_status']) && sanitize_text_field(wp_unslash($_GET['rbfw_status'])) === 'trash';
 
+            // SEO column is opt-in on the active SEO plugin: no plugin, no column.
+            $seo_active = '' !== $this->seo_plugin();
+            $seo_label  = $this->seo_plugin_label();
+
             $active    = $this->get_items();
             $total     = count($active);
             $published = 0;
@@ -279,7 +509,6 @@ if (!class_exists('RBFW_Rental_List')) {
             $base_url  = admin_url('admin.php?page=' . self::PAGE_SLUG);
             $trash_url = add_query_arg('rbfw_status', 'trash', $base_url);
             $add_url   = class_exists( 'RBFW_Modern_Editor' ) ? RBFW_Modern_Editor::add_new_url() : admin_url( 'post-new.php?post_type=rbfw_item' );
-            $classic   = admin_url('edit.php?post_type=rbfw_item&rbfw_view=classic');
             $rent_types = RBFW_Function::rbfw_rent_types();
             ?>
             <div class="wrap rbfw-fleet-wrap">
@@ -290,10 +519,6 @@ if (!class_exists('RBFW_Rental_List')) {
                             <span><?php echo esc_html(sprintf(_n('%d item', '%d items', $total, 'booking-and-rental-manager-for-woocommerce'), $total)); ?></span>
                         </div>
                         <div class="rbfw-header-actions">
-                            <a class="rbfw-classic-link" href="<?php echo esc_url($classic); ?>">
-                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-                                <?php esc_html_e('Classic view', 'booking-and-rental-manager-for-woocommerce'); ?>
-                            </a>
                             <a class="rbfw-add-btn" href="<?php echo esc_url($add_url); ?>">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                                 <?php printf(esc_html__('Add New %s', 'booking-and-rental-manager-for-woocommerce'), esc_html($name)); ?>
@@ -418,6 +643,9 @@ if (!class_exists('RBFW_Rental_List')) {
                                             <a class="rbfw-act-btn edit" href="<?php echo esc_url($it['edit_link']); ?>" title="<?php esc_attr_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                             </a>
+                                            <a class="rbfw-act-btn dup" href="<?php echo esc_url($it['duplicate_link']); ?>" title="<?php esc_attr_e('Duplicate', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                                            </a>
                                             <a class="rbfw-act-btn del" href="<?php echo esc_url($it['trash_link']); ?>" title="<?php esc_attr_e('Move to Trash', 'booking-and-rental-manager-for-woocommerce'); ?>" onclick="return confirm('<?php echo esc_js(__('Move this item to Trash?', 'booking-and-rental-manager-for-woocommerce')); ?>');">
                                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
                                             </a>
@@ -450,6 +678,10 @@ if (!class_exists('RBFW_Rental_List')) {
                                 <th><?php esc_html_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <?php // SEO column appears only while an SEO plugin is active — header and cell are gated together. ?>
+                                <?php if ($seo_active) : ?>
+                                <th class="rbfw-th-seo" title="<?php echo esc_attr(sprintf(/* translators: %s: SEO plugin name */ __('SEO score from %s', 'booking-and-rental-manager-for-woocommerce'), $seo_label)); ?>"><?php esc_html_e('SEO', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <?php endif; ?>
                                 <th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                             </tr>
@@ -473,6 +705,49 @@ if (!class_exists('RBFW_Rental_List')) {
                                     </td>
                                     <td data-label="<?php esc_attr_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['type_label'] ? '<span class="rbfw-t-badge type">' . esc_html($it['type_label']) . '</span>' : '-'; ?></td>
                                     <td data-label="<?php esc_attr_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html($it['price'] ?: '-'); ?></td>
+                                    <?php if ($seo_active) : $seo = $it['seo']; ?>
+                                    <td class="rbfw-td-seo" data-label="<?php esc_attr_e('SEO', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                        <span class="rbfw-seo-line">
+                                            <?php if (null === $seo['score'] || 0 === $seo['score']) : ?>
+                                                <span class="rbfw-seo-badge is-none" title="<?php esc_attr_e('Not analysed yet — open the item and set a focus keyword.', 'booking-and-rental-manager-for-woocommerce'); ?>">&mdash;</span>
+                                            <?php else : ?>
+                                                <span class="rbfw-seo-badge is-<?php echo esc_attr($this->seo_rank((int) $seo['score'])); ?>" title="<?php echo esc_attr(sprintf(/* translators: 1: score 0-100, 2: SEO plugin name */ __('SEO score %1$s/100 (%2$s)', 'booking-and-rental-manager-for-woocommerce'), number_format_i18n((int) $seo['score']), $seo_label)); ?>">
+                                                    <?php echo esc_html(number_format_i18n((int) $seo['score'])); ?><i>/100</i>
+                                                </span>
+                                            <?php endif; ?>
+                                            <?php // Readability is a separate score; only Yoast reports one. ?>
+                                            <?php if (null !== $seo['readability'] && 0 !== $seo['readability']) : ?>
+                                                <span class="rbfw-seo-badge is-<?php echo esc_attr($this->seo_rank((int) $seo['readability'], true)); ?>" title="<?php echo esc_attr(sprintf(/* translators: %s: score 0-100 */ __('Readability %s/100', 'booking-and-rental-manager-for-woocommerce'), number_format_i18n((int) $seo['readability']))); ?>">
+                                                    <b>Aa</b> <?php echo esc_html(number_format_i18n((int) $seo['readability'])); ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </span>
+                                        <?php
+                                        // Detail line: keyword text, then icon-only warnings. Icons rather
+                                        // than words because this column is narrow — the tooltip carries
+                                        // the explanation, so the cell stays one line at any table width.
+                                        ?>
+                                        <span class="rbfw-seo-sub">
+                                            <?php if ('' !== $seo['keyword']) : ?>
+                                                <span class="rbfw-seo-kw" title="<?php echo esc_attr(sprintf(/* translators: %s: focus keyword */ __('Focus keyword: %s', 'booking-and-rental-manager-for-woocommerce'), $seo['keyword'])); ?>"><?php echo esc_html($seo['keyword']); ?></span>
+                                            <?php else : ?>
+                                                <span class="rbfw-seo-ico" title="<?php esc_attr_e('No focus keyword set — the plugin cannot score this item.', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('No focus keyword', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2"/><path d="m17 6 3 3"/></svg>
+                                                </span>
+                                            <?php endif; ?>
+                                            <?php if (! $seo['has_desc']) : ?>
+                                                <span class="rbfw-seo-ico" title="<?php esc_attr_e('No meta description — search engines will invent one.', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('No meta description', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h5"/><path d="M8 17h8"/></svg>
+                                                </span>
+                                            <?php endif; ?>
+                                            <?php if ($seo['noindex']) : ?>
+                                                <span class="rbfw-seo-ico is-noindex" title="<?php esc_attr_e('Excluded from search engines (noindex).', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Excluded from search engines', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.9 4.2A10.9 10.9 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.2 3.2"/><path d="M6.6 6.6A18.4 18.4 0 0 0 2 12s3 8 10 8a10.9 10.9 0 0 0 5.4-1.4"/><path d="M14.1 14.1a3 3 0 1 1-4.2-4.2"/><path d="m2 2 20 20"/></svg>
+                                                </span>
+                                            <?php endif; ?>
+                                        </span>
+                                    </td>
+                                    <?php endif; ?>
                                     <td data-label="<?php esc_attr_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-status-dot status-<?php echo esc_attr($it['status']); ?>"><?php echo esc_html($this->status_label($it['status'])); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                         <div class="rbfw-table-acts">
@@ -489,6 +764,9 @@ if (!class_exists('RBFW_Rental_List')) {
                                             </a><?php endif; ?>
                                             <a class="rbfw-table-act edit" href="<?php echo esc_url($it['edit_link']); ?>" title="<?php esc_attr_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            </a>
+                                            <a class="rbfw-table-act dup" href="<?php echo esc_url($it['duplicate_link']); ?>" title="<?php esc_attr_e('Duplicate', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Duplicate', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
                                             </a>
                                             <a class="rbfw-table-act del" href="<?php echo esc_url($it['trash_link']); ?>" title="<?php esc_attr_e('Move to Trash', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Move to Trash', 'booking-and-rental-manager-for-woocommerce'); ?>" onclick="return confirm('<?php echo esc_js(__('Move this item to Trash?', 'booking-and-rental-manager-for-woocommerce')); ?>');">
                                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
@@ -512,40 +790,6 @@ if (!class_exists('RBFW_Rental_List')) {
                 </div>
             </div>
             <?php
-        }
-
-        function rbfw_duplicate_post_function()
-        {
-            if (!isset($_GET['post_id']) || !isset($_GET['_wpnonce']) ||
-                !wp_verify_nonce($_GET['_wpnonce'], 'rbfw_duplicate_post_' . sanitize_text_field($_GET['post_id']))
-            ) {
-                wp_die('Invalid request (missing or invalid nonce).');
-            }
-
-            $post_id = (int)sanitize_text_field(wp_unslash($_GET['post_id']));
-            $post = get_post($post_id);
-
-            $new_post = array(
-                'post_title' => $post->post_title . ' (Copy)',
-                'post_content' => $post->post_content,
-                'post_status' => 'draft',
-                'post_type' => $post->post_type,
-                'post_author' => get_current_user_id(),
-            );
-
-            $new_post_id = wp_insert_post($new_post);
-
-            if (is_wp_error($new_post_id) || !$new_post_id) {
-                wp_die('Failed to duplicate post.');
-            }
-            $meta = get_post_meta($post_id);
-            foreach ($meta as $key => $values) {
-                foreach ($values as $value) {
-                    add_post_meta($new_post_id, $key, maybe_unserialize($value));
-                }
-            }
-            wp_redirect(admin_url('post.php?action=edit&post=' . $new_post_id));
-            exit;
         }
 
     }

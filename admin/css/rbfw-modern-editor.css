@@ -3880,6 +3880,12 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     overflow: visible !important;
 }
 
+.rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely,
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely.rbfw_hide,
+.rbfw-me-pricing-classic-wrap section.manage_inventory_as_timely.rbfw_hide {
+    display: none !important;
+}
+
 .rbfw-me-pricing-classic-wrap section.manage_inventory_as_timely > div {
     flex: 1 !important;
     min-width: 0 !important;
@@ -3966,6 +3972,358 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     border-radius: 8px !important;
     overflow: hidden !important;
     margin-bottom: 12px !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Inventory card (reused classic markup) — match the modern editor's field
+   spacing. The generic `.rbfw-me-pricing-classic-wrap section:not(…)` rule
+   forces padding:0 with high specificity, so the padding override below
+   replicates that :not() chain (plus the .rbfw-me-inventory-card scope) to
+   win, while the layout/control rules stay scoped to this card only.
+   ════════════════════════════════════════════════════════════════════════ */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration):not(.appointment-onday) {
+    padding: 16px 20px !important;
+    margin: 0 !important;
+}
+/* Toggle / stock rows: title + helper on the left, control on the right */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section:not(.rbfw_variations_table_wrap) {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+}
+/* Hide inventory toggle rows that don't apply to the current rent type.
+   These override the generic `display:flex !important` rule above (higher
+   specificity + driven by the pricing panel's data-item-type, which
+   applyType() keeps in sync on live type changes).
+   - Return-date release: not for Single Day / Appointment.
+   - Multiple-item selection: only multi-day Bike/Car, Dress, Equipment, Others.
+   - Stock Quantity: not for Single Day — its stock comes from the per-type rows
+     in the pricing table, so only Item variation applies here. */
+.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_quantity_section,
+.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
+.rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
+.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
+.rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
+.rbfw-me-panel[data-item-type="resort"]         .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
+.rbfw-me-panel[data-item-type="multiple_items"] .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty {
+    display: none !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section > div:first-child {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+/* Stock quantity — modern input, right aligned */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity input {
+    width: 160px !important;
+    max-width: 100% !important;
+    height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    color: #1d2327 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity input:focus {
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
+    outline: none !important;
+}
+/* Variation rows table spans full width below the toggles */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_variations_table_wrap.show {
+    display: block !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_variations_table_wrap.hide {
+    display: none !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Variations builder (inside the inventory card) — modern, card-per-variation
+   layout with styled inputs, value table and action buttons.
+   ════════════════════════════════════════════════════════════════════════ */
+.rbfw-me-inventory-card .rbfw_variations_table {
+    width: 100% !important;
+    margin: 0 0 14px !important;
+}
+/* Each variation = a bordered sub-card */
+.rbfw-me-inventory-card .rbfw_variations_table_row {
+    position: relative !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    padding: 16px !important;
+    margin: 0 0 14px !important;
+}
+/* Field Label header */
+.rbfw-me-inventory-card .rbfw_variations_table_row > header {
+    display: block !important;
+    margin: 0 0 14px !important;
+    padding-right: 48px !important; /* room for the remove-variation button */
+}
+.rbfw-me-inventory-card .rbfw_variations_table_row > header > label {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1d2327 !important;
+    margin: 0 0 6px !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_table_row > header > div > input[type="text"] {
+    width: 100% !important;
+    height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+/* Value table */
+.rbfw-me-inventory-card .rbfw_variations_value_table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table thead th {
+    text-align: left !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    padding: 6px 10px !important;
+    border: none !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table tbody td {
+    padding: 6px 10px !important;
+    border: none !important;
+    vertical-align: middle !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table td input[type="text"],
+.rbfw-me-inventory-card .rbfw_variations_value_table td input[type="number"] {
+    width: 100% !important;
+    height: 38px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table td input:focus,
+.rbfw-me-inventory-card .rbfw_variations_table_row > header input:focus {
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
+    outline: none !important;
+}
+/* "Is Default" column — centre the checkbox */
+.rbfw-me-inventory-card .rbfw_variations_value_table th:nth-child(3),
+.rbfw-me-inventory-card .rbfw_variations_value_table td:nth-child(3) {
+    text-align: center !important;
+    width: 90px !important;
+}
+.rbfw-me-inventory-card .rbfw_variation_selected_value {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+.rbfw-me-inventory-card .rbfw_variations_value_table th:nth-child(4),
+.rbfw-me-inventory-card .rbfw_variations_value_table td:nth-child(4) {
+    width: 90px !important;
+}
+/* Action icon buttons (trash / move) */
+.rbfw-me-inventory-card .mp_event_remove_move {
+    display: inline-flex !important;
+    gap: 6px !important;
+    align-items: center !important;
+}
+.rbfw-me-inventory-card .mp_event_remove_move .button,
+.rbfw-me-inventory-card .remove-rbfw_variations_table_row {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    color: #6b7280 !important;
+    cursor: pointer !important;
+    transition: border-color .15s, color .15s, background .15s !important;
+}
+.rbfw-me-inventory-card .mp_event_remove_move .button:hover {
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+    background: #f4f7fe !important;
+}
+.rbfw-me-inventory-card .remove-rbfw_variations_value_table_row:hover,
+.rbfw-me-inventory-card .remove-rbfw_variations_table_row:hover {
+    border-color: #dc2626 !important;
+    color: #dc2626 !important;
+    background: #fef2f2 !important;
+}
+/* Remove-whole-variation button — pin to the card's top-right corner */
+.rbfw-me-inventory-card .rbfw_variations_table_row > .mp_event_remove_move {
+    position: absolute !important;
+    top: 14px !important;
+    right: 14px !important;
+}
+/* Divider + add buttons spacing */
+.rbfw-me-inventory-card .variations-inner-table hr {
+    border: none !important;
+    border-top: 1px solid #f0f0f1 !important;
+    margin: 12px 0 !important;
+}
+.rbfw-me-inventory-card .add-new-variation-value {
+    margin-top: 4px !important;
+}
+.rbfw-me-inventory-card #add-new-variation {
+    margin-top: 4px !important;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Location card (modern) — pick-up / drop-off location checkbox groups.
+   ════════════════════════════════════════════════════════════════════════ */
+.rbfw-me-location-card .rbfw-me-loc-group {
+    padding: 4px 0 14px !important;
+    margin: 0 0 6px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-checkboxes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 10px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 13px !important;
+    color: #1d2327 !important;
+    cursor: pointer !important;
+    transition: border-color .15s, background .15s !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-label:hover {
+    border-color: #1a56db !important;
+    background: #f4f7fe !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-checkbox {
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-empty {
+    margin: 0 !important;
+    font-size: 13px !important;
+    color: #6b7280 !important;
+}
+
+/* Manage locations (add / rename / delete taxonomy terms inline) */
+.rbfw-me-location-card .rbfw-me-loc-manage {
+    border: 1px solid #e2e6ee !important;
+    border-radius: 10px !important;
+    background: #f9fafc !important;
+    padding: 16px !important;
+    margin: 0 0 18px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-manage__head {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+    margin: 0 0 12px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-manage__head strong {
+    font-size: 14px !important;
+    color: #1d2327 !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-manage__add {
+    display: flex !important;
+    gap: 8px !important;
+    margin: 0 0 12px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-new {
+    flex: 1 1 auto !important;
+    height: 40px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #d5d8df !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-size: 14px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-add-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-list {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    padding: 8px 12px !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    margin: 0 !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-row__name {
+    font-size: 13px !important;
+    color: #1d2327 !important;
+    word-break: break-word !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-row__actions {
+    display: inline-flex !important;
+    gap: 6px !important;
+    flex: 0 0 auto !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-edit,
+.rbfw-me-location-card .rbfw-me-loc-delete {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    padding: 0 !important;
+    border: 1px solid #e2e6ee !important;
+    border-radius: 7px !important;
+    background: #fff !important;
+    color: #6b7280 !important;
+    cursor: pointer !important;
+    transition: border-color .15s, color .15s, background .15s !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-edit:hover {
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+    background: #f4f7fe !important;
+}
+.rbfw-me-location-card .rbfw-me-loc-delete:hover {
+    border-color: #dc2626 !important;
+    color: #dc2626 !important;
+    background: #fef2f2 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_time_inventory.rbfw_item_stock_quantity section.rbfw_item_quantiry_duration {
@@ -4232,7 +4590,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     border: 1px solid #dde4ef !important;
     border-radius: 8px !important;
     box-sizing: border-box !important;
-    margin: 0 20px 12px !important;
+    margin: 0 20px 10px !important;
     padding: 16px 20px !important;
     width: auto !important;
 }
@@ -7616,6 +7974,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     content: '⚠ ';
 }
 input.rbfw-me-field-invalid,
+select.rbfw-me-field-invalid,
 textarea.rbfw-me-field-invalid {
     border-color: #d63638 !important;
     box-shadow: 0 0 0 1px #d63638 !important;
@@ -8884,6 +9243,11 @@ textarea.rbfw-me-field-invalid {
     overflow: visible !important;
 }
 
+.rbfw-me-wrap .rbfw-me-panel[data-panel="pricing"][data-item-type="appointment"] .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely,
+.rbfw-me-wrap .rbfw-me-panel[data-panel="pricing"] .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section.manage_inventory_as_timely.rbfw_hide {
+    display: none !important;
+}
+
 /* Seasonal sub-panels — switch instantly by rent type (data-item-type on pricing panel) */
 .rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .rbfw-sp-config-panel,
 .rbfw-me-panel[data-panel="pricing"] .rbfw-sp-modern-panel > .sessional_price_single_day,
@@ -8916,3 +9280,208 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-panel[data-panel="pricing"][data-item-type="multiple_items"] .rbfw-sp-modern-panel > .sessional_price_multiple_items {
     display: block !important;
 }
+
+/* Rent-type chip hover actions (edit / delete) */
+.rbfw-me-checkbox-label.rbfw-rt-chip { position: relative; }
+/* The pill sets `span { pointer-events: none }` so text clicks fall through to the
+   label; re-enable it on the action icons or edit/delete clicks never register. */
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions,
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions span { pointer-events: auto; }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions {
+    position: absolute;
+    top: -12px;
+    right: -10px;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid #d8dee9;
+    border-radius: 7px;
+    padding: 4px 9px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.16);
+    z-index: 4;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip:hover .rbfw-rt-actions { display: inline-flex; }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: color .15s, transform .15s;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .dashicons:hover { transform: scale(1.18); }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .rbfw-rt-edit:hover { color: #2271b1; }
+.rbfw-me-checkbox-label.rbfw-rt-chip .rbfw-rt-actions .rbfw-rt-del:hover { color: #d63638; }
+
+/* Animated (moving) gradient border shown while hovering a rent-type chip */
+.rbfw-me-checkbox-label.rbfw-rt-chip::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: 999px;
+    padding: 2px;
+    background: linear-gradient(90deg, #1a73e8, #34a853, #fbbc05, #ea4335, #1a73e8);
+    background-size: 300% 100%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip:hover::after {
+    opacity: 1;
+    animation: rbfw-rt-border-move 2s linear infinite;
+}
+@keyframes rbfw-rt-border-move {
+    to { background-position: 300% 0; }
+}
+
+/* ── Sub-category (child) rent-type chips ─────────────────────── */
+/* Children are indented via left margin (depth * step) and get a softer,
+   dashed pill treatment plus a "corner" connector so the hierarchy reads
+   clearly even inside the flex-wrap pill grid. */
+.rbfw-me-checkbox-label.rbfw-rt-chip--child {
+    margin-left: calc(var(--rbfw-rt-depth, 1) * 22px);
+    background: #f8fafc;
+    border-style: dashed;
+    border-color: #cbd5e1;
+    color: #475569;
+    font-weight: 500;
+    padding-left: 14px;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip--child:hover {
+    background: #eef2f9;
+    border-color: #94a3b8;
+    color: #1e293b;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip--child:has(input:checked),
+.rbfw-me-checkbox-label.rbfw-rt-chip--child.is-checked {
+    background: var(--me-primary-soft);
+    border-color: var(--me-primary);
+    border-style: solid;
+    color: var(--me-primary);
+    font-weight: 600;
+}
+/* Connector elbow drawn to the left of each child chip */
+.rbfw-me-checkbox-label.rbfw-rt-chip--child::before {
+    content: "";
+    position: absolute;
+    left: -14px;
+    top: 50%;
+    width: 12px;
+    height: 1px;
+    background: #cbd5e1;
+    pointer-events: none;
+}
+.rbfw-rt-subarrow {
+    color: #94a3b8;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    margin-right: 4px;
+    pointer-events: none;
+}
+.rbfw-me-checkbox-label.rbfw-rt-chip--child:has(input:checked) .rbfw-rt-subarrow,
+.rbfw-me-checkbox-label.rbfw-rt-chip--child.is-checked .rbfw-rt-subarrow {
+    color: var(--me-primary);
+}
+
+/* ── Block Booking If Date Range Contains Off Days (Off Days tab) ── */
+.rbfw-me-offday-block-head {
+    align-items: center !important;
+    display: flex !important;
+    gap: 16px !important;
+    justify-content: space-between !important;
+}
+.rbfw-me-offday-block-head > div { flex: 1; min-width: 0; }
+.rbfw-me-offday-block-switch { flex-shrink: 0 !important; }
+/* Collapsible card: head toggles the body; caret indicates state. */
+.rbfw-me-card--collapsible > .rbfw-me-card__head { cursor: pointer; }
+.rbfw-me-card--collapsible > .rbfw-me-card__head .rbfw-me-offday-block-switch { cursor: default; }
+.rbfw-me-card--collapsible.is-collapsed > .rbfw-me-card__body { display: none; }
+.rbfw-me-card__caret {
+    color: var(--me-muted);
+    flex-shrink: 0;
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+    transition: transform 0.2s ease;
+}
+.rbfw-me-card--collapsible.is-collapsed .rbfw-me-card__caret { transform: rotate(-90deg); }
+/* Collapsible rules block inside "Location Inventory & Price" (starts collapsed). */
+.rbfw-me-loc-inv-collapse { margin-top: 4px; }
+.rbfw-me-loc-inv-collapse__head {
+    align-items: center;
+    background: #f7f9fc;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
+    color: var(--me-text);
+    cursor: pointer;
+    display: flex;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 8px;
+    padding: 10px 14px;
+    text-align: left;
+    width: 100%;
+}
+.rbfw-me-loc-inv-collapse__head:hover { background: #eef3ff; }
+.rbfw-me-loc-inv-collapse__body { padding-top: 12px; }
+.rbfw-me-loc-inv-collapse.is-collapsed > .rbfw-me-loc-inv-collapse__body { display: none; }
+.rbfw-me-loc-inv-collapse.is-collapsed .rbfw-me-card__caret { transform: rotate(-90deg); }
+.rbfw-me-offday-rules { display: flex; flex-direction: column; gap: 10px; }
+.rbfw-me-offday-rule {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    display: flex;
+    gap: 14px;
+    padding: 12px 16px;
+}
+.rbfw-me-offday-rule__badge {
+    background: #eef3ff;
+    border: 1px solid #dbe4ff;
+    border-radius: 7px;
+    color: #2f5eff;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    white-space: nowrap;
+}
+.rbfw-me-offday-rule__text { color: #1f2733; flex: 1; font-size: 13px; font-weight: 600; }
+.rbfw-me-offday-rule__check { color: #16a34a; flex-shrink: 0; font-size: 20px; height: 20px; width: 20px; }
+.rbfw-me-offday-rules-note {
+    align-items: center;
+    background: #eef3ff;
+    border-radius: 8px;
+    color: #4a5568;
+    display: flex;
+    font-size: 12.5px;
+    gap: 8px;
+    margin: 12px 0 0;
+    padding: 10px 14px;
+}
+.rbfw-me-offday-rules-note .dashicons { color: #2f5eff; flex-shrink: 0; font-size: 16px; height: 16px; width: 16px; }
+
+/* ── Location Inventory & Price (Location panel) ── */
+.rbfw-me-loc-inv-rows { margin-top: 4px; }
+.rbfw-me-loc-inv-grid {
+    align-items: center;
+    display: grid;
+    gap: 10px 14px;
+    grid-template-columns: minmax(140px, 1.4fr) 1fr 1fr;
+}
+.rbfw-me-loc-inv-head {
+    color: #6a727e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+}
+.rbfw-me-loc-inv-name { color: #1f2733; font-size: 13px; font-weight: 600; }

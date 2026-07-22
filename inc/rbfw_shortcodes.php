@@ -58,11 +58,95 @@ function rbfw_rent_list_get_category_filter_names( $category ) {
                 $category_names[] = $term->name;
             }
         } else {
-            $category_names[] = $category_value;
+            $term = get_term_by( 'name', $category_value, 'rbfw_item_caregory' );
+            if ( ! $term ) {
+                $term = get_term_by( 'slug', sanitize_title( $category_value ), 'rbfw_item_caregory' );
+            }
+            if ( $term && ! is_wp_error( $term ) ) {
+                $category_names[] = $term->name;
+            }
         }
     }
 
     return array_values( array_unique( array_filter( $category_names ) ) );
+}
+
+if ( ! function_exists( 'rbfw_parse_search_pickup_date' ) ) {
+    /**
+     * Parse the pickup date submitted by the rental search form.
+     *
+     * The visible datepicker format is derived from the WordPress `date_format`
+     * option (see the JS mapping in RBFW_Dependencies.php), so the raw value can
+     * arrive in several different formats. We try the format that matches the
+     * current site setting first (this guarantees correct day/month
+     * disambiguation for slash formats), then a list of known fallbacks, and
+     * finally strtotime() for resilience. Returning null on failure lets callers
+     * skip date handling instead of calling ->format() on a boolean false.
+     *
+     * @param string $raw Raw, already-sanitised pickup date string.
+     * @return DateTime|null DateTime on success, null when the value cannot be parsed.
+     */
+    function rbfw_parse_search_pickup_date( $raw ) {
+        $raw = trim( (string) $raw );
+
+        if ( '' === $raw ) {
+            return null;
+        }
+
+        // Map the WordPress date_format option to the PHP format the datepicker
+        // actually submits (mirrors the JS in RBFW_Dependencies.php).
+        switch ( get_option( 'date_format' ) ) {
+            case 'F j, Y':
+                $primary = 'd M Y'; // datepicker 'dd M yy' => "23 Jun 2026".
+                break;
+            case 'm/d/Y':
+                $primary = 'm/d/Y'; // datepicker 'mm/dd/yy'.
+                break;
+            case 'd/m/Y':
+                $primary = 'd/m/Y'; // datepicker 'dd/mm/yy'.
+                break;
+            default:
+                $primary = 'Y-m-d'; // datepicker default 'yy-mm-dd'.
+                break;
+        }
+
+        // Candidate formats, most-likely first. The leading "!" resets unspecified
+        // fields (e.g. time) to the Unix epoch so date-only values are stable.
+        $formats = array_unique(
+            array(
+                $primary,
+                'Y-m-d',
+                'd M Y',
+                'F j, Y', // A value a user may type to match the placeholder.
+                'd-m-Y',
+                'm/d/Y',
+                'd/m/Y',
+            )
+        );
+
+        foreach ( $formats as $format ) {
+            $date   = DateTime::createFromFormat( '!' . $format, $raw );
+            $errors = DateTime::getLastErrors();
+
+            // PHP 8.2+ returns false from getLastErrors() when the parse is clean.
+            if ( $date instanceof DateTime
+                && ( false === $errors || ( empty( $errors['warning_count'] ) && empty( $errors['error_count'] ) ) ) ) {
+                return $date;
+            }
+        }
+
+        // Last-resort fallback for any other recognisable date string.
+        $timestamp = strtotime( $raw );
+
+        if ( false !== $timestamp ) {
+            $date = new DateTime();
+            $date->setTimestamp( $timestamp );
+
+            return $date;
+        }
+
+        return null;
+    }
 }
 
 function rbfw_rent_list_shortcode_func($atts = null) {
@@ -122,8 +206,11 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $pickup_date = ( $rbfw_pickup_date != '' ) ? $rbfw_pickup_date : '';
 
         if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
-            $date = DateTime::createFromFormat('F j, Y', $pickup_date );
-            $pickup_date = $date->format('d-m-Y');
+            // Normalise the search date (submitted format varies with the site's
+            // date_format option) to d-m-Y for the off-day query below. Clear the
+            // value when it cannot be parsed so we never call ->format() on false.
+            $date        = rbfw_parse_search_pickup_date( $pickup_date );
+            $pickup_date = ( $date instanceof DateTime ) ? $date->format('d-m-Y') : '';
         }
 
         if( !empty( $pickup_date ) && $pickup_date !== 'Pickup date' ){
@@ -175,13 +262,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         );
 
 
-        if( !empty( $rbfw_search_type ) ) {
-            $search_category_name = $rbfw_search_type;
-            $args['meta_query'][] = array(
-                    'key' => 'rbfw_categories',
-                'value' => $search_category_name,
-                'compare' => 'LIKE'
+        if ( ! empty( $rbfw_search_type ) ) {
+            $validated_types = rbfw_sanitize_rent_type_categories(
+                array( sanitize_text_field( (string) $rbfw_search_type ) )
             );
+            $category_clause = rbfw_build_categories_meta_clause( $validated_types );
+            if ( ! empty( $category_clause ) ) {
+                $args['meta_query'][] = $category_clause;
+            }
         }
 
 
@@ -228,6 +316,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
         if(!empty($category)) {
             $category = array_filter( array_map( 'trim', explode( ',', $category ) ) );
+            $category_names = array();
             foreach ($category as $cat) {
                 $term = get_term( absint( $cat ) );
 
@@ -235,15 +324,18 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                     continue;
                 }
 
-                $category_name = $term->name;
+                $category_name            = $term->name;
                 $base_filter_categories[] = $category_name;
-                // Match every storage format of rbfw_categories (serialized
-                // array / single string / comma separated) so the initial list
-                // is not empty when the meta is not a serialized array.
-                $category_clause = rbfw_build_category_meta_clause( $category_name );
-                if ( ! empty( $category_clause ) ) {
-                    $args['meta_query'][] = $category_clause;
-                }
+                $category_names[]         = $category_name;
+            }
+            // Match every storage format of rbfw_categories (serialized array /
+            // single string / comma separated) in ONE flat OR group so several
+            // selected categories share a single wp_postmeta JOIN instead of
+            // forcing one JOIN per category, which timed out (504 Gateway
+            // Time-out). See rbfw_build_categories_meta_clause().
+            $category_clause = rbfw_build_categories_meta_clause( $category_names );
+            if ( ! empty( $category_clause ) ) {
+                $args['meta_query'][] = $category_clause;
             }
         }
     }
@@ -663,18 +755,18 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
 
     $attributes = shortcode_atts( array(
-        'search-type'  => '',
+        'search-type'      => '',
         'hide_pickup_date' => 'no',
+        'hide_location'    => 'no',
+        'type_label'       => '',
+        'location_label'   => '',
     ), $atts );
 
-    $search_type  = $attributes['search-type'];
+    $search_type      = $attributes['search-type'];
     $hide_pickup_date = $attributes['hide_pickup_date'];
-
-
-
-
-    $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
-    $search_page_link = get_page_link($search_page_id);
+    $hide_location    = $attributes['hide_location'];
+    $type_label       = $attributes['type_label'];
+    $location_label   = $attributes['location_label'];
 
     $location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
     $type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
@@ -758,11 +850,13 @@ function rbfw_rent_search_shortcode( $atts = null ){
                     <?php endif; ?>
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
-                            <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
+                            <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category', $type_label );?>
                         </div>
+                        <?php if( $hide_location !== 'yes' ): ?>
                         <div class="rbfw_search_item">
-                            <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
+                            <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location', $location_label );?>
                         </div>
+                        <?php endif; ?>
                         <?php if( $hide_pickup_date !== 'yes' ): ?>
                         <div class="rbfw_search_item rbfw_flatpicker">
                             <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="<?php echo date_i18n( get_option('date_format')) ?>">

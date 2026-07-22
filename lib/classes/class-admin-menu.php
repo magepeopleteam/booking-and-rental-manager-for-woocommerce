@@ -16,8 +16,16 @@
 				$this->settings_api = new RBFW_Setting_API;
 				add_action( 'add_meta_boxes', array( $this, 'add_meta_box_func' ) );
 				add_action( 'admin_init', array( $this, 'admin_init' ) );
+				add_action( 'admin_init', array( $this, 'rbfw_redirect_legacy_order_list' ) );
 				add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+				// Hide the Pro "Reports" submenu — its data now lives in the Order List.
+				// Runs late ( priority 999 ) so it removes the entry after Pro registers it.
+				add_action( 'admin_menu', array( $this, 'rbfw_remove_reports_submenu' ), 999 );
 				add_action( 'admin_enqueue_scripts', array( $this, 'rbfw_admin_enqueue_scripts' ) );
+				// The Pro "Report Settings" tab has moved to the Order List page as the
+				// "Export Settings" accordion, so remove it from the global Settings.
+				add_filter( 'rbfw_settings_sec_reg', array( $this, 'rbfw_remove_report_settings_section' ), 200 );
+				add_filter( 'rbfw_settings_sec_fields', array( $this, 'rbfw_remove_report_settings_fields' ), 200 );
 				/* WooCommerce Action and Filter */
 				add_filter( 'woocommerce_order_status_changed', array( $this, 'rbfw_wc_status_update' ), 10, 4 );
 				/* End WooCommerce Action and Filter */
@@ -31,7 +39,14 @@
 
 			function admin_menu() {
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ), __( 'Time Slots', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_time_slots', array( $this, 'rbfw_time_slots' ) );
-				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_order', array( $this, 'rbfw_order_list' ) );
+				// The legacy WooCommerce-only "Order List" has been folded into the unified
+				// "Bookings" page (which lists both WooCommerce and custom bookings). Its
+				// submenu is retired by default; the class + its AJAX handlers stay loaded so
+				// the unified page can reuse them, and the page can be re-exposed via the
+				// `rbfw_enable_legacy_order_list` filter.
+				if ( apply_filters( 'rbfw_enable_legacy_order_list', false ) ) {
+					add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), __( 'Order List', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_order', array( $this, 'rbfw_order_list' ) );
+				}
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_inventory', array( $this, 'rbfw_inventory_list' ) );
 				do_action( 'rbfw_admin_menu_after_inventory' );
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_settings_page', array( $this, 'plugin_page' ) );
@@ -44,14 +59,85 @@
 				// End PRO plugin is activated
 			}
 
+			/**
+			 * Send direct hits on the retired "Order List" page (?page=rbfw_order) to the
+			 * unified "Bookings" page, unless the legacy list has been re-enabled via the
+			 * `rbfw_enable_legacy_order_list` filter.
+			 */
+			public function rbfw_redirect_legacy_order_list() {
+				if ( apply_filters( 'rbfw_enable_legacy_order_list', false ) ) {
+					return;
+				}
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( isset( $_GET['page'] ) && 'rbfw_order' === $_GET['page'] ) {
+					wp_safe_redirect( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_booking_orders' ) );
+					exit;
+				}
+			}
+
+			/**
+			 * Remove the Pro "Reports" submenu.
+			 *
+			 * The Reports (attendee/customer) dashboard has been superseded by the
+			 * Order List page — booking details, status management, filtering,
+			 * export and the revenue summary all live there now — so the duplicate
+			 * submenu is hidden. Runs at admin_menu priority 999, after the Pro
+			 * plugin has registered it on rbfw_admin_menu_after_inventory.
+			 */
+			public function rbfw_remove_reports_submenu() {
+				remove_submenu_page( 'edit.php?post_type=rbfw_item', 'reports' );
+			}
+
+			/**
+			 * Remove the "Report Settings" section from the global Settings tabs.
+			 *
+			 * Its purpose ( choosing which columns the report/export shows ) now lives
+			 * on the Order List page as the "Export Settings" accordion.
+			 *
+			 * @param array $sections registered settings sections.
+			 * @return array
+			 */
+			public function rbfw_remove_report_settings_section( $sections ) {
+				if ( ! is_array( $sections ) ) {
+					return $sections;
+				}
+				foreach ( $sections as $index => $section ) {
+					if ( isset( $section['id'] ) && 'rbfw_basic_purchase_list_settings' === $section['id'] ) {
+						unset( $sections[ $index ] );
+					}
+				}
+				return array_values( $sections );
+			}
+
+			/**
+			 * Remove the "Report Settings" fields that belong to the moved section.
+			 *
+			 * @param array $fields registered settings fields keyed by section id.
+			 * @return array
+			 */
+			public function rbfw_remove_report_settings_fields( $fields ) {
+				if ( is_array( $fields ) && isset( $fields['rbfw_basic_purchase_list_settings'] ) ) {
+					unset( $fields['rbfw_basic_purchase_list_settings'] );
+				}
+				return $fields;
+			}
+
 			public function rbfw_admin_enqueue_scripts( $hook ) {
-				// Only load on our order list page
-				if ( $hook === 'rbfw_item_page_rbfw_order' ) {
-					wp_enqueue_style( 
-						'rbfw-order-list-modern', 
-						plugin_dir_url( __FILE__ ) . '../../assets/admin/css/rbfw-order-list-modern.css', 
-						array(), 
-						'1.0.0' 
+				// The Order List page is fully styled by the modern admin/css/rbfw_order.css
+				// (scoped under .rbfw_ol). The legacy rbfw-order-list-modern.css was retired:
+				// it wrapped the page in a centered max-width card (margin:0 auto -> side gaps)
+				// and shipped a global "*"/"body" reset that leaked into the rest of wp-admin.
+
+				// Global Settings page — modern two-column layout (panel + sidebar cards).
+				// Scoped under .rbfw_global_settings and loaded after the base admin style
+				// ( dependency ) so its overrides win without touching the shared Settings API.
+				if ( 'rbfw_item_page_rbfw_settings_page' === $hook ) {
+					$gs_css = RBFW_PLUGIN_DIR . '/admin/css/rbfw_global_settings.css';
+					wp_enqueue_style(
+						'rbfw-global-settings',
+						RBFW_PLUGIN_URL . '/admin/css/rbfw_global_settings.css',
+						array( 'rbfw-admin-style' ),
+						file_exists( $gs_css ) ? filemtime( $gs_css ) : false
 					);
 				}
 			}
@@ -73,329 +159,477 @@
 					'post_status'    => array('publish', 'private', 'draft', 'pending', 'future', 'inherit')
 				);
 				$query                = new WP_Query( $args );
-				
-				// Calculate stats
-				$total_orders = 0;
-				$completed_orders = 0;
-				$cancelled_orders = 0;
-				$pending_orders = 0;
-				$refunded_orders = 0;
-				$total_amount = 0;
-				$completed_amount = 0;
-				$cancelled_amount = 0;
-				$pending_amount = 0;
-				$refunded_amount = 0;
-				
-				if ( $query->have_posts() ) {
-					while ( $query->have_posts() ) {
-						$query->the_post();
-						global $post;
-						$post_id = $post->ID;
-						$wc_order_id = get_post_meta( $post_id, 'rbfw_order_id', true );
-						$order = wc_get_order($wc_order_id);
-						
-						if ($order) {
-							$status = $order->get_status();
-							
-							// Skip orders with trash status
-							if ($status === 'trash' || $status === 'wc-trash') {
-								continue;
-							}
-							
-							$total_orders++;
-							$order_total = $order->get_total();
-							$total_amount += $order_total;
-							
-							// Normalize status by removing 'wc-' prefix if present
-							$normalized_status = str_replace('wc-', '', $status);
-							
-							// Count orders and amounts by normalized status
-							switch($normalized_status) {
-								case 'completed':
-									$completed_orders++;
-									$completed_amount += $order_total;
-									break;
-								case 'cancelled':
-								case 'canceled':
-								case 'failed':
-									$cancelled_orders++;
-									$cancelled_amount += $order_total;
-									break;
-								case 'refunded':
-									$refunded_orders++;
-									$refunded_amount += $order_total;
-									break;
-								case 'pending':
-								case 'on-hold':
-								case 'processing':
-									$pending_orders++;
-									$pending_amount += $order_total;
-									break;
-							}
-						}
-					}
-					wp_reset_postdata();
-				}
+
+				// Dashboard stats ( status counts/amounts + revenue summary ) come from
+				// the shared calculator so the page load and the post-delete AJAX update
+				// stay in sync.
+				$stats            = function_exists( 'rbfw_calculate_order_list_stats' ) ? rbfw_calculate_order_list_stats() : array();
+				$total_orders     = isset( $stats['total_orders'] ) ? $stats['total_orders'] : 0;
+				$total_amount     = isset( $stats['total_amount'] ) ? $stats['total_amount'] : 0;
+				$completed_orders = isset( $stats['completed_orders'] ) ? $stats['completed_orders'] : 0;
+				$completed_amount = isset( $stats['completed_amount'] ) ? $stats['completed_amount'] : 0;
+				$cancelled_orders = isset( $stats['cancelled_orders'] ) ? $stats['cancelled_orders'] : 0;
+				$cancelled_amount = isset( $stats['cancelled_amount'] ) ? $stats['cancelled_amount'] : 0;
+				$pending_orders   = isset( $stats['pending_orders'] ) ? $stats['pending_orders'] : 0;
+				$pending_amount   = isset( $stats['pending_amount'] ) ? $stats['pending_amount'] : 0;
+				$refunded_orders  = isset( $stats['refunded_orders'] ) ? $stats['refunded_orders'] : 0;
+				$refunded_amount  = isset( $stats['refunded_amount'] ) ? $stats['refunded_amount'] : 0;
+				$processing_amount  = isset( $stats['processing_amount'] ) ? $stats['processing_amount'] : 0;
+				$net_revenue        = isset( $stats['net_revenue'] ) ? $stats['net_revenue'] : 0;
+				$this_month_revenue = isset( $stats['this_month_revenue'] ) ? $stats['this_month_revenue'] : 0;
+				$avg_order_value    = isset( $stats['avg_order_value'] ) ? $stats['avg_order_value'] : 0;
+				$paid_orders        = isset( $stats['paid_orders'] ) ? $stats['paid_orders'] : 0;
 				?>
-                <div class="rental-order-list-dashboard">
-                    <div class="rental-order-list-header">
-                        <h1><?php esc_html_e( 'ORDER LIST', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+                <div class="rbfw_ol rental-order-list-dashboard wrap">
+                    <div class="rbfw_ol_header">
+                        <div class="rbfw_ol_title">
+                            <span class="rbfw_ol_title_icon"><?php echo rbfw_inv_icon( 'clipboard' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            <h1><?php esc_html_e( 'Order List', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+                            <span class="rbfw_ol_badge_count"><?php
+                                /* translators: %s: number of orders. */
+                                echo esc_html( sprintf( _n( '%s Order', '%s Orders', $total_orders, 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( $total_orders ) ) );
+                            ?></span>
+                        </div>
+                        <?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) { ?>
+                        <div class="rbfw_ol_header_actions">
+                            <button type="button" id="rbfw_ol_export_btn" class="rbfw_ol_export_btn">
+                                <?php echo rbfw_inv_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                <span><?php esc_html_e( 'Export', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            </button>
+                        </div>
+                        <?php } ?>
                     </div>
-                    
-                    <!-- Stats Cards -->
-                    <div class="rental-order-list-stats-grid">
-                        <div class="rental-order-list-stat-card rental-order-list-total">
-                            <div class="rental-order-list-stat-icon">📊</div>
-                            <div class="rental-order-list-stat-info">
-                                <div class="rental-order-list-stat-number"><?php echo esc_html( $total_orders ); ?></div>
-                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Total Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $total_amount ) ); ?></div>
+                    <hr class="wp-header-end">
+
+                    <!-- Revenue summary card -->
+                    <div class="rbfw_ol_revenue">
+                        <div class="rbfw_ol_rev_main">
+                            <div class="rbfw_ol_rev_ic"><?php echo rbfw_inv_icon( 'tag' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_rev_main_txt">
+                                <div class="rbfw_ol_rev_label"><?php esc_html_e( 'Net Revenue', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_rev_value" data-rev="net"><?php echo wp_kses_post( wc_price( $net_revenue ) ); ?></div>
+                                <div class="rbfw_ol_rev_sub" data-rev="paid_label">
+                                    <?php
+                                    /* translators: %s: number of paid (completed + processing) orders. */
+                                    echo esc_html( sprintf( _n( 'From %s paid order', 'From %s paid orders', $paid_orders, 'booking-and-rental-manager-for-woocommerce' ), number_format_i18n( $paid_orders ) ) );
+                                    ?>
+                                </div>
                             </div>
                         </div>
-                        <div class="rental-order-list-stat-card rental-order-list-cancelled">
-                            <div class="rental-order-list-stat-icon">❌</div>
-                            <div class="rental-order-list-stat-info">
-                                <div class="rental-order-list-stat-number"><?php echo esc_html( $cancelled_orders ); ?></div>
-                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Cancelled Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $cancelled_amount ) ); ?></div>
+                        <div class="rbfw_ol_rev_breakdown">
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Completed', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="completed"><?php echo wp_kses_post( wc_price( $completed_amount ) ); ?></span>
                             </div>
-                        </div>
-                        <div class="rental-order-list-stat-card rental-order-list-completed">
-                            <div class="rental-order-list-stat-icon">✅</div>
-                            <div class="rental-order-list-stat-info">
-                                <div class="rental-order-list-stat-number"><?php echo esc_html( $completed_orders ); ?></div>
-                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Completed Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $completed_amount ) ); ?></div>
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'clock' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Processing', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="processing"><?php echo wp_kses_post( wc_price( $processing_amount ) ); ?></span>
                             </div>
-                        </div>
-                        <div class="rental-order-list-stat-card rental-order-list-pending">
-                            <div class="rental-order-list-stat-icon">⏳</div>
-                            <div class="rental-order-list-stat-info">
-                                <div class="rental-order-list-stat-number"><?php echo esc_html( $pending_orders ); ?></div>
-                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Pending Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $pending_amount ) ); ?></div>
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'calendar' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'This Month', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="month"><?php echo wp_kses_post( wc_price( $this_month_revenue ) ); ?></span>
                             </div>
-                        </div>
-                        <div class="rental-order-list-stat-card rental-order-list-refunded">
-                            <div class="rental-order-list-stat-icon">🔄</div>
-                            <div class="rental-order-list-stat-info">
-                                <div class="rental-order-list-stat-number"><?php echo esc_html( $refunded_orders ); ?></div>
-                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Refunded Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $refunded_amount ) ); ?></div>
+                            <div class="rbfw_ol_rev_chip">
+                                <span class="rbfw_ol_rev_chip_lbl"><?php echo rbfw_inv_icon( 'calculator' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Avg. Order', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span class="rbfw_ol_rev_chip_val" data-rev="avg"><?php echo wp_kses_post( wc_price( $avg_order_value ) ); ?></span>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="rental-order-list-search-container">
-                        <div class="rental-order-list-search-icon">🔍</div>
-                        <input type="text" id="search" class="rental-order-list-search-input" placeholder="<?php esc_attr_e( 'Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+
+                    <!-- Stat cards -->
+                    <div class="rbfw_ol_stats">
+                        <div class="rbfw_ol_stat" data-stat="total">
+                            <div class="rbfw_ol_stat_icon purple"><?php echo rbfw_inv_icon( 'file' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_stat_info">
+                                <div class="rbfw_ol_stat_num"><?php echo esc_html( number_format_i18n( $total_orders ) ); ?></div>
+                                <div class="rbfw_ol_stat_lbl"><?php esc_html_e( 'Total Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_stat_amt <?php echo $total_amount > 0 ? 'pos' : 'zero'; ?>"><?php echo wp_kses_post( wc_price( $total_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rbfw_ol_stat" data-stat="cancelled">
+                            <div class="rbfw_ol_stat_icon red"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_stat_info">
+                                <div class="rbfw_ol_stat_num"><?php echo esc_html( number_format_i18n( $cancelled_orders ) ); ?></div>
+                                <div class="rbfw_ol_stat_lbl"><?php esc_html_e( 'Cancelled', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_stat_amt <?php echo $cancelled_amount > 0 ? 'pos' : 'zero'; ?>"><?php echo wp_kses_post( wc_price( $cancelled_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rbfw_ol_stat" data-stat="completed">
+                            <div class="rbfw_ol_stat_icon green"><?php echo rbfw_inv_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_stat_info">
+                                <div class="rbfw_ol_stat_num"><?php echo esc_html( number_format_i18n( $completed_orders ) ); ?></div>
+                                <div class="rbfw_ol_stat_lbl"><?php esc_html_e( 'Completed', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_stat_amt <?php echo $completed_amount > 0 ? 'pos' : 'zero'; ?>"><?php echo wp_kses_post( wc_price( $completed_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rbfw_ol_stat" data-stat="pending">
+                            <div class="rbfw_ol_stat_icon amber"><?php echo rbfw_inv_icon( 'clock' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_stat_info">
+                                <div class="rbfw_ol_stat_num"><?php echo esc_html( number_format_i18n( $pending_orders ) ); ?></div>
+                                <div class="rbfw_ol_stat_lbl"><?php esc_html_e( 'Pending', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_stat_amt <?php echo $pending_amount > 0 ? 'pos' : 'zero'; ?>"><?php echo wp_kses_post( wc_price( $pending_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rbfw_ol_stat" data-stat="refunded">
+                            <div class="rbfw_ol_stat_icon blue"><?php echo rbfw_inv_icon( 'refresh' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
+                            <div class="rbfw_ol_stat_info">
+                                <div class="rbfw_ol_stat_num"><?php echo esc_html( number_format_i18n( $refunded_orders ) ); ?></div>
+                                <div class="rbfw_ol_stat_lbl"><?php esc_html_e( 'Refunded', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw_ol_stat_amt <?php echo $refunded_amount > 0 ? 'pos' : 'zero'; ?>"><?php echo wp_kses_post( wc_price( $refunded_amount ) ); ?></div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="rental-order-list-table-container">
-                        <table class="rental-order-list-table">
-                        <thead>
-                        <tr>
-                            <th><?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Billing Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Order Created Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Booking Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Booking End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                        </tr>
-                        </thead>
-                        <tbody id="order-list">
-						<?php if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
-							global $post;
-							$post_id             = $post->ID;
 
-							$billing_name        = get_post_meta( $post_id, 'rbfw_billing_name', true );
-							$wc_order_id       = get_post_meta( $post_id, 'rbfw_order_id', true );
+                    <!-- Filter bar -->
+                    <div class="rbfw_ol_filterbar">
+                        <div class="rbfw_ol_filter_field rbfw_ol_fb_by">
+                            <span class="rbfw_ol_filter_ico"><?php echo rbfw_inv_icon( 'filter' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            <select id="rbfw_ol_fb_field" class="rbfw_ol_filter_select" aria-label="<?php esc_attr_e( 'Filter by field', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                <option value="name"><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                <option value="order"><?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                <option value="phone"><?php esc_html_e( 'Phone', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                <option value="email"><?php esc_html_e( 'Email', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                <option value="item"><?php esc_html_e( 'Item', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            </select>
+                        </div>
+                        <div class="rbfw_ol_search" id="rbfw_ol_fb_textwrap">
+                            <?php echo rbfw_inv_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                            <input type="text" id="search" class="rbfw_ol_search_input" placeholder="<?php esc_attr_e( 'Search by name...', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                        </div>
+                        <div class="rbfw_ol_filter_field rbfw_ol_fb_item_wrap" id="rbfw_ol_fb_itemwrap" style="display:none;">
+                            <span class="rbfw_ol_filter_ico"><?php echo rbfw_inv_icon( 'box' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            <select id="rbfw_ol_fb_item" class="rbfw_ol_filter_select" aria-label="<?php esc_attr_e( 'Filter by item', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                <option value=""><?php esc_html_e( 'All Items', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                <?php
+                                $rbfw_filter_items = get_posts( array( 'post_type' => 'rbfw_item', 'numberposts' => -1, 'orderby' => 'title', 'order' => 'ASC', 'post_status' => 'publish' ) );
+                                foreach ( $rbfw_filter_items as $rbfw_filter_item ) : ?>
+                                    <option value="<?php echo esc_attr( $rbfw_filter_item->ID ); ?>"><?php echo esc_html( get_the_title( $rbfw_filter_item->ID ) ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="rbfw_ol_filter_field">
+                            <span class="rbfw_ol_filter_ico"><?php echo rbfw_inv_icon( 'filter' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            <select id="rbfw_ol_filter_status" class="rbfw_ol_filter_select" aria-label="<?php esc_attr_e( 'Filter by status', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                <option value=""><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                <?php if ( function_exists( 'wc_get_order_statuses' ) ) :
+                                    foreach ( wc_get_order_statuses() as $rbfw_fs_key => $rbfw_fs_label ) : ?>
+                                        <option value="<?php echo esc_attr( str_replace( 'wc-', '', $rbfw_fs_key ) ); ?>"><?php echo esc_html( $rbfw_fs_label ); ?></option>
+                                    <?php endforeach;
+                                endif; ?>
+                            </select>
+                        </div>
+                        <div class="rbfw_ol_filter_field rbfw_ol_filter_dates">
+                            <span class="rbfw_ol_filter_ico"><?php echo rbfw_inv_icon( 'calendar' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            <input type="text" id="rbfw_ol_filter_from" class="rbfw_ol_filter_date" placeholder="<?php esc_attr_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Booking start from', 'booking-and-rental-manager-for-woocommerce' ); ?>" readonly>
+                            <span class="rbfw_ol_filter_sep">&ndash;</span>
+                            <input type="text" id="rbfw_ol_filter_to" class="rbfw_ol_filter_date" placeholder="<?php esc_attr_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Booking start to', 'booking-and-rental-manager-for-woocommerce' ); ?>" readonly>
+                        </div>
+                        <button type="button" id="rbfw_ol_filter_reset" class="rbfw_ol_filter_reset">
+                            <?php echo rbfw_inv_icon( 'refresh' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                            <span><?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </button>
+                    </div>
 
-                            $order = wc_get_order($wc_order_id);
-                            if (!$order) {
-                                continue;
-                            }
-                            
-                            // Skip orders with trash status
-                            if ($order->get_status() === 'trash') {
-                                continue;
-                            }
-
-							$status              = $order->get_status();
-							$total_price         = $order->get_total();
-							$ticket_infos        = get_post_meta( $post_id, 'rbfw_ticket_info', true );
-							$ticket_info_array   = maybe_unserialize( $ticket_infos );
-							$rbfw_start_datetime = '';
-							$rbfw_end_datetime   = '';
-							if ( ! empty( $ticket_info_array ) && is_array( $ticket_info_array ) ) {
-								foreach ( $ticket_info_array as $ticket_info ) {
-									$rbfw_start_datetime = isset( $ticket_info['rbfw_start_datetime'] ) ? $ticket_info['rbfw_start_datetime'] : '';
-									$rbfw_end_datetime   = isset( $ticket_info['rbfw_end_datetime'] ) ? $ticket_info['rbfw_end_datetime'] : '';
-								}
-							}
-							?>
-                            <tr class="order-row">
-                                <td><?php echo esc_html( $wc_order_id ); ?></td>
-                                <td><?php echo esc_html( $billing_name ); ?></td>
-                                <td><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
-                                <td><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_start_datetime ) ) : '' ); ?></td>
-                                <td><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_end_datetime ) ) : '' ); ?></td>
-                                <td><span class="rental-order-list-status-badge rental-order-list-status-<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst($status) ); ?></span></td>
-                                <td><span class="rental-order-list-price"><?php echo wp_kses_post( wc_price( $total_price ) ); ?></span></td>
-								<?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) { ?>
-                                    <td>
-                                        <div class="rental-order-list-action-buttons">
-                                            <a href="javascript:void(0);" class="rental-order-list-btn rental-order-list-btn-view rbfw_order_view_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>">
-                                                👁️
-                                            </a>
-                                            <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post_id . '&action=edit' ) ); ?>" class="rental-order-list-btn rental-order-list-btn-edit">
-                                                ✏️
-                                            </a>
+                    <?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) && function_exists( 'rbfw_export_column_groups' ) ) :
+                        $rbfw_exs_labels  = rbfw_export_columns();
+                        $rbfw_exs_enabled = rbfw_export_column_enabled_map();
+                        ?>
+                        <!-- Export Settings accordion -->
+                        <div class="rbfw_ol_exs" id="rbfw_ol_exs">
+                            <button type="button" class="rbfw_ol_exs_head" aria-expanded="false" aria-controls="rbfw_ol_exs_body">
+                                <span class="rbfw_ol_exs_head_ic"><?php echo rbfw_inv_icon( 'sliders' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                <span class="rbfw_ol_exs_head_txt">
+                                    <span class="rbfw_ol_exs_title"><?php esc_html_e( 'Export Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw_ol_exs_sub"><?php esc_html_e( 'Choose which columns are included in the CSV / PDF export', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </span>
+                                <span class="rbfw_ol_exs_chev"><?php echo rbfw_inv_icon( 'chevron_down' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                            </button>
+                            <div class="rbfw_ol_exs_body" id="rbfw_ol_exs_body" hidden>
+                                <div class="rbfw_ol_exs_groups">
+                                    <?php foreach ( rbfw_export_column_groups() as $rbfw_exs_gkey => $rbfw_exs_group ) : ?>
+                                        <div class="rbfw_ol_exs_group">
+                                            <div class="rbfw_ol_exs_group_title"><?php echo esc_html( $rbfw_exs_group['label'] ); ?></div>
+                                            <div class="rbfw_ol_exs_cols">
+                                                <?php foreach ( $rbfw_exs_group['columns'] as $rbfw_exs_col ) :
+                                                    if ( ! isset( $rbfw_exs_labels[ $rbfw_exs_col ] ) ) { continue; }
+                                                    $rbfw_exs_on = ! empty( $rbfw_exs_enabled[ $rbfw_exs_col ] );
+                                                    ?>
+                                                    <label class="rbfw_ol_exs_toggle">
+                                                        <input type="checkbox" class="rbfw_ol_exs_cb" data-col="<?php echo esc_attr( $rbfw_exs_col ); ?>" <?php checked( $rbfw_exs_on ); ?>>
+                                                        <span class="rbfw_ol_exs_switch"></span>
+                                                        <span class="rbfw_ol_exs_label"><?php echo esc_html( $rbfw_exs_labels[ $rbfw_exs_col ] ); ?></span>
+                                                    </label>
+                                                <?php endforeach; ?>
+                                            </div>
                                         </div>
-                                    </td>
-								<?php
-									} else {
-								?>
-                                    <td>
-                                        <div class="rental-order-list-action-buttons">
-                                            <a href="javascript:void(0);" class="rental-order-list-btn rental-order-list-btn-view pro-overlay">
-                                                👁️
-                                            </a>
-                                            <a href="javascript:void(0);" class="rental-order-list-btn rental-order-list-btn-edit pro-overlay">
-                                                ✏️
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <script>
-										document.querySelectorAll('.pro-overlay').forEach(function (button) {
-											button.replaceWith(button.cloneNode(true));
-										});
+                                    <?php endforeach; ?>
+                                </div>
+                                <div class="rbfw_ol_exs_foot">
+                                    <div class="rbfw_ol_exs_quick">
+                                        <button type="button" class="rbfw_ol_exs_all"><?php esc_html_e( 'Select all', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                        <span class="rbfw_ol_exs_dot">&middot;</span>
+                                        <button type="button" class="rbfw_ol_exs_none"><?php esc_html_e( 'Clear all', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    </div>
+                                    <span class="rbfw_ol_exs_hint"><?php esc_html_e( 'Changes are saved automatically.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw_ol_exs_msg" id="rbfw_ol_exs_msg" style="display:none;"></span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
-										document.querySelectorAll('.pro-overlay').forEach(function (button) {
-											button.addEventListener('click', function (event) {
-												event.preventDefault(); // Prevent default link behavior
-												window.open('<?php echo esc_js( esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ) ); ?>', '_blank');
-											});
-										});
-									</script>
-									<?php
-								}
-								?>
-                            </tr>
-                            <tr id="order-details-<?php echo esc_attr( $post_id ); ?>" class="order-details" style="display: none;">
-                                <td colspan="12">
-                                    <div class="order-details-content"></div>
-                                </td>
-                            </tr>
-						<?php endwhile; else : ?>
-                            <tr>
-                                <td colspan="12"><?php esc_html_e( 'Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                            </tr>
-						<?php endif;
-							wp_reset_postdata(); ?>
-                        </tbody>
-                    </table>
+                    <!-- Table -->
+                    <div class="rbfw_ol_card">
+                        <div class="rbfw_ol_table_scroll">
+                            <table class="rbfw_ol_table">
+                                <thead>
+                                <tr>
+                                    <th><?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th><?php esc_html_e( 'Billing Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th><?php esc_html_e( 'Order Created', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th><?php esc_html_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th><?php esc_html_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th><?php esc_html_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th class="rbfw_ol_th_action"><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                </tr>
+                                </thead>
+                                <tbody id="order-list">
+                                <?php if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
+                                    global $post;
+                                    $post_id      = $post->ID;
+                                    $billing_name = get_post_meta( $post_id, 'rbfw_billing_name', true );
+                                    $wc_order_id  = get_post_meta( $post_id, 'rbfw_order_id', true );
+                                    $order        = wc_get_order( $wc_order_id );
+                                    if ( ! $order ) { continue; }
+                                    if ( $order->get_status() === 'trash' ) { continue; }
+                                    $status      = $order->get_status();
+                                    $total_price = $order->get_total();
+                                    $billing_phone = $order->get_billing_phone();
+                                    $billing_email = $order->get_billing_email();
+                                    $ticket_infos      = get_post_meta( $post_id, 'rbfw_ticket_info', true );
+                                    $ticket_info_array = maybe_unserialize( $ticket_infos );
+                                    $rbfw_start_datetime = '';
+                                    $rbfw_end_datetime   = '';
+                                    $rbfw_start_time     = '';
+                                    $rbfw_end_time       = '';
+                                    $rbfw_row_item_ids   = array();
+                                    if ( ! empty( $ticket_info_array ) && is_array( $ticket_info_array ) ) {
+                                        foreach ( $ticket_info_array as $ticket_info ) {
+                                            $rbfw_start_datetime = isset( $ticket_info['rbfw_start_datetime'] ) ? $ticket_info['rbfw_start_datetime'] : '';
+                                            $rbfw_end_datetime   = isset( $ticket_info['rbfw_end_datetime'] ) ? $ticket_info['rbfw_end_datetime'] : '';
+                                            $rbfw_start_time     = isset( $ticket_info['rbfw_start_time'] ) ? $ticket_info['rbfw_start_time'] : '';
+                                            $rbfw_end_time       = isset( $ticket_info['rbfw_end_time'] ) ? $ticket_info['rbfw_end_time'] : '';
+                                            if ( ! empty( $ticket_info['rbfw_id'] ) ) {
+                                                $rbfw_row_item_ids[] = (string) $ticket_info['rbfw_id'];
+                                            }
+                                        }
+                                    }
+                                    // Day-wise bookings carry no real time; drop it from the columns.
+                                    // The booking is "timed" only when it has a real START time — the end
+                                    // time can be a duration artifact, so gate it on the start too.
+                                    $rbfw_ol_is_timed  = rbfw_booking_has_time( $rbfw_start_time );
+                                    $rbfw_ol_start_fmt = $rbfw_ol_is_timed ? 'F j, Y g:i a' : 'F j, Y';
+                                    $rbfw_ol_end_fmt   = ( $rbfw_ol_is_timed && rbfw_booking_has_time( $rbfw_end_time ) ) ? 'F j, Y g:i a' : 'F j, Y';
+                                    $rbfw_is_pro = function_exists( 'rbfw_pro_tab_menu_list' );
+                                    ?>
+                                    <tr class="order-row rbfw_ol_row" data-order="<?php echo esc_attr( strtolower( (string) $wc_order_id ) ); ?>" data-name="<?php echo esc_attr( strtolower( (string) $billing_name ) ); ?>" data-phone="<?php echo esc_attr( strtolower( (string) $billing_phone ) ); ?>" data-email="<?php echo esc_attr( strtolower( (string) $billing_email ) ); ?>" data-item="<?php echo esc_attr( implode( ' ', array_unique( $rbfw_row_item_ids ) ) ); ?>" data-status="<?php echo esc_attr( $status ); ?>" data-start="<?php echo esc_attr( ! empty( $rbfw_start_datetime ) ? gmdate( 'Y-m-d', strtotime( $rbfw_start_datetime ) ) : '' ); ?>">
+                                        <td class="rbfw_ol_td_order" data-th="<?php esc_attr_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?>">#<?php echo esc_html( $wc_order_id ); ?></td>
+                                        <td class="rbfw_ol_td_name" data-th="<?php esc_attr_e( 'Billing Name', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( $billing_name ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Order Created', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( $rbfw_ol_start_fmt, strtotime( $rbfw_start_datetime ) ) : '—' ); ?></td>
+                                        <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( $rbfw_ol_end_fmt, strtotime( $rbfw_end_datetime ) ) : '—' ); ?></td>
+                                        <td data-th="<?php esc_attr_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ol_badge rbfw_ol_badge_<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst( $status ) ); ?></span></td>
+                                        <td class="rbfw_ol_td_total" data-th="<?php esc_attr_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $total_price ) ); ?></td>
+                                        <td class="rbfw_ol_td_action" data-th="<?php esc_attr_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                            <div class="rbfw_ol_actions">
+                                                <?php if ( $rbfw_is_pro ) { ?>
+                                                    <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_view rbfw_order_view_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>" title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                                                    <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_edit rbfw_order_status_edit_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>" data-order-no="<?php echo esc_attr( $wc_order_id ); ?>" data-status="<?php echo esc_attr( $status ); ?>" title="<?php esc_attr_e( 'Edit Status', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                                                    <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_delete rbfw_order_delete_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>" data-order-no="<?php echo esc_attr( $wc_order_id ); ?>" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'trash' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                                                <?php } else { ?>
+                                                    <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_view pro-overlay" title="<?php esc_attr_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'eye' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                                                    <a href="javascript:void(0);" class="rbfw_ol_act rbfw_ol_act_edit pro-overlay" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
+                                                <?php } ?>
+                                                <?php
+                                                /**
+                                                 * Extra per-row order actions (e.g. Pro "Export PDF").
+                                                 *
+                                                 * @param int    $post_id     Booking ( rbfw_order ) post ID.
+                                                 * @param string $wc_order_id WooCommerce order number.
+                                                 * @param string $status      Current order status.
+                                                 */
+                                                do_action( 'rbfw_ol_row_actions', $post_id, $wc_order_id, $status );
+                                                ?>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="order-details-<?php echo esc_attr( $post_id ); ?>" class="order-details rbfw_ol_detail_row" style="display: none;">
+                                        <td colspan="8"><div class="rbfw_ol_detail_anim"><div class="order-details-content"></div></div></td>
+                                    </tr>
+                                <?php endwhile; else : ?>
+                                    <tr class="rbfw_ol_empty_tr">
+                                        <td colspan="8" class="rbfw_ol_empty"><?php esc_html_e( 'No orders found.', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                                    </tr>
+                                <?php endif;
+                                    wp_reset_postdata(); ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="rbfw_ol_footer">
+                            <span class="rbfw_ol_rowinfo" id="row-info"></span>
+                            <div class="rbfw_ol_pager" id="rbfw_ol_pager"></div>
+                        </div>
                     </div>
-                    
-                    <div id="loader" style="display: none;">
-                        <div class="loader"></div> <!-- Loader element -->
-                    </div>
-                    
-                    <div class="rental-order-list-load-more-container">
-                        <button id="load-more-btn" class="rental-order-list-load-more-btn" style="display: <?php echo ($total_orders > 10) ? 'block' : 'none'; ?>;"><?php esc_html_e( 'Load More Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                    </div>
+
+                    <div id="loader" class="rbfw_ol_loader" style="display: none;"><span class="rbfw_ol_spinner"></span></div>
+
+                    <?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) {
+                        $rbfw_wc_statuses = function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : array();
+                        ?>
+                        <div id="rbfw_ol_status_modal" class="rbfw_ol_status_modal" style="display:none;" aria-hidden="true">
+                            <div class="rbfw_ol_status_modal_overlay"></div>
+                            <div class="rbfw_ol_status_modal_box" role="dialog" aria-modal="true" aria-labelledby="rbfw_ol_status_modal_title">
+                                <div class="rbfw_ol_status_modal_head">
+                                    <span class="rbfw_ol_status_modal_ic"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                    <h2 id="rbfw_ol_status_modal_title"><?php esc_html_e( 'Update Order Status', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                                    <button type="button" class="rbfw_ol_status_modal_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></button>
+                                </div>
+                                <div class="rbfw_ol_status_modal_body">
+                                    <p class="rbfw_ol_status_modal_order"><?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong>#<span id="rbfw_ol_status_order_no"></span></strong></p>
+                                    <label class="rbfw_ol_status_label" for="rbfw_ol_status_select"><?php esc_html_e( 'Order Status', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <select id="rbfw_ol_status_select" class="rbfw_ol_status_select">
+                                        <?php foreach ( $rbfw_wc_statuses as $rbfw_st_key => $rbfw_st_label ) : ?>
+                                            <option value="<?php echo esc_attr( str_replace( 'wc-', '', $rbfw_st_key ) ); ?>"><?php echo esc_html( $rbfw_st_label ); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <p class="rbfw_ol_status_msg" id="rbfw_ol_status_msg" style="display:none;"></p>
+                                </div>
+                                <div class="rbfw_ol_status_modal_foot">
+                                    <button type="button" class="rbfw_ol_status_cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <button type="button" class="rbfw_ol_status_save"><?php esc_html_e( 'Save Changes', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="rbfw_ol_delete_modal" class="rbfw_ol_status_modal rbfw_ol_delete_modal" style="display:none;" aria-hidden="true">
+                            <div class="rbfw_ol_status_modal_overlay"></div>
+                            <div class="rbfw_ol_status_modal_box" role="dialog" aria-modal="true" aria-labelledby="rbfw_ol_delete_modal_title">
+                                <div class="rbfw_ol_status_modal_head rbfw_ol_delete_head">
+                                    <span class="rbfw_ol_status_modal_ic"><?php echo rbfw_inv_icon( 'trash' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                    <h2 id="rbfw_ol_delete_modal_title"><?php esc_html_e( 'Delete Order', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                                    <button type="button" class="rbfw_ol_status_modal_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></button>
+                                </div>
+                                <div class="rbfw_ol_status_modal_body">
+                                    <p class="rbfw_ol_delete_text"><?php esc_html_e( 'This will move the booking and its linked WooCommerce order to Trash. You can restore them later from the Trash.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                                    <p class="rbfw_ol_status_modal_order"><?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong>#<span id="rbfw_ol_delete_order_no"></span></strong></p>
+                                    <p class="rbfw_ol_status_msg" id="rbfw_ol_delete_msg" style="display:none;"></p>
+                                </div>
+                                <div class="rbfw_ol_status_modal_foot">
+                                    <button type="button" class="rbfw_ol_status_cancel rbfw_ol_delete_cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <button type="button" class="rbfw_ol_delete_confirm"><?php esc_html_e( 'Move to Trash', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="rbfw_ol_edit_modal" class="rbfw_ol_status_modal rbfw_ol_edit_modal" style="display:none;" aria-hidden="true">
+                            <div class="rbfw_ol_status_modal_overlay"></div>
+                            <div class="rbfw_ol_status_modal_box rbfw_ol_edit_box" role="dialog" aria-modal="true" aria-labelledby="rbfw_ol_edit_modal_title">
+                                <div class="rbfw_ol_status_modal_head">
+                                    <span class="rbfw_ol_status_modal_ic"><?php echo rbfw_inv_icon( 'pencil' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                    <h2 id="rbfw_ol_edit_modal_title"><?php esc_html_e( 'Edit Order', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                                    <button type="button" class="rbfw_ol_status_modal_close rbfw_ol_edit_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></button>
+                                </div>
+                                <div class="rbfw_ol_status_modal_body rbfw_ol_edit_body" id="rbfw_ol_edit_body">
+                                    <div class="rbfw_ol_edit_loading"><span class="rbfw_ol_spinner"></span></div>
+                                </div>
+                                <p class="rbfw_ol_status_msg rbfw_ol_edit_msg" id="rbfw_ol_edit_msg" style="display:none;"></p>
+                                <div class="rbfw_ol_status_modal_foot">
+                                    <button type="button" class="rbfw_ol_status_cancel rbfw_ol_edit_cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <button type="button" class="rbfw_ol_edit_save"><?php esc_html_e( 'Save Changes', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Export modal -->
+                        <div id="rbfw_ol_export_modal" class="rbfw_ol_status_modal rbfw_ol_export_modal" style="display:none;" aria-hidden="true">
+                            <div class="rbfw_ol_status_modal_overlay"></div>
+                            <div class="rbfw_ol_status_modal_box rbfw_ol_export_box" role="dialog" aria-modal="true" aria-labelledby="rbfw_ol_export_modal_title">
+                                <div class="rbfw_ol_status_modal_head">
+                                    <span class="rbfw_ol_status_modal_ic"><?php echo rbfw_inv_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                    <h2 id="rbfw_ol_export_modal_title"><?php esc_html_e( 'Export Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                                    <button type="button" class="rbfw_ol_status_modal_close rbfw_ol_export_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon( 'x' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></button>
+                                </div>
+                                <div class="rbfw_ol_status_modal_body rbfw_ol_export_body">
+                                    <label class="rbfw_ol_export_label"><?php esc_html_e( 'Export format', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <div class="rbfw_ol_export_formats">
+                                        <label class="rbfw_ol_export_fmt is-active">
+                                            <input type="radio" name="rbfw_ol_export_format" value="csv" checked>
+                                            <span class="rbfw_ol_export_fmt_ic"><?php echo rbfw_inv_icon( 'file_csv' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                            <span class="rbfw_ol_export_fmt_txt">
+                                                <span class="rbfw_ol_export_fmt_title"><?php esc_html_e( 'CSV', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                <span class="rbfw_ol_export_fmt_sub"><?php esc_html_e( 'Spreadsheet (Excel, Sheets)', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                            </span>
+                                        </label>
+                                        <label class="rbfw_ol_export_fmt">
+                                            <input type="radio" name="rbfw_ol_export_format" value="pdf">
+                                            <span class="rbfw_ol_export_fmt_ic"><?php echo rbfw_inv_icon( 'file_pdf' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
+                                            <span class="rbfw_ol_export_fmt_txt">
+                                                <span class="rbfw_ol_export_fmt_title"><?php esc_html_e( 'PDF', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                <span class="rbfw_ol_export_fmt_sub"><?php esc_html_e( 'Printable document', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <label class="rbfw_ol_export_label" for="rbfw_ol_export_item"><?php esc_html_e( 'Item', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <select id="rbfw_ol_export_item" class="rbfw_ol_export_select">
+                                        <option value="0"><?php esc_html_e( 'All Items', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                        <?php
+                                        $rbfw_export_items = get_posts( array( 'post_type' => 'rbfw_item', 'numberposts' => -1, 'orderby' => 'title', 'order' => 'ASC', 'post_status' => 'publish' ) );
+                                        foreach ( $rbfw_export_items as $rbfw_export_item ) : ?>
+                                            <option value="<?php echo esc_attr( $rbfw_export_item->ID ); ?>"><?php echo esc_html( get_the_title( $rbfw_export_item->ID ) ); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <label class="rbfw_ol_export_label" for="rbfw_ol_export_status"><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <select id="rbfw_ol_export_status" class="rbfw_ol_export_select">
+                                        <option value=""><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                        <?php if ( function_exists( 'wc_get_order_statuses' ) ) :
+                                            foreach ( wc_get_order_statuses() as $rbfw_es_key => $rbfw_es_label ) : ?>
+                                                <option value="<?php echo esc_attr( str_replace( 'wc-', '', $rbfw_es_key ) ); ?>"><?php echo esc_html( $rbfw_es_label ); ?></option>
+                                            <?php endforeach;
+                                        endif; ?>
+                                    </select>
+
+                                    <label class="rbfw_ol_export_label"><?php esc_html_e( 'Month range', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw_ol_export_hint">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
+                                    <div class="rbfw_ol_export_months">
+                                        <input type="month" id="rbfw_ol_export_from" class="rbfw_ol_export_month" aria-label="<?php esc_attr_e( 'From month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                        <span class="rbfw_ol_export_month_sep">&ndash;</span>
+                                        <input type="month" id="rbfw_ol_export_to" class="rbfw_ol_export_month" aria-label="<?php esc_attr_e( 'To month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                    </div>
+                                    <p class="rbfw_ol_export_note"><?php esc_html_e( 'Filters by booking start date. Leave blank to export all dates.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                                </div>
+                                <div class="rbfw_ol_status_modal_foot">
+                                    <button type="button" class="rbfw_ol_status_cancel rbfw_ol_export_cancel"><?php esc_html_e( 'Cancel', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <button type="button" class="rbfw_ol_export_do">
+                                        <?php echo rbfw_inv_icon( 'download' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
+                                        <span><?php esc_html_e( 'Download', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <?php if ( ! function_exists( 'rbfw_pro_tab_menu_list' ) ) { ?>
+                    <script>
+                        document.querySelectorAll('.pro-overlay').forEach(function (button) {
+                            button.addEventListener('click', function (event) {
+                                event.preventDefault();
+                                window.open('<?php echo esc_js( esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ) ); ?>', '_blank');
+                            });
+                        });
+                    </script>
+                    <?php } ?>
                 </div>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const rows = document.querySelectorAll('.order-row');
-                        let rowsPerPage = 10;
-                        let currentlyShown = rowsPerPage;
-                        let filteredRows = Array.from(rows);
-                        
-                        function displayRows(rowsToShow = filteredRows) {
-                            // Hide all rows first
-                            rows.forEach(row => row.style.display = 'none');
-                            
-                            // Show only the rows we want to display
-                            rowsToShow.slice(0, currentlyShown).forEach(row => {
-                                row.style.display = '';
-                            });
-                            
-                            // Update load more button
-                            const loadMoreBtn = document.getElementById('load-more-btn');
-                            if (currentlyShown >= rowsToShow.length) {
-                                loadMoreBtn.style.display = 'none';
-                            } else {
-                                loadMoreBtn.style.display = 'block';
-                            }
-                        }
-                        
-                        // Load more functionality
-                        document.getElementById('load-more-btn').addEventListener('click', function() {
-                            currentlyShown += rowsPerPage;
-                            displayRows(filteredRows);
-                        });
-                        
-                        // Search functionality
-                        document.getElementById('search').addEventListener('keyup', function () {
-                            const filter = this.value.toLowerCase();
-                            filteredRows = Array.from(rows).filter(row => {
-                                const orderId = row.cells[0].textContent.toLowerCase();
-                                const billingName = row.cells[1].textContent.toLowerCase();
-                                return orderId.includes(filter) || billingName.includes(filter);
-                            });
-                            currentlyShown = rowsPerPage; // Reset to initial load
-                            displayRows(filteredRows);
-                        });
-                        
-                        // Initial setup
-                        displayRows(filteredRows);
-                    });
-                </script>
-                <script>
-					document.addEventListener('DOMContentLoaded', function () {
-						document.querySelectorAll('.rbfw_order_view_btn').forEach(function (button) {
-							button.addEventListener('click', function () {
-								const postId = this.getAttribute('data-post-id'); // Ensure post_id is sanitized on the server side
-								const orderDetailsRow = document.getElementById(`order-details-${postId}`);
-								const loader = document.getElementById('loader');
-								
-								if (orderDetailsRow.style.display === 'none') {
-									// Show the loader
-									loader.style.display = 'flex';
-									// Make an AJAX request to fetch the order details
-									fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
-										method: 'POST',
-										headers: {
-											'Content-Type': 'application/x-www-form-urlencoded',
-										},
-										body: new URLSearchParams({
-											action: 'fetch_order_details',
-											post_id: postId,
-                                            'nonce': rbfw_ajax_admin.nonce_fetch_order_details
-										})
-									})
-										.then(response => response.text())
-										.then(data => {
-											orderDetailsRow.querySelector('.order-details-content').innerHTML = data;
-											orderDetailsRow.style.display = 'table-row';
-											// Hide the loader
-											loader.style.display = 'none';
-										})
-										.catch(error => {
-											console.error('Error:', error);
-											// Hide the loader in case of an error
-											loader.style.display = 'none';
-										});
-								} else {
-									orderDetailsRow.style.display = 'none';
-								}
-							});
-						});
-					});
-				</script>
 				<?php
 			}
 
@@ -437,21 +671,59 @@
 			}
 
 			function plugin_page() {
-				echo '<div class="wrap">';
-				settings_errors();
-				echo '</div>';
-				echo '<div class="rbfw_settings_wrapper">';
-				echo '<div class="rbfw_settings_inner_wrapper">';
-				echo '<div class="rbfw_settings_panel_header">';
-				echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) );
-				echo '<small>' . esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ) . '</small>';
-				echo '</div>';
-				echo '<div class="mage_settings_panel_wrap rbfw_settings_panel">';
-				$this->settings_api->show_navigation();
-				$this->settings_api->show_forms();
-				echo '</div>';
-				echo '</div>';
-				echo '</div>';
+				$pro_active = is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' );
+				?>
+				<div class="wrap rbfw_gs_notices"><?php settings_errors(); ?></div>
+				<div id="rbfw_content" class="rbfw_global_settings">
+					<div class="rbfw-gs-layout">
+						<div class="rbfw-gs-main">
+							<div class="rbfwPanel">
+								<div class="rbfwPanelHeader">
+									<div class="rbfw-gs-header-icon"><i class="fas fa-gear"></i></div>
+									<div class="rbfw-gs-header-text">
+										<h2><?php esc_html_e( 'Global Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+										<p><?php esc_html_e( 'Configure plugin preferences — general behaviour, styling, custom CSS, checkout, and license settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									</div>
+									<span class="rbfw-gs-version"><?php echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) ); ?> <small>v<?php echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ); ?></small></span>
+								</div>
+								<div class="rbfwPanelBody">
+									<div class="rbfw_settings_wrapper">
+										<div class="mage_settings_panel_wrap rbfw_settings_panel">
+											<?php
+												$this->settings_api->show_navigation();
+												$this->settings_api->show_forms();
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<aside class="rbfw-gs-sidebar">
+							<?php if ( ! $pro_active ) : ?>
+								<div class="rbfw-gs-card rbfw-gs-pro-card">
+									<div class="rbfw-gs-card-icon"><i class="fas fa-crown"></i></div>
+									<h4><?php esc_html_e( 'Upgrade to Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+									<p><?php esc_html_e( 'Unlock advanced pricing, security deposits, PDF invoices, backend orders, and priority support.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-pro"><?php esc_html_e( 'Get Pro Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+								</div>
+							<?php endif; ?>
+							<div class="rbfw-gs-card">
+								<h4><i class="fas fa-book"></i> <?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+								<ul class="rbfw-gs-links">
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Configuration Guide', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'View All Docs', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+								</ul>
+							</div>
+							<div class="rbfw-gs-card">
+								<h4><i class="fas fa-puzzle-piece"></i> <?php esc_html_e( 'Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+								<p><?php esc_html_e( 'Extend your plugin with our powerful addon collection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+								<a href="https://mage-people.com/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-outline"><?php esc_html_e( 'Browse Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+							</div>
+						</aside>
+					</div>
+				</div>
+				<?php
 			}
 
 			function get_pages() {

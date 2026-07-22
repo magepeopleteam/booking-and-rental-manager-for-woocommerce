@@ -17,7 +17,7 @@
 				$rbfw_item_type         = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 				?>
-                <li data-target-tabs="#rbfw_variations" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
+                <li data-target-tabs="#rbfw_variations" <?php echo in_array( $rbfw_item_type, [ 'resort', 'appointment', 'multiple_items' ], true ) ? 'style="display:none"' : ''; ?>>
                     <i class="fas fa-table-cells-large"></i><?php esc_html_e( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </li>
 				<?php
@@ -77,6 +77,9 @@
                                                     <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?><b class="required">*</b>
                                                 </th>
                                                 <th>
+                                                    <?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                </th>
+                                                <th>
 													<?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                                 </th>
                                                 <th>
@@ -94,6 +97,9 @@
                                                             </td>
                                                             <td>
                                                                 <input type="number" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][quantity]" value="<?php echo esc_attr( $value['quantity'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" step="0.01" min="0" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][price]" value="<?php echo esc_attr( isset( $value['price'] ) ? $value['price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                                             </td>
                                                             <td>
                                                                 <input type="checkbox" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][selected_value]" value="<?php echo esc_attr( $value['name'] ); ?>" class="rbfw_variation_selected_value" <?php if ( $value['name'] == $selected_value ) {
@@ -150,6 +156,9 @@
                                                 </b>
                                             </th>
                                             <th>
+                                                <?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </th>
+                                            <th>
 												<?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>
                                             <th>
@@ -163,6 +172,9 @@
                                                 </td>
                                                 <td>
                                                     <input type="number" name="rbfw_variations_data[0][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                </td>
+                                                <td>
+                                                    <input type="number" step="0.01" min="0" name="rbfw_variations_data[0][value][0][price]" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                                 </td>
                                                 <td>
                                                     <input type="checkbox" name="rbfw_variations_data[0][selected_value]" class="rbfw_variation_selected_value">
@@ -198,7 +210,7 @@
 				$rbfw_item_stock_quantity = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
 				$rbfw_enable_variations   = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 				?>
-                <section>
+                <section class="rbfw_stock_quantity_section">
                     <div>
                         <label>
 							<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -218,9 +230,13 @@
 
                 $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
 
+                // Return-date inventory release only applies to date-range (multi-day) rentals.
+                // Hide it for Single Day and Appointment, which have no scheduled return date.
+                $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+                $hide_return    = in_array( $rbfw_item_type, array( 'bike_car_sd', 'appointment' ), true );
 
                 ?>
-                    <section>
+                    <section class="rbfw_stock_return_date_section"<?php echo $hide_return ? ' style="display:none"' : ''; ?>>
                         <div>
                             <label for="">Inventory Management by Return Date</label>
                             <p>(Items become available for booking again on the scheduled return date.)</p>
@@ -240,8 +256,13 @@
 
 			public function quantity_box_toggle( $post_id ) {
 				$rbfw_enable_md_type_item_qty = get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
+
+				// Multiple-item selection only works for multi-day Bike/Car, Dress, Equipment & Others.
+				// Hide it for every other type (Single Day, Appointment, Resort, Multiple Items).
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$show_multi     = in_array( $rbfw_item_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true );
 				?>
-                <section>
+                <section class="rbfw_switch_md_type_item_qty"<?php echo $show_multi ? '' : ' style="display:none"'; ?>>
                     <div>
                         <label><?php esc_html_e( 'Enable Multiple Item Choosing Option', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                         <p><?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -260,7 +281,7 @@
                 <section>
                     <div>
                         <label><?php esc_html_e( 'Item variation', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <p><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        <p><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Single Day, Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="rbfw_enable_variations" value="<?php echo esc_attr( $rbfw_enable_variations ); ?>" <?php echo esc_attr( ( $rbfw_enable_variations == 'yes' ) ? 'checked' : '' ); ?>>
@@ -270,10 +291,34 @@
 				<?php
 			}
 
+			/**
+			 * Render the Inventory section for the modern editor.
+			 *
+			 * Mirrors the RBFW_Pricing / RBFW_Off_Day reuse pattern: the modern
+			 * editor lacked any inventory UI, so its AJAX save read empty values
+			 * and silently reset stock to 1000, disabled variations and wiped the
+			 * variation rows on every save. Reusing the existing classic render
+			 * methods (via a constructor-less instance, so no hooks re-register)
+			 * surfaces the exact same fields/markup the save handler expects, and
+			 * the already-loaded mkb-admin.js drives the variations repeater and
+			 * the enable/return-date toggles unchanged.
+			 *
+			 * @param int $post_id Current rental item ID.
+			 * @return void
+			 */
+			public static function render_for_modern_editor( int $post_id ): void {
+				$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+				$renderer->stock_settings( $post_id );
+				$renderer->stock_manage_return_date( $post_id );
+				$renderer->quantity_box_toggle( $post_id );
+				$renderer->variation_table_switch_on_off( $post_id );
+				$renderer->variation_settings( $post_id );
+			}
+
 			public function add_tabs_content( $post_id ) {
 				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : '';
 				?>
-                <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_variations" data-tab-item="#rbfw_variations" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) {
+                <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_variations" data-tab-item="#rbfw_variations" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'appointment' ) {
 					echo 'style="display:none"';
 				} ?>>
 					<?php $this->section_header(); ?>
@@ -302,7 +347,7 @@
 					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_stock_quantity'] ) ) : '';
 					$stock_manage_on_return_date = isset( $_POST['stock_manage_on_return_date'] ) ? sanitize_text_field( wp_unslash( $_POST['stock_manage_on_return_date'] ) ) : '';
 					$rbfw_enable_md_type_item_qty = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_md_type_item_qty'] ) ) : 'no';
-					$rbfw_variations_data = isset( $_POST['rbfw_variations_data'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_variations_data'] ) : [];
+					$rbfw_variations_data = isset( $_POST['rbfw_variations_data'] ) ? rbfw_clean_variations_data( RBFW_Function::data_sanitize( $_POST['rbfw_variations_data'] ) ) : [];
 
                     $rbfw_item_stock_quantity = ($rbfw_item_stock_quantity)?$rbfw_item_stock_quantity:1000;
 

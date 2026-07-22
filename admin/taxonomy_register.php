@@ -25,6 +25,10 @@ function rbfw_taxonomy_register(){
         'show_admin_column'     => false,
         'update_count_callback' => '_update_post_term_count',
         'query_var'             => true,
+        // Rent types are managed inline in the rental-item editor
+        // (General ▸ Category Settings), so the auto-generated taxonomy
+        // submenu is hidden from the admin sidebar.
+        'show_in_menu'          => false,
         'rewrite'               => array( 'slug' => 'rbfw_caregory' ),
         'show_in_rest'          => false,
         'meta_box_cb'           => false,
@@ -46,6 +50,11 @@ function rbfw_taxonomy_register(){
         'show_admin_column'     => false,
         'update_count_callback' => '_update_post_term_count',
         'query_var'             => true,
+        // Locations are now managed inline in the rental-item editor
+        // (Advanced ▸ Location Configuration), so the auto-generated taxonomy
+        // submenu is hidden from the admin sidebar. The taxonomy itself stays
+        // fully functional (terms, queries, and the edit-tags screen via URL).
+        'show_in_menu'          => false,
         'rewrite'               => array( 'slug' => 'rbfw_location' ),
         'show_in_rest'          => false,
         'meta_box_cb'           => false,

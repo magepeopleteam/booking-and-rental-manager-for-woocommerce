@@ -105,12 +105,32 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $item_quantity = isset($_POST['item_quantity']) ? absint($_POST['item_quantity']) : 0;
-            $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
-            $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):'';
+            // Note: the multiplier must apply to the whole ternary result. The old
+            // code (`isset(...) ? floatval(...) : '' * $qty`) fataled on PHP 8
+            // ("int * string") whenever rbfw_service_price was not posted.
+            $rbfw_service_price = ( isset($_POST['rbfw_service_price']) ? floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))) : 0 ) * $item_quantity;
+            $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):0;
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'no';
 
-
+            // Per-value variation surcharge for the live multi-day total.
+            $rbfw_variation_surcharge = 0.0;
+            if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) && function_exists( 'rbfw_get_variation_price_for_value' ) ) {
+                foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $field_id => $values ) {
+                    if ( ! is_array( $values ) ) {
+                        continue;
+                    }
+                    foreach ( $values as $value_name => $qty ) {
+                        $value_name = sanitize_text_field( $value_name );
+                        $qty        = (int) $qty;
+                        if ( '' === $value_name || $qty <= 0 ) {
+                            continue;
+                        }
+                        $unit_price                = rbfw_get_variation_price_for_value( $post_id, $value_name );
+                        $rbfw_variation_surcharge += $unit_price * $qty;
+                    }
+                }
+            }
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
             if ( ! is_array( $max_available_qty ) ) {
@@ -130,8 +150,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $duration_price_display = $duration_price;
 
             $total_days = $duration_price_info['total_days'];
-            $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
-            $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_management_price + (float)$rbfw_service_price;
+            $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):0;
+            $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_management_price + (float)$rbfw_service_price + (float)$rbfw_variation_surcharge;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
             $pricing_applied = isset( $duration_price_info['pricing_applied'] ) ? $duration_price_info['pricing_applied'] : 'No';
@@ -210,6 +230,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'rbfw_management_price_html' => wc_price($rbfw_management_price),
                 'service_cost' => $service_cost+$rbfw_service_price,
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
+                'variation_price' => $rbfw_variation_surcharge,
+                'variation_price_html' => wc_price($rbfw_variation_surcharge),
                 'sub_total_price_html' => wc_price($sub_total_price),
                 'discount' => $discount_amount,
                 'discount_type' => $discount_type,
@@ -319,10 +341,17 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $rbfw_minimum_booking_day = 0;
             $rbfw_maximum_booking_day = 0;
+            $rbfw_datewise_minmax     = array();
             if(rbfw_check_min_max_booking_day_active()){
                 $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
                 if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
                     $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+                }
+                // Date-wise overrides (only when enabled): per-range min/max applied
+                // on the front end based on the selected pick-up date.
+                if ( get_post_meta($post_id, 'rbfw_enable_datewise_minmax', true) === 'yes' ) {
+                    $dw = get_post_meta($post_id, 'rbfw_datewise_minmax', true);
+                    $rbfw_datewise_minmax = is_array($dw) ? array_values($dw) : array();
                 }
             }
 
@@ -331,6 +360,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'rbfw_maximum_booking_day' => $rbfw_maximum_booking_day,
                 'rbfw_off_days' => rbfw_off_days($post_id),
                 'rbfw_offday_range' => rbfw_off_dates($post_id),
+                'rbfw_datewise_minmax' => $rbfw_datewise_minmax,
 
             ));
 
@@ -416,9 +446,13 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     $c = 0;
                     foreach ($variation_info as $key => $value):
 
-                        $main_array[0]['rbfw_variation_info'][$c]['field_id'] = $value['field_id'];
-                        $main_array[0]['rbfw_variation_info'][$c]['field_label'] = $value['field_label'];
-                        $main_array[0]['rbfw_variation_info'][$c]['field_value'] = $value['field_value'];
+                        $main_array[0]['rbfw_variation_info'][$c]['field_id'] = $value['field_id'] ?? '';
+                        $main_array[0]['rbfw_variation_info'][$c]['field_label'] = $value['field_label'] ?? '';
+                        $main_array[0]['rbfw_variation_info'][$c]['field_value'] = $value['field_value'] ?? '';
+                        // Per-value qty steppers: carry the selected qty + per-value surcharge
+                        // through to the order/email display and stock decrement.
+                        $main_array[0]['rbfw_variation_info'][$c]['qty'] = isset( $value['qty'] ) ? (int) $value['qty'] : 0;
+                        $main_array[0]['rbfw_variation_info'][$c]['price'] = isset( $value['price'] ) ? (float) $value['price'] : 0;
                         $c++;
                     endforeach;
                 }
@@ -429,6 +463,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $main_array[0]['discount_type'] = $discount_type;
                 $main_array[0]['discount_amount'] = $discount_amount;
                 $main_array[0]['rbfw_regf_info'] = $rbfw_regf_info;
+                $main_array[0]['rbfw_regf_attendees'] = ( isset( $GLOBALS['rbfw_regf_attendees'] ) && ! empty( $GLOBALS['rbfw_regf_attendees'] ) ) ? $GLOBALS['rbfw_regf_attendees'] : ( ! empty( $rbfw_regf_info ) ? array( $rbfw_regf_info ) : array() );
 
                 return $main_array;
 

@@ -1,6 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Function.php';
+require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Payment_Status_Checker.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Frontend.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Super_Slider.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Style.php';
@@ -9,23 +10,44 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-admin-menu.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-form-fields-generator.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-form-fields-wrapper.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-meta-box.php';
+require_once RBFW_PLUGIN_DIR . '/includes/docs/class-docs-page.php';
 require_once RBFW_PLUGIN_DIR . '/admin/admin.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Modern_Editor.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_WC_Payment_Manager.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Settings.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Admin_Payment_Notice.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Pro_Features_Notice.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_frontend_display.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_resort_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_fee_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shortcodes.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_booking_search.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 
+// ---- Unified coupon engine (mode-agnostic core; loads in every mode) ----
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Post_Type.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Usage.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Context.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Engine.php';
+require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Frontend.php';
+if ( is_admin() ) {
+    // Coupons manager page + the "Coupons" tab on the global settings page.
+    require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Admin.php';
+    require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Coupon_Settings.php';
+}
+
 
 
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_export.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-thankyou-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-search-page.php';
@@ -37,6 +59,17 @@ require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 
 require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
 //require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
+
+// ---- Booking abstraction layer (WooCommerce optional) ----
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Payment_Provider_Interface.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Service_Interface.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Woo_Booking_Service.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Standalone_Booking_Service.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Manager.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Post_Type.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Actions.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Normalizer.php';
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_List_Table.php';
 
 
 
@@ -76,17 +109,35 @@ function rbfw_new_installation_or_update(){
 }
 
 /*************************************************
-* if Woocommerce Payment System is Enabled
+* Booking integration: load the WooCommerce cart/checkout bridge only when WooCommerce
+* is active; otherwise load the native (standalone) checkout flow. The bridge files call
+* WooCommerce order/cart APIs that the fallback shims cannot fake, so they must not load
+* in Standalone mode.
 **************************************************/
 add_action('wp_loaded', 'rbfw_free_woocommerce_integrate');
 
 function rbfw_free_woocommerce_integrate(){
 
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
-    require_once(RBFW_PLUGIN_DIR . "/Frontend/RBFW_Woocommerse.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+    if ( RBFW_Function::has_woocommerce() ) {
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
+        require_once(RBFW_PLUGIN_DIR . "/Frontend/RBFW_Woocommerse.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+        // Coupon engine: WooCommerce application layer. Hook bodies additionally gate on use_wc(),
+        // so it stays inert when WooCommerce is active but Booking Mode = Standalone.
+        require_once(RBFW_PLUGIN_DIR . "/inc/coupon/RBFW_Coupon_WC.php");
+    }
+
+    // Native checkout + booking confirmation run whenever the WooCommerce flow is not in
+    // use (WooCommerce inactive, or active but Booking Mode = Standalone).
+    if ( ! RBFW_Function::use_wc() ) {
+        require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Native_Checkout.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Confirmation.php");
+        // Coupon engine: standalone application layer (live preview endpoint). The authoritative
+        // recompute happens inside RBFW_Native_Checkout::process().
+        require_once(RBFW_PLUGIN_DIR . "/inc/coupon/RBFW_Coupon_Native.php");
+    }
 
 }
 

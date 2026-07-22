@@ -23,6 +23,89 @@ if(isset($_POST['post_id'])){
 
     $selected_date = isset($_POST['selected_date']) ? sanitize_text_field(wp_unslash($_POST['selected_date'])) : '';
 
+    // Selected item variation values (Single Day) posted from the booking form; used to
+    // cap each rate's available quantity by the chosen size. Nonce is verified above.
+    $rbfw_selected_variations = array();
+    if ( isset( $_POST['rbfw_selected_variations'] ) && is_array( $_POST['rbfw_selected_variations'] ) ) {
+        $rbfw_selected_variations = array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_selected_variations'] ) );
+        $rbfw_selected_variations = array_values( array_filter( $rbfw_selected_variations, static function ( $v ) { return '' !== $v; } ) );
+    }
+    // Per-value quantities posted from the stepper form (new model); used to preserve the
+    // visitor's entered quantities across the date-change AJAX reload, and (below) to also
+    // seed $rbfw_selected_variations so rate-quantity capping still sees the chosen sizes.
+    $rbfw_selected_qty_map = array();
+    if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) ) {
+        foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $rbfw_fid => $rbfw_vals ) {
+            if ( ! is_array( $rbfw_vals ) ) {
+                continue;
+            }
+            $rbfw_fid = sanitize_text_field( $rbfw_fid );
+            foreach ( $rbfw_vals as $rbfw_vname => $rbfw_vqty ) {
+                $rbfw_vname = sanitize_text_field( $rbfw_vname );
+                $rbfw_vqty  = (int) $rbfw_vqty;
+                if ( '' !== $rbfw_vname && $rbfw_vqty > 0 ) {
+                    $rbfw_selected_qty_map[ $rbfw_fid ][ $rbfw_vname ] = $rbfw_vqty;
+                    if ( ! in_array( $rbfw_vname, $rbfw_selected_variations, true ) ) {
+                        $rbfw_selected_variations[] = $rbfw_vname;
+                    }
+                }
+            }
+        }
+    }
+    // Resolve, per variation group, which size is effective for the selected date and
+    // which values are sold out, so (a) rate quantities are capped by an AVAILABLE size,
+    // and (b) the selector rendered under the price table disables sold-out values.
+    // Resolution order: customer's posted choice (if available) > default (if available)
+    // > first available value.
+    $rbfw_selected_date_dmy    = $selected_date ? gmdate( 'd-m-Y', strtotime( $selected_date ) ) : '';
+    $rbfw_variation_soldout    = array(); // "field_id::name" => bool
+    $rbfw_variation_remaining  = array(); // "field_id::name" => int|null remaining qty for the selected date
+    $rbfw_resolved_variation   = array(); // field_id => resolved value name
+    $rbfw_effective_variations = array();
+    $rbfw_vdata_sd             = get_post_meta( $id, 'rbfw_variations_data', true );
+    if ( is_array( $rbfw_vdata_sd ) ) {
+        foreach ( $rbfw_vdata_sd as $grp ) {
+            $fid             = isset( $grp['field_id'] ) ? (string) $grp['field_id'] : '';
+            $vals            = ( ! empty( $grp['value'] ) && is_array( $grp['value'] ) ) ? $grp['value'] : array();
+            $def             = ! empty( $grp['selected_value'] ) ? (string) $grp['selected_value'] : '';
+            $posted          = '';
+            $first_available = '';
+            foreach ( $vals as $v ) {
+                $nm = isset( $v['name'] ) ? (string) $v['name'] : '';
+                if ( '' === $nm ) {
+                    continue;
+                }
+                $rem  = ( $rbfw_selected_date_dmy && function_exists( 'rbfw_sd_variation_remaining_stock' ) )
+                    ? rbfw_sd_variation_remaining_stock( $id, array( $rbfw_selected_date_dmy ), $nm )
+                    : null;
+                $sold = ( null !== $rem && $rem <= 0 );
+                $rbfw_variation_soldout[ $fid . '::' . $nm ]   = $sold;
+                $rbfw_variation_remaining[ $fid . '::' . $nm ] = $rem;
+                if ( ! $sold ) {
+                    if ( '' === $first_available ) {
+                        $first_available = $nm;
+                    }
+                    if ( in_array( $nm, $rbfw_selected_variations, true ) ) {
+                        $posted = $nm;
+                    }
+                }
+            }
+            if ( '' !== $posted ) {
+                $resolved = $posted;
+            } elseif ( '' !== $def && empty( $rbfw_variation_soldout[ $fid . '::' . $def ] ) ) {
+                $resolved = $def;
+            } else {
+                $resolved = $first_available;
+            }
+            $rbfw_resolved_variation[ $fid ] = $resolved;
+            if ( '' !== $resolved ) {
+                $rbfw_effective_variations[] = $resolved;
+            }
+        }
+    }
+    // Variations enabled but no value is available for this date -> nothing is bookable;
+    // the rate quantities below are forced to sold-out.
+    $rbfw_variations_all_soldout = ( get_post_meta( $id, 'rbfw_enable_variations', true ) === 'yes' && ! empty( $rbfw_vdata_sd ) && empty( $rbfw_effective_variations ) );
 
     $default_timezone = wp_timezone_string();
     $date = new DateTime("now", new DateTimeZone($default_timezone));
@@ -61,7 +144,13 @@ if(isset($_POST['post_id'])){
         $datetime_string = $result . ' ' . $selected_time;
         $timestamp = strtotime($datetime_string);
 
-        $wp_datetime = date_i18n( get_option('date_format') . ' ' . get_option('time_format'), $timestamp );
+        // Day-wise rentals carry no meaningful time — omit it so the summary
+        // doesn't show a misleading "12:00 am" when no time was actually picked.
+        $rbfw_selected_format = rbfw_booking_has_time( $selected_time )
+            ? get_option('date_format') . ' ' . get_option('time_format')
+            : get_option('date_format');
+
+        $wp_datetime = date_i18n( $rbfw_selected_format, $timestamp );
 
 
 
@@ -105,7 +194,8 @@ if(isset($_POST['post_id'])){
 
                             $i = 1;
                             foreach ($rbfw_bike_car_sd_data as $value) {
-                                $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time);
+                                $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time, $rbfw_effective_variations);
+                                if ( ! empty( $rbfw_variations_all_soldout ) ) { $max_available_qty = 0; }
                                 if( isset($value['qty']) && $value['qty'] > 0 ){
 
                                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
@@ -163,9 +253,21 @@ if(isset($_POST['post_id'])){
                             </tbody>
                         </table>
 
-
-
-
+            <?php
+            /* Item Variations (Single Day): the chosen size caps each rate's available
+               quantity above and is enforced at add-to-cart. Rendered directly under the
+               rate price table; the selection is preserved across AJAX reloads via the
+               posted rbfw_selected_variations (see rbfw_script.js), and changing it reloads
+               this table so the per-rate quantities reflect the new size. */
+            $rbfw_sd_variations_data   = get_post_meta( $id, 'rbfw_variations_data', true );
+            $rbfw_sd_enable_variations = get_post_meta( $id, 'rbfw_enable_variations', true ) ? get_post_meta( $id, 'rbfw_enable_variations', true ) : 'no';
+            $rbfw_sd_rent_type         = get_post_meta( $id, 'rbfw_item_type', true );
+            if ( $rbfw_sd_rent_type == 'bike_car_sd' && $rbfw_sd_enable_variations == 'yes' && ! empty( $rbfw_sd_variations_data ) && function_exists( 'rbfw_render_sd_variation_field' ) ) {
+                // Per-value quantity steppers (label + N left + surcharge + −[n]+), date-aware
+                // for the selected date and preserving the visitor's entered quantities across
+                // this AJAX reload. phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo rbfw_render_sd_variation_field( $id, $rbfw_sd_variations_data, $rbfw_selected_date_dmy, $rbfw_selected_qty_map );
+            } ?>
 
             <?php if(!empty($rbfw_extra_service_data)){  ?>
 
@@ -256,7 +358,7 @@ if(isset($_POST['post_id'])){
 
 
             <?php
-            $rbfw_fee_data = get_post_meta( $id, 'rbfw_fee_data', true );
+            $rbfw_fee_data = rbfw_get_enabled_fee_data( $id );
             $fee_management_cost_enable = false;
             ?>
 
@@ -349,6 +451,11 @@ if(isset($_POST['post_id'])){
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>
                         <?php } ?>
+
+                        <li class="variation-costing rbfw-cond" style="display: none">
+                            <?php echo esc_html__( 'Variations','booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                        </li>
 
                         <li class="subtotal">
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
