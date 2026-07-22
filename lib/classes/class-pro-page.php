@@ -31,7 +31,7 @@ if (!class_exists('RBFWProPage')) {
                         </ul>
                         <a href="<?php echo esc_url('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/'); ?>" class="rbfw_go_pro_btn1"><?php esc_html_e('Buy Pro','booking-and-rental-manager-for-woocommerce'); ?></a>
                         <a href="<?php echo esc_url('https://booking.mage-people.com/'); ?>" class="rbfw_go_pro_btn2"><?php esc_html_e('View Demo','booking-and-rental-manager-for-woocommerce'); ?></a>
-                        <a href="<?php echo esc_url('https://docs.mage-people.com/rent-and-booking-manager/'); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e('Documentation','booking-and-rental-manager-for-woocommerce'); ?></a>
+                        <a href="<?php echo esc_url('https://docs.mage-people.com/plugins/wprently/overview'); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e('Documentation','booking-and-rental-manager-for-woocommerce'); ?></a>
                     </div>
                     <div class="rbfw_go_pro_intro_col_2">
                         <img src="<?php echo esc_url(RBFW_PLUGIN_URL . '/css/images/4529264-ai.png'); ?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro','booking-and-rental-manager-for-woocommerce'); ?>">

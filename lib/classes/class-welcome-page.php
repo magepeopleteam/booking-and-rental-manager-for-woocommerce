@@ -38,11 +38,11 @@
                     <h1><?php esc_html_e( 'Welcome to Booking and Rental Manager Plugin Guideline', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
                     <p><?php echo wp_kses( 'A complete rental & booking solution for your business. It is perfect to offer all types of rental and booking services.', $arr ); ?></p>
                     <a href="<?php echo esc_url( 'https://booking.mage-people.com/' ); ?>" class="rbfw_go_pro_btn2"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-                    <a href="<?php echo esc_url( 'https://docs.mage-people.com/rent-and-booking-manager/' ); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                    <a href="<?php echo esc_url( 'https://docs.mage-people.com/plugins/wprently/overview' ); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
                     <h2><?php echo wp_kses( 'Video Tutorial: How to create a <b>Bike/Car for Single Day</b> booking or rental item?', array( 'b' => array() ) ); ?></h2>
-                    <p class="rbfw_alert_success"><i class="fas fa-circle-info"></i> <?php echo wp_kses( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/rent-and-booking-manager/" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    <p class="rbfw_alert_success"><i class="fas fa-circle-info"></i> <?php echo wp_kses( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/plugins/wprently/overview" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     <h2><?php echo wp_kses( 'Video Tutorial: How to create a <b>resort</b> booking or rental item?', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="rbfw_alert_success"><i class="fas fa-circle-info"></i> <?php echo wp_kses( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/rent-and-booking-manager/" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    <p class="rbfw_alert_success"><i class="fas fa-circle-info"></i> <?php echo wp_kses( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/plugins/wprently/overview" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                 </div>
                 <!-- End Start Tab One Content -->
                 <!-- Start Tab Three Content -->
