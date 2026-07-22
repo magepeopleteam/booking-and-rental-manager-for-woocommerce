@@ -416,9 +416,11 @@
 				$printed = true;
 				?>
 				<style>
-				/* Render the selector row full width (its settings-table label cell is empty). */
+				/* Render the selector row full width. Its cell is spanned across both table
+				   columns via JS (colspan=2); a display:block hack here would break that span
+				   and let 2-column setting rows squeeze it into the narrow label column. */
 				#rbfw_payment_settings tr.rbfw_booking_mode_selector > th{display:none;}
-				#rbfw_payment_settings tr.rbfw_booking_mode_selector > td{padding-left:0 !important;display:block;width:100%;}
+				#rbfw_payment_settings tr.rbfw_booking_mode_selector > td{padding-left:0 !important;}
 				.rbfw-bm-wrap,.rbfw-bm-wrap *,.rbfw-bm-auto-note,.rbfw-bm-auto-note *{box-sizing:border-box;}
 				.rbfw-bm-wrap{margin:2px 0 18px;max-width:100%;}
 				.rbfw-bm-head h3{margin:0 0 2px;font-size:15px;font-weight:700;color:#1d2327;}
@@ -1038,6 +1040,13 @@
 				jQuery(function($){
 					// Only run on the Payments tab (identified by the Booking Mode selector row).
 					if ($('tr.rbfw_booking_mode_selector').length === 0) { return; }
+
+					// The Booking Mode selector row carries full-width UI (intro, mode cards,
+					// context banner). Once WooCommerce mode shows its 2-column "Additional
+					// Settings" rows, an un-spanned single cell gets squeezed into the narrow
+					// label column — so drop the empty label cell and span it across both columns.
+					$('tr.rbfw_booking_mode_selector').children('th').remove();
+					$('tr.rbfw_booking_mode_selector').children('td').attr('colspan', 2);
 
 					var wcActive   = <?php echo $wc_active; ?>;
 					var activeMode = <?php echo wp_json_encode( $mode ); ?>;
