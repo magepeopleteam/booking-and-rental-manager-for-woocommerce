@@ -358,6 +358,16 @@
         rbfwUpdateRentTypeDesc(jQuery('.rbfw-rent-type.selected'));
 
         jQuery('.rbfw-rent-type').on('click', function() {
+            // The modern editor reuses these very rent-type cards but drives the
+            // per-type sections from its own delegated handler on the pricing panel.
+            // This legacy handler is bound DIRECTLY to the card and ends in
+            // `return false` (= preventDefault + stopPropagation), so leaving it
+            // active here swallowed the event before it could bubble: the modern
+            // applyType() never ran, `data-item-type` was never updated, and every
+            // section keyed off that attribute — the Discount Over x-days addon card
+            // among them — stayed stuck on the previously saved rent type.
+            if ( ! rbfwIsLegacyEditorTarget(this) ) return;
+
             var item_type = jQuery(this).data('rent-type');
             jQuery('#rbfw_item_type').val(item_type);
             jQuery('#rbfw_add_meta_box').attr('data-item-type', item_type);
