@@ -987,16 +987,21 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     width: 100% !important;
 }
 
+/* Card head — full-bleed, matching every other card head in the editor (the card
+   itself supplies the rounded border). It previously carried its own margin,
+   radius and border, which floated it inside the card as a detached box and left
+   the toggle row beneath it visibly misaligned. */
 .rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light {
     align-items: center !important;
-    background: #F0F4FB !important;
-    border: 1px solid #dbd0d0 !important;
-    border-radius: 10px !important;
+    background: #f0f4fb !important;
+    border: none !important;
+    border-bottom: 1px solid #dde1ec !important;
+    border-radius: 0 !important;
     display: flex !important;
-    margin: 16px 20px !important;
+    margin: 0 !important;
     gap: 20px !important;
     justify-content: space-between !important;
-    padding: 16px 20px !important;
+    padding: 14px 20px !important;
     box-sizing: border-box !important;
 }
 
@@ -1019,8 +1024,12 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding: 0 !important;
 }
 
-.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > div > p {
+/* The addon prints its descriptions as <span style="display:flex;flex-direction:column">,
+   not <p>, so the inline style has to be overridden here as well. */
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > div > p,
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > section.bg-light > div > span {
     color: #64748b !important;
+    display: block !important;
     font-size: 12px !important;
     font-weight: 400 !important;
     line-height: 1.4 !important;
@@ -1032,10 +1041,88 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     flex-shrink: 0 !important;
 }
 
+/* ── "On/Off Discount" toggle row ───────────────────────────────
+   The addon renders this row as a bare, class-less <section>, so it matched none
+   of the card styling above and instead fell through to the generic classic-wrap
+   rule that zeroes padding on section:not(.bg-light). The result was a full-bleed
+   row that escaped the card's gutter with the switch stacked underneath the text.
+   Lay it out like every other toggle row in the modern editor: title + description
+   on the left, switch pinned right.
+
+   NOTE ON THE SELECTOR: the generic rule this has to beat carries an eight-strong
+   :not() chain, which scores (0,9,1) — far above the (0,3,1) a plain card-scoped
+   selector would get, so the shorter form silently lost even with !important. The
+   chain is mirrored here so this rule scores (0,11,1) and wins on specificity
+   rather than on source order. Keep the chain in sync if the generic rule changes. */
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_price_config_wrapper > section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration):not(.appointment-onday) {
+    align-items: center !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f1 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    gap: 20px !important;
+    justify-content: space-between !important;
+    margin: 0 !important;
+    padding: 16px 20px !important;
+    width: 100% !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_price_config_wrapper > section:not(.bg-light) > div {
+    display: flex !important;
+    flex: 1 !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_price_config_wrapper > section:not(.bg-light) > div > label {
+    color: #1e293b !important;
+    cursor: default !important;
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_price_config_wrapper > section:not(.bg-light) > div > p,
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_price_config_wrapper > section:not(.bg-light) > div > span {
+    color: #64748b !important;
+    display: block !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_price_config_wrapper > section:not(.bg-light) > label.switch {
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+}
+
+/* The hidden "empty row" template the Add New Discount button clones lives in its
+   own bare <table> after the panel; unstyled it paints a few stray pixels under
+   the card. Hiding the table does not affect the clone (the JS strips the
+   screen-reader class from the copy once it is inside the real tbody). */
+.rbfw-me-addon-discount-card .rbfw_discount_price_config_wrapper > table {
+    display: none !important;
+}
+
 .rbfw-me-addon-discount-card .rbfw_discount_xday_table {
     box-sizing: border-box !important;
     padding: 0 20px 20px !important;
     width: 100% !important;
+}
+
+/* The rules table is wrapped in its own <section>, which the generic classic-wrap
+   rule gives a bottom border — that painted a stray divider across the bottom of
+   the card. Same :not() chain as above so this wins on specificity, not order. */
+.rbfw-me-addon-discount-card .rbfw-me-pricing-classic-wrap .rbfw_discount_xday_table section:not(.bg-light):not(.rent-type-area):not(.category-wise-service):not(.service_category_title):not(.particulare-date-time-slot):not(.manage_inventory_as_timely):not(.rbfw_item_quantiry_duration):not(.appointment-onday) {
+    border-bottom: none !important;
+    padding: 0 !important;
 }
 
 .rbfw-me-addon-discount-card .rbfw_discount_xday_table .md-price-card {
