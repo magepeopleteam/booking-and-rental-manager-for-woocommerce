@@ -222,6 +222,18 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 			}
 			?>
 			<div class="wrap rbfw-docs" data-active="<?php echo esc_attr( $active ); ?>">
+				<?php
+				/*
+				 * Anchor for WordPress admin notices. Core's common.js relocates every
+				 * notice to just AFTER `.wp-header-end`, and without that marker it falls
+				 * back to the first `h1`/`h2` inside `.wrap` — which here is the title
+				 * *inside* the dark header card, so notices rendered on top of the
+				 * branding. Keeping the marker first means notices stack above the
+				 * header card instead. Core styles it `visibility:hidden`.
+				 */
+				?>
+				<hr class="wp-header-end">
+
 				<div class="rbfw-docs-top">
 					<div class="rbfw-docs-brand">
 						<span class="dashicons dashicons-book-alt"></span>

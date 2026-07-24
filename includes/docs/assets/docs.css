@@ -52,6 +52,15 @@
 .rbfw-docs.is-searching .rbfw-docs-search-clear { display: block; }
 .rbfw-docs-noresults { margin: 12px 2px 0; color: #fecaca; font-weight: 600; }
 
+/* ---------- Admin notices ---------- */
+/* Core's common.js moves every admin notice to just after `.wp-header-end`, which the
+   template places first inside .wrap — so notices stack above the header card rather
+   than inside it. Collapse the marker itself and space the notices off the card. */
+.rbfw-docs .wp-header-end { margin: 0; border: 0; height: 0; }
+.rbfw-docs > .notice,
+.rbfw-docs > .updated,
+.rbfw-docs > .error { margin: 0 0 16px; }
+
 /* ---------- Layout ---------- */
 .rbfw-docs-layout { display: flex; gap: 22px; margin-top: 22px; align-items: flex-start; }
 
