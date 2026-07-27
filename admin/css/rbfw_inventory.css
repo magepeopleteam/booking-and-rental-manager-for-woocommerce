@@ -886,3 +886,101 @@
     text-align: center;
 }
 .rbfw_inv_loc_table_wrap.rbfw_inv_loading { opacity: .5; pointer-events: none; }
+
+/* =========================================================================
+   Stock-model labelling
+   "12/20" means a different thing on every rental type (per rate, timely
+   pool, multi-day pool, per room, per size), so each row and each detail
+   modal carries a badge naming the model behind its numbers.
+   ========================================================================= */
+.rbfw_inv .rbfw_inv_model_row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+}
+.rbfw_inv .rbfw_inv_model_badge,
+.rbfw_inv_modal .rbfw_inv_model_badge {
+    background: var(--rbfw-bg, #F4F6FA);
+    border: 1px solid var(--rbfw-border, #E4E9F2);
+    border-radius: 20px;
+    color: var(--rbfw-text-3, #8896B0);
+    cursor: help;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .2px;
+    line-height: 1.6;
+    padding: 1px 8px;
+    white-space: nowrap;
+}
+/* One hue per model so the type is scannable down the column. */
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_sd_rate,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_sd_rate    { background: #EEF1FE; border-color: #C7D4FB; color: #3B55C4; }
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_sd_timely,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_sd_timely  { background: #FEF3C7; border-color: #FCD34D; color: #92580A; }
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_md_pool,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_md_pool    { background: #D1FAE5; border-color: #6EE7B7; color: #06694B; }
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_md_size,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_md_size,
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_size,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_size       { background: #F3E8FF; border-color: #D8B4FE; color: #6B21A8; }
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_resort,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_resort     { background: #FCE7F3; border-color: #F9A8D4; color: #9D174D; }
+.rbfw_inv .rbfw_inv_model_badge.rbfw_inv_model_multi_items,
+.rbfw_inv_modal .rbfw_inv_model_badge.rbfw_inv_model_multi_items{ background: #E0F2FE; border-color: #7DD3FC; color: #075985; }
+
+/* Modal sub-line: date + model badges on one row */
+.rbfw_inv_modal_sub {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Three-figure summary strip (timely pool / multi-day pool) */
+.rbfw_inv_modal .rbfw_inv_sum_grid {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 10px;
+}
+.rbfw_inv_modal .rbfw_inv_sum_tile {
+    background: #F8FAFC;
+    border: 1px solid var(--rbfw-border, #E4E9F2);
+    border-radius: 8px;
+    padding: 9px 12px;
+    text-align: center;
+}
+.rbfw_inv_modal .rbfw_inv_sum_label {
+    color: var(--rbfw-text-3, #8896B0);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .4px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+}
+.rbfw_inv_modal .rbfw_inv_sum_value {
+    color: var(--rbfw-text-1, #1A1F36);
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.1;
+}
+.rbfw_inv_modal .rbfw_inv_sum_value.rbfw_inv_sum_zero { color: #DC2626; }
+
+/* Explanatory footnote under a model section */
+.rbfw_inv_modal .rbfw_inv_model_note {
+    color: var(--rbfw-text-3, #8896B0);
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin-top: 6px;
+}
+.rbfw_inv_modal .rbfw_inv_md_status {
+    color: var(--rbfw-text-3, #8896B0);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 600px) {
+    .rbfw_inv_modal .rbfw_inv_sum_grid { grid-template-columns: 1fr; }
+}

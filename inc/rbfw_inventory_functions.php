@@ -1052,6 +1052,77 @@ function rbfw_inventory_item_stock_totals( $post_id ) {
 }
 
 /**
+ * Describe HOW an item's stock is managed, for display on the Inventory page.
+ *
+ * The page lists every rental type in one table, but "12/20" does not mean the
+ * same thing on every row: single-day stock lives on each pricing rate row,
+ * single-day in timely mode uses one shared pool allocated by time overlap,
+ * multi-day holds one pool across the whole date range, resort is per room type
+ * and variations are per value. Naming the model next to the numbers stops the
+ * columns being read as one comparable figure.
+ *
+ * Read-only — this reports on existing meta, it never changes availability math.
+ *
+ * @param int $post_id rbfw_item post ID.
+ * @return array{key:string,label:string,title:string,extra:string}
+ */
+function rbfw_inventory_stock_model( $post_id ) {
+    $rent_type  = get_post_meta( $post_id, 'rbfw_item_type', true );
+    $rent_type  = ! empty( $rent_type ) ? $rent_type : '';
+    $variations = ( get_post_meta( $post_id, 'rbfw_enable_variations', true ) === 'yes' );
+    $timely     = ( get_post_meta( $post_id, 'manage_inventory_as_timely', true ) === 'on' );
+
+    $extra = '';
+
+    if ( 'resort' === $rent_type ) {
+        $key   = 'resort';
+        $label = __( 'Resort · per room type', 'booking-and-rental-manager-for-woocommerce' );
+        $title = __( 'Each room type carries its own available quantity. The total shown is the sum of every room type.', 'booking-and-rental-manager-for-woocommerce' );
+    } elseif ( 'multiple_items' === $rent_type ) {
+        $key   = 'multi_items';
+        $label = __( 'Multiple Items · per sub-item', 'booking-and-rental-manager-for-woocommerce' );
+        $title = __( 'Each sub-item carries its own quantity and is booked independently.', 'booking-and-rental-manager-for-woocommerce' );
+    } elseif ( 'bike_car_sd' === $rent_type || 'appointment' === $rent_type ) {
+        $type_name = ( 'appointment' === $rent_type )
+            ? __( 'Appointment', 'booking-and-rental-manager-for-woocommerce' )
+            : __( 'Single Day', 'booking-and-rental-manager-for-woocommerce' );
+
+        /* Matches rbfw_inventory_item_stock_totals(), which honours the timely
+           pool for both types — badge, table total and modal must not disagree. */
+        if ( $timely ) {
+            $key   = 'sd_timely';
+            /* translators: %s: rental type name (Single Day). */
+            $label = sprintf( __( '%s · timely pool', 'booking-and-rental-manager-for-woocommerce' ), $type_name );
+            $title = __( 'One shared pool (Pricing → Stock Quantity) allocated by pickup/drop-off time overlap, not per rental option.', 'booking-and-rental-manager-for-woocommerce' );
+        } else {
+            $key   = 'sd_rate';
+            /* translators: %s: rental type name (Single Day / Appointment). */
+            $label = sprintf( __( '%s · per rate', 'booking-and-rental-manager-for-woocommerce' ), $type_name );
+            $title = __( 'Every rental option row carries its own Stock/Day on the Pricing tab. The total shown is the sum of those rows, and a date is sold out only when every option reaches zero.', 'booking-and-rental-manager-for-woocommerce' );
+        }
+
+        if ( $variations && 'appointment' !== $rent_type ) {
+            $extra = __( '+ per size', 'booking-and-rental-manager-for-woocommerce' );
+        }
+    } elseif ( $variations ) {
+        $key   = 'md_size';
+        $label = __( 'Multi-Day · per size', 'booking-and-rental-manager-for-woocommerce' );
+        $title = __( 'Each variation value holds its own stock for the whole booked date range. The total shown is the sum of every value.', 'booking-and-rental-manager-for-woocommerce' );
+    } else {
+        $key   = 'md_pool';
+        $label = __( 'Multi-Day · shared pool', 'booking-and-rental-manager-for-woocommerce' );
+        $title = __( 'One stock quantity (Inventory tab) held on every date of a booking until it is released.', 'booking-and-rental-manager-for-woocommerce' );
+    }
+
+    return array(
+        'key'   => $key,
+        'label' => $label,
+        'title' => $title,
+        'extra' => $extra,
+    );
+}
+
+/**
  * Visual state for a stock pill: 'full' (green), 'zero' (red) or '' (neutral).
  *
  * @param float $remain Remaining/available quantity.
@@ -1562,6 +1633,10 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 $rbfw_item_stock_quantity = $stock_totals['item_stock'];
                 $total_es_qty             = $stock_totals['es_qty'];
 
+                /* How this row's stock is managed — the Item Stock column means a
+                   different thing per rental type, so label it inline. */
+                $stock_model = rbfw_inventory_stock_model( $post_id );
+
                 if ( !empty($date) ){
                     $current_date = $date;
                 } else {
@@ -1677,7 +1752,15 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 <tr class="rbfw_inv_row">
                     <td class="rbfw_inv_td_date" data-th="<?php esc_attr_e('Date','booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html(gmdate(get_option('date_format'),strtotime($current_date))); ?></td>
 
-                    <td class="rbfw_inv_td_name" data-th="<?php esc_attr_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?>"><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
+                    <td class="rbfw_inv_td_name" data-th="<?php esc_attr_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a>
+                        <span class="rbfw_inv_model_row">
+                            <span class="rbfw_inv_model_badge rbfw_inv_model_<?php echo esc_attr( $stock_model['key'] ); ?>" title="<?php echo esc_attr( $stock_model['title'] ); ?>"><?php echo esc_html( $stock_model['label'] ); ?></span>
+                            <?php if ( ! empty( $stock_model['extra'] ) ) { ?>
+                                <span class="rbfw_inv_model_badge rbfw_inv_model_size" title="<?php esc_attr_e( 'Item variations are on: every value also holds its own stock, checked on top of the model above.', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( $stock_model['extra'] ); ?></span>
+                            <?php } ?>
+                        </span>
+                    </td>
 
                     <td class="rbfw_text_center" data-th="<?php esc_attr_e('Item Stock','booking-and-rental-manager-for-woocommerce'); ?>">
                         <span class="rbfw_inv_stock_wrap">
@@ -1808,43 +1891,27 @@ function rbfw_get_stock_details(){
                 $total_es_qty += !empty($extra_service_data['service_qty']) ? $extra_service_data['service_qty'] : 0;
             }
 
-            $rbfw_item_stock_quantity = 0;
+            /* Total configured stock. Shared with the Inventory table and the summary
+               cards so the modal hero can never disagree with the row it was opened
+               from — it also honours timely mode, which the old inline copy of this
+               calculation did not (it summed the per-rate quantities even when the
+               shared timely pool was the real stock source). */
+            $modal_totals             = rbfw_inventory_item_stock_totals( $data_id );
+            $rbfw_item_stock_quantity = $modal_totals['item_stock'];
 
-            if ($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
+            $manage_inventory_as_timely = ( get_post_meta( $data_id, 'manage_inventory_as_timely', true ) === 'on' );
+            $stock_model                = rbfw_inventory_stock_model( $data_id );
 
-                foreach ($rbfw_bike_car_sd_data as $key => $bike_car_sd_data) {
-
-                    $rbfw_item_stock_quantity += !empty($bike_car_sd_data['qty']) ? $bike_car_sd_data['qty'] : 0;
-                }
-
-            } elseif ($rent_type == 'resort'){
-                foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
-                    $rbfw_item_stock_quantity += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;
-                }
-            } else {
-                if($rbfw_enable_variations=='yes'){
-                    foreach ($rbfw_variations_data as $_variations_data) {
-                        if(!empty($_variations_data['value'])){
-                            foreach ($_variations_data['value'] as $value) {
-                                if(empty($value['quantity']) || $value['quantity'] <= 0){
-                                  ////
-                                } else{
-                                    $rbfw_item_stock_quantity =  $value['quantity'] + $rbfw_item_stock_quantity;
-                                }
-                            }
-                        }
-                    }
-                }else{
-                    $rbfw_item_stock_quantity = !empty(get_post_meta($data_id, 'rbfw_item_stock_quantity', true)) ? get_post_meta($data_id, 'rbfw_item_stock_quantity', true) : 0;
-                }
-            }
+            /* Fetched once, up front: the multi-day and category-service sections
+               below read this too, and previously only the 'closing' branch defined
+               it (an undefined variable on any other request). */
+            $rbfw_inventory = get_post_meta( $data_id, 'rbfw_inventory', true );
+            $rbfw_inventory = ! empty( $rbfw_inventory ) ? $rbfw_inventory : [];
 
             $remaining_item_stock = $rbfw_item_stock_quantity;
             $sold_item_qty = 0;
 
             if($data_request == 'closing'){
-
-                $rbfw_inventory =  get_post_meta($data_id, 'rbfw_inventory', true);
 
                 if(!empty($rbfw_inventory)){
 
@@ -2009,9 +2076,15 @@ function rbfw_get_stock_details(){
                     <div class="rbfw_inv_modal_icon"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></div>
                     <div class="rbfw_inv_modal_title_wrap">
                         <div class="rbfw_inv_modal_title"><?php echo esc_html( $modal_title ); ?></div>
-                        <?php if ( $modal_date_fmt ) { ?>
-                            <div class="rbfw_inv_modal_sub"><?php echo esc_html( $modal_date_fmt ); ?></div>
-                        <?php } ?>
+                        <div class="rbfw_inv_modal_sub">
+                            <?php if ( $modal_date_fmt ) { ?>
+                                <span><?php echo esc_html( $modal_date_fmt ); ?></span>
+                            <?php } ?>
+                            <span class="rbfw_inv_model_badge rbfw_inv_model_<?php echo esc_attr( $stock_model['key'] ); ?>" title="<?php echo esc_attr( $stock_model['title'] ); ?>"><?php echo esc_html( $stock_model['label'] ); ?></span>
+                            <?php if ( ! empty( $stock_model['extra'] ) ) { ?>
+                                <span class="rbfw_inv_model_badge rbfw_inv_model_size"><?php echo esc_html( $stock_model['extra'] ); ?></span>
+                            <?php } ?>
+                        </div>
                     </div>
                     <a href="#" class="rbfw_inv_modal_close" aria-label="<?php esc_attr_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo rbfw_inv_icon('x'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></a>
                 </div>
@@ -2041,21 +2114,214 @@ function rbfw_get_stock_details(){
                     </div>
                     <?php } ?>
 
-                    <?php if(!empty($rbfw_bike_car_sd_data) && ($rent_type == 'bike_car_sd' || $rent_type == 'appointment')){ ?>
+                    <?php
+                    /* Single Day / Appointment, rate-wise inventory: each pricing row
+                       carries its own Stock/Day. Suppressed in timely mode, where those
+                       quantities are not the stock source at all — the shared pool below
+                       is, and printing the rate column there was actively misleading. */
+                    if(!empty($rbfw_bike_car_sd_data) && ($rent_type == 'bike_car_sd' || $rent_type == 'appointment') && ! $manage_inventory_as_timely){ ?>
                     <div class="rbfw_inv_modal_section">
                         <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('car'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Rent Info','booking-and-rental-manager-for-woocommerce'); ?></div>
                         <table class="rbfw_inv_mini_table">
                             <thead><tr><th><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
                             <tbody>
-                            <?php foreach ($rbfw_bike_car_sd_data as $bike_car_sd_data) { ?>
-                                <tr><td><?php echo esc_html($bike_car_sd_data['rent_type']); ?></td><td class="rbfw_inv_qty_cell"><?php echo esc_html($bike_car_sd_data['qty']); ?></td></tr>
+                            <?php foreach ($rbfw_bike_car_sd_data as $bike_car_sd_data) {
+                                $rate_zero = ( ! isset( $bike_car_sd_data['qty'] ) || $bike_car_sd_data['qty'] <= 0 ); ?>
+                                <tr><td><?php echo esc_html($bike_car_sd_data['rent_type']); ?></td><td class="rbfw_inv_qty_cell <?php echo esc_attr( $rate_zero ? 'rbfw_inv_qty_cell_zero' : '' ); ?>"><?php echo esc_html($bike_car_sd_data['qty']); ?></td></tr>
                             <?php } ?>
                             </tbody>
                         </table>
+                        <div class="rbfw_inv_model_note"><?php esc_html_e( 'Stock is held per rental option. This date is only sold out when every option above reaches zero.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                     </div>
                     <?php } ?>
 
-                    <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){ ?>
+                    <?php
+                    /* Single Day, timely inventory: one shared pool allocated by
+                       pickup/drop-off overlap. Availability is a property of the time
+                       window, not of the rental option, so each configured window is
+                       evaluated through the same helper the booking form uses. */
+                    if ( $manage_inventory_as_timely && ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) ) {
+                        $timely_pool = (int) get_post_meta( $data_id, 'rbfw_item_stock_quantity_timely', true );
+                        $timely_ymd  = $data_date ? gmdate( 'Y-m-d', strtotime( $data_date ) ) : '';
+                        $timely_dur  = ( get_post_meta( $data_id, 'enable_specific_duration', true ) === 'on' );
+
+                        /* Units held anywhere in the selected day = pool minus what is
+                           still free across the whole day. */
+                        $timely_day_free = ( $timely_ymd && function_exists( 'rbfw_timely_available_quantity_updated' ) )
+                            ? (int) rbfw_timely_available_quantity_updated( $data_id, $timely_ymd, '00:00', $timely_ymd, '23:59' )
+                            : $timely_pool;
+                        $timely_booked = max( 0, $timely_pool - $timely_day_free );
+                        ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clock'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Timely Inventory','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <div class="rbfw_inv_sum_grid">
+                                <div class="rbfw_inv_sum_tile">
+                                    <div class="rbfw_inv_sum_label"><?php esc_html_e('Shared Pool','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                    <div class="rbfw_inv_sum_value"><?php echo esc_html( $timely_pool ); ?></div>
+                                </div>
+                                <div class="rbfw_inv_sum_tile">
+                                    <div class="rbfw_inv_sum_label"><?php esc_html_e('Booked This Date','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                    <div class="rbfw_inv_sum_value"><?php echo esc_html( $timely_booked ); ?></div>
+                                </div>
+                                <div class="rbfw_inv_sum_tile">
+                                    <div class="rbfw_inv_sum_label"><?php esc_html_e('Free All Day','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                    <div class="rbfw_inv_sum_value <?php echo esc_attr( $timely_day_free <= 0 ? 'rbfw_inv_sum_zero' : '' ); ?>"><?php echo esc_html( $timely_day_free ); ?></div>
+                                </div>
+                            </div>
+                            <?php if ( ! empty( $rbfw_bike_car_sd_data ) ) { ?>
+                                <table class="rbfw_inv_mini_table">
+                                    <thead><tr><th><?php esc_html_e('Rental Option','booking-and-rental-manager-for-woocommerce'); ?></th><th><?php echo $timely_dur ? esc_html__('Duration','booking-and-rental-manager-for-woocommerce') : esc_html__('Window','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
+                                    <tbody>
+                                    <?php foreach ( $rbfw_bike_car_sd_data as $timely_row ) {
+                                        $t_name  = isset( $timely_row['rent_type'] ) ? $timely_row['rent_type'] : '';
+                                        $t_start = isset( $timely_row['start_time'] ) ? $timely_row['start_time'] : '';
+                                        $t_end   = isset( $timely_row['end_time'] ) ? $timely_row['end_time'] : '';
+
+                                        if ( $timely_dur ) {
+                                            /* Duration-based options have no fixed window: the
+                                               customer's chosen pickup time decides the overlap,
+                                               so there is no single figure to report here. */
+                                            $t_window = trim( ( isset( $timely_row['duration'] ) ? $timely_row['duration'] : '' ) . ' ' . ( isset( $timely_row['d_type'] ) ? $timely_row['d_type'] : '' ) );
+                                            $t_avail  = '—';
+                                            $t_zero   = false;
+                                        } elseif ( '' !== $t_start && '' !== $t_end && $timely_ymd && function_exists( 'rbfw_timely_available_quantity_updated' ) ) {
+                                            $t_window = $t_start . ' – ' . $t_end;
+                                            $t_num    = (int) rbfw_timely_available_quantity_updated( $data_id, $timely_ymd, $t_start, $timely_ymd, $t_end );
+                                            $t_avail  = $t_num;
+                                            $t_zero   = ( $t_num <= 0 );
+                                        } else {
+                                            $t_window = '—';
+                                            $t_avail  = '—';
+                                            $t_zero   = false;
+                                        }
+                                        ?>
+                                        <tr>
+                                            <td><?php echo esc_html( $t_name ); ?></td>
+                                            <td><?php echo esc_html( $t_window ); ?></td>
+                                            <td class="rbfw_inv_qty_cell <?php echo esc_attr( $t_zero ? 'rbfw_inv_qty_cell_zero' : '' ); ?>"><?php echo esc_html( $t_avail ); ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            <?php } ?>
+                            <div class="rbfw_inv_model_note">
+                                <?php if ( $timely_dur ) {
+                                    esc_html_e( 'Duration-based options have no fixed window — availability depends on the pickup time the customer picks, so only the shared pool is reported.', 'booking-and-rental-manager-for-woocommerce' );
+                                } else {
+                                    esc_html_e( 'Every window draws on the same pool. Overlapping windows therefore compete for the same units.', 'booking-and-rental-manager-for-woocommerce' );
+                                } ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <?php
+                    /* Multi-day types: one pool held on every date of a booking. The
+                       page previously showed nothing but the hero number for these, so
+                       there was no way to see what was consuming the stock or when it
+                       comes back.
+
+                       The rows below deliberately reuse this modal's OWN closing-stock
+                       filter (managed statuses + picked, minus deposit-only partials)
+                       rather than the availability engine's wider set, so the listed
+                       orders always add up to the "Booked This Date" tile — which is
+                       $sold_item_qty, computed by that same filter above. */
+                    $rbfw_md_types = apply_filters( 'rbfw_inventory_md_types', array( 'bike_car_md', 'dress', 'equipment', 'others' ) );
+                    if ( in_array( $rent_type, $rbfw_md_types, true ) ) {
+                        /* Mirrors the availability engine: a buffer overrides everything,
+                           otherwise 'no' drops the last booked date (return date freed)
+                           and 'yes' keeps holding it. */
+                        $md_hold_return_date = ( get_post_meta( $data_id, 'stock_manage_on_return_date', true ) === 'yes' );
+                        $md_buffer_after     = (int) get_post_meta( $data_id, 'rbfw_buffer_time_after', true );
+
+                        $md_managed = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+                        $md_managed = is_array( $md_managed ) ? $md_managed : array( 'processing' => 'processing', 'completed' => 'completed' );
+                        $md_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
+
+                        $md_rows = array();
+                        /* Only the closing-stock request computes $sold_item_qty; listing
+                           holders against untouched totals would not reconcile. */
+                        $md_entries = ( 'closing' === $data_request ) ? $rbfw_inventory : array();
+                        foreach ( $md_entries as $md_order_id => $md_entry ) {
+                            if ( ! is_array( $md_entry ) ) {
+                                continue;
+                            }
+                            $md_dates = ! empty( $md_entry['booked_dates'] ) ? (array) $md_entry['booked_dates'] : array();
+                            if ( empty( $md_dates ) || ! in_array( $data_date, $md_dates ) ) {
+                                continue;
+                            }
+                            $md_status = isset( $md_entry['rbfw_order_status'] ) ? $md_entry['rbfw_order_status'] : '';
+                            if ( 'partially-paid' === $md_status && 'deposit' === $md_reduce_stock ) {
+                                continue;
+                            }
+                            if ( ! in_array( $md_status, $md_managed ) && 'picked' !== $md_status ) {
+                                continue;
+                            }
+                            $md_rows[] = array(
+                                'order_id' => (int) $md_order_id,
+                                'from'     => reset( $md_dates ),
+                                'to'       => end( $md_dates ),
+                                'qty'      => ! empty( $md_entry['rbfw_item_quantity'] ) ? (int) $md_entry['rbfw_item_quantity'] : 0,
+                                'status'   => $md_status,
+                            );
+                        }
+                        ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('calendar'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Multi-Day Stock','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <div class="rbfw_inv_sum_grid">
+                                <div class="rbfw_inv_sum_tile">
+                                    <div class="rbfw_inv_sum_label"><?php esc_html_e('Total Stock','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                    <div class="rbfw_inv_sum_value"><?php echo esc_html( $rbfw_item_stock_quantity ); ?></div>
+                                </div>
+                                <div class="rbfw_inv_sum_tile">
+                                    <div class="rbfw_inv_sum_label"><?php esc_html_e('Booked This Date','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                    <div class="rbfw_inv_sum_value"><?php echo esc_html( $sold_item_qty ); ?></div>
+                                </div>
+                                <div class="rbfw_inv_sum_tile">
+                                    <div class="rbfw_inv_sum_label"><?php esc_html_e('Remaining','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                    <div class="rbfw_inv_sum_value <?php echo esc_attr( $remaining_item_stock <= 0 ? 'rbfw_inv_sum_zero' : '' ); ?>"><?php echo esc_html( $remaining_item_stock ); ?></div>
+                                </div>
+                            </div>
+                            <table class="rbfw_inv_mini_table">
+                                <thead><tr><th><?php esc_html_e('Order','booking-and-rental-manager-for-woocommerce'); ?></th><th><?php esc_html_e('Held For','booking-and-rental-manager-for-woocommerce'); ?></th><th class="rbfw_inv_ta_r"><?php esc_html_e('Qty','booking-and-rental-manager-for-woocommerce'); ?></th></tr></thead>
+                                <tbody>
+                                <?php if ( ! empty( $md_rows ) ) {
+                                    foreach ( $md_rows as $md_row ) {
+                                        $md_status_name = function_exists( 'wc_get_order_status_name' ) ? wc_get_order_status_name( $md_row['status'] ) : $md_row['status'];
+                                        ?>
+                                        <tr>
+                                            <td>#<?php echo esc_html( $md_row['order_id'] ); ?> <span class="rbfw_inv_md_status"><?php echo esc_html( $md_status_name ); ?></span></td>
+                                            <td><?php echo esc_html( $md_row['from'] . ' → ' . $md_row['to'] ); ?></td>
+                                            <td class="rbfw_inv_qty_cell"><?php echo esc_html( $md_row['qty'] ); ?></td>
+                                        </tr>
+                                    <?php }
+                                } else { ?>
+                                    <tr><td colspan="3" class="rbfw_inv_empty_modal"><?php esc_html_e('Nothing is holding stock on this date','booking-and-rental-manager-for-woocommerce'); ?></td></tr>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <div class="rbfw_inv_model_note">
+                                <?php
+                                if ( $md_buffer_after > 0 ) {
+                                    /* translators: %d: buffer hours configured after drop-off. */
+                                    echo esc_html( sprintf( _n( 'Released %d hour after drop-off (buffer time).', 'Released %d hours after drop-off (buffer time).', $md_buffer_after, 'booking-and-rental-manager-for-woocommerce' ), $md_buffer_after ) );
+                                } elseif ( $md_hold_return_date ) {
+                                    esc_html_e( 'Held through the return date itself — the drop-off day is not resold.', 'booking-and-rental-manager-for-woocommerce' );
+                                } else {
+                                    esc_html_e( 'Held up to the day before drop-off — the return date is bookable again.', 'booking-and-rental-manager-for-woocommerce' );
+                                }
+                                ?>
+                                <?php echo ' ' . esc_html( $stock_model['title'] ); ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <?php
+                    /* Per-value stock. Single Day is included here: its closing-stock
+                       decrement is computed above but the table was never rendered, so
+                       sold-out sizes on a single-day item were invisible on this page.
+                       Resort has no variations UI, and Appointment hides the Inventory
+                       tab entirely, so neither can produce meaningful rows. */
+                    if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'appointment'){ ?>
                         <?php foreach ($rbfw_variations_data as $_variations_data) { ?>
                         <div class="rbfw_inv_modal_section">
                             <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clone'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php echo esc_html( $_variations_data['field_label'] ?? '' ); ?></div>
