@@ -165,6 +165,54 @@ Appsero does not collect data by default. Data collection starts only after user
 Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+2.7.4
+Seasonal and date-wise Min/Max booking days are now actually applied — the booking calendars honour them and they are enforced when adding to the cart. Previously these values were saved but never read.
+Date-wise Min/Max ranges now work in the [rbfw_booking_search] widget as well.
+Payments settings redesigned: both booking flows stay visible, and an unavailable one carries the action that unlocks it (activate WooCommerce, or enable the free Offline gateway).
+Payments tab now follows the Global Settings colour scheme.
+Offline Payment is now a free standalone gateway, with a single unified payment-method notice.
+Inventory page now shows both the single-day and multi-day stock models.
+Fee Configuration now respects its enable toggle everywhere.
+Single-day item variations charge the base rate once, with quantity and price shown consistently.
+Sample data import moved to a non-blocking corner widget with progress.
+Fixed the [rbfw_booking_search] form layout on mobile.
+Fixed the calendar still showing bookings deleted from the Bookings page.
+Fixed modern editor rent-type switching and the Discount addon card.
+Fixed documentation links.
+
+2.7.3
+Unified coupon and discount engine for both WooCommerce and Standalone bookings.
+Rental Docs added — in-admin documentation covering the free and Pro features.
+Multi-location inventory and pricing for every rental type, plus a By Location tab on the Inventory page.
+Booking search rebuilt: multi-item date, location and type search with in-page booking and checkout.
+Per-attendee registration form data across all booking surfaces.
+Global Settings redesigned, the Status page moved in as a tab, and the whole page made mobile responsive.
+Order List gained CSV and PDF export, a revenue summary, and an Export Settings accordion.
+Edit Stock added to the Inventory page, including extra-service stock.
+Standalone booking status management and native checkout flow added.
+Buffer Time is now enforced server-side and no longer overrides the "today booking" setting.
+Single-day hourly inventory, sold-out time slots and end-time handling fixed.
+Server-side availability checks added to prevent double booking.
+Multi-day service price manipulation from the client blocked.
+Modern editor saving fixed: toggle persistence, pricing-gate abort, and timeslots.
+Fixed Scandinavian characters (ae/oe/aa) being corrupted on save.
+Admin and frontend strings made translatable; POT and all 7 locale files regenerated.
+
+2.7.2
+New modern full-page rental item editor, now the default, with the classic editor still available.
+Rental Items list redesigned: responsive layout, list view by default, image and author columns, icon actions and trash support.
+Duplicate action added to the rental list.
+Muffin theme templates added for single-day, multi-day, resort and multi-item bookings.
+WooCommerce install and demo import are now chunked and low-memory safe.
+Fixed a 504 timeout when filtering the Rent List by multiple categories.
+Fixed broken access control in admin handlers by adding capability checks.
+Fixed same-day rental price showing 0 when the monthly or weekly rate was enabled.
+Count Extra Day now applies to the monthly and weekly pricing breakdown.
+Fixed rental permalinks returning 404 after a rewrite flush.
+Fixed pagination for the [rent-list] shortcode on live servers.
+Fixed the left filter category search and a stray rent type.
+Frontend pickup time now shows English AM/PM instead of the browser locale.
+
 2.7.1
 Code updated and minor bug fixes.
 Big Design Improvemnt
