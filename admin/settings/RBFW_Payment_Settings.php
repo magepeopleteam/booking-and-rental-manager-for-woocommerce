@@ -398,6 +398,14 @@
 				$printed = true;
 				?>
 				<style>
+				/* This tab's accent follows the settings shell's --rbfw-gs-accent (the blue
+				   used by the active nav tab, the page header and the doc links) so the
+				   Payments content reads as part of the same page. The brand pink stays
+				   reserved for what rbfw_global_settings.css reserves it for — the Save
+				   button and the Pro card. The literal is only a fallback for contexts that
+				   don't load that stylesheet; rgba() tints below are hand-matched to it. */
+				:root{--rbfw-pay-accent:#2271B1;}
+				.rbfw_global_settings{--rbfw-pay-accent:var(--rbfw-gs-accent,#2271B1);}
 				/* Render the selector row full width. Its cell is spanned across both table
 				   columns via JS (colspan=2); a display:block hack here would break that span
 				   and let 2-column setting rows squeeze it into the narrow label column. */
@@ -409,10 +417,10 @@
 				.rbfw-bm-head p{margin:0 0 12px;font-size:12.5px;color:#6b7280;max-width:680px;line-height:1.55;}
 				.rbfw-bm-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:100%;}
 				.rbfw-bm-card{position:relative;display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid #e5e7eb;border-radius:12px;background:#fafafb;cursor:pointer;transition:border-color .15s,box-shadow .15s,background .15s;min-width:0;}
-				.rbfw-bm-card:hover{border-color:#d4b3c3;box-shadow:0 4px 14px rgba(16,24,40,0.06);}
-				.rbfw-bm-card.is-selected{border-color:#F12971;background:#fff;box-shadow:0 6px 18px rgba(241,41,113,0.12);}
+				.rbfw-bm-card:hover{border-color:#a8c8e4;box-shadow:0 4px 14px rgba(16,24,40,0.06);}
+				.rbfw-bm-card.is-selected{border-color:var(--rbfw-pay-accent);background:#fff;box-shadow:0 6px 18px rgba(34,113,177,0.12);}
 				.rbfw-bm-card input[type=radio]{position:absolute;opacity:0;width:0;height:0;}
-				.rbfw-bm-card-icon{flex:0 0 auto;width:36px;height:36px;border-radius:9px;background:rgba(241,41,113,0.1);color:#F12971;display:flex !important;align-items:center !important;justify-content:center !important;font-size:18px;}
+				.rbfw-bm-card-icon{flex:0 0 auto;width:36px;height:36px;border-radius:9px;background:rgba(34,113,177,0.1);color:var(--rbfw-pay-accent);display:flex !important;align-items:center !important;justify-content:center !important;font-size:18px;}
 				.rbfw-bm-card-body{display:block !important;flex:1;min-width:0;white-space:normal !important;}
 				.rbfw-bm-card-title-row{display:flex !important;align-items:center;justify-content:space-between;gap:8px;margin:0 0 4px;width:100%;}
 				.rbfw-bm-card-body strong{display:inline-block !important;font-size:14px;line-height:1.3;color:#1d2327;}
@@ -438,20 +446,20 @@
 				.rbfw-bm-auto-note-cta{margin-top:10px !important;}
 
 				/* "How payments work here" intro strip */
-				.rbfw-pay-intro{background:linear-gradient(135deg,#fff5f9 0%,#fdfdff 100%);border:1px solid #f4d4e2;border-radius:12px;padding:14px 18px;margin:2px 0 16px;}
-				.rbfw-pay-intro-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#9d174d;margin-bottom:9px;}
-				.rbfw-pay-intro-title .dashicons{color:#F12971;}
+				.rbfw-pay-intro{background:linear-gradient(135deg,#f4f9fd 0%,#fdfdff 100%);border:1px solid #cfe1f2;border-radius:12px;padding:14px 18px;margin:2px 0 16px;}
+				.rbfw-pay-intro-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:#1E3A5F;margin-bottom:9px;}
+				.rbfw-pay-intro-title .dashicons{color:var(--rbfw-pay-accent);}
 				.rbfw-pay-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 				.rbfw-pay-steps li{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:#4b5563;line-height:1.5;}
-				.rbfw-pay-step-n{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:#F12971;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+				.rbfw-pay-step-n{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--rbfw-pay-accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
 				@media (max-width:782px){.rbfw-pay-steps{grid-template-columns:1fr;}}
 
 				/* Live "You're configuring: <flow>" context banner (replaces the old pill bar) */
-				.rbfw-bm-context{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 4px;padding:11px 16px;border-radius:10px;background:#fdf2f7;border:1px solid #f4c6db;border-left:4px solid #F12971;}
-				.rbfw-bm-context-dot{width:9px;height:9px;border-radius:50%;background:#F12971;flex:0 0 auto;box-shadow:0 0 0 4px rgba(241,41,113,0.18);}
+				.rbfw-bm-context{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 4px;padding:11px 16px;border-radius:10px;background:#eff6fc;border:1px solid #c3ddf1;border-left:4px solid var(--rbfw-pay-accent);}
+				.rbfw-bm-context-dot{width:9px;height:9px;border-radius:50%;background:var(--rbfw-pay-accent);flex:0 0 auto;box-shadow:0 0 0 4px rgba(34,113,177,0.18);}
 				.rbfw-bm-context-label{font-size:12.5px;font-weight:600;color:#6b7280;}
-				.rbfw-bm-context-icon{color:#F12971;}
-				.rbfw-bm-context-mode{font-size:14px;font-weight:700;color:#9d174d;}
+				.rbfw-bm-context-icon{color:var(--rbfw-pay-accent);}
+				.rbfw-bm-context-mode{font-size:14px;font-weight:700;color:#1E3A5F;}
 
 				/* Attention "blink" — a gentle pulse, disabled for reduced-motion users */
 				@keyframes rbfwBlink{0%,100%{opacity:1;}50%{opacity:.25;}}
@@ -463,7 +471,7 @@
 				/* Toast notification (booking-flow switch → saving / saved / failed) */
 				.rbfw-toast{position:fixed;top:52px;right:24px;z-index:100001;display:flex;align-items:flex-start;gap:12px;width:344px;max-width:calc(100vw - 32px);padding:14px 16px;background:#fff;border:1px solid #e5e7eb;border-left:4px solid #9ca3af;border-radius:12px;box-shadow:0 14px 38px rgba(16,24,40,0.20);pointer-events:none;opacity:0;transform:translateX(120%);transition:transform .34s cubic-bezier(.16,1,.3,1),opacity .34s;}
 				.rbfw-toast.is-visible{opacity:1;transform:translateX(0);pointer-events:auto;}
-				.rbfw-toast.is-loading{border-left-color:#F12971;}
+				.rbfw-toast.is-loading{border-left-color:var(--rbfw-pay-accent);}
 				.rbfw-toast.is-success{border-left-color:#16a34a;}
 				.rbfw-toast.is-error{border-left-color:#dc2626;}
 				.rbfw-toast-ico{flex:0 0 auto;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin-top:1px;}
@@ -475,7 +483,7 @@
 				.rbfw-toast-sub{font-size:12px;color:#6b7280;line-height:1.45;overflow-wrap:break-word;}
 				.rbfw-toast-x{flex:0 0 auto;background:none;border:none;cursor:pointer;font-size:18px;line-height:1;color:#9ca3af;padding:0 0 0 4px;}
 				.rbfw-toast-x:hover{color:#4b5563;}
-				.rbfw-spin{width:18px;height:18px;border:2px solid #f0d3df;border-top-color:#F12971;border-radius:50%;animation:rbfwSpin .7s linear infinite;}
+				.rbfw-spin{width:18px;height:18px;border:2px solid #d3e4f2;border-top-color:var(--rbfw-pay-accent);border-radius:50%;animation:rbfwSpin .7s linear infinite;}
 				@keyframes rbfwSpin{to{transform:rotate(360deg);}}
 				@media (prefers-reduced-motion:reduce){.rbfw-toast{transition:opacity .2s;transform:none;}.rbfw-spin{animation-duration:1.4s;}}
 
@@ -750,7 +758,7 @@
 				.rbfw-gw-field{margin-bottom:20px;}
 				.rbfw-gw-field label.rbfw-gw-label{display:block;font-weight:600;font-size:13px;color:#374151;margin-bottom:7px;}
 				.rbfw-gw-field input[type="text"],.rbfw-gw-field input[type="password"]{width:100%;padding:10px 14px;border:1.5px solid #d1d5db;border-radius:8px;font-size:14px;color:#111;background:#f9fafb;box-sizing:border-box;}
-				.rbfw-gw-field input[type="text"]:focus,.rbfw-gw-field input[type="password"]:focus{border-color:#F12971;box-shadow:0 0 0 3px rgba(241,41,113,0.12);outline:none;background:#fff;}
+				.rbfw-gw-field input[type="text"]:focus,.rbfw-gw-field input[type="password"]:focus{border-color:var(--rbfw-pay-accent);box-shadow:0 0 0 3px rgba(34,113,177,0.12);outline:none;background:#fff;}
 				.rbfw-gw-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#f9fafb;border-radius:10px;margin-bottom:20px;border:1.5px solid #e5e7eb;}
 				.rbfw-gw-toggle-label{font-weight:600;font-size:14px;color:#111827;}
 				.rbfw-gw-toggle-sub{font-size:12px;color:#6b7280;margin-top:2px;}
@@ -948,7 +956,9 @@
 				$mode      = class_exists( 'RBFW_Function' ) ? RBFW_Function::booking_mode() : 'woocommerce';
 				?>
 				<style>
-				:root{--rbfw-pay-accent:#F12971;}
+				/* Same accent contract as booking_mode_styles() — see the note there. */
+				:root{--rbfw-pay-accent:#2271B1;}
+				.rbfw_global_settings{--rbfw-pay-accent:var(--rbfw-gs-accent,#2271B1);}
 
 				/* Custom Payment intro */
 				.rbfw-gw-intro{margin:4px 0 18px;}
@@ -994,8 +1004,8 @@
 				/* WooCommerce sub-tab accordions */
 				tr.rbfw-acc-header > td.rbfw-acc-header-cell{padding:0 !important;}
 				tr.rbfw-acc-header .rbfw-acc-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;user-select:none;background:#fff;border:1px solid #e7e8ec;border-radius:10px;padding:13px 16px;margin:14px 0 4px;transition:background 0.2s ease,border-color 0.2s ease,box-shadow 0.2s ease;}
-				tr.rbfw-acc-header .rbfw-acc-bar:hover{border-color:#d4b3c3;box-shadow:0 2px 8px rgba(16,24,40,0.06);}
-				tr.rbfw-acc-header.open .rbfw-acc-bar{background:#fdf2f7;border-color:var(--rbfw-pay-accent);}
+				tr.rbfw-acc-header .rbfw-acc-bar:hover{border-color:#a8c8e4;box-shadow:0 2px 8px rgba(16,24,40,0.06);}
+				tr.rbfw-acc-header.open .rbfw-acc-bar{background:#eff6fc;border-color:var(--rbfw-pay-accent);}
 				tr.rbfw-acc-header .rbfw-acc-title{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#1d2327;margin:0;}
 				tr.rbfw-acc-header.open .rbfw-acc-title{color:var(--rbfw-pay-accent);}
 				tr.rbfw-acc-header .rbfw-acc-arrow{transition:transform 0.2s ease;color:#50575e;line-height:1;}
