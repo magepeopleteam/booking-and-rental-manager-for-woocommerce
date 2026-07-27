@@ -802,6 +802,8 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
                     <input type="hidden" id="rbfw_minimum_booking_day" value="0">
                     <input type="hidden" id="rbfw_maximum_booking_day" value="0">
+                    <?php // Filled in by rbfw_bikecarmd_ajax_min_max_and_offdays_info once an item is picked. ?>
+                    <input type="hidden" id="rbfw_datewise_minmax" value="[]">
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days" value="[]">
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" value="[]">
 

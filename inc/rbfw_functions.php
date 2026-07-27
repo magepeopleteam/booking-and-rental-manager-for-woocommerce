@@ -1894,6 +1894,142 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 		}
 	}
 	/****************************************************
+	 * Date-wise Min/Max booking-day ranges for an item
+	 *
+	 * Single resolution point for every per-date-range min/max override that can
+	 * apply to a rental item. It starts with the Min & Max Booking Day addon's own
+	 * date-wise rows, then lets other addons (Seasonal Pricing, for one) contribute
+	 * their periods through the `rbfw_datewise_minmax_ranges` filter. Without this
+	 * a second addon would have to duplicate the whole front-end resolution.
+	 *
+	 * Each returned range is [ start_date, end_date, min_days, max_days ]. A limit
+	 * left as '' means "keep the item's global value"; a real number — 0 included,
+	 * which reads as "no cap" for max — overrides it. Earlier ranges win, so the
+	 * addon's explicit rows take precedence over anything appended afterwards.
+	 *
+	 * @param int $post_id Rental item ID.
+	 * @return array<int,array<string,mixed>>
+	 ****************************************************/
+	function rbfw_get_datewise_minmax_ranges( $post_id ) {
+		$post_id = absint( $post_id );
+		$ranges  = array();
+
+		if ( ! $post_id || ! rbfw_check_min_max_booking_day_active() ) {
+			return $ranges;
+		}
+
+		if ( get_post_meta( $post_id, 'rbfw_enable_datewise_minmax', true ) === 'yes' ) {
+			$datewise = get_post_meta( $post_id, 'rbfw_datewise_minmax', true );
+			if ( is_array( $datewise ) ) {
+				$ranges = array_values( $datewise );
+			}
+		}
+
+		$ranges = apply_filters( 'rbfw_datewise_minmax_ranges', $ranges, $post_id );
+		if ( ! is_array( $ranges ) ) {
+			return array();
+		}
+
+		$clean = array();
+		foreach ( $ranges as $range ) {
+			if ( ! is_array( $range ) ) {
+				continue;
+			}
+
+			$start = isset( $range['start_date'] ) ? sanitize_text_field( (string) $range['start_date'] ) : '';
+			$end   = isset( $range['end_date'] ) ? sanitize_text_field( (string) $range['end_date'] ) : '';
+			if ( '' === $start || '' === $end || ! strtotime( $start ) || ! strtotime( $end ) ) {
+				continue;
+			}
+
+			$min = ( isset( $range['min_days'] ) && '' !== $range['min_days'] && is_numeric( $range['min_days'] ) )
+				? absint( $range['min_days'] ) : '';
+			$max = ( isset( $range['max_days'] ) && '' !== $range['max_days'] && is_numeric( $range['max_days'] ) )
+				? absint( $range['max_days'] ) : '';
+
+			// A range that overrides neither limit would only shadow later ranges.
+			if ( '' === $min && '' === $max ) {
+				continue;
+			}
+
+			$clean[] = array(
+				'start_date' => $start,
+				'end_date'   => $end,
+				'min_days'   => $min,
+				'max_days'   => $max,
+			);
+		}
+
+		return $clean;
+	}
+
+	/****************************************************
+	 * Midnight timestamp for a booking date
+	 *
+	 * Drops any time component before parsing so two dates can be compared, and
+	 * subtracted, as whole calendar days. Parsing "Y-m-d H:i" and then trimming
+	 * would be timezone-dependent; trimming the string first is not.
+	 *
+	 * @param string $value Date, optionally with a time component.
+	 * @return int|false Timestamp at local midnight, or false when unparseable.
+	 ****************************************************/
+	function rbfw_booking_day_timestamp( $value ) {
+		$value = trim( (string) $value );
+		if ( '' === $value ) {
+			return false;
+		}
+
+		if ( preg_match( '/^(\d{4}-\d{2}-\d{2})/', $value, $matches ) ) {
+			return strtotime( $matches[1] . ' 00:00:00' );
+		}
+
+		$parsed = strtotime( $value );
+
+		return $parsed ? strtotime( gmdate( 'Y-m-d', $parsed ) . ' 00:00:00' ) : false;
+	}
+
+	/****************************************************
+	 * Effective min/max booking days for a pick-up date
+	 *
+	 * Server-side twin of rbfwEffectiveMinMax() in md_script.js: the first
+	 * date-wise range containing $start_date wins, and any limit it leaves unset
+	 * falls back to the item's global value.
+	 *
+	 * @param int    $post_id    Rental item ID.
+	 * @param string $start_date Pick-up date (Y-m-d).
+	 * @return array{min:int,max:int} Days; 0 means "not limited".
+	 ****************************************************/
+	function rbfw_get_effective_minmax_days( $post_id, $start_date ) {
+		$post_id = absint( $post_id );
+		$eff     = array(
+			'min' => (int) get_post_meta( $post_id, 'rbfw_minimum_booking_day', true ),
+			'max' => (int) get_post_meta( $post_id, 'rbfw_maximum_booking_day', true ),
+		);
+
+		// Compare whole days so a time component can't push a date out of its range.
+		$start_ts = rbfw_booking_day_timestamp( $start_date );
+		if ( ! $start_ts ) {
+			return $eff;
+		}
+
+		foreach ( rbfw_get_datewise_minmax_ranges( $post_id ) as $range ) {
+			$from = rbfw_booking_day_timestamp( $range['start_date'] );
+			$to   = rbfw_booking_day_timestamp( $range['end_date'] );
+			if ( ! $from || ! $to || $start_ts < $from || $start_ts > $to ) {
+				continue;
+			}
+			if ( '' !== $range['min_days'] ) {
+				$eff['min'] = (int) $range['min_days'];
+			}
+			if ( '' !== $range['max_days'] ) {
+				$eff['max'] = (int) $range['max_days'];
+			}
+			break;
+		}
+
+		return $eff;
+	}
+	/****************************************************
 	 * Check Discount Over Days Plugin Active
 	 ****************************************************/
 	function rbfw_check_discount_over_days_plugin_active() {

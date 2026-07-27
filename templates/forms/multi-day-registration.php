@@ -819,10 +819,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
                         $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
                     }
-                    if(get_post_meta($post_id, 'rbfw_enable_datewise_minmax', true) === 'yes'){
-                        $dw = get_post_meta($post_id, 'rbfw_datewise_minmax', true);
-                        $rbfw_datewise_minmax = is_array($dw) ? array_values($dw) : array();
-                    }
+                    // Per-date-range overrides from the Min/Max addon plus any other
+                    // addon that hooks rbfw_datewise_minmax_ranges (e.g. Seasonal Pricing).
+                    $rbfw_datewise_minmax = rbfw_get_datewise_minmax_ranges($post_id);
                 }
 
                 $day_wise_imventory = '';
