@@ -168,50 +168,26 @@
 				// page reads as a guided setup rather than a wall of controls.
 				$this->render_mode_intro( $mode, ( 'both' === $availability ) );
 
-				// --- States with no real choice: explain what's active and, when WooCommerce
-				//     is the missing piece, offer to install/activate it right here. ---
-				if ( 'both' !== $availability ) {
-					$note_class = ( 'none' === $availability ) ? ' rbfw-bm-auto-note--warn' : '';
-					$icon       = ( 'none' === $availability ) ? 'dashicons-warning' : 'dashicons-yes-alt';
-
-					if ( 'none' === $availability ) {
-						$msg = __( 'No booking flow is available yet: WooCommerce is not active and the Pro plugin is not active. Activate WooCommerce or the Pro plugin to start taking bookings.', 'booking-and-rental-manager-for-woocommerce' );
-					} elseif ( 'woocommerce_only' === $availability ) {
-						$msg = __( 'Bookings are automatically processed through WooCommerce — it\'s the only booking flow available right now. Activate the Pro plugin to unlock the standalone Custom Payment flow (and a mode switch here).', 'booking-and-rental-manager-for-woocommerce' );
-					} else { // custom_only
-						$msg = __( 'Bookings are automatically processed through the Custom Payment flow — WooCommerce is not active. Activate WooCommerce to unlock the WooCommerce checkout flow (and a mode switch here).', 'booking-and-rental-manager-for-woocommerce' );
-					}
-					?>
-					<div class="rbfw-bm-auto-note<?php echo esc_attr( $note_class ); ?>">
-						<span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
-						<div>
-							<p><?php echo esc_html( $msg ); ?></p>
-							<?php if ( ! $this->has_woo() ) : ?>
-								<p class="rbfw-bm-auto-note-cta"><?php echo $this->wc_install_button(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-							<?php endif; ?>
-						</div>
-					</div>
-					<?php
-					$this->render_mode_context_banner( $mode );
-					$this->booking_mode_styles();
-					return;
-				}
-
-				// --- $availability === 'both': a real choice between two live flows. ---
-				$is_wc       = ( 'woocommerce' === $mode );
-				$is_custom   = ( 'standalone' === $mode );
-				$checker     = class_exists( 'RBFW_Payment_Status_Checker' ) ? new RBFW_Payment_Status_Checker() : null;
-				$has_gateway = $checker ? $checker->has_gateway_for_active_mode() : true;
+				// The two flow cards are ALWAYS shown as the modern switcher. A flow that
+				// isn't available right now — WooCommerce inactive, or Custom Payment with
+				// no gateway on a free/no-Pro site — renders DISABLED with a CTA to unlock
+				// it, instead of collapsing the whole switcher to a plain note.
+				$woo_available    = $this->has_woo();
+				$custom_available = ( $this->is_pro() || RBFW_Function::offline_payment_enabled() );
+				$is_wc            = ( 'woocommerce' === $mode );
+				$is_custom        = ( 'standalone' === $mode );
+				$checker          = class_exists( 'RBFW_Payment_Status_Checker' ) ? new RBFW_Payment_Status_Checker() : null;
+				$has_gateway      = $checker ? $checker->has_gateway_for_active_mode() : true;
 				?>
-				<div class="rbfw-bm-wrap" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_save_booking_mode' ) ); ?>">
+				<div class="rbfw-bm-wrap<?php echo ( 'both' === $availability ) ? '' : ' rbfw-bm-single'; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_save_booking_mode' ) ); ?>">
 					<div class="rbfw-bm-head">
 						<h3><?php esc_html_e( 'Step 1 — Choose your booking flow', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 						<p><?php esc_html_e( 'Pick exactly one flow to process bookings. This single switch decides everything below, so WooCommerce and Custom Payment never both try to handle the same booking. Your choice is saved instantly, and only the matching settings are shown.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 					</div>
 
 					<div class="rbfw-bm-cards">
-						<label class="rbfw-bm-card<?php echo $is_wc ? ' is-selected' : ''; ?>" data-mode="woocommerce">
-							<input type="radio" name="rbfw_booking_mode_radio" value="woocommerce" <?php checked( $is_wc ); ?>>
+						<label class="rbfw-bm-card<?php echo $is_wc ? ' is-selected' : ''; echo $woo_available ? '' : ' is-disabled'; ?>" data-mode="woocommerce"<?php echo $woo_available ? '' : ' aria-disabled="true"'; ?>>
+							<input type="radio" name="rbfw_booking_mode_radio" value="woocommerce" <?php checked( $is_wc ); ?> <?php disabled( ! $woo_available ); ?>>
 							<span class="rbfw-bm-card-icon dashicons dashicons-cart"></span>
 							<span class="rbfw-bm-card-body">
 								<span class="rbfw-bm-card-title-row">
@@ -219,10 +195,13 @@
 									<span class="rbfw-bm-card-badge"><span class="rbfw-bm-dot rbfw-blink"></span><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 								</span>
 								<span class="rbfw-bm-card-desc"><?php esc_html_e( 'Bookings go through the WooCommerce cart, checkout, and orders.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+								<?php if ( ! $woo_available ) : ?>
+									<span class="rbfw-bm-card-cta"><?php echo $this->wc_install_button(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built from escaped parts. ?></span>
+								<?php endif; ?>
 							</span>
 						</label>
-						<label class="rbfw-bm-card<?php echo $is_custom ? ' is-selected' : ''; ?>" data-mode="standalone">
-							<input type="radio" name="rbfw_booking_mode_radio" value="standalone" <?php checked( $is_custom ); ?>>
+						<label class="rbfw-bm-card<?php echo $is_custom ? ' is-selected' : ''; echo $custom_available ? '' : ' is-disabled'; ?>" data-mode="standalone"<?php echo $custom_available ? '' : ' aria-disabled="true"'; ?>>
+							<input type="radio" name="rbfw_booking_mode_radio" value="standalone" <?php checked( $is_custom ); ?> <?php disabled( ! $custom_available ); ?>>
 							<span class="rbfw-bm-card-icon dashicons dashicons-money-alt"></span>
 							<span class="rbfw-bm-card-body">
 								<span class="rbfw-bm-card-title-row">
@@ -230,6 +209,9 @@
 									<span class="rbfw-bm-card-badge"><span class="rbfw-bm-dot rbfw-blink"></span><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 								</span>
 								<span class="rbfw-bm-card-desc"><?php esc_html_e( 'Bookings are taken directly via PayPal, Stripe, or Offline payment — no WooCommerce.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+								<?php if ( ! $custom_available ) : ?>
+									<span class="rbfw-bm-card-cta rbfw-bm-card-cta--hint"><?php esc_html_e( 'Enable the free Offline gateway below (or upgrade to PRO for PayPal & Stripe).', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+								<?php endif; ?>
 							</span>
 						</label>
 					</div>
@@ -305,7 +287,7 @@
 					function hideToast(){ if ($toast) { clearTimeout(toastTimer); $toast.removeClass('is-visible'); } }
 
 					var saving = false;
-					$wrap.on('click', '.rbfw-bm-card', function(){
+					$wrap.on('click', '.rbfw-bm-card:not(.is-disabled)', function(){
 						var $card = $(this), mode = $card.data('mode');
 						if (saving || $card.hasClass('is-selected')) { return; }
 
@@ -438,7 +420,15 @@
 				.rbfw-bm-card-badge{flex:0 0 auto;display:none !important;align-items:center;gap:5px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;background:#dcfce7;color:#166534;padding:2px 9px;border-radius:20px;}
 				.rbfw-bm-card.is-selected .rbfw-bm-card-badge{display:inline-flex !important;}
 				.rbfw-bm-dot{width:6px;height:6px;border-radius:50%;background:#16a34a;display:inline-block;flex:0 0 auto;}
-				.rbfw-bm-wrap.is-saving .rbfw-bm-card{cursor:progress;}
+				.rbfw-bm-wrap.is-saving .rbfw-bm-card:not(.is-disabled){cursor:progress;}
+				/* Unavailable flow: shown but not selectable, with a CTA to unlock it. */
+				.rbfw-bm-card.is-disabled{cursor:default;background:#f6f7f9;border-style:dashed;}
+				.rbfw-bm-card.is-disabled:hover{border-color:#e5e7eb;box-shadow:none;}
+				.rbfw-bm-card.is-disabled .rbfw-bm-card-icon{background:#eef0f3;color:#9ca3af;}
+				.rbfw-bm-card.is-disabled .rbfw-bm-card-body strong{color:#6b7280;}
+				.rbfw-bm-card-cta{display:block;margin-top:10px;}
+				.rbfw-bm-card-cta .button{white-space:nowrap;}
+				.rbfw-bm-card-cta--hint{font-size:11.5px;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:6px 9px;line-height:1.45;}
 				.rbfw-bm-gateway-warning{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;}
 				.rbfw-bm-gateway-warning p{margin:0;}
 				.rbfw-bm-auto-note{display:flex;align-items:flex-start;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:10px;padding:12px 16px;margin:4px 0 14px;font-size:12.5px;}
@@ -511,78 +501,75 @@
 					<p><?php esc_html_e( 'Accept payments directly without WooCommerce. Configure a gateway below, then enable it for the Standalone / Custom Payment checkout.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 				</div>
 
-				<!-- PayPal Card -->
-				<div class="gateway-card paypal-card">
-					<div class="gateway-header">
-						<div class="gateway-id">
+				<div class="rbfw-gw-grid">
+					<!-- PayPal Card -->
+					<div class="gateway-card paypal-card">
+						<div class="gateway-top">
 							<span class="gateway-icon">
 								<svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106z" fill="#fff"/>
 								</svg>
 							</span>
-							<span class="gateway-meta">
-								<span class="gateway-name"><?php esc_html_e( 'PayPal', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-								<span class="gateway-sub"><?php esc_html_e( 'Cards & PayPal balance', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-							</span>
-						</div>
-						<?php if ( $is_pro ) : ?>
-							<span class="gateway-status <?php echo $pp_enabled ? 'active' : ''; ?>"><?php echo esc_html( $pp_enabled ? $enabled_txt : $disabled_txt ); ?></span>
-						<?php endif; ?>
-						<div class="gateway-actions">
 							<?php if ( $is_pro ) : ?>
-								<button type="button" class="gateway-configure-btn" id="rbfw-paypal-configure-btn"><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+								<span class="gateway-status <?php echo $pp_enabled ? 'active' : ''; ?>"><?php echo esc_html( $pp_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 							<?php else : ?>
 								<?php echo wp_kses_post( $pro_badge ); ?>
 							<?php endif; ?>
 						</div>
+						<span class="gateway-meta">
+							<span class="gateway-name"><?php esc_html_e( 'PayPal', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span class="gateway-sub"><?php esc_html_e( 'Cards & PayPal balance', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</span>
+						<?php if ( $is_pro ) : ?>
+							<div class="gateway-actions">
+								<button type="button" class="gateway-configure-btn" id="rbfw-paypal-configure-btn"><span class="dashicons dashicons-admin-generic"></span><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							</div>
+						<?php endif; ?>
 					</div>
-				</div>
 
-				<!-- Stripe Card -->
-				<div class="gateway-card stripe-card">
-					<div class="gateway-header">
-						<div class="gateway-id">
+					<!-- Stripe Card -->
+					<div class="gateway-card stripe-card">
+						<div class="gateway-top">
 							<span class="gateway-icon">
 								<svg width="26" height="26" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
 									<path fill="#fff" d="M14.07 15.11c-1.85-.43-2.61-.79-2.61-1.63 0-.79.75-1.33 1.95-1.33 1.34 0 2.87.41 4.31 1.09V8.65c-1.39-.56-2.93-.84-4.52-.84-3.8 0-6.66 1.96-6.66 5.25 0 3.73 3.32 4.96 6.03 5.61 2.05.49 2.8.92 2.8 1.8 0 .86-.87 1.48-2.3 1.48-1.57 0-3.37-.53-5.06-1.54v4.75c1.67.75 3.59 1.13 5.51 1.13 4.13 0 7-2 7-5.34-.01-3.6-3.6-4.41-6.45-5.84z"/>
 								</svg>
 							</span>
-							<span class="gateway-meta">
-								<span class="gateway-name"><?php esc_html_e( 'Stripe', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-								<span class="gateway-sub"><?php esc_html_e( 'Credit & debit cards', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-							</span>
-						</div>
-						<?php if ( $is_pro ) : ?>
-							<span class="gateway-status <?php echo $st_enabled ? 'active' : ''; ?>"><?php echo esc_html( $st_enabled ? $enabled_txt : $disabled_txt ); ?></span>
-						<?php endif; ?>
-						<div class="gateway-actions">
 							<?php if ( $is_pro ) : ?>
-								<button type="button" class="gateway-configure-btn" id="rbfw-stripe-configure-btn"><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+								<span class="gateway-status <?php echo $st_enabled ? 'active' : ''; ?>"><?php echo esc_html( $st_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 							<?php else : ?>
 								<?php echo wp_kses_post( $pro_badge ); ?>
 							<?php endif; ?>
 						</div>
+						<span class="gateway-meta">
+							<span class="gateway-name"><?php esc_html_e( 'Stripe', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span class="gateway-sub"><?php esc_html_e( 'Credit & debit cards', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</span>
+						<?php if ( $is_pro ) : ?>
+							<div class="gateway-actions">
+								<button type="button" class="gateway-configure-btn" id="rbfw-stripe-configure-btn"><span class="dashicons dashicons-admin-generic"></span><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							</div>
+						<?php endif; ?>
 					</div>
-				</div>
 
-				<!-- Offline Payment Card -->
-				<div class="gateway-card offline-card">
-					<div class="gateway-header">
-						<div class="gateway-id">
+					<!-- Offline Payment Card -->
+					<div class="gateway-card offline-card">
+						<div class="gateway-top">
 							<span class="gateway-icon">
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M3 19h18a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
 									<path d="M2 10h20M6 14h4" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
 								</svg>
 							</span>
-							<span class="gateway-meta">
-								<span class="gateway-name"><?php esc_html_e( 'Offline Payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-								<span class="gateway-sub"><?php esc_html_e( 'Bank transfer, cash, pay on pickup', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-							</span>
+							<?php // Offline Payment is FREE — always show its live status + Configure (PayPal/Stripe stay Pro-gated above). ?>
+							<span class="gateway-status <?php echo $off_enabled ? 'active' : ''; ?>"><?php echo esc_html( $off_enabled ? $enabled_txt : $disabled_txt ); ?></span>
 						</div>
-						<span class="gateway-status <?php echo $off_enabled ? 'active' : ''; ?>"><?php echo esc_html( $off_enabled ? $enabled_txt : $disabled_txt ); ?></span>
+						<span class="gateway-meta">
+							<span class="gateway-name"><?php esc_html_e( 'Offline Payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span class="gateway-sub"><?php esc_html_e( 'Bank transfer, cash, pay on pickup', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</span>
 						<div class="gateway-actions">
-							<button type="button" class="gateway-configure-btn" id="rbfw-offline-configure-btn"><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+							<button type="button" class="gateway-configure-btn" id="rbfw-offline-configure-btn"><span class="dashicons dashicons-admin-generic"></span><?php esc_html_e( 'Configure', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 						</div>
 					</div>
 				</div>
@@ -968,28 +955,32 @@
 				.rbfw-gw-intro h3{margin:0 0 4px;font-size:16px;font-weight:700;color:#1d2327;}
 				.rbfw-gw-intro p{margin:0;font-size:13px;color:#6b7280;max-width:680px;line-height:1.6;}
 
-				/* Gateway cards (Custom Payment) */
+				/* Gateway cards (Custom Payment) — modern responsive card grid.
+				   Each card exposes its brand colour via --gw / --gw2 custom
+				   properties so the accent strip, icon badge, and Configure button
+				   all share one palette per gateway. */
 				.payment-gateways-container th{display:none;}
 				.payment-gateways-container td{padding:0 !important;}
-				.gateway-card{border:none;border-radius:14px;margin-bottom:14px;box-shadow:0 6px 18px rgba(16,24,40,0.10);width:100%;box-sizing:border-box;color:#fff;overflow:hidden;transition:transform 0.18s ease,box-shadow 0.18s ease;}
-				.gateway-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(16,24,40,0.16);}
-				.gateway-card .gateway-header{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;}
-				.gateway-card .gateway-id{display:flex;align-items:center;gap:14px;min-width:0;flex:1 1 0;}
-				.gateway-card .gateway-icon{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;}
-				.gateway-card .gateway-meta{display:flex;flex-direction:column;min-width:0;}
-				.gateway-card .gateway-name{font-size:16px;font-weight:700;color:#fff;line-height:1.3;}
-				.gateway-card .gateway-sub{font-size:12px;color:rgba(255,255,255,0.82);line-height:1.4;}
-				.gateway-card .gateway-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex:1 1 0;}
-				.gateway-card .gateway-status{display:inline-block;min-width:78px;text-align:center;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;padding:4px 11px;border-radius:20px;background:rgba(255,255,255,0.2);color:#fff;font-weight:700;}
-				.gateway-card .gateway-status.active{background:#fff;}
-				.gateway-card.paypal-card{background:linear-gradient(135deg,#003087 0%,#0079C1 100%);}
-				.gateway-card.paypal-card .gateway-status.active{color:#003087;}
-				.gateway-card.stripe-card{background:linear-gradient(135deg,#635bff 0%,#3f36c5 100%);}
-				.gateway-card.stripe-card .gateway-status.active{color:#635bff;}
-				.gateway-card.offline-card{background:linear-gradient(135deg,#0f766e 0%,#115e59 100%);}
-				.gateway-card.offline-card .gateway-status.active{color:#0f766e;}
-				.gateway-card .gateway-configure-btn{cursor:pointer;color:#1d2327 !important;background:#fff !important;border:none !important;font-weight:600 !important;font-size:13px !important;border-radius:8px !important;padding:7px 16px !important;line-height:1.4 !important;box-shadow:0 2px 6px rgba(0,0,0,0.18) !important;transition:opacity 0.15s ease;}
-				.gateway-card .gateway-configure-btn:hover{opacity:0.9;}
+				.rbfw-gw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-bottom:22px;}
+				.gateway-card{--gw:var(--rbfw-pay-accent);--gw2:var(--rbfw-pay-accent);position:relative;display:flex;flex-direction:column;gap:14px;background:#fff;border:1px solid #eceef2;border-radius:16px;padding:22px 20px 18px;box-shadow:0 4px 14px rgba(16,24,40,0.06);overflow:hidden;box-sizing:border-box;transition:transform 0.18s ease,box-shadow 0.18s ease,border-color 0.18s ease;}
+				.gateway-card:before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gw),var(--gw2));}
+				.gateway-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(16,24,40,0.13);border-color:var(--gw);}
+				.gateway-card.paypal-card{--gw:#0079C1;--gw2:#003087;}
+				.gateway-card.stripe-card{--gw:#635bff;--gw2:#3f36c5;}
+				.gateway-card.offline-card{--gw:#0f766e;--gw2:#115e59;}
+				.gateway-card .gateway-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+				.gateway-card .gateway-icon{flex:0 0 auto;width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--gw),var(--gw2));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px -6px var(--gw);}
+				.gateway-card .gateway-meta{display:flex;flex-direction:column;gap:3px;min-width:0;}
+				.gateway-card .gateway-name{font-size:16px;font-weight:700;color:#1d2327;line-height:1.3;}
+				.gateway-card .gateway-sub{font-size:12.5px;color:#6b7280;line-height:1.45;}
+				.gateway-card .gateway-status{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;text-transform:uppercase;letter-spacing:0.5px;padding:5px 11px;border-radius:20px;background:#f3f4f6;color:#6b7280;font-weight:700;white-space:nowrap;}
+				.gateway-card .gateway-status:before{content:"";width:6px;height:6px;border-radius:50%;background:#9ca3af;}
+				.gateway-card .gateway-status.active{background:#dcfce7;color:#166534;}
+				.gateway-card .gateway-status.active:before{background:#22c55e;}
+				.gateway-card .gateway-actions{display:flex;margin-top:auto;}
+				.gateway-card .gateway-configure-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;width:100%;cursor:pointer;color:var(--gw) !important;background:#fff !important;border:1.5px solid var(--gw) !important;font-weight:700 !important;font-size:13.5px !important;border-radius:10px !important;padding:9px 16px !important;line-height:1.4 !important;transition:color 0.16s ease,background 0.16s ease,box-shadow 0.16s ease;}
+				.gateway-card .gateway-configure-btn .dashicons{font-size:16px;width:16px;height:16px;line-height:1;}
+				.gateway-card .gateway-configure-btn:hover{color:#fff !important;background:linear-gradient(135deg,var(--gw),var(--gw2)) !important;box-shadow:0 8px 18px -6px var(--gw) !important;}
 				.rbfw-gw-pro-badge{background:linear-gradient(135deg,#f6d365 0%,#fda085 100%);color:#fff;padding:5px 12px;border-radius:20px;font-weight:bold;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 2px 6px rgba(253,160,133,0.4);}
 
 				/* Booking confirmation page */
