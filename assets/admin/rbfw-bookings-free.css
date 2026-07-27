@@ -21,7 +21,10 @@
 /* Locked (blurred) sections — non-interactive, no real data behind them */
 .rbfwfb-locked { position: relative; margin-bottom: 16px; border-radius: 12px; overflow: hidden; }
 .rbfwfb-locked > .rbfwfb-stats,
-.rbfwfb-locked > .rbfwfb-filters { filter: blur(5px); opacity: .55; pointer-events: none; user-select: none; }
+.rbfwfb-locked > .rbfwfb-filters,
+.rbfwfb-locked > .rbfwfb-locked-stack { filter: blur(5px); opacity: .55; pointer-events: none; user-select: none; }
+/* Stats + filters share one lock, so they stack inside a single blurred wrapper */
+.rbfwfb-locked-stack { display: grid; gap: 16px; }
 .rbfwfb-lock-overlay {
 	position: absolute; inset: 0; display: flex; flex-direction: column;
 	align-items: center; justify-content: center; gap: 8px; text-align: center;

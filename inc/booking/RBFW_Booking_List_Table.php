@@ -156,9 +156,7 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 					<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_go_pro_page' ) ); ?>" class="rbfwfb-pro-cta"><span class="dashicons dashicons-star-filled"></span><?php esc_html_e( 'Upgrade to PRO', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 				</div>
 
-				<?php $this->render_locked_stats(); ?>
-
-				<?php $this->render_locked_filters(); ?>
+				<?php $this->render_locked_preview(); ?>
 
 				<div class="rbfwfb-table-wrap">
 					<div class="rbfwfb-table-toolbar">
@@ -199,7 +197,14 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 			<?php
 		}
 
-		private function render_locked_stats() {
+		/**
+		 * Blurred stats + filters preview behind a SINGLE PRO overlay.
+		 *
+		 * These were two separately locked blocks, which stacked two identical PRO
+		 * badges on one screen and read as nagging. One container, one badge, one
+		 * message covering both features.
+		 */
+		private function render_locked_preview() {
 			// Deliberately no real data behind the blur (pitfall #6).
 			$cards = array(
 				array( 'dashicons-cart', esc_html__( 'Total Bookings', 'booking-and-rental-manager-for-woocommerce' ) ),
@@ -207,41 +212,32 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 				array( 'dashicons-clock', esc_html__( 'Pending', 'booking-and-rental-manager-for-woocommerce' ) ),
 			);
 			?>
-			<div class="rbfwfb-locked">
-				<div class="rbfwfb-stats" aria-hidden="true">
-					<?php foreach ( $cards as $card ) : ?>
-						<div class="rbfwfb-stat">
-							<span class="rbfwfb-stat-icon dashicons <?php echo esc_attr( $card[0] ); ?>"></span>
-							<div>
-								<span class="rbfwfb-stat-value">•••</span>
-								<span class="rbfwfb-stat-label"><?php echo esc_html( $card[1] ); ?></span>
+			<div class="rbfwfb-locked rbfwfb-locked-preview">
+				<div class="rbfwfb-locked-stack" aria-hidden="true">
+					<div class="rbfwfb-stats">
+						<?php foreach ( $cards as $card ) : ?>
+							<div class="rbfwfb-stat">
+								<span class="rbfwfb-stat-icon dashicons <?php echo esc_attr( $card[0] ); ?>"></span>
+								<div>
+									<span class="rbfwfb-stat-value">•••</span>
+									<span class="rbfwfb-stat-label"><?php echo esc_html( $card[1] ); ?></span>
+								</div>
 							</div>
-						</div>
-					<?php endforeach; ?>
-				</div>
-				<div class="rbfwfb-lock-overlay">
-					<span class="rbfwfb-pro-badge"><span class="dashicons dashicons-lock"></span><?php esc_html_e( 'PRO', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					<p><?php esc_html_e( 'Booking analytics & revenue insights are a PRO feature.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-				</div>
-			</div>
-			<?php
-		}
-
-		private function render_locked_filters() {
-			?>
-			<div class="rbfwfb-locked rbfwfb-locked-filters">
-				<div class="rbfwfb-filters" aria-hidden="true">
-					<div class="rbfwfb-filter-field">
-						<span class="dashicons dashicons-search"></span>
-						<input type="text" placeholder="<?php esc_attr_e( 'Search bookings…', 'booking-and-rental-manager-for-woocommerce' ); ?>" disabled />
+						<?php endforeach; ?>
 					</div>
-					<select disabled><option><?php esc_html_e( 'All Sources', 'booking-and-rental-manager-for-woocommerce' ); ?></option></select>
-					<select disabled><option><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option></select>
-					<select disabled><option><?php esc_html_e( 'All Items', 'booking-and-rental-manager-for-woocommerce' ); ?></option></select>
+					<div class="rbfwfb-filters">
+						<div class="rbfwfb-filter-field">
+							<span class="dashicons dashicons-search"></span>
+							<input type="text" placeholder="<?php esc_attr_e( 'Search bookings…', 'booking-and-rental-manager-for-woocommerce' ); ?>" disabled />
+						</div>
+						<select disabled><option><?php esc_html_e( 'All Sources', 'booking-and-rental-manager-for-woocommerce' ); ?></option></select>
+						<select disabled><option><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option></select>
+						<select disabled><option><?php esc_html_e( 'All Items', 'booking-and-rental-manager-for-woocommerce' ); ?></option></select>
+					</div>
 				</div>
 				<div class="rbfwfb-lock-overlay">
 					<span class="rbfwfb-pro-badge"><span class="dashicons dashicons-lock"></span><?php esc_html_e( 'PRO', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					<p><?php esc_html_e( 'Search, filtering & CSV export are available in PRO.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					<p><?php esc_html_e( 'Booking analytics, search, filtering & CSV export are PRO features.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 				</div>
 			</div>
 			<?php
