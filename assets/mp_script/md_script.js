@@ -9,7 +9,19 @@ var disabledDates = [];
 // #rbfw_datewise_minmax (JSON) server-side and refreshed via AJAX. Returns the
 // global values unchanged when date-wise is disabled or nothing matches.
 function rbfwEffectiveMinMax(dateYmd, globalMin, globalMax) {
-    var eff = { min: globalMin, max: globalMax };
+    // A limit left blank on a range means "keep the global value"; only a real
+    // number overrides it (0 included — for max that reads as "no cap"). Anything
+    // unparseable falls back too, so a missing hidden field can't yield NaN and
+    // hand an Invalid Date to the datepicker.
+    function limit(value, fallback) {
+        if (value === '' || value === null || typeof value === 'undefined') {
+            return fallback;
+        }
+        var n = parseInt(value, 10);
+        return isNaN(n) ? fallback : n;
+    }
+
+    var eff = { min: limit(globalMin, 0), max: limit(globalMax, 0) };
     var dw = [];
     try { dw = JSON.parse(jQuery('#rbfw_datewise_minmax').val()) || []; } catch (e) {}
     if (dw.length && dateYmd) {
@@ -17,8 +29,8 @@ function rbfwEffectiveMinMax(dateYmd, globalMin, globalMax) {
         for (var i = 0; i < dw.length; i++) {
             var s = new Date(dw[i].start_date), e = new Date(dw[i].end_date);
             if (!isNaN(s.getTime()) && !isNaN(e.getTime()) && d >= s && d <= e) {
-                eff.min = parseInt(dw[i].min_days, 10) || 0;
-                eff.max = parseInt(dw[i].max_days, 10) || 0;
+                eff.min = limit(dw[i].min_days, eff.min);
+                eff.max = limit(dw[i].max_days, eff.max);
                 break;
             }
         }
@@ -461,6 +473,16 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
             let minDate = new Date(gYear,  gMonth - 1, gDay );
             minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
             jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
+
+            // Mirror the single-item calendar so the search can't offer a span the
+            // item page would reject. Only cap when a maximum is actually set.
+            if (rbfw_maximum_booking_day) {
+                let maxDate = new Date(gYear,  gMonth - 1, gDay );
+                maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
+                jQuery(".dropoff_date_search").datepicker("option", "maxDate", maxDate);
+            } else {
+                jQuery(".dropoff_date_search").datepicker("option", "maxDate", null);
+            }
         },
     });
 

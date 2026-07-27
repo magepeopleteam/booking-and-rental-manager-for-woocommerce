@@ -347,12 +347,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
                     $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
                 }
-                // Date-wise overrides (only when enabled): per-range min/max applied
-                // on the front end based on the selected pick-up date.
-                if ( get_post_meta($post_id, 'rbfw_enable_datewise_minmax', true) === 'yes' ) {
-                    $dw = get_post_meta($post_id, 'rbfw_datewise_minmax', true);
-                    $rbfw_datewise_minmax = is_array($dw) ? array_values($dw) : array();
-                }
+                // Date-wise overrides applied on the front end based on the selected
+                // pick-up date: the Min/Max addon's own rows plus anything other
+                // addons contribute via rbfw_datewise_minmax_ranges.
+                $rbfw_datewise_minmax = rbfw_get_datewise_minmax_ranges($post_id);
             }
 
             echo wp_json_encode( array(
