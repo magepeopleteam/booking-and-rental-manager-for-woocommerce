@@ -175,21 +175,27 @@ Inventory page now shows both the single-day and multi-day stock models.
 Fee Configuration now respects its enable toggle everywhere.
 Single-day item variations charge the base rate once, with quantity and price shown consistently.
 Sample data import moved to a non-blocking corner widget with progress.
+Dismissible Pro feature notice added, shown while Pro is inactive.
+WooCommerce bookings now stay in step across the order, the Bookings list and the Booking Calendar for the whole life of the order.
 Fixed the [rbfw_booking_search] form layout on mobile.
-Fixed the calendar still showing bookings deleted from the Bookings page.
+Fixed the calendar still showing bookings deleted from the Bookings page, and the availability they were holding is released.
 Fixed modern editor rent-type switching and the Discount addon card.
 Fixed documentation links.
 
 2.7.3
-Unified coupon and discount engine for both WooCommerce and Standalone bookings.
+Bookings can now be taken without WooCommerce: a standalone booking engine with its own Bookings post type, admin Bookings list, status management, native checkout and confirmation page.
+New Payments settings tab, with WooCommerce gateways configurable inline using each gateway's own settings form.
+Payment status checker added, warning in the admin when no usable payment method is enabled.
+Unified coupon and discount engine for both WooCommerce and Standalone bookings, with its own coupon post type and usage counters.
 Rental Docs added — in-admin documentation covering the free and Pro features.
 Multi-location inventory and pricing for every rental type, plus a By Location tab on the Inventory page.
 Booking search rebuilt: multi-item date, location and type search with in-page booking and checkout.
 Per-attendee registration form data across all booking surfaces.
+Front-end display badges are now configurable for text, colour and visibility.
 Global Settings redesigned, the Status page moved in as a tab, and the whole page made mobile responsive.
 Order List gained CSV and PDF export, a revenue summary, and an Export Settings accordion.
+Booking admin screens can now be delegated to roles without manage_options.
 Edit Stock added to the Inventory page, including extra-service stock.
-Standalone booking status management and native checkout flow added.
 Buffer Time is now enforced server-side and no longer overrides the "today booking" setting.
 Single-day hourly inventory, sold-out time slots and end-time handling fixed.
 Server-side availability checks added to prevent double booking.
@@ -202,7 +208,7 @@ Admin and frontend strings made translatable; POT and all 7 locale files regener
 New modern full-page rental item editor, now the default, with the classic editor still available.
 Rental Items list redesigned: responsive layout, list view by default, image and author columns, icon actions and trash support.
 Duplicate action added to the rental list.
-Muffin theme templates added for single-day, multi-day, resort and multi-item bookings.
+Muffin theme layouts reworked for single-day, multi-day, resort and multi-item bookings, with slider and calendar fixes.
 WooCommerce install and demo import are now chunked and low-memory safe.
 Fixed a 504 timeout when filtering the Rent List by multiple categories.
 Fixed broken access control in admin handlers by adding capability checks.
