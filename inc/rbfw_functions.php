@@ -504,6 +504,23 @@ function rbfw_url_exclude_search_engine() {
         global $rbfw;
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
+	if ( ! function_exists( 'rbfw_allow_duplicate_rental_cart_items' ) ) {
+		/**
+		 * Whether the same rental product may be added to the cart more than once.
+		 *
+		 * Read the stored settings array directly so this value is also reliable in
+		 * WP-CLI and background contexts where rbfw_get_option() intentionally skips.
+		 *
+		 * @return bool
+		 */
+		function rbfw_allow_duplicate_rental_cart_items() {
+			$settings = get_option( 'rbfw_basic_gen_settings', array() );
+
+			return is_array( $settings )
+				&& isset( $settings['rbfw_allow_duplicate_rental_cart_item'] )
+				&& 'yes' === $settings['rbfw_allow_duplicate_rental_cart_item'];
+		}
+	}
 	// Deprecated function - use esc_html_e() instead
 	function rbfw_string( $option_name, $default_string ) {
 		echo esc_html( $default_string );

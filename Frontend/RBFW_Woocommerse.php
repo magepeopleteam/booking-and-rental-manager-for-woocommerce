@@ -13,6 +13,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_buffer_lead_time'), 15, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_location_stock'), 25, 3 );
+            add_filter( 'woocommerce_is_sold_individually', array($this , 'rbfw_rental_product_sold_individually'), 10, 2 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
@@ -79,13 +80,35 @@ if (!class_exists('RBFW_Woocommerce')) {
             return false;
         }
 
+        /**
+         * Keep WooCommerce's sold-individually state aligned with the rental setting.
+         *
+         * Rental items are represented in the cart by hidden WooCommerce products.
+         * Those products historically stored `_sold_individually = yes`, which made
+         * WooCommerce reject a second booking even when duplicates were enabled.
+         * Apply the setting at runtime so existing hidden products are fixed
+         * immediately, while leaving ordinary WooCommerce products untouched.
+         *
+         * @param bool       $sold_individually Current WooCommerce product value.
+         * @param WC_Product $product           Product being evaluated.
+         * @return bool
+         */
+        public function rbfw_rental_product_sold_individually( $sold_individually, $product ) {
+            if ( ! is_a( $product, 'WC_Product' ) ) {
+                return $sold_individually;
+            }
+
+            $rbfw_id = absint( get_post_meta( $product->get_id(), 'link_rbfw_id', true ) );
+
+            if ( ! $rbfw_id || 'rbfw_item' !== get_post_type( $rbfw_id ) ) {
+                return $sold_individually;
+            }
+
+            return ! rbfw_allow_duplicate_rental_cart_items();
+        }
+
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
-
-
-            $rbfw_allow_duplicate_rental_cart_item = rbfw_get_option( 'rbfw_allow_duplicate_rental_cart_item', 'rbfw_basic_gen_settings' );
-
-            // If share section is disabled, don't display it
-            if ( $rbfw_allow_duplicate_rental_cart_item !== 'yes' ) {
+            if ( ! rbfw_allow_duplicate_rental_cart_items() ) {
                 foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
                     $_product = $values['data'];
 
@@ -2826,7 +2849,6 @@ if (!class_exists('RBFW_Woocommerce')) {
     }
     new RBFW_Woocommerce();
 }
-
 
 
 
