@@ -123,7 +123,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
 	        update_post_meta( $post_id, 'link_wc_product', $pid );
 	        update_post_meta( $pid, 'link_rbfw_id', $post_id );
 	        update_post_meta( $pid, '_price', 0.01 );
-	        update_post_meta( $pid, '_sold_individually', 'yes' );
+	        update_post_meta( $pid, '_sold_individually', $this->sold_individually_meta_value() );
 	        update_post_meta( $pid, '_virtual', 'no' );
 	        $terms = array('exclude-from-catalog', 'exclude-from-search');
 	        wp_set_object_terms($pid, $terms, 'product_visibility');
@@ -148,7 +148,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
 		        update_post_meta( $post_id, 'link_wc_product', $pid );
 		        update_post_meta( $pid, 'link_rbfw_id', $post_id );
 		        update_post_meta( $pid, '_price', 0.01 );
-		        update_post_meta( $pid, '_sold_individually', 'yes' );
+		        update_post_meta( $pid, '_sold_individually', $this->sold_individually_meta_value() );
 		        update_post_meta( $pid, '_virtual', 'no' );
 		        $terms = array('exclude-from-catalog', 'exclude-from-search');
 		        wp_set_object_terms($pid, $terms, 'product_visibility');
@@ -209,7 +209,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
                 update_post_meta($product_id, '_tax_class', $_tax_class);
                 update_post_meta($product_id, '_stock_status', 'instock');
                 update_post_meta($product_id, '_manage_stock', 'no');
-                update_post_meta($product_id, '_sold_individually', 'yes');
+                update_post_meta($product_id, '_sold_individually', $this->sold_individually_meta_value());
 
                 $my_post = array(
                     'ID'         => $product_id,
@@ -220,6 +220,15 @@ if (!class_exists('RBFW_Hidden_Product')) {
                 wp_update_post($my_post);
             }
 }
+
+        /**
+         * Return the WooCommerce meta value matching the duplicate-cart setting.
+         *
+         * @return string "no" when duplicate rental bookings are enabled, otherwise "yes".
+         */
+        private function sold_individually_meta_value() {
+            return rbfw_allow_duplicate_rental_cart_items() ? 'no' : 'yes';
+        }
 
         public function hide_wc_hidden_product_from_product_list($query) {
 	        global $pagenow;

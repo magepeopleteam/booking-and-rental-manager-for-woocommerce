@@ -11,6 +11,6 @@ function rbfw_set_cart_item_price_func( $value, $rbfw_id ) {
     $value['data']->set_price( $total_price );
     $value['data']->set_regular_price( $total_price );
     $value['data']->set_sale_price( $total_price );
-    $value['data']->set_sold_individually( 'yes' );
+    $value['data']->set_sold_individually( ! rbfw_allow_duplicate_rental_cart_items() );
     $value['data']->get_price();
 }
