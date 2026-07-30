@@ -12,8 +12,8 @@ $rbfw_fee_data 	= rbfw_get_enabled_fee_data( $rbfw_id );
 do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
 
 
-$security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
-$rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_management_info'] : [];
+$security_deposit_amount 	= $cart_item['security_deposit_amount'] ?? '';
+$rbfw_management_info 	= $cart_item['rbfw_management_info'] ?? [];
 
 
 
