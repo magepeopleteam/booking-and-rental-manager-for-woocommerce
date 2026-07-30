@@ -179,7 +179,7 @@
 				$checker          = class_exists( 'RBFW_Payment_Status_Checker' ) ? new RBFW_Payment_Status_Checker() : null;
 				$has_gateway      = $checker ? $checker->has_gateway_for_active_mode() : true;
 				?>
-				<div class="rbfw-bm-wrap<?php echo ( 'both' === $availability ) ? '' : ' rbfw-bm-single'; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_save_booking_mode' ) ); ?>">
+				<div class="rbfw-bm-wrap<?php echo ( 'both' === $availability ) ? '' : ' rbfw-bm-single'; ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'rbfw_save_booking_mode' ) ); ?>"<?php echo RBFW_Function::needs_mode_selection() ? ' data-unconfirmed="1"' : ''; ?>>
 					<div class="rbfw-bm-head">
 						<h3><?php esc_html_e( 'Step 1 — Choose your booking flow', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 						<p><?php esc_html_e( 'Pick exactly one flow to process bookings. This single switch decides everything below, so WooCommerce and Custom Payment never both try to handle the same booking. Your choice is saved instantly, and only the matching settings are shown.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -289,7 +289,12 @@
 					var saving = false;
 					$wrap.on('click', '.rbfw-bm-card:not(.is-disabled)', function(){
 						var $card = $(this), mode = $card.data('mode');
-						if (saving || $card.hasClass('is-selected')) { return; }
+						// Clicking the already-selected card is normally a no-op — EXCEPT while no
+						// choice has ever been stored (data-unconfirmed), when the card shown as
+						// selected is only the auto-resolved default. Clicking it then IS the admin
+						// confirming that default and must be persisted; otherwise the install stays
+						// "mode never chosen" forever and keeps being prompted for it.
+						if (saving || ($card.hasClass('is-selected') && !$wrap.data('unconfirmed'))) { return; }
 
 						// Remember the current selection so we can roll back on failure.
 						var $prev     = $wrap.find('.rbfw-bm-card.is-selected');
@@ -315,6 +320,9 @@
 						$.post(ajaxurl, { action:'rbfw_save_booking_mode', nonce:nonce, mode:mode })
 							.done(function(res){
 								if (res && res.success) {
+									// The choice is stored now, so the selected card goes back to
+									// being a no-op on click.
+									$wrap.removeAttr('data-unconfirmed').removeData('unconfirmed');
 									showToast('success', i18n.savedTitle, i18n.savedSub.replace('%s', modeLabel));
 
 									// Refresh the "no gateway enabled" warning for the newly active mode.
