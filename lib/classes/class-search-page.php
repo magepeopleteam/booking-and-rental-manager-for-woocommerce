@@ -362,8 +362,26 @@
 
 			public function display_filter_rent_items( $post_id, $post_title, $the_content, $style, $d ) {
 				global $rbfw;
-				$post_featured_img = ! empty( get_the_post_thumbnail_url( $post_id, 'full' ) ) ? get_the_post_thumbnail_url( $post_id,
-					'full' ) : RBFW_PLUGIN_URL . '/assets/images/no_image.png';
+				/**
+				 * FIX: item images vanished as soon as any filter was applied.
+				 * This AJAX renderer only read the featured image, while the archive
+				 * templates (grid_new.php / list_new.php) fall back to the first
+				 * rbfw_gallery_images attachment. Items whose photos live only in the
+				 * Gallery tab therefore rendered no_image.png in filtered results.
+				 * Precedence is kept identical to the templates: featured image first,
+				 * then the first gallery image, then the placeholder.
+				 */
+				$post_featured_img = get_the_post_thumbnail_url( $post_id, 'full' );
+				if ( empty( $post_featured_img ) ) {
+					$gallery_images = maybe_unserialize( get_post_meta( $post_id, 'rbfw_gallery_images', true ) );
+					if ( ! empty( $gallery_images ) && is_array( $gallery_images ) ) {
+						$first_image       = absint( reset( $gallery_images ) );
+						$post_featured_img = $first_image ? wp_get_attachment_image_url( $first_image, 'full' ) : '';
+					}
+				}
+				if ( empty( $post_featured_img ) ) {
+					$post_featured_img = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
+				}
 				$post_link         = get_the_permalink();
 				$book_now_label    = (
                 ( $rbfw->get_option_trans( 'rbfw_text_book_now', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
