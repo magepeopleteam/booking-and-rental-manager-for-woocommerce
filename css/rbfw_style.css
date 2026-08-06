@@ -14137,3 +14137,16 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
 	background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px;
 	font-size: 12.5px; color: #6d28d9; line-height: 1.5;
 }
+
+/* A locked leg is a statement, not a choice — it reads as settled rather than disabled. */
+.rbfw-delivery-option.is-locked {
+	border-color: var(--color_theme, #6d28d9);
+	background: #faf5ff;
+	cursor: default;
+}
+.rbfw-delivery-option.is-locked input[type="checkbox"] {
+	opacity: 1;
+	cursor: default;
+	accent-color: var(--color_theme, #6d28d9);
+}
+.rbfw-delivery-option.is-locked .rbfw-delivery-option-hint { color: #7c3aed; }

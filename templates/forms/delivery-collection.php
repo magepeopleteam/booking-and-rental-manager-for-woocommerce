@@ -70,10 +70,21 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 	data-collection-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['collection_band_rows'] ) ); ?>">
 
 	<?php
-	/* When both legs are mandatory they are pre-selected: the shop is not offering a
-	   choice, it is telling the customer what the rental includes. They can still see the
-	   price and fill in the address; unticking one is what the validator refuses. */
+	/*
+	 * When both legs are mandatory they are shown ticked and LOCKED, not merely
+	 * pre-selected. Leaving them clickable invited the obvious question — if it is
+	 * required, why can I untick it? — and turned a statement of what the rental includes
+	 * into a trap that only complained at submit time.
+	 *
+	 * A disabled checkbox does not submit, so each locked leg carries a hidden input with
+	 * the real field name. The server re-checks the rule regardless, so the lock is honest
+	 * UI rather than the control.
+	 *
+	 * Only locked when the shop offers BOTH legs; if one is switched off there is nothing
+	 * to pair it with and the remaining leg stays an ordinary choice.
+	 */
 	$rbfw_delivery_both = ( 'both' === $rbfw_delivery_cfg['require_mode'] );
+	$rbfw_delivery_lock = ( $rbfw_delivery_both && $rbfw_delivery_cfg['enabled'] && $rbfw_delivery_cfg['collection_enabled'] );
 	?>
 	<div class="rbfw-single-right-heading">
 		<?php esc_html_e( 'Delivery &amp; Collection', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -97,18 +108,34 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 
 		<div class="rbfw-delivery-options">
 			<?php if ( $rbfw_delivery_cfg['enabled'] ) : ?>
-				<label class="rbfw-delivery-option">
-					<input type="checkbox" name="rbfw_delivery_wanted" value="yes" class="rbfw-delivery-toggle" <?php checked( $rbfw_delivery_both ); ?>>
+				<label class="rbfw-delivery-option <?php echo esc_attr( $rbfw_delivery_lock ? 'is-locked' : '' ); ?>">
+					<input type="checkbox" name="<?php echo esc_attr( $rbfw_delivery_lock ? '' : 'rbfw_delivery_wanted' ); ?>" value="yes" class="rbfw-delivery-toggle"
+						<?php checked( $rbfw_delivery_both ); ?> <?php disabled( $rbfw_delivery_lock ); ?>>
+					<?php if ( $rbfw_delivery_lock ) : ?>
+						<input type="hidden" name="rbfw_delivery_wanted" value="yes" class="rbfw-delivery-locked-value">
+					<?php endif; ?>
 					<span class="rbfw-delivery-option-label"><?php echo esc_html( $rbfw_delivery_cfg['delivery_label'] ); ?></span>
-					<span class="rbfw-delivery-option-hint"><?php esc_html_e( 'We bring it to you', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					<span class="rbfw-delivery-option-hint">
+						<?php echo esc_html( $rbfw_delivery_lock
+							? __( 'Included with this rental', 'booking-and-rental-manager-for-woocommerce' )
+							: __( 'We bring it to you', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+					</span>
 				</label>
 			<?php endif; ?>
 
 			<?php if ( $rbfw_delivery_cfg['collection_enabled'] ) : ?>
-				<label class="rbfw-delivery-option">
-					<input type="checkbox" name="rbfw_collection_wanted" value="yes" class="rbfw-delivery-toggle" <?php checked( $rbfw_delivery_both ); ?>>
+				<label class="rbfw-delivery-option <?php echo esc_attr( $rbfw_delivery_lock ? 'is-locked' : '' ); ?>">
+					<input type="checkbox" name="<?php echo esc_attr( $rbfw_delivery_lock ? '' : 'rbfw_collection_wanted' ); ?>" value="yes" class="rbfw-delivery-toggle"
+						<?php checked( $rbfw_delivery_both ); ?> <?php disabled( $rbfw_delivery_lock ); ?>>
+					<?php if ( $rbfw_delivery_lock ) : ?>
+						<input type="hidden" name="rbfw_collection_wanted" value="yes" class="rbfw-delivery-locked-value">
+					<?php endif; ?>
 					<span class="rbfw-delivery-option-label"><?php echo esc_html( $rbfw_delivery_cfg['collection_label'] ); ?></span>
-					<span class="rbfw-delivery-option-hint"><?php esc_html_e( 'We pick it up afterwards', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					<span class="rbfw-delivery-option-hint">
+						<?php echo esc_html( $rbfw_delivery_lock
+							? __( 'Included with this rental', 'booking-and-rental-manager-for-woocommerce' )
+							: __( 'We pick it up afterwards', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+					</span>
 				</label>
 			<?php endif; ?>
 		</div>

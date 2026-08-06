@@ -48,9 +48,26 @@
 		return ( i && i[ key ] ) ? i[ key ] : fallback;
 	}
 
+	/**
+	 * Whether a leg is selected.
+	 *
+	 * A locked leg is a DISABLED checkbox plus a hidden input carrying the real field name,
+	 * because a disabled control does not submit. Reading `:checked` alone would therefore
+	 * report a mandatory leg as unselected and quote the customer nothing.
+	 *
+	 * @param {jQuery} $block
+	 * @param {string} name Field name.
+	 * @return {boolean}
+	 */
+	function legChosen( $block, name ) {
+		var $hidden = $block.find( 'input[type="hidden"][name="' + name + '"]' );
+		if ( $hidden.length ) { return 'yes' === $hidden.val(); }
+		return $block.find( 'input[name="' + name + '"]' ).is( ':checked' );
+	}
+
 	function update( $block ) {
-		var wantDelivery   = $block.find( 'input[name="rbfw_delivery_wanted"]' ).is( ':checked' );
-		var wantCollection = $block.find( 'input[name="rbfw_collection_wanted"]' ).is( ':checked' );
+		var wantDelivery   = legChosen( $block, 'rbfw_delivery_wanted' );
+		var wantCollection = legChosen( $block, 'rbfw_collection_wanted' );
 		var $fields        = $block.find( '.rbfw-delivery-fields' );
 		var $quote         = $block.find( '.rbfw-delivery-quote' );
 
@@ -221,16 +238,16 @@
 		};
 
 		var mode           = $block.attr( 'data-require-mode' ) || 'off';
-		var $delivery      = $block.find( 'input[name="rbfw_delivery_wanted"]' );
-		var $collection    = $block.find( 'input[name="rbfw_collection_wanted"]' );
-		var wantDelivery   = $delivery.is( ':checked' );
-		var wantCollection = $collection.is( ':checked' );
+		var hasDelivery    = $block.find( '[name="rbfw_delivery_wanted"]' ).length > 0;
+		var hasCollection  = $block.find( '[name="rbfw_collection_wanted"]' ).length > 0;
+		var wantDelivery   = legChosen( $block, 'rbfw_delivery_wanted' );
+		var wantCollection = legChosen( $block, 'rbfw_collection_wanted' );
 		var wants          = wantDelivery || wantCollection;
 
 		// "Both" only demands a leg the shop actually offers — a checkbox that was never
 		// rendered cannot be required, or nobody could book at all.
 		if ( 'both' === mode ) {
-			if ( ( $delivery.length && ! wantDelivery ) || ( $collection.length && ! wantCollection ) ) {
+			if ( ( hasDelivery && ! wantDelivery ) || ( hasCollection && ! wantCollection ) ) {
 				return fail( null, 'needBoth', 'This rental is booked with delivery and collection together — please select both.' );
 			}
 		} else if ( ! wants ) {
