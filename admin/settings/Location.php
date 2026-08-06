@@ -312,6 +312,44 @@
 				);
 
 				self::render_modern_location_inventory( $post_id, $locations );
+				self::render_modern_delivery( $post_id );
+			}
+
+			/**
+			 * Modern editor: the per-item delivery opt-out.
+			 *
+			 * Mirrors delivery_config() on the classic panel, using the modern editor's own
+			 * toggle-row component so it matches the rest of that screen. Same meta key, same
+			 * 'yes'/'no' values, so an item can be edited in either editor interchangeably.
+			 *
+			 * Renders nothing when the shop does not offer delivery — a switch that cannot do
+			 * anything is worse than no switch.
+			 *
+			 * @param int $post_id
+			 * @return void
+			 */
+			private static function render_modern_delivery( int $post_id ): void {
+				if ( ! function_exists( 'rbfw_delivery_is_enabled' ) || ! rbfw_delivery_is_enabled() ) {
+					return;
+				}
+
+				// No stored value means "follow the shop", which is ON — see
+				// rbfw_delivery_enabled_for_item().
+				$enabled = ( 'no' !== get_post_meta( $post_id, 'rbfw_enable_delivery', true ) );
+				?>
+				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<div class="rbfw-me-field__info">
+						<strong><?php esc_html_e( 'Allow Delivery & Collection', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<span class="rbfw-me-field__desc">
+							<?php esc_html_e( 'Let customers ask for this item to be delivered to them. Turn off for anything you cannot transport — the delivery fields are then hidden on this item\'s booking form. Pricing is shared across the shop and set in Settings → Delivery.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</span>
+					</div>
+					<label class="rbfw-me-toggle">
+						<input type="checkbox" name="rbfw_enable_delivery" value="yes" <?php checked( $enabled ); ?> class="rbfw-me-toggle__input" />
+						<span class="rbfw-me-toggle__track"><span class="rbfw-me-toggle__thumb"></span></span>
+					</label>
+				</div>
+				<?php
 			}
 
 			/**
