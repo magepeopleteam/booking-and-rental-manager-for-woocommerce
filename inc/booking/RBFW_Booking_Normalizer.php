@@ -695,15 +695,18 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 			if ( $filters['status'] ) {
 				$meta_query[] = array( 'key' => $status_meta_key, 'value' => sanitize_key( $filters['status'] ) );
 			}
-			// item_id / gateway are only reliable meta on native rows.
-			if ( self::CPT_CUSTOM === $cpt ) {
-				if ( $filters['item_id'] ) {
-					$meta_query[] = array( 'key' => 'rbfw_item_id', 'value' => absint( $filters['item_id'] ) );
-				}
-				if ( $filters['gateway'] ) {
-					$meta_query[] = array( 'key' => 'rbfw_payment_method', 'value' => sanitize_text_field( $filters['gateway'] ) );
-				}
+			// item_id is only reliable meta on native rows.
+			if ( self::CPT_CUSTOM === $cpt && $filters['item_id'] ) {
+				$meta_query[] = array( 'key' => 'rbfw_item_id', 'value' => absint( $filters['item_id'] ) );
 			}
+			/*
+			 * Payment is deliberately NOT filtered here. It used to be a meta_query on
+			 * `rbfw_payment_method`, which meant it only ever matched native rows and only ever
+			 * saw the GATEWAY — so the column could read "Card" while filtering for Card
+			 * returned nothing, and WooCommerce bookings were never filtered by payment at all.
+			 * It is resolved in PHP instead (see apply_php_filters), using exactly the same
+			 * accounting-method-then-gateway rule the column displays.
+			 */
 			if ( $meta_query ) {
 				$args['meta_query'] = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			}
@@ -756,6 +759,7 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		private static function apply_php_filters( $rows, $filters ) {
 			$search  = strtolower( trim( (string) $filters['search'] ) );
 			$item_id = absint( $filters['item_id'] );
+			$gateway = strtolower( trim( (string) $filters['gateway'] ) );
 
 			// Rental-date range. Inclusive on both ends; a booking matches when its period
 			// OVERLAPS the range, so a 10–20 Aug rental is found by a search for 15 Aug.
@@ -767,11 +771,11 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 
 			$delivery = in_array( $filters['delivery'], array( 'yes', 'no' ), true ) ? $filters['delivery'] : '';
 
-			if ( '' === $search && ! $item_id && ! $rental_from && ! $rental_to && '' === $delivery ) {
+			if ( '' === $search && ! $item_id && ! $rental_from && ! $rental_to && '' === $delivery && '' === $gateway ) {
 				return $rows;
 			}
 
-			return array_values( array_filter( $rows, static function ( $row ) use ( $search, $item_id, $rental_from, $rental_to, $delivery ) {
+			return array_values( array_filter( $rows, static function ( $row ) use ( $search, $item_id, $rental_from, $rental_to, $delivery, $gateway ) {
 				// item filter for WooCommerce rows (native rows already filtered in SQL).
 				if ( $item_id && RBFW_Booking_Normalizer::SOURCE_WOO === $row['source'] && (int) $row['item_id'] !== $item_id ) {
 					return false;
@@ -795,6 +799,31 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 				if ( '' !== $delivery ) {
 					$wanted = ! empty( $row['delivery']['wanted'] );
 					if ( ( 'yes' === $delivery ) !== $wanted ) {
+						return false;
+					}
+				}
+
+				/*
+				 * Payment. Matches the RECORDED accounting method first and falls back to the
+				 * gateway — the same order the Payment Method column displays, so filtering by
+				 * what is on screen returns what is on screen. Both the slug and the label are
+				 * accepted, because the dropdown is built from the registry (slugs) while older
+				 * bookings carry a free-text gateway title.
+				 */
+				if ( '' !== $gateway ) {
+					$candidates = array( strtolower( (string) $row['gateway'] ) );
+
+					if ( function_exists( 'rbfw_get_booking_payment_method' ) ) {
+						$method = rbfw_get_booking_payment_method( $row['id'] );
+						if ( '' !== $method['slug'] ) {
+							$candidates[] = strtolower( $method['slug'] );
+						}
+						if ( '' !== $method['label'] ) {
+							$candidates[] = strtolower( $method['label'] );
+						}
+					}
+
+					if ( ! in_array( $gateway, array_filter( $candidates ), true ) ) {
 						return false;
 					}
 				}
