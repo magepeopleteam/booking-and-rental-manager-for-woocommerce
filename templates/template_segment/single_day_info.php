@@ -437,6 +437,19 @@ if(isset($_POST['post_id'])){
 
 
 
+            <?php
+            /* Delivery & Collection.
+             *
+             * This panel is what the customer sees AFTER choosing a date and duration, which
+             * is exactly where the delivery question belongs — and it is rendered over AJAX,
+             * which is why placing the block in the static booking form never showed it on
+             * items using this step flow.
+             *
+             * $id is the rental item in this segment's scope. */
+            $rbfw_id = isset( $id ) ? $id : ( isset( $rbfw_id ) ? $rbfw_id : 0 );
+            include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+            ?>
+
             <div class="item rbfw_bikecarsd_price_summary">
                 <div class="item-content rbfw-costing">
                     <ul class="rbfw-ul">
@@ -444,6 +457,16 @@ if(isset($_POST['post_id'])){
                             <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
+
+                        <?php
+                        /* Delivery line in the running total. Hidden until a zone is chosen;
+                           the delivery script reveals and fills it. */
+                        if ( function_exists( 'rbfw_delivery_enabled_for_item' ) && rbfw_delivery_enabled_for_item( $rbfw_id ) ) : ?>
+                            <li class="rbfw-delivery-costing" style="display:none;">
+                                <?php echo esc_html__( 'Delivery','booking-and-rental-manager-for-woocommerce' ); ?>
+                                <span class="rbfw-delivery-cost-value"><?php echo wp_kses( wc_price( 0 ), rbfw_allowed_html() ); ?></span>
+                            </li>
+                        <?php endif; ?>
 
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                             <li class="extra_service_cost rbfw-cond" style="display: none">

@@ -14096,14 +14096,20 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
 .rbfw-delivery-fields { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
 .rbfw-delivery-field { display: flex; flex-direction: column; gap: 4px; }
 .rbfw-delivery-field label { font-size: 13px; font-weight: 600; color: #334155; }
-.rbfw-delivery-field .rbfw-input {
+.rbfw-delivery-field .rbfw-input,
+.rbfw-delivery-field .rbfw-select {
 	width: 100%; padding: 9px 12px;
 	border: 1.5px solid #e2e8f0; border-radius: 8px;
 	font-size: 14px; background: #fff;
 }
-.rbfw-delivery-field .rbfw-input:focus {
+.rbfw-delivery-field .rbfw-input:focus,
+.rbfw-delivery-field .rbfw-select:focus {
 	outline: none; border-color: var(--color_theme, #6d28d9);
 }
+/* The zone picker is the primary choice here, so it reads a step heavier than
+   the address box above it. */
+.rbfw-delivery-field .rbfw-delivery-distance { font-weight: 600; }
+.rbfw-delivery-range { display: block; font-size: 11.5px; color: #94a3b8; margin-top: 4px; }
 .rbfw-required { color: #dc2626; }
 
 .rbfw-delivery-quote {

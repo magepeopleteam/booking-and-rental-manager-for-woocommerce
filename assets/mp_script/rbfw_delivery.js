@@ -72,10 +72,10 @@
 		var bands   = readJson( $block, 'bands', [] );
 		var cBands  = readJson( $block, 'collection-bands', [] );
 
-		// Nothing typed yet — prompt rather than quoting a misleading zero.
+		// No zone chosen yet — prompt rather than quoting a misleading zero.
 		if ( ! $block.find( '.rbfw-delivery-distance' ).val() ) {
 			$quote.removeClass( 'is-error' ).html(
-				'<span class="rbfw-delivery-quote-hint">' + t( 'enterDistance', 'Enter the distance to see the price.' ) + '</span>'
+				'<span class="rbfw-delivery-quote-hint">' + t( 'enterDistance', 'Choose your area to see the price.' ) + '</span>'
 			);
 			$block.removeData( 'quote' );
 			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, error: 'incomplete' } ] );
@@ -129,6 +129,26 @@
 		$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: total, error: '' } ] );
 	}
 
+	/**
+	 * Mirror the delivery charge into the booking summary's own cost list.
+	 *
+	 * The summary total itself is owned by the plugin's pricing scripts and recalculated
+	 * server-side, so this only shows the delivery LINE — it never rewrites the total. The
+	 * authoritative figure still comes from the cart/checkout, which prices delivery from
+	 * the band table regardless of anything shown here.
+	 */
+	$( document.body ).on( 'rbfw_delivery_changed', function ( e, data ) {
+		var $line = $( '.rbfw-delivery-costing' );
+		if ( ! $line.length ) { return; }
+
+		if ( ! data || ! data.total ) {
+			$line.hide();
+			return;
+		}
+		$line.find( '.rbfw-delivery-cost-value' ).html( money( data.total ) );
+		$line.show();
+	} );
+
 	$( document ).on( 'change', '.rbfw-delivery-toggle', function () {
 		update( $( this ).closest( '.rbfw-delivery-block' ) );
 	} );
@@ -159,7 +179,7 @@
 		if ( ! $distance.val() || km < 0 ) {
 			e.preventDefault();
 			$distance.trigger( 'focus' );
-			$block.find( '.rbfw-delivery-quote' ).addClass( 'is-error' ).text( t( 'needDistance', 'Please tell us how far away you are.' ) );
+			$block.find( '.rbfw-delivery-quote' ).addClass( 'is-error' ).text( t( 'needDistance', 'Please choose how far you are from us.' ) );
 			return false;
 		}
 		if ( maxKm > 0 && km > maxKm ) {

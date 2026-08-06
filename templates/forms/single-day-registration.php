@@ -79,13 +79,6 @@
                 <?php endif; ?>
 
                 <?php
-                /* Delivery & Collection — renders nothing unless the shop offers it and this
-                   item allows it. Sits with the location fields because it answers the same
-                   question: where does this rental start and end? */
-                include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
-                ?>
-
-                <?php
                 // --- Flexible Rate box ---
                 $_rbfw_sd_raw   = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true );
                 $_rbfw_min_h    = 0;
@@ -276,6 +269,13 @@
                             </div>
                         </div>
                     </div>
+
+                    <?php
+                    /* Delivery & Collection — placed AFTER the date/duration step on purpose:
+                       the customer picks WHEN first, then how they get the bike. Renders
+                       nothing unless the shop offers delivery and this item allows it. */
+                    include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+                    ?>
 
                     <input type="hidden" name="service_type" id="rbfw_service_type_for_st" value="">
 
