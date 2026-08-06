@@ -1,0 +1,544 @@
+<?php
+/**
+ * Delivery & Collection mileage pricing.
+ *
+ * Prices a "we bring the bike to you / we pick it up again" service from the customer's
+ * distance, using admin-defined distance bands plus an optional flat base fee and a free
+ * radius. There is no external API and no API key: the customer states their address and
+ * how far away they are, and the band table turns that into a price.
+ *
+ * WHY IT PLUGS INTO THE FEE BUCKET
+ * The charge is emitted as a row in `rbfw_management_info` / `rbfw_management_price` — the
+ * same bucket rbfw_apply_location_charge() uses. That bucket already flows through the cart
+ * summary, the order meta, the PDF ticket, the Pro booking detail view and the Booking
+ * Editor's "Fees" line, so delivery appears everywhere with no changes to any of them.
+ *
+ * SECURITY
+ * The browser posts only the CHOICE — delivery yes/no, collection yes/no, an address and a
+ * distance. Every amount is resolved here, server-side, from the stored settings. This
+ * mirrors how optional fees already work in RBFW_Woocommerse (the form says WHICH fee was
+ * ticked; the server decides what it costs), so a tampered price in the request is ignored.
+ *
+ * @package booking-and-rental-manager-for-woocommerce
+ * @since 2.8.0
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	die;
+}
+
+/** Settings section id, shared by the settings screen and every reader below. */
+if ( ! defined( 'RBFW_DELIVERY_SECTION' ) ) {
+	define( 'RBFW_DELIVERY_SECTION', 'rbfw_delivery_settings' );
+}
+
+/**
+ * Default distance bands, used until the shop configures its own.
+ *
+ * @return array<int,array{from:float,to:float,price:float}>
+ */
+function rbfw_delivery_default_bands() {
+	return array(
+		array( 'from' => 0,  'to' => 5,  'price' => 0 ),
+		array( 'from' => 5,  'to' => 15, 'price' => 10 ),
+		array( 'from' => 15, 'to' => 30, 'price' => 20 ),
+	);
+}
+
+/**
+ * Normalize one stored band row.
+ *
+ * @param mixed $row
+ * @return array{from:float,to:float,price:float}|null Null when the row is unusable.
+ */
+function rbfw_delivery_normalize_band( $row ) {
+	if ( ! is_array( $row ) ) {
+		return null;
+	}
+	$from  = isset( $row['from'] ) ? (float) $row['from'] : 0;
+	$to    = isset( $row['to'] ) ? (float) $row['to'] : 0;
+	$price = isset( $row['price'] ) ? (float) $row['price'] : 0;
+
+	// A band that ends before it starts can never match; drop it rather than let it
+	// silently swallow a distance.
+	if ( $to <= $from ) {
+		return null;
+	}
+
+	return array(
+		'from'  => max( 0, $from ),
+		'to'    => max( 0, $to ),
+		'price' => max( 0, $price ),
+	);
+}
+
+/**
+ * Sanitize + sort a raw band list. Sorted ascending by `from` so the first match wins
+ * deterministically no matter what order the admin entered the rows in.
+ *
+ * @param mixed $raw
+ * @return array<int,array{from:float,to:float,price:float}>
+ */
+function rbfw_delivery_sanitize_bands( $raw ) {
+	if ( ! is_array( $raw ) ) {
+		return array();
+	}
+
+	$bands = array();
+	foreach ( $raw as $row ) {
+		$band = rbfw_delivery_normalize_band( $row );
+		if ( $band ) {
+			$bands[] = $band;
+		}
+	}
+
+	usort( $bands, static function ( $a, $b ) {
+		return $a['from'] <=> $b['from'];
+	} );
+
+	return $bands;
+}
+
+/**
+ * The shop's delivery configuration, fully normalized.
+ *
+ * Read directly from the stored option rather than through rbfw_get_option(), because this
+ * runs on pricing paths that also execute under WP-CLI and in cron, where rbfw_get_option()
+ * deliberately returns nothing (see inc/rbfw_functions.php:497).
+ *
+ * @return array
+ */
+function rbfw_delivery_settings( $force_refresh = false ) {
+	static $cache = null;
+	if ( null !== $cache && ! $force_refresh ) {
+		return $cache;
+	}
+
+	$opts = get_option( RBFW_DELIVERY_SECTION, array() );
+	$opts = is_array( $opts ) ? $opts : array();
+
+	$get = static function ( $key, $default = '' ) use ( $opts ) {
+		return isset( $opts[ $key ] ) && '' !== $opts[ $key ] ? $opts[ $key ] : $default;
+	};
+
+	$bands = rbfw_delivery_sanitize_bands( $get( 'rbfw_delivery_bands', array() ) );
+	if ( empty( $bands ) ) {
+		$bands = rbfw_delivery_default_bands();
+	}
+
+	$collection_bands = rbfw_delivery_sanitize_bands( $get( 'rbfw_collection_bands', array() ) );
+
+	$cache = array(
+		'enabled'            => 'on' === $get( 'rbfw_delivery_enable', 'off' ),
+		'collection_enabled' => 'on' === $get( 'rbfw_collection_enable', 'off' ),
+		// same | own | free
+		'collection_mode'    => in_array( $get( 'rbfw_collection_mode', 'same' ), array( 'same', 'own', 'free' ), true )
+			? $get( 'rbfw_collection_mode', 'same' )
+			: 'same',
+		'base_fee'           => max( 0, (float) $get( 'rbfw_delivery_base_fee', 0 ) ),
+		'free_radius'        => max( 0, (float) $get( 'rbfw_delivery_free_radius', 0 ) ),
+		'max_distance'       => max( 0, (float) $get( 'rbfw_delivery_max_distance', 0 ) ),
+		'bands'              => $bands,
+		'collection_band_rows' => $collection_bands,
+		'require_address'    => 'off' !== $get( 'rbfw_delivery_require_address', 'on' ),
+		'delivery_label'     => (string) $get( 'rbfw_delivery_label', __( 'Delivery', 'booking-and-rental-manager-for-woocommerce' ) ),
+		'collection_label'   => (string) $get( 'rbfw_collection_label', __( 'Collection', 'booking-and-rental-manager-for-woocommerce' ) ),
+		'help_text'          => (string) $get( 'rbfw_delivery_help_text', '' ),
+	);
+
+	/**
+	 * Filter the resolved delivery configuration.
+	 *
+	 * @since 2.8.0
+	 * @param array $cache Normalized settings.
+	 */
+	$cache = apply_filters( 'rbfw_delivery_settings', $cache );
+
+	return $cache;
+}
+
+/**
+ * Drop the memoized settings so the next read reflects a just-saved option.
+ *
+ * Hooked to the option write below, because the settings screen saves and then re-renders
+ * inside the SAME request — without this the admin would be shown the values from before
+ * their save.
+ *
+ * @return void
+ */
+function rbfw_delivery_flush_settings_cache() {
+	rbfw_delivery_settings( true );
+}
+add_action( 'update_option_' . RBFW_DELIVERY_SECTION, 'rbfw_delivery_flush_settings_cache', 10, 0 );
+add_action( 'add_option_' . RBFW_DELIVERY_SECTION, 'rbfw_delivery_flush_settings_cache', 10, 0 );
+
+/**
+ * Whether delivery is offered at all (shop-wide switch).
+ *
+ * @return bool
+ */
+function rbfw_delivery_is_enabled() {
+	$cfg = rbfw_delivery_settings();
+	return ! empty( $cfg['enabled'] ) || ! empty( $cfg['collection_enabled'] );
+}
+
+/**
+ * Whether delivery is offered for one rental item.
+ *
+ * The shop-wide switch is the master; each item may then opt OUT. A brand new item has no
+ * `rbfw_enable_delivery` meta at all, and that must mean "follow the shop", not "disabled" —
+ * otherwise turning delivery on would appear to do nothing until every item was re-saved.
+ *
+ * @param int $item_id rbfw_item post id.
+ * @return bool
+ */
+function rbfw_delivery_enabled_for_item( $item_id ) {
+	if ( ! rbfw_delivery_is_enabled() ) {
+		return false;
+	}
+
+	$item_id = absint( $item_id );
+	if ( ! $item_id ) {
+		return false;
+	}
+
+	$per_item = get_post_meta( $item_id, 'rbfw_enable_delivery', true );
+
+	// '' (never saved) inherits the shop-wide setting; only an explicit 'no' opts out.
+	$enabled = ( 'no' !== $per_item );
+
+	/**
+	 * Filter whether one item can be delivered.
+	 *
+	 * @since 2.8.0
+	 * @param bool $enabled
+	 * @param int  $item_id
+	 */
+	return (bool) apply_filters( 'rbfw_delivery_enabled_for_item', $enabled, $item_id );
+}
+
+/**
+ * Price for a distance from a band table.
+ *
+ * Bands are treated as [from, to] with an INCLUSIVE upper bound, so a table of 0–5 / 5–15
+ * has no gap at exactly 5 km. The first matching band wins (they are sorted ascending), so
+ * an overlapping table degrades to "the lowest band that covers this distance" instead of
+ * throwing or picking arbitrarily.
+ *
+ * @param float $km
+ * @param array $bands
+ * @return float|null Null when no band covers the distance.
+ */
+function rbfw_delivery_band_price( $km, $bands ) {
+	$km = (float) $km;
+	foreach ( $bands as $band ) {
+		if ( $km >= $band['from'] && $km <= $band['to'] ) {
+			return (float) $band['price'];
+		}
+	}
+	return null;
+}
+
+/**
+ * Human label for the band a distance falls into ("5 – 15 km").
+ *
+ * @param float $km
+ * @param array $bands
+ * @return string
+ */
+function rbfw_delivery_band_label( $km, $bands ) {
+	$km = (float) $km;
+	foreach ( $bands as $band ) {
+		if ( $km >= $band['from'] && $km <= $band['to'] ) {
+			return sprintf(
+				/* translators: 1: band lower bound, 2: band upper bound. */
+				__( '%1$s – %2$s km', 'booking-and-rental-manager-for-woocommerce' ),
+				rbfw_delivery_format_km( $band['from'] ),
+				rbfw_delivery_format_km( $band['to'] )
+			);
+		}
+	}
+	return '';
+}
+
+/**
+ * Format a distance without a pointless trailing ".0".
+ *
+ * @param float $km
+ * @return string
+ */
+function rbfw_delivery_format_km( $km ) {
+	$km = (float) $km;
+	return ( $km == (int) $km ) ? (string) (int) $km : rtrim( rtrim( number_format( $km, 2, '.', '' ), '0' ), '.' );
+}
+
+/**
+ * Quote delivery and/or collection for one booking.
+ *
+ * @param int   $item_id        rbfw_item post id.
+ * @param float $km             Distance the customer stated.
+ * @param bool  $want_delivery  Customer wants the bike delivered.
+ * @param bool  $want_collection Customer wants it collected again.
+ * `applied_delivery` / `applied_collection` say whether the service was GRANTED, which is
+ * not the same as costing money — inside the free radius a delivery is applied at 0.00. Any
+ * caller asking "was this booking delivered?" must read those, never the amounts.
+ *
+ * @return array{
+ *     delivery:float, collection:float, total:float, band:string, distance:float,
+ *     applied_delivery:bool, applied_collection:bool, error:string, error_code:string
+ * }
+ */
+function rbfw_delivery_quote( $item_id, $km, $want_delivery = false, $want_collection = false ) {
+	$empty = array(
+		'delivery'           => 0.0,
+		'collection'         => 0.0,
+		'total'              => 0.0,
+		'band'               => '',
+		'distance'           => 0.0,
+		'applied_delivery'   => false,
+		'applied_collection' => false,
+		'error'              => '',
+		'error_code'         => '',
+	);
+
+	if ( ! $want_delivery && ! $want_collection ) {
+		return $empty;
+	}
+	if ( ! rbfw_delivery_enabled_for_item( $item_id ) ) {
+		return $empty;
+	}
+
+	$cfg = rbfw_delivery_settings();
+
+	// Honour the two independent switches: a shop may deliver but not collect.
+	$want_delivery   = $want_delivery && ! empty( $cfg['enabled'] );
+	$want_collection = $want_collection && ! empty( $cfg['collection_enabled'] );
+	if ( ! $want_delivery && ! $want_collection ) {
+		return $empty;
+	}
+
+	$km = (float) $km;
+	if ( $km < 0 ) {
+		$km = 0;
+	}
+
+	// Out of range is a hard refusal, not a silent free delivery: quoting 0 for a 200 km
+	// journey would let the booking through at a price the shop never agreed to.
+	if ( $cfg['max_distance'] > 0 && $km > $cfg['max_distance'] ) {
+		return array_merge( $empty, array(
+			'distance'   => $km,
+			'error_code' => 'out_of_range',
+			'error'      => sprintf(
+				/* translators: %s: maximum distance in km. */
+				__( 'Sorry, we only deliver within %s km. Please contact us to arrange something.', 'booking-and-rental-manager-for-woocommerce' ),
+				rbfw_delivery_format_km( $cfg['max_distance'] )
+			),
+		) );
+	}
+
+	// Inside the free radius nothing is charged — but the service is still APPLIED, so the
+	// booking is correctly recorded as a delivery and shows as one on the calendar.
+	if ( $cfg['free_radius'] > 0 && $km <= $cfg['free_radius'] ) {
+		return array_merge( $empty, array(
+			'distance'           => $km,
+			'band'               => __( 'Free delivery zone', 'booking-and-rental-manager-for-woocommerce' ),
+			'applied_delivery'   => $want_delivery,
+			'applied_collection' => $want_collection,
+		) );
+	}
+
+	$band_price = rbfw_delivery_band_price( $km, $cfg['bands'] );
+	if ( null === $band_price ) {
+		return array_merge( $empty, array(
+			'distance'   => $km,
+			'error_code' => 'no_band',
+			'error'      => __( 'We could not work out a delivery price for that distance. Please contact us.', 'booking-and-rental-manager-for-woocommerce' ),
+		) );
+	}
+
+	$delivery = 0.0;
+	if ( $want_delivery ) {
+		$delivery = $cfg['base_fee'] + $band_price;
+	}
+
+	$collection = 0.0;
+	if ( $want_collection ) {
+		switch ( $cfg['collection_mode'] ) {
+			case 'free':
+				$collection = 0.0;
+				break;
+
+			case 'own':
+				$own = rbfw_delivery_band_price( $km, $cfg['collection_band_rows'] );
+				// An "own bands" table that does not cover this distance falls back to the
+				// delivery price rather than quoting 0 — under-charging is the worse failure.
+				$collection = ( null === $own ) ? ( $cfg['base_fee'] + $band_price ) : ( $cfg['base_fee'] + $own );
+				break;
+
+			case 'same':
+			default:
+				$collection = $cfg['base_fee'] + $band_price;
+				break;
+		}
+	}
+
+	$quote = array(
+		'delivery'           => round( max( 0, $delivery ), 2 ),
+		'collection'         => round( max( 0, $collection ), 2 ),
+		'total'              => round( max( 0, $delivery + $collection ), 2 ),
+		'band'               => rbfw_delivery_band_label( $km, $cfg['bands'] ),
+		'distance'           => $km,
+		'applied_delivery'   => $want_delivery,
+		'applied_collection' => $want_collection,
+		'error'              => '',
+		'error_code'         => '',
+	);
+
+	/**
+	 * Filter a delivery quote before it is charged.
+	 *
+	 * @since 2.8.0
+	 * @param array $quote
+	 * @param int   $item_id
+	 * @param float $km
+	 */
+	return apply_filters( 'rbfw_delivery_quote', $quote, $item_id, $km );
+}
+
+/**
+ * Read the delivery choice out of a submitted booking form.
+ *
+ * Only the CHOICE is taken from the request — never a price.
+ *
+ * @param array $input Sanitized form payload.
+ * @return array{delivery:bool,collection:bool,distance:float,address:string}
+ */
+function rbfw_delivery_input_from_form( $input ) {
+	$input = is_array( $input ) ? $input : array();
+
+	$truthy = static function ( $value ) {
+		return in_array( (string) $value, array( '1', 'yes', 'on', 'true' ), true );
+	};
+
+	$distance = isset( $input['rbfw_delivery_distance'] ) ? (float) str_replace( ',', '.', (string) $input['rbfw_delivery_distance'] ) : 0.0;
+
+	return array(
+		'delivery'   => isset( $input['rbfw_delivery_wanted'] ) && $truthy( $input['rbfw_delivery_wanted'] ),
+		'collection' => isset( $input['rbfw_collection_wanted'] ) && $truthy( $input['rbfw_collection_wanted'] ),
+		'distance'   => max( 0, $distance ),
+		'address'    => isset( $input['rbfw_delivery_address'] ) ? sanitize_text_field( (string) $input['rbfw_delivery_address'] ) : '',
+	);
+}
+
+/**
+ * Add the delivery / collection charge to a booking's fee bucket.
+ *
+ * Deliberately mirrors rbfw_apply_location_charge()'s shape (inc/rbfw_functions.php) so the
+ * two read alike at every call site.
+ *
+ * @param int   $item_id          rbfw_item post id.
+ * @param array $input            Raw sanitized form payload.
+ * @param array $management_info  Fee rows so far.
+ * @param float $management_price Fee total so far.
+ * @return array{0:array,1:float} [ $management_info, $management_price ]
+ */
+function rbfw_apply_delivery_charge( $item_id, $input, $management_info, $management_price ) {
+	$choice = rbfw_delivery_input_from_form( $input );
+	if ( ! $choice['delivery'] && ! $choice['collection'] ) {
+		return array( $management_info, $management_price );
+	}
+
+	$quote = rbfw_delivery_quote( $item_id, $choice['distance'], $choice['delivery'], $choice['collection'] );
+	if ( '' !== $quote['error'] ) {
+		// Refused quotes add nothing. The checkout paths surface the message separately;
+		// silently charging zero here is what must not happen.
+		return array( $management_info, $management_price );
+	}
+
+	$cfg      = rbfw_delivery_settings();
+	$distance = rbfw_delivery_format_km( $quote['distance'] );
+
+	if ( $quote['delivery'] > 0 ) {
+		$label = sprintf(
+			/* translators: 1: "Delivery" label, 2: distance in km. */
+			__( '%1$s (%2$s km)', 'booking-and-rental-manager-for-woocommerce' ),
+			$cfg['delivery_label'],
+			$distance
+		);
+		$management_info[ $label ] = array(
+			'price'      => $quote['delivery'],
+			'price_desc' => rbfw_delivery_price_html( $quote['delivery'] ),
+			'refundable' => 'no',
+		);
+		$management_price += $quote['delivery'];
+	}
+
+	if ( $quote['collection'] > 0 ) {
+		$label = sprintf(
+			/* translators: 1: "Collection" label, 2: distance in km. */
+			__( '%1$s (%2$s km)', 'booking-and-rental-manager-for-woocommerce' ),
+			$cfg['collection_label'],
+			$distance
+		);
+		$management_info[ $label ] = array(
+			'price'      => $quote['collection'],
+			'price_desc' => rbfw_delivery_price_html( $quote['collection'] ),
+			'refundable' => 'no',
+		);
+		$management_price += $quote['collection'];
+	}
+
+	return array( $management_info, $management_price );
+}
+
+/**
+ * Price markup for a fee row. WooCommerce may be inactive (Standalone mode), so wc_price()
+ * is never called unguarded.
+ *
+ * @param float $amount
+ * @return string
+ */
+function rbfw_delivery_price_html( $amount ) {
+	if ( function_exists( 'wc_price' ) ) {
+		return wc_price( (float) $amount );
+	}
+	$symbol = function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '';
+	return $symbol . number_format( (float) $amount, 2 );
+}
+
+/**
+ * Persist the delivery choice + resolved amounts on a booking.
+ *
+ * Written as flat meta on BOTH booking post types so the Bookings list, the calendar, the
+ * editor and the emails can read it with one get_post_meta() and no unserializing.
+ *
+ * @param int   $booking_id rbfw_booking or rbfw_order post id.
+ * @param int   $item_id    rbfw_item post id.
+ * @param array $input      Raw sanitized form payload.
+ * @return void
+ */
+function rbfw_delivery_save_booking_meta( $booking_id, $item_id, $input ) {
+	$booking_id = absint( $booking_id );
+	if ( ! $booking_id ) {
+		return;
+	}
+
+	$choice = rbfw_delivery_input_from_form( $input );
+	if ( ! $choice['delivery'] && ! $choice['collection'] ) {
+		return;
+	}
+
+	$quote = rbfw_delivery_quote( $item_id, $choice['distance'], $choice['delivery'], $choice['collection'] );
+	if ( '' !== $quote['error'] ) {
+		return;
+	}
+
+	// Record what was GRANTED, not what cost money — a free-radius delivery is still a
+	// delivery, and the calendar's "with / without delivery" badge depends on this.
+	update_post_meta( $booking_id, 'rbfw_delivery_wanted', $quote['applied_delivery'] ? 'yes' : 'no' );
+	update_post_meta( $booking_id, 'rbfw_collection_wanted', $quote['applied_collection'] ? 'yes' : 'no' );
+	update_post_meta( $booking_id, 'rbfw_delivery_distance', $quote['distance'] );
+	update_post_meta( $booking_id, 'rbfw_delivery_address', $choice['address'] );
+	update_post_meta( $booking_id, 'rbfw_delivery_amount', $quote['total'] );
+	update_post_meta( $booking_id, 'rbfw_delivery_band', $quote['band'] );
+}
