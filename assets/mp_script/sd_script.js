@@ -111,8 +111,10 @@
                                 // asset load can never throw here — an exception in complete
                                 // aborts the sequence before the global ajaxComplete fires,
                                 // which silently kills the variation-surcharge recalc.
-                                if (typeof rbfwScrollBookingWidgetIntoView === 'function') {
-                                    rbfwScrollBookingWidgetIntoView();
+                                // Date chosen: reveal the time-slot list this response
+                                // just rendered into the result area.
+                                if (typeof rbfwScrollBookingStepIntoView === 'function') {
+                                    rbfwScrollBookingStepIntoView('.rbfw-bikecarsd-result');
                                 }
                             }
                     });
