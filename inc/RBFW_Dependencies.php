@@ -50,6 +50,14 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_bikecarmd_ajax_min_max_and_offdays_info'   => wp_create_nonce('rbfw_bikecarmd_ajax_min_max_and_offdays_info_action'),
 				'nonce_native_checkout'                           => wp_create_nonce('rbfw_native_checkout_action'),
 				'nonce_apply_coupon'                              => wp_create_nonce('rbfw_apply_coupon_action'),
+				/* Booking-form submit nonce — the one wp_nonce_field('rbfw_ajax_action','nonce')
+				   prints into the registration templates. Unlike the AJAX nonces above it
+				   travels on a normal form POST, so the guard script cannot recover it from a
+				   403 retry: rbfw_nonce_guard.js refreshes this value into the form's hidden
+				   input before the customer submits. Without that, a page cached for longer
+				   than the nonce lifetime submits a dead nonce and the booking is built with
+				   no data at all (0,00 order + skipped availability check). */
+				'nonce_form_submit'                               => wp_create_nonce('rbfw_ajax_action'),
 			);
 		}
 

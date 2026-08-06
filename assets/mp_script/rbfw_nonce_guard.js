@@ -79,6 +79,45 @@
         }
     }
 
+    /**
+     * Booking-form nonce (wp_nonce_field('rbfw_ajax_action', 'nonce')).
+     *
+     * This one is posted by a normal form submit, not by AJAX, so the 403-retry
+     * path below can never rescue it: WooCommerce simply builds a rental line
+     * with no booking data (0,00 total, availability check skipped). It is also
+     * printed straight into the HTML, so a page cache serving HTML older than
+     * the 12-24 h nonce lifetime hands every visitor a dead nonce.
+     *
+     * Fix: the first time the customer touches a booking form, swap in a fresh
+     * nonce. Lazy on purpose — page views that never engage with the form cost
+     * no extra request, and anyone who does engage takes seconds to pick dates,
+     * far longer than the refresh needs.
+     */
+    function bindFormNonceRefresh() {
+        // Scoped to the rbfw booking forms only: `nonce` is a common field name,
+        // and rewriting another plugin's nonce would break its submit.
+        var FORM = 'form.mp_rbfw_ticket_form';
+        var done = false;
+
+        $(document).on('focusin change', FORM, function () {
+            if (done) {
+                return;
+            }
+            done = true;
+            refreshNonces().done(function (fresh) {
+                if (!fresh || !fresh.nonce_form_submit) {
+                    done = false; // let a later interaction try again
+                    return;
+                }
+                $(FORM).find('input[name="nonce"]').val(String(fresh.nonce_form_submit));
+            }).fail(function () {
+                done = false;
+            });
+        });
+    }
+
+    $(bindFormNonceRefresh);
+
     $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
         var cfg = config();
         if (!cfg || originalOptions._rbfwNonceRetry) {
