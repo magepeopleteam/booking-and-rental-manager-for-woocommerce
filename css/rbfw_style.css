@@ -14066,3 +14066,60 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     box-shadow: none !important;
     transform: none !important;
 }
+
+/* ==================================================================
+ * Delivery & Collection block (booking form)
+ * ================================================================== */
+.rbfw-delivery-options { display: flex; flex-direction: column; gap: 8px; }
+
+.rbfw-delivery-option {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	grid-template-areas: "cb label" "cb hint";
+	align-items: center;
+	gap: 0 10px;
+	padding: 10px 12px;
+	border: 1.5px solid #e2e8f0;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: border-color .15s ease, background .15s ease;
+}
+.rbfw-delivery-option:hover { border-color: #cbd5e1; background: #f8fafc; }
+.rbfw-delivery-option input { grid-area: cb; margin: 0; }
+.rbfw-delivery-option-label { grid-area: label; font-weight: 600; font-size: 14px; }
+.rbfw-delivery-option-hint { grid-area: hint; font-size: 12px; color: #64748b; }
+.rbfw-delivery-option:has(input:checked) {
+	border-color: var(--color_theme, #6d28d9);
+	background: #faf5ff;
+}
+
+.rbfw-delivery-fields { margin-top: 12px; display: flex; flex-direction: column; gap: 10px; }
+.rbfw-delivery-field { display: flex; flex-direction: column; gap: 4px; }
+.rbfw-delivery-field label { font-size: 13px; font-weight: 600; color: #334155; }
+.rbfw-delivery-field .rbfw-input {
+	width: 100%; padding: 9px 12px;
+	border: 1.5px solid #e2e8f0; border-radius: 8px;
+	font-size: 14px; background: #fff;
+}
+.rbfw-delivery-field .rbfw-input:focus {
+	outline: none; border-color: var(--color_theme, #6d28d9);
+}
+.rbfw-required { color: #dc2626; }
+
+.rbfw-delivery-quote {
+	display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+	font-size: 13.5px; color: #166534;
+	background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+	padding: 9px 12px;
+}
+.rbfw-delivery-quote:empty { display: none; }
+.rbfw-delivery-quote.is-error {
+	color: #991b1b; background: #fef2f2; border-color: #fecaca;
+}
+.rbfw-delivery-quote-hint { color: #64748b; }
+.rbfw-delivery-quote.is-error .rbfw-delivery-quote-hint { color: inherit; }
+.rbfw-delivery-quote-badge {
+	background: #dcfce7; color: #166534;
+	border-radius: 999px; padding: 2px 10px; font-size: 12px; font-weight: 600;
+}
+.rbfw-delivery-help { font-size: 12px; color: #64748b; margin: 0; line-height: 1.5; }

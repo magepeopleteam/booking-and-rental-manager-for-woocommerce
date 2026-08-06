@@ -413,6 +413,47 @@
 				<?php
 			}
 
+			/**
+			 * Per-item delivery opt-out.
+			 *
+			 * The shop-wide switch in Settings → Delivery is the master; this only lets an
+			 * individual item say "not this one" (a cargo bike that will not fit in the van,
+			 * say). It therefore renders nothing at all when the shop does not offer delivery,
+			 * rather than showing a control that cannot do anything.
+			 *
+			 * Stored as 'yes'/'no'. An item that has never been saved since the feature
+			 * shipped has NO value, which is read as "follow the shop" — see
+			 * rbfw_delivery_enabled_for_item().
+			 *
+			 * @param int $post_id Rental item id.
+			 * @return void
+			 */
+			public function delivery_config( $post_id ) {
+				if ( ! function_exists( 'rbfw_delivery_is_enabled' ) || ! rbfw_delivery_is_enabled() ) {
+					return;
+				}
+
+				$stored  = get_post_meta( $post_id, 'rbfw_enable_delivery', true );
+				$enabled = ( 'no' !== $stored );
+
+				$this->panel_header(
+					esc_html__( 'Delivery & Collection', 'booking-and-rental-manager-for-woocommerce' ),
+					esc_html__( 'Whether this item can be delivered. Pricing is shared across the shop and configured in Settings → Delivery.', 'booking-and-rental-manager-for-woocommerce' )
+				);
+				?>
+				<section>
+					<div>
+						<label><?php esc_html_e( 'Allow Delivery', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<p><?php esc_html_e( 'Turn off for items you cannot deliver. The delivery fields are then hidden on this item\'s booking form.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<label class="switch">
+						<input type="checkbox" name="rbfw_enable_delivery" value="yes" <?php checked( $enabled ); ?>>
+						<span class="slider round"></span>
+					</label>
+				</section>
+				<?php
+			}
+
 			public function add_tabs_content( $post_id ) {
 				?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_location_config">
@@ -468,6 +509,7 @@
 					<?php $this->location_inventory_config( $post_id ); ?>
 					<?php $this->panel_header( 'Drop-off Location Configuration', 'Here you can set drop off location.' ); ?>
 					<?php $this->drop_off_location_config( $post_id ); ?>
+					<?php $this->delivery_config( $post_id ); ?>
 					<?php do_action( 'rbfw_location_config_after', $post_id ); ?>
                 </div>
                 <script>
@@ -774,6 +816,17 @@
 					$rbfw_enable_dropoff_point = isset( $_POST['rbfw_enable_dropoff_point'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_dropoff_point'] ) ) : 'no';
 					update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
 					update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
+
+					/* Per-item delivery opt-out. Only written when the shop offers delivery at
+					   all — otherwise the control was never rendered, and saving 'no' from its
+					   absence would silently opt every item out the moment delivery is enabled. */
+					if ( function_exists( 'rbfw_delivery_is_enabled' ) && rbfw_delivery_is_enabled() ) {
+						update_post_meta(
+							$post_id,
+							'rbfw_enable_delivery',
+							isset( $_POST['rbfw_enable_delivery'] ) ? 'yes' : 'no'
+						);
+					}
 					// Saving Pickup Location Data
 					$old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
 					$new_rbfw_pickup_data = array();

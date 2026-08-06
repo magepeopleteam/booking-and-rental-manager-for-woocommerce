@@ -108,6 +108,29 @@ if (! class_exists('RBFW_Dependencies')) {
 			// only acts when rbfw_ajax_front.booking_mode === 'standalone'.
 			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
 
+			// Delivery & Collection. The script is inert unless a delivery block is on the
+			// page, which only happens when the shop has enabled the feature.
+			wp_enqueue_script('rbfw_delivery', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_delivery.js', array('jquery'), time(), true);
+			wp_localize_script('rbfw_delivery', 'rbfwDelivery', array(
+				// The currency symbol is an HTML entity in WooCommerce (e.g. &euro;), which
+				// renders literally once passed through .text(). Decode it here so the
+				// preview shows the symbol rather than its entity.
+				'symbol' => function_exists('get_woocommerce_currency_symbol')
+					? html_entity_decode(get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8')
+					: '',
+				'i18n'   => array(
+					'delivery'      => __('Delivery', 'booking-and-rental-manager-for-woocommerce'),
+					'collection'    => __('Collection', 'booking-and-rental-manager-for-woocommerce'),
+					'freeZone'      => __('Free delivery zone', 'booking-and-rental-manager-for-woocommerce'),
+					'enterDistance' => __('Enter the distance to see the price.', 'booking-and-rental-manager-for-woocommerce'),
+					'needDistance'  => __('Please tell us how far away you are.', 'booking-and-rental-manager-for-woocommerce'),
+					'needAddress'   => __('Please enter the delivery address.', 'booking-and-rental-manager-for-woocommerce'),
+					/* translators: %s: maximum delivery distance in km. */
+					'outOfRange'    => __('Sorry, we only deliver within %s km.', 'booking-and-rental-manager-for-woocommerce'),
+					'noBand'        => __('We could not work out a price for that distance. Please contact us.', 'booking-and-rental-manager-for-woocommerce'),
+				),
+			));
+
 			wp_enqueue_style('select2css', RBFW_PLUGIN_URL . '/admin/css/select2.min.css', false, '1.0', 'all');
 			wp_enqueue_script('select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array('jquery'), null, true);
 

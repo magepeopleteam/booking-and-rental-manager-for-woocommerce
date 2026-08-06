@@ -27,6 +27,10 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_fee_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_delivery_functions.php';
 // Accounting payment methods (card / cheque / cash / bank transfer).
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_payment_methods.php';
+// Delivery settings screen — after the engine, whose RBFW_DELIVERY_SECTION it registers against.
+if ( is_admin() ) {
+	require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Delivery_Settings.php';
+}
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';

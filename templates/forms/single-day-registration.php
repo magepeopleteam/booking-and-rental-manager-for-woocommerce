@@ -78,6 +78,12 @@
                     </div>
                 <?php endif; ?>
 
+                <?php
+                /* Delivery & Collection — renders nothing unless the shop offers it and this
+                   item allows it. Sits with the location fields because it answers the same
+                   question: where does this rental start and end? */
+                include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+                ?>
 
                 <?php
                 // --- Flexible Rate box ---

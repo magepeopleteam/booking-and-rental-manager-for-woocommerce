@@ -974,6 +974,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
+                /* Delivery & Collection. Priced server-side from the configured bands —
+                   the form only says WHICH legs were asked for and how far away the
+                   customer is, exactly like the optional fees resolved above. */
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_delivery_charge( $rbfw_id, $sd_input_data_sabitized, $rbfw_management_info, $rbfw_management_price );
 
                 /* Item Variations (Single Day): per-value quantity steppers submit
                    rbfw_variation_qty[field_id][value_name] = qty. Build one cart entry
@@ -1044,6 +1048,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_ticket_info']              = $rbfw_bikecarsd_ticket_info;
                 $cart_item_data['rbfw_management_info']          = $rbfw_management_info;
                 $cart_item_data['rbfw_management_price']          = $rbfw_management_price;
+                /* Delivery record travels with the cart item so it survives into the
+                   order line and then the rbfw_order mirror as flat, readable meta. */
+                $cart_item_data = array_merge( $cart_item_data, rbfw_delivery_cart_data( $rbfw_id, $sd_input_data_sabitized ) );
                 $cart_item_data['security_deposit_amount']       = $security_deposit['security_deposit_amount'];
                 $cart_item_data['security_deposit_desc']         = $security_deposit['security_deposit_desc'];
 
@@ -1100,6 +1107,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_management_info     = $prepared_management_info['items'];
                 $rbfw_management_price    = $prepared_management_info['total'];
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
+                /* Delivery & Collection. Priced server-side from the configured bands —
+                   the form only says WHICH legs were asked for and how far away the
+                   customer is, exactly like the optional fees resolved above. */
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_delivery_charge( $rbfw_id, $sd_input_data_sabitized, $rbfw_management_info, $rbfw_management_price );
 
 
 
@@ -1129,6 +1140,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_ticket_info']               = $rbfw_ticket_info;
                 $cart_item_data['rbfw_management_info']           = $rbfw_management_info;
                 $cart_item_data['rbfw_management_price']          = $rbfw_management_price;
+                /* Delivery record travels with the cart item so it survives into the
+                   order line and then the rbfw_order mirror as flat, readable meta. */
+                $cart_item_data = array_merge( $cart_item_data, rbfw_delivery_cart_data( $rbfw_id, $sd_input_data_sabitized ) );
                 $cart_item_data['total_days']                     = $total_days;
                 $cart_item_data['discount_type']                  = $discount_type;
                 $cart_item_data['discount_amount']                = $discount_amount;
@@ -1337,6 +1351,10 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
+                /* Delivery & Collection. Priced server-side from the configured bands —
+                   the form only says WHICH legs were asked for and how far away the
+                   customer is, exactly like the optional fees resolved above. */
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_delivery_charge( $rbfw_id, $sd_input_data_sabitized, $rbfw_management_info, $rbfw_management_price );
 
                 $discount_amount = 0;
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
@@ -1362,6 +1380,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_service_info']              = $rbfw_service_info;
                 $cart_item_data['rbfw_management_info']           = $rbfw_management_info;
                 $cart_item_data['rbfw_management_price']           = $rbfw_management_price;
+                /* Delivery record travels with the cart item so it survives into the
+                   order line and then the rbfw_order mirror as flat, readable meta. */
+                $cart_item_data = array_merge( $cart_item_data, rbfw_delivery_cart_data( $rbfw_id, $sd_input_data_sabitized ) );
                 $cart_item_data['rbfw_service_infos']             = $rbfw_service_infos;
                 $cart_item_data['rbfw_variation_info']            = $variation_info;
                 $cart_item_data['rbfw_variation_surcharge']       = $rbfw_variation_surcharge;
@@ -1488,6 +1509,41 @@ if (!class_exists('RBFW_Woocommerce')) {
             $rbfw_id = array_key_exists( 'rbfw_id', $values ) ? $values['rbfw_id'] : 0;
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
                 $this->rbfw_validate_add_order_item_func( $values, $item, $rbfw_id );
+                $this->rbfw_add_delivery_order_item_meta( $item, $values, $order );
+            }
+        }
+
+        /**
+         * Carry the delivery record from the cart item onto the order line and the order.
+         *
+         * It is written in BOTH places on purpose: the line item is what the PDF and the
+         * rbfw_order mirror read per rental, while the order-level copy is what an admin
+         * looking at the WooCommerce order screen (and any accounting export) needs without
+         * having to walk the line items.
+         *
+         * Keys are hidden (underscore-prefixed) on the line item so they do not appear as
+         * raw rows in the customer's order table — the readable summary is added separately.
+         *
+         * @param WC_Order_Item_Product $item
+         * @param array                 $values Cart item data.
+         * @param WC_Order              $order
+         * @return void
+         */
+        private function rbfw_add_delivery_order_item_meta( $item, $values, $order ) {
+            if ( ! function_exists( 'rbfw_delivery_meta_keys' ) ) {
+                return;
+            }
+            if ( empty( $values['rbfw_delivery_wanted'] ) && empty( $values['rbfw_collection_wanted'] ) ) {
+                return;
+            }
+
+            foreach ( rbfw_delivery_meta_keys() as $key ) {
+                if ( isset( $values[ $key ] ) ) {
+                    $item->update_meta_data( '_' . $key, $values[ $key ] );
+                    if ( $order ) {
+                        $order->update_meta_data( '_' . $key, $values[ $key ] );
+                    }
+                }
             }
         }
         public  function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
@@ -2700,6 +2756,19 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $zdata[ $key ]['end_date']                = $end_date;
                     $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
                     $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
+
+                    /* Delivery record, copied off the order so the mirror carries it as flat
+                       meta — that is what the Bookings list, the calendar badge, the editor,
+                       the PDF and the emails all read. */
+                    if ( function_exists( 'rbfw_delivery_meta_keys' ) ) {
+                        foreach ( rbfw_delivery_meta_keys() as $delivery_key ) {
+                            $delivery_value = $order->get_meta( '_' . $delivery_key, true );
+                            if ( '' !== $delivery_value && null !== $delivery_value ) {
+                                $zdata[ $key ][ $delivery_key ] = $delivery_value;
+                            }
+                        }
+                    }
+
                     $meta_data                                = array_merge( $zdata[ $key ] );
                     /*rbfw_order add*/
                     $order_id = $rbfw->rbfw_add_order_data( $meta_data, $ticket_info, $rbfw_service_price_data_actual );

@@ -507,6 +507,104 @@ function rbfw_delivery_price_html( $amount ) {
 }
 
 /**
+ * Flat delivery record for one booking, ready to travel as cart-item data.
+ *
+ * The fee bucket carries the MONEY, but not the address, the distance or the fact that a
+ * free-radius delivery happened at all. This carries those, so the cart item → order item →
+ * `rbfw_order` mirror chain ends with flat meta the list, calendar, PDF and emails can read
+ * with a single get_post_meta().
+ *
+ * Returns an empty array when no delivery was asked for, so callers can merge unconditionally
+ * without writing empty meta onto every ordinary booking.
+ *
+ * @param int   $item_id rbfw_item post id.
+ * @param array $input   Raw sanitized form payload.
+ * @return array<string,mixed>
+ */
+function rbfw_delivery_cart_data( $item_id, $input ) {
+	$choice = rbfw_delivery_input_from_form( $input );
+	if ( ! $choice['delivery'] && ! $choice['collection'] ) {
+		return array();
+	}
+
+	$quote = rbfw_delivery_quote( $item_id, $choice['distance'], $choice['delivery'], $choice['collection'] );
+	if ( '' !== $quote['error'] ) {
+		return array();
+	}
+
+	return array(
+		'rbfw_delivery_wanted'   => $quote['applied_delivery'] ? 'yes' : 'no',
+		'rbfw_collection_wanted' => $quote['applied_collection'] ? 'yes' : 'no',
+		'rbfw_delivery_distance' => $quote['distance'],
+		'rbfw_delivery_address'  => $choice['address'],
+		'rbfw_delivery_amount'   => $quote['total'],
+		'rbfw_delivery_band'     => $quote['band'],
+	);
+}
+
+/**
+ * The meta keys the delivery record travels under, in one place so the cart, the order item
+ * and the mirror can never drift apart.
+ *
+ * @return string[]
+ */
+function rbfw_delivery_meta_keys() {
+	return array(
+		'rbfw_delivery_wanted',
+		'rbfw_collection_wanted',
+		'rbfw_delivery_distance',
+		'rbfw_delivery_address',
+		'rbfw_delivery_amount',
+		'rbfw_delivery_band',
+	);
+}
+
+/**
+ * Human summary of a booking's delivery, for the PDF, emails and admin views.
+ *
+ * @param int $booking_id rbfw_booking or rbfw_order post id.
+ * @return string '' when the booking has no delivery.
+ */
+function rbfw_delivery_summary( $booking_id ) {
+	$booking_id = absint( $booking_id );
+	if ( ! $booking_id ) {
+		return '';
+	}
+
+	$delivery   = 'yes' === get_post_meta( $booking_id, 'rbfw_delivery_wanted', true );
+	$collection = 'yes' === get_post_meta( $booking_id, 'rbfw_collection_wanted', true );
+	if ( ! $delivery && ! $collection ) {
+		return '';
+	}
+
+	$cfg   = rbfw_delivery_settings();
+	$legs  = array();
+	if ( $delivery ) {
+		$legs[] = $cfg['delivery_label'];
+	}
+	if ( $collection ) {
+		$legs[] = $cfg['collection_label'];
+	}
+
+	$summary  = implode( ' + ', $legs );
+	$distance = (float) get_post_meta( $booking_id, 'rbfw_delivery_distance', true );
+	if ( $distance > 0 ) {
+		$summary .= sprintf(
+			/* translators: %s: distance in km. */
+			__( ' — %s km', 'booking-and-rental-manager-for-woocommerce' ),
+			rbfw_delivery_format_km( $distance )
+		);
+	}
+
+	$address = (string) get_post_meta( $booking_id, 'rbfw_delivery_address', true );
+	if ( '' !== $address ) {
+		$summary .= ' — ' . $address;
+	}
+
+	return $summary;
+}
+
+/**
  * Persist the delivery choice + resolved amounts on a booking.
  *
  * Written as flat meta on BOTH booking post types so the Bookings list, the calendar, the

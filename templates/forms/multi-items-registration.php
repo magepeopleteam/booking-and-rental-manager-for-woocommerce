@@ -287,6 +287,11 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                         </div>
                     <?php endif; ?>
 
+                    <?php
+                    /* Delivery & Collection — renders nothing unless the shop offers it and
+                       this item allows it. */
+                    include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+                    ?>
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>

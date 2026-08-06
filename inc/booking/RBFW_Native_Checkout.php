@@ -129,6 +129,32 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			$subtotal = isset( $_POST['rbfw_total'] ) ? (float) preg_replace( '/[^0-9.]/', '', wp_unslash( $_POST['rbfw_total'] ) ) : 0.0;
 			$subtotal = max( 0, $subtotal );
 
+			// 6a. Delivery & Collection. Resolved from the stored bands, NOT from the posted
+			// total, and added on top — so this charge is correct even though the base subtotal
+			// above is still client-derived. A distance the shop refuses (beyond the configured
+			// maximum, or in no band) stops the booking here rather than letting it through
+			// with the delivery silently dropped.
+			$delivery_total = 0.0;
+			if ( function_exists( 'rbfw_delivery_quote' ) ) {
+				$delivery_choice = rbfw_delivery_input_from_form( $raw );
+
+				if ( $delivery_choice['delivery'] || $delivery_choice['collection'] ) {
+					$delivery_quote = rbfw_delivery_quote(
+						$item_id,
+						$delivery_choice['distance'],
+						$delivery_choice['delivery'],
+						$delivery_choice['collection']
+					);
+
+					if ( '' !== $delivery_quote['error'] ) {
+						wp_send_json_error( array( 'message' => $delivery_quote['error'] ) );
+					}
+					$delivery_total = (float) $delivery_quote['total'];
+				}
+			}
+
+			$subtotal += $delivery_total;
+
 			// 6b. Coupon — ALWAYS authoritative server-side. Only the coupon CODE is accepted from
 			// the client; the discount value is recomputed from the coupon's own configuration, so a
 			// tampered `rbfw_coupon_discount` in the POST is ignored entirely. Automatic (no-code)
@@ -177,6 +203,21 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 
 			if ( is_wp_error( $result ) ) {
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
+			}
+
+			// 7a. Record the delivery choice as flat meta, so the bookings list, calendar,
+			// editor, PDF and emails can all read it without unpacking the raw payload.
+			if ( ! empty( $result['booking_id'] ) && function_exists( 'rbfw_delivery_save_booking_meta' ) ) {
+				rbfw_delivery_save_booking_meta( $result['booking_id'], $item_id, $raw );
+			}
+
+			// 7b. Record how the customer said they will pay, validated against the shop's
+			// own method list so an arbitrary slug can never be stored.
+			if ( ! empty( $result['booking_id'] ) && function_exists( 'rbfw_set_booking_payment_method' ) ) {
+				$chosen_method = isset( $_POST['rbfw_payment_method'] ) ? sanitize_key( wp_unslash( $_POST['rbfw_payment_method'] ) ) : '';
+				if ( '' !== $chosen_method && rbfw_is_valid_payment_method( $chosen_method ) ) {
+					rbfw_set_booking_payment_method( $result['booking_id'], $chosen_method );
+				}
 			}
 
 			// 8. Build the response, then let add-ons (e.g. the Pro payment gateways) take over.
