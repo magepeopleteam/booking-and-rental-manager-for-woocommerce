@@ -201,53 +201,49 @@
 	} );
 
 	/**
-	 * Block submission when a chosen delivery is incomplete or out of range.
+	 * Whether this form's delivery choice satisfies the shop's rules.
 	 *
-	 * Without this the customer would submit, the server would refuse the quote, and the
-	 * booking would silently go through with no delivery attached — the worst outcome for
-	 * both sides. The server refusal still stands on its own; this just surfaces it early.
+	 * Returns false and shows the reason; the caller stops the submission.
+	 *
+	 * @param {jQuery} $form
+	 * @return {boolean}
 	 */
-	$( document ).on( 'submit', '.mp_rbfw_ticket_form', function ( e ) {
-		var $block = $( this ).find( '.rbfw-delivery-block' );
-		if ( ! $block.length ) { return; }
+	function deliveryIsValid( $form ) {
+		var $block = $form.find( '.rbfw-delivery-block' );
+		if ( ! $block.length ) { return true; }
+
+		var $quote = $block.find( '.rbfw-delivery-quote' );
+		var fail   = function ( $field, key, fallback ) {
+			$quote.show().addClass( 'is-error' ).text( t( key, fallback ) );
+			if ( $field && $field.length ) { $field.trigger( 'focus' ); }
+			$( 'html, body' ).animate( { scrollTop: $block.offset().top - 90 }, 200 );
+			return false;
+		};
 
 		var wants = $block.find( '.rbfw-delivery-toggle:checked' ).length > 0;
 
-		// The shop can make choosing a leg mandatory. Server-enforced too; this just says
-		// so before the round trip.
 		if ( ! wants ) {
 			if ( $block.attr( 'data-require-choice' ) === '1' ) {
-				e.preventDefault();
-				$block.find( '.rbfw-delivery-quote' )
-					.show()
-					.addClass( 'is-error' )
-					.text( t( 'needChoice', 'Please choose whether you would like delivery or collection.' ) );
-				$( 'html, body' ).animate( { scrollTop: $block.offset().top - 80 }, 200 );
-				return false;
+				return fail( null, 'needChoice', 'Please choose whether you would like delivery or collection.' );
 			}
-			return;
+			return true;
 		}
 
 		var $distance = $block.find( '.rbfw-delivery-distance' );
-		var $address  = $block.find( '.rbfw-delivery-address' );
 		var maxKm     = num( $block.attr( 'data-max-distance' ) );
 		var km        = num( $distance.val() );
 
 		if ( ! $distance.val() || km < 0 ) {
-			e.preventDefault();
-			$distance.trigger( 'focus' );
-			$block.find( '.rbfw-delivery-quote' ).addClass( 'is-error' ).text( t( 'needDistance', 'Please choose how far you are from us.' ) );
-			return false;
+			return fail( $distance, 'needDistance', 'Please choose how far you are from us.' );
 		}
 		if ( maxKm > 0 && km > maxKm ) {
-			e.preventDefault();
-			$distance.trigger( 'focus' );
-			return false;
+			return fail( $distance, 'outOfRange', 'Sorry, we only deliver within %s km.' );
 		}
+
 		// Every field the shop marked required, in the order they appear, so the customer is
 		// sent to the first thing they missed rather than the last.
 		var required = [
-			[ $address, 'needAddress', 'Please enter the delivery address.' ],
+			[ $block.find( '.rbfw-delivery-address' ), 'needAddress', 'Please enter the delivery address.' ],
 			[ $block.find( '.rbfw-delivery-phone' ), 'needPhone', 'Please give us a contact number for the delivery.' ],
 			[ $block.find( '.rbfw-delivery-note' ), 'needNote', 'Please add delivery notes so we can find you.' ]
 		];
@@ -255,15 +251,39 @@
 		for ( var i = 0; i < required.length; i++ ) {
 			var $field = required[ i ][ 0 ];
 			if ( $field.length && $field.attr( 'data-required' ) && ! $.trim( $field.val() ) ) {
-				e.preventDefault();
-				$field.trigger( 'focus' );
-				$block.find( '.rbfw-delivery-quote' )
-					.show()
-					.addClass( 'is-error' )
-					.text( t( required[ i ][ 1 ], required[ i ][ 2 ] ) );
-				return false;
+				return fail( $field, required[ i ][ 1 ], required[ i ][ 2 ] );
 			}
 		}
+
+		return true;
+	}
+
+	/**
+	 * Stop the booking before anything else acts on it.
+	 *
+	 * stopImmediatePropagation, not just preventDefault: in Standalone mode
+	 * rbfw_native_checkout.js has its own delegated handler on the SAME element, and jQuery's
+	 * `return false` only prevents the default and stops BUBBLING — sibling handlers on
+	 * document still run. Without this the checkout modal opened over the error and the
+	 * customer went all the way to payment before the server refused them.
+	 *
+	 * This is a courtesy gate only. rbfw_delivery_validate_input() re-checks every rule on
+	 * both checkout paths, so removing this in the browser changes nothing.
+	 */
+	function guard( e ) {
+		var $form = $( e.currentTarget ).closest( '.mp_rbfw_ticket_form' );
+		if ( ! $form.length ) { $form = $( e.target ).closest( '.mp_rbfw_ticket_form' ); }
+		if ( ! $form.length || deliveryIsValid( $form ) ) { return; }
+
+		e.preventDefault();
+		e.stopImmediatePropagation();
+	}
+
+	// Registered before the standalone-checkout script binds its own handlers (the delivery
+	// assets are enqueued first), so this runs first and can stop it.
+	$( document ).on( 'submit', '.mp_rbfw_ticket_form', guard );
+	$( document ).on( 'click', '.mp_rbfw_book_now_submit, [name="add-to-cart"], [type="submit"]', function ( e ) {
+		if ( $( e.currentTarget ).closest( '.mp_rbfw_ticket_form' ).length ) { guard( e ); }
 	} );
 
 	$( function () {
