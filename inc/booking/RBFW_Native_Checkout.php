@@ -211,10 +211,11 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 				rbfw_delivery_save_booking_meta( $result['booking_id'], $item_id, $raw );
 			}
 
-			// 7b. Record how the customer said they will pay, validated against the shop's
-			// own method list so an arbitrary slug can never be stored.
+			// 7b. Record how the customer said they will pay, for the shop's books. Read from
+			// its own field — `rbfw_payment_method` is the GATEWAY selector — and validated
+			// against the shop's own list, so an arbitrary slug can never be stored.
 			if ( ! empty( $result['booking_id'] ) && function_exists( 'rbfw_set_booking_payment_method' ) ) {
-				$chosen_method = isset( $_POST['rbfw_payment_method'] ) ? sanitize_key( wp_unslash( $_POST['rbfw_payment_method'] ) ) : '';
+				$chosen_method = isset( $_POST['rbfw_accounting_method'] ) ? sanitize_key( wp_unslash( $_POST['rbfw_accounting_method'] ) ) : '';
 				if ( '' !== $chosen_method && rbfw_is_valid_payment_method( $chosen_method ) ) {
 					rbfw_set_booking_payment_method( $result['booking_id'], $chosen_method );
 				}

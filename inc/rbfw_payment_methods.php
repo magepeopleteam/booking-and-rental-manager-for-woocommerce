@@ -261,13 +261,59 @@ function rbfw_get_booking_payment_method( $booking_id ) {
 }
 
 /**
+ * Accounting sub-method picker for the standalone checkout.
+ *
+ * Rendered UNDER the gateway selector, and posted as its own `rbfw_accounting_method`
+ * field: `rbfw_payment_method` already belongs to the Pro gateway selector (paypal /
+ * stripe / offline), and reusing it would make the customer's "I'll pay by cheque" choice
+ * overwrite which gateway is meant to process the booking.
+ *
+ * Only shown when the Offline gateway is enabled — a card payment through Stripe already
+ * knows how it was paid, and asking would be noise.
+ *
+ * @param int $item_id Rental item id.
+ * @return void
+ */
+function rbfw_render_accounting_method_picker( $item_id = 0 ) {
+	if ( ! class_exists( 'RBFW_Function' ) || ! RBFW_Function::offline_payment_enabled() ) {
+		return;
+	}
+
+	$methods = rbfw_payment_methods( true );
+	if ( count( $methods ) < 2 ) {
+		// One (or no) method is not a choice worth showing.
+		return;
+	}
+	?>
+	<div class="rbfw-native-field rbfw-native-accounting-methods" data-rbfw-accounting-picker="1">
+		<label><?php esc_html_e( 'How will you pay?', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+		<?php $first = true; ?>
+		<?php foreach ( $methods as $slug => $method ) : ?>
+			<label class="rbfw-native-pm-option" style="display:flex;align-items:flex-start;gap:8px;font-weight:400;margin:4px 0;">
+				<input type="radio" name="rbfw_accounting_method" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $first ); ?> style="width:auto;margin-top:3px;">
+				<span>
+					<?php echo esc_html( $method['label'] ); ?>
+					<?php if ( '' !== trim( (string) $method['instructions'] ) ) : ?>
+						<small style="display:block;color:#64748b;"><?php echo wp_kses_post( $method['instructions'] ); ?></small>
+					<?php endif; ?>
+				</span>
+			</label>
+			<?php $first = false; ?>
+		<?php endforeach; ?>
+	</div>
+	<?php
+}
+add_action( 'rbfw_native_checkout_payment_fields', 'rbfw_render_accounting_method_picker', 15 );
+
+/**
  * Record how a booking was actually paid.
  *
- * Source-aware:
- *   - native `rbfw_booking` → writes the accounting meta AND `rbfw_payment_method`, because
- *     for a standalone booking there is no other record of how it was paid.
- *   - WooCommerce `rbfw_order` → writes the accounting meta on the mirror AND on the real
- *     order, and leaves the WooCommerce gateway fields untouched (see the file header).
+ * The accounting method is kept in ITS OWN meta for BOTH sources, and the gateway record is
+ * never touched — `rbfw_payment_method` on a native booking is the gateway that processed it
+ * (offline / paypal / stripe), just as `_payment_method` is on a WooCommerce order. Writing
+ * the accounting slug over it would destroy that record and, worse, make clearing the
+ * accounting method impossible: the cleared value would simply be read back from the gateway
+ * field it had just overwritten.
  *
  * @param int    $booking_id rbfw_booking or rbfw_order post id.
  * @param string $slug       Method slug, or '' to clear.
@@ -298,10 +344,7 @@ function rbfw_set_booking_payment_method( $booking_id, $slug ) {
 	}
 
 	if ( 'rbfw_booking' === $post_type ) {
-		// Standalone: the accounting method IS the payment record.
-		if ( '' !== $slug ) {
-			update_post_meta( $booking_id, 'rbfw_payment_method', $slug );
-		}
+		// Native bookings keep `rbfw_payment_method` as the GATEWAY that took the money.
 		return true;
 	}
 
