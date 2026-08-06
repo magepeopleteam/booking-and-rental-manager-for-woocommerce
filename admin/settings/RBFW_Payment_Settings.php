@@ -139,9 +139,175 @@
 						'class'    => 'no-woocommerce-field payment-gateways-container',
 						'callback' => array( $this, 'render_gateway_cards' ),
 					),
+					/*
+					 * How the shop was ACTUALLY paid, for its books — a different question from
+					 * which gateway processed the booking, and the reason this sits on the
+					 * Payments tab rather than a tab of its own: it belongs beside the gateways,
+					 * not opposite them. Applies in BOTH booking modes, so it is deliberately
+					 * not tagged woocommerce-field / no-woocommerce-field.
+					 */
+					array(
+						'name'              => 'rbfw_payment_methods',
+						'label'             => '',
+						'callback'          => array( $this, 'render_payment_methods' ),
+						'sanitize_callback' => array( __CLASS__, 'sanitize_payment_methods' ),
+					),
 				);
 
 				return $settings_fields;
+			}
+
+			/* ============================================================== *
+			 * Accounting payment methods (card / cheque / cash / transfer)
+			 * ============================================================== */
+
+			/**
+			 * Sanitize the posted method rows.
+			 *
+			 * Slugs are carried on the row rather than regenerated from the label, so renaming
+			 * "Cheque" to "Chèque" does not orphan every booking recorded against it. Two rows
+			 * resolving to the same slug are made unique instead of silently overwriting.
+			 *
+			 * @param mixed $raw
+			 * @return array
+			 */
+			public static function sanitize_payment_methods( $raw ) {
+				if ( ! is_array( $raw ) ) {
+					return array();
+				}
+
+				$out = array();
+				foreach ( $raw as $row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+
+					$label = isset( $row['label'] ) ? sanitize_text_field( wp_unslash( $row['label'] ) ) : '';
+					if ( '' === trim( $label ) ) {
+						// Unlabelled methods cannot be shown or reconciled.
+						continue;
+					}
+
+					$slug = isset( $row['slug'] ) ? sanitize_key( $row['slug'] ) : '';
+					if ( '' === $slug ) {
+						$slug = sanitize_key( sanitize_title( $label ) );
+					}
+					if ( '' === $slug ) {
+						continue;
+					}
+
+					$base = $slug;
+					$i    = 2;
+					while ( isset( $out[ $slug ] ) ) {
+						$slug = $base . '_' . $i;
+						$i++;
+					}
+
+					$out[ $slug ] = array(
+						'label'        => $label,
+						'icon'         => isset( $row['icon'] ) ? sanitize_html_class( $row['icon'] ) : '',
+						'instructions' => isset( $row['instructions'] ) ? wp_kses_post( wp_unslash( $row['instructions'] ) ) : '',
+						'enabled'      => ! empty( $row['enabled'] ),
+					);
+				}
+
+				return $out;
+			}
+
+			/** The methods repeater, rendered under the gateway cards. */
+			public function render_payment_methods() {
+				if ( ! function_exists( 'rbfw_payment_methods' ) ) {
+					return;
+				}
+				$methods = rbfw_payment_methods();
+				$name    = self::OPTION . '[rbfw_payment_methods]';
+				$i       = 0;
+				?>
+				<div class="rbfw-pm-repeater" data-name="<?php echo esc_attr( $name ); ?>">
+					<h3 class="rbfw-pm-title"><?php esc_html_e( 'Payment methods for your accounts', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+					<p class="rbfw-pm-intro">
+						<?php esc_html_e( 'How customers actually pay you — cheque at the counter, cash on pickup, a bank transfer. These are offered at the standalone checkout, can be recorded against any booking afterwards, and are the buckets the "Revenue by payment method" totals reconcile into. Recording one against a WooCommerce order never changes the gateway that processed it.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</p>
+					<table class="rbfw-pm-table">
+						<thead>
+							<tr>
+								<th style="width:60px;"><?php esc_html_e( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+								<th><?php esc_html_e( 'Label', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+								<th><?php esc_html_e( 'Instructions (shown at checkout)', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+								<th style="width:40px;"></th>
+							</tr>
+						</thead>
+						<tbody class="rbfw-pm-body">
+							<?php foreach ( $methods as $slug => $m ) : ?>
+								<tr class="rbfw-pm-row">
+									<td style="text-align:center;">
+										<input type="checkbox" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $i ); ?>][enabled]" value="1" <?php checked( ! empty( $m['enabled'] ) ); ?>>
+									</td>
+									<td>
+										<input type="text" class="regular-text" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $i ); ?>][label]" value="<?php echo esc_attr( $m['label'] ); ?>">
+										<input type="hidden" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $i ); ?>][slug]" value="<?php echo esc_attr( $slug ); ?>">
+										<code class="rbfw-pm-slug"><?php echo esc_html( $slug ); ?></code>
+									</td>
+									<td>
+										<input type="text" class="large-text" name="<?php echo esc_attr( $name ); ?>[<?php echo esc_attr( $i ); ?>][instructions]" value="<?php echo esc_attr( $m['instructions'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. Make cheques payable to…', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									</td>
+									<td><button type="button" class="button-link rbfw-pm-remove" aria-label="<?php esc_attr_e( 'Remove method', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button></td>
+								</tr>
+								<?php $i++; ?>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+					<button type="button" class="button rbfw-pm-add"><?php esc_html_e( '+ Add method', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					<p class="description">
+						<?php esc_html_e( 'Removing a method here does not change bookings already recorded against it — those keep showing what they were paid with.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</p>
+				</div>
+
+				<style>
+					.rbfw-pm-repeater { margin-top: 26px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+					.rbfw-pm-title { margin: 0 0 6px; font-size: 15px; }
+					.rbfw-pm-intro { margin: 0 0 14px; max-width: 760px; color: #50575e; font-size: 13px; line-height: 1.6; }
+					.rbfw-pm-table { border-collapse: collapse; margin-bottom: 8px; width: 100%; max-width: 900px; }
+					.rbfw-pm-table th { text-align: left; font-size: 12px; color: #50575e; padding: 0 8px 4px 0; font-weight: 600; }
+					.rbfw-pm-table td { padding: 0 8px 8px 0; vertical-align: top; }
+					.rbfw-pm-slug { display: block; margin-top: 3px; font-size: 11px; color: #787c82; background: none; padding: 0; }
+					.rbfw-pm-remove { color: #b32d2e !important; font-size: 18px; text-decoration: none !important; line-height: 1; }
+				</style>
+				<script>
+				( function ( $ ) {
+					function reindex( $wrap ) {
+						var name = $wrap.data( 'name' );
+						$wrap.find( '.rbfw-pm-row' ).each( function ( i ) {
+							$( this ).find( 'input' ).each( function () {
+								var key = ( this.name.match( /\[(enabled|label|slug|instructions)\]$/ ) || [] )[ 1 ];
+								if ( key ) { this.name = name + '[' + i + '][' + key + ']'; }
+							} );
+						} );
+					}
+					$( document ).on( 'click', '.rbfw-pm-add', function () {
+						var $wrap = $( this ).closest( '.rbfw-pm-repeater' );
+						var n = $wrap.data( 'name' ), i = $wrap.find( '.rbfw-pm-row' ).length;
+						// Slug left empty on purpose: the sanitizer derives it from the label,
+						// which is what gives a brand new method a stable, readable key.
+						$wrap.find( '.rbfw-pm-body' ).append(
+							'<tr class="rbfw-pm-row">' +
+							'<td style="text-align:center;"><input type="checkbox" name="' + n + '[' + i + '][enabled]" value="1" checked></td>' +
+							'<td><input type="text" class="regular-text" name="' + n + '[' + i + '][label]" value="">' +
+							'<input type="hidden" name="' + n + '[' + i + '][slug]" value=""></td>' +
+							'<td><input type="text" class="large-text" name="' + n + '[' + i + '][instructions]" value=""></td>' +
+							'<td><button type="button" class="button-link rbfw-pm-remove">&times;</button></td>' +
+							'</tr>'
+						);
+						reindex( $wrap );
+					} );
+					$( document ).on( 'click', '.rbfw-pm-remove', function () {
+						var $wrap = $( this ).closest( '.rbfw-pm-repeater' );
+						$( this ).closest( '.rbfw-pm-row' ).remove();
+						reindex( $wrap );
+					} );
+				} )( jQuery );
+				</script>
+				<?php
 			}
 
 			/**

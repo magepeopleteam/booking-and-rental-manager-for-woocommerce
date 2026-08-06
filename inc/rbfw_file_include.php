@@ -31,7 +31,6 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_payment_methods.php';
 // against constants and helpers those files define.
 if ( is_admin() ) {
 	require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Delivery_Settings.php';
-	require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Methods_Settings.php';
 }
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
