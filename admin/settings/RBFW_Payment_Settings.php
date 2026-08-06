@@ -1373,12 +1373,23 @@
 
 				$toggles = array( 'rbfw_paypal_enable', 'rbfw_paypal_sandbox', 'rbfw_stripe_enable', 'rbfw_stripe_sandbox', 'rbfw_offline_enable' );
 				foreach ( $allowed[ $gateway ] as $key ) {
-					$val = isset( $fields[ $key ] ) ? $fields[ $key ] : 'off';
 					if ( in_array( $key, $toggles, true ) ) {
+						// An unchecked checkbox posts nothing, so absent genuinely means "off".
+						$val              = isset( $fields[ $key ] ) ? $fields[ $key ] : 'off';
 						$existing[ $key ] = ( 'on' === $val ) ? 'on' : 'off';
-					} else {
-						$existing[ $key ] = sanitize_text_field( $val );
+						continue;
 					}
+
+					// Text fields are a different story: absent means "not submitted", NOT
+					// "empty". This previously fell through to the same 'off' default and
+					// wrote the literal string "off" into the field — which is how a partial
+					// save could turn the Offline heading into "off", and would just as
+					// happily have overwritten a Stripe or PayPal API key with it. Leave a
+					// field that was not posted exactly as it was stored.
+					if ( ! isset( $fields[ $key ] ) ) {
+						continue;
+					}
+					$existing[ $key ] = sanitize_text_field( $fields[ $key ] );
 				}
 
 				update_option( self::OPTION, $existing );
