@@ -129,24 +129,40 @@
 		$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: total, error: '' } ] );
 	}
 
+	/* ── Booking summary integration ───────────────────────────────────── */
+
 	/**
-	 * Mirror the delivery charge into the booking summary's own cost list.
+	 * Publish the delivery charge for the pricing scripts to pick up.
 	 *
-	 * The summary total itself is owned by the plugin's pricing scripts and recalculated
-	 * server-side, so this only shows the delivery LINE — it never rewrites the total. The
-	 * authoritative figure still comes from the cart/checkout, which prices delivery from
-	 * the band table regardless of anything shown here.
+	 * The summary total is OWNED by those scripts, which rebuild it from scratch on every
+	 * date / quantity / add-on change. Patching the rendered total afterwards would be
+	 * undone by the customer's very next click, so the value is exposed here and added
+	 * inside their own calculation instead (see rbfw_delivery_price in sd_script.js).
+	 *
+	 * This is display only. The amount actually charged is recomputed server-side from the
+	 * band table at add-to-cart, so nothing in the browser can change what the customer
+	 * pays — this only keeps the figure on screen honest.
 	 */
 	$( document.body ).on( 'rbfw_delivery_changed', function ( e, data ) {
-		var $line = $( '.rbfw-delivery-costing' );
-		if ( ! $line.length ) { return; }
+		window.rbfwDeliveryTotal = ( data && data.total ) ? data.total : 0;
 
-		if ( ! data || ! data.total ) {
-			$line.hide();
-			return;
+		// Nudge the pricing engine to repaint with the new figure. Each item type has its
+		// own recalculation entry point, so try the known ones and fall back to updating
+		// just our own line when none is present (e.g. a flow with no live summary).
+		var recalc = window.rbfw_price_calculation_sd   // single day / timely
+			|| window.rbfw_price_calculation_md         // multi day
+			|| window.calculateTotal;
+		if ( typeof recalc === 'function' ) {
+			try { recalc(); return; } catch ( err ) { /* fall through to the local update */ }
 		}
-		$line.find( '.rbfw-delivery-cost-value' ).html( money( data.total ) );
-		$line.show();
+
+		var $line = $( '.rbfw-delivery-costing' );
+		if ( window.rbfwDeliveryTotal > 0 ) {
+			$line.find( '.rbfw-delivery-cost-value' ).html( money( window.rbfwDeliveryTotal ) );
+			$line.show();
+		} else {
+			$line.hide();
+		}
 	} );
 
 	$( document ).on( 'change', '.rbfw-delivery-toggle', function () {

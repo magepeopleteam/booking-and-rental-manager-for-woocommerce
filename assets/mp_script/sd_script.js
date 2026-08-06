@@ -667,9 +667,24 @@ function rbfw_price_calculation_sd(){
         }
     }
 
-    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    /* Delivery & Collection.
+     *
+     * Folded in HERE rather than patched onto the rendered total afterwards: this function
+     * owns the total and rewrites it on every date / quantity / add-on change, so anything
+     * applied after the fact would be wiped on the customer's next click. The figure comes
+     * from the delivery block's own quote (window.rbfwDeliveryTotal), and is recomputed
+     * server-side from the band table at add-to-cart — so this only keeps the number on
+     * screen honest, it never decides what is charged. */
+    var rbfw_delivery_price = parseFloat(window.rbfwDeliveryTotal) || 0;
 
+    var total_price = sub_total_price + rbfw_management_price + rbfw_delivery_price + parseFloat(rbfw_security_deposit_actual_amount);
 
+    if (rbfw_delivery_price > 0) {
+        jQuery('.rbfw-delivery-costing').show();
+        jQuery('.rbfw-delivery-cost-value').html(wc_price_rbfw(rbfw_delivery_price));
+    } else {
+        jQuery('.rbfw-delivery-costing').hide();
+    }
 
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
