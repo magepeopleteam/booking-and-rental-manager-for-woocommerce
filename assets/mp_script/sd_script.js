@@ -105,16 +105,14 @@
 
                             },
                             complete:function(data) {
-                                // Guard: on some templates (e.g. multi-hour/timely) the
-                                // calendar header is absent, so .offset() is undefined.
-                                // An unguarded .top throw here aborts jQuery's complete
-                                // sequence BEFORE the global ajaxComplete fires, which
-                                // silently kills the variation-surcharge recalc bound to it.
-                                var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
-                                if ($hdr.length && $hdr.offset()) {
-                                    jQuery('html, body').animate({
-                                        scrollTop: $hdr.offset().top
-                                    }, 100);
+                                // Defined in rbfw_script.js; both files are enqueued on the
+                                // booking page and this runs at AJAX-complete time, long
+                                // after every script has loaded. Guarded anyway so a partial
+                                // asset load can never throw here — an exception in complete
+                                // aborts the sequence before the global ajaxComplete fires,
+                                // which silently kills the variation-surcharge recalc.
+                                if (typeof rbfwScrollBookingWidgetIntoView === 'function') {
+                                    rbfwScrollBookingWidgetIntoView();
                                 }
                             }
                     });

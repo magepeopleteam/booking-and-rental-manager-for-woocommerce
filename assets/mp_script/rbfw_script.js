@@ -1,5 +1,40 @@
 /*start single day and appointment pricing booking*/
 
+/**
+ * Keep the booking widget in view after an AJAX step (date -> times -> rates) loads.
+ *
+ * Both step handlers used to scroll to `.rbfw-bikecarsd-calendar-header`. Despite the
+ * name, that element is the "Real-time availability / Instant confirmation" box printed
+ * by the rbfw_ticket_feature_info action, and the registration templates emit it at the
+ * BOTTOM of the form — directly above the Book Now button, ~330 lines below the result
+ * area. Aligning it with the top of the viewport therefore pushed the entire widget
+ * off-screen and parked the customer on whatever follows the form (the Ratings section
+ * on the default single-item layout).
+ *
+ * Anchor on the widget itself, and only move when its top has actually been scrolled
+ * past — when the form is already on screen the freshly loaded content should simply
+ * appear where the customer is looking, with no scrolling at all.
+ */
+function rbfwScrollBookingWidgetIntoView() {
+    var $widget = jQuery('.rbfw_bikecarsd_pricing_table_wrap').first();
+    if (!$widget.length) {
+        $widget = jQuery('.mp_rbfw_ticket_form').first();
+    }
+    if (!$widget.length || !$widget.offset()) {
+        return; // absent on some templates (multi-hour/timely) -> nothing to do
+    }
+
+    var target = $widget.offset().top - 100; // breathing room for sticky headers
+    if (target < 0) {
+        target = 0;
+    }
+    if (jQuery(window).scrollTop() <= target) {
+        return; // widget top already visible -> leave the customer where they are
+    }
+
+    jQuery('html, body').animate({ scrollTop: target }, 300);
+}
+
 /* Start Calendar Script */
 let bikecarsd_price_arr = {};
 let service_price_arr = {};
@@ -101,15 +136,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
         },
         complete:function(response) {
-            // Guard: element is absent on some templates (multi-hour/timely). An
-            // unguarded .offset().top throw here aborts the complete sequence before
-            // the global ajaxComplete fires, killing the variation-surcharge recalc.
-            var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
-            if ($hdr.length && $hdr.offset()) {
-                jQuery('html, body').animate({
-                    scrollTop: $hdr.offset().top
-                }, 100);
-            }
+            rbfwScrollBookingWidgetIntoView();
         }
     });
 });
