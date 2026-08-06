@@ -162,67 +162,9 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 			</div>
 
 			<?php
-			/*
-			 * Zone choices, built from the configured bands.
-			 *
-			 * The posted value is the band's MIDPOINT rather than its edge. Bands are
-			 * inclusive at both ends, so neighbouring bands touch (0-5 and 5-15 both contain
-			 * 5) and submitting an edge would let the "first match wins" rule resolve to the
-			 * cheaper neighbour — the customer would pick the 5-15 zone and be charged the
-			 * 0-5 price. A midpoint can only ever fall in its own band.
-			 */
-			$rbfw_delivery_zones = array();
-
-			if ( $rbfw_delivery_cfg['free_radius'] > 0 ) {
-				$rbfw_delivery_zones[] = array(
-					'value' => min( $rbfw_delivery_cfg['free_radius'], max( 0.1, $rbfw_delivery_cfg['free_radius'] / 2 ) ),
-					'label' => sprintf(
-						/* translators: %s: free radius in km. */
-						__( 'Within %s km', 'booking-and-rental-manager-for-woocommerce' ),
-						rbfw_delivery_format_km( $rbfw_delivery_cfg['free_radius'] )
-					),
-					'note'  => __( 'Free', 'booking-and-rental-manager-for-woocommerce' ),
-				);
-			}
-
-			foreach ( $rbfw_delivery_cfg['bands'] as $rbfw_band ) {
-				$rbfw_from = $rbfw_band['from'];
-				$rbfw_to   = $rbfw_band['to'];
-
-				if ( $rbfw_delivery_cfg['free_radius'] > 0 ) {
-					// Entirely inside the free radius — already covered by the free row above.
-					if ( $rbfw_to <= $rbfw_delivery_cfg['free_radius'] ) {
-						continue;
-					}
-					/*
-					 * Straddles the free radius (free 0-3, band 0-5): only the part ABOVE the
-					 * radius actually costs anything, so the option must describe 3-5, not 0-5.
-					 * Leaving it as 0-5 put its midpoint inside the free zone, which quoted a
-					 * 4 km customer at nothing — the shop delivering for free by accident.
-					 */
-					if ( $rbfw_from < $rbfw_delivery_cfg['free_radius'] ) {
-						$rbfw_from = $rbfw_delivery_cfg['free_radius'];
-					}
-				}
-
-				// Midpoint of the chargeable span. Bands are inclusive at both ends, so
-				// neighbours touch; a midpoint can only ever resolve to its own band.
-				$rbfw_mid   = $rbfw_from + ( ( $rbfw_to - $rbfw_from ) / 2 );
-				$rbfw_quote = rbfw_delivery_quote( $rbfw_delivery_item_id, $rbfw_mid, true, false );
-
-				$rbfw_delivery_zones[] = array(
-					'value' => $rbfw_mid,
-					'label' => sprintf(
-						/* translators: 1: band lower bound, 2: band upper bound. */
-						__( '%1$s – %2$s km', 'booking-and-rental-manager-for-woocommerce' ),
-						rbfw_delivery_format_km( $rbfw_from ),
-						rbfw_delivery_format_km( $rbfw_to )
-					),
-					'note'  => $rbfw_quote['delivery'] > 0
-						? wp_strip_all_tags( rbfw_delivery_price_html( $rbfw_quote['delivery'] ) )
-						: __( 'Free', 'booking-and-rental-manager-for-woocommerce' ),
-				);
-			}
+			/* Zones come from the shared helper so the public form and the admin booking
+			   editor can never offer different zones or prices for the same shop. */
+			$rbfw_delivery_zones = rbfw_delivery_zone_options( $rbfw_delivery_item_id );
 			?>
 			<div class="rbfw-delivery-field rbfw-delivery-field-distance">
 				<label for="rbfw-delivery-distance-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">

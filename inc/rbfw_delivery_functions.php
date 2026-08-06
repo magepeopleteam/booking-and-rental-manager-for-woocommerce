@@ -633,6 +633,107 @@ function rbfw_delivery_validate_input( $item_id, $input ) {
 }
 
 /**
+ * The distance zones a customer (or an admin) picks from, built from the configured bands.
+ *
+ * Shared by the public booking form and the admin booking editor so the two can never offer
+ * different zones or different prices for the same shop.
+ *
+ * Each option's VALUE is a distance inside its band — the midpoint of the chargeable span,
+ * not an edge. Bands are inclusive at both ends, so neighbours touch (0-5 and 5-15 both
+ * contain 5) and submitting an edge would let "first match wins" resolve to the cheaper
+ * neighbour: the customer picks the 5-15 zone and is charged the 0-5 price.
+ *
+ * Bands straddling the free radius are trimmed to their chargeable part. With free delivery
+ * to 3 km and a 0-5 band, offering "0 - 5 km" puts its midpoint inside the free zone, so a
+ * customer 4 km away is quoted nothing and the shop delivers free by accident.
+ *
+ * @param int $item_id rbfw_item post id.
+ * @return array<int,array{value:float,label:string,note:string}>
+ */
+function rbfw_delivery_zone_options( $item_id ) {
+	$cfg   = rbfw_delivery_settings();
+	$zones = array();
+
+	if ( $cfg['free_radius'] > 0 ) {
+		$zones[] = array(
+			'value' => min( $cfg['free_radius'], max( 0.1, $cfg['free_radius'] / 2 ) ),
+			'label' => sprintf(
+				/* translators: %s: free radius in km. */
+				__( 'Within %s km', 'booking-and-rental-manager-for-woocommerce' ),
+				rbfw_delivery_format_km( $cfg['free_radius'] )
+			),
+			'note'  => __( 'Free', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+	}
+
+	foreach ( $cfg['bands'] as $band ) {
+		$from = $band['from'];
+		$to   = $band['to'];
+
+		if ( $cfg['free_radius'] > 0 ) {
+			if ( $to <= $cfg['free_radius'] ) {
+				continue; // already covered by the free row above
+			}
+			if ( $from < $cfg['free_radius'] ) {
+				$from = $cfg['free_radius'];
+			}
+		}
+
+		$mid   = $from + ( ( $to - $from ) / 2 );
+		$quote = rbfw_delivery_quote( $item_id, $mid, true, false );
+
+		$zones[] = array(
+			'value' => $mid,
+			'label' => sprintf(
+				/* translators: 1: band lower bound, 2: band upper bound. */
+				__( '%1$s – %2$s km', 'booking-and-rental-manager-for-woocommerce' ),
+				rbfw_delivery_format_km( $from ),
+				rbfw_delivery_format_km( $to )
+			),
+			'note'  => $quote['delivery'] > 0
+				? wp_strip_all_tags( rbfw_delivery_price_html( $quote['delivery'] ) )
+				: __( 'Free', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+	}
+
+	return $zones;
+}
+
+/**
+ * The zone option whose band contains a stored distance, so an existing booking reopens on
+ * the zone it was actually booked with rather than falling back to "choose one".
+ *
+ * @param int   $item_id
+ * @param float $distance
+ * @return float|null The matching option value, or null when nothing covers it.
+ */
+function rbfw_delivery_zone_value_for( $item_id, $distance ) {
+	$distance = (float) $distance;
+	if ( $distance <= 0 ) {
+		return null;
+	}
+
+	$cfg = rbfw_delivery_settings();
+
+	// Inside the free radius the first option is the right one.
+	if ( $cfg['free_radius'] > 0 && $distance <= $cfg['free_radius'] ) {
+		$zones = rbfw_delivery_zone_options( $item_id );
+		return isset( $zones[0] ) ? $zones[0]['value'] : null;
+	}
+
+	foreach ( $cfg['bands'] as $band ) {
+		if ( $distance >= $band['from'] && $distance <= $band['to'] ) {
+			$from = ( $cfg['free_radius'] > 0 && $band['from'] < $cfg['free_radius'] )
+				? $cfg['free_radius']
+				: $band['from'];
+			return $from + ( ( $band['to'] - $from ) / 2 );
+		}
+	}
+
+	return null;
+}
+
+/**
  * Flat delivery record for one booking, ready to travel as cart-item data.
  *
  * The fee bucket carries the MONEY, but not the address, the distance or the fact that a
