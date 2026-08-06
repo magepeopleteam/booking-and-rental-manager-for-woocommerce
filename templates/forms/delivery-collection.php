@@ -65,6 +65,7 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 	data-free-radius="<?php echo esc_attr( $rbfw_delivery_cfg['free_radius'] ); ?>"
 	data-max-distance="<?php echo esc_attr( $rbfw_delivery_cfg['max_distance'] ); ?>"
 	data-collection-mode="<?php echo esc_attr( $rbfw_delivery_cfg['collection_mode'] ); ?>"
+	data-require-choice="<?php echo esc_attr( $rbfw_delivery_cfg['require_choice'] ? '1' : '0' ); ?>"
 	data-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['bands'] ) ); ?>"
 	data-collection-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['collection_band_rows'] ) ); ?>">
 
@@ -204,6 +205,38 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 					</small>
 				<?php endif; ?>
 			</div>
+
+			<?php if ( $rbfw_delivery_cfg['require_phone'] ) : ?>
+				<div class="rbfw-delivery-field">
+					<label for="rbfw-delivery-phone-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
+						<?php esc_html_e( 'Contact number for the delivery', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						<span class="rbfw-required">*</span>
+					</label>
+					<input type="tel"
+						id="rbfw-delivery-phone-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+						name="rbfw_delivery_phone"
+						class="rbfw-input rbfw-delivery-phone"
+						autocomplete="tel"
+						data-required="1"
+						placeholder="<?php esc_attr_e( 'We will call when we arrive', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $rbfw_delivery_cfg['require_note'] ) : ?>
+				<div class="rbfw-delivery-field">
+					<label for="rbfw-delivery-note-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
+						<?php esc_html_e( 'Delivery notes', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						<span class="rbfw-required">*</span>
+					</label>
+					<textarea
+						id="rbfw-delivery-note-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+						name="rbfw_delivery_note"
+						class="rbfw-input rbfw-delivery-note"
+						rows="2"
+						data-required="1"
+						placeholder="<?php esc_attr_e( 'Gate code, floor, where to leave it…', 'booking-and-rental-manager-for-woocommerce' ); ?>"></textarea>
+				</div>
+			<?php endif; ?>
 
 			<div class="rbfw-delivery-quote" aria-live="polite"></div>
 

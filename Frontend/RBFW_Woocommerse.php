@@ -11,6 +11,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_buffer_lead_time'), 15, 3 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_delivery_fields'), 16, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_location_stock'), 25, 3 );
             add_filter( 'woocommerce_is_sold_individually', array($this , 'rbfw_rental_product_sold_individually'), 10, 2 );
@@ -105,6 +106,39 @@ if (!class_exists('RBFW_Woocommerce')) {
             }
 
             return ! rbfw_allow_duplicate_rental_cart_items();
+        }
+
+        /**
+         * Enforce the shop's delivery required-field rules at add-to-cart.
+         *
+         * The booking form marks the same fields required, but that is a convenience for the
+         * customer rather than a control — anything enforced only in the browser can be
+         * removed with the developer tools. This is the check that actually holds, and it
+         * mirrors the one on the standalone checkout path so both behave identically.
+         *
+         * @param bool $passed
+         * @param int  $product_id The hidden WooCommerce product backing the rental item.
+         * @return bool
+         */
+        public function rbfw_validate_delivery_fields( $passed, $product_id ) {
+            if ( ! $passed || ! function_exists( 'rbfw_delivery_validate_input' ) ) {
+                return $passed;
+            }
+
+            $rbfw_id = isset( $_POST['rbfw_post_id'] ) ? absint( wp_unslash( $_POST['rbfw_post_id'] ) ) : 0;
+            if ( ! $rbfw_id || get_post_type( $rbfw_id ) !== 'rbfw_item' ) {
+                return $passed;
+            }
+
+            $input = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
+            $valid = rbfw_delivery_validate_input( $rbfw_id, $input );
+
+            if ( is_wp_error( $valid ) ) {
+                wc_add_notice( $valid->get_error_message(), 'error' );
+                return false;
+            }
+
+            return $passed;
         }
 
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {

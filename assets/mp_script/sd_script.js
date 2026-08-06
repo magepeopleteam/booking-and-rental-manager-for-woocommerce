@@ -679,11 +679,10 @@ function rbfw_price_calculation_sd(){
 
     var total_price = sub_total_price + rbfw_management_price + rbfw_delivery_price + parseFloat(rbfw_security_deposit_actual_amount);
 
-    if (rbfw_delivery_price > 0) {
-        jQuery('.rbfw-delivery-costing').show();
-        jQuery('.rbfw-delivery-cost-value').html(wc_price_rbfw(rbfw_delivery_price));
-    } else {
-        jQuery('.rbfw-delivery-costing').hide();
+    /* Delivery and collection are two separately billed legs, priced by band tables that
+       may differ, so the summary lists them separately rather than as one merged figure. */
+    if (typeof window.rbfwRenderDeliveryLines === 'function') {
+        window.rbfwRenderDeliveryLines();
     }
 
     if(rbfw_security_deposit_actual_amount){

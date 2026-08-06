@@ -140,7 +140,11 @@ function rbfw_delivery_settings( $force_refresh = false ) {
 		'max_distance'       => max( 0, (float) $get( 'rbfw_delivery_max_distance', 0 ) ),
 		'bands'              => $bands,
 		'collection_band_rows' => $collection_bands,
+		// What the customer must complete. Enforced on the form AND on the server.
+		'require_choice'     => 'on' === $get( 'rbfw_delivery_require_choice', 'off' ),
 		'require_address'    => 'off' !== $get( 'rbfw_delivery_require_address', 'on' ),
+		'require_phone'      => 'on' === $get( 'rbfw_delivery_require_phone', 'off' ),
+		'require_note'       => 'on' === $get( 'rbfw_delivery_require_note', 'off' ),
 		'delivery_label'     => (string) $get( 'rbfw_delivery_label', __( 'Delivery', 'booking-and-rental-manager-for-woocommerce' ) ),
 		'collection_label'   => (string) $get( 'rbfw_collection_label', __( 'Collection', 'booking-and-rental-manager-for-woocommerce' ) ),
 		'help_text'          => (string) $get( 'rbfw_delivery_help_text', '' ),
@@ -427,6 +431,8 @@ function rbfw_delivery_input_from_form( $input ) {
 		'collection' => isset( $input['rbfw_collection_wanted'] ) && $truthy( $input['rbfw_collection_wanted'] ),
 		'distance'   => max( 0, $distance ),
 		'address'    => isset( $input['rbfw_delivery_address'] ) ? sanitize_text_field( (string) $input['rbfw_delivery_address'] ) : '',
+		'phone'      => isset( $input['rbfw_delivery_phone'] ) ? sanitize_text_field( (string) $input['rbfw_delivery_phone'] ) : '',
+		'note'       => isset( $input['rbfw_delivery_note'] ) ? sanitize_textarea_field( (string) $input['rbfw_delivery_note'] ) : '',
 	);
 }
 
@@ -507,6 +513,74 @@ function rbfw_delivery_price_html( $amount ) {
 }
 
 /**
+ * Validate a submitted delivery choice against the shop's required-field settings.
+ *
+ * Runs on BOTH checkout paths. The booking form marks the same fields required, but that is
+ * a convenience for the customer, not a control: anything enforced only in the browser can
+ * be removed with the developer tools. This is the check that actually holds.
+ *
+ * @param int   $item_id rbfw_item post id.
+ * @param array $input   Raw sanitized form payload.
+ * @return true|WP_Error
+ */
+function rbfw_delivery_validate_input( $item_id, $input ) {
+	if ( ! rbfw_delivery_enabled_for_item( $item_id ) ) {
+		return true;
+	}
+
+	$cfg    = rbfw_delivery_settings();
+	$choice = rbfw_delivery_input_from_form( $input );
+	$chosen = ( $choice['delivery'] || $choice['collection'] );
+
+	if ( ! $chosen ) {
+		if ( ! empty( $cfg['require_choice'] ) ) {
+			return new WP_Error(
+				'rbfw_delivery_required',
+				esc_html__( 'Please choose whether you would like delivery or collection.', 'booking-and-rental-manager-for-woocommerce' )
+			);
+		}
+		// Nothing asked for and nothing required — collecting in store is a valid answer.
+		return true;
+	}
+
+	if ( $choice['distance'] <= 0 ) {
+		return new WP_Error(
+			'rbfw_delivery_no_distance',
+			esc_html__( 'Please choose how far you are from us.', 'booking-and-rental-manager-for-woocommerce' )
+		);
+	}
+
+	// The quote itself is authoritative on range and coverage.
+	$quote = rbfw_delivery_quote( $item_id, $choice['distance'], $choice['delivery'], $choice['collection'] );
+	if ( '' !== $quote['error'] ) {
+		return new WP_Error( 'rbfw_delivery_' . $quote['error_code'], $quote['error'] );
+	}
+
+	if ( ! empty( $cfg['require_address'] ) && '' === trim( $choice['address'] ) ) {
+		return new WP_Error(
+			'rbfw_delivery_no_address',
+			esc_html__( 'Please enter the delivery address.', 'booking-and-rental-manager-for-woocommerce' )
+		);
+	}
+
+	if ( ! empty( $cfg['require_phone'] ) && '' === trim( (string) ( $input['rbfw_delivery_phone'] ?? '' ) ) ) {
+		return new WP_Error(
+			'rbfw_delivery_no_phone',
+			esc_html__( 'Please give us a contact number for the delivery.', 'booking-and-rental-manager-for-woocommerce' )
+		);
+	}
+
+	if ( ! empty( $cfg['require_note'] ) && '' === trim( (string) ( $input['rbfw_delivery_note'] ?? '' ) ) ) {
+		return new WP_Error(
+			'rbfw_delivery_no_note',
+			esc_html__( 'Please add delivery notes so we can find you.', 'booking-and-rental-manager-for-woocommerce' )
+		);
+	}
+
+	return true;
+}
+
+/**
  * Flat delivery record for one booking, ready to travel as cart-item data.
  *
  * The fee bucket carries the MONEY, but not the address, the distance or the fact that a
@@ -537,7 +611,11 @@ function rbfw_delivery_cart_data( $item_id, $input ) {
 		'rbfw_collection_wanted' => $quote['applied_collection'] ? 'yes' : 'no',
 		'rbfw_delivery_distance' => $quote['distance'],
 		'rbfw_delivery_address'  => $choice['address'],
+		'rbfw_delivery_phone'    => $choice['phone'],
+		'rbfw_delivery_note'     => $choice['note'],
 		'rbfw_delivery_amount'   => $quote['total'],
+		'rbfw_delivery_fee'      => $quote['delivery'],
+		'rbfw_collection_fee'    => $quote['collection'],
 		'rbfw_delivery_band'     => $quote['band'],
 	);
 }
@@ -554,7 +632,14 @@ function rbfw_delivery_meta_keys() {
 		'rbfw_collection_wanted',
 		'rbfw_delivery_distance',
 		'rbfw_delivery_address',
+		'rbfw_delivery_phone',
+		'rbfw_delivery_note',
 		'rbfw_delivery_amount',
+		// Each leg is kept separately as well as summed — they are billed as two services
+		// and can be priced by different band tables, so a merged total cannot be split
+		// back apart afterwards for an invoice or a refund.
+		'rbfw_delivery_fee',
+		'rbfw_collection_fee',
 		'rbfw_delivery_band',
 	);
 }
@@ -637,6 +722,10 @@ function rbfw_delivery_save_booking_meta( $booking_id, $item_id, $input ) {
 	update_post_meta( $booking_id, 'rbfw_collection_wanted', $quote['applied_collection'] ? 'yes' : 'no' );
 	update_post_meta( $booking_id, 'rbfw_delivery_distance', $quote['distance'] );
 	update_post_meta( $booking_id, 'rbfw_delivery_address', $choice['address'] );
+	update_post_meta( $booking_id, 'rbfw_delivery_phone', $choice['phone'] );
+	update_post_meta( $booking_id, 'rbfw_delivery_note', $choice['note'] );
 	update_post_meta( $booking_id, 'rbfw_delivery_amount', $quote['total'] );
+	update_post_meta( $booking_id, 'rbfw_delivery_fee', $quote['delivery'] );
+	update_post_meta( $booking_id, 'rbfw_collection_fee', $quote['collection'] );
 	update_post_meta( $booking_id, 'rbfw_delivery_band', $quote['band'] );
 }

@@ -136,6 +136,13 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			// with the delivery silently dropped.
 			$delivery_total = 0.0;
 			if ( function_exists( 'rbfw_delivery_quote' ) ) {
+				// Required-field rules are enforced here, not only on the form: anything
+				// checked solely in the browser can be removed with the dev tools.
+				$delivery_valid = rbfw_delivery_validate_input( $item_id, $raw );
+				if ( is_wp_error( $delivery_valid ) ) {
+					wp_send_json_error( array( 'message' => $delivery_valid->get_error_message() ) );
+				}
+
 				$delivery_choice = rbfw_delivery_input_from_form( $raw );
 
 				if ( $delivery_choice['delivery'] || $delivery_choice['collection'] ) {

@@ -58,7 +58,7 @@
 			$fields.slideUp( 120 );
 			$quote.empty().removeClass( 'is-error' );
 			$block.removeData( 'quote' );
-			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, error: '' } ] );
+			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, delivery: 0, collection: 0, error: '' } ] );
 			return;
 		}
 
@@ -78,7 +78,7 @@
 				'<span class="rbfw-delivery-quote-hint">' + t( 'enterDistance', 'Choose your area to see the price.' ) + '</span>'
 			);
 			$block.removeData( 'quote' );
-			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, error: 'incomplete' } ] );
+			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, delivery: 0, collection: 0, error: 'incomplete' } ] );
 			return;
 		}
 
@@ -87,7 +87,7 @@
 				t( 'outOfRange', 'Sorry, we only deliver within %s km.' ).replace( '%s', maxKm )
 			);
 			$block.removeData( 'quote' );
-			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, error: 'out_of_range' } ] );
+			$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, delivery: 0, collection: 0, error: 'out_of_range' } ] );
 			return;
 		}
 
@@ -100,7 +100,7 @@
 			if ( price === null ) {
 				$quote.addClass( 'is-error' ).text( t( 'noBand', 'We could not work out a price for that distance. Please contact us.' ) );
 				$block.removeData( 'quote' );
-				$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, error: 'no_band' } ] );
+				$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: 0, delivery: 0, collection: 0, error: 'no_band' } ] );
 				return;
 			}
 			if ( wantDelivery ) { delivery = baseFee + price; }
@@ -125,8 +125,15 @@
 		$quote.removeClass( 'is-error' ).html( rows );
 		$block.data( 'quote', total );
 
-		// The price tables listen for this so the running total stays honest.
-		$( document.body ).trigger( 'rbfw_delivery_changed', [ { total: total, error: '' } ] );
+		// The price tables listen for this so the running total stays honest. Legs are
+		// reported separately as well as summed: they are billed as two services and can be
+		// priced by different band tables, so the summary shows a line for each.
+		$( document.body ).trigger( 'rbfw_delivery_changed', [ {
+			total: total,
+			delivery: wantDelivery ? delivery : 0,
+			collection: wantCollection ? collection : 0,
+			error: ''
+		} ] );
 	}
 
 	/* ── Booking summary integration ───────────────────────────────────── */
@@ -144,7 +151,11 @@
 	 * pays — this only keeps the figure on screen honest.
 	 */
 	$( document.body ).on( 'rbfw_delivery_changed', function ( e, data ) {
-		window.rbfwDeliveryTotal = ( data && data.total ) ? data.total : 0;
+		window.rbfwDeliveryTotal      = ( data && data.total ) ? data.total : 0;
+		window.rbfwDeliveryLegs       = {
+			delivery:   ( data && data.delivery ) ? data.delivery : 0,
+			collection: ( data && data.collection ) ? data.collection : 0
+		};
 
 		// Nudge the pricing engine to repaint with the new figure. Each item type has its
 		// own recalculation entry point, so try the known ones and fall back to updating
@@ -156,14 +167,30 @@
 			try { recalc(); return; } catch ( err ) { /* fall through to the local update */ }
 		}
 
-		var $line = $( '.rbfw-delivery-costing' );
-		if ( window.rbfwDeliveryTotal > 0 ) {
-			$line.find( '.rbfw-delivery-cost-value' ).html( money( window.rbfwDeliveryTotal ) );
-			$line.show();
-		} else {
-			$line.hide();
-		}
+		rbfwRenderDeliveryLines();
 	} );
+
+	/** Fill the two cost lines from the last quote. Shared with the pricing scripts. */
+	function rbfwRenderDeliveryLines() {
+		var legs = window.rbfwDeliveryLegs || { delivery: 0, collection: 0 };
+
+		$( '.rbfw-delivery-costing' ).each( function () {
+			var $l = $( this );
+			if ( legs.delivery > 0 ) {
+				$l.find( '.rbfw-delivery-cost-value' ).html( money( legs.delivery ) );
+				$l.show();
+			} else { $l.hide(); }
+		} );
+
+		$( '.rbfw-collection-costing' ).each( function () {
+			var $l = $( this );
+			if ( legs.collection > 0 ) {
+				$l.find( '.rbfw-collection-cost-value' ).html( money( legs.collection ) );
+				$l.show();
+			} else { $l.hide(); }
+		} );
+	}
+	window.rbfwRenderDeliveryLines = rbfwRenderDeliveryLines;
 
 	$( document ).on( 'change', '.rbfw-delivery-toggle', function () {
 		update( $( this ).closest( '.rbfw-delivery-block' ) );
@@ -185,7 +212,21 @@
 		if ( ! $block.length ) { return; }
 
 		var wants = $block.find( '.rbfw-delivery-toggle:checked' ).length > 0;
-		if ( ! wants ) { return; }
+
+		// The shop can make choosing a leg mandatory. Server-enforced too; this just says
+		// so before the round trip.
+		if ( ! wants ) {
+			if ( $block.attr( 'data-require-choice' ) === '1' ) {
+				e.preventDefault();
+				$block.find( '.rbfw-delivery-quote' )
+					.show()
+					.addClass( 'is-error' )
+					.text( t( 'needChoice', 'Please choose whether you would like delivery or collection.' ) );
+				$( 'html, body' ).animate( { scrollTop: $block.offset().top - 80 }, 200 );
+				return false;
+			}
+			return;
+		}
 
 		var $distance = $block.find( '.rbfw-delivery-distance' );
 		var $address  = $block.find( '.rbfw-delivery-address' );
@@ -203,11 +244,25 @@
 			$distance.trigger( 'focus' );
 			return false;
 		}
-		if ( $address.attr( 'data-required' ) && ! $.trim( $address.val() ) ) {
-			e.preventDefault();
-			$address.trigger( 'focus' );
-			$block.find( '.rbfw-delivery-quote' ).addClass( 'is-error' ).text( t( 'needAddress', 'Please enter the delivery address.' ) );
-			return false;
+		// Every field the shop marked required, in the order they appear, so the customer is
+		// sent to the first thing they missed rather than the last.
+		var required = [
+			[ $address, 'needAddress', 'Please enter the delivery address.' ],
+			[ $block.find( '.rbfw-delivery-phone' ), 'needPhone', 'Please give us a contact number for the delivery.' ],
+			[ $block.find( '.rbfw-delivery-note' ), 'needNote', 'Please add delivery notes so we can find you.' ]
+		];
+
+		for ( var i = 0; i < required.length; i++ ) {
+			var $field = required[ i ][ 0 ];
+			if ( $field.length && $field.attr( 'data-required' ) && ! $.trim( $field.val() ) ) {
+				e.preventDefault();
+				$field.trigger( 'focus' );
+				$block.find( '.rbfw-delivery-quote' )
+					.show()
+					.addClass( 'is-error' )
+					.text( t( required[ i ][ 1 ], required[ i ][ 2 ] ) );
+				return false;
+			}
 		}
 	} );
 
