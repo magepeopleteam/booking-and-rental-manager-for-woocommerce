@@ -129,11 +129,16 @@ if ( ! class_exists( 'RBFW_Delivery_Settings' ) ) {
 					'desc'  => esc_html__( 'What the customer must complete before they can book. Each of these is enforced on the booking form AND again on the server, so it cannot be skipped by editing the page.', 'booking-and-rental-manager-for-woocommerce' ),
 				),
 				array(
-					'name'    => 'rbfw_delivery_require_choice',
-					'label'   => esc_html__( 'Delivery Choice Mandatory', 'booking-and-rental-manager-for-woocommerce' ),
-					'desc'    => esc_html__( 'The customer must pick delivery and/or collection before booking. Leave off to keep delivery entirely optional (they can collect in store).', 'booking-and-rental-manager-for-woocommerce' ),
-					'type'    => 'checkbox',
+					'name'    => 'rbfw_delivery_require_mode',
+					'label'   => esc_html__( 'Delivery Choice', 'booking-and-rental-manager-for-woocommerce' ),
+					'desc'    => esc_html__( 'How much of the delivery service the customer must take. "Both" suits a shop that will not leave a rental at an address it is not coming back to. Only the legs you actually offer above are ever required.', 'booking-and-rental-manager-for-woocommerce' ),
+					'type'    => 'select',
 					'default' => 'off',
+					'options' => array(
+						'off'  => esc_html__( 'Optional — they may collect in store', 'booking-and-rental-manager-for-woocommerce' ),
+						'any'  => esc_html__( 'At least one — delivery or collection', 'booking-and-rental-manager-for-woocommerce' ),
+						'both' => esc_html__( 'Both — delivery and collection together', 'booking-and-rental-manager-for-woocommerce' ),
+					),
 				),
 				array(
 					'name'    => 'rbfw_delivery_require_address',

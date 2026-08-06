@@ -65,20 +65,40 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 	data-free-radius="<?php echo esc_attr( $rbfw_delivery_cfg['free_radius'] ); ?>"
 	data-max-distance="<?php echo esc_attr( $rbfw_delivery_cfg['max_distance'] ); ?>"
 	data-collection-mode="<?php echo esc_attr( $rbfw_delivery_cfg['collection_mode'] ); ?>"
-	data-require-choice="<?php echo esc_attr( $rbfw_delivery_cfg['require_choice'] ? '1' : '0' ); ?>"
+	data-require-mode="<?php echo esc_attr( $rbfw_delivery_cfg['require_mode'] ); ?>"
 	data-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['bands'] ) ); ?>"
 	data-collection-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['collection_band_rows'] ) ); ?>">
 
+	<?php
+	/* When both legs are mandatory they are pre-selected: the shop is not offering a
+	   choice, it is telling the customer what the rental includes. They can still see the
+	   price and fill in the address; unticking one is what the validator refuses. */
+	$rbfw_delivery_both = ( 'both' === $rbfw_delivery_cfg['require_mode'] );
+	?>
 	<div class="rbfw-single-right-heading">
 		<?php esc_html_e( 'Delivery &amp; Collection', 'booking-and-rental-manager-for-woocommerce' ); ?>
+		<?php if ( 'off' !== $rbfw_delivery_cfg['require_mode'] ) : ?><span class="rbfw-required">*</span><?php endif; ?>
 	</div>
+
+	<?php if ( $rbfw_delivery_both && $rbfw_delivery_cfg['enabled'] && $rbfw_delivery_cfg['collection_enabled'] ) : ?>
+		<p class="rbfw-delivery-both-note">
+			<?php
+			printf(
+				/* translators: 1: delivery label, 2: collection label. */
+				esc_html__( '%1$s and %2$s are booked together for this rental.', 'booking-and-rental-manager-for-woocommerce' ),
+				esc_html( $rbfw_delivery_cfg['delivery_label'] ),
+				esc_html( $rbfw_delivery_cfg['collection_label'] )
+			);
+			?>
+		</p>
+	<?php endif; ?>
 
 	<div class="item-content rbfw-delivery-content">
 
 		<div class="rbfw-delivery-options">
 			<?php if ( $rbfw_delivery_cfg['enabled'] ) : ?>
 				<label class="rbfw-delivery-option">
-					<input type="checkbox" name="rbfw_delivery_wanted" value="yes" class="rbfw-delivery-toggle">
+					<input type="checkbox" name="rbfw_delivery_wanted" value="yes" class="rbfw-delivery-toggle" <?php checked( $rbfw_delivery_both ); ?>>
 					<span class="rbfw-delivery-option-label"><?php echo esc_html( $rbfw_delivery_cfg['delivery_label'] ); ?></span>
 					<span class="rbfw-delivery-option-hint"><?php esc_html_e( 'We bring it to you', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 				</label>
@@ -86,7 +106,7 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 
 			<?php if ( $rbfw_delivery_cfg['collection_enabled'] ) : ?>
 				<label class="rbfw-delivery-option">
-					<input type="checkbox" name="rbfw_collection_wanted" value="yes" class="rbfw-delivery-toggle">
+					<input type="checkbox" name="rbfw_collection_wanted" value="yes" class="rbfw-delivery-toggle" <?php checked( $rbfw_delivery_both ); ?>>
 					<span class="rbfw-delivery-option-label"><?php echo esc_html( $rbfw_delivery_cfg['collection_label'] ); ?></span>
 					<span class="rbfw-delivery-option-hint"><?php esc_html_e( 'We pick it up afterwards', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 				</label>

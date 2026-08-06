@@ -100,6 +100,7 @@ if (! class_exists('RBFW_Dependencies')) {
 					'needDistance'  => __('Please choose how far you are from us.', 'booking-and-rental-manager-for-woocommerce'),
 					'needAddress'   => __('Please enter the delivery address.', 'booking-and-rental-manager-for-woocommerce'),
 					'needChoice'    => __('Please choose whether you would like delivery or collection.', 'booking-and-rental-manager-for-woocommerce'),
+					'needBoth'      => __('This rental is booked with delivery and collection together — please select both.', 'booking-and-rental-manager-for-woocommerce'),
 					'needPhone'     => __('Please give us a contact number for the delivery.', 'booking-and-rental-manager-for-woocommerce'),
 					'needNote'      => __('Please add delivery notes so we can find you.', 'booking-and-rental-manager-for-woocommerce'),
 					/* translators: %s: maximum delivery distance in km. */

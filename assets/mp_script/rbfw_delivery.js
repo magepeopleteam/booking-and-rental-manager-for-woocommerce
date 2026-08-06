@@ -220,10 +220,21 @@
 			return false;
 		};
 
-		var wants = $block.find( '.rbfw-delivery-toggle:checked' ).length > 0;
+		var mode           = $block.attr( 'data-require-mode' ) || 'off';
+		var $delivery      = $block.find( 'input[name="rbfw_delivery_wanted"]' );
+		var $collection    = $block.find( 'input[name="rbfw_collection_wanted"]' );
+		var wantDelivery   = $delivery.is( ':checked' );
+		var wantCollection = $collection.is( ':checked' );
+		var wants          = wantDelivery || wantCollection;
 
-		if ( ! wants ) {
-			if ( $block.attr( 'data-require-choice' ) === '1' ) {
+		// "Both" only demands a leg the shop actually offers — a checkbox that was never
+		// rendered cannot be required, or nobody could book at all.
+		if ( 'both' === mode ) {
+			if ( ( $delivery.length && ! wantDelivery ) || ( $collection.length && ! wantCollection ) ) {
+				return fail( null, 'needBoth', 'This rental is booked with delivery and collection together — please select both.' );
+			}
+		} else if ( ! wants ) {
+			if ( 'any' === mode ) {
 				return fail( null, 'needChoice', 'Please choose whether you would like delivery or collection.' );
 			}
 			return true;

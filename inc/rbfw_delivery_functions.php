@@ -128,6 +128,14 @@ function rbfw_delivery_settings( $force_refresh = false ) {
 
 	$collection_bands = rbfw_delivery_sanitize_bands( $get( 'rbfw_collection_bands', array() ) );
 
+	$delivery_require_mode = $get( 'rbfw_delivery_require_mode', '' );
+	if ( ! in_array( $delivery_require_mode, array( 'off', 'any', 'both' ), true ) ) {
+		// Migrate the superseded boolean. It was documented as "delivery and/or collection",
+		// but a shop that ticks "mandatory" and can still book a lone leg reads that as
+		// broken — so the honest upgrade is the stricter mode.
+		$delivery_require_mode = ( 'on' === $get( 'rbfw_delivery_require_choice', 'off' ) ) ? 'both' : 'off';
+	}
+
 	$cache = array(
 		'enabled'            => 'on' === $get( 'rbfw_delivery_enable', 'off' ),
 		'collection_enabled' => 'on' === $get( 'rbfw_collection_enable', 'off' ),
@@ -140,8 +148,20 @@ function rbfw_delivery_settings( $force_refresh = false ) {
 		'max_distance'       => max( 0, (float) $get( 'rbfw_delivery_max_distance', 0 ) ),
 		'bands'              => $bands,
 		'collection_band_rows' => $collection_bands,
-		// What the customer must complete. Enforced on the form AND on the server.
-		'require_choice'     => 'on' === $get( 'rbfw_delivery_require_choice', 'off' ),
+		/*
+		 * What the customer must complete. Enforced on the form AND on the server.
+		 *
+		 * require_mode: off | any | both.
+		 *   off  — delivery is entirely optional; collecting in store is a valid answer.
+		 *   any  — at least one leg.
+		 *   both — delivery AND collection, for a shop that will not leave a rental at an
+		 *          address it is not coming back to.
+		 *
+		 * The old boolean `rbfw_delivery_require_choice` migrates to `both`, which is what
+		 * shops that turned it on actually meant: ticking it and still being able to book
+		 * one leg read as the setting not working.
+		 */
+		'require_mode'       => $delivery_require_mode,
 		'require_address'    => 'off' !== $get( 'rbfw_delivery_require_address', 'on' ),
 		'require_phone'      => 'on' === $get( 'rbfw_delivery_require_phone', 'off' ),
 		'require_note'       => 'on' === $get( 'rbfw_delivery_require_note', 'off' ),
@@ -532,8 +552,40 @@ function rbfw_delivery_validate_input( $item_id, $input ) {
 	$choice = rbfw_delivery_input_from_form( $input );
 	$chosen = ( $choice['delivery'] || $choice['collection'] );
 
+	/*
+	 * A leg can only be required if the shop actually offers it. Requiring "both" while
+	 * Collection is switched off would make every booking impossible, so each rule is
+	 * narrowed to the legs on offer first.
+	 */
+	$needs_delivery   = ! empty( $cfg['enabled'] ) && 'both' === $cfg['require_mode'];
+	$needs_collection = ! empty( $cfg['collection_enabled'] ) && 'both' === $cfg['require_mode'];
+
+	if ( $needs_delivery && ! $choice['delivery'] ) {
+		return new WP_Error(
+			'rbfw_delivery_required',
+			sprintf(
+				/* translators: 1: delivery label, 2: collection label. */
+				esc_html__( 'This rental is booked with %1$s and %2$s together — please select both.', 'booking-and-rental-manager-for-woocommerce' ),
+				$cfg['delivery_label'],
+				$cfg['collection_label']
+			)
+		);
+	}
+
+	if ( $needs_collection && ! $choice['collection'] ) {
+		return new WP_Error(
+			'rbfw_collection_required',
+			sprintf(
+				/* translators: 1: delivery label, 2: collection label. */
+				esc_html__( 'This rental is booked with %1$s and %2$s together — please select both.', 'booking-and-rental-manager-for-woocommerce' ),
+				$cfg['delivery_label'],
+				$cfg['collection_label']
+			)
+		);
+	}
+
 	if ( ! $chosen ) {
-		if ( ! empty( $cfg['require_choice'] ) ) {
+		if ( 'any' === $cfg['require_mode'] ) {
 			return new WP_Error(
 				'rbfw_delivery_required',
 				esc_html__( 'Please choose whether you would like delivery or collection.', 'booking-and-rental-manager-for-woocommerce' )
