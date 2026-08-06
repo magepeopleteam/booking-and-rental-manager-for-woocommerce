@@ -140,7 +140,13 @@ $rbfw_delivery_cfg = rbfw_delivery_settings();
 			<?php endif; ?>
 		</div>
 
-		<div class="rbfw-delivery-fields" style="display:none;">
+		<?php
+		/* Rendered OPEN when a leg is already selected, rather than waiting for JS to reveal
+		   it. With both legs locked there is no change event coming — a disabled checkbox
+		   never fires one — so relying on the script left the customer told that delivery
+		   was included and given nowhere to say where they are. */
+		?>
+		<div class="rbfw-delivery-fields"<?php echo $rbfw_delivery_both ? '' : ' style="display:none;"'; ?>>
 			<div class="rbfw-delivery-field">
 				<label for="rbfw-delivery-address-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
 					<?php esc_html_e( 'Delivery address', 'booking-and-rental-manager-for-woocommerce' ); ?>

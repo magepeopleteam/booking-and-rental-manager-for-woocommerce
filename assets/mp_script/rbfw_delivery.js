@@ -314,8 +314,32 @@
 		if ( $( e.currentTarget ).closest( '.mp_rbfw_ticket_form' ).length ) { guard( e ); }
 	} );
 
-	$( function () {
-		$( '.rbfw-delivery-block' ).each( function () { update( $( this ) ); } );
+	/**
+	 * Initialise any delivery block that has not been set up yet.
+	 *
+	 * On the step / timely flow the block is injected by AJAX AFTER DOM-ready, so a one-shot
+	 * pass on load never saw it. That alone left the address and zone fields hidden — and
+	 * with both legs LOCKED there is no change event coming either, because a disabled
+	 * checkbox never fires one. The customer was told delivery was included and then given
+	 * nowhere to say where they are.
+	 *
+	 * Marked per block so repeated AJAX refreshes cannot re-run it over a part-filled form.
+	 */
+	function initBlocks() {
+		$( '.rbfw-delivery-block' ).each( function () {
+			var $block = $( this );
+			if ( $block.data( 'rbfwInit' ) ) { return; }
+			$block.data( 'rbfwInit', true );
+			update( $block );
+		} );
+	}
+
+	$( initBlocks );
+
+	// The booking panel is rebuilt over AJAX on every date change, bringing a fresh block
+	// with it. Deferred slightly so the new markup is in the DOM before we look for it.
+	$( document ).ajaxComplete( function () {
+		window.setTimeout( initBlocks, 50 );
 	} );
 
 } )( jQuery );
