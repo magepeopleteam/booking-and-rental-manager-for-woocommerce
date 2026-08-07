@@ -8,6 +8,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function __construct()
         {
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_booking_nonce'), 4, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_buffer_lead_time'), 15, 3 );
@@ -48,6 +49,58 @@ if (!class_exists('RBFW_Woocommerce')) {
             /* Self-healing: rebuild booking records for paid orders placed before this fix
                (e.g. redirect-gateway orders that never triggered the thank-you page). */
             add_action( 'admin_init', array($this ,  'rbfw_backfill_missing_order_mirrors') );
+        }
+
+        /**
+         * Refuse a rental add-to-cart whose booking nonce is missing or expired.
+         *
+         * rbfw_add_cart_item_func() bails out with a bare `return;` when the
+         * rbfw_ajax_action nonce does not verify. That NULL used to flow on into the
+         * cart item unchecked, so the line was added anyway carrying nothing but
+         * rbfw_id: no dates, no ticket info, no price. The result was an order with
+         * _rbfw_ticket_info = a:0:{} and a 0,00 total (the security deposit fee was
+         * lost too), and — because rbfw_check_rental_availability() fails open on
+         * empty dates — the availability gate was skipped, so the unit stayed
+         * bookable. In practice the trigger is a page cache serving the booking form
+         * for longer than the 12-24 h nonce lifetime.
+         *
+         * Failing closed here turns that silent data-loss into a plain message the
+         * customer can act on. rbfw_nonce_guard.js refreshes the form's nonce on
+         * first interaction, so this should now only fire for genuinely stale tabs
+         * or forged posts.
+         *
+         * @param bool $passed     Validation result so far.
+         * @param int  $product_id Product being added.
+         * @return bool
+         */
+        public function rbfw_validate_booking_nonce( $passed, $product_id ) {
+            if ( ! $passed ) {
+                return $passed; // already rejected by another validator
+            }
+            global $rbfw;
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            if ( get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+                return $passed; // not a rental item — leave ordinary products alone
+            }
+
+            if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+                return $passed;
+            }
+
+            wc_add_notice(
+                __( 'Your booking session has expired. Please reload the page and select your dates again.', 'booking-and-rental-manager-for-woocommerce' ),
+                'error'
+            );
+
+            if ( wp_doing_ajax() ) {
+                wc_print_notices();
+                wp_die();
+            }
+
+            return false;
         }
 
         /**
@@ -530,7 +583,18 @@ if (!class_exists('RBFW_Woocommerce')) {
             $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
             $product_id     = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
             if ( get_post_type( $product_id ) == $rbfw->get_cpt_name() ) {
-                $cart_item_data = $this->rbfw_add_cart_item_func( $cart_item_data, $product_id );
+                $built = $this->rbfw_add_cart_item_func( $cart_item_data, $product_id );
+                /* rbfw_add_cart_item_func() returns NULL when the booking nonce fails.
+                   Assigning into that NULL auto-creates an array holding only rbfw_id,
+                   which is how dataless 0,00 rental lines used to reach checkout.
+                   rbfw_validate_booking_nonce() already rejects this at add-to-cart;
+                   this is the belt-and-braces stop for any other caller. */
+                if ( ! is_array( $built ) ) {
+                    throw new Exception(
+                        esc_html__( 'Your booking session has expired. Please reload the page and select your dates again.', 'booking-and-rental-manager-for-woocommerce' )
+                    );
+                }
+                $cart_item_data = $built;
             }
             $cart_item_data['rbfw_id'] = $product_id;
 
