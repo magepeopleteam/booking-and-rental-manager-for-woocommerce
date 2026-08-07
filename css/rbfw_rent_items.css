@@ -324,6 +324,58 @@
     }    
 }
 /* shortcode end */
+
+/* Item name search shortcode */
+.rbfw_item_search_wrap {
+    width: 100%;
+}
+.rbfw_item_search_box {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 10px;
+}
+.rbfw_item_search_input {
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    width: auto;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    background-color: #fff;
+    font-size: 16px;
+    color: #333;
+}
+.rbfw_item_search_input:focus {
+    outline: none;
+    border-color: var(--rbfw_color_primary);
+}
+.rbfw_item_search_submit {
+    flex: 0 0 auto;
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
+    border: 1px solid var(--rbfw_color_primary);
+    border-radius: 0;
+    padding: 12px 24px;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    text-align: center;
+}
+.rbfw_item_search_submit:hover {
+    opacity: 0.85;
+}
+@media (max-width: 575px) {
+    .rbfw_item_search_box {
+        flex-direction: column;
+    }
+    .rbfw_item_search_input,
+    .rbfw_item_search_submit {
+        width: 100%;
+    }
+}
+/* Item name search shortcode end */
+
 .c-filter__field--header {
     flex: 0 0 auto !important;
     width: auto !important;
