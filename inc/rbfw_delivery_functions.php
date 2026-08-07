@@ -197,11 +197,55 @@ add_action( 'update_option_' . RBFW_DELIVERY_SECTION, 'rbfw_delivery_flush_setti
 add_action( 'add_option_' . RBFW_DELIVERY_SECTION, 'rbfw_delivery_flush_settings_cache', 10, 0 );
 
 /**
+ * Whether the Delivery & Collection feature is licensed.
+ *
+ * Delivery is a PRO feature. The engine ships in the free plugin because it emits into the
+ * free fee bucket and is read back by free-side templates, but it may only be CONFIGURED,
+ * OFFERED and CHARGED while Pro is active.
+ *
+ * Memoized: the active-plugin set cannot meaningfully change mid-request, and this is called
+ * on pricing paths that run per cart item.
+ *
+ * @return bool
+ */
+function rbfw_delivery_is_pro() {
+	static $is_pro = null;
+
+	if ( null === $is_pro ) {
+		$is_pro = function_exists( 'rbfw_check_pro_active' ) ? (bool) rbfw_check_pro_active() : false;
+
+		/**
+		 * Filter whether Delivery & Collection is unlocked.
+		 *
+		 * The single switch for the whole feature — settings tab, per-item toggle, booking
+		 * form, pricing and validation all resolve through here.
+		 *
+		 * @since 2.8.0
+		 * @param bool $is_pro
+		 */
+		$is_pro = (bool) apply_filters( 'rbfw_delivery_is_pro', $is_pro );
+	}
+
+	return $is_pro;
+}
+
+/**
  * Whether delivery is offered at all (shop-wide switch).
+ *
+ * Every surface — settings, per-item toggle, booking form, quote, charge, validation — funnels
+ * through this one call, so the Pro check belongs here rather than repeated at each of them.
+ *
+ * Deliberately NOT applied to rbfw_delivery_summary(): a booking that already recorded a
+ * delivery must keep displaying it on its order, PDF and invoice even if Pro is later
+ * deactivated. Locking the feature must not rewrite history.
  *
  * @return bool
  */
 function rbfw_delivery_is_enabled() {
+	if ( ! rbfw_delivery_is_pro() ) {
+		return false;
+	}
+
 	$cfg = rbfw_delivery_settings();
 	return ! empty( $cfg['enabled'] ) || ! empty( $cfg['collection_enabled'] );
 }
@@ -759,6 +803,15 @@ function rbfw_delivery_cart_data( $item_id, $input ) {
 		return array();
 	}
 
+	/*
+	 * The customer asked, but nothing was granted — the item opted out, the shop offers only
+	 * the other leg, or the feature is locked. Recording an address for a delivery that is not
+	 * happening is worse than recording nothing.
+	 */
+	if ( ! $quote['applied_delivery'] && ! $quote['applied_collection'] ) {
+		return array();
+	}
+
 	return array(
 		'rbfw_delivery_wanted'   => $quote['applied_delivery'] ? 'yes' : 'no',
 		'rbfw_collection_wanted' => $quote['applied_collection'] ? 'yes' : 'no',
@@ -866,6 +919,12 @@ function rbfw_delivery_save_booking_meta( $booking_id, $item_id, $input ) {
 
 	$quote = rbfw_delivery_quote( $item_id, $choice['distance'], $choice['delivery'], $choice['collection'] );
 	if ( '' !== $quote['error'] ) {
+		return;
+	}
+
+	// Nothing granted — see rbfw_delivery_cart_data(). Leave the booking's meta untouched
+	// rather than stamping it with a delivery that is not happening.
+	if ( ! $quote['applied_delivery'] && ! $quote['applied_collection'] ) {
 		return;
 	}
 

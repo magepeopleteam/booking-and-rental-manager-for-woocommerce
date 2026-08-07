@@ -77,13 +77,18 @@ if (! class_exists('RBFW_Dependencies')) {
 		 * useless without its script. Registering it in one place stops the two copies
 		 * drifting apart.
 		 *
-		 * The script is inert unless a delivery block is present, which only happens when the
-		 * shop has enabled the feature.
+		 * Delivery is a Pro feature, and even with Pro it is off until the shop turns it on.
+		 * rbfw_delivery_is_enabled() covers both, so a shop that does not offer delivery is not
+		 * asked to download a script that can never do anything.
 		 *
 		 * @return void
 		 */
 		private function rbfw_enqueue_delivery_assets()
 		{
+			if (!function_exists('rbfw_delivery_is_enabled') || !rbfw_delivery_is_enabled()) {
+				return;
+			}
+
 			wp_enqueue_script('rbfw_delivery', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_delivery.js', array('jquery'), time(), true);
 			wp_localize_script('rbfw_delivery', 'rbfwDelivery', array(
 				// The currency symbol is an HTML entity in WooCommerce (e.g. &euro;), which

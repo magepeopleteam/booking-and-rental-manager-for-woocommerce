@@ -68,6 +68,7 @@ if ( ! class_exists( 'RBFW_Pro_Features_Notice' ) ) {
 			return array(
 				array( 'icon' => 'cart',               'label' => __( 'PayPal & Stripe checkout', 'booking-and-rental-manager-for-woocommerce' ) ),
 				array( 'icon' => 'calendar-alt',       'label' => __( 'Booking calendar & orders dashboard', 'booking-and-rental-manager-for-woocommerce' ) ),
+				array( 'icon' => 'car',                'label' => __( 'Delivery & collection by distance', 'booking-and-rental-manager-for-woocommerce' ) ),
 				array( 'icon' => 'media-document',     'label' => __( 'Branded PDF & POS receipts', 'booking-and-rental-manager-for-woocommerce' ) ),
 				array( 'icon' => 'welcome-write-blog', 'label' => __( 'Drag-and-drop booking forms', 'booking-and-rental-manager-for-woocommerce' ) ),
 				array( 'icon' => 'star-filled',        'label' => __( 'Reviews & ratings', 'booking-and-rental-manager-for-woocommerce' ) ),

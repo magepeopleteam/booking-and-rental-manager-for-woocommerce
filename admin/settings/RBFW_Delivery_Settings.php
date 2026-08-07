@@ -24,15 +24,46 @@ if ( ! class_exists( 'RBFW_Delivery_Settings' ) ) {
 			add_action( 'admin_footer', array( $this, 'print_styles' ) );
 		}
 
+		/**
+		 * Whether the feature is unlocked. Delegates to the engine so the settings screen and
+		 * the pricing paths can never disagree about who may use delivery.
+		 *
+		 * @return bool
+		 */
+		private function is_pro() {
+			return function_exists( 'rbfw_delivery_is_pro' ) ? rbfw_delivery_is_pro() : false;
+		}
+
 		public function register_section( $sections ) {
+			// The tab stays visible without Pro — it is how the feature is discovered — but
+			// carries a padlock so nobody mistakes it for something they can switch on.
+			$icon = $this->is_pro() ? 'fa-truck' : 'fa-lock';
+
 			$sections[] = array(
 				'id'    => RBFW_DELIVERY_SECTION,
-				'title' => '<i class="fas fa-truck"></i>' . esc_html__( 'Delivery', 'booking-and-rental-manager-for-woocommerce' ),
+				'title' => '<i class="fas ' . esc_attr( $icon ) . '"></i>' . esc_html__( 'Delivery', 'booking-and-rental-manager-for-woocommerce' ),
 			);
 			return $sections;
 		}
 
 		public function register_fields( $fields ) {
+			/*
+			 * Without Pro the tab renders an upsell and NOTHING writable. Showing the real
+			 * fields disabled would still be a form an admin could fill in and save, leaving a
+			 * configured-looking feature that never runs.
+			 */
+			if ( ! $this->is_pro() ) {
+				$fields[ RBFW_DELIVERY_SECTION ] = array(
+					array(
+						'name'     => 'rbfw_delivery_pro_notice',
+						'label'    => '',
+						'type'     => 'html',
+						'callback' => array( $this, 'render_pro_lock' ),
+					),
+				);
+				return $fields;
+			}
+
 			$fields[ RBFW_DELIVERY_SECTION ] = array(
 				array(
 					'name'  => 'rbfw_delivery_heading',
@@ -175,6 +206,55 @@ if ( ! class_exists( 'RBFW_Delivery_Settings' ) ) {
 		}
 
 		/* ================================================================== *
+		 * Pro lock
+		 * ================================================================== */
+
+		/**
+		 * The whole Delivery tab when Pro is not active: what the feature does, and where to
+		 * get it. No inputs, because nothing here could be saved into effect.
+		 *
+		 * @param array $args Settings field args (unused).
+		 * @return void
+		 */
+		public function render_pro_lock( $args ) {
+			$pro_url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_go_pro_page' );
+			$points  = array(
+				__( 'Charge for delivering a rental to the customer and collecting it again.', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'Price by distance bands you define — no mapping service and no API key.', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'A free radius for nearby customers, and a maximum distance beyond which you do not deliver.', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'Turn delivery off per rental item for anything you cannot transport.', 'booking-and-rental-manager-for-woocommerce' ),
+				__( 'Delivery and collection appear as separate lines on the cart, order, invoice and PDF ticket.', 'booking-and-rental-manager-for-woocommerce' ),
+			);
+			?>
+			<div class="rbfw-dl-lock">
+				<div class="rbfw-dl-lock__head">
+					<span class="rbfw-dl-lock__icon dashicons dashicons-lock" aria-hidden="true"></span>
+					<div>
+						<span class="rbfw-dl-lock__eyebrow"><?php esc_html_e( 'Pro feature', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<h2 class="rbfw-dl-lock__title"><?php esc_html_e( 'Delivery &amp; Collection', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+					</div>
+				</div>
+				<p class="rbfw-dl-lock__intro">
+					<?php esc_html_e( 'Bring the rental to your customer and pick it up again, priced by how far away they are.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</p>
+				<ul class="rbfw-dl-lock__list">
+					<?php foreach ( $points as $point ) : ?>
+						<li><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php echo esc_html( $point ); ?></li>
+					<?php endforeach; ?>
+				</ul>
+				<p class="rbfw-dl-lock__cta">
+					<a class="button button-primary" href="<?php echo esc_url( $pro_url ); ?>">
+						<?php esc_html_e( 'Unlock with Pro', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</a>
+				</p>
+				<p class="description rbfw-dl-lock__note">
+					<?php esc_html_e( 'Bookings that already recorded a delivery keep showing it on their order and invoice — activating Pro restores your saved settings exactly as they were.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</p>
+			</div>
+			<?php
+		}
+
+		/* ================================================================== *
 		 * Band repeater
 		 * ================================================================== */
 
@@ -253,6 +333,19 @@ if ( ! class_exists( 'RBFW_Delivery_Settings' ) ) {
 				.rbfw-bands-table input { width: 110px; }
 				.rbfw-band-remove { color: #b32d2e !important; font-size: 18px; text-decoration: none !important; line-height: 1; }
 				.rbfw-band-remove:hover { color: #8a2424 !important; }
+
+				/* Pro lock (shown in place of the fields when Pro is inactive). */
+				.rbfw-dl-lock { max-width: 640px; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 22px 26px 20px; }
+				.rbfw-dl-lock__head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+				.rbfw-dl-lock__icon { width: 40px; height: 40px; font-size: 22px; line-height: 40px; text-align: center; border-radius: 50%; background: #fef3c7; color: #b45309; flex-shrink: 0; }
+				.rbfw-dl-lock__eyebrow { display: block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #b45309; }
+				.rbfw-dl-lock__title { margin: 2px 0 0; font-size: 18px; line-height: 1.2; }
+				.rbfw-dl-lock__intro { margin: 0 0 12px; color: #4b5563; }
+				.rbfw-dl-lock__list { margin: 0 0 18px; padding: 0; list-style: none; }
+				.rbfw-dl-lock__list li { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 8px; color: #374151; }
+				.rbfw-dl-lock__list .dashicons { color: #16a34a; flex-shrink: 0; }
+				.rbfw-dl-lock__cta { margin: 0 0 10px; }
+				.rbfw-dl-lock__note { margin: 0; }
 			</style>
 			<script>
 			( function ( $ ) {
