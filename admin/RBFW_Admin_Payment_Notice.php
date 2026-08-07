@@ -43,12 +43,31 @@ if ( ! class_exists( 'RBFW_Admin_Payment_Notice' ) ) {
 				return;
 			}
 
+			// The modern rental-item editor carries its own slim banner for this exact
+			// condition (RBFW_Payment_Settings::render_editor_payment_notice()), wired to
+			// the in-place Payment Method popup. Two warnings about one problem on one
+			// screen is noise, so stand down there.
+			if ( $this->is_modern_editor_screen() ) {
+				return;
+			}
+
 			if ( function_exists( 'rbfw_admin_notice_styles' ) ) {
 				rbfw_admin_notice_styles();
 			}
 
 			$has_wc = function_exists( 'rbfw_has_woocommerce' ) ? rbfw_has_woocommerce() : class_exists( 'WooCommerce' );
 			$this->render_action_needed( $has_wc );
+		}
+
+		/** Is this the modern rental-item editor page, which shows its own banner instead? */
+		private function is_modern_editor_screen() {
+			if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
+				return false;
+			}
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check, no state change.
+			$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+			return RBFW_Modern_Editor::PAGE_SLUG === $page;
 		}
 
 		/**

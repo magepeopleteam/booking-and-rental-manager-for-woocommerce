@@ -96,6 +96,19 @@
 		<?php endforeach; ?>
 	</div>
 
+	<?php
+		/**
+		 * Slim, editor-scoped notices shown directly under the step bar.
+		 *
+		 * Used by RBFW_Payment_Settings for the "No payment method is currently
+		 * configured" banner, mirroring the taxi plugin's edit-screen notice.
+		 * Nothing hooked here may output a named form control — the editor's
+		 * collectFormData() serializes every [name] input inside .rbfw-me-wrap
+		 * and would persist it as item meta.
+		 */
+		do_action( 'rbfw_modern_editor_notices', $post_id );
+	?>
+
 	<!-- ── Body ──────────────────────────────────────────────────────────── -->
 	<div class="rbfw-me-body">
 		<div class="rbfw-me-main">
@@ -619,6 +632,18 @@
 		<!-- ── Sidebar ───────────────────────────────────────────────────── -->
 		<aside class="rbfw-me-sidebar">
 
+			<?php
+				/**
+				 * Top of the editor sidebar, above the Featured Image.
+				 *
+				 * RBFW_Payment_Settings renders its "Payment Method" status card here
+				 * (active booking flow + enabled gateway), matching the taxi plugin's
+				 * transportation edit screen. Same rule as rbfw_modern_editor_notices:
+				 * no named form controls — collectFormData() would save them as item meta.
+				 */
+				do_action( 'rbfw_modern_editor_sidebar_top', $post_id );
+			?>
+
 			<div class="rbfw-me-card rbfw-me-card--sidebar">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Featured Image', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
@@ -714,15 +739,15 @@
 						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
 
-					<!-- Pro Version -->
-					<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" rel="noopener" class="rbfw-me-help-link rbfw-me-help-link--pro">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-star-filled"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Buy Pro Version', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Unlock all premium features', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
+					<?php
+						/**
+						 * Pro Version row. Rendered by RBFW_Pro_Features_Notice so the
+						 * feature list has ONE home: it prints the same "Buy Pro Version"
+						 * row that used to be hard-coded here, plus the Pro feature list
+						 * it expands into, and prints nothing at all once Pro is active.
+						 */
+						do_action( 'rbfw_modern_editor_pro_links', $post_id );
+					?>
 
 					<!-- Min and Max Booking Limit -->
 					<a href="https://mage-people.com/product/min-and-max-booking-day-for-booking-and-rental-plugin/" target="_blank" rel="noopener" class="rbfw-me-help-link">

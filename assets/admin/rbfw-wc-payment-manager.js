@@ -62,6 +62,10 @@
 				.done( function ( res ) {
 					if ( res && res.success ) {
 						applyEnabledState( $card, res.data.enabled === 'yes' );
+						// Anything showing "is a booking payable right now?" (the editor's
+						// Payment Method card, its banner, the no-gateway warning) is
+						// rendered server-side and would otherwise stay stale until reload.
+						$( document ).trigger( 'rbfw:payment-updated' );
 					} else {
 						$input.prop( 'checked', ! $input.is( ':checked' ) );
 						window.alert( ( res && res.data ) || i18n.error );

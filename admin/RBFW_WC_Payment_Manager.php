@@ -44,7 +44,18 @@
 				unset( $hook );
 
 				$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-				if ( ! $screen || ( $screen->id !== 'rbfw_item_page_rbfw_settings_page' && strpos( $screen->id, 'rbfw_settings_page' ) === false ) ) {
+				if ( ! $screen ) {
+					return;
+				}
+				$is_settings_page = ( $screen->id === 'rbfw_item_page_rbfw_settings_page' || strpos( $screen->id, 'rbfw_settings_page' ) !== false );
+				// Also needed on the modern rental-item editor: the "Payment Method"
+				// sidebar card's popup embeds this same WooCommerce Payment Methods
+				// manager when the active booking flow is WooCommerce, and its toggles /
+				// Configure panels are driven entirely by this script.
+				$is_modern_editor = class_exists( 'RBFW_Modern_Editor' )
+					&& isset( $_GET['page'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only screen check.
+					&& sanitize_key( wp_unslash( $_GET['page'] ) ) === RBFW_Modern_Editor::PAGE_SLUG; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				if ( ! $is_settings_page && ! $is_modern_editor ) {
 					return;
 				}
 
