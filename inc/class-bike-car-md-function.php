@@ -267,9 +267,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
             $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):'';
             $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
-            $durationType_display = ($durationType == 'hourly' ? esc_html__('Hour','booking-and-rental-manager-for-woocommerce') : ($durationType == 'daily' ? esc_html__('Day','booking-and-rental-manager-for-woocommerce') :($durationType == 'weekly'? esc_html__('Week','booking-and-rental-manager-for-woocommerce') : esc_html__('Month','booking-and-rental-manager-for-woocommerce'))));
-
-            $durationType_display = ($durationQty==1)?$durationType_display:$durationType_display.'s';
+            /*
+             * Pluralising by appending a literal "s" to an already-translated word
+             * produced nonsense in every non-English locale ("Diena" -> "Dienas") and
+             * hard-coded English plural rules. _n() lets each locale pick the right
+             * form; see rbfw_format_duration_unit() in inc/rbfw_functions.php.
+             */
+            $durationUnit         = ( 'hourly' === $durationType ? 'hour' : ( 'daily' === $durationType ? 'day' : ( 'weekly' === $durationType ? 'week' : 'month' ) ) );
+            $durationType_display = rbfw_format_duration_unit( $durationUnit, $durationQty );
 
             $start_date_time = new DateTime($start_date.' '.$start_time);
             $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : ($durationType == 'weekly' ? $durationQty * 24 * 7 : $durationQty * 24 * 30)));
@@ -316,7 +321,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'total_price_html' => wc_price((float)$rbfw_multi_item_price + (float)$rbfw_service_category_price + (float)$security_deposit['security_deposit_amount']),
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
-                'total_duration' => $durationQty.' '.$durationType_display,
+                'total_duration' => $durationType_display, // Already carries the count, e.g. "3 days".
                 'start_date' => rbfw_date_format($formatted_start_date),
                 'end_date' => rbfw_date_format($end_date),
                 'ticket_item_quantity' => '',
