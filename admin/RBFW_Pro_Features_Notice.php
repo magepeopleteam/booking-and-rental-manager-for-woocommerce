@@ -1,15 +1,23 @@
 <?php
 /**
- * Dismissible "Booking & Rental Manager Pro" upsell notice.
+ * "Buy Pro Version" row + its Pro feature list, inside the modern rental-item editor's
+ * "Resources & Addons" sidebar card.
  *
- * Highlights the key Pro-only features as a compact grid of chips and links to the
- * Get PRO page. Shown only in the free build (hidden once Pro is active), only on
- * the plugin's own admin screens (plus the main Plugins list), and never again once
- * the admin dismisses it (stored in the rbfw_pro_promo_dismissed option).
+ * History: this was a wp-admin-wide `admin_notices` banner that fired on every plugin
+ * screen AND the main Plugins list, with a "Maybe later" dismissal. The taxi plugin has
+ * no such banner — its Pro upsell is a card on the edit screen only
+ * (MPTBM_Right_Side_Content_Settings::mptbm_right_pro_features_card()) — so this moved
+ * into the editor sidebar to match. It then lived as its own card, which duplicated the
+ * "Buy Pro Version" link already in Resources & Addons; both are now this single row.
  *
- * Reuses rbfw_admin_notice_styles() for the shared card chrome. The highlighted
- * features mirror the Get PRO page categories — Offline is deliberately excluded
- * because it is a free payment method (see RBFW_Function::offline_payment_enabled()).
+ * The row replaces that previously hard-coded link (same label, same destination) and
+ * expands on click to reveal the feature list, so nothing in the sidebar is listed twice.
+ * Being non-intrusive it needs no dismiss control, same as the taxi plugin's card. The
+ * old `rbfw_pro_promo_dismissed` option is simply no longer read; nothing is deleted, so
+ * downgrading restores the previous behaviour intact.
+ *
+ * The highlighted features mirror the Get PRO page categories — Offline is deliberately
+ * excluded because it is a free payment method (see RBFW_Function::offline_payment_enabled()).
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,45 +27,15 @@ if ( ! class_exists( 'RBFW_Pro_Features_Notice' ) ) {
 
 	class RBFW_Pro_Features_Notice {
 
-		const DISMISS_OPTION = 'rbfw_pro_promo_dismissed';
+		/** Where "Buy Pro Version" goes — unchanged from the row this replaces. */
+		const PRO_URL = 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/';
 
 		public function __construct() {
-			add_action( 'admin_init', array( $this, 'handle_dismiss' ) );
-			add_action( 'admin_notices', array( $this, 'render' ) );
+			add_action( 'rbfw_modern_editor_pro_links', array( $this, 'render' ) );
 		}
 
 		private function is_pro() {
 			return function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active();
-		}
-
-		/** Persist dismissal (nonce + capability checked) so the notice never returns. */
-		public function handle_dismiss() {
-			if ( ! isset( $_GET['rbfw_dismiss_pro_promo'] ) || '1' !== $_GET['rbfw_dismiss_pro_promo'] ) {
-				return;
-			}
-			if ( isset( $_GET['_wpnonce'] )
-				&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'rbfw_dismiss_pro_promo' )
-				&& current_user_can( 'manage_options' ) ) {
-				update_option( self::DISMISS_OPTION, 'yes' );
-			}
-		}
-
-		/** Limit to the plugin's own admin pages + the main Plugins list. */
-		private function is_target_screen() {
-			if ( ! function_exists( 'get_current_screen' ) ) {
-				return false;
-			}
-			$screen = get_current_screen();
-			if ( ! $screen ) {
-				return false;
-			}
-			if ( 'rbfw_item_page_rbfw_go_pro_page' === $screen->id ) {
-				return false; // already on the Pro page
-			}
-			if ( false !== strpos( $screen->id, 'rbfw_item' ) ) {
-				return true;
-			}
-			return 'plugins' === $screen->id;
 		}
 
 		/**
@@ -78,59 +56,87 @@ if ( ! class_exists( 'RBFW_Pro_Features_Notice' ) ) {
 			);
 		}
 
-		public function render() {
-			if ( ! current_user_can( 'manage_options' ) ) {
-				return;
-			}
+		/**
+		 * @param int $post_id Unused; the upsell is site-wide, not per item.
+		 */
+		public function render( $post_id = 0 ) {
+			unset( $post_id );
+
+			// Nothing to upsell once Pro is active — the row disappears with its list,
+			// leaving the addon links below it untouched.
 			if ( $this->is_pro() ) {
-				return; // Pro is active — nothing to upsell.
-			}
-			if ( 'yes' === get_option( self::DISMISS_OPTION ) ) {
-				return; // Dismissed for good.
-			}
-			if ( ! $this->is_target_screen() ) {
 				return;
 			}
 
-			if ( function_exists( 'rbfw_admin_notice_styles' ) ) {
-				rbfw_admin_notice_styles();
-			}
 			$this->print_styles();
-
-			$pro_url     = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_go_pro_page' );
-			$dismiss_url = wp_nonce_url( add_query_arg( 'rbfw_dismiss_pro_promo', '1' ), 'rbfw_dismiss_pro_promo' );
 			?>
-			<div class="notice rbfw-admin-notice rbfw-admin-notice--pro">
-				<div class="rbfw-an-inner">
-					<span class="rbfw-an-icon"><span class="dashicons dashicons-awards" aria-hidden="true"></span></span>
-					<div class="rbfw-an-content">
-						<span class="rbfw-an-eyebrow"><?php esc_html_e( 'Booking & Rental Manager Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						<div class="rbfw-an-title"><?php esc_html_e( 'Unlock every premium feature', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-						<p class="rbfw-an-text"><?php esc_html_e( 'You\'re on the free plugin. Upgrade to Pro to add online payments and the full booking toolkit:', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-						<ul class="rbfw-pro-chips">
-							<?php foreach ( $this->features() as $f ) : ?>
-								<li class="rbfw-pro-chip">
-									<span class="dashicons dashicons-<?php echo esc_attr( $f['icon'] ); ?>" aria-hidden="true"></span>
-									<?php echo esc_html( $f['label'] ); ?>
-								</li>
-							<?php endforeach; ?>
-						</ul>
-						<div class="rbfw-an-actions">
-							<a class="rbfw-an-btn rbfw-an-btn-primary" href="<?php echo esc_url( $pro_url ); ?>">
-								<span class="dashicons dashicons-star-filled" aria-hidden="true"></span>
-								<?php esc_html_e( 'Get Pro Now', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</a>
-							<a class="rbfw-an-btn rbfw-an-btn-ghost" href="<?php echo esc_url( $dismiss_url ); ?>">
-								<?php esc_html_e( 'Maybe later', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</a>
-						</div>
-					</div>
+			<div class="rbfw-me-pro-row">
+				<?php
+					// A button, not a link: its job is to disclose the list. The real
+					// navigation is the CTA at the end of that list, pointing at the same
+					// URL the plain link used to.
+				?>
+				<button type="button" class="rbfw-me-help-link rbfw-me-help-link--pro rbfw-me-pro-toggle" aria-expanded="false" aria-controls="rbfw-me-pro-features">
+					<span class="rbfw-me-help-link__icon dashicons dashicons-star-filled"></span>
+					<span class="rbfw-me-help-link__text">
+						<strong><?php esc_html_e( 'Buy Pro Version', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+						<span><?php esc_html_e( 'Unlock all premium features', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</span>
+					<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+				</button>
+
+				<div class="rbfw-me-pro-features" id="rbfw-me-pro-features" hidden>
+					<ul class="rbfw-me-pro-features__list">
+						<?php foreach ( $this->features() as $f ) : ?>
+							<li>
+								<span class="dashicons dashicons-<?php echo esc_attr( $f['icon'] ); ?>" aria-hidden="true"></span>
+								<?php echo esc_html( $f['label'] ); ?>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+					<a class="rbfw-me-pro-features__cta" href="<?php echo esc_url( self::PRO_URL ); ?>" target="_blank" rel="noopener">
+						<span class="dashicons dashicons-star-filled" aria-hidden="true"></span>
+						<?php esc_html_e( 'Upgrade to Pro', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</a>
 				</div>
 			</div>
 			<?php
+			// Printed in the footer, not inline here: the editor enqueues jQuery as a
+			// footer dependency, so a <script> in the middle of the body can't assume
+			// jQuery exists yet. Registered from render() so the script only ships on
+			// requests that actually drew the row.
+			add_action( 'admin_footer', array( $this, 'print_script' ) );
 		}
 
-		/** Pro-specific styling layered on top of the shared notice chrome. Printed once. */
+		/** Disclosure behaviour for the Pro row. */
+		public function print_script() {
+			?>
+			<script>
+			jQuery(function($){
+				$(document).on('click', '.rbfw-me-pro-toggle', function(){
+					var $btn   = $(this);
+					var open   = $btn.attr('aria-expanded') !== 'true';
+					var $panel = $btn.siblings('.rbfw-me-pro-features');
+
+					$btn.attr('aria-expanded', open ? 'true' : 'false');
+
+					// prop(), not attr(): `hidden` is a boolean attribute. It must come
+					// off BEFORE the slide, and the panel has to actually be display:none
+					// for slideDown to animate rather than snap — hence the .hide().
+					if (open) {
+						$panel.prop('hidden', false).hide().stop(true, true).slideDown(160);
+					} else {
+						$panel.stop(true, true).slideUp(160, function(){
+							$(this).prop('hidden', true);
+						});
+					}
+				});
+			});
+			</script>
+			<?php
+		}
+
+		/** Row + list styling, matching the surrounding .rbfw-me-help-link rows. Printed once. */
 		private function print_styles() {
 			static $printed = false;
 			if ( $printed ) {
@@ -138,14 +144,24 @@ if ( ! class_exists( 'RBFW_Pro_Features_Notice' ) ) {
 			}
 			$printed = true;
 			?>
-			<style id="rbfw-pro-promo-styles">
-				.rbfw-admin-notice--pro{border-left-color:#7b2ff7 !important;}
-				.rbfw-admin-notice--pro .rbfw-an-icon{background:linear-gradient(135deg,#F12971 0%,#7b2ff7 100%);color:#fff;}
-				.rbfw-admin-notice--pro .rbfw-an-eyebrow{color:#7b2ff7;}
-				.rbfw-pro-chips{list-style:none;margin:12px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:8px;}
-				.rbfw-pro-chip{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:#374151;background:#faf5ff;border:1px solid #efe3fb;border-radius:8px;padding:7px 12px;line-height:1.35;white-space:nowrap;}
-				.rbfw-pro-chip .dashicons{font-size:16px;width:16px;height:16px;line-height:1;color:#F12971;flex:0 0 auto;}
-				@media (max-width:600px){.rbfw-pro-chip{flex:1 1 100%;white-space:normal;}}
+			<style id="rbfw-me-pro-row-styles">
+				/* The sibling rows are <a>; neutralise the button chrome so this one
+				   sits in the list as if it were another link. */
+				.rbfw-me-pro-toggle{width:100%;box-sizing:border-box;background:none;border:none;border-left:3px solid transparent;font:inherit;text-align:left;cursor:pointer;padding-top:0;padding-bottom:0;}
+				.rbfw-me-pro-toggle:focus-visible{outline:2px solid var(--me-primary,#1a56db);outline-offset:-2px;}
+				/* The arrow is hover-only on the plain rows; while this one is open it
+				   must stay visible, and it turns to point down. */
+				.rbfw-me-pro-toggle .rbfw-me-help-link__arrow{transition:opacity .12s,transform .16s;}
+				.rbfw-me-pro-toggle[aria-expanded="true"]{background:#f0f6fc;border-left-color:var(--me-primary,#1a56db);}
+				.rbfw-me-pro-toggle[aria-expanded="true"] .rbfw-me-help-link__arrow{opacity:1;transform:rotate(90deg);}
+
+				.rbfw-me-pro-features{padding:4px 14px 12px 30px;}
+				.rbfw-me-pro-features__list{list-style:none;margin:0 0 10px;padding:0;display:flex;flex-direction:column;gap:6px;}
+				.rbfw-me-pro-features__list li{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:var(--me-text-secondary,#334155);line-height:1.45;}
+				.rbfw-me-pro-features__list .dashicons{flex:0 0 auto;font-size:14px;width:14px;height:14px;line-height:1.3;color:#F12971;}
+				.rbfw-me-pro-features__cta{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 12px;border-radius:8px;background:linear-gradient(135deg,#F12971 0%,#7b2ff7 100%);color:#fff !important;font-size:12px;font-weight:700;text-decoration:none;box-shadow:0 3px 10px rgba(241,41,113,.26);transition:transform .15s ease,box-shadow .15s ease;}
+				.rbfw-me-pro-features__cta:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(241,41,113,.32);color:#fff !important;text-decoration:none;}
+				.rbfw-me-pro-features__cta .dashicons{font-size:14px;width:14px;height:14px;line-height:1;}
 			</style>
 			<?php
 		}
