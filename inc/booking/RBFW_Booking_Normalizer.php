@@ -246,6 +246,113 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		}
 
 		/**
+		 * Timestamp for a stored booking date, or 0 when it is empty / unparseable.
+		 *
+		 * Rental dates are NOT stored in a fixed format. The datepickers write whatever the
+		 * site's `date_format` option implies — see the mapping in RBFW_Dependencies.php
+		 * (js_date_format): 'yy-mm-dd' by default, but 'mm/dd/yy' on an m/d/Y site, 'dd/mm/yy'
+		 * on a d/m/Y site and 'dd M yy' on an F j, Y site.
+		 *
+		 * That makes a slash-separated date genuinely ambiguous — 08/03/2026 is 3 August on a
+		 * d/m/Y site and 8 March on an m/d/Y site — so the site's own option decides the
+		 * order, exactly as the datepicker did when the value was written. Guessing (or
+		 * letting strtotime() apply its US default) silently sorts and filters bookings into
+		 * the wrong month for half the world's installs.
+		 *
+		 * @param string $date A stored rental date.
+		 * @return int Unix timestamp at local midnight, or 0.
+		 */
+		public static function date_to_ts( $date ) {
+			$date = trim( (string) $date );
+			if ( '' === $date ) {
+				return 0;
+			}
+
+			// Strip a trailing time, if any — only the day matters for range filtering and
+			// sorting. Matched precisely rather than by splitting on whitespace, because a
+			// textual date ("03 Aug 2026", written on an F j, Y site) contains spaces of its own.
+			$date = trim( preg_replace( '/[ T]\d{1,2}:\d{2}(:\d{2})?\s*([ap]\.?m\.?)?$/i', '', $date ) );
+
+			// ISO, and the plugin's own default: 2026-08-03.
+			if ( preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2})$/', $date, $m ) ) {
+				return (int) mktime( 0, 0, 0, (int) $m[2], (int) $m[3], (int) $m[1] );
+			}
+
+			// Two numbers then a 4-digit year. Which is the day depends on the site format.
+			if ( preg_match( '#^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$#', $date, $m ) ) {
+				$a = (int) $m[1];
+				$b = (int) $m[2];
+				$y = (int) $m[3];
+
+				if ( self::month_first() ) {
+					$month = $a;
+					$day   = $b;
+				} else {
+					$month = $b;
+					$day   = $a;
+				}
+
+				// A value above 12 can only be the day, whatever the configured order says —
+				// this rescues dates written before the site's date_format was changed.
+				if ( $a > 12 ) {
+					$day   = $a;
+					$month = $b;
+				} elseif ( $b > 12 ) {
+					$day   = $b;
+					$month = $a;
+				}
+
+				return (int) mktime( 0, 0, 0, $month, $day, $y );
+			}
+
+			// Textual months ("03 Aug 2026", "August 3, 2026") are unambiguous for strtotime().
+			$ts = strtotime( $date );
+			return $ts ? (int) $ts : 0;
+		}
+
+		/**
+		 * Whether this site's date format puts the MONTH before the day, which is what the
+		 * datepicker used when it wrote the stored rental dates.
+		 *
+		 * @return bool
+		 */
+		private static function month_first() {
+			static $month_first = null;
+			if ( null !== $month_first ) {
+				return $month_first;
+			}
+
+			$format = (string) get_option( 'date_format' );
+			// Position of the first day vs month token in the raw format string.
+			$day   = self::first_token_pos( $format, array( 'd', 'j' ) );
+			$month = self::first_token_pos( $format, array( 'm', 'n', 'F', 'M' ) );
+
+			$month_first = ( $month >= 0 && ( $day < 0 || $month < $day ) );
+			return $month_first;
+		}
+
+		/**
+		 * Index of the first unescaped occurrence of any of $tokens in a PHP date format.
+		 *
+		 * @param string   $format PHP date format string.
+		 * @param string[] $tokens Format characters to look for.
+		 * @return int Offset, or -1 when none is present.
+		 */
+		private static function first_token_pos( $format, $tokens ) {
+			$len = strlen( $format );
+			for ( $i = 0; $i < $len; $i++ ) {
+				if ( '\\' === $format[ $i ] ) {
+					$i++; // Skip the escaped literal.
+					continue;
+				}
+				if ( in_array( $format[ $i ], $tokens, true ) ) {
+					return $i;
+				}
+			}
+			return -1;
+		}
+
+		/**
 		 * Build a "start → end" period string from date/time parts.
 		 *
 		 * @return string
@@ -281,6 +388,11 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 			$phone     = (string) get_post_meta( $id, 'rbfw_customer_phone', true );
 			$gateway   = (string) get_post_meta( $id, 'rbfw_payment_method', true );
 
+			$start_date = (string) get_post_meta( $id, 'rbfw_start_date', true );
+			$end_date   = (string) get_post_meta( $id, 'rbfw_end_date', true );
+			$start_ts   = self::date_to_ts( $start_date );
+			$end_ts     = self::date_to_ts( $end_date );
+
 			return array(
 				'id'             => $id,
 				'source'         => self::SOURCE_CUSTOM,
@@ -296,6 +408,33 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 				'pin'            => '',
 				'gateway'        => $gateway ? $gateway : 'custom',
 				'total_meta'     => (float) get_post_meta( $id, 'rbfw_total', true ),
+				'start_date'     => $start_date,
+				'end_date'       => $end_date,
+				'start_ts'       => $start_ts,
+				'end_ts'         => $end_ts ? $end_ts : $start_ts,
+				'delivery'       => self::describe_delivery( $id ),
+			);
+		}
+
+		/**
+		 * Flat delivery summary for a booking, from the meta written by the delivery engine
+		 * (inc/rbfw_delivery_functions.php). Returns a zeroed shape when the feature was
+		 * never used on this booking, so every consumer can read it unconditionally.
+		 *
+		 * @param int $id Booking / mirror post id.
+		 * @return array{wanted:bool,delivery:bool,collection:bool,distance:float,address:string,amount:float}
+		 */
+		private static function describe_delivery( $id ) {
+			$delivery   = 'yes' === get_post_meta( $id, 'rbfw_delivery_wanted', true );
+			$collection = 'yes' === get_post_meta( $id, 'rbfw_collection_wanted', true );
+
+			return array(
+				'wanted'     => ( $delivery || $collection ),
+				'delivery'   => $delivery,
+				'collection' => $collection,
+				'distance'   => (float) get_post_meta( $id, 'rbfw_delivery_distance', true ),
+				'address'    => (string) get_post_meta( $id, 'rbfw_delivery_address', true ),
+				'amount'     => (float) get_post_meta( $id, 'rbfw_delivery_amount', true ),
 			);
 		}
 
@@ -333,6 +472,11 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 				'pin'            => $pin,
 				'gateway'        => (string) get_post_meta( $id, 'rbfw_payment_method_title', true ),
 				'total_meta'     => (float) get_post_meta( $id, 'rbfw_ticket_total_price', true ),
+				'start_date'     => $ticket['start_date'],
+				'end_date'       => $ticket['end_date'],
+				'start_ts'       => $ticket['start_ts'],
+				'end_ts'         => $ticket['end_ts'] ? $ticket['end_ts'] : $ticket['start_ts'],
+				'delivery'       => self::describe_delivery( $id ),
 				'_period'        => $ticket['period'],
 				'_quantity'      => $ticket['quantity'],
 			);
@@ -344,10 +488,19 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		 * meta is decoded with object instantiation disabled.
 		 *
 		 * @param int $id rbfw_order post id.
-		 * @return array{item_id:int,item_name:string,period:string,quantity:int}
+		 * @return array{item_id:int,item_name:string,period:string,quantity:int,start_date:string,end_date:string,start_ts:int,end_ts:int}
 		 */
 		private static function parse_woo_ticket( $id ) {
-			$out = array( 'item_id' => 0, 'item_name' => '—', 'period' => '—', 'quantity' => 1 );
+			$out = array(
+				'item_id'    => 0,
+				'item_name'  => '—',
+				'period'     => '—',
+				'quantity'   => 1,
+				'start_date' => '',
+				'end_date'   => '',
+				'start_ts'   => 0,
+				'end_ts'     => 0,
+			);
 
 			$raw = get_post_meta( $id, 'rbfw_ticket_info', true );
 			if ( is_string( $raw ) && '' !== $raw ) {
@@ -372,12 +525,20 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 				$out['quantity'] = max( 1, absint( $first['rbfw_item_quantity'] ) );
 			}
 
+			$start_date = isset( $first['rbfw_start_date'] ) ? (string) $first['rbfw_start_date'] : '';
+			$end_date   = isset( $first['rbfw_end_date'] ) ? (string) $first['rbfw_end_date'] : '';
+
 			$out['period'] = self::format_period(
-				isset( $first['rbfw_start_date'] ) ? $first['rbfw_start_date'] : '',
+				$start_date,
 				isset( $first['rbfw_start_time'] ) ? $first['rbfw_start_time'] : '',
-				isset( $first['rbfw_end_date'] ) ? $first['rbfw_end_date'] : '',
+				$end_date,
 				isset( $first['rbfw_end_time'] ) ? $first['rbfw_end_time'] : ''
 			);
+
+			$out['start_date'] = $start_date;
+			$out['end_date']   = $end_date;
+			$out['start_ts']   = self::date_to_ts( $start_date );
+			$out['end_ts']     = self::date_to_ts( $end_date );
 
 			return $out;
 		}
@@ -406,14 +567,40 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		 */
 		public static function default_filters( $filters = array() ) {
 			return wp_parse_args( $filters, array(
-				'search'    => '',
-				'source'    => '',   // '' | custom | woocommerce
-				'status'    => '',   // normalized status slug
-				'item_id'   => 0,
-				'gateway'   => '',
-				'date_from' => '',
-				'date_to'   => '',
+				'search'      => '',
+				'source'      => '',   // '' | custom | woocommerce
+				'status'      => '',   // normalized status slug
+				'item_id'     => 0,
+				'gateway'     => '',
+				'date_from'   => '',   // ORDER date (post_date) — unchanged, legacy behaviour
+				'date_to'     => '',
+				'rental_from' => '',   // RENTAL date (booking period) — Y-m-d
+				'rental_to'   => '',
+				'delivery'    => '',   // '' | yes | no
+				'orderby'     => self::ORDERBY_DATE,
+				'order'       => 'DESC',
 			) );
+		}
+
+		/**
+		 * Sort keys the index understands. `date` (the order's placement date) stays the
+		 * default so every existing caller keeps its current behaviour.
+		 */
+		const ORDERBY_DATE         = 'date';
+		const ORDERBY_RENTAL_START = 'rental_start';
+		const ORDERBY_RENTAL_END   = 'rental_end';
+
+		/**
+		 * Valid sort keys => the descriptor field each one sorts on.
+		 *
+		 * @return array<string,string>
+		 */
+		public static function orderby_map() {
+			return array(
+				self::ORDERBY_DATE         => 'timestamp',
+				self::ORDERBY_RENTAL_START => 'start_ts',
+				self::ORDERBY_RENTAL_END   => 'end_ts',
+			);
 		}
 
 		/**
@@ -446,7 +633,36 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 
 			$rows = self::apply_php_filters( $rows, $filters );
 
-			usort( $rows, static function ( $a, $b ) {
+			return self::sort_rows( $rows, $filters['orderby'], $filters['order'] );
+		}
+
+		/**
+		 * Order the index. Rows with no rental date (0) always sink to the bottom of a
+		 * rental sort in BOTH directions — an unknown date is not "the earliest booking",
+		 * and letting zeros lead an ascending sort would bury every real upcoming rental.
+		 * Ties fall back to the placement date so the order is stable and reproducible.
+		 *
+		 * @param array  $rows
+		 * @param string $orderby One of orderby_map()'s keys.
+		 * @param string $order   ASC | DESC.
+		 * @return array
+		 */
+		private static function sort_rows( $rows, $orderby, $order ) {
+			$map   = self::orderby_map();
+			$field = isset( $map[ $orderby ] ) ? $map[ $orderby ] : $map[ self::ORDERBY_DATE ];
+			$dir   = ( 'ASC' === strtoupper( (string) $order ) ) ? 1 : -1;
+
+			usort( $rows, static function ( $a, $b ) use ( $field, $dir ) {
+				$av = isset( $a[ $field ] ) ? (int) $a[ $field ] : 0;
+				$bv = isset( $b[ $field ] ) ? (int) $b[ $field ] : 0;
+
+				// Undated rows last, regardless of direction.
+				if ( ( 0 === $av ) !== ( 0 === $bv ) ) {
+					return ( 0 === $av ) ? 1 : -1;
+				}
+				if ( $av !== $bv ) {
+					return ( $av <=> $bv ) * $dir;
+				}
 				return $b['timestamp'] <=> $a['timestamp'];
 			} );
 
@@ -479,15 +695,18 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 			if ( $filters['status'] ) {
 				$meta_query[] = array( 'key' => $status_meta_key, 'value' => sanitize_key( $filters['status'] ) );
 			}
-			// item_id / gateway are only reliable meta on native rows.
-			if ( self::CPT_CUSTOM === $cpt ) {
-				if ( $filters['item_id'] ) {
-					$meta_query[] = array( 'key' => 'rbfw_item_id', 'value' => absint( $filters['item_id'] ) );
-				}
-				if ( $filters['gateway'] ) {
-					$meta_query[] = array( 'key' => 'rbfw_payment_method', 'value' => sanitize_text_field( $filters['gateway'] ) );
-				}
+			// item_id is only reliable meta on native rows.
+			if ( self::CPT_CUSTOM === $cpt && $filters['item_id'] ) {
+				$meta_query[] = array( 'key' => 'rbfw_item_id', 'value' => absint( $filters['item_id'] ) );
 			}
+			/*
+			 * Payment is deliberately NOT filtered here. It used to be a meta_query on
+			 * `rbfw_payment_method`, which meant it only ever matched native rows and only ever
+			 * saw the GATEWAY — so the column could read "Card" while filtering for Card
+			 * returned nothing, and WooCommerce bookings were never filtered by payment at all.
+			 * It is resolved in PHP instead (see apply_php_filters), using exactly the same
+			 * accounting-method-then-gateway rule the column displays.
+			 */
 			if ( $meta_query ) {
 				$args['meta_query'] = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			}
@@ -540,16 +759,75 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		private static function apply_php_filters( $rows, $filters ) {
 			$search  = strtolower( trim( (string) $filters['search'] ) );
 			$item_id = absint( $filters['item_id'] );
+			$gateway = strtolower( trim( (string) $filters['gateway'] ) );
 
-			if ( '' === $search && ! $item_id ) {
+			// Rental-date range. Inclusive on both ends; a booking matches when its period
+			// OVERLAPS the range, so a 10–20 Aug rental is found by a search for 15 Aug.
+			$rental_from = self::date_to_ts( $filters['rental_from'] );
+			$rental_to   = self::date_to_ts( $filters['rental_to'] );
+			if ( $rental_to ) {
+				$rental_to += DAY_IN_SECONDS - 1; // include the whole "to" day.
+			}
+
+			$delivery = in_array( $filters['delivery'], array( 'yes', 'no' ), true ) ? $filters['delivery'] : '';
+
+			if ( '' === $search && ! $item_id && ! $rental_from && ! $rental_to && '' === $delivery && '' === $gateway ) {
 				return $rows;
 			}
 
-			return array_values( array_filter( $rows, static function ( $row ) use ( $search, $item_id ) {
+			return array_values( array_filter( $rows, static function ( $row ) use ( $search, $item_id, $rental_from, $rental_to, $delivery, $gateway ) {
 				// item filter for WooCommerce rows (native rows already filtered in SQL).
 				if ( $item_id && RBFW_Booking_Normalizer::SOURCE_WOO === $row['source'] && (int) $row['item_id'] !== $item_id ) {
 					return false;
 				}
+
+				if ( $rental_from || $rental_to ) {
+					$start = (int) $row['start_ts'];
+					$end   = (int) $row['end_ts'] ? (int) $row['end_ts'] : $start;
+					// A booking with no usable rental date can never match a rental-date range.
+					if ( ! $start ) {
+						return false;
+					}
+					if ( $rental_to && $start > $rental_to ) {
+						return false;
+					}
+					if ( $rental_from && $end < $rental_from ) {
+						return false;
+					}
+				}
+
+				if ( '' !== $delivery ) {
+					$wanted = ! empty( $row['delivery']['wanted'] );
+					if ( ( 'yes' === $delivery ) !== $wanted ) {
+						return false;
+					}
+				}
+
+				/*
+				 * Payment. Matches the RECORDED accounting method first and falls back to the
+				 * gateway — the same order the Payment Method column displays, so filtering by
+				 * what is on screen returns what is on screen. Both the slug and the label are
+				 * accepted, because the dropdown is built from the registry (slugs) while older
+				 * bookings carry a free-text gateway title.
+				 */
+				if ( '' !== $gateway ) {
+					$candidates = array( strtolower( (string) $row['gateway'] ) );
+
+					if ( function_exists( 'rbfw_get_booking_payment_method' ) ) {
+						$method = rbfw_get_booking_payment_method( $row['id'] );
+						if ( '' !== $method['slug'] ) {
+							$candidates[] = strtolower( $method['slug'] );
+						}
+						if ( '' !== $method['label'] ) {
+							$candidates[] = strtolower( $method['label'] );
+						}
+					}
+
+					if ( ! in_array( $gateway, array_filter( $candidates ), true ) ) {
+						return false;
+					}
+				}
+
 				if ( '' === $search ) {
 					return true;
 				}
@@ -576,11 +854,25 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		 * @return array<int,array> Render-ready rows.
 		 */
 		public static function hydrate( $slice ) {
-			$out = array();
+			$out    = array();
+			$format = get_option( 'date_format' );
+
 			foreach ( $slice as $row ) {
-				$out[] = self::SOURCE_WOO === $row['source']
+				$hydrated = self::SOURCE_WOO === $row['source']
 					? self::hydrate_woo( $row )
 					: self::hydrate_custom( $row );
+
+				// Rental dates rendered in the site's own date format, so the list reads the
+				// same way as every other date on screen. Falls back to the stored string when
+				// the date could not be parsed, rather than showing a misleading epoch date.
+				$hydrated['rental_start'] = $hydrated['start_ts']
+					? date_i18n( $format, $hydrated['start_ts'] )
+					: ( $hydrated['start_date'] ? $hydrated['start_date'] : '—' );
+				$hydrated['rental_end'] = $hydrated['end_ts']
+					? date_i18n( $format, $hydrated['end_ts'] )
+					: ( $hydrated['end_date'] ? $hydrated['end_date'] : '—' );
+
+				$out[] = $hydrated;
 			}
 			return $out;
 		}

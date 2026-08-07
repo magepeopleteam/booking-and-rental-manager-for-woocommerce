@@ -465,8 +465,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <?php endif; ?>
 
 
-
-
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
                     <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
@@ -554,6 +552,13 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <?php } ?>
 
                     <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+
+                    <?php
+                    /* Delivery & Collection — after the date/duration step, so the customer
+                       picks WHEN first and then how they get the item. Renders nothing unless
+                       the shop offers delivery and this item allows it. */
+                    include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+                    ?>
 
 
                     <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>

@@ -144,6 +144,165 @@
 				return $settings_fields;
 			}
 
+			/* ============================================================== *
+			 * Accounting payment methods (card / cheque / cash / transfer)
+			 * ============================================================== */
+
+			/**
+			 * Sanitize the posted method rows.
+			 *
+			 * Slugs are carried on the row rather than regenerated from the label, so renaming
+			 * "Cheque" to "Chèque" does not orphan every booking recorded against it. Two rows
+			 * resolving to the same slug are made unique instead of silently overwriting.
+			 *
+			 * @param mixed $raw
+			 * @return array
+			 */
+			public static function sanitize_payment_methods( $raw ) {
+				if ( ! is_array( $raw ) ) {
+					return array();
+				}
+
+				$out = array();
+				foreach ( $raw as $row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+
+					$label = isset( $row['label'] ) ? sanitize_text_field( wp_unslash( $row['label'] ) ) : '';
+					if ( '' === trim( $label ) ) {
+						// Unlabelled methods cannot be shown or reconciled.
+						continue;
+					}
+
+					$slug = isset( $row['slug'] ) ? sanitize_key( $row['slug'] ) : '';
+					if ( '' === $slug ) {
+						$slug = sanitize_key( sanitize_title( $label ) );
+					}
+					if ( '' === $slug ) {
+						continue;
+					}
+
+					$base = $slug;
+					$i    = 2;
+					while ( isset( $out[ $slug ] ) ) {
+						$slug = $base . '_' . $i;
+						$i++;
+					}
+
+					$out[ $slug ] = array(
+						'label'        => $label,
+						'icon'         => isset( $row['icon'] ) ? sanitize_html_class( $row['icon'] ) : '',
+						'instructions' => isset( $row['instructions'] ) ? wp_kses_post( wp_unslash( $row['instructions'] ) ) : '',
+						'enabled'      => ! empty( $row['enabled'] ),
+					);
+				}
+
+				return $out;
+			}
+
+			/**
+			 * The offline payment types, rendered INSIDE the Offline gateway's Configure modal.
+			 *
+			 * This is where they belong: the Offline gateway is literally "the customer pays
+			 * you directly", and card / cheque / cash / bank transfer are the ways that
+			 * happens. Listing them anywhere else on this tab reads as a second, competing
+			 * set of payment settings sitting next to the gateway that already describes them.
+			 *
+			 * The same list is what an admin can later record against ANY booking (including
+			 * WooCommerce ones) and what the "Revenue by payment method" totals bucket into.
+			 *
+			 * Rows carry no `name` attributes — the modal saves over AJAX, not with the
+			 * settings form, and the collector below reads them positionally.
+			 *
+			 * @return void
+			 */
+			public function render_offline_methods() {
+				if ( ! function_exists( 'rbfw_payment_methods' ) ) {
+					return;
+				}
+				$methods = rbfw_payment_methods();
+				?>
+				<div class="rbfw-gw-field rbfw-pm-repeater">
+					<label class="rbfw-gw-label"><?php esc_html_e( 'Payment Types', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<p class="rbfw-pm-intro">
+						<?php esc_html_e( 'The ways customers can pay you directly. Shown as choices at the standalone checkout, recordable against any booking afterwards (including WooCommerce ones, for your books), and the buckets the "Revenue by payment method" totals reconcile into.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</p>
+
+					<div class="rbfw-pm-body">
+						<?php foreach ( $methods as $slug => $m ) : ?>
+							<div class="rbfw-pm-row" data-slug="<?php echo esc_attr( $slug ); ?>">
+								<label class="rbfw-pm-active" title="<?php esc_attr_e( 'Offer this at checkout', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<input type="checkbox" class="rbfw-pm-enabled" <?php checked( ! empty( $m['enabled'] ) ); ?>>
+								</label>
+								<input type="text" class="rbfw-pm-label" value="<?php echo esc_attr( $m['label'] ); ?>" placeholder="<?php esc_attr_e( 'Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+								<input type="text" class="rbfw-pm-instructions" value="<?php echo esc_attr( $m['instructions'] ); ?>" placeholder="<?php esc_attr_e( 'Instructions shown at checkout (optional)', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+								<button type="button" class="rbfw-pm-remove" aria-label="<?php esc_attr_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
+							</div>
+						<?php endforeach; ?>
+					</div>
+
+					<button type="button" class="rbfw-pm-add"><?php esc_html_e( '+ Add payment type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+					<p style="margin:10px 0 0;font-size:12px;color:#6b7280;">
+						<?php esc_html_e( 'Removing a type here does not change bookings already recorded against it — those keep showing what they were paid with.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</p>
+				</div>
+
+				<style>
+					/* Scoped to the Offline modal so it cannot leak into the settings form. */
+					.rbfw-gw-modal .rbfw-pm-intro {
+						margin: 0 0 12px; font-size: 12px; color: #6b7280; line-height: 1.55;
+					}
+					.rbfw-gw-modal .rbfw-pm-row {
+						display: grid;
+						grid-template-columns: 26px minmax(0, 1fr) minmax(0, 1.4fr) 26px;
+						align-items: center; gap: 8px; margin-bottom: 8px;
+					}
+					.rbfw-gw-modal .rbfw-pm-row input[type="text"] {
+						width: 100%; min-width: 0; margin: 0;
+					}
+					.rbfw-gw-modal .rbfw-pm-active { display: flex; justify-content: center; margin: 0; }
+					.rbfw-gw-modal .rbfw-pm-active input { margin: 0; }
+					.rbfw-gw-modal .rbfw-pm-remove {
+						background: none; border: 0; cursor: pointer; padding: 0;
+						color: #b32d2e; font-size: 18px; line-height: 1;
+					}
+					.rbfw-gw-modal .rbfw-pm-remove:hover { color: #8a2424; }
+					.rbfw-gw-modal .rbfw-pm-add {
+						background: none; border: 1px dashed #cbd5e1; border-radius: 7px;
+						padding: 7px 14px; cursor: pointer; font-size: 12.5px;
+						color: #0f766e; font-weight: 600; width: 100%;
+					}
+					.rbfw-gw-modal .rbfw-pm-add:hover { border-color: #0f766e; background: #f0fdfa; }
+					@media screen and (max-width: 600px) {
+						.rbfw-gw-modal .rbfw-pm-row {
+							grid-template-columns: 26px minmax(0, 1fr) 26px;
+						}
+						.rbfw-gw-modal .rbfw-pm-instructions { grid-column: 2 / 4; }
+					}
+				</style>
+				<script>
+				( function ( $ ) {
+					$( document ).on( 'click', '.rbfw-gw-modal .rbfw-pm-add', function () {
+						// A blank slug tells the server to derive one from the label, which is
+						// what gives a brand new type a stable, readable key.
+						$( this ).closest( '.rbfw-pm-repeater' ).find( '.rbfw-pm-body' ).append(
+							'<div class="rbfw-pm-row" data-slug="">' +
+								'<label class="rbfw-pm-active"><input type="checkbox" class="rbfw-pm-enabled" checked></label>' +
+								'<input type="text" class="rbfw-pm-label" value="">' +
+								'<input type="text" class="rbfw-pm-instructions" value="">' +
+								'<button type="button" class="rbfw-pm-remove">&times;</button>' +
+							'</div>'
+						);
+					} );
+					$( document ).on( 'click', '.rbfw-gw-modal .rbfw-pm-remove', function () {
+						$( this ).closest( '.rbfw-pm-row' ).remove();
+					} );
+				} )( jQuery );
+				</script>
+				<?php
+			}
+
 			/**
 			 * The "Booking Mode" selector — now the SINGLE, self-explanatory switch that
 			 * decides whether WooCommerce or the standalone Custom Payment flow processes
@@ -892,10 +1051,12 @@
 							</div>
 							<hr class="rbfw-gw-divider">
 							<div class="rbfw-gw-field">
-								<label class="rbfw-gw-label"><?php esc_html_e( 'Payment Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<label class="rbfw-gw-label"><?php esc_html_e( 'Heading', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<input type="text" data-field="rbfw_offline_label" value="<?php echo $off_label; ?>" placeholder="<?php esc_attr_e( 'e.g. Pay on Pickup / Bank Transfer', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-								<p style="margin:8px 0 0;font-size:12px;color:#6b7280;"><?php esc_html_e( 'This label is shown to customers on the frontend payment step.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+								<p style="margin:8px 0 0;font-size:12px;color:#6b7280;"><?php esc_html_e( 'Shown above the payment choices on the frontend payment step.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 							</div>
+							<hr class="rbfw-gw-divider">
+							<?php $this->render_offline_methods(); ?>
 						</div>
 						<div class="rbfw-gw-modal-footer">
 							<button type="button" class="rbfw-gw-save-btn" data-gateway="offline" style="background:linear-gradient(135deg,#0f766e,#115e59);"><?php esc_html_e( 'Save Offline Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
@@ -925,10 +1086,26 @@
 							var key=$(this).data('field');
 							fields[key]=($(this).attr('type')==='checkbox') ? ($(this).is(':checked')?'on':'off') : $(this).val();
 						});
+
+						// Offline payment types are a repeater, not flat data-field inputs, so
+						// they travel alongside `fields` rather than inside it.
+						var methods=[];
+						$box.find('.rbfw-pm-row').each(function(){
+							var $row=$(this);
+							var label=$.trim($row.find('.rbfw-pm-label').val()||'');
+							if(!label){ return; }   // unlabelled rows cannot be shown or reconciled
+							methods.push({
+								slug: $row.attr('data-slug')||'',
+								label: label,
+								instructions: $row.find('.rbfw-pm-instructions').val()||'',
+								enabled: $row.find('.rbfw-pm-enabled').is(':checked') ? 1 : 0
+							});
+						});
+
 						$btn.prop('disabled',true).css('opacity','0.7'); $msg.hide();
 						$.ajax({
 							url: ajaxurl, type:'POST',
-							data:{ action:'rbfw_save_gateway_settings', nonce:rbfwGateway.nonce, gateway:gateway, fields:fields },
+							data:{ action:'rbfw_save_gateway_settings', nonce:rbfwGateway.nonce, gateway:gateway, fields:fields, methods:methods },
 							success: function(res){
 								if(res.success){
 									$msg.css({'color':'#0f5132','background':'#d1e7dd','border':'1px solid #badbcc'}).text(res.data).fadeIn(200);
@@ -1186,14 +1363,33 @@
 					wp_send_json_error( __( 'This gateway is available in the Pro version.', 'booking-and-rental-manager-for-woocommerce' ) );
 				}
 
+				// Offline payment types (the repeater in that gateway's modal). Only accepted
+				// for the offline gateway, and only when the repeater was actually posted —
+				// an absent key must leave the stored list alone rather than wipe it.
+				if ( 'offline' === $gateway && isset( $_POST['methods'] ) ) {
+					$raw = wp_unslash( $_POST['methods'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitized field-by-field in sanitize_payment_methods().
+					$existing['rbfw_payment_methods'] = self::sanitize_payment_methods( is_array( $raw ) ? $raw : array() );
+				}
+
 				$toggles = array( 'rbfw_paypal_enable', 'rbfw_paypal_sandbox', 'rbfw_stripe_enable', 'rbfw_stripe_sandbox', 'rbfw_offline_enable' );
 				foreach ( $allowed[ $gateway ] as $key ) {
-					$val = isset( $fields[ $key ] ) ? $fields[ $key ] : 'off';
 					if ( in_array( $key, $toggles, true ) ) {
+						// An unchecked checkbox posts nothing, so absent genuinely means "off".
+						$val              = isset( $fields[ $key ] ) ? $fields[ $key ] : 'off';
 						$existing[ $key ] = ( 'on' === $val ) ? 'on' : 'off';
-					} else {
-						$existing[ $key ] = sanitize_text_field( $val );
+						continue;
 					}
+
+					// Text fields are a different story: absent means "not submitted", NOT
+					// "empty". This previously fell through to the same 'off' default and
+					// wrote the literal string "off" into the field — which is how a partial
+					// save could turn the Offline heading into "off", and would just as
+					// happily have overwritten a Stripe or PayPal API key with it. Leave a
+					// field that was not posted exactly as it was stored.
+					if ( ! isset( $fields[ $key ] ) ) {
+						continue;
+					}
+					$existing[ $key ] = sanitize_text_field( $fields[ $key ] );
 				}
 
 				update_option( self::OPTION, $existing );
@@ -1288,6 +1484,10 @@
 					'rbfw_stripe_enable', 'rbfw_stripe_sandbox', 'rbfw_stripe_test_pub', 'rbfw_stripe_test_sec',
 					'rbfw_stripe_live_pub', 'rbfw_stripe_live_sec',
 					'rbfw_offline_enable', 'rbfw_offline_label',
+					// Offline payment types live in that gateway's modal and save over AJAX,
+					// so they never travel with the settings form — without this, saving any
+					// other field on the Payments tab would silently wipe the whole list.
+					'rbfw_payment_methods',
 				);
 				if ( ! is_array( $new_value ) ) {
 					return $new_value;

@@ -1,0 +1,244 @@
+<?php
+/**
+ * Delivery & Collection block for the booking forms.
+ *
+ * Included by each registration template right after the pick-up / drop-off location
+ * fields. Renders nothing at all unless the shop offers delivery AND this item allows it,
+ * so a shop that never turns the feature on sees no change whatsoever.
+ *
+ * WHAT IT POSTS
+ *   rbfw_delivery_wanted     yes|''   customer wants it delivered
+ *   rbfw_collection_wanted   yes|''   customer wants it collected
+ *   rbfw_delivery_distance   float    the chosen zone's distance
+ *   rbfw_delivery_address    string   where to deliver
+ *
+ * WHY A ZONE PICKER, NOT A KM BOX
+ * There is no geolocation here — the shop prices manually. Asking a customer to type "how
+ * many km away are you" makes them guess a number they do not know, and a wrong guess is a
+ * wrong price the shop then has to argue about. So the configured bands are offered as
+ * named CHOICES ("Up to 5 km — free", "5–15 km — 15.00") and the customer picks the one
+ * that describes them. The value submitted is a distance inside the chosen band, so the
+ * server prices it through exactly the same band table with no special-casing.
+ *
+ * It deliberately does NOT post a price. The figure shown here is for the customer's
+ * benefit; the amount charged is recomputed server-side on both the WooCommerce and the
+ * standalone path.
+ *
+ * Expects $rbfw_id (rental item id) in scope.
+ *
+ * @package booking-and-rental-manager-for-woocommerce
+ * @since 2.8.0
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	die;
+}
+
+$rbfw_delivery_item_id = isset( $rbfw_id ) ? absint( $rbfw_id ) : get_the_ID();
+
+if ( ! function_exists( 'rbfw_delivery_enabled_for_item' ) || ! rbfw_delivery_enabled_for_item( $rbfw_delivery_item_id ) ) {
+	return;
+}
+
+/*
+ * Render once per request.
+ *
+ * Item types differ in where the booking UI is built: the step / timely flow renders its
+ * panel over AJAX (template_segment/single_day_info.php) while the other flows render it
+ * inline in the form. Both include this partial so every flow gets delivery, which means
+ * one page could otherwise print two sets of delivery inputs with the same field names —
+ * and the second would silently win on submit.
+ *
+ * The AJAX segment is a fresh request, so it always renders; only a genuine double-include
+ * within one page render is suppressed.
+ */
+if ( ! empty( $GLOBALS['rbfw_delivery_block_rendered'] ) ) {
+	return;
+}
+$GLOBALS['rbfw_delivery_block_rendered'] = true;
+
+$rbfw_delivery_cfg = rbfw_delivery_settings();
+?>
+<div class="item rbfw-delivery-block"
+	data-item-id="<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+	data-base-fee="<?php echo esc_attr( $rbfw_delivery_cfg['base_fee'] ); ?>"
+	data-free-radius="<?php echo esc_attr( $rbfw_delivery_cfg['free_radius'] ); ?>"
+	data-max-distance="<?php echo esc_attr( $rbfw_delivery_cfg['max_distance'] ); ?>"
+	data-collection-mode="<?php echo esc_attr( $rbfw_delivery_cfg['collection_mode'] ); ?>"
+	data-require-mode="<?php echo esc_attr( $rbfw_delivery_cfg['require_mode'] ); ?>"
+	data-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['bands'] ) ); ?>"
+	data-collection-bands="<?php echo esc_attr( wp_json_encode( $rbfw_delivery_cfg['collection_band_rows'] ) ); ?>">
+
+	<?php
+	/*
+	 * When both legs are mandatory they are shown ticked and LOCKED, not merely
+	 * pre-selected. Leaving them clickable invited the obvious question — if it is
+	 * required, why can I untick it? — and turned a statement of what the rental includes
+	 * into a trap that only complained at submit time.
+	 *
+	 * A disabled checkbox does not submit, so each locked leg carries a hidden input with
+	 * the real field name. The server re-checks the rule regardless, so the lock is honest
+	 * UI rather than the control.
+	 *
+	 * Only locked when the shop offers BOTH legs; if one is switched off there is nothing
+	 * to pair it with and the remaining leg stays an ordinary choice.
+	 */
+	$rbfw_delivery_both = ( 'both' === $rbfw_delivery_cfg['require_mode'] );
+	$rbfw_delivery_lock = ( $rbfw_delivery_both && $rbfw_delivery_cfg['enabled'] && $rbfw_delivery_cfg['collection_enabled'] );
+	?>
+	<div class="rbfw-single-right-heading">
+		<?php esc_html_e( 'Delivery &amp; Collection', 'booking-and-rental-manager-for-woocommerce' ); ?>
+		<?php if ( 'off' !== $rbfw_delivery_cfg['require_mode'] ) : ?><span class="rbfw-required">*</span><?php endif; ?>
+	</div>
+
+	<?php if ( $rbfw_delivery_both && $rbfw_delivery_cfg['enabled'] && $rbfw_delivery_cfg['collection_enabled'] ) : ?>
+		<p class="rbfw-delivery-both-note">
+			<?php
+			printf(
+				/* translators: 1: delivery label, 2: collection label. */
+				esc_html__( '%1$s and %2$s are booked together for this rental.', 'booking-and-rental-manager-for-woocommerce' ),
+				esc_html( $rbfw_delivery_cfg['delivery_label'] ),
+				esc_html( $rbfw_delivery_cfg['collection_label'] )
+			);
+			?>
+		</p>
+	<?php endif; ?>
+
+	<div class="item-content rbfw-delivery-content">
+
+		<div class="rbfw-delivery-options">
+			<?php if ( $rbfw_delivery_cfg['enabled'] ) : ?>
+				<label class="rbfw-delivery-option <?php echo esc_attr( $rbfw_delivery_lock ? 'is-locked' : '' ); ?>">
+					<input type="checkbox" name="<?php echo esc_attr( $rbfw_delivery_lock ? '' : 'rbfw_delivery_wanted' ); ?>" value="yes" class="rbfw-delivery-toggle"
+						<?php checked( $rbfw_delivery_both ); ?> <?php disabled( $rbfw_delivery_lock ); ?>>
+					<?php if ( $rbfw_delivery_lock ) : ?>
+						<input type="hidden" name="rbfw_delivery_wanted" value="yes" class="rbfw-delivery-locked-value">
+					<?php endif; ?>
+					<span class="rbfw-delivery-option-label"><?php echo esc_html( $rbfw_delivery_cfg['delivery_label'] ); ?></span>
+					<span class="rbfw-delivery-option-hint">
+						<?php echo esc_html( $rbfw_delivery_lock
+							? __( 'Included with this rental', 'booking-and-rental-manager-for-woocommerce' )
+							: __( 'We bring it to you', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+					</span>
+				</label>
+			<?php endif; ?>
+
+			<?php if ( $rbfw_delivery_cfg['collection_enabled'] ) : ?>
+				<label class="rbfw-delivery-option <?php echo esc_attr( $rbfw_delivery_lock ? 'is-locked' : '' ); ?>">
+					<input type="checkbox" name="<?php echo esc_attr( $rbfw_delivery_lock ? '' : 'rbfw_collection_wanted' ); ?>" value="yes" class="rbfw-delivery-toggle"
+						<?php checked( $rbfw_delivery_both ); ?> <?php disabled( $rbfw_delivery_lock ); ?>>
+					<?php if ( $rbfw_delivery_lock ) : ?>
+						<input type="hidden" name="rbfw_collection_wanted" value="yes" class="rbfw-delivery-locked-value">
+					<?php endif; ?>
+					<span class="rbfw-delivery-option-label"><?php echo esc_html( $rbfw_delivery_cfg['collection_label'] ); ?></span>
+					<span class="rbfw-delivery-option-hint">
+						<?php echo esc_html( $rbfw_delivery_lock
+							? __( 'Included with this rental', 'booking-and-rental-manager-for-woocommerce' )
+							: __( 'We pick it up afterwards', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+					</span>
+				</label>
+			<?php endif; ?>
+		</div>
+
+		<?php
+		/* Rendered OPEN when a leg is already selected, rather than waiting for JS to reveal
+		   it. With both legs locked there is no change event coming — a disabled checkbox
+		   never fires one — so relying on the script left the customer told that delivery
+		   was included and given nowhere to say where they are. */
+		?>
+		<div class="rbfw-delivery-fields"<?php echo $rbfw_delivery_both ? '' : ' style="display:none;"'; ?>>
+			<div class="rbfw-delivery-field">
+				<label for="rbfw-delivery-address-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
+					<?php esc_html_e( 'Delivery address', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<?php if ( $rbfw_delivery_cfg['require_address'] ) : ?><span class="rbfw-required">*</span><?php endif; ?>
+				</label>
+				<input type="text"
+					id="rbfw-delivery-address-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+					name="rbfw_delivery_address"
+					class="rbfw-input rbfw-delivery-address"
+					autocomplete="street-address"
+					placeholder="<?php esc_attr_e( 'Street, town, postcode', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+					<?php echo $rbfw_delivery_cfg['require_address'] ? 'data-required="1"' : ''; ?>>
+			</div>
+
+			<?php
+			/* Zones come from the shared helper so the public form and the admin booking
+			   editor can never offer different zones or prices for the same shop. */
+			$rbfw_delivery_zones = rbfw_delivery_zone_options( $rbfw_delivery_item_id );
+			?>
+			<div class="rbfw-delivery-field rbfw-delivery-field-distance">
+				<label for="rbfw-delivery-distance-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
+					<?php esc_html_e( 'How far are you from us?', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<span class="rbfw-required">*</span>
+				</label>
+				<select id="rbfw-delivery-distance-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+					name="rbfw_delivery_distance"
+					class="rbfw-select rbfw-delivery-distance">
+					<option value=""><?php esc_html_e( 'Choose your area…', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+					<?php foreach ( $rbfw_delivery_zones as $rbfw_zone ) : ?>
+						<option value="<?php echo esc_attr( $rbfw_zone['value'] ); ?>">
+							<?php
+							printf(
+								/* translators: 1: distance zone, 2: price for that zone. */
+								esc_html__( '%1$s — %2$s', 'booking-and-rental-manager-for-woocommerce' ),
+								esc_html( $rbfw_zone['label'] ),
+								esc_html( $rbfw_zone['note'] )
+							);
+							?>
+						</option>
+					<?php endforeach; ?>
+				</select>
+				<?php if ( $rbfw_delivery_cfg['max_distance'] > 0 ) : ?>
+					<small class="rbfw-delivery-range">
+						<?php
+						printf(
+							/* translators: %s: maximum delivery distance in km. */
+							esc_html__( 'We deliver up to %s km. Further away? Get in touch.', 'booking-and-rental-manager-for-woocommerce' ),
+							esc_html( rbfw_delivery_format_km( $rbfw_delivery_cfg['max_distance'] ) )
+						);
+						?>
+					</small>
+				<?php endif; ?>
+			</div>
+
+			<?php if ( $rbfw_delivery_cfg['require_phone'] ) : ?>
+				<div class="rbfw-delivery-field">
+					<label for="rbfw-delivery-phone-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
+						<?php esc_html_e( 'Contact number for the delivery', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						<span class="rbfw-required">*</span>
+					</label>
+					<input type="tel"
+						id="rbfw-delivery-phone-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+						name="rbfw_delivery_phone"
+						class="rbfw-input rbfw-delivery-phone"
+						autocomplete="tel"
+						data-required="1"
+						placeholder="<?php esc_attr_e( 'We will call when we arrive', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+				</div>
+			<?php endif; ?>
+
+			<?php if ( $rbfw_delivery_cfg['require_note'] ) : ?>
+				<div class="rbfw-delivery-field">
+					<label for="rbfw-delivery-note-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>">
+						<?php esc_html_e( 'Delivery notes', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						<span class="rbfw-required">*</span>
+					</label>
+					<textarea
+						id="rbfw-delivery-note-<?php echo esc_attr( $rbfw_delivery_item_id ); ?>"
+						name="rbfw_delivery_note"
+						class="rbfw-input rbfw-delivery-note"
+						rows="2"
+						data-required="1"
+						placeholder="<?php esc_attr_e( 'Gate code, floor, where to leave it…', 'booking-and-rental-manager-for-woocommerce' ); ?>"></textarea>
+				</div>
+			<?php endif; ?>
+
+			<div class="rbfw-delivery-quote" aria-live="polite"></div>
+
+			<?php if ( '' !== trim( (string) $rbfw_delivery_cfg['help_text'] ) ) : ?>
+				<p class="rbfw-delivery-help"><?php echo esc_html( $rbfw_delivery_cfg['help_text'] ); ?></p>
+			<?php endif; ?>
+		</div>
+
+	</div>
+</div>

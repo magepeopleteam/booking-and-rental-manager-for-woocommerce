@@ -78,7 +78,6 @@
                     </div>
                 <?php endif; ?>
 
-
                 <?php
                 // --- Flexible Rate box ---
                 $_rbfw_sd_raw   = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true );
@@ -270,6 +269,13 @@
                             </div>
                         </div>
                     </div>
+
+                    <?php
+                    /* Delivery & Collection — placed AFTER the date/duration step on purpose:
+                       the customer picks WHEN first, then how they get the bike. Renders
+                       nothing unless the shop offers delivery and this item allows it. */
+                    include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+                    ?>
 
                     <input type="hidden" name="service_type" id="rbfw_service_type_for_st" value="">
 

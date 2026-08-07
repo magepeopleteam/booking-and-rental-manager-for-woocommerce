@@ -68,6 +68,53 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_send_json_success(self::rbfw_frontend_nonces());
 		}
 
+
+		/**
+		 * Delivery & Collection assets.
+		 *
+		 * Called from BOTH the front-end and the admin enqueue hooks: the booking form is
+		 * rendered on the site AND inside the backend "add booking" screen, and the block is
+		 * useless without its script. Registering it in one place stops the two copies
+		 * drifting apart.
+		 *
+		 * Delivery is a Pro feature, and even with Pro it is off until the shop turns it on.
+		 * rbfw_delivery_is_enabled() covers both, so a shop that does not offer delivery is not
+		 * asked to download a script that can never do anything.
+		 *
+		 * @return void
+		 */
+		private function rbfw_enqueue_delivery_assets()
+		{
+			if (!function_exists('rbfw_delivery_is_enabled') || !rbfw_delivery_is_enabled()) {
+				return;
+			}
+
+			wp_enqueue_script('rbfw_delivery', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_delivery.js', array('jquery'), time(), true);
+			wp_localize_script('rbfw_delivery', 'rbfwDelivery', array(
+				// The currency symbol is an HTML entity in WooCommerce (e.g. &euro;), which
+				// renders literally once passed through .text(). Decode it here so the
+				// preview shows the symbol rather than its entity.
+				'symbol' => function_exists('get_woocommerce_currency_symbol')
+					? html_entity_decode(get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8')
+					: '',
+				'i18n'   => array(
+					'delivery'      => __('Delivery', 'booking-and-rental-manager-for-woocommerce'),
+					'collection'    => __('Collection', 'booking-and-rental-manager-for-woocommerce'),
+					'freeZone'      => __('Free delivery zone', 'booking-and-rental-manager-for-woocommerce'),
+					'enterDistance' => __('Choose your area to see the price.', 'booking-and-rental-manager-for-woocommerce'),
+					'needDistance'  => __('Please choose how far you are from us.', 'booking-and-rental-manager-for-woocommerce'),
+					'needAddress'   => __('Please enter the delivery address.', 'booking-and-rental-manager-for-woocommerce'),
+					'needChoice'    => __('Please choose whether you would like delivery or collection.', 'booking-and-rental-manager-for-woocommerce'),
+					'needBoth'      => __('This rental is booked with delivery and collection together — please select both.', 'booking-and-rental-manager-for-woocommerce'),
+					'needPhone'     => __('Please give us a contact number for the delivery.', 'booking-and-rental-manager-for-woocommerce'),
+					'needNote'      => __('Please add delivery notes so we can find you.', 'booking-and-rental-manager-for-woocommerce'),
+					/* translators: %s: maximum delivery distance in km. */
+					'outOfRange'    => __('Sorry, we only deliver within %s km.', 'booking-and-rental-manager-for-woocommerce'),
+					'noBand'        => __('We could not work out a price for that distance. Please contact us.', 'booking-and-rental-manager-for-woocommerce'),
+				),
+			));
+		}
+
 		public function rbfw_add_admin_scripts($hook)
 		{
 			//font awesome
@@ -77,6 +124,7 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('jquery-ui-core');
 			wp_enqueue_script('jquery-ui-datepicker');
 			wp_enqueue_script('jquery-ui-accordion');
+			$this->rbfw_enqueue_delivery_assets();
 			//wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style.css', array(), time(), 'all' );
 			wp_enqueue_style('mp_admin_settings', RBFW_PLUGIN_URL . '/assets/mp_admin_settings.css', array(), time(), 'all');
 			// wp_enqueue_script( 'mp_plugin_global_rbfw', RBFW_PLUGIN_URL . '/assets/mp_script.js', array(), time(), true );
@@ -107,6 +155,7 @@ if (! class_exists('RBFW_Dependencies')) {
 			// Standalone (non-WooCommerce) checkout interception. Loads in every mode but
 			// only acts when rbfw_ajax_front.booking_mode === 'standalone'.
 			wp_enqueue_script('rbfw_native_checkout', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_native_checkout.js', array('jquery'), time(), true);
+
 
 			wp_enqueue_style('select2css', RBFW_PLUGIN_URL . '/admin/css/select2.min.css', false, '1.0', 'all');
 			wp_enqueue_script('select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array('jquery'), null, true);
@@ -315,6 +364,11 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 			// mage icon
 			wp_enqueue_style('mage-icons', RBFW_PLUGIN_URL . '/assets/mage-icon/css/mage-icon.css', array(), time());
+
+			// Delivery & Collection. Needed on the FRONT END above all — the block is
+			// rendered into the booking panel (partly over AJAX) and does nothing without it.
+			$this->rbfw_enqueue_delivery_assets();
+
 			wp_enqueue_script('rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true);
 
 

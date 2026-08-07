@@ -872,6 +872,14 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				RBFW_Location::save_location_inventory_from_post( $post_id );
 			}
 
+			/* Per-item delivery opt-out. Only written while the shop actually offers delivery:
+			 * the toggle is not rendered otherwise, and saving 'no' from its absence would
+			 * silently opt every item out the moment the feature is switched on. */
+			if ( function_exists( 'rbfw_delivery_is_enabled' ) && rbfw_delivery_is_enabled() ) {
+				$enable_delivery = ( isset( $_POST['rbfw_enable_delivery'] ) && 'yes' === $_POST['rbfw_enable_delivery'] ) ? 'yes' : 'no';
+				update_post_meta( $post_id, 'rbfw_enable_delivery', $enable_delivery );
+			}
+
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
 				$cats = rbfw_sanitize_rent_type_categories( wp_unslash( $_POST['rbfw_categories'] ) );
