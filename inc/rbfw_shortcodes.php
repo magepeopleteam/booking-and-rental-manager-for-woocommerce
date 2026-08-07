@@ -170,6 +170,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'left-type-filter' => 'on',
         'left-feature-filter' => 'on',
         'hide-price' => 'no',
+        'rbfw_search_item_name' => '',
     ), $atts );
 
     $style  = $attributes['style'];
@@ -341,6 +342,10 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     }
 
     $base_filter_categories = array_values( array_unique( $base_filter_categories ) );
+
+    if ( ! empty( $attributes['rbfw_search_item_name'] ) ) {
+        $args['s'] = sanitize_text_field( (string) $attributes['rbfw_search_item_name'] );
+    }
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
@@ -591,10 +596,12 @@ function rbfw_rent_search_result_shortcode_func($atts = null)
     $rbfw_search_location = !empty( $_GET['rbfw_search_location'] ) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])  ) : '';
     $rbfw_search_type = !empty( $_GET['rbfw_search_type'] ) ? trim(  sanitize_text_field( wp_unslash($_GET['rbfw_search_type'] )) ) : '' ;
     $rbfw_pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? trim(sanitize_text_field ( wp_unslash($_GET['rbfw-pickup-date'] )) ) : '';
+    $rbfw_search_item_name = !empty( $_GET['rbfw_search_item_name'] ) ? sanitize_text_field( wp_unslash( $_GET['rbfw_search_item_name'] ) ) : '';
 
     $atts['rbfw_search_location'] = $rbfw_search_location;
     $atts['rbfw_search_type'] = $rbfw_search_type;
     $atts['rbfw_pickup_date'] = $rbfw_pickup_date;
+    $atts['rbfw_search_item_name'] = $rbfw_search_item_name;
     $atts['search_result'] = 'yes';
 
 
