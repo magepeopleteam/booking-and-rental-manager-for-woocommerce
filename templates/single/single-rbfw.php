@@ -3,29 +3,44 @@ if ( ! defined( 'ABSPATH' ) ) {
     die;
 } // Cannot access pages directly.
 
-if ( wp_is_block_theme() ) {  ?>
+if ( wp_is_block_theme() ) {
+    /*
+     * Block themes build their layout CSS *while the blocks render*: every
+     * `wp:group`/`wp:navigation` with a layout gets a generated
+     * `.wp-container-core-…` rule pushed into the style engine's `block-supports`
+     * store. Core flushes that store in `wp_enqueue_stored_styles()`, which for a
+     * block theme prints during `wp_enqueue_scripts` — i.e. inside wp_head() — and
+     * deliberately bails out on `wp_footer` (see wp-includes/script-loader.php).
+     *
+     * Rendering the header/footer template parts *after* wp_head() therefore emitted
+     * markup whose layout rules were never printed at all: flex/justification was
+     * lost, so the navigation collapsed to the left, header items wrapped, and the
+     * footer lost its alignment. Core's own template-canvas.php avoids this by
+     * building the template HTML before <head> for exactly this reason.
+     *
+     * So: render both template parts up front, buffer the markup, and echo it in
+     * place further down. Nothing about the output changes — only when it is built.
+     */
+    ob_start();
+    block_header_area();
+    $rbfw_block_header_html = ob_get_clean();
+
+    ob_start();
+    block_footer_area();
+    $rbfw_block_footer_html = ob_get_clean();
+    ?>
     <!DOCTYPE html>
     <html <?php language_attributes(); ?>>
     <head>
         <meta charset="<?php bloginfo( 'charset' ); ?>">
-        <?php
-        $block_content = do_blocks( '
-		<!-- wp:group {"layout":{"type":"constrained"}} -->
-		<div class="wp-block-group">
-		<!-- wp:post-content /-->
-		</div>
-		<!-- /wp:group -->'
-        );
-        wp_head(); ?>
+        <?php wp_head(); ?>
     </head>
     <body <?php body_class(); ?>>
     <?php wp_body_open(); ?>
     <div class="wp-site-blocks">
         <header class="wp-block-template-part site-header">
-            <?php block_header_area(); ?>
+            <?php echo $rbfw_block_header_html; // phpcs:ignore WordPress.Security.EscapingOutput.OutputNotEscaped -- rendered block markup. ?>
         </header>
-
-    </div>
     <?php
 } else {
     get_header();
@@ -71,10 +86,12 @@ if ( wp_is_block_theme() ) {
 // Code for block themes goes here.
     ?>
     <footer class="wp-block-template-part">
-        <?php block_footer_area(); ?>
+        <?php echo $rbfw_block_footer_html; // phpcs:ignore WordPress.Security.EscapingOutput.OutputNotEscaped -- rendered block markup, built before wp_head(). ?>
     </footer>
+    </div><!-- /.wp-site-blocks -->
     <?php wp_footer(); ?>
     </body>
+    </html>
     <?php
 } else {
     get_footer();

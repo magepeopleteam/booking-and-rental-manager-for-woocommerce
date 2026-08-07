@@ -396,14 +396,31 @@ if (!class_exists('RBFW_Hidden_Product')) {
 	        global $pagenow;
 	        $q_vars = &$query->query_vars;
 	        if ( $pagenow == 'edit.php' && isset( $q_vars['post_type'] ) && $q_vars['post_type'] == 'product' ) {
-		        $tax_query = array(
-			        [
-				        'taxonomy' => 'product_visibility',
-				        'field'    => 'slug',
-				        'terms'    => 'exclude-from-catalog',
-				        'operator' => 'NOT IN',
-			        ]
+		        $hidden_clause = array(
+			        'taxonomy' => 'product_visibility',
+			        'field'    => 'slug',
+			        'terms'    => 'exclude-from-catalog',
+			        'operator' => 'NOT IN',
 		        );
+
+		        /*
+		         * Merge, never replace. This used to overwrite `tax_query` wholesale,
+		         * dropping any clause already on the products list table — WooCommerce's
+		         * "Filter by shipping class" among them. Nested so an existing
+		         * 'relation' => 'OR' group keeps its own meaning.
+		         */
+		        $existing = $query->get( 'tax_query' );
+
+		        if ( is_array( $existing ) && ! empty( $existing ) ) {
+			        $tax_query = array(
+				        'relation' => 'AND',
+				        $existing,
+				        array( $hidden_clause ),
+			        );
+		        } else {
+			        $tax_query = array( $hidden_clause );
+		        }
+
 		        $query->set( 'tax_query', $tax_query );
 	        }
         }

@@ -1408,17 +1408,67 @@ function rbfw_url_exclude_search_engine() {
 		}
 	}
 	add_action( 'pre_get_posts', 'rbfw_search_query_exlude_hidden_wc_fix' );
+	/**
+	 * Keep the hidden backing products of rental items out of site search results.
+	 *
+	 * Two things used to make this fire far too widely and clobber other people's
+	 * queries:
+	 *
+	 * 1. `$query->is_search` is set by WP_Query::parse_query() whenever the `s`
+	 *    query var is merely *present* — `if ( isset( $this->query['s'] ) )` — not
+	 *    only when something was actually searched for. WooCommerce's Product
+	 *    Collection block always passes `'s' => $search` with an empty default
+	 *    (see QueryBuilder::get_final_frontend_query()), so every Product
+	 *    Collection block on the front end looked like a search query.
+	 * 2. `$query->set( 'tax_query', … )` *replaces* the whole tax query. Combined
+	 *    with (1), the `product_visibility`/`featured` clause that the "Featured
+	 *    Products" collection had just built was thrown away, so the block fell
+	 *    back to listing every product in its "Order by" order — the reported bug.
+	 *    The same overwrite silently broke category, tag, attribute and stock
+	 *    filters on any other block or search query.
+	 *
+	 * So: require a real search term, and merge into whatever tax query is already
+	 * there instead of replacing it.
+	 *
+	 * @param WP_Query $query Query about to run.
+	 *
+	 * @return WP_Query
+	 */
 	function rbfw_search_query_exlude_hidden_wc_fix( $query ) {
-		if ( $query->is_search && ! is_admin() ) {
-			$query->set( 'tax_query', array(
-				array(
-					'taxonomy' => 'product_visibility',
-					'field'    => 'name',
-					'terms'    => 'exclude-from-search',
-					'operator' => 'NOT IN',
-				)
-			) );
+		if ( is_admin() || ! ( $query instanceof WP_Query ) || ! $query->is_search ) {
+			return $query;
 		}
+
+		// An empty `s` is not a search — see (1) above.
+		if ( '' === trim( (string) $query->get( 's' ) ) ) {
+			return $query;
+		}
+
+		$hidden_clause = array(
+			'taxonomy' => 'product_visibility',
+			'field'    => 'name',
+			'terms'    => 'exclude-from-search',
+			'operator' => 'NOT IN',
+		);
+
+		$existing = $query->get( 'tax_query' );
+
+		if ( is_array( $existing ) && ! empty( $existing ) ) {
+			/*
+			 * Nest rather than append: the existing query may carry its own
+			 * 'relation' => 'OR', and appending a clause to that would widen it into
+			 * "OR not-hidden" instead of narrowing it.
+			 */
+			$tax_query = array(
+				'relation' => 'AND',
+				$existing,
+				array( $hidden_clause ),
+			);
+		} else {
+			$tax_query = array( $hidden_clause );
+		}
+
+		$query->set( 'tax_query', $tax_query );
 
 		return $query;
 	}
@@ -3409,6 +3459,58 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 		return wp_json_encode( $off_dates );
 	}
 
+if ( ! function_exists( 'rbfw_format_duration_unit' ) ) {
+	/**
+	 * Format one "<count> <unit>" chunk of a human-readable rental duration.
+	 *
+	 * The duration summary used to be assembled by string concatenation —
+	 * `"$days day" . ( $days > 1 ? 's' : '' )` — which hard-coded English plural
+	 * rules and, because the text never passed through a translation function, was
+	 * invisible to Loco Translate and to `wp-cli i18n make-pot`. Languages with
+	 * more than two plural forms (Lithuanian, Polish, Russian, …) could not
+	 * translate it at all.
+	 *
+	 * Going through _n() puts the singular/plural pair in the POT file and lets
+	 * each locale apply its own plural rules.
+	 *
+	 * @param string    $unit  Unit key: 'month', 'week', 'day' or 'hour'.
+	 * @param int|float $count Number of units.
+	 *
+	 * @return string Localised "2 days" style string, or '' for an unknown unit.
+	 */
+	function rbfw_format_duration_unit( $unit, $count ) {
+		$count = is_numeric( $count ) ? $count + 0 : 0;
+
+		/*
+		 * _n() selects the plural form from a whole number, but the displayed value
+		 * must keep any fraction — every current caller passes an integer, yet
+		 * truncating a "2.5 hours" duration down to "2 hours" would silently
+		 * misreport what the customer is being charged for.
+		 */
+		$number = ( is_float( $count ) && 0.0 !== fmod( $count, 1 ) )
+			? number_format_i18n( $count, 2 )
+			: number_format_i18n( (int) $count );
+
+		$count = (int) $count;
+
+		switch ( $unit ) {
+			case 'month':
+				/* translators: %s: number of months. */
+				return sprintf( _n( '%s month', '%s months', $count, 'booking-and-rental-manager-for-woocommerce' ), $number );
+			case 'week':
+				/* translators: %s: number of weeks. */
+				return sprintf( _n( '%s week', '%s weeks', $count, 'booking-and-rental-manager-for-woocommerce' ), $number );
+			case 'day':
+				/* translators: %s: number of days. */
+				return sprintf( _n( '%s day', '%s days', $count, 'booking-and-rental-manager-for-woocommerce' ), $number );
+			case 'hour':
+				/* translators: %s: number of hours. */
+				return sprintf( _n( '%s hour', '%s hours', $count, 'booking-and-rental-manager-for-woocommerce' ), $number );
+		}
+
+		return '';
+	}
+}
 
 function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, $dropoff_datetime = 0, $start_date = '', $end_date = '', $star_time = '', $end_time = '', $rbfw_enable_time_slot = '') {
     global $rbfw;
@@ -3529,10 +3631,10 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         }
 
 
-        if ($totalMonths > 0)       $output[] = "$totalMonths month" . ($totalMonths > 1 ? 's' : '');
-        if ($weeks > 0)       $output[] = "$weeks week" . ($weeks > 1 ? 's' : '');
-        if ($days > 0)        $output[] = "$days day" . ($days > 1 ? 's' : '');
-        if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
+        if ($totalMonths > 0)       $output[] = rbfw_format_duration_unit( 'month', $totalMonths );
+        if ($weeks > 0)       $output[] = rbfw_format_duration_unit( 'week', $weeks );
+        if ($days > 0)        $output[] = rbfw_format_duration_unit( 'day', $days );
+        if ($hours > 0)       $output[] = rbfw_format_duration_unit( 'hour', $hours );
 
 
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
@@ -3579,9 +3681,9 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
             }
         }
 
-        if ($actualWeeks > 0)        $output[] = "$actualWeeks week" . ($actualWeeks > 1 ? 's' : '');
-        if ($daysWeeks > 0)        $output[] = "$daysWeeks day" . ($daysWeeks > 1 ? 's' : '');
-        if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
+        if ($actualWeeks > 0)        $output[] = rbfw_format_duration_unit( 'week', $actualWeeks );
+        if ($daysWeeks > 0)        $output[] = rbfw_format_duration_unit( 'day', $daysWeeks );
+        if ($hours > 0)       $output[] = rbfw_format_duration_unit( 'hour', $hours );
 
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
     }
