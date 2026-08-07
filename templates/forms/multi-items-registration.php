@@ -164,7 +164,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
     <div class="rbfw-single-right-container">
 
         <div class="rbfw-sd-rate-box">
-            <?php rbfw_fd_summary_badges(); ?>
+            <?php rbfw_fd_summary_badges( $rbfw_id ); ?>
             <?php rbfw_fd_summary_title(); ?>
             <?php rbfw_fd_summary_desc(); ?>
             <?php if ( $_rbfw_mi_min_price > 0 ) : ?>

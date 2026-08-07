@@ -56,7 +56,7 @@
 
 		<div class="rbfw-single-right-container">
 			<div class="rbfw-sd-rate-box">
-				<?php rbfw_fd_summary_badges(); ?>
+				<?php rbfw_fd_summary_badges( $rbfw_id ); ?>
 				<?php rbfw_fd_summary_title(); ?>
 				<?php rbfw_fd_summary_desc(); ?>
 				<?php if ( $_rbfw_resort_min_price > 0 ) : ?>

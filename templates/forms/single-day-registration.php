@@ -94,7 +94,7 @@
                 }
                 ?>
                 <div class="rbfw-sd-rate-box">
-                    <?php rbfw_fd_summary_badges(); ?>
+                    <?php rbfw_fd_summary_badges( $rbfw_id ); ?>
                     <?php rbfw_fd_summary_title(); ?>
                     <?php rbfw_fd_summary_desc(); ?>
                     <?php if ( $_rbfw_start > 0 ) : ?>
