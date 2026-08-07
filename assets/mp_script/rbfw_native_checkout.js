@@ -30,6 +30,25 @@
 		return isNaN(num) ? 0 : num;
 	}
 
+	/**
+	 * The booking total to POST, which deliberately EXCLUDES delivery.
+	 *
+	 * The displayed total includes delivery so the customer sees what they will pay, but the
+	 * server prices delivery itself from the band table and adds it on top — that is what
+	 * makes the charge tamper-proof. Posting the displayed figure therefore counted delivery
+	 * twice: a $20 booking with $100 of delivery arrived as $120 and was confirmed at $220.
+	 *
+	 * Subtracting it here keeps one rule: the client reports the RENTAL, the server decides
+	 * the DELIVERY.
+	 *
+	 * @param {jQuery} $form
+	 * @return {number}
+	 */
+	function readPostableTotal($form) {
+		var delivery = parseFloat(window.rbfwDeliveryTotal) || 0;
+		return Math.max(0, readTotal($form) - delivery);
+	}
+
 	function currency() {
 		return (typeof rbfw_ajax_front !== 'undefined' && rbfw_ajax_front.currency_symbol) ? rbfw_ajax_front.currency_symbol : '';
 	}
@@ -61,7 +80,9 @@
 		}
 
 		// Validate + price the coupon against the live booking form, server-side.
-		var gross = readTotal($activeForm);
+		// Coupons apply to the rental, not to the delivery legs, so they are priced against
+		// the same base the booking itself will be created with.
+		var gross = readPostableTotal($activeForm);
 		var data = $activeForm.serializeArray();
 		data.push({ name: 'action', value: 'rbfw_apply_coupon_native' });
 		data.push({ name: 'nonce', value: rbfw_ajax_front.nonce_apply_coupon });
@@ -156,7 +177,7 @@
 		data.push({ name: 'rbfw_billing_name', value: name });
 		data.push({ name: 'rbfw_billing_email', value: email });
 		data.push({ name: 'rbfw_billing_phone', value: phone });
-		data.push({ name: 'rbfw_total', value: readTotal($activeForm) });
+		data.push({ name: 'rbfw_total', value: readPostableTotal($activeForm) });
 		// The applied coupon code (server re-validates + recomputes the discount authoritatively).
 		if (appliedCouponCode) {
 			data.push({ name: 'rbfw_coupon_code', value: appliedCouponCode });

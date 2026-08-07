@@ -105,6 +105,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
             array(
+                'name' => 'rbfw_calendar_day_mode',
+                'label' => esc_html__( 'Booking Calendar Days', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "What each day shows on the Booking Calendar. Chips name the customer and flag deliveries; Count only shows the previous 'View Details (n)' badge.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'chips',
+                'options' => array(
+                    'chips' => esc_html__( 'Customer names + delivery', 'booking-and-rental-manager-for-woocommerce' ),
+                    'count' => esc_html__( 'Count only', 'booking-and-rental-manager-for-woocommerce' ),
+                )
+            ),
+            array(
                 'name' => 'rbfw_pricing_info_display',
                 'label' => esc_html__( 'Pricing Info Display', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to display pricing info, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),

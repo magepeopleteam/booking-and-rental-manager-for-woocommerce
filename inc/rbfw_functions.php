@@ -3171,7 +3171,23 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 				// Copy meta fields.
 				$post_meta = get_post_custom( $post_id );
 				if ( $post_meta ) {
+					/*
+					 * Meta binding the source to its OWN backing WooCommerce product must not
+					 * be copied. `link_wc_product` would make the copy share the original's
+					 * product — so a booking on the copy was recorded against the original,
+					 * and deleting that one product broke every item cloned from it — while
+					 * `check_if_run_once` marked the copy as already-provisioned, so it could
+					 * never mint a product of its own. The copy is created as a draft and gets
+					 * its own product from RBFW_Hidden_Product when it is first published.
+					 */
+					$rbfw_skip_meta = class_exists( 'RBFW_Hidden_Product' )
+						? RBFW_Hidden_Product::$own_product_meta
+						: array( 'link_wc_product', 'check_if_run_once' );
+
 					foreach ( $post_meta as $meta_key => $meta_values ) {
+						if ( in_array( $meta_key, $rbfw_skip_meta, true ) ) {
+							continue;
+						}
 						update_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_values[0] ) );
 					}
 					update_post_meta( $new_post_id, 'rbfw_inventory', '' );

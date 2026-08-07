@@ -45,6 +45,16 @@ if (!class_exists('RBFWProPage')) {
 					),
 				),
 				array(
+					'icon'  => 'car',
+					'title' => __( 'Delivery & Collection', 'booking-and-rental-manager-for-woocommerce' ),
+					'items' => array(
+						__( 'Deliver a rental to the customer and collect it again, charged by distance.', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Your own distance bands — no mapping service and no API key to set up.', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Free delivery radius for nearby customers, plus a maximum distance you will travel.', 'booking-and-rental-manager-for-woocommerce' ),
+						__( 'Switch delivery off per rental item for anything you cannot transport.', 'booking-and-rental-manager-for-woocommerce' ),
+					),
+				),
+				array(
 					'icon'  => 'media-document',
 					'title' => __( 'PDF & Receipts', 'booking-and-rental-manager-for-woocommerce' ),
 					'items' => array(

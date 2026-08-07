@@ -417,6 +417,13 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                     <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
 
+                    <?php
+                    /* Delivery & Collection — after the date/duration step, so the customer
+                       picks WHEN first and then how they get the item. Renders nothing unless
+                       the shop offers delivery and this item allows it. */
+                    include RBFW_Function::get_template_path( 'forms/delivery-collection.php' );
+                    ?>
+
                     <?php  if(!empty($multiple_items_info)){ ?>
 
                         <div class="item rbfw_resourse_md" style="display: none">

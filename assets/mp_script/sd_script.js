@@ -105,16 +105,16 @@
 
                             },
                             complete:function(data) {
-                                // Guard: on some templates (e.g. multi-hour/timely) the
-                                // calendar header is absent, so .offset() is undefined.
-                                // An unguarded .top throw here aborts jQuery's complete
-                                // sequence BEFORE the global ajaxComplete fires, which
-                                // silently kills the variation-surcharge recalc bound to it.
-                                var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
-                                if ($hdr.length && $hdr.offset()) {
-                                    jQuery('html, body').animate({
-                                        scrollTop: $hdr.offset().top
-                                    }, 100);
+                                // Defined in rbfw_script.js; both files are enqueued on the
+                                // booking page and this runs at AJAX-complete time, long
+                                // after every script has loaded. Guarded anyway so a partial
+                                // asset load can never throw here — an exception in complete
+                                // aborts the sequence before the global ajaxComplete fires,
+                                // which silently kills the variation-surcharge recalc.
+                                // Date chosen: reveal the time-slot list this response
+                                // just rendered into the result area.
+                                if (typeof rbfwScrollBookingStepIntoView === 'function') {
+                                    rbfwScrollBookingStepIntoView('.rbfw-bikecarsd-result');
                                 }
                             }
                     });
@@ -667,9 +667,23 @@ function rbfw_price_calculation_sd(){
         }
     }
 
-    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    /* Delivery & Collection.
+     *
+     * Folded in HERE rather than patched onto the rendered total afterwards: this function
+     * owns the total and rewrites it on every date / quantity / add-on change, so anything
+     * applied after the fact would be wiped on the customer's next click. The figure comes
+     * from the delivery block's own quote (window.rbfwDeliveryTotal), and is recomputed
+     * server-side from the band table at add-to-cart — so this only keeps the number on
+     * screen honest, it never decides what is charged. */
+    var rbfw_delivery_price = parseFloat(window.rbfwDeliveryTotal) || 0;
 
+    var total_price = sub_total_price + rbfw_management_price + rbfw_delivery_price + parseFloat(rbfw_security_deposit_actual_amount);
 
+    /* Delivery and collection are two separately billed legs, priced by band tables that
+       may differ, so the summary lists them separately rather than as one merged figure. */
+    if (typeof window.rbfwRenderDeliveryLines === 'function') {
+        window.rbfwRenderDeliveryLines();
+    }
 
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();

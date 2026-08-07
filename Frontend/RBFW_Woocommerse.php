@@ -8,9 +8,11 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function __construct()
         {
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_booking_nonce'), 4, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_buffer_lead_time'), 15, 3 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_delivery_fields'), 16, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_location_stock'), 25, 3 );
             add_filter( 'woocommerce_is_sold_individually', array($this , 'rbfw_rental_product_sold_individually'), 10, 2 );
@@ -47,6 +49,58 @@ if (!class_exists('RBFW_Woocommerce')) {
             /* Self-healing: rebuild booking records for paid orders placed before this fix
                (e.g. redirect-gateway orders that never triggered the thank-you page). */
             add_action( 'admin_init', array($this ,  'rbfw_backfill_missing_order_mirrors') );
+        }
+
+        /**
+         * Refuse a rental add-to-cart whose booking nonce is missing or expired.
+         *
+         * rbfw_add_cart_item_func() bails out with a bare `return;` when the
+         * rbfw_ajax_action nonce does not verify. That NULL used to flow on into the
+         * cart item unchecked, so the line was added anyway carrying nothing but
+         * rbfw_id: no dates, no ticket info, no price. The result was an order with
+         * _rbfw_ticket_info = a:0:{} and a 0,00 total (the security deposit fee was
+         * lost too), and — because rbfw_check_rental_availability() fails open on
+         * empty dates — the availability gate was skipped, so the unit stayed
+         * bookable. In practice the trigger is a page cache serving the booking form
+         * for longer than the 12-24 h nonce lifetime.
+         *
+         * Failing closed here turns that silent data-loss into a plain message the
+         * customer can act on. rbfw_nonce_guard.js refreshes the form's nonce on
+         * first interaction, so this should now only fire for genuinely stale tabs
+         * or forged posts.
+         *
+         * @param bool $passed     Validation result so far.
+         * @param int  $product_id Product being added.
+         * @return bool
+         */
+        public function rbfw_validate_booking_nonce( $passed, $product_id ) {
+            if ( ! $passed ) {
+                return $passed; // already rejected by another validator
+            }
+            global $rbfw;
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            if ( get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+                return $passed; // not a rental item — leave ordinary products alone
+            }
+
+            if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+                return $passed;
+            }
+
+            wc_add_notice(
+                __( 'Your booking session has expired. Please reload the page and select your dates again.', 'booking-and-rental-manager-for-woocommerce' ),
+                'error'
+            );
+
+            if ( wp_doing_ajax() ) {
+                wc_print_notices();
+                wp_die();
+            }
+
+            return false;
         }
 
         /**
@@ -105,6 +159,39 @@ if (!class_exists('RBFW_Woocommerce')) {
             }
 
             return ! rbfw_allow_duplicate_rental_cart_items();
+        }
+
+        /**
+         * Enforce the shop's delivery required-field rules at add-to-cart.
+         *
+         * The booking form marks the same fields required, but that is a convenience for the
+         * customer rather than a control — anything enforced only in the browser can be
+         * removed with the developer tools. This is the check that actually holds, and it
+         * mirrors the one on the standalone checkout path so both behave identically.
+         *
+         * @param bool $passed
+         * @param int  $product_id The hidden WooCommerce product backing the rental item.
+         * @return bool
+         */
+        public function rbfw_validate_delivery_fields( $passed, $product_id ) {
+            if ( ! $passed || ! function_exists( 'rbfw_delivery_validate_input' ) ) {
+                return $passed;
+            }
+
+            $rbfw_id = isset( $_POST['rbfw_post_id'] ) ? absint( wp_unslash( $_POST['rbfw_post_id'] ) ) : 0;
+            if ( ! $rbfw_id || get_post_type( $rbfw_id ) !== 'rbfw_item' ) {
+                return $passed;
+            }
+
+            $input = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
+            $valid = rbfw_delivery_validate_input( $rbfw_id, $input );
+
+            if ( is_wp_error( $valid ) ) {
+                wc_add_notice( $valid->get_error_message(), 'error' );
+                return false;
+            }
+
+            return $passed;
         }
 
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
@@ -496,7 +583,18 @@ if (!class_exists('RBFW_Woocommerce')) {
             $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
             $product_id     = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
             if ( get_post_type( $product_id ) == $rbfw->get_cpt_name() ) {
-                $cart_item_data = $this->rbfw_add_cart_item_func( $cart_item_data, $product_id );
+                $built = $this->rbfw_add_cart_item_func( $cart_item_data, $product_id );
+                /* rbfw_add_cart_item_func() returns NULL when the booking nonce fails.
+                   Assigning into that NULL auto-creates an array holding only rbfw_id,
+                   which is how dataless 0,00 rental lines used to reach checkout.
+                   rbfw_validate_booking_nonce() already rejects this at add-to-cart;
+                   this is the belt-and-braces stop for any other caller. */
+                if ( ! is_array( $built ) ) {
+                    throw new Exception(
+                        esc_html__( 'Your booking session has expired. Please reload the page and select your dates again.', 'booking-and-rental-manager-for-woocommerce' )
+                    );
+                }
+                $cart_item_data = $built;
             }
             $cart_item_data['rbfw_id'] = $product_id;
 
@@ -974,6 +1072,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
+                /* Delivery & Collection. Priced server-side from the configured bands —
+                   the form only says WHICH legs were asked for and how far away the
+                   customer is, exactly like the optional fees resolved above. */
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_delivery_charge( $rbfw_id, $sd_input_data_sabitized, $rbfw_management_info, $rbfw_management_price );
 
                 /* Item Variations (Single Day): per-value quantity steppers submit
                    rbfw_variation_qty[field_id][value_name] = qty. Build one cart entry
@@ -1044,6 +1146,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_ticket_info']              = $rbfw_bikecarsd_ticket_info;
                 $cart_item_data['rbfw_management_info']          = $rbfw_management_info;
                 $cart_item_data['rbfw_management_price']          = $rbfw_management_price;
+                /* Delivery record travels with the cart item so it survives into the
+                   order line and then the rbfw_order mirror as flat, readable meta. */
+                $cart_item_data = array_merge( $cart_item_data, rbfw_delivery_cart_data( $rbfw_id, $sd_input_data_sabitized ) );
                 $cart_item_data['security_deposit_amount']       = $security_deposit['security_deposit_amount'];
                 $cart_item_data['security_deposit_desc']         = $security_deposit['security_deposit_desc'];
 
@@ -1100,6 +1205,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_management_info     = $prepared_management_info['items'];
                 $rbfw_management_price    = $prepared_management_info['total'];
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
+                /* Delivery & Collection. Priced server-side from the configured bands —
+                   the form only says WHICH legs were asked for and how far away the
+                   customer is, exactly like the optional fees resolved above. */
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_delivery_charge( $rbfw_id, $sd_input_data_sabitized, $rbfw_management_info, $rbfw_management_price );
 
 
 
@@ -1129,6 +1238,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_ticket_info']               = $rbfw_ticket_info;
                 $cart_item_data['rbfw_management_info']           = $rbfw_management_info;
                 $cart_item_data['rbfw_management_price']          = $rbfw_management_price;
+                /* Delivery record travels with the cart item so it survives into the
+                   order line and then the rbfw_order mirror as flat, readable meta. */
+                $cart_item_data = array_merge( $cart_item_data, rbfw_delivery_cart_data( $rbfw_id, $sd_input_data_sabitized ) );
                 $cart_item_data['total_days']                     = $total_days;
                 $cart_item_data['discount_type']                  = $discount_type;
                 $cart_item_data['discount_amount']                = $discount_amount;
@@ -1337,6 +1449,10 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
                 list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_location_charge( $rbfw_id, $rbfw_pickup_point, $rbfw_management_info, $rbfw_management_price );
+                /* Delivery & Collection. Priced server-side from the configured bands —
+                   the form only says WHICH legs were asked for and how far away the
+                   customer is, exactly like the optional fees resolved above. */
+                list( $rbfw_management_info, $rbfw_management_price ) = rbfw_apply_delivery_charge( $rbfw_id, $sd_input_data_sabitized, $rbfw_management_info, $rbfw_management_price );
 
                 $discount_amount = 0;
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
@@ -1362,6 +1478,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_service_info']              = $rbfw_service_info;
                 $cart_item_data['rbfw_management_info']           = $rbfw_management_info;
                 $cart_item_data['rbfw_management_price']           = $rbfw_management_price;
+                /* Delivery record travels with the cart item so it survives into the
+                   order line and then the rbfw_order mirror as flat, readable meta. */
+                $cart_item_data = array_merge( $cart_item_data, rbfw_delivery_cart_data( $rbfw_id, $sd_input_data_sabitized ) );
                 $cart_item_data['rbfw_service_infos']             = $rbfw_service_infos;
                 $cart_item_data['rbfw_variation_info']            = $variation_info;
                 $cart_item_data['rbfw_variation_surcharge']       = $rbfw_variation_surcharge;
@@ -1488,6 +1607,41 @@ if (!class_exists('RBFW_Woocommerce')) {
             $rbfw_id = array_key_exists( 'rbfw_id', $values ) ? $values['rbfw_id'] : 0;
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
                 $this->rbfw_validate_add_order_item_func( $values, $item, $rbfw_id );
+                $this->rbfw_add_delivery_order_item_meta( $item, $values, $order );
+            }
+        }
+
+        /**
+         * Carry the delivery record from the cart item onto the order line and the order.
+         *
+         * It is written in BOTH places on purpose: the line item is what the PDF and the
+         * rbfw_order mirror read per rental, while the order-level copy is what an admin
+         * looking at the WooCommerce order screen (and any accounting export) needs without
+         * having to walk the line items.
+         *
+         * Keys are hidden (underscore-prefixed) on the line item so they do not appear as
+         * raw rows in the customer's order table — the readable summary is added separately.
+         *
+         * @param WC_Order_Item_Product $item
+         * @param array                 $values Cart item data.
+         * @param WC_Order              $order
+         * @return void
+         */
+        private function rbfw_add_delivery_order_item_meta( $item, $values, $order ) {
+            if ( ! function_exists( 'rbfw_delivery_meta_keys' ) ) {
+                return;
+            }
+            if ( empty( $values['rbfw_delivery_wanted'] ) && empty( $values['rbfw_collection_wanted'] ) ) {
+                return;
+            }
+
+            foreach ( rbfw_delivery_meta_keys() as $key ) {
+                if ( isset( $values[ $key ] ) ) {
+                    $item->update_meta_data( '_' . $key, $values[ $key ] );
+                    if ( $order ) {
+                        $order->update_meta_data( '_' . $key, $values[ $key ] );
+                    }
+                }
             }
         }
         public  function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
@@ -2700,6 +2854,19 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $zdata[ $key ]['end_date']                = $end_date;
                     $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
                     $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
+
+                    /* Delivery record, copied off the order so the mirror carries it as flat
+                       meta — that is what the Bookings list, the calendar badge, the editor,
+                       the PDF and the emails all read. */
+                    if ( function_exists( 'rbfw_delivery_meta_keys' ) ) {
+                        foreach ( rbfw_delivery_meta_keys() as $delivery_key ) {
+                            $delivery_value = $order->get_meta( '_' . $delivery_key, true );
+                            if ( '' !== $delivery_value && null !== $delivery_value ) {
+                                $zdata[ $key ][ $delivery_key ] = $delivery_value;
+                            }
+                        }
+                    }
+
                     $meta_data                                = array_merge( $zdata[ $key ] );
                     /*rbfw_order add*/
                     $order_id = $rbfw->rbfw_add_order_data( $meta_data, $ticket_info, $rbfw_service_price_data_actual );

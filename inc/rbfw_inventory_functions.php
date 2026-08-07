@@ -336,7 +336,12 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                         if ($stock_manage_on_return_date == 'no') {
                             $date = new DateTime($inventory_end_date);
                             $date->modify('-1 day');
-                            $inventory_end_date = $date->format('Y-m-d');
+                            $adjusted_end_date = $date->format('Y-m-d');
+                            /* Freeing the return date must never push the end before the
+                               start: on a same-day booking (start === end) that produces an
+                               inverted range which overlaps nothing, so the unit reads as
+                               free on the very day it is rented out. Clamp to the start. */
+                            $inventory_end_date = ($adjusted_end_date < $inventory_start_date) ? $inventory_start_date : $adjusted_end_date;
                         }
                     }
 
@@ -655,8 +660,11 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                     if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
 
 
-                        $booked_dates = $inventory['booked_dates'];
-                        if($stock_manage_on_return_date=='no'){
+                        $booked_dates = is_array($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                        /* Dropping the return date must never empty the list: a same-day
+                           booking holds exactly one date, and popping it would leave the
+                           unit showing as available on the day it is actually rented out. */
+                        if($stock_manage_on_return_date=='no' && count($booked_dates) > 1){
                             array_pop($booked_dates);
                         }
                         if (in_array($date,$booked_dates)) {
@@ -2988,7 +2996,12 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 			try {
 				$dt = new DateTime( $inv_end_date );
 				$dt->modify( '-1 day' );
-				$inv_end_date = $dt->format( 'Y-m-d' );
+				$adjusted_end = $dt->format( 'Y-m-d' );
+				/* Never let the freed return date move the end before the start.
+				   A same-day booking (start === end) would otherwise become an
+				   inverted range that overlaps nothing, so the already-booked unit
+				   passes this gate and gets double-booked. */
+				$inv_end_date = ( $adjusted_end < $inv_start_date ) ? $inv_start_date : $adjusted_end;
 			} catch ( Exception $e ) {
 				continue;
 			}
