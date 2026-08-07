@@ -1,5 +1,59 @@
 /*start single day and appointment pricing booking*/
 
+/**
+ * Bring the block that an AJAX step just loaded into view (date -> times -> rates).
+ *
+ * Both step handlers used to scroll to `.rbfw-bikecarsd-calendar-header`. Despite the
+ * name, that element is the "Real-time availability / Instant confirmation" box printed
+ * by the rbfw_ticket_feature_info action, and the registration templates emit it at the
+ * BOTTOM of the form — directly above the Book Now button, ~330 lines below the result
+ * area. Aligning it with the top of the viewport therefore pushed the entire widget
+ * off-screen and parked the customer on whatever follows the form (the Ratings section
+ * on the default single-item layout).
+ *
+ * Scroll to the freshly rendered block instead, so choosing a time reveals the rate
+ * table, fee management, totals and Book Now button. Hidden containers are skipped
+ * (several are printed up-front with display:none), and a block that is already fully
+ * on screen is left alone so the page never jumps for no reason.
+ *
+ * @param {string} [selector] Preferred target; falls back to the result area, then the
+ *                            whole widget, then the booking form.
+ */
+function rbfwScrollBookingStepIntoView(selector) {
+    var $target = jQuery();
+    if (selector) {
+        $target = jQuery(selector).filter(':visible').first();
+    }
+    if (!$target.length) {
+        $target = jQuery('.rbfw-bikecarsd-result-wrap').filter(':visible').first();
+    }
+    if (!$target.length) {
+        $target = jQuery('.rbfw_bikecarsd_pricing_table_wrap').first();
+    }
+    if (!$target.length) {
+        $target = jQuery('.mp_rbfw_ticket_form').first();
+    }
+    if (!$target.length || !$target.offset()) {
+        return; // absent on some templates (multi-hour/timely) -> nothing to do
+    }
+
+    var OFFSET    = 100; // breathing room for sticky headers / the admin bar
+    var top       = $target.offset().top;
+    var bottom    = top + $target.outerHeight();
+    var viewTop   = jQuery(window).scrollTop();
+    var viewBottom  = viewTop + jQuery(window).height();
+
+    if (top >= viewTop + OFFSET && bottom <= viewBottom) {
+        return; // already fully visible -> don't move the page under the customer
+    }
+
+    var dest = top - OFFSET;
+    if (dest < 0) {
+        dest = 0;
+    }
+    jQuery('html, body').stop(true).animate({ scrollTop: dest }, 300);
+}
+
 /* Start Calendar Script */
 let bikecarsd_price_arr = {};
 let service_price_arr = {};
@@ -101,15 +155,9 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
         },
         complete:function(response) {
-            // Guard: element is absent on some templates (multi-hour/timely). An
-            // unguarded .offset().top throw here aborts the complete sequence before
-            // the global ajaxComplete fires, killing the variation-surcharge recalc.
-            var $hdr = jQuery(".rbfw-bikecarsd-calendar-header");
-            if ($hdr.length && $hdr.offset()) {
-                jQuery('html, body').animate({
-                    scrollTop: $hdr.offset().top
-                }, 100);
-            }
+            // Time chosen: reveal the rate table / fees / totals / Book Now that
+            // this response just rendered.
+            rbfwScrollBookingStepIntoView('.rbfw_bikecarsd_pricing_table_container');
         }
     });
 });
