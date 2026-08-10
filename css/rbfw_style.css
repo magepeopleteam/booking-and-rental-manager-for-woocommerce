@@ -14200,7 +14200,14 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
     border-bottom: 1px solid #e6eaef;
 }
-.rbfw-archive-head-inner { max-width: 1200px; margin: 0 auto; }
+.rbfw-archive-head-inner { max-width: 1200px; margin: 0 auto; padding: 0 4px; }
+/* The plugin's own gutters: a block theme gives a plugin template no content width, so the
+   page ran edge-to-edge. Uses the theme's --wp--style--global--content-size when it exposes
+   one, so the listing lines up with the rest of the site instead of guessing. */
+.rbfw-archive-head,
+.rbfw-archive-body { padding-left: clamp(16px, 4vw, 32px); padding-right: clamp(16px, 4vw, 32px); }
+.rbfw-archive-head-inner,
+.rbfw-archive-body > * { max-width: var(--wp--style--global--wide-size, 1200px); margin-left: auto; margin-right: auto; }
 .rbfw-archive-crumbs { font-size: 12.5px; color: #6b7280; margin-bottom: 10px; }
 .rbfw-archive-crumbs a { color: #6b7280; text-decoration: none; }
 .rbfw-archive-crumbs a:hover { color: var(--rbfw_color_primary, #ff3726); }

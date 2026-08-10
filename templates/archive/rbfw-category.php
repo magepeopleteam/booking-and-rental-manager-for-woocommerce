@@ -24,7 +24,33 @@ $rbfw_name = ( $rbfw_term instanceof WP_Term ) ? $rbfw_term->name : '';
 $rbfw_desc = ( $rbfw_term instanceof WP_Term ) ? term_description( $rbfw_term ) : '';
 $rbfw_count = ( $rbfw_term instanceof WP_Term ) ? (int) $rbfw_term->count : 0;
 
-get_header();
+/*
+ * Header / footer, both theme kinds.
+ *
+ * get_header() only renders a real header on CLASSIC themes. Under a block theme there is no
+ * header.php, so WordPress falls back to a bare document — the site title and "proudly powered
+ * by WordPress" — which is what this page used to show. Block themes expose their header and
+ * footer as template PARTS, so they have to be rendered as blocks, and the document itself
+ * (doctype, wp_head, body_class) becomes ours to emit.
+ */
+$rbfw_is_block_theme = function_exists( 'wp_is_block_theme' ) && wp_is_block_theme();
+
+if ( $rbfw_is_block_theme ) {
+	?>
+	<!doctype html>
+	<html <?php language_attributes(); ?>>
+	<head>
+		<meta charset="<?php bloginfo( 'charset' ); ?>">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( 'rbfw-archive-page' ); ?>>
+	<?php
+	wp_body_open();
+	echo do_blocks( '<!-- wp:template-part {"slug":"header","tagName":"header"} /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- block output.
+} else {
+	get_header();
+}
 ?>
 <div class="rbfw-archive mpStyle">
 	<div class="rbfw-archive-head">
@@ -83,4 +109,10 @@ get_header();
 	</div>
 </div>
 <?php
-get_footer();
+if ( $rbfw_is_block_theme ) {
+	echo do_blocks( '<!-- wp:template-part {"slug":"footer","tagName":"footer"} /-->' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- block output.
+	wp_footer();
+	echo '</body></html>';
+} else {
+	get_footer();
+}
