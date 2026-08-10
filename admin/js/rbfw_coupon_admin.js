@@ -171,6 +171,9 @@
 
 		var from = val('valid_from'), to = val('valid_to');
 		var validity = (from || to) ? ((from || '…') + ' → ' + (to || '…')) : t('i18n_always', 'Always');
+		var basis = (from || to)
+			? ($form.find('[name=date_basis]').val() === 'booking' ? 'Booking date (when the rental starts)' : 'Redemption date (when the code is used)')
+			: '';
 
 		var days = checkedLabels('weekdays');
 		var roles = checkedLabels('allowed_roles');
@@ -193,6 +196,7 @@
 			['Minimum amount', (val('min_amount') && val('min_amount') !== '0') ? t('currency', '') + val('min_amount') : ''],
 			['Maximum amount', (val('max_amount') && val('max_amount') !== '0') ? t('currency', '') + val('max_amount') : ''],
 			['Validity', validity],
+			['Measured on', basis],
 			['Allowed weekdays', days.length ? days.join(', ') : 'Every day'],
 			['Blackout dates', val('blackout_dates')]
 		]);
@@ -246,6 +250,11 @@
 		});
 
 		$form.find('[name=discount_type][value="' + (data.discount_type || 'percentage') + '"]').prop('checked', true);
+		$form.find('[name=date_basis]').val(data.date_basis === 'booking' ? 'booking' : 'redemption');
+
+		// The calendars hold their own state — form.reset() cannot clear them, and writing
+		// .val() behind flatpickr's back would leave the visible field out of step.
+		Dates.fill(data);
 
 		['auto_apply', 'allow_combine', 'first_booking_only'].forEach(function (k) {
 			$form.find('[name="' + k + '"]').prop('checked', data[k] === 'yes');
@@ -438,6 +447,118 @@
 	})();
 
 	/* ------------------------------------------------------------------ */
+	/* Dates — calendar pickers instead of typed text                       */
+	/*                                                                      */
+	/* Valid From / Valid To are single flatpickr inputs; Blackout Dates is */
+	/* a pick-then-Add list. Both still store plain Y-m-d (the list as a    */
+	/* comma-separated hidden input), so the server sanitizer, the review   */
+	/* step and every already-saved coupon keep working untouched.          */
+	/* ------------------------------------------------------------------ */
+
+	var Dates = (function () {
+
+		// allowInput keeps the field clearable and typeable — a read-only picker gives an admin
+		// no way to empty "Valid To" again. static:true anchors the calendar inside the
+		// scrolling wizard pane instead of positioning it off-screen.
+		var FP_OPTS = { dateFormat: 'Y-m-d', disableMobile: true, static: true, allowInput: true };
+
+		/** flatpickr is bundled with the plugin; degrade to a plain text field if it is missing. */
+		function attach($el, extra) {
+			if (typeof flatpickr === 'undefined' || !$el.length || $el.data('fp')) { return null; }
+			var fp = flatpickr($el[0], $.extend({}, FP_OPTS, extra || {}));
+			$el.data('fp', fp);
+			return fp;
+		}
+
+		function setSingle($el, value) {
+			var fp = $el.data('fp');
+			if (fp) { fp.setDate(value || '', false); } else { $el.val(value || ''); }
+		}
+
+		/* --- Blackout list ------------------------------------------------ */
+
+		function $wrap()  { return $form.find('[data-rbfw-dates]'); }
+		function $value() { return $wrap().find('[data-rbfw-dates-value]'); }
+
+		function list() {
+			return ($value().val() || '').split(',')
+				.map(function (s) { return $.trim(s); })
+				.filter(function (s) { return s !== ''; });
+		}
+
+		function write(dates) {
+			// Sorted + de-duplicated: the same list always reads back the same way.
+			var seen = {}, out = [];
+			dates.forEach(function (d) { if (d && !seen[d]) { seen[d] = 1; out.push(d); } });
+			out.sort();
+			$value().val(out.join(', '));
+			paintChips(out);
+		}
+
+		function paintChips(dates) {
+			var $ul = $wrap().find('[data-rbfw-dates-list]').empty();
+			dates.forEach(function (d) {
+				$('<li class="rbfw-cpn-dates-item"></li>')
+					.append($('<span></span>').text(d))
+					.append($('<button type="button" class="rbfw-cpn-dates-x" aria-label="Remove"></button>')
+						.attr('data-rbfw-dates-remove', d).html('&times;'))
+					.appendTo($ul);
+			});
+		}
+
+		function add() {
+			var $pick = $wrap().find('[data-rbfw-dates-pick]');
+			var date  = $.trim($pick.val() || '');
+			if (!date) {
+				return fail($pick, t('i18n_pick_date', 'Choose a date first.'));
+			}
+			if (list().indexOf(date) !== -1) {
+				return fail($pick, t('i18n_dupe_date', 'That date is already in the list.'));
+			}
+			write(list().concat([date]));
+			setSingle($pick, '');
+			clearFieldErrors();
+		}
+
+		function remove(date) {
+			write(list().filter(function (d) { return d !== date; }));
+		}
+
+		return {
+			init: function () {
+				attach($form.find('[name=valid_from]'));
+				attach($form.find('[name=valid_to]'));
+				attach($wrap().find('[data-rbfw-dates-pick]'));
+
+				$form.on('click', '[data-rbfw-dates-add]', function (e) { e.preventDefault(); add(); });
+				// Enter in the date box means "add this date", not "next step" — the wizard's
+				// global Enter handler would otherwise skip the pane with the date unsaved.
+				$form.on('keydown', '[data-rbfw-dates-pick]', function (e) {
+					if (e.key !== 'Enter') { return; }
+					e.preventDefault();
+					// stopImmediatePropagation, not stopPropagation: the wizard's "Enter = next
+					// step" handler is delegated from this same <form>, so plain bubbling
+					// control would not keep it from firing straight after this one.
+					e.stopImmediatePropagation();
+					add();
+				});
+				$form.on('click', '[data-rbfw-dates-remove]', function (e) {
+					e.preventDefault();
+					remove($(this).attr('data-rbfw-dates-remove'));
+				});
+			},
+			/** Repaint every picker from the values just written into the form. */
+			fill: function (data) {
+				setSingle($form.find('[name=valid_from]'), data.valid_from || '');
+				setSingle($form.find('[name=valid_to]'), data.valid_to || '');
+				setSingle($wrap().find('[data-rbfw-dates-pick]'), '');
+				$value().val(data.blackout_dates || '');
+				write(list());
+			}
+		};
+	})();
+
+	/* ------------------------------------------------------------------ */
 	/* Boot                                                                 */
 	/* ------------------------------------------------------------------ */
 
@@ -456,6 +577,7 @@
 		$caption  = $modal.find('.rbfw-cpn-stepcaption');
 
 		Tokens.init();
+		Dates.init();
 
 		$(document).on('click', '.rbfw-cpn-add', function () { open({}); });
 		$(document).on('click', '.rbfw-cpn-edit', function () { open($(this).closest('tr').data('coupon')); });

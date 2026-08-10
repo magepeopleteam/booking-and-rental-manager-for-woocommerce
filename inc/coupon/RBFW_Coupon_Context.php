@@ -110,12 +110,19 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 
 			if ( $item_id && get_post_type( $item_id ) === 'rbfw_item' ) {
 				$qty  = isset( $post['rbfw_item_quantity'] ) ? absint( $post['rbfw_item_quantity'] ) : 1;
-				$days = 1.0;
+				$days = 0.0;
 				foreach ( array( 'rbfw_total_days', 'total_days', 'rbfw_duration_days' ) as $dk ) {
 					if ( isset( $post[ $dk ] ) && '' !== $post[ $dk ] ) {
 						$days = (float) self::to_number( $post[ $dk ] );
 						break;
 					}
+				}
+				// Only the multi-items form posts a days field; multi-day, single-day and resort
+				// bookings carry dates instead. Falling straight through to 1 made a "1 free day"
+				// coupon worth the WHOLE duration price on a five-day rental, so derive the billed
+				// units from the posted date span exactly as the WooCommerce context does.
+				if ( $days <= 0 ) {
+					$days = self::native_duration_units( $post );
 				}
 				$days = $days > 0 ? $days : 1.0;
 
@@ -133,9 +140,15 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 				$base = max( 0, $base );
 
 				// Duration-only figure (drives the free_days per-unit rate); never above the base.
+				// The key differs per rent type exactly as it does in the cart (resort posts
+				// rbfw_room_duration_price, single-day rbfw_bikecarsd_duration_price), so all
+				// three are accepted instead of silently charging free days at the full subtotal.
 				$duration = $base;
-				if ( isset( $post['rbfw_duration_price'] ) && '' !== $post['rbfw_duration_price'] ) {
-					$duration = min( max( 0, (float) self::to_number( $post['rbfw_duration_price'] ) ), $base );
+				foreach ( array( 'rbfw_duration_price', 'rbfw_bikecarsd_duration_price', 'rbfw_room_duration_price' ) as $pk ) {
+					if ( isset( $post[ $pk ] ) && '' !== $post[ $pk ] ) {
+						$duration = min( max( 0, (float) self::to_number( $post[ $pk ] ) ), $base );
+						break;
+					}
 				}
 
 				$desc = self::item_descriptor( $item_id );
@@ -156,10 +169,17 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 				$subtotal = $base;
 			}
 
+			// The booking's start date, which the weekday / blackout / booking-window rules are
+			// judged on. Every registration template names this field differently — single-day
+			// rbfw_bikecarsd_selected_date, multi-day & multi-items rbfw_pickup_start_date,
+			// resort rbfw_start_datetime — and a name that is missing here does not fail loudly:
+			// the context quietly falls back to "today", so the rule is evaluated against the
+			// wrong day. Cover them all.
 			$dates = array();
-			foreach ( array( 'rbfw_bikecarsd_selected_date', 'rbfw_pickup_start_date' ) as $dk ) {
-				if ( ! empty( $post[ $dk ] ) ) {
-					$dates[] = sanitize_text_field( $post[ $dk ] );
+			foreach ( array( 'rbfw_bikecarsd_selected_date', 'rbfw_pickup_start_date', 'rbfw_start_datetime', 'rbfw_start_date' ) as $dk ) {
+				$d = self::first_scalar( isset( $post[ $dk ] ) ? $post[ $dk ] : '' );
+				if ( '' !== $d ) {
+					$dates[] = $d;
 					break;
 				}
 			}
@@ -269,7 +289,11 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 			return '';
 		}
 
-		/** Earliest parseable date among the collected line dates, as Y-m-d; today (GMT) if none. */
+		/**
+		 * Earliest parseable date among the collected line dates, normalized to Y-m-d so the
+		 * blackout comparison (a strict string match) can never miss because one template posts
+		 * "2026-08-11 10:00" and another "2026-08-11". Falls back to the SITE's today, not UTC's.
+		 */
 		protected static function earliest_date( $dates ) {
 			$stamps = array();
 			foreach ( (array) $dates as $d ) {
@@ -278,8 +302,40 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 					$stamps[] = $ts;
 				}
 			}
-			$ts = $stamps ? min( $stamps ) : time();
-			return gmdate( 'Y-m-d', $ts );
+			return $stamps ? gmdate( 'Y-m-d', min( $stamps ) ) : current_time( 'Y-m-d' );
+		}
+
+		/**
+		 * Billed units for a standalone booking, derived from the posted date span when the form
+		 * carries no days field. Always >= 1 so the free_days per-unit rate cannot divide by zero.
+		 */
+		protected static function native_duration_units( $post ) {
+			$start = 0;
+			foreach ( array( 'rbfw_pickup_start_date', 'rbfw_start_datetime', 'rbfw_start_date', 'rbfw_bikecarsd_selected_date' ) as $k ) {
+				$start = strtotime( self::first_scalar( isset( $post[ $k ] ) ? $post[ $k ] : '' ) );
+				if ( $start ) {
+					break;
+				}
+			}
+			$end = 0;
+			foreach ( array( 'rbfw_pickup_end_date', 'rbfw_end_datetime', 'rbfw_end_date' ) as $k ) {
+				$end = strtotime( self::first_scalar( isset( $post[ $k ] ) ? $post[ $k ] : '' ) );
+				if ( $end ) {
+					break;
+				}
+			}
+			if ( $start && $end && $end > $start ) {
+				return max( 1.0, round( ( $end - $start ) / DAY_IN_SECONDS ) );
+			}
+			return 1.0;
+		}
+
+		/** A posted value as a single sanitized string (duplicate form fields can arrive as arrays). */
+		protected static function first_scalar( $value ) {
+			if ( is_array( $value ) ) {
+				$value = reset( $value );
+			}
+			return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : '';
 		}
 
 		protected static function current_email() {

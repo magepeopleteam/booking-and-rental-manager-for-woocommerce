@@ -302,24 +302,74 @@
 .rbfw-cpn-row input.has-error { border-color: #D92D20; box-shadow: 0 0 0 3px rgba(217,45,32,.10); }
 .rbfw-cpn-row select[multiple] { padding: 6px; }
 
+/* ── Blackout dates: pick a date, press Add, get a removable chip ─── */
+.rbfw-cpn-dates { display: flex; flex-direction: column; gap: 8px; }
+.rbfw-cpn-dates-add { display: flex; gap: 8px; align-items: stretch; }
+.rbfw-cpn-dates-add .rbfw-cpn-dates-pick { flex: 1 1 auto; min-width: 0; }
+/* static:true keeps the calendar anchored inside the scrolling wizard pane; it also wraps
+   the input in .flatpickr-wrapper, which must inherit the field's own sizing. */
+.rbfw-cpn-row .flatpickr-wrapper { display: block; width: 100%; min-width: 0; }
+.rbfw-cpn-dates-add .flatpickr-wrapper { flex: 1 1 auto; }
+.rbfw-cpn-row .flatpickr-calendar { font-size: 13px; }
+.rbfw-cpn-dates-btn {
+	flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+	border: 1.5px solid var(--cpn-accent); border-radius: 8px; padding: 0 14px;
+	background: #fff; color: var(--cpn-accent); font-size: 12.5px; font-weight: 600;
+	transition: background-color .15s ease, color .15s ease;
+}
+.rbfw-cpn-dates-btn:hover { background: var(--cpn-accent); color: #fff; }
+.rbfw-cpn-dates-btn i { font-size: 11px; }
+.rbfw-cpn-dates-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.rbfw-cpn-dates-list:empty { display: none; }
+.rbfw-cpn-dates-item {
+	display: inline-flex; align-items: center; gap: 6px; margin: 0;
+	border: 1px solid #E2E5E9; border-radius: 999px; padding: 4px 6px 4px 12px;
+	background: #F6F8FA; font-size: 12px; font-variant-numeric: tabular-nums; color: #374151;
+}
+.rbfw-cpn-dates-x {
+	display: inline-flex; align-items: center; justify-content: center;
+	width: 18px; height: 18px; padding: 0; cursor: pointer;
+	border: none; border-radius: 50%; background: #E5E9ED; color: #6B7280;
+	font-size: 13px; line-height: 1;
+}
+.rbfw-cpn-dates-x:hover { background: #D92D20; color: #fff; }
+
 /* discount-type cards */
-.rbfw-cpn-types { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-.rbfw-cpn-type { flex: 1 1 180px; cursor: pointer; }
+/* The discount types sit inline as equal cards. A wrapping flex row could not hold them —
+   each card's min-content width floored its flex-basis, so the third dropped to its own line.
+   auto-fit + minmax gives equal columns that stay inline while there is room for them and fold
+   to two, then one, on a narrow pane, instead of being squeezed until they read as one strip.
+   The gap matches .rbfw-cpn-row so the whole step lines up on the same rhythm. */
+.rbfw-cpn-types {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 16px;
+	margin-bottom: 16px;
+	align-items: stretch;
+}
+/* position: relative anchors the visually-hidden radio to its own card — absolutely
+   positioned against a far ancestor it can drag the scroll position when focused. */
+.rbfw-cpn-type { position: relative; min-width: 0; cursor: pointer; }
 .rbfw-cpn-type input { position: absolute; opacity: 0; pointer-events: none; }
-.rbfw-cpn-type .card {
+.rbfw-cpn-type .rbfw-cpn-card {
 	display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
 	border: 1.5px solid #E2E5E9; border-radius: 10px; padding: 14px 16px;
 	background: #fff; transition: all .16s ease; height: 100%;
 }
-.rbfw-cpn-type .card i { font-size: 16px; color: #8A94A6; margin-bottom: 4px; }
-.rbfw-cpn-type .card strong { font-size: 13px; color: var(--cpn-heading); }
-.rbfw-cpn-type .card small { font-size: 11px; color: var(--cpn-muted); }
-.rbfw-cpn-type:hover .card { border-color: #B9C4CF; }
-.rbfw-cpn-type input:checked + .card {
+.rbfw-cpn-type .rbfw-cpn-card i { font-size: 16px; color: #8A94A6; margin-bottom: 4px; }
+.rbfw-cpn-type .rbfw-cpn-card strong { font-size: 13px; color: var(--cpn-heading); line-height: 1.3; }
+.rbfw-cpn-type .rbfw-cpn-card small { font-size: 11px; color: var(--cpn-muted); line-height: 1.4; }
+/* Narrow columns + a long translated label must wrap inside the card, never spill past it. */
+.rbfw-cpn-type .rbfw-cpn-card strong,
+.rbfw-cpn-type .rbfw-cpn-card small { max-width: 100%; overflow-wrap: anywhere; }
+.rbfw-cpn-type:hover .rbfw-cpn-card { border-color: #B9C4CF; }
+.rbfw-cpn-type input:checked + .rbfw-cpn-card {
 	border-color: var(--cpn-accent); background: #F4F9FD;
-	box-shadow: 0 2px 8px rgba(34,113,177,.14);
+	/* An INSET ring: the old 8px drop shadow spread across most of the gap and read as the
+	   selected card overlapping its neighbour. This one cannot leave the card's own box. */
+	box-shadow: inset 0 0 0 1px var(--cpn-accent);
 }
-.rbfw-cpn-type input:checked + .card i { color: var(--cpn-accent); }
+.rbfw-cpn-type input:checked + .rbfw-cpn-card i { color: var(--cpn-accent); }
 
 /* switches */
 .rbfw-cpn-switches { display: flex; gap: 14px; flex-wrap: wrap; }

@@ -52,20 +52,46 @@ if ( ! class_exists( 'RBFW_Coupon_Engine' ) ) {
 				return $fail( esc_html__( 'This coupon is not available.', 'booking-and-rental-manager-for-woocommerce' ) );
 			}
 
-			// Validity window is evaluated against "now" (coupon live?), in GMT.
-			$today = gmdate( 'Y-m-d' );
-			$from  = $coupon->get_valid_from();
-			$to    = $coupon->get_valid_to();
-			if ( $from && $today < $from ) {
-				return $fail( esc_html__( 'This coupon is not active yet.', 'booking-and-rental-manager-for-woocommerce' ) );
+			// "Today" is the SITE's date, not UTC: on a site at UTC+6 a coupon starting today
+			// would otherwise stay "not active yet" until 6am local, and one ending today would
+			// die six hours early. current_time() is the same clock the rest of the plugin books
+			// against.
+			$today        = current_time( 'Y-m-d' );
+			$booking_date = ( isset( $ctx['date'] ) && '' !== $ctx['date'] ) ? $ctx['date'] : $today;
+
+			// The validity window is measured against whichever date THIS coupon is configured
+			// for: when it was redeemed (default) or when the rental starts.
+			$from     = $coupon->get_valid_from();
+			$to       = $coupon->get_valid_to();
+			$on_booking = ( 'booking' === $coupon->get_date_basis() );
+			$subject  = $on_booking ? $booking_date : $today;
+			if ( $from && $subject < $from ) {
+				return $fail( $on_booking
+					? sprintf(
+						/* translators: %s: first date the coupon covers */
+						esc_html__( 'This coupon only applies to bookings starting from %s.', 'booking-and-rental-manager-for-woocommerce' ),
+						esc_html( self::format_date( $from ) )
+					)
+					: sprintf(
+						/* translators: %s: date the coupon becomes usable */
+						esc_html__( 'This coupon can be used from %s.', 'booking-and-rental-manager-for-woocommerce' ),
+						esc_html( self::format_date( $from ) )
+					)
+				);
 			}
-			if ( $to && $today > $to ) {
-				return $fail( esc_html__( 'This coupon has expired.', 'booking-and-rental-manager-for-woocommerce' ) );
+			if ( $to && $subject > $to ) {
+				return $fail( $on_booking
+					? sprintf(
+						/* translators: %s: last date the coupon covers */
+						esc_html__( 'This coupon only applies to bookings starting up to %s.', 'booking-and-rental-manager-for-woocommerce' ),
+						esc_html( self::format_date( $to ) )
+					)
+					: esc_html__( 'This coupon has expired.', 'booking-and-rental-manager-for-woocommerce' )
+				);
 			}
 
 			// Booking-date based rules use the context date (earliest booking start).
-			$booking_date = isset( $ctx['date'] ) ? $ctx['date'] : $today;
-			$weekdays     = $coupon->get_weekdays();
+			$weekdays = $coupon->get_weekdays();
 			if ( $weekdays ) {
 				$w = (int) gmdate( 'w', strtotime( $booking_date ) );
 				if ( ! in_array( $w, $weekdays, true ) ) {
@@ -90,7 +116,7 @@ if ( ! class_exists( 'RBFW_Coupon_Engine' ) ) {
 				return $fail( sprintf(
 					/* translators: %s: minimum amount */
 					esc_html__( 'A minimum booking amount of %s is required for this coupon.', 'booking-and-rental-manager-for-woocommerce' ),
-					wp_strip_all_tags( wc_price( $min ) )
+					self::price_text( $min )
 				) );
 			}
 			if ( $max > 0 && $subtotal > $max ) {
@@ -146,6 +172,30 @@ if ( ! class_exists( 'RBFW_Coupon_Engine' ) ) {
 			}
 
 			return array( 'valid' => true, 'reason' => '' );
+		}
+
+		/**
+		 * A price as PLAIN TEXT, safe to drop into a message that will be printed with .text()
+		 * or esc_html().
+		 *
+		 * wc_price() returns markup whose currency symbol is an HTML ENTITY (`&#2547;` for ৳,
+		 * `&#36;` for $) plus a non-breaking-space entity. Stripping the tags leaves those
+		 * entities behind, so the customer read "A minimum booking amount of 200.00&#2547;&nbsp;
+		 * is required" — the entity has to be decoded, not just de-tagged.
+		 */
+		public static function price_text( $amount ) {
+			$text = html_entity_decode( wp_strip_all_tags( wc_price( $amount ) ), ENT_QUOTES, 'UTF-8' );
+			// The decoded nbsp is invisible but breaks naive string comparisons in templates.
+			return trim( str_replace( "\xc2\xa0", ' ', $text ) );
+		}
+
+		/**
+		 * A stored Y-m-d rendered in the site's own date format, for customer-facing messages
+		 * ("This coupon can be used from 11 August 2026" beats a bare "not active yet").
+		 */
+		protected static function format_date( $ymd ) {
+			$ts = strtotime( (string) $ymd );
+			return $ts ? date_i18n( get_option( 'date_format' ), $ts ) : (string) $ymd;
 		}
 
 		/* -------------------------------------------------------------------------

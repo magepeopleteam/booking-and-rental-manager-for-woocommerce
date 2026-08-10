@@ -74,10 +74,12 @@ if ( ! class_exists( 'RBFW_Coupon_Native' ) ) {
 					: esc_html__( 'No discount applies to this booking.', 'booking-and-rental-manager-for-woocommerce' ),
 				'code'          => implode( ', ', $codes ),
 				'applied'       => $codes,
+				// Plain text, not markup: the modal prints these with .text(), so an undecoded
+				// currency entity would be shown to the customer verbatim ("−&#2547;5.67").
 				'discount'      => round( $discount, wc_get_price_decimals() ),
-				'discount_html' => wp_strip_all_tags( wc_price( $discount ) ),
+				'discount_html' => RBFW_Coupon_Engine::price_text( $discount ),
 				'total'         => round( $new_total, wc_get_price_decimals() ),
-				'total_html'    => wp_strip_all_tags( wc_price( $new_total ) ),
+				'total_html'    => RBFW_Coupon_Engine::price_text( $new_total ),
 			) );
 		}
 

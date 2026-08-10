@@ -11,6 +11,17 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
+
+/*
+ * Are there automatic (no-code) discount rules live right now? The server applies those on
+ * submit whether or not the customer types anything, so the modal has to preview them — a Total
+ * shown here that is higher than the amount actually charged is worse than showing no coupon UI
+ * at all. Independent of the "Show coupon field" setting: automatic rules apply either way.
+ */
+$rbfw_has_auto_coupons = class_exists( 'RBFW_Coupon_Engine' )
+	&& RBFW_Coupon_Engine::is_enabled()
+	&& class_exists( 'RBFW_Coupon' )
+	&& RBFW_Coupon::has_auto_coupons();
 ?>
 <style>
 	.rbfw-native-modal{position:fixed;inset:0;z-index:99999;}
@@ -74,7 +85,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	.rbfw-native-coupon__applied{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:8px 12px;border-radius:6px;background:#ecfdf3;border:1px solid #abefc6;font-size:13px;font-weight:600;color:#166534;}
 	.rbfw-native-coupon__applied[hidden]{display:none;}
 </style>
-<div id="rbfw-native-checkout-modal" class="rbfw-native-modal" aria-hidden="true" style="display:none;">
+<div id="rbfw-native-checkout-modal" class="rbfw-native-modal" aria-hidden="true" style="display:none;" data-rbfw-native-auto="<?php echo $rbfw_has_auto_coupons ? '1' : '0'; ?>">
 	<div class="rbfw-native-modal__overlay" data-rbfw-native-close></div>
 	<div class="rbfw-native-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="rbfw-native-modal-title">
 		<button type="button" class="rbfw-native-modal__close" data-rbfw-native-close aria-label="<?php echo esc_attr__( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>

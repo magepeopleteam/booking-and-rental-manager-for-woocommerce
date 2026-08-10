@@ -17,7 +17,12 @@
 	var $activeForm = null;
 
 	// Coupon state for the current modal session (owned here, entered in the modal).
+	// `manualCouponCode` is deliberately separate: only a code the CUSTOMER typed may be posted
+	// with the booking. Posting back an automatic resolution would hand the server a code it
+	// treats as manual — and several stacked automatic codes arrive as "A, B", which no lookup
+	// can resolve, so the booking would be refused as an invalid coupon.
 	var appliedCouponCode = '';
+	var manualCouponCode = '';
 	var appliedCouponDiscount = 0;
 
 	function readTotal($form) {
@@ -62,10 +67,66 @@
 
 	function resetCoupon($modal) {
 		appliedCouponCode = '';
+		manualCouponCode = '';
 		appliedCouponDiscount = 0;
 		$modal.find('[data-rbfw-native-coupon-input]').val('');
 		$modal.find('[data-rbfw-native-coupon-msg]').removeClass('error success').text('');
 		$modal.find('[data-rbfw-native-coupon-applied]').prop('hidden', true);
+	}
+
+	/**
+	 * The booking payload the coupon endpoint is judged against.
+	 *
+	 * It is the booking form itself, so every rule the coupon can carry — targeting, dates,
+	 * spend window — sees the same values the booking will be created with. The customer
+	 * identity is added from the modal: without it, "Allowed emails" and "First booking only"
+	 * were evaluated against an empty address and rejected every guest at Apply time, even
+	 * though the very same rules then passed on submit.
+	 */
+	function couponPayload($modal) {
+		// Coupons apply to the rental, not to the delivery legs, so they are priced against
+		// the same base the booking itself will be created with.
+		var gross = readPostableTotal($activeForm);
+		var data = $activeForm.serializeArray();
+		data.push({ name: 'action', value: 'rbfw_apply_coupon_native' });
+		data.push({ name: 'nonce', value: rbfw_ajax_front.nonce_apply_coupon });
+		data.push({ name: 'rbfw_subtotal', value: gross });
+		data.push({ name: 'rbfw_total', value: gross });
+
+		var email = $.trim($modal.find('#rbfw_billing_email').val() || '');
+		if (email) {
+			data.push({ name: 'rbfw_billing_email', value: email });
+		}
+		return data;
+	}
+
+	/** Paint the outcome of a coupon request (shared by manual apply and automatic preview). */
+	function showCouponResult(res, $modal, $msg, typedCode, silent) {
+		var discount = (res && res.success) ? parseFloat(res.data.discount) : 0;
+
+		if (res && res.success && discount > 0) {
+			appliedCouponCode = res.data.code || typedCode;
+			manualCouponCode = silent ? '' : typedCode;
+			appliedCouponDiscount = discount;
+			$modal.find('[data-rbfw-native-coupon-summary]').text(
+				(res.data.code || typedCode) + '  −' + (res.data.discount_html || '')
+			);
+			$modal.find('[data-rbfw-native-coupon-applied]').prop('hidden', false);
+			if (!silent) {
+				$msg.removeClass('error').addClass('success').text(res.data.message || 'Coupon applied.');
+			}
+		} else {
+			appliedCouponCode = '';
+			manualCouponCode = '';
+			appliedCouponDiscount = 0;
+			$modal.find('[data-rbfw-native-coupon-applied]').prop('hidden', true);
+			// A silent preview stays silent: nothing was typed, so there is nothing to report.
+			if (!silent) {
+				var m = (res && res.data && res.data.message) ? res.data.message : 'Coupon could not be applied.';
+				$msg.removeClass('success').addClass('error').text(m);
+			}
+		}
+		updateModalTotal();
 	}
 
 	function applyCoupon() {
@@ -80,45 +141,16 @@
 		}
 
 		// Validate + price the coupon against the live booking form, server-side.
-		// Coupons apply to the rental, not to the delivery legs, so they are priced against
-		// the same base the booking itself will be created with.
-		var gross = readPostableTotal($activeForm);
-		var data = $activeForm.serializeArray();
-		data.push({ name: 'action', value: 'rbfw_apply_coupon_native' });
-		data.push({ name: 'nonce', value: rbfw_ajax_front.nonce_apply_coupon });
+		var data = couponPayload($modal);
 		data.push({ name: 'code', value: code });
 		data.push({ name: 'preview', value: '0' });
-		data.push({ name: 'rbfw_subtotal', value: gross });
-		data.push({ name: 'rbfw_total', value: gross });
 
 		$wrap.addClass('is-busy');
 		$msg.removeClass('error success').text('');
 
 		$.post(rbfw_ajax_front.rbfw_ajaxurl, data)
 			.done(function (res) {
-				if (res && res.success && parseFloat(res.data.discount) > 0) {
-					appliedCouponCode = res.data.code || code;
-					appliedCouponDiscount = parseFloat(res.data.discount) || 0;
-					$modal.find('[data-rbfw-native-coupon-summary]').text(
-						(res.data.code || code) + '  −' + (res.data.discount_html || '')
-					);
-					$modal.find('[data-rbfw-native-coupon-applied]').prop('hidden', false);
-					$msg.removeClass('error').addClass('success').text(res.data.message || 'Coupon applied.');
-					updateModalTotal();
-				} else if (res && res.success) {
-					appliedCouponCode = '';
-					appliedCouponDiscount = 0;
-					$modal.find('[data-rbfw-native-coupon-applied]').prop('hidden', true);
-					$msg.removeClass('success').addClass('error').text(res.data.message || 'No discount applies to this booking.');
-					updateModalTotal();
-				} else {
-					appliedCouponCode = '';
-					appliedCouponDiscount = 0;
-					var m = res && res.data && res.data.message ? res.data.message : 'Coupon could not be applied.';
-					$modal.find('[data-rbfw-native-coupon-applied]').prop('hidden', true);
-					$msg.removeClass('success').addClass('error').text(m);
-					updateModalTotal();
-				}
+				showCouponResult(res, $modal, $msg, code, false);
 			})
 			.fail(function () {
 				$msg.removeClass('success').addClass('error').text('Network error. Please try again.');
@@ -128,10 +160,34 @@
 			});
 	}
 
+	/**
+	 * Automatic (no-code) discounts.
+	 *
+	 * The server applies these on submit whether or not anything was typed, so the modal has to
+	 * show them too — otherwise the customer confirms a Total that is higher than what they are
+	 * actually charged. Only runs when the page was rendered with active automatic rules.
+	 */
+	function previewAutoCoupons($modal) {
+		if (!$activeForm || $modal.attr('data-rbfw-native-auto') !== '1') { return; }
+
+		var data = couponPayload($modal);
+		data.push({ name: 'code', value: '' });
+		data.push({ name: 'preview', value: '1' });
+
+		$.post(rbfw_ajax_front.rbfw_ajaxurl, data).done(function (res) {
+			// Never clobber a code the customer typed while this was in flight.
+			if (appliedCouponCode) { return; }
+			showCouponResult(res, $modal, $modal.find('[data-rbfw-native-coupon-msg]'), '', true);
+		});
+	}
+
 	function removeCoupon() {
 		var $modal = $('#rbfw-native-checkout-modal');
 		resetCoupon($modal);
 		updateModalTotal();
+		// Removing a typed code does not remove the shop's automatic discounts — the server
+		// still applies them — so the displayed Total has to fall back to them, not to gross.
+		previewAutoCoupons($modal);
 	}
 
 	function openModal($form) {
@@ -145,6 +201,7 @@
 		updateModalTotal();
 		$modal.find('[data-rbfw-native-message]').removeClass('error success').text('');
 		$modal.attr('aria-hidden', 'false').fadeIn(120);
+		previewAutoCoupons($modal);
 	}
 
 	function closeModal() {
@@ -178,9 +235,10 @@
 		data.push({ name: 'rbfw_billing_email', value: email });
 		data.push({ name: 'rbfw_billing_phone', value: phone });
 		data.push({ name: 'rbfw_total', value: readPostableTotal($activeForm) });
-		// The applied coupon code (server re-validates + recomputes the discount authoritatively).
-		if (appliedCouponCode) {
-			data.push({ name: 'rbfw_coupon_code', value: appliedCouponCode });
+		// Only the code the customer typed (server re-validates + recomputes the discount
+		// authoritatively, and resolves automatic rules on its own).
+		if (manualCouponCode) {
+			data.push({ name: 'rbfw_coupon_code', value: manualCouponCode });
 		}
 
 		// Payment method (Pro): the selector lives in the modal, not the booking form,

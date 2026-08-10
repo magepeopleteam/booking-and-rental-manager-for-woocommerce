@@ -50,16 +50,20 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 			}
 
 			wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css', array(), '6.0' );
+			// Same date picker the Order List admin uses, so every date the plugin asks an admin
+			// for is entered the same way instead of being typed as text.
+			wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/assets/flatpickr.min.css', array(), null );
+			wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js', array(), null, true );
 			wp_enqueue_style(
 				'rbfw-coupon-admin',
 				RBFW_PLUGIN_URL . '/admin/css/rbfw_coupon_admin.css',
-				array(),
+				array( 'flatpickr-css' ),
 				filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw_coupon_admin.css' )
 			);
 			wp_enqueue_script(
 				'rbfw-coupon-admin',
 				RBFW_PLUGIN_URL . '/admin/js/rbfw_coupon_admin.js',
-				array( 'jquery' ),
+				array( 'jquery', 'flatpickr-js' ),
 				filemtime( RBFW_PLUGIN_DIR . '/admin/js/rbfw_coupon_admin.js' ),
 				true
 			);
@@ -72,6 +76,8 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 				'i18n_need_code' => __( 'Please enter a coupon code.', 'booking-and-rental-manager-for-woocommerce' ),
 				'i18n_need_val'  => __( 'Enter a discount value greater than zero.', 'booking-and-rental-manager-for-woocommerce' ),
 				'i18n_pct_max'   => __( 'A percentage discount cannot exceed 100%.', 'booking-and-rental-manager-for-woocommerce' ),
+				'i18n_pick_date' => __( 'Choose a date first.', 'booking-and-rental-manager-for-woocommerce' ),
+				'i18n_dupe_date' => __( 'That date is already in the list.', 'booking-and-rental-manager-for-woocommerce' ),
 				'i18n_network'   => __( 'Network error. Please try again.', 'booking-and-rental-manager-for-woocommerce' ),
 				'i18n_all'       => __( 'All rentals', 'booking-and-rental-manager-for-woocommerce' ),
 				'i18n_none'      => __( 'None', 'booking-and-rental-manager-for-woocommerce' ),
@@ -249,6 +255,7 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 
 			update_post_meta( $cid, 'rbfw_valid_from', $this->date( $post, 'valid_from' ) );
 			update_post_meta( $cid, 'rbfw_valid_to', $this->date( $post, 'valid_to' ) );
+			update_post_meta( $cid, 'rbfw_date_basis', ( isset( $post['date_basis'] ) && 'booking' === $post['date_basis'] ) ? 'booking' : 'redemption' );
 			update_post_meta( $cid, 'rbfw_weekdays', $this->weekdays( $post ) );
 			update_post_meta( $cid, 'rbfw_blackout_dates', $this->date_list( isset( $post['blackout_dates'] ) ? $post['blackout_dates'] : '' ) );
 
@@ -427,6 +434,7 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 				'max_amount'           => $c->get_max_amount(),
 				'valid_from'           => $c->get_valid_from(),
 				'valid_to'             => $c->get_valid_to(),
+				'date_basis'           => $c->get_date_basis(),
 				'weekdays'             => $c->get_weekdays(),
 				'blackout_dates'       => implode( ', ', $c->get_blackout_dates() ),
 				'usage_limit'          => $c->get_usage_limit(),
@@ -441,7 +449,9 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 		private function describe_value( RBFW_Coupon $c ) {
 			switch ( $c->get_discount_type() ) {
 				case 'fixed':
-					return wp_strip_all_tags( wc_price( $c->get_discount_value() ) );
+					// Decoded, because the caller escapes it with esc_html() — a raw `&#2547;`
+					// would then be printed literally in the list.
+					return RBFW_Coupon_Engine::price_text( $c->get_discount_value() );
 				case 'free_days':
 					/* translators: %s: number of free units */
 					return sprintf( esc_html__( '%s free day(s)', 'booking-and-rental-manager-for-woocommerce' ), (float) $c->get_discount_value() );
@@ -741,15 +751,15 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 								<div class="rbfw-cpn-types">
 									<label class="rbfw-cpn-type">
 										<input type="radio" name="discount_type" value="percentage" checked>
-										<span class="card"><i class="fas fa-percent"></i><strong><?php esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><small><?php esc_html_e( '% off the rental subtotal', 'booking-and-rental-manager-for-woocommerce' ); ?></small></span>
+										<span class="rbfw-cpn-card"><i class="fas fa-percent"></i><strong><?php esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><small><?php esc_html_e( '% off the rental subtotal', 'booking-and-rental-manager-for-woocommerce' ); ?></small></span>
 									</label>
 									<label class="rbfw-cpn-type">
 										<input type="radio" name="discount_type" value="fixed">
-										<span class="card"><i class="fas fa-tag"></i><strong><?php esc_html_e( 'Fixed amount', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><small><?php esc_html_e( 'A flat sum off', 'booking-and-rental-manager-for-woocommerce' ); ?></small></span>
+										<span class="rbfw-cpn-card"><i class="fas fa-tag"></i><strong><?php esc_html_e( 'Fixed amount', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><small><?php esc_html_e( 'A flat sum off', 'booking-and-rental-manager-for-woocommerce' ); ?></small></span>
 									</label>
 									<label class="rbfw-cpn-type">
 										<input type="radio" name="discount_type" value="free_days">
-										<span class="card"><i class="fas fa-calendar-day"></i><strong><?php esc_html_e( 'Free days', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><small><?php esc_html_e( 'Waive N rental days', 'booking-and-rental-manager-for-woocommerce' ); ?></small></span>
+										<span class="rbfw-cpn-card"><i class="fas fa-calendar-day"></i><strong><?php esc_html_e( 'Free days', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><small><?php esc_html_e( 'Waive N rental days', 'booking-and-rental-manager-for-woocommerce' ); ?></small></span>
 									</label>
 								</div>
 
@@ -809,17 +819,37 @@ if ( ! class_exists( 'RBFW_Coupon_Admin' ) ) {
 										<input type="number" name="max_amount" step="0.01" min="0" placeholder="<?php esc_attr_e( '0 = none', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 									</label>
 									<label><span class="lb"><?php esc_html_e( 'Valid From', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-										<input type="date" name="valid_from">
+										<input type="text" name="valid_from" class="rbfw-cpn-date" placeholder="<?php esc_attr_e( 'Any date', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off">
 									</label>
 									<label><span class="lb"><?php esc_html_e( 'Valid To', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-										<input type="date" name="valid_to">
+										<input type="text" name="valid_to" class="rbfw-cpn-date" placeholder="<?php esc_attr_e( 'Any date', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off">
+									</label>
+								</div>
+								<div class="rbfw-cpn-row">
+									<label><span class="lb"><?php esc_html_e( 'Apply That Date Range To', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+										<select name="date_basis">
+											<option value="redemption"><?php esc_html_e( 'Redemption date — when the code is used', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+											<option value="booking"><?php esc_html_e( 'Booking date — when the rental starts', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+										</select>
+										<small><?php esc_html_e( 'Redemption: the code works only between those dates. Booking: the code works for rentals starting between those dates, whenever they are booked.', 'booking-and-rental-manager-for-woocommerce' ); ?></small>
 									</label>
 								</div>
 								<div class="rbfw-cpn-row">
 									<?php $this->checkbox_grid( 'weekdays', $weekdays, __( 'Allowed Booking Weekdays', 'booking-and-rental-manager-for-woocommerce' ), __( 'Empty = every day allowed.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
 									<label><span class="lb"><?php esc_html_e( 'Blackout Dates', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-										<textarea name="blackout_dates" rows="5" placeholder="2026-12-24, 2026-12-25"></textarea>
-										<small><?php esc_html_e( 'Y-m-d, separated by commas or new lines. Invalid dates are ignored.', 'booking-and-rental-manager-for-woocommerce' ); ?></small>
+										<div class="rbfw-cpn-dates" data-rbfw-dates>
+											<div class="rbfw-cpn-dates-add">
+												<input type="text" class="rbfw-cpn-dates-pick" data-rbfw-dates-pick
+													   placeholder="<?php esc_attr_e( 'Pick a date…', 'booking-and-rental-manager-for-woocommerce' ); ?>" autocomplete="off">
+												<button type="button" class="rbfw-cpn-dates-btn" data-rbfw-dates-add>
+													<i class="fas fa-plus"></i> <?php esc_html_e( 'Add', 'booking-and-rental-manager-for-woocommerce' ); ?>
+												</button>
+											</div>
+											<ul class="rbfw-cpn-dates-list" data-rbfw-dates-list></ul>
+											<?php // The picker writes the same comma-separated Y-m-d list the sanitizer already parses. ?>
+											<input type="hidden" name="blackout_dates" data-rbfw-dates-value value="">
+										</div>
+										<small><?php esc_html_e( 'Dates this coupon cannot be used for. Pick a date and press Add; click × to remove one.', 'booking-and-rental-manager-for-woocommerce' ); ?></small>
 									</label>
 								</div>
 							</section>

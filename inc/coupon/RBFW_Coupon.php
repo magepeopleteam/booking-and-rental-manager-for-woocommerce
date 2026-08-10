@@ -287,6 +287,24 @@ if ( ! class_exists( 'RBFW_Coupon' ) ) {
 			return $this->meta( 'rbfw_valid_to', '' );
 		}
 
+		/**
+		 * Which date the valid_from/valid_to window is measured against:
+		 *
+		 *   'redemption' — today, i.e. when the customer uses the code (the default, and how
+		 *                  every coupon behaved before this option existed).
+		 *   'booking'    — the rental's start date, so "11–13 Aug" means a coupon for rentals
+		 *                  starting in that window, no matter when it is booked.
+		 *
+		 * Stored per coupon so both rental patterns are expressible without the window
+		 * silently meaning something different from one coupon to the next.
+		 *
+		 * @return string 'redemption'|'booking'
+		 */
+		public function get_date_basis() {
+			$basis = $this->meta( 'rbfw_date_basis', 'redemption' );
+			return 'booking' === $basis ? 'booking' : 'redemption';
+		}
+
 		/** @return int[] 0-6 (Sun-Sat). Empty = every weekday allowed. */
 		public function get_weekdays() {
 			return array_map( 'absint', $this->meta_array( 'rbfw_weekdays' ) );
