@@ -790,6 +790,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="price-figure" data-price=""><?php echo wp_kses( wc_price(0), rbfw_allowed_html() ); ?></span>
                             </li>
 
+                            <?php // Tax the item is configured for, shown as WooCommerce will charge it. ?>
+                            <?php rbfw_tax_summary_row( $post_id ); ?>
+
                             <li class="management-costing rbfw-cond" style="display:none;">
                                 <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">

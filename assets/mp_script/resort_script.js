@@ -267,6 +267,8 @@ function calculateTotalDurationPrice() {
     }
 
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -329,6 +331,8 @@ function calculateTotalResortExtraService() {
     }
 
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -404,6 +408,8 @@ function calculateTotalManagementPriceResort() {
     }
 
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));

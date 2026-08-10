@@ -143,6 +143,9 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
                             <?php echo wp_kses(wc_price($duration_cost) , rbfw_allowed_html()); ?>
                         </li>
+
+                        <?php // Tax the item is configured for, shown as WooCommerce will charge it. ?>
+                        <?php rbfw_tax_summary_row( $id ); ?>
                         <?php
                         $security_deposit = rbfw_security_deposit($id,$duration_cost);
 

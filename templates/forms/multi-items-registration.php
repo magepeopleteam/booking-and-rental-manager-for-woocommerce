@@ -655,6 +655,9 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                                     <span class="price-figure" data-price=""><?php echo wp_kses( wc_price(0), rbfw_allowed_html() ); ?></span>
                                 </li>
 
+                                <?php // Tax the item is configured for, shown as WooCommerce will charge it. ?>
+                                <?php rbfw_tax_summary_row( $post_id ); ?>
+
                                 <?php if($fee_management_cost_enable){ ?>
                                     <li class="management-costing rbfw-cond">
                                         <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>

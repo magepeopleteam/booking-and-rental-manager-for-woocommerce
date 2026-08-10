@@ -1192,6 +1192,8 @@ function calculateAdditional() {
         }
     }
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -1275,6 +1277,8 @@ function calculateTotalExtraService() {
 
 
     var total_price = sub_total_price + rbfw_management_price +  parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
     var rbfw_discount_type = jQuery('#rbfw_discount_type').val();
@@ -1327,6 +1331,8 @@ function calculateTotalManagementPrice() {
     }
 
     let total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
 
 
 
@@ -1433,6 +1439,8 @@ function calculateTotalSingleItem() {
         }
     }
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
     jQuery('.resource-costing.rbfw-cond').show();
@@ -1548,6 +1556,8 @@ function calculateTotalMultipleItems(only_calculation=false) {
             }
         }
         var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Tax line (shared helper; refundable deposit excluded from the taxable base).
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
 
         if(rbfw_security_deposit_actual_amount){
             jQuery('.security_deposit').show();
@@ -1959,6 +1969,36 @@ function rbfw_service_price_calculation(total_days){
     });
     jQuery('#rbfw_service_price').val(total);
     rbfwScheduleMdPriceCalculation();
+}
+
+/**
+ * The booking summary's Tax line — one implementation shared by every booking type.
+ *
+ * Rate and inclusive/exclusive flag come from hidden inputs printed by
+ * rbfw_tax_summary_row() out of the item's own tax settings, so the item page always
+ * agrees with what WooCommerce charges at checkout:
+ *   prices INCLUSIVE -> break out the tax already inside the figure; total unchanged (returns 0)
+ *   prices EXCLUSIVE -> tax goes on top; returns the amount the caller must add
+ * When the item is not taxable the row is never printed and this is a no-op returning 0.
+ *
+ * @param {number} taxable_base Amount the tax applies to (refundable deposits excluded).
+ * @return {number} Amount to ADD to the total.
+ */
+function rbfwTaxLine(taxable_base) {
+    var $row = jQuery('.tax-costing');
+    var rate = parseFloat(jQuery('#rbfw_tax_rate').val()) || 0;
+    if (rate <= 0 || !$row.length) {
+        $row.hide();
+        return 0;
+    }
+
+    var base     = parseFloat(taxable_base) || 0;
+    var included = jQuery('#rbfw_tax_included').val() === 'yes';
+    var tax      = included ? base - (base / (1 + (rate / 100))) : base * (rate / 100);
+
+    $row.show().find('span').text(wc_price_rbfw(tax));
+
+    return included ? 0 : tax;
 }
 
 function wc_price_rbfw(price) {

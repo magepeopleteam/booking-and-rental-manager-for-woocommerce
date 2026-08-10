@@ -11,6 +11,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
             // Self-healing: reconcile missing backing products (e.g. items imported in
             // Standalone mode that later switched to WooCommerce mode).
             add_action('admin_init', array($this, 'maybe_backfill_hidden_products'));
+            add_action('admin_init', array($this, 'maybe_backfill_product_tax'));
             // Drop dangling links the moment a backing product is permanently deleted, so
             // the item is detected as needing repair instead of pointing at a gone id.
             add_action('before_delete_post', array($this, 'unlink_deleted_hidden_product'));
@@ -101,9 +102,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
             // healed outside that path is immediately bookable.
             update_post_meta( $pid, '_stock_status', 'instock' );
             update_post_meta( $pid, '_manage_stock', 'no' );
-            if ( '' === get_post_meta( $pid, '_tax_status', true ) ) {
-                update_post_meta( $pid, '_tax_status', 'none' );
-            }
+            $this->sync_tax_to_product( $item_id, $pid );
             if ( '' === get_post_meta( $pid, '_regular_price', true ) ) {
                 update_post_meta( $pid, '_regular_price', 0.01 );
             }
@@ -199,6 +198,51 @@ if (!class_exists('RBFW_Hidden_Product')) {
             if (count($broken) >= self::REPAIR_BATCH) {
                 delete_transient('rbfw_hidden_product_scan_lock');
             }
+        }
+
+        /**
+         * One-time repair for items whose tax was configured before the mirror existed.
+         *
+         * Until this release the product's tax meta was only written from the classic
+         * metabox's POST, so every item saved in the modern editor left its product at
+         * "none" and WooCommerce charged no tax. Those items are already correct in their
+         * own meta and would each need a manual re-save, so reconcile them once here.
+         *
+         * @return int Products corrected.
+         */
+        public function maybe_backfill_product_tax() {
+            if (get_option('rbfw_product_tax_mirror_done')) {
+                return 0;
+            }
+            if (!function_exists('rbfw_booking_mode') || rbfw_booking_mode() !== 'woocommerce') {
+                return 0; // Standalone has no backing products; retry after a mode switch.
+            }
+
+            global $wpdb;
+            // Only items that actually carry a tax status — an untouched item has nothing to mirror.
+            $items = $wpdb->get_col(
+                "SELECT p.ID
+                   FROM {$wpdb->posts} p
+                   INNER JOIN {$wpdb->postmeta} tax  ON tax.post_id = p.ID AND tax.meta_key = '_tax_status'
+                   INNER JOIN {$wpdb->postmeta} link ON link.post_id = p.ID AND link.meta_key = 'link_wc_product'
+                  WHERE p.post_type = 'rbfw_item'
+                    AND tax.meta_value <> ''
+                    AND link.meta_value <> ''"
+            );
+
+            $fixed = 0;
+            foreach ((array) $items as $item_id) {
+                $product_id = (int) get_post_meta((int) $item_id, 'link_wc_product', true);
+                if (!$product_id || get_post_type($product_id) !== 'product') {
+                    continue;
+                }
+                $this->sync_tax_to_product((int) $item_id, $product_id);
+                $fixed++;
+            }
+
+            update_option('rbfw_product_tax_mirror_done', 1);
+
+            return $fixed;
         }
 
         /** Items repaired per admin request, so a large backlog never stalls a page load. */
@@ -369,19 +413,91 @@ if (!class_exists('RBFW_Hidden_Product')) {
                 }
 
                 /*
-                 * Tax fields are posted by the classic ticket-type metabox, so reading them
-                 * still requires its nonce. Everything above is derived from the item itself
-                 * and must not be gated on it.
+                 * Tax comes from the ITEM's own meta, not from $_POST.
+                 *
+                 * This used to read the posted fields behind the classic ticket-type metabox
+                 * nonce. The modern editor saves the very same _tax_status / _tax_class on the
+                 * item but posts its own nonce, so this block never ran: the item said
+                 * "taxable" while its backing product stayed at the creation default "none",
+                 * and WooCommerce — which only ever looks at the product — charged no tax.
                  */
-                if (isset($_POST['rbfw_ticket_type_nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce')) {
-                    $_tax_status = isset($_POST['_tax_status']) ? sanitize_text_field(wp_unslash($_POST['_tax_status'])) : 'none';
-                    $_tax_class  = isset($_POST['_tax_class']) ? sanitize_text_field(wp_unslash($_POST['_tax_class'])) : '';
-
-                    update_post_meta($product_id, '_tax_status', $_tax_status);
-                    update_post_meta($product_id, '_tax_class', $_tax_class);
-                }
+                $this->sync_tax_to_product($post_id, $product_id);
             }
 }
+
+        /**
+         * Copy a rental item's tax configuration onto its backing WooCommerce product.
+         *
+         * The item is the single source of truth (both editors store _tax_status /
+         * _tax_class on the rbfw_item post); the product is only the mirror WooCommerce
+         * reads when it calculates cart and order tax.
+         *
+         * @param int $item_id    Rental item.
+         * @param int $product_id Backing hidden product.
+         * @return void
+         */
+        private function sync_tax_to_product($item_id, $product_id) {
+            $item_id    = (int) $item_id;
+            $product_id = (int) $product_id;
+            if ( ! $item_id || ! $product_id ) {
+                return;
+            }
+
+            $tax = $this->resolve_item_tax($item_id);
+
+            update_post_meta($product_id, '_tax_status', $tax['status']);
+            update_post_meta($product_id, '_tax_class', $tax['class']);
+
+            // WooCommerce caches product objects; without this the cart can keep pricing
+            // against the previous tax status for the rest of the request and beyond.
+            if (function_exists('wc_delete_product_transients')) {
+                wc_delete_product_transients($product_id);
+            }
+        }
+
+        /**
+         * The tax status/class WooCommerce should apply to an item, normalized.
+         *
+         * @param int $item_id Rental item.
+         * @return array{status:string,class:string}
+         */
+        private function resolve_item_tax($item_id) {
+            $status = (string) get_post_meta($item_id, '_tax_status', true);
+            $class  = (string) get_post_meta($item_id, '_tax_class', true);
+
+            /*
+             * The modern editor keeps the tax fields behind an "Enable tax settings" toggle.
+             * A collapsed section still posts its selects, so an item switched back to off
+             * would otherwise stay taxable on the strength of leftover values.
+             */
+            if ('no' === get_post_meta($item_id, 'rbfw_enable_tax_settings', true)) {
+                return array('status' => 'none', 'class' => '');
+            }
+
+            // Unset, or the "Select Tax Status" placeholder option.
+            if ( ! in_array($status, array('taxable', 'shipping', 'none'), true)) {
+                $status = 'none';
+            }
+
+            if ('none' === $status) {
+                return array('status' => 'none', 'class' => '');
+            }
+
+            /*
+             * WooCommerce's Standard class IS the empty string — its own product screen posts
+             * value="" for it. The rental tax tab offers value="standard" instead, and storing
+             * that verbatim made WC_Tax look up a class slug that no rate row carries, so a
+             * "taxable / Standard" rental still came out with zero tax.
+             */
+            if ('standard' === $class) {
+                $class = '';
+            }
+            if ('' !== $class && class_exists('WC_Tax') && ! in_array($class, WC_Tax::get_tax_class_slugs(), true)) {
+                $class = '';
+            }
+
+            return array('status' => $status, 'class' => $class);
+        }
 
         /**
          * Return the WooCommerce meta value matching the duplicate-cart setting.

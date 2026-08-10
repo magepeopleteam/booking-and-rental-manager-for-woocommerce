@@ -4196,6 +4196,103 @@ function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' 
 
 
 
+/**
+ * The tax WooCommerce will apply to a rental, resolved for display in the booking summary.
+ *
+ * The item's own _tax_status / _tax_class are the source of truth (both editors write them,
+ * and RBFW_Hidden_Product mirrors them onto the backing product WooCommerce charges against).
+ * Rates come from the shop's BASE location: the customer's address is not known before
+ * checkout, which is the same estimate WooCommerce itself uses for catalog prices.
+ *
+ * `included` reflects woocommerce_prices_include_tax, and decides whether the summary adds
+ * the tax on top of the total or merely breaks out the portion already inside it — get that
+ * wrong and the item page disagrees with the checkout.
+ *
+ * @param int $item_id Rental item id.
+ * @return array{taxable:bool,rate:float,label:string,included:bool}
+ */
+function rbfw_item_tax_info( $item_id ) {
+	$none = array( 'taxable' => false, 'rate' => 0.0, 'label' => '', 'included' => false );
+
+	$item_id = absint( $item_id );
+	if ( ! $item_id || ! class_exists( 'WC_Tax' ) || 'yes' !== get_option( 'woocommerce_calc_taxes' ) ) {
+		return $none;
+	}
+	if ( 'taxable' !== get_post_meta( $item_id, '_tax_status', true ) ) {
+		return $none;
+	}
+	if ( 'no' === get_post_meta( $item_id, 'rbfw_enable_tax_settings', true ) ) {
+		return $none;
+	}
+
+	// WooCommerce's Standard class is the empty string; the rental tax tab offers "standard".
+	$tax_class = (string) get_post_meta( $item_id, '_tax_class', true );
+	if ( 'standard' === $tax_class ) {
+		$tax_class = '';
+	}
+
+	$rates = WC_Tax::get_rates( $tax_class );
+	if ( empty( $rates ) ) {
+		return $none;
+	}
+
+	$rate  = 0.0;
+	$label = '';
+	foreach ( $rates as $row ) {
+		$rate += isset( $row['rate'] ) ? (float) $row['rate'] : 0.0;
+		if ( '' === $label && ! empty( $row['label'] ) ) {
+			$label = (string) $row['label'];
+		}
+	}
+	if ( $rate <= 0 ) {
+		return $none;
+	}
+
+	return array(
+		'taxable'  => true,
+		'rate'     => $rate,
+		'label'    => '' !== $label ? $label : __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
+		'included' => wc_prices_include_tax(),
+	);
+}
+
+/**
+ * Hidden inputs + the summary row the booking scripts read to show tax.
+ *
+ * Printed by each registration template inside its own form, so every booking type shares
+ * one definition of what "tax" means on the item page.
+ *
+ * @param int $item_id Rental item id.
+ * @return void
+ */
+function rbfw_tax_summary_row( $item_id ) {
+	$tax = rbfw_item_tax_info( $item_id );
+	if ( ! $tax['taxable'] ) {
+		return;
+	}
+	?>
+	<input type="hidden" id="rbfw_tax_rate" value="<?php echo esc_attr( $tax['rate'] ); ?>">
+	<input type="hidden" id="rbfw_tax_included" value="<?php echo $tax['included'] ? 'yes' : 'no'; ?>">
+	<li class="tax-costing rbfw-cond" style="display:none;">
+		<?php
+		echo esc_html(
+			$tax['included']
+				/* translators: 1: tax label, 2: rate percentage */
+				? sprintf( __( '%1$s (incl. %2$s%%)', 'booking-and-rental-manager-for-woocommerce' ), $tax['label'], rbfw_trim_zeros_number( $tax['rate'] ) )
+				/* translators: 1: tax label, 2: rate percentage */
+				: sprintf( __( '%1$s (%2$s%%)', 'booking-and-rental-manager-for-woocommerce' ), $tax['label'], rbfw_trim_zeros_number( $tax['rate'] ) )
+		);
+		?>
+		<span class="price-figure" data-price="0"><?php echo wp_kses( wc_price( 0 ), rbfw_allowed_html() ); ?></span>
+	</li>
+	<?php
+}
+
+/** 10.0000 -> "10", 8.5000 -> "8.5". Keeps the tax label readable. */
+function rbfw_trim_zeros_number( $number ) {
+	return rtrim( rtrim( number_format( (float) $number, 4, '.', '' ), '0' ), '.' );
+}
+
 function rbfw_security_deposit( $post_id, $sub_total_price ) {
 		$security_deposit_amount      = 0;
 		$security_deposit_desc        = 0;
