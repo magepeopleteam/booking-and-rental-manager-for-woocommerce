@@ -316,18 +316,17 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         );
 
         if(!empty($category)) {
-            $category = array_filter( array_map( 'trim', explode( ',', $category ) ) );
-            $category_names = array();
-            foreach ($category as $cat) {
-                $term = get_term( absint( $cat ) );
-
-                if ( ! $term || is_wp_error( $term ) ) {
-                    continue;
-                }
-
-                $category_name            = $term->name;
+            /*
+             * Accept NAMES as well as term ids. This loop used to be
+             * get_term( absint( $cat ) ), so category="Bike" resolved to get_term(0), was
+             * skipped, and the shortcode quietly returned every rental instead of the
+             * bikes — a filter that looked configured but did nothing.
+             * rbfw_rent_list_get_category_filter_names() already handles both forms and is
+             * what the left-hand filter uses, so both paths now agree.
+             */
+            $category_names = rbfw_rent_list_get_category_filter_names( $category );
+            foreach ( $category_names as $category_name ) {
                 $base_filter_categories[] = $category_name;
-                $category_names[]         = $category_name;
             }
             // Match every storage format of rbfw_categories (serialized array /
             // single string / comma separated) in ONE flat OR group so several
@@ -336,7 +335,17 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             // Time-out). See rbfw_build_categories_meta_clause().
             $category_clause = rbfw_build_categories_meta_clause( $category_names );
             if ( ! empty( $category_clause ) ) {
-                $args['meta_query'][] = $category_clause;
+                /*
+                 * AND, not appended into the outer OR group: the type/location clauses are
+                 * deliberately OR'd together, so adding the category there let an item match
+                 * on location alone and ignore the category entirely. Nesting keeps the
+                 * existing type-or-location behaviour while making the category required.
+                 */
+                $args['meta_query'] = array(
+                    'relation' => 'AND',
+                    $args['meta_query'],
+                    $category_clause,
+                );
             }
         }
     }

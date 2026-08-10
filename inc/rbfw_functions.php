@@ -4289,6 +4289,88 @@ function rbfw_tax_summary_row( $item_id ) {
 }
 
 /**
+ * The rent types (categories) an item belongs to, as linked chips for the single page.
+ *
+ * Every category was visible in the admin editor and nowhere on the front end, so a visitor
+ * could not see what kind of rental they were looking at, nor jump to similar ones.
+ *
+ * Terms are the source of truth; the name-based `rbfw_categories` mirror is only used as a
+ * fallback for items imported without term relationships, with the name resolved back to a
+ * term so the chip still links somewhere useful.
+ *
+ * @param int  $item_id Rental item id.
+ * @param bool $echo    Print (default) or return the markup.
+ * @return string
+ */
+function rbfw_item_category_chips( $item_id = 0, $echo = true ) {
+	$item_id = $item_id ? absint( $item_id ) : get_the_ID();
+	$terms   = get_the_terms( $item_id, 'rbfw_item_caregory' );
+	$terms   = ( is_array( $terms ) && ! is_wp_error( $terms ) ) ? $terms : array();
+
+	if ( empty( $terms ) ) {
+		$names = get_post_meta( $item_id, 'rbfw_categories', true );
+		foreach ( (array) $names as $name ) {
+			$term = get_term_by( 'name', $name, 'rbfw_item_caregory' );
+			if ( $term && ! is_wp_error( $term ) ) {
+				$terms[] = $term;
+			}
+		}
+	}
+	if ( empty( $terms ) ) {
+		return '';
+	}
+
+	$out = '<div class="rbfw-item-categories">';
+	foreach ( $terms as $term ) {
+		$link = get_term_link( $term );
+		$out .= sprintf(
+			'<a class="rbfw-item-category" href="%s" rel="tag"><i class="fas fa-tag" aria-hidden="true"></i>%s</a>',
+			esc_url( is_wp_error( $link ) ? rbfw_item_category_url( $term->slug ) : $link ),
+			esc_html( $term->name )
+		);
+	}
+	$out .= '</div>';
+
+	if ( $echo ) {
+		echo wp_kses_post( $out );
+	}
+
+	return $out;
+}
+
+/**
+ * A category listing URL that works regardless of permalink settings.
+ *
+ * The taxonomy is public with a `rbfw_caregory` rewrite slug, but its rules are only present
+ * after a flush (see rbfw_maybe_flush_category_rewrites), so the query-var form is the
+ * dependable fallback.
+ *
+ * @param string $slug Category term slug.
+ * @return string
+ */
+function rbfw_item_category_url( $slug ) {
+	return add_query_arg( 'rbfw_item_caregory', sanitize_title( $slug ), home_url( '/' ) );
+}
+
+/**
+ * Register the category rewrite rules once.
+ *
+ * `/rbfw_caregory/<slug>/` returned 404 on existing sites: the taxonomy is registered with a
+ * rewrite slug, but nothing ever flushed the rules after it was added, so only the
+ * `?rbfw_item_caregory=<slug>` form resolved. Flushing is expensive, hence the version guard.
+ *
+ * @return void
+ */
+function rbfw_maybe_flush_category_rewrites() {
+	if ( get_option( 'rbfw_category_rewrite_version' ) === '1' ) {
+		return;
+	}
+	flush_rewrite_rules( false );
+	update_option( 'rbfw_category_rewrite_version', '1' );
+}
+add_action( 'admin_init', 'rbfw_maybe_flush_category_rewrites', 99 );
+
+/**
  * Total tax on a WooCommerce order, read through the order API.
  *
  * This was `get_post_meta( $order_id, '_order_tax' )` everywhere, which returns NOTHING once

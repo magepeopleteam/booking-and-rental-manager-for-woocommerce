@@ -14150,3 +14150,44 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
 	accent-color: var(--color_theme, #6d28d9);
 }
 .rbfw-delivery-option.is-locked .rbfw-delivery-option-hint { color: #7c3aed; }
+
+/* ── Rent-type chips on the single item hero ─────────────────────────
+   The item's categories were admin-only; these surface them and link
+   each one to its listing. Sits over the hero image, so the styling is
+   translucent-on-dark rather than the page's usual light chip. */
+.rbfw-item-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 14px;
+}
+.rbfw-item-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    backdrop-filter: blur(2px);
+    transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.rbfw-item-category:hover,
+.rbfw-item-category:focus {
+    background: var(--rbfw_color_primary, #ff3726);
+    border-color: var(--rbfw_color_primary, #ff3726);
+    color: #fff;
+    transform: translateY(-1px);
+}
+.rbfw-item-category i { font-size: 10px; opacity: .85; }
+/* Outside the hero (e.g. a theme that renders the title on a light background). */
+.mp_details_page:not(.rbfw_default_hero_wrap) > .rbfw-item-categories .rbfw-item-category {
+    border-color: #e2e8f0;
+    background: #f6f8fa;
+    color: #374151;
+}
