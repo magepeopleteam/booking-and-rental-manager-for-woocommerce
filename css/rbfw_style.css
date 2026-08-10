@@ -14191,3 +14191,44 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     background: #f6f8fa;
     color: #374151;
 }
+
+/* ── Rent type / location archive (templates/archive/rbfw-category.php) ──
+   These pages used to fall through to the theme's blog layout. */
+.rbfw-archive { background: #fff; }
+.rbfw-archive-head {
+    padding: 38px 20px 30px;
+    background: linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+    border-bottom: 1px solid #e6eaef;
+}
+.rbfw-archive-head-inner { max-width: 1200px; margin: 0 auto; }
+.rbfw-archive-crumbs { font-size: 12.5px; color: #6b7280; margin-bottom: 10px; }
+.rbfw-archive-crumbs a { color: #6b7280; text-decoration: none; }
+.rbfw-archive-crumbs a:hover { color: var(--rbfw_color_primary, #ff3726); }
+.rbfw-archive-crumbs span { margin: 0 6px; }
+.rbfw-archive-crumbs span:last-child { margin: 0; color: #1f2937; font-weight: 600; }
+.rbfw-archive-title {
+    margin: 0 0 6px; padding: 0;
+    font-size: 30px; line-height: 1.2; font-weight: 700; color: #111827;
+}
+.rbfw-archive-count { margin: 0; font-size: 13.5px; color: #6b7280; }
+.rbfw-archive-desc { margin-top: 12px; max-width: 780px; font-size: 14px; line-height: 1.6; color: #4b5563; }
+.rbfw-archive-body { max-width: 1200px; margin: 0 auto; padding: 26px 20px 50px; }
+.rbfw-archive-empty {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    padding: 60px 20px; text-align: center;
+    border: 1px dashed #d9dee5; border-radius: 12px; background: #fafbfc;
+}
+.rbfw-archive-empty i { font-size: 30px; color: #cbd5e1; margin-bottom: 6px; }
+.rbfw-archive-empty strong { font-size: 16px; color: #111827; }
+.rbfw-archive-empty span { font-size: 13.5px; color: #6b7280; }
+.rbfw-archive-empty-btn {
+    margin-top: 10px; padding: 10px 20px; border-radius: 8px;
+    background: var(--rbfw_color_primary, #ff3726); color: #fff;
+    font-size: 13.5px; font-weight: 600; text-decoration: none;
+}
+.rbfw-archive-empty-btn:hover { opacity: .92; color: #fff; }
+@media (max-width: 782px) {
+    .rbfw-archive-head { padding: 26px 16px 22px; }
+    .rbfw-archive-title { font-size: 23px; }
+    .rbfw-archive-body { padding: 20px 16px 40px; }
+}

@@ -4289,6 +4289,31 @@ function rbfw_tax_summary_row( $item_id ) {
 }
 
 /**
+ * Serve the plugin's own listing on rent-type / location archives.
+ *
+ * These URLs had no template of their own, so WordPress fell back to the theme's blog archive
+ * — a full-width image, an excerpt and a post date per rental, with no price, no booking link
+ * and no grid/list control. Themes can still override by copying the file into
+ * yourtheme/templates/archive/rbfw-category.php (get_template_path() checks there first).
+ *
+ * @param string $template Template WordPress resolved.
+ * @return string
+ */
+function rbfw_category_archive_template( $template ) {
+	if ( ! is_tax( array( 'rbfw_item_caregory', 'rbfw_item_location' ) ) ) {
+		return $template;
+	}
+	if ( ! class_exists( 'RBFW_Function' ) ) {
+		return $template;
+	}
+
+	$custom = RBFW_Function::get_template_path( 'archive/rbfw-category.php' );
+
+	return ( $custom && file_exists( $custom ) ) ? $custom : $template;
+}
+add_filter( 'template_include', 'rbfw_category_archive_template', 99 );
+
+/**
  * The rent types (categories) an item belongs to, as linked chips for the single page.
  *
  * Every category was visible in the admin editor and nowhere on the front end, so a visitor
