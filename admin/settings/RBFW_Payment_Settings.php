@@ -1956,7 +1956,7 @@
 				// The choice is only meaningful when both systems are available; otherwise the
 				// mode is auto-resolved and shouldn't be overridden.
 				if ( class_exists( 'RBFW_Function' ) && 'both' !== RBFW_Function::mode_availability() ) {
-					wp_send_json_error( __( 'Booking mode can only be changed when both WooCommerce and the Pro custom gateways are available.', 'booking-and-rental-manager-for-woocommerce' ) );
+					wp_send_json_error( __( 'Booking mode can only be changed while both flows are usable: WooCommerce active, and at least one custom payment method (Offline, or a Pro gateway) enabled.', 'booking-and-rental-manager-for-woocommerce' ) );
 				}
 
 				RBFW_Function::set_booking_mode( $mode );
