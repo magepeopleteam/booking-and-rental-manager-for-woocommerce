@@ -4288,6 +4288,79 @@ function rbfw_tax_summary_row( $item_id ) {
 	<?php
 }
 
+/**
+ * Total tax on a WooCommerce order, read through the order API.
+ *
+ * This was `get_post_meta( $order_id, '_order_tax' )` everywhere, which returns NOTHING once
+ * High-Performance Order Storage is on (orders live in their own tables, not postmeta) — and
+ * HPOS is the default for new WooCommerce installs. That is why the booking record's
+ * rbfw_order_tax meta was never written, and why the PDF's tax row, the booking detail's Tax
+ * field and the e-mail totals were all blank however the rental was taxed. `_order_tax` also
+ * only ever held the line-item tax, never shipping tax.
+ *
+ * @param int $wc_order_id WooCommerce order id.
+ * @return float
+ */
+function rbfw_wc_order_tax_total( $wc_order_id ) {
+	$wc_order_id = absint( $wc_order_id );
+	if ( ! $wc_order_id || ! function_exists( 'wc_get_order' ) ) {
+		return 0.0;
+	}
+
+	$order = wc_get_order( $wc_order_id );
+	if ( $order instanceof WC_Order || $order instanceof WC_Abstract_Order ) {
+		return (float) $order->get_total_tax();
+	}
+
+	// Legacy fallback for a stored id whose order object can no longer be loaded.
+	$legacy = get_post_meta( $wc_order_id, '_order_tax', true );
+
+	return '' !== $legacy ? (float) $legacy : 0.0;
+}
+
+/**
+ * The tax note printed beside a booking's total on the thank-you page, in e-mails and in the
+ * booking detail — e.g. "(incl. ৳9.09 Tax)".
+ *
+ * Reads the figure recorded on the booking (rbfw_order_tax), so every document quotes the same
+ * amount the customer was actually charged rather than re-deriving it from live rates.
+ *
+ * Deliberately accepts EITHER id: the callers are split between the booking record (thank-you
+ * page, booking detail) and the linked WooCommerce order (Pro's e-mail and calendar popup read
+ * rbfw_link_order_id), and an id-specific helper would have silently returned nothing for half
+ * of them.
+ *
+ * @param int $id Booking record post id, or the linked WooCommerce order id.
+ * @return string Empty when there is no tax to report.
+ */
+function rbfw_booking_tax_note( $id ) {
+	$id  = absint( $id );
+	$tax = (float) get_post_meta( $id, 'rbfw_order_tax', true );
+
+	// Not a booking record (or not recorded yet) — ask WooCommerce directly.
+	if ( $tax <= 0 ) {
+		$tax = rbfw_wc_order_tax_total( $id );
+	}
+	if ( $tax <= 0 ) {
+		return '';
+	}
+
+	$label = __( 'Tax', 'booking-and-rental-manager-for-woocommerce' );
+	if ( function_exists( 'rbfw_get_option' ) ) {
+		$custom = rbfw_get_option( 'rbfw_text_order_tax', 'rbfw_basic_translation_settings' );
+		if ( ! empty( $custom ) ) {
+			$label = $custom;
+		}
+	}
+
+	/* translators: 1: tax amount, 2: tax label */
+	return sprintf(
+		__( '(incl. %1$s %2$s)', 'booking-and-rental-manager-for-woocommerce' ),
+		class_exists( 'RBFW_Coupon_Engine' ) ? RBFW_Coupon_Engine::price_text( $tax ) : wp_strip_all_tags( wc_price( $tax ) ),
+		$label
+	);
+}
+
 /** 10.0000 -> "10", 8.5000 -> "8.5". Keeps the tax label readable. */
 function rbfw_trim_zeros_number( $number ) {
 	return rtrim( rtrim( number_format( (float) $number, 4, '.', '' ), '0' ), '.' );

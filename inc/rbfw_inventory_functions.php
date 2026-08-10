@@ -13,7 +13,9 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 
         $wc_order_id = intval($meta_data['rbfw_order_id']);
         $ticket_info = $meta_data['rbfw_ticket_info'];
-        $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
+        // Order API, not postmeta: under HPOS the order is not in postmeta at all, so the
+        // old _order_tax read returned nothing and no booking ever recorded its tax.
+        $order_tax = rbfw_wc_order_tax_total($wc_order_id);
         $total_cost = get_post_meta($wc_order_id, '_order_total', true);
         $rbfw_link_order_id = get_post_meta($wc_order_id, '_rbfw_link_order_id', true);
         $rbfw_pin = get_post_meta($rbfw_link_order_id, 'rbfw_pin', true);
@@ -52,9 +54,9 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 
         update_post_meta($post_id, 'rbfw_pin', $rbfw_pin);
 
-        if(!empty($order_tax)){
-            update_post_meta($post_id, 'rbfw_order_tax', $order_tax);
-        }
+        // Written unconditionally: guarding on non-empty left a stale figure behind when an
+        // order's tax was later removed.
+        update_post_meta($post_id, 'rbfw_order_tax', $order_tax);
 
         update_post_meta($post_id, 'rbfw_ticket_total_price', $total_cost);
         update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);

@@ -890,7 +890,8 @@
 
                 $rbfw_id          = $meta_data['rbfw_id'];
                 $wc_order_id      = $meta_data['rbfw_order_id'];
-                $order_tax        = ! empty( get_post_meta( $wc_order_id, '_order_tax', true ) ) ? get_post_meta( $wc_order_id, '_order_tax', true ) : 0;
+                // Order API, not postmeta: HPOS keeps orders out of postmeta entirely.
+                $order_tax        = rbfw_wc_order_tax_total( $wc_order_id );
                 $is_tax_inclusive = get_option( 'woocommerce_prices_include_tax', true );
                 $args   = array(
                         'post_title'   => $title,
@@ -939,9 +940,7 @@
 							}
 							update_post_meta( $post_id, 'rbfw_ticket_info', $merged_ticket_info );
 							update_post_meta( $post_id, 'rbfw_ticket_total_price', $total_price );
-							if ( ! empty( $order_tax ) ) {
-								update_post_meta( $post_id, 'rbfw_order_tax', $order_tax );
-							}
+							update_post_meta( $post_id, 'rbfw_order_tax', $order_tax );
 						}
 					} else {
                         $rbfw_ticket_total_price               = $meta_data['rbfw_ticket_total_price'];

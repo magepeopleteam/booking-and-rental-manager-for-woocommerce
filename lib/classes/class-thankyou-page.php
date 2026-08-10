@@ -115,7 +115,8 @@
 								$rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'], 'date-time-text' );
 							}
 							$tax        = ! empty( $ticket_info['rbfw_mps_tax'] ) ? $ticket_info['rbfw_mps_tax'] : 0;
-							$tax_status = '';
+							// Recorded tax for this booking; empty string when the order carried none.
+							$tax_status = rbfw_booking_tax_note( $order_id );
 
 							if ( ! empty( $_GET['paymentStatus'] ) && empty( get_post_meta( $order_id, 'rbfw_payment_status', true ) ) ) {
 								$paymentStatus = sanitize_text_field( wp_unslash( $_GET['paymentStatus'] ) );
@@ -467,7 +468,7 @@
 						$rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'], 'date-time-text' );
 					}
 					$tax        = ! empty( $ticket_info['rbfw_mps_tax'] ) ? $ticket_info['rbfw_mps_tax'] : 0;
-					$tax_status = '';
+					$tax_status = rbfw_booking_tax_note( $order_id );
 
 					if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
 						$BikeCarSdClass = new RBFW_BikeCarSd_Function();
