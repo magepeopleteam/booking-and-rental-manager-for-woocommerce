@@ -503,6 +503,9 @@ if(isset($_POST['post_id'])){
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
 
+                        <?php // Tax the item is configured for, as WooCommerce will charge it. ?>
+                        <?php rbfw_tax_summary_row( $id ); ?>
+
                         <?php if($fee_management_cost_enable){ ?>
                             <li class="management-costing rbfw-cond">
                                 <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
