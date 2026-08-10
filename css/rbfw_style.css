@@ -14239,3 +14239,59 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     .rbfw-archive-title { font-size: 23px; }
     .rbfw-archive-body { padding: 20px 16px 40px; }
 }
+
+/* ── List view: an actual row ─────────────────────────────────────────
+   The layout was defined across two stylesheets and the later one won, so the
+   image kept its full-width grid sizing while the card was already flex-row —
+   image on top, text under it, and a large empty column to the right. These
+   rules are last-loaded and state the row explicitly: fixed image column,
+   flexible details, no reliance on percentage widths surviving the class swap. */
+.rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 20px;
+    min-height: 0;
+}
+.rbfw_rent_list_style_list .rbfw_rent_list_lists_images,
+.rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top {
+    flex: 0 0 clamp(180px, 30%, 330px);
+    width: clamp(180px, 30%, 330px);
+    max-width: clamp(180px, 30%, 330px);
+    min-height: 220px;
+    align-self: stretch;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.rbfw_rent_list_style_list .rbfw_rent_list_lists_images img,
+.rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+/* min-width:0 lets a long title wrap instead of forcing the row wider than the card. */
+.rbfw_rent_list_style_list .rbfw_rent_list_lists_info,
+.rbfw_rent_list_style_list .rbfw_inner_details {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 18px 16px 0;
+}
+/* One card per row in list mode, whatever column class the grid left behind. */
+.rbfw_rent_list_style_list .rbfw-w-33,
+.rbfw_rent_list_style_list .rbfw-w-50,
+.rbfw_rent_list_style_list .rbfw-w-25 { width: 100%; max-width: 100%; flex: 0 0 100%; }
+
+@media (max-width: 767px) {
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper { flex-direction: column; gap: 0; }
+    .rbfw_rent_list_style_list .rbfw_rent_list_lists_images,
+    .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top {
+        flex: 0 0 auto; width: 100%; max-width: 100%; min-height: 200px; border-radius: 10px 10px 0 0;
+    }
+    .rbfw_rent_list_style_list .rbfw_rent_list_lists_info,
+    .rbfw_rent_list_style_list .rbfw_inner_details { padding: 14px 16px; }
+}
