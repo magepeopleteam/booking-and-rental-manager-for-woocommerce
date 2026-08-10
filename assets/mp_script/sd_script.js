@@ -701,6 +701,10 @@ function rbfw_price_calculation_sd(){
 
     var total_price = sub_total_price + rbfw_management_price + rbfw_delivery_price + parseFloat(rbfw_security_deposit_actual_amount);
 
+    // Tax line (shared with every other booking type; see rbfwTaxLine in md_script.js).
+    // The deposit is refundable, so it is never part of the taxable base.
+    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
+
     /* Delivery and collection are two separately billed legs, priced by band tables that
        may differ, so the summary lists them separately rather than as one merged figure. */
     if (typeof window.rbfwRenderDeliveryLines === 'function') {

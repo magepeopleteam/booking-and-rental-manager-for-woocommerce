@@ -1642,7 +1642,7 @@ function rbfw_order_meta_box_callback() {
                     $rbfw_end_datetime   = rbfw_get_datetime( $ticket_info['rbfw_end_datetime'] ?? '', 'date-text' );
                 }
                 $tax        = ! empty( $ticket_info['rbfw_mps_tax'] ) ? $ticket_info['rbfw_mps_tax'] : 0;
-                $tax_status = '';
+                $tax_status = rbfw_booking_tax_note( $order_id );
                 if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
                     $BikeCarSdClass = new RBFW_BikeCarSd_Function();
                     $rent_info      = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];

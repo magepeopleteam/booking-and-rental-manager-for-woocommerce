@@ -55,6 +55,8 @@
 							<div class="rbfw_default_hero_content">
 								<?php rbfw_fd_hero_badge(); ?>
 								<h1 class="rbfw_default_hero_title"><?php echo esc_html( $post_title ); ?></h1>
+								<?php // Rent types this item belongs to, linked to their listing. ?>
+								<?php rbfw_item_category_chips( $post_id ); ?>
 								<?php if ( ! empty( $rbfw_default_hero_subtitle ) ) : ?>
 								<p class="rbfw_default_hero_desc"><?php echo esc_html( $rbfw_default_hero_subtitle ); ?></p>
 								<?php endif; ?>

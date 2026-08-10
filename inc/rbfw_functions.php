@@ -4196,6 +4196,283 @@ function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' 
 
 
 
+/**
+ * The tax WooCommerce will apply to a rental, resolved for display in the booking summary.
+ *
+ * The item's own _tax_status / _tax_class are the source of truth (both editors write them,
+ * and RBFW_Hidden_Product mirrors them onto the backing product WooCommerce charges against).
+ * Rates come from the shop's BASE location: the customer's address is not known before
+ * checkout, which is the same estimate WooCommerce itself uses for catalog prices.
+ *
+ * `included` reflects woocommerce_prices_include_tax, and decides whether the summary adds
+ * the tax on top of the total or merely breaks out the portion already inside it — get that
+ * wrong and the item page disagrees with the checkout.
+ *
+ * @param int $item_id Rental item id.
+ * @return array{taxable:bool,rate:float,label:string,included:bool}
+ */
+function rbfw_item_tax_info( $item_id ) {
+	$none = array( 'taxable' => false, 'rate' => 0.0, 'label' => '', 'included' => false );
+
+	$item_id = absint( $item_id );
+	if ( ! $item_id || ! class_exists( 'WC_Tax' ) || 'yes' !== get_option( 'woocommerce_calc_taxes' ) ) {
+		return $none;
+	}
+	if ( 'taxable' !== get_post_meta( $item_id, '_tax_status', true ) ) {
+		return $none;
+	}
+	if ( 'no' === get_post_meta( $item_id, 'rbfw_enable_tax_settings', true ) ) {
+		return $none;
+	}
+
+	// WooCommerce's Standard class is the empty string; the rental tax tab offers "standard".
+	$tax_class = (string) get_post_meta( $item_id, '_tax_class', true );
+	if ( 'standard' === $tax_class ) {
+		$tax_class = '';
+	}
+
+	$rates = WC_Tax::get_rates( $tax_class );
+	if ( empty( $rates ) ) {
+		return $none;
+	}
+
+	$rate  = 0.0;
+	$label = '';
+	foreach ( $rates as $row ) {
+		$rate += isset( $row['rate'] ) ? (float) $row['rate'] : 0.0;
+		if ( '' === $label && ! empty( $row['label'] ) ) {
+			$label = (string) $row['label'];
+		}
+	}
+	if ( $rate <= 0 ) {
+		return $none;
+	}
+
+	return array(
+		'taxable'  => true,
+		'rate'     => $rate,
+		'label'    => '' !== $label ? $label : __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
+		'included' => wc_prices_include_tax(),
+	);
+}
+
+/**
+ * Hidden inputs + the summary row the booking scripts read to show tax.
+ *
+ * Printed by each registration template inside its own form, so every booking type shares
+ * one definition of what "tax" means on the item page.
+ *
+ * @param int $item_id Rental item id.
+ * @return void
+ */
+function rbfw_tax_summary_row( $item_id ) {
+	$tax = rbfw_item_tax_info( $item_id );
+	if ( ! $tax['taxable'] ) {
+		return;
+	}
+	?>
+	<input type="hidden" id="rbfw_tax_rate" value="<?php echo esc_attr( $tax['rate'] ); ?>">
+	<input type="hidden" id="rbfw_tax_included" value="<?php echo $tax['included'] ? 'yes' : 'no'; ?>">
+	<li class="tax-costing rbfw-cond" style="display:none;">
+		<?php
+		echo esc_html(
+			$tax['included']
+				/* translators: 1: tax label, 2: rate percentage */
+				? sprintf( __( '%1$s (incl. %2$s%%)', 'booking-and-rental-manager-for-woocommerce' ), $tax['label'], rbfw_trim_zeros_number( $tax['rate'] ) )
+				/* translators: 1: tax label, 2: rate percentage */
+				: sprintf( __( '%1$s (%2$s%%)', 'booking-and-rental-manager-for-woocommerce' ), $tax['label'], rbfw_trim_zeros_number( $tax['rate'] ) )
+		);
+		?>
+		<span class="price-figure" data-price="0"><?php echo wp_kses( wc_price( 0 ), rbfw_allowed_html() ); ?></span>
+	</li>
+	<?php
+}
+
+/**
+ * Serve the plugin's own listing on rent-type / location archives.
+ *
+ * These URLs had no template of their own, so WordPress fell back to the theme's blog archive
+ * — a full-width image, an excerpt and a post date per rental, with no price, no booking link
+ * and no grid/list control. Themes can still override by copying the file into
+ * yourtheme/templates/archive/rbfw-category.php (get_template_path() checks there first).
+ *
+ * @param string $template Template WordPress resolved.
+ * @return string
+ */
+function rbfw_category_archive_template( $template ) {
+	if ( ! is_tax( array( 'rbfw_item_caregory', 'rbfw_item_location' ) ) ) {
+		return $template;
+	}
+	if ( ! class_exists( 'RBFW_Function' ) ) {
+		return $template;
+	}
+
+	$custom = RBFW_Function::get_template_path( 'archive/rbfw-category.php' );
+
+	return ( $custom && file_exists( $custom ) ) ? $custom : $template;
+}
+add_filter( 'template_include', 'rbfw_category_archive_template', 99 );
+
+/**
+ * The rent types (categories) an item belongs to, as linked chips for the single page.
+ *
+ * Every category was visible in the admin editor and nowhere on the front end, so a visitor
+ * could not see what kind of rental they were looking at, nor jump to similar ones.
+ *
+ * Terms are the source of truth; the name-based `rbfw_categories` mirror is only used as a
+ * fallback for items imported without term relationships, with the name resolved back to a
+ * term so the chip still links somewhere useful.
+ *
+ * @param int  $item_id Rental item id.
+ * @param bool $echo    Print (default) or return the markup.
+ * @return string
+ */
+function rbfw_item_category_chips( $item_id = 0, $echo = true ) {
+	$item_id = $item_id ? absint( $item_id ) : get_the_ID();
+	$terms   = get_the_terms( $item_id, 'rbfw_item_caregory' );
+	$terms   = ( is_array( $terms ) && ! is_wp_error( $terms ) ) ? $terms : array();
+
+	if ( empty( $terms ) ) {
+		$names = get_post_meta( $item_id, 'rbfw_categories', true );
+		foreach ( (array) $names as $name ) {
+			$term = get_term_by( 'name', $name, 'rbfw_item_caregory' );
+			if ( $term && ! is_wp_error( $term ) ) {
+				$terms[] = $term;
+			}
+		}
+	}
+	if ( empty( $terms ) ) {
+		return '';
+	}
+
+	$out = '<div class="rbfw-item-categories">';
+	foreach ( $terms as $term ) {
+		$link = get_term_link( $term );
+		$out .= sprintf(
+			'<a class="rbfw-item-category" href="%s" rel="tag"><i class="fas fa-tag" aria-hidden="true"></i>%s</a>',
+			esc_url( is_wp_error( $link ) ? rbfw_item_category_url( $term->slug ) : $link ),
+			esc_html( $term->name )
+		);
+	}
+	$out .= '</div>';
+
+	if ( $echo ) {
+		echo wp_kses_post( $out );
+	}
+
+	return $out;
+}
+
+/**
+ * A category listing URL that works regardless of permalink settings.
+ *
+ * The taxonomy is public with a `rbfw_caregory` rewrite slug, but its rules are only present
+ * after a flush (see rbfw_maybe_flush_category_rewrites), so the query-var form is the
+ * dependable fallback.
+ *
+ * @param string $slug Category term slug.
+ * @return string
+ */
+function rbfw_item_category_url( $slug ) {
+	return add_query_arg( 'rbfw_item_caregory', sanitize_title( $slug ), home_url( '/' ) );
+}
+
+/**
+ * Register the category rewrite rules once.
+ *
+ * `/rbfw_caregory/<slug>/` returned 404 on existing sites: the taxonomy is registered with a
+ * rewrite slug, but nothing ever flushed the rules after it was added, so only the
+ * `?rbfw_item_caregory=<slug>` form resolved. Flushing is expensive, hence the version guard.
+ *
+ * @return void
+ */
+function rbfw_maybe_flush_category_rewrites() {
+	if ( get_option( 'rbfw_category_rewrite_version' ) === '1' ) {
+		return;
+	}
+	flush_rewrite_rules( false );
+	update_option( 'rbfw_category_rewrite_version', '1' );
+}
+add_action( 'admin_init', 'rbfw_maybe_flush_category_rewrites', 99 );
+
+/**
+ * Total tax on a WooCommerce order, read through the order API.
+ *
+ * This was `get_post_meta( $order_id, '_order_tax' )` everywhere, which returns NOTHING once
+ * High-Performance Order Storage is on (orders live in their own tables, not postmeta) — and
+ * HPOS is the default for new WooCommerce installs. That is why the booking record's
+ * rbfw_order_tax meta was never written, and why the PDF's tax row, the booking detail's Tax
+ * field and the e-mail totals were all blank however the rental was taxed. `_order_tax` also
+ * only ever held the line-item tax, never shipping tax.
+ *
+ * @param int $wc_order_id WooCommerce order id.
+ * @return float
+ */
+function rbfw_wc_order_tax_total( $wc_order_id ) {
+	$wc_order_id = absint( $wc_order_id );
+	if ( ! $wc_order_id || ! function_exists( 'wc_get_order' ) ) {
+		return 0.0;
+	}
+
+	$order = wc_get_order( $wc_order_id );
+	if ( $order instanceof WC_Order || $order instanceof WC_Abstract_Order ) {
+		return (float) $order->get_total_tax();
+	}
+
+	// Legacy fallback for a stored id whose order object can no longer be loaded.
+	$legacy = get_post_meta( $wc_order_id, '_order_tax', true );
+
+	return '' !== $legacy ? (float) $legacy : 0.0;
+}
+
+/**
+ * The tax note printed beside a booking's total on the thank-you page, in e-mails and in the
+ * booking detail — e.g. "(incl. ৳9.09 Tax)".
+ *
+ * Reads the figure recorded on the booking (rbfw_order_tax), so every document quotes the same
+ * amount the customer was actually charged rather than re-deriving it from live rates.
+ *
+ * Deliberately accepts EITHER id: the callers are split between the booking record (thank-you
+ * page, booking detail) and the linked WooCommerce order (Pro's e-mail and calendar popup read
+ * rbfw_link_order_id), and an id-specific helper would have silently returned nothing for half
+ * of them.
+ *
+ * @param int $id Booking record post id, or the linked WooCommerce order id.
+ * @return string Empty when there is no tax to report.
+ */
+function rbfw_booking_tax_note( $id ) {
+	$id  = absint( $id );
+	$tax = (float) get_post_meta( $id, 'rbfw_order_tax', true );
+
+	// Not a booking record (or not recorded yet) — ask WooCommerce directly.
+	if ( $tax <= 0 ) {
+		$tax = rbfw_wc_order_tax_total( $id );
+	}
+	if ( $tax <= 0 ) {
+		return '';
+	}
+
+	$label = __( 'Tax', 'booking-and-rental-manager-for-woocommerce' );
+	if ( function_exists( 'rbfw_get_option' ) ) {
+		$custom = rbfw_get_option( 'rbfw_text_order_tax', 'rbfw_basic_translation_settings' );
+		if ( ! empty( $custom ) ) {
+			$label = $custom;
+		}
+	}
+
+	/* translators: 1: tax amount, 2: tax label */
+	return sprintf(
+		__( '(incl. %1$s %2$s)', 'booking-and-rental-manager-for-woocommerce' ),
+		class_exists( 'RBFW_Coupon_Engine' ) ? RBFW_Coupon_Engine::price_text( $tax ) : wp_strip_all_tags( wc_price( $tax ) ),
+		$label
+	);
+}
+
+/** 10.0000 -> "10", 8.5000 -> "8.5". Keeps the tax label readable. */
+function rbfw_trim_zeros_number( $number ) {
+	return rtrim( rtrim( number_format( (float) $number, 4, '.', '' ), '0' ), '.' );
+}
+
 function rbfw_security_deposit( $post_id, $sub_total_price ) {
 		$security_deposit_amount      = 0;
 		$security_deposit_desc        = 0;

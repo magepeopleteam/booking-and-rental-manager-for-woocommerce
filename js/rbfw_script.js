@@ -133,7 +133,12 @@
             var minHeightValue = '';
 
             if( clickedId === 'rbfw_rent_items_grid' ){
-               wrapperElement.classList.replace(wrapperElement.classList[wrapperElement.classList.length - 1], 'rbfw_rent_list_style_grid');
+               // Swap the style class by NAME. This used to replace whatever class sat LAST on the
+               // wrapper, which is only the style class if nothing else was ever appended — so the
+               // list layout silently failed to switch while the card's inner classes did, leaving a
+               // stacked image in a full-width card.
+               wrapperElement.classList.remove('rbfw_rent_list_style_list');
+               wrapperElement.classList.add('rbfw_rent_list_style_grid');
                let $element = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_lists_images');
                let $element1 = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_lists_info');
                let $element2 = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_item_content_list_bottom');
@@ -148,7 +153,8 @@
 
            } else{
 
-               wrapperElement.classList.replace(wrapperElement.classList[wrapperElement.classList.length - 1], 'rbfw_rent_list_style_list');
+               wrapperElement.classList.remove('rbfw_rent_list_style_grid');
+               wrapperElement.classList.add('rbfw_rent_list_style_list');
                let $element = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_grid_view_top');
                let $element1 = $('#rbfw_rent_list_wrapper').find('.rbfw_inner_details');
                let $element2 = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_info');
