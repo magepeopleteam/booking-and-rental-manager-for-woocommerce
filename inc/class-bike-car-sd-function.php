@@ -511,7 +511,9 @@
                         ? esc_html( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' ) )
                         : esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' )
                     ) . ' <span class="price-figure" data-price="' . $total_bikecarsd_price . '">' . wc_price( $total_bikecarsd_price ) . '</span></li>';
-				if ( ! empty( $service_price_arr ) ) {
+				// Guard on the computed total, not on the array: the steppers post a row per
+				// service even when every quantity is 0, which printed a "Resource Cost 0.00" line.
+				if ( $total_service_price > 0 ) {
 					$content .= '<li class="resource-costing rbfw-cond">' . (
                         ( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' ) )

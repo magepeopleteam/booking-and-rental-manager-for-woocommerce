@@ -292,19 +292,24 @@
                                         // Available qty defaults to the configured stock (no date is selected at
                                         // initial render); avoids an undefined-variable warning in the notice below.
                                         $max_es_available_qty = isset($value['service_qty']) ? $value['service_qty'] : 0;
+                                        $img = '';
                                         if ($img_url) {
-                                            $img = '<a href="#rbfw_service_img_<?php echo $uniq_id ?>" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
-                                            $img .= '<div id="rbfw_service_img_' . $uniq_id . '" class="mage_modal"><img src="<?php echo esc_url($img_url) ?>"/></div>';
-                                        }else{
-                                            $img = '';
+                                            // Concatenate the values in: a literal PHP tag inside the
+                                            // single-quoted string was output verbatim, which broke both the
+                                            // lightbox anchor and the popup image source.
+                                            $img  = '<a href="#rbfw_service_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
+                                            $img .= '<div id="rbfw_service_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
                                         }
                                         if($value['service_qty'] > 0){
                                             ?>
                                             <div class="rbfw-optional-add-ons">
                                                 <div>
-                                                    <div>
-                                                        <?php echo wp_kses($img , rbfw_allowed_html()); ?>
-                                                    </div>
+                                                    <?php // No image on this service: skip the holder entirely instead of leaving an empty box in the row. ?>
+                                                    <?php if ($img) { ?>
+                                                        <div>
+                                                            <?php echo wp_kses($img , rbfw_allowed_html()); ?>
+                                                        </div>
+                                                    <?php } ?>
                                                     <div>
                                                         <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?></span>
                                                         <?php if(!empty($value['service_desc'])){ ?>

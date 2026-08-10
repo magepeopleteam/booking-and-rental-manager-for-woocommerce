@@ -72,11 +72,13 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                     foreach ($rbfw_extra_service_data as $value) {
                         $img_url = !empty($value['service_img']) ? wp_get_attachment_url($value['service_img']) : '';
                         $uniq_id = wp_rand();
+                        $img     = '';
                         if ($img_url) {
-                            $img = '<a href="#rbfw_service_img_<?php echo $uniq_id ?>" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
-                            $img .= '<div id="rbfw_service_img_' . $uniq_id . '" class="mage_modal"><img src="<?php echo esc_url($img_url) ?>"/></div>';
-                        }else{
-                            $img = '';
+                            // Both the id and the url must be concatenated in: a literal PHP tag inside a
+                            // single-quoted string was printed verbatim, so the lightbox link pointed at an
+                            // anchor that does not exist and the popup image had no src.
+                            $img  = '<a href="#rbfw_service_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
+                            $img .= '<div id="rbfw_service_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
                         }
 
                         $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $start_date, $value['service_name']);
@@ -85,9 +87,12 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                             ?>
                             <div class="rbfw-optional-add-ons">
                                     <div>
-                                        <div>
-                                            <?php echo wp_kses($img , rbfw_allowed_html()); ?>
-                                        </div>
+                                        <?php // No image on this service: render no holder at all, rather than an empty box that still takes up space in the row. ?>
+                                        <?php if ($img) { ?>
+                                            <div>
+                                                <?php echo wp_kses($img , rbfw_allowed_html()); ?>
+                                            </div>
+                                        <?php } ?>
                                         <div>
                                             <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?></span>
                                             <?php if(!empty($value['service_desc'])){ ?>
@@ -134,7 +139,8 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                             <?php echo wp_kses(wc_price($duration_cost), rbfw_allowed_html()); ?>
                         </li>
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
-                            <li class="resource-costing rbfw-cond">
+                            <?php // Hidden at zero, like every other template; sd_script reveals it. ?>
+                            <li class="resource-costing rbfw-cond" style="display:none;">
                                 <?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                             </li>

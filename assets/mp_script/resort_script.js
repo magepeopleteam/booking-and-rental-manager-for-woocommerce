@@ -293,7 +293,17 @@ function calculateTotalResortExtraService() {
 
     // Output total
     jQuery('#rbfw_extra_service_price').val(resort_extra_service.toFixed(2));
-    jQuery('.resource-costing .price-figure').text(wc_price_rbfw(resort_extra_service));
+
+    // Value AND visibility together: the row used to sit there reading "Resource Cost 0.00"
+    // whenever no add-on was chosen. Scoped to the resort summary so it cannot reach the
+    // identically-named row in the single-day / multi-day templates.
+    var $rbfw_resort_resource = jQuery('.rbfw_room_price_summary').find('li.resource-costing');
+    $rbfw_resort_resource.find('.price-figure').text(wc_price_rbfw(resort_extra_service));
+    if (resort_extra_service > 0) {
+        $rbfw_resort_resource.show();
+    } else {
+        $rbfw_resort_resource.hide();
+    }
 
     let sub_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + resort_extra_service;
 

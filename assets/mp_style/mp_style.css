@@ -1687,13 +1687,16 @@
     .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_50_pc {
         flex: 1 1 auto; display: flex; -webkit-align-items: center; align-items: center; gap: 10px;
     }
-    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_50_pc::before {
+    /* Round select marker — only on services that actually have an image (the template adds
+       .rbfw-es-has-img). Without an image the empty outline read as a broken image placeholder,
+       and the row's own border/background already shows the selected state. */
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody td.w_50_pc.rbfw-es-has-img::before {
         content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900;
         width: 22px; height: 22px; border-radius: 50%; border: 2px solid #E2E8F0; color: transparent;
         display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; -webkit-justify-content: center; justify-content: center;
         font-size: 10px; flex: 0 0 auto; transition: all 0.2s ease;
     }
-    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody tr.rbfw-es-selected td.w_50_pc::before {
+    .rbfw_bikecarsd_es_price_table table.rbfw_bikecarsd_price_table tbody tr.rbfw-es-selected td.w_50_pc.rbfw-es-has-img::before {
         background-color: var(--color_theme); border-color: var(--color_theme); color: var(--color_theme_alter, #FFF);
     }
     .rbfw_bikecarsd_es_price_table .rbfw_bikecarsd_type_title { font-size: 14px; font-weight: 500; color: #111827; }
