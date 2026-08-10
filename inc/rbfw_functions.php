@@ -3459,6 +3459,62 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 		return wp_json_encode( $off_dates );
 	}
 
+if ( ! function_exists( 'rbfw_is_off_day' ) ) {
+	/**
+	 * Is the given date an Off Day for this rental item?
+	 *
+	 * Mirrors the rule the datepicker already applies in `rbfw_off_day_dates()`
+	 * (assets/mp_script/rbfw_script.js): a date is off when its weekday is listed
+	 * in the item's weekly Off Days, or when the date itself falls inside one of
+	 * the configured Off Day ranges. Keeping the two in step is the point — server
+	 * side badges that disagree with the calendar are what made the
+	 * "Available Today" badge claim a day the calendar had greyed out.
+	 *
+	 * @param int         $post_id rbfw_item id.
+	 * @param string|null $date    Any date DateTimeImmutable can parse, or null for
+	 *                             today in the site's timezone.
+	 *
+	 * @return bool True when the date is an Off Day.
+	 */
+	function rbfw_is_off_day( $post_id, $date = null ) {
+		$post_id = (int) $post_id;
+		if ( $post_id < 1 ) {
+			return false;
+		}
+
+		try {
+			$moment = ( null === $date )
+				? new DateTimeImmutable( 'now', wp_timezone() )
+				: new DateTimeImmutable( $date, wp_timezone() );
+		} catch ( Exception $e ) {
+			return false; // Unparseable date: never claim it is an Off Day.
+		}
+
+		/*
+		 * format('l') and not wp_date('l'): the weekday names stored in
+		 * `rbfw_off_days` are lowercase English ("sunday"), matching the hardcoded
+		 * array the datepicker compares against. wp_date() returns the *translated*
+		 * name, which on a non-English site could never match.
+		 */
+		$weekday  = strtolower( $moment->format( 'l' ) );
+		$off_days = json_decode( (string) rbfw_off_days( $post_id ), true );
+		if ( is_array( $off_days ) ) {
+			foreach ( $off_days as $off_day ) {
+				if ( is_string( $off_day ) && $weekday === strtolower( trim( $off_day ) ) ) {
+					return true;
+				}
+			}
+		}
+
+		$off_dates = json_decode( (string) rbfw_off_dates( $post_id ), true );
+		if ( is_array( $off_dates ) && in_array( $moment->format( 'd-m-Y' ), $off_dates, true ) ) {
+			return true;
+		}
+
+		return false;
+	}
+}
+
 if ( ! function_exists( 'rbfw_format_duration_unit' ) ) {
 	/**
 	 * Format one "<count> <unit>" chunk of a human-readable rental duration.

@@ -142,11 +142,39 @@ if ( ! function_exists( 'rbfw_fd_hero_badge' ) ) {
 	}
 }
 
-/** Booking-summary badges wrapper ("Available Today" + "Best Seller"). */
+/**
+ * Booking-summary badges wrapper ("Available Today" + "Best Seller").
+ *
+ * @param int $post_id rbfw_item id. Defaults to the current post so any existing
+ *                     no-argument caller keeps working.
+ */
 if ( ! function_exists( 'rbfw_fd_summary_badges' ) ) {
-	function rbfw_fd_summary_badges() {
+	function rbfw_fd_summary_badges( $post_id = 0 ) {
+		$post_id = $post_id ? (int) $post_id : (int) get_the_ID();
+
 		$show_avail  = rbfw_fd_is_on( 'avail_badge_show' );
 		$show_seller = rbfw_fd_is_on( 'seller_badge_show' );
+
+		/*
+		 * The badge used to be a pure settings toggle, so it announced
+		 * "Available Today" even on a day the calendar had greyed out as an Off Day
+		 * and refused to book. Ask the same question the datepicker asks.
+		 */
+		if ( $show_avail && function_exists( 'rbfw_is_off_day' ) && rbfw_is_off_day( $post_id ) ) {
+			$show_avail = false;
+		}
+
+		/**
+		 * Filter whether the "Available Today" badge is shown.
+		 *
+		 * Lets a site widen the test — same-day booking being switched off, an item
+		 * being out of stock today — without replacing the template.
+		 *
+		 * @param bool $show_avail Whether to render the badge.
+		 * @param int  $post_id    rbfw_item id.
+		 */
+		$show_avail = (bool) apply_filters( 'rbfw_fd_show_available_today', $show_avail, $post_id );
+
 		if ( ! $show_avail && ! $show_seller ) {
 			return;
 		}
