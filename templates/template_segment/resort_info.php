@@ -454,6 +454,9 @@ if(isset($post_id) && isset($active_tab)){
                 </span>
             </li>
 
+            <?php // Tax the item is configured for, shown as WooCommerce will charge it. ?>
+            <?php rbfw_tax_summary_row( $post_id ); ?>
+
             <?php if($fee_management_cost_enable){ ?>
                 <li class="management-costing rbfw-cond">
                     <?php echo esc_html__( 'Management Fee','booking-and-rental-manager-for-woocommerce' ); ?>
