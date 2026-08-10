@@ -238,6 +238,10 @@
 .rbfw_ol .rbfw_ol_badge_cancelled,
 .rbfw_ol .rbfw_ol_badge_failed    { background: var(--rbfw-red-lt);    color: #991B1B; }
 .rbfw_ol .rbfw_ol_badge_refunded  { background: var(--rbfw-purple-lt); color: #6D28D9; }
+/* Rental-only statuses: goods out with the customer, and goods back on the rack.
+   Picked borrows the amber "in flight" tone; Returned reads as a finished rental. */
+.rbfw_ol .rbfw_ol_badge_picked    { background: var(--rbfw-amber-lt);  color: #92400E; }
+.rbfw_ol .rbfw_ol_badge_returned  { background: var(--rbfw-green-lt);  color: #065F46; }
 
 /* action buttons */
 .rbfw_ol .rbfw_ol_actions { display: inline-flex; gap: 6px; align-items: center; vertical-align: middle; }

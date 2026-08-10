@@ -253,6 +253,13 @@ function rbfw_collect_export_rows( $filters ) {
 			continue;
 		}
 
+		/* Match the Order List: a booking carrying a rental-only status (Picked /
+		   Returned) reports that instead of the WooCommerce status it rides on, so
+		   those options in the export filter select real rows rather than nothing. */
+		$order_status = function_exists( 'rbfw_get_booking_display_status' )
+			? rbfw_get_booking_display_status( $post_id, $order_status )
+			: $order_status;
+
 		// Status filter (statuses are stored without the wc- prefix in the UI).
 		if ( '' !== $status && str_replace( 'wc-', '', $order_status ) !== $status ) {
 			continue;
@@ -332,7 +339,9 @@ function rbfw_collect_export_rows( $filters ) {
 				'coupon'           => isset( $ticket['rbfw_coupon_code'] ) ? (string) $ticket['rbfw_coupon_code'] : '',
 				'coupon_discount'  => isset( $ticket['rbfw_coupon_discount'] ) ? (float) $ticket['rbfw_coupon_discount'] : 0,
 				'security_deposit' => isset( $ticket['security_deposit_amount'] ) ? (float) $ticket['security_deposit_amount'] : 0,
-				'status'           => ucfirst( str_replace( 'wc-', '', $order_status ) ),
+				'status'           => function_exists( 'rbfw_get_booking_status_label' )
+					? rbfw_get_booking_status_label( str_replace( 'wc-', '', $order_status ) )
+					: ucfirst( str_replace( 'wc-', '', $order_status ) ),
 				// The WC order total belongs to the whole order; only attribute it
 				// to the first line so the column never double-counts a multi-item
 				// order when summed in a spreadsheet.
