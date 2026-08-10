@@ -440,7 +440,13 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                 }
             }
         }
-        $remaining_stock = max($variant_instock);
+        /* Headline figure for the whole requested range is the best-stocked size; per-size
+           limits are enforced at add-to-cart by rbfw_check_rental_availability(). Guarded
+           because max() throws on an empty array in PHP 8 — reachable when variations are
+           enabled but every configured row is missing its label, values or quantity. */
+        if ( ! empty( $variant_instock ) ) {
+            $remaining_stock = max($variant_instock);
+        }
     }
 
     /*end variation inventory*/
@@ -690,24 +696,29 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         $variant_instock = [];
 
         if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
-            $variant_q = [];
             foreach($rbfw_variations_data as $key=>$item1){
                 $field_label = isset($item1['field_label']) ? $item1['field_label'] : '';
                 if($field_label && !empty($item1['value']) && is_array($item1['value'])){
                     foreach ($item1['value'] as $key1=>$single){
-                        if(!empty($single['name'])){
-                            foreach($date_range as $date1){
-                                $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
-                            }
-                            $booked_quantity = array_column($variant_q, $single['name']);
-                            $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                        if(!empty($single['name']) && isset($single['quantity'])){
+                            /* This function already runs once per $date, so the booked count is
+                               for that single day. The previous code looped the whole date range
+                               here while still passing $date, recomputing one identical value
+                               once per day in the range before taking its max() — same result,
+                               O(days) wasted work per size per day. */
+                            $booked = total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return);
+                            $variant_instock[] = $single['quantity'] - $booked;
                         }
                     }
                 }
             }
-            $remaining_stock = max($variant_instock);
-
-
+            /* A date counts as sold out only when EVERY size is gone, so the day's headline
+               figure is the best-stocked size. Per-size limits are enforced at add-to-cart by
+               rbfw_check_rental_availability(); this value only drives calendar display.
+               Guarded because max() throws on an empty array in PHP 8. */
+            if ( ! empty( $variant_instock ) ) {
+                $remaining_stock = max($variant_instock);
+            }
         }
 
         $day_wise_inventory[$date] = $remaining_stock;

@@ -311,9 +311,11 @@
                             <span class="rbfw_ol_filter_ico"><?php echo rbfw_inv_icon( 'filter' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?></span>
                             <select id="rbfw_ol_filter_status" class="rbfw_ol_filter_select" aria-label="<?php esc_attr_e( 'Filter by status', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                 <option value=""><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <?php if ( function_exists( 'wc_get_order_statuses' ) ) :
-                                    foreach ( wc_get_order_statuses() as $rbfw_fs_key => $rbfw_fs_label ) : ?>
-                                        <option value="<?php echo esc_attr( str_replace( 'wc-', '', $rbfw_fs_key ) ); ?>"><?php echo esc_html( $rbfw_fs_label ); ?></option>
+                                <?php
+                                /* Includes Picked / Returned so the rows now badged with them stay filterable. */
+                                if ( function_exists( 'rbfw_get_booking_status_choices' ) ) :
+                                    foreach ( rbfw_get_booking_status_choices() as $rbfw_fs_key => $rbfw_fs_label ) : ?>
+                                        <option value="<?php echo esc_attr( $rbfw_fs_key ); ?>"><?php echo esc_html( $rbfw_fs_label ); ?></option>
                                     <?php endforeach;
                                 endif; ?>
                             </select>
@@ -402,7 +404,13 @@
                                     $order        = wc_get_order( $wc_order_id );
                                     if ( ! $order ) { continue; }
                                     if ( $order->get_status() === 'trash' ) { continue; }
-                                    $status      = $order->get_status();
+                                    /* Prefer the booking's own status when it is a rental-only one
+                                       (Picked / Returned): those ride on top of a WooCommerce status,
+                                       so reading the order alone would render a returned booking as
+                                       plain "Completed" and hide the return from this list. */
+                                    $status      = function_exists( 'rbfw_get_booking_display_status' )
+                                        ? rbfw_get_booking_display_status( $post_id, $order->get_status() )
+                                        : $order->get_status();
                                     $total_price = $order->get_total();
                                     $billing_phone = $order->get_billing_phone();
                                     $billing_email = $order->get_billing_email();
@@ -438,7 +446,7 @@
                                         <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Order Created', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
                                         <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking Start', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( $rbfw_ol_start_fmt, strtotime( $rbfw_start_datetime ) ) : '—' ); ?></td>
                                         <td class="rbfw_ol_td_date" data-th="<?php esc_attr_e( 'Booking End', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( $rbfw_ol_end_fmt, strtotime( $rbfw_end_datetime ) ) : '—' ); ?></td>
-                                        <td data-th="<?php esc_attr_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ol_badge rbfw_ol_badge_<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst( $status ) ); ?></span></td>
+                                        <td data-th="<?php esc_attr_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?>"><span class="rbfw_ol_badge rbfw_ol_badge_<?php echo esc_attr( $status ); ?>"><?php echo esc_html( function_exists( 'rbfw_get_booking_status_label' ) ? rbfw_get_booking_status_label( $status ) : ucfirst( $status ) ); ?></span></td>
                                         <td class="rbfw_ol_td_total" data-th="<?php esc_attr_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?>"><?php echo wp_kses_post( wc_price( $total_price ) ); ?></td>
                                         <td class="rbfw_ol_td_action" data-th="<?php esc_attr_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                             <div class="rbfw_ol_actions">
@@ -484,7 +492,11 @@
                     <div id="loader" class="rbfw_ol_loader" style="display: none;"><span class="rbfw_ol_spinner"></span></div>
 
                     <?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) {
-                        $rbfw_wc_statuses = function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : array();
+                        /* WooCommerce statuses plus Picked / Returned, so a return can be
+                           recorded from this list instead of only the booking detail screen. */
+                        $rbfw_wc_statuses = function_exists( 'rbfw_get_booking_status_choices' )
+                            ? rbfw_get_booking_status_choices()
+                            : ( function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : array() );
                         ?>
                         <div id="rbfw_ol_status_modal" class="rbfw_ol_status_modal" style="display:none;" aria-hidden="true">
                             <div class="rbfw_ol_status_modal_overlay"></div>
@@ -593,9 +605,12 @@
                                     <label class="rbfw_ol_export_label" for="rbfw_ol_export_status"><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                     <select id="rbfw_ol_export_status" class="rbfw_ol_export_select">
                                         <option value=""><?php esc_html_e( 'All Statuses', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                        <?php if ( function_exists( 'wc_get_order_statuses' ) ) :
-                                            foreach ( wc_get_order_statuses() as $rbfw_es_key => $rbfw_es_label ) : ?>
-                                                <option value="<?php echo esc_attr( str_replace( 'wc-', '', $rbfw_es_key ) ); ?>"><?php echo esc_html( $rbfw_es_label ); ?></option>
+                                        <?php
+                                        /* Includes Picked / Returned; rbfw_order_export.php resolves the
+                                           same display status, so these options match real rows. */
+                                        if ( function_exists( 'rbfw_get_booking_status_choices' ) ) :
+                                            foreach ( rbfw_get_booking_status_choices() as $rbfw_es_key => $rbfw_es_label ) : ?>
+                                                <option value="<?php echo esc_attr( $rbfw_es_key ); ?>"><?php echo esc_html( $rbfw_es_label ); ?></option>
                                             <?php endforeach;
                                         endif; ?>
                                     </select>

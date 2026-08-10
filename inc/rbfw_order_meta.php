@@ -38,9 +38,15 @@ function rbfw_update_order_status_callback() {
     }
 
     // Build an allow-list of valid statuses ( slug without the wc- prefix => label ).
-    $allowed = array();
-    foreach ( wc_get_order_statuses() as $key => $label ) {
-        $allowed[ str_replace( 'wc-', '', $key ) ] = $label;
+    // Includes the rental-only statuses ( Picked / Returned ) so a return can be
+    // recorded from the Order List, not just the booking detail screen.
+    $allowed = function_exists( 'rbfw_get_booking_status_choices' )
+        ? rbfw_get_booking_status_choices()
+        : array();
+    if ( empty( $allowed ) ) {
+        foreach ( wc_get_order_statuses() as $key => $label ) {
+            $allowed[ str_replace( 'wc-', '', $key ) ] = $label;
+        }
     }
     if ( ! isset( $allowed[ $new_status ] ) ) {
         wp_send_json_error( array( 'message' => esc_html__( 'Invalid order status.', 'booking-and-rental-manager-for-woocommerce' ) ) );
@@ -52,18 +58,33 @@ function rbfw_update_order_status_callback() {
         wp_send_json_error( array( 'message' => esc_html__( 'Order not found.', 'booking-and-rental-manager-for-woocommerce' ) ) );
     }
 
-    // Nothing to do if the status is unchanged.
-    if ( $order->get_status() === $new_status ) {
+    // The WooCommerce status a rental-only status rides on ( picked -> processing,
+    // returned -> completed ). Mirrors the booking detail screen so both entry
+    // points move the order identically.
+    $wc_status = function_exists( 'rbfw_map_booking_status_to_wc' )
+        ? rbfw_map_booking_status_to_wc( $new_status )
+        : $new_status;
+
+    // Nothing to do if the status is unchanged. This must compare the BOOKING's
+    // status, not the order's: Picked and Returned both map onto a WooCommerce
+    // status, so comparing against the order would treat "Completed -> Returned"
+    // as a no-op and silently drop a genuine return.
+    $current_booking_status = get_post_meta( $post_id, 'rbfw_order_status', true );
+    if ( $current_booking_status === $new_status ) {
         wp_send_json_success( array(
             'status'       => $new_status,
-            'status_label' => ucfirst( $new_status ),
+            'status_label' => $allowed[ $new_status ],
             'message'      => esc_html__( 'Status is already set.', 'booking-and-rental-manager-for-woocommerce' ),
         ) );
     }
 
     // Update the WooCommerce order. This fires woocommerce_order_status_changed,
-    // which the plugin already hooks ( rbfw_wc_status_update ) for its own side effects.
-    $order->update_status( $new_status, '', true );
+    // which the plugin already hooks ( rbfw_wc_status_update ) for its own side effects
+    // — including writing the WooCommerce status back onto the booking. The rental
+    // status is therefore persisted AFTER this call so it always wins.
+    if ( $order->get_status() !== $wc_status ) {
+        $order->update_status( $wc_status, '', true );
+    }
 
     // Keep the booking CPT + reports + inventory in sync with the new status.
     update_post_meta( $post_id, 'rbfw_order_status', $new_status );
@@ -88,7 +109,7 @@ function rbfw_update_order_status_callback() {
 
     wp_send_json_success( array(
         'status'       => $new_status,
-        'status_label' => ucfirst( $new_status ),
+        'status_label' => $allowed[ $new_status ],
         'message'      => esc_html__( 'Order status updated.', 'booking-and-rental-manager-for-woocommerce' ),
     ) );
 }

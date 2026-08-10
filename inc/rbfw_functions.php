@@ -4158,6 +4158,114 @@ function rbfw_security_deposit( $post_id, $sub_total_price ) {
 
 		return array( 'security_deposit_amount' => $security_deposit_amount, 'security_deposit_desc' => $security_deposit_desc );
     }
+
+	/****************************************************
+	 * Booking statuses
+	 *
+	 * A rental has two independent lifecycles: the money (a WooCommerce order)
+	 * and the physical item (out with the customer, or back on the rack).
+	 * WooCommerce can only express the first, so the plugin stores the second on
+	 * the booking itself as rbfw_order_status. The helpers below are the single
+	 * source of truth for that combined status set, so every screen that offers
+	 * or renders a booking status stays consistent.
+	 ****************************************************/
+
+	/**
+	 * Booking statuses that exist only inside the plugin.
+	 *
+	 * Picked and Returned are deliberately NOT registered as WooCommerce order
+	 * statuses — they describe where the goods are, not what was paid. Any screen
+	 * that builds a status list from wc_get_order_statuses() alone will therefore
+	 * omit them and leave the rental half of the workflow unreachable.
+	 *
+	 * @return array<string,string> Status slug => translated label.
+	 */
+	function rbfw_get_rental_only_statuses() {
+		return apply_filters(
+			'rbfw_rental_only_statuses',
+			array(
+				'picked'   => esc_html__( 'Picked', 'booking-and-rental-manager-for-woocommerce' ),
+				'returned' => esc_html__( 'Returned', 'booking-and-rental-manager-for-woocommerce' ),
+			)
+		);
+	}
+
+	/**
+	 * Every status an admin may assign to a booking: WooCommerce's own plus the
+	 * rental-only ones.
+	 *
+	 * @return array<string,string> Slug (no wc- prefix) => translated label.
+	 */
+	function rbfw_get_booking_status_choices() {
+		$choices = array();
+		if ( function_exists( 'wc_get_order_statuses' ) ) {
+			foreach ( wc_get_order_statuses() as $key => $label ) {
+				$choices[ str_replace( 'wc-', '', $key ) ] = $label;
+			}
+		}
+
+		return array_merge( $choices, rbfw_get_rental_only_statuses() );
+	}
+
+	/**
+	 * The WooCommerce order status a booking status maps onto.
+	 *
+	 * A rental-only status still sits on top of a real order: the goods being out
+	 * means the order is Processing, and a completed rental means Completed. Both
+	 * the booking detail screen and the Order List use this so either entry point
+	 * moves the WooCommerce order the same way.
+	 *
+	 * @param string $status Booking status slug.
+	 * @return string WooCommerce status slug (no wc- prefix).
+	 */
+	function rbfw_map_booking_status_to_wc( $status ) {
+		$map = apply_filters(
+			'rbfw_booking_status_wc_map',
+			array(
+				'picked'   => 'processing',
+				'returned' => 'completed',
+			)
+		);
+
+		return isset( $map[ $status ] ) ? $map[ $status ] : $status;
+	}
+
+	/**
+	 * Human-readable label for a booking status, with a prettified-slug fallback
+	 * so an unknown or legacy value still renders sensibly.
+	 *
+	 * @param string $status Booking status slug.
+	 * @return string
+	 */
+	function rbfw_get_booking_status_label( $status ) {
+		$choices = rbfw_get_booking_status_choices();
+
+		return isset( $choices[ $status ] ) ? $choices[ $status ] : ucfirst( str_replace( '-', ' ', (string) $status ) );
+	}
+
+	/**
+	 * The status to display for a booking row.
+	 *
+	 * The WooCommerce order stays authoritative for payment state, but it cannot
+	 * represent Picked/Returned — a returned booking rides on a Completed order,
+	 * making it indistinguishable from one that never came back. When the booking
+	 * carries a rental-only status that is the more specific truth, so it wins;
+	 * otherwise the WooCommerce status is shown unchanged.
+	 *
+	 * @param int    $booking_id rbfw_order post id.
+	 * @param string $wc_status  Status of the linked WooCommerce order.
+	 * @return string
+	 */
+	function rbfw_get_booking_display_status( $booking_id, $wc_status = '' ) {
+		$booking_status = get_post_meta( $booking_id, 'rbfw_order_status', true );
+
+		if ( $booking_status && array_key_exists( $booking_status, rbfw_get_rental_only_statuses() ) ) {
+			return $booking_status;
+		}
+
+		return $wc_status;
+	}
+
 	/**
 	 * Get unique categories from post meta with key 'rbfw_categories' using WP_Query.
 	 *
