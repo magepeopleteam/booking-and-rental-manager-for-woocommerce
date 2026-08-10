@@ -646,7 +646,29 @@ function rbfw_price_calculation_sd(){
     jQuery('.management-costing span').text( wc_price_rbfw(rbfw_management_price));
 
     jQuery('.duration-costing span').text(wc_price_rbfw(rbfw_service_price));
-    jQuery('.extra_service_cost span').text(wc_price_rbfw(rbfw_es_service_price));
+
+    // Resource Cost line — value AND visibility, in one place.
+    //
+    // Every add-on control funnels through this function, but only some of the callers used
+    // to reveal the row: the checkbox switch toggled '.extra_service_cost.rbfw-cond', the
+    // timely steppers toggled '.resource-costing.extra_service_cost', and calculateServiceTotal()
+    // (the +/- steppers in the single-day slot table) toggled nothing at all. That row therefore
+    // stayed display:none while its price was silently added to the Subtotal — an add-on the
+    // customer paid for with no line of its own.
+    //
+    // The selector covers every markup variant in the templates, which spell the row
+    // differently: 'resource-costing extra_service_cost rbfw-cond' (single-day form),
+    // 'extra_service_cost rbfw-cond' (slot table) and 'resource-costing rbfw-cond' (timely).
+    // Scoped to the single-day summary box on purpose: multi-day and resort have their own
+    // '.resource-costing' row driven by md_script / resort_script, and this must never reach it.
+    var $rbfw_resource_line = jQuery('.rbfw_bikecarsd_price_summary, .rbfw_bikecarsd_price_summary_only')
+        .find('.extra_service_cost, li.resource-costing');
+    $rbfw_resource_line.find('span').text(wc_price_rbfw(rbfw_es_service_price));
+    if (rbfw_es_service_price > 0) {
+        $rbfw_resource_line.show();
+    } else {
+        $rbfw_resource_line.hide();
+    }
 
     // Variations surcharge line — only surfaced when a priced variant is selected.
     if (rbfw_variation_surcharge > 0) {

@@ -438,7 +438,8 @@ if(isset($post_id) && isset($active_tab)){
             </li>
 
             <?php if($extra_service_enable){ ?>
-                <li class="resource-costing rbfw-cond">
+                <?php // Hidden until an add-on is actually chosen; resort_script reveals it. ?>
+                <li class="resource-costing rbfw-cond" style="display:none;">
                     <?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                     <span class="price-figure" data-price="0">
                         <?php echo wp_kses_post(wc_price(0)); ?>

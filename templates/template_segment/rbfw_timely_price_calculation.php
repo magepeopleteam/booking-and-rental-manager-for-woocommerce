@@ -25,6 +25,8 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
             <?php echo wp_kses( wc_price( $duration_cost ) , rbfw_allowed_html()); ?>
         </li>
 
+        <?php // Server-rendered summary: omit the row entirely rather than printing a 0.00 line. ?>
+        <?php if ( $es_service_price > 0 ) { ?>
         <li class="resource-costing rbfw-cond">
 
             <?php
@@ -36,6 +38,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
             ?>
             <?php echo wp_kses( wc_price( $es_service_price ) , rbfw_allowed_html()); ?>
         </li>
+        <?php } ?>
 
         <li class="subtotal">
 
