@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.1
+Stable tag: 2.7.5
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -165,6 +165,37 @@ Appsero does not collect data by default. Data collection starts only after user
 Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+2.7.5
+Delivery and Collection added (Pro): distance-band pricing with a base fee, a free radius and a maximum distance, editable labels, and a per-item opt-out. Collection can be priced the same as delivery, on its own bands, or free.
+Customers pick a named delivery zone ("3 - 5 km - $5.00") instead of guessing a distance, and delivery and collection are shown, stored and invoiced as two separate lines. Every amount is recomputed on the server from the stored bands, so the browser can never lower the fee.
+Delivery required-field settings added: whether a delivery choice is mandatory (optional, at least one leg, or both legs), and whether address, contact number and delivery notes must be completed.
+Accounting payment methods added (card, cheque, cash, bank transfer). Editable in Settings > Payments, offered at the standalone checkout, and recordable on any booking from the Bookings screen, with revenue split by method.
+Bookings can now be filtered and sorted by rental date, not only by the date the order was placed. A search for 13 August finds a 12-14 August rental.
+Picked and Returned booking statuses now appear in the Order List column, badge, status filter, edit modal and export, so a return can be recorded without opening the booking.
+Rent type and location archives now use the plugin's own listing (grid/list toggle, left filter, price and Book Now) instead of the theme's blog archive, and an item's categories are shown as links on the single item page.
+New [rbfw_item_search] shortcode: an inline item-name search box.
+Payment setup surfaced inside the modern editor: a Payment Method card, a warning while the active booking flow has no usable gateway, and a popup that fixes it without leaving the item.
+New Booking Calendar setting to show customer names or the booking count on each day.
+Fixed bookings being completed with a 0,00 total on cached pages. An expired nonce now asks the customer to reload instead of adding an empty line to the cart.
+Fixed the same unit being booked twice on the same day when stock is not managed on the return date.
+Fixed per-rental tax never reaching WooCommerce. An item set to Taxable is now taxed at checkout, and the tax is shown in the booking summary.
+Fixed tax missing from the PDF receipt, e-mails, thank-you page and booking detail on High-Performance Order Storage sites.
+Fixed activating WooCommerce hijacking a working Standalone shop and asking again which booking mode to use.
+Fixed coupon rules in Standalone mode: the booking start date, billed days and customer e-mail are now read correctly, so weekday, blackout, booking-window, free-day and first-booking rules apply as configured. Validity dates are measured in site time, and a new per-coupon setting chooses whether that window is matched against the booking date or the redemption date.
+Blackout Dates and Valid From/To are now date pickers with removable chips, and the discount type cards no longer overlap.
+Fixed extra-service add-ons: the Resource Cost line now appears for the single-day slot table, zero lines and empty image placeholders are no longer rendered, and the add-on image lightbox works.
+Fixed the "Available Today" badge showing when today is an Off Day.
+Fixed block themes: the site header, navigation and footer now render correctly on rental item pages and on the new archives, with proper page gutters.
+Fixed WooCommerce's Featured Products block listing every product, and category, tag, attribute and stock filters being dropped from other product queries.
+Fixed a rental item becoming permanently unbookable when its hidden WooCommerce product was deleted. Broken links now repair themselves, and duplicating an item no longer shares the original's product.
+Fixed the booking form scrolling past itself after choosing a date or time. The step that was loaded is brought into view instead.
+Fixed missing item images in filtered search results when the photo lives only in the Gallery tab.
+Fixed the rent list "list" view rendering as a stacked card instead of a row.
+Fixed category filtering in [rent-list]: category names are accepted, and an item matching only the location is no longer returned.
+Fixed the Bookings Payment Method filter returning nothing for a method plainly shown in the column, and the dropdown listing only "offline".
+Fixed gateway settings overwriting unposted text fields with the string "off", which could erase a stored API key or label.
+Duration strings such as "3 days" are now translatable, and the translation bundle was regenerated (2927 to 3117 strings, all 7 locales merged with no translations lost).
+
 2.7.4
 Seasonal and date-wise Min/Max booking days are now actually applied — the booking calendars honour them and they are enforced when adding to the cart. Previously these values were saved but never read.
 Date-wise Min/Max ranges now work in the [rbfw_booking_search] widget as well.
@@ -178,6 +209,9 @@ Sample data import moved to a non-blocking corner widget with progress.
 Fixed the [rbfw_booking_search] form layout on mobile.
 Fixed the calendar still showing bookings deleted from the Bookings page.
 Fixed modern editor rent-type switching and the Discount addon card.
+Fixed duplicate rental items appearing in the WooCommerce cart.
+Fixed the Booking Mode never being stored when the admin confirmed the flow that was already selected.
+Fixed cart page notices on items saved without security deposit or fee data.
 Fixed documentation links.
 
 2.7.3
