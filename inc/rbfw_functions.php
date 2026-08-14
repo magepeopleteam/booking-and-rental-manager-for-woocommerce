@@ -1691,6 +1691,30 @@ function rbfw_url_exclude_search_engine() {
 
 		return $remaining_stock;
 	}
+/**
+ * Make a configured rental duration safe to do arithmetic and DateTime maths with.
+ *
+ * A rate row created for a fixed-clock item (Enable duration-based rental items =
+ * on) stores an empty `duration`, because its window comes from start_time/end_time
+ * instead. If such a row is ever run through the duration branch — the browser posts
+ * `enable_specific_duration=off`, a stale cached form, or a hand-made request — the
+ * old code fed that empty string straight into `$duration * 24` and
+ * `DateTime::modify( "+$total_hours hours" )`. On PHP 8 the first raises
+ * `TypeError: Unsupported operand types` and the second a
+ * `DateMalformedStringException`, so the whole request died with a critical error
+ * instead of the endpoint simply returning no availability.
+ *
+ * Returning 0 for anything non-numeric keeps every valid configuration byte-identical
+ * (the caller's existing expression is untouched) and turns the crash into a
+ * zero-length window, which the availability maths already handles.
+ *
+ * @param mixed $duration Raw `duration` / duration qty from the rate row or POST.
+ * @return int|string|float Original value when numeric, otherwise 0.
+ */
+function rbfw_sanitize_duration_value( $duration ) {
+	return is_numeric( $duration ) ? $duration : 0;
+}
+
 function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time ) {
     if ( empty( $post_id ) ) {
         return;
@@ -1715,19 +1739,31 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         'processing' => 'processing',
         'completed'  => 'completed',
     ];
+    /* Resolve every reservation's status against WooCommerce in ONE query before
+       counting. The mirrored rbfw_order_status is only a snapshot taken when the
+       record was written and can be permanently stale — see
+       rbfw_resolve_inventory_status() for the race that causes it. Trusting the
+       snapshot let a paid booking quietly stop holding stock, so a slot that was
+       already full kept selling. */
+    $rbfw_live_statuses = ( is_array( $rbfw_inventory ) && ! empty( $rbfw_inventory ) && function_exists( 'rbfw_get_live_order_statuses' ) )
+        ? rbfw_get_live_order_statuses( array_keys( $rbfw_inventory ) )
+        : array();
+
     if ( ! empty( $rbfw_inventory ) ) {
         foreach ( $rbfw_inventory as $key => $inventory ) {
             $rbfw_item_quantity = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
 
+            $checkValues = function_exists( 'rbfw_resolve_inventory_status' )
+                ? rbfw_resolve_inventory_status( $key, isset( $inventory['rbfw_order_status'] ) ? $inventory['rbfw_order_status'] : '', $rbfw_live_statuses )
+                : ( isset( $inventory['rbfw_order_status'] ) ? $inventory['rbfw_order_status'] : '' );
+
             $partial_stock = true;
-            if($inventory['rbfw_order_status'] == 'partially-paid' && $mepp_reduce_stock_timely=='deposit'){
+            if($checkValues == 'partially-paid' && $mepp_reduce_stock_timely=='deposit'){
                 $partial_stock = false;
             }
 
-            $checkValues = $inventory['rbfw_order_status'];
 
-
-            if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
+            if ( (in_array($checkValues, $inventory_managed_order_status) || $checkValues == 'picked' || ($inventory_based_on_return == 'yes' && $checkValues == 'returned')) && $partial_stock) {
                 if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] ) {
                     $inventory_start_date = $inventory['rbfw_start_date_ymd'];
                     $inventory_end_date   = $inventory['rbfw_end_date_ymd'];
@@ -3110,6 +3146,8 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
                     $for_end_date_time = $start_date_time;
                     $d_type   = $value['d_type'];
                     $duration = $value['duration'];
+                    /* Empty duration on a fixed-clock rate row is fatal on PHP 8 (TypeError + DateMalformedStringException) — see rbfw_sanitize_duration_value(). */
+                    $duration = rbfw_sanitize_duration_value( $duration );
                     $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int) $duration * 24 : ( $d_type == 'Weeks' ? (int) $duration * 24 * 7 : (int) $duration * 24 * 30 ) ) );
                     $for_end_date_time->modify( "+$total_hours hours" );
                     $end_date = $for_end_date_time->format( 'Y-m-d' );

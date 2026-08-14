@@ -948,6 +948,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 // quantity). So the duration rate must never be multiplied by the variation
                 // total — force the base quantity to 1 whenever a value is selected. Done
                 // server-side too (not just in JS) so the cart price is authoritative.
+                $rbfw_sd_variation_locked_qty = false;
                 if ( get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes'
                     && isset( $sd_input_data_sabitized['rbfw_variation_qty'] )
                     && is_array( $sd_input_data_sabitized['rbfw_variation_qty'] ) ) {
@@ -957,7 +958,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                         }
                         foreach ( $rbfw_vq_values as $rbfw_vq ) {
                             if ( (int) $rbfw_vq > 0 ) {
-                                $rbfw_item_quantity = 1;
+                                $rbfw_item_quantity           = 1;
+                                $rbfw_sd_variation_locked_qty = true;
                                 break 2;
                             }
                         }
@@ -979,6 +981,21 @@ if (!class_exists('RBFW_Woocommerce')) {
                             }
                         }
                         $a ++;
+                    }
+
+                    /* The time-slot table posts its units per rate row (rbfw_bikecarsd_info),
+                       not through the rbfw_item_quantity field, which stays at its posted
+                       default of 1. Inventory subtracts rbfw_item_quantity, so a paid
+                       3-unit booking only ever reserved ONE unit and the remaining two
+                       stayed on sale. Carry the real unit count across. Pricing is derived
+                       from $rbfw_type_info, never from this value, so totals are unchanged.
+                       Variation bookings are excluded: there the base rate is deliberately
+                       charged once and per-value stock is reserved via rbfw_variation_info. */
+                    if ( ! $rbfw_sd_variation_locked_qty && ! empty( $rbfw_type_info ) ) {
+                        $rbfw_sd_units = array_sum( array_map( 'absint', $rbfw_type_info ) );
+                        if ( $rbfw_sd_units > 0 ) {
+                            $rbfw_item_quantity = $rbfw_sd_units;
+                        }
                     }
                 }
 
@@ -1010,6 +1027,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                                 } catch ( Exception $e ) {
                                     $start_date_time = new DateTime();
                                 }
+                                /* Empty duration on a fixed-clock rate row is fatal on PHP 8 (TypeError + DateMalformedStringException) — see rbfw_sanitize_duration_value(). */
+                                $duration = rbfw_sanitize_duration_value( $duration );
                                 $total_hours     = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? $duration * 24 : ( $d_type == 'Weeks' ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
                                 $start_date_time->modify( "+$total_hours hours" );
                                 $end_date = $start_date_time->format( 'Y-m-d' );
@@ -1167,6 +1186,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 } catch ( Exception $e ) {
                     $start_date_time = new DateTime();
                 }
+                /* Empty duration on a fixed-clock rate row is fatal on PHP 8 (TypeError + DateMalformedStringException) — see rbfw_sanitize_duration_value(). */
+                $durationQty = rbfw_sanitize_duration_value( $durationQty );
                 $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 :($durationType == 'weekly'?$durationQty * 24 * 7: $durationQty * 24 * 30)));
 
                 $start_date_time->modify("+$total_hours hours");

@@ -2765,6 +2765,121 @@ function rbfw_update_inventory_stock() {
  * ===================================================================== */
 
 /**
+ * Statuses the plugin owns that WooCommerce knows nothing about.
+ *
+ * These are written into the inventory mirror by the rental workflow (picked up,
+ * returned, partially paid) and have no equivalent on the WooCommerce order, so
+ * they must survive status resolution instead of being overwritten by whatever
+ * the order happens to say.
+ *
+ * @return string[]
+ */
+function rbfw_get_plugin_only_order_statuses() {
+	return apply_filters( 'rbfw_plugin_only_order_statuses', array( 'picked', 'returned', 'partially-paid' ) );
+}
+
+/**
+ * Fetch the *live* WooCommerce status for many orders in a single query.
+ *
+ * Reads the order store directly (HPOS table or the legacy shop_order posts)
+ * rather than hydrating order objects: an inventory map can hold hundreds of
+ * entries and availability is evaluated on every date/time change, so
+ * wc_get_order() per entry would be far too expensive. Results are memoised for
+ * the request.
+ *
+ * Ids that are absent from the result are simply not WooCommerce orders — a
+ * Standalone/native booking, or an order that has since been deleted — and the
+ * caller keeps the mirrored status for those.
+ *
+ * @param int[] $order_ids
+ * @return array<int,string> order id => status slug, without the wc- prefix.
+ */
+function rbfw_get_live_order_statuses( $order_ids ) {
+	static $cache = array();
+
+	$order_ids = array_values( array_unique( array_filter( array_map( 'absint', (array) $order_ids ) ) ) );
+	if ( empty( $order_ids ) ) {
+		return array();
+	}
+
+	$missing = array_diff( $order_ids, array_keys( $cache ) );
+	if ( ! empty( $missing ) ) {
+		global $wpdb;
+		$placeholders = implode( ',', array_fill( 0, count( $missing ), '%d' ) );
+		$hpos         = class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' )
+			&& \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+
+		if ( $hpos ) {
+			$sql = "SELECT id AS order_id, status FROM {$wpdb->prefix}wc_orders WHERE id IN ( $placeholders )";
+		} else {
+			$sql = "SELECT ID AS order_id, post_status AS status FROM {$wpdb->posts} WHERE ID IN ( $placeholders ) AND post_type = 'shop_order'";
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- placeholders built from a counted int array.
+		$rows = $wpdb->get_results( $wpdb->prepare( $sql, $missing ) );
+		foreach ( (array) $rows as $row ) {
+			$cache[ (int) $row->order_id ] = preg_replace( '/^wc-/', '', (string) $row->status );
+		}
+		// Remember the misses too, so a Standalone booking is not re-queried every call.
+		foreach ( $missing as $id ) {
+			if ( ! isset( $cache[ $id ] ) ) {
+				$cache[ $id ] = null;
+			}
+		}
+	}
+
+	$out = array();
+	foreach ( $order_ids as $id ) {
+		if ( ! empty( $cache[ $id ] ) ) {
+			$out[ $id ] = $cache[ $id ];
+		}
+	}
+
+	return $out;
+}
+
+/**
+ * Effective status of one inventory entry, with WooCommerce as the authority.
+ *
+ * The mirrored rbfw_order_status is a snapshot taken when the reservation record
+ * was written, and it can be permanently wrong: rbfw_update_inventory_extra()
+ * silently does nothing when woocommerce_order_status_changed fires *before* the
+ * record exists. With a redirect/webhook gateway (Stripe) the order is created
+ * `pending` and confirmed `processing` a second or two later, racing the
+ * thank-you request that writes the record — so the correction is dropped and the
+ * reservation stays `pending` for ever. `pending` is not a managed status, so
+ * that booking silently stops holding stock and the slot resells.
+ *
+ * Resolving against the order at read time repairs existing bad records without a
+ * migration and closes the race for good. Plugin-only statuses (picked/returned/
+ * partially-paid) are kept, as WooCommerce has no opinion on them.
+ *
+ * @param int    $order_id      Inventory key (WC order id, or a Standalone booking id).
+ * @param string $mirror_status Status stored on the inventory entry.
+ * @param array  $live_statuses Result of rbfw_get_live_order_statuses().
+ * @return string
+ */
+function rbfw_resolve_inventory_status( $order_id, $mirror_status, $live_statuses = array() ) {
+	$mirror_status = (string) $mirror_status;
+
+	if ( in_array( $mirror_status, rbfw_get_plugin_only_order_statuses(), true ) ) {
+		return $mirror_status;
+	}
+
+	$order_id = absint( $order_id );
+	$resolved = ! empty( $live_statuses[ $order_id ] ) ? $live_statuses[ $order_id ] : $mirror_status;
+
+	/**
+	 * Filter the effective status used when counting a reservation against stock.
+	 *
+	 * @param string $resolved      Status the availability math will use.
+	 * @param int    $order_id      Inventory key.
+	 * @param string $mirror_status Status stored on the inventory entry.
+	 */
+	return apply_filters( 'rbfw_resolved_inventory_status', $resolved, $order_id, $mirror_status );
+}
+
+/**
  * Order statuses that occupy a rental slot for *server-side validation*.
  *
  * Starts from the admin-configured managed statuses

@@ -277,6 +277,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $durationType_display = rbfw_format_duration_unit( $durationUnit, $durationQty );
 
             $start_date_time = new DateTime($start_date.' '.$start_time);
+            /* Empty duration on a fixed-clock rate row is fatal on PHP 8 (TypeError + DateMalformedStringException) — see rbfw_sanitize_duration_value(). */
+            $durationQty = rbfw_sanitize_duration_value( $durationQty );
             $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : ($durationType == 'weekly' ? $durationQty * 24 * 7 : $durationQty * 24 * 30)));
             $formatted_start_date = $start_date_time->format('Y-m-d');
             $start_date_time->modify("+$total_hours hours");
