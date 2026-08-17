@@ -1,0 +1,387 @@
+/**
+ * Frontend styles for the embedded Gravity form.
+ *
+ * Everything here is scoped inside .rbfw-gf-wrap. The same form is usually also
+ * published on a full-width page of its own, where the site's Gravity Forms
+ * styling plugin is right to lay it out wide — these rules must not touch that.
+ *
+ * The layout problem this solves: the form is embedded in the rental booking
+ * column, which is a narrow sidebar (~440px) at every viewport width. A viewport
+ * media query is therefore the wrong tool — the viewport can be 2560px while the
+ * container is still 440px. The form container is a containment context instead,
+ * and the breakpoints below are container queries.
+ */
+
+.rbfw-gf-wrap {
+	margin: 0 0 24px;
+	max-width: 100%;
+	min-width: 0;
+}
+
+.rbfw-gf-title {
+	margin: 0 0 12px;
+	font-size: 1.15em;
+	line-height: 1.3;
+	overflow-wrap: break-word;
+}
+
+/* The containment context the @container rules below resolve against. */
+.rbfw-gf-form {
+	container-type: inline-size;
+	container-name: rbfwgf;
+	max-width: 100%;
+	min-width: 0;
+}
+
+/**
+ * Gravity Forms styling plugins commonly print `body #gform_wrapper_N { width:<px> }`
+ * inline, after this stylesheet and with an id selector, so ordering and plain
+ * specificity both lose to it — hence !important. Re-scoping the wrapper to its
+ * container is what stops the form overflowing and being clipped on the right.
+ */
+body .rbfw-gf-wrap .gform_wrapper,
+body .rbfw-gf-wrap [id^="gform_wrapper_"] {
+	width: 100% !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+
+	/**
+	 * The styling plugin sets `padding: 70px` on the wrapper, which is right for
+	 * the full-width page this form also lives on but costs 140px of a ~440px
+	 * booking column — a third of the width. Rewritten on all four sides rather
+	 * than only the horizontal ones: zeroing left/right alone left the content
+	 * flush against the rounded border while the 70px top/bottom stayed, which
+	 * read as a large empty band above the first field.
+	 *
+	 * The card's border and 20px radius are deliberately left alone; only the
+	 * spacing is rescaled to the container.
+	 */
+	padding: 20px !important;
+	box-sizing: border-box;
+}
+
+/* Nothing inside may establish a wider floor than the container. */
+body .rbfw-gf-wrap .gform_wrapper *,
+body .rbfw-gf-wrap [id^="gform_wrapper_"] * {
+	min-width: 0;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+/* Controls stretch to the column rather than keeping a fixed pixel width. */
+body .rbfw-gf-wrap input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+body .rbfw-gf-wrap select,
+body .rbfw-gf-wrap textarea {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+body .rbfw-gf-wrap img {
+	height: auto;
+}
+
+/**
+ * Single column by default. GF lays fields on a 12-column grid and this form
+ * uses third / quarter / five spans, which collapse to unusable slivers in a
+ * sidebar. The spans are restored further down once the container is wide enough
+ * to carry them.
+ */
+body .rbfw-gf-wrap .gform_fields {
+	display: grid !important;
+	grid-template-columns: 1fr !important;
+	gap: 16px !important;
+}
+
+body .rbfw-gf-wrap .gfield {
+	grid-column: 1 / -1 !important;
+	max-width: 100%;
+}
+
+/**
+ * Choice lists.
+ *
+ * Two different renderers have to be handled here.
+ *
+ * 1. Plain Gravity Forms choices — a list of .gchoice inside .gfield_radio.
+ * 2. The Enhanced Choices add-on — when active on a field it marks the field
+ *    `.ec-enabled`, moves the real inputs into an `.ec-sr` (visually hidden)
+ *    container, and builds the visible UI as `.ec-cards-wrap > .ec-card` in
+ *    JavaScript. Styling .gchoice on those fields does nothing at all, because
+ *    .ec-sr is clipped to a 1px box.
+ *
+ * The grid below is therefore restricted to fields Enhanced Choices has NOT
+ * taken over, so it cannot fight that add-on's flex layout.
+ */
+body .rbfw-gf-wrap .gfield:not(.ec-enabled) .gfield_radio,
+body .rbfw-gf-wrap .gfield:not(.ec-enabled) .gfield_checkbox {
+	display: grid !important;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+	gap: 10px !important;
+	width: 100% !important;
+}
+
+/**
+ * Plain GF choices carry ready-classes such as `gf_list_4col` / `gf_list_5col`,
+ * which pin an explicit percentage width per choice. Releasing it lets the grid
+ * above choose the column count from the space actually available.
+ */
+body .rbfw-gf-wrap .gfield:not(.ec-enabled) .gchoice {
+	width: auto !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	float: none !important;
+}
+
+body .rbfw-gf-wrap .gfield:not(.ec-enabled) .gchoice label {
+	display: block;
+	overflow-wrap: break-word;
+	word-break: normal;
+	hyphens: none;
+	line-height: 1.3;
+}
+
+/**
+ * Enhanced Choices cards.
+ *
+ * Its own responsive system is driven by VIEWPORT media queries — .ec-cols--N
+ * above 1080px, .ec-cols-md--N from 640px, .ec-cols-sm--N below. That cannot see
+ * that this form sits in a ~440px booking column: on a desktop screen a field
+ * configured for five columns keeps five columns, giving each card about 65px
+ * and wrapping its label one letter per line.
+ *
+ * Rather than trying to out-guess each ec-cols--N rule, the row is allowed to
+ * wrap and the cards are given a flex basis instead of a fixed percentage, so
+ * they reflow to fit whatever width they really have.
+ */
+body .rbfw-gf-wrap .ec-cards-wrap {
+	--ec-column-spacing: 12px;
+	display: flex !important;
+	flex-direction: row !important;
+	flex-wrap: wrap !important;
+	gap: 12px !important;
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+body .rbfw-gf-wrap .ec-card {
+	/* Two per row in the booking column; widened by the container query below. */
+	flex: 1 1 calc(50% - 12px) !important;
+	width: auto !important;
+	max-width: 100% !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+}
+
+/**
+ * Card artwork. Enhanced Choices strips the width/height attributes and sizes
+ * images from --ec-image-height, wrapping them in an aspect-ratio box. Both the
+ * custom property and a hard cap are set: the property is the supported way in,
+ * the cap covers the aspect-ratio wrapper, which the property does not govern.
+ */
+body .rbfw-gf-wrap .ec-cards-wrap,
+body .rbfw-gf-wrap .ec-card {
+	--ec-image-height: 80px;
+}
+
+body .rbfw-gf-wrap .ec-image {
+	height: auto !important;
+	max-height: 80px !important;
+	width: auto !important;
+	max-width: 100% !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	object-fit: contain !important;
+}
+
+body .rbfw-gf-wrap .ec-fluid-wrapper {
+	aspect-ratio: auto !important;
+	max-height: 80px !important;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Card text stays readable at card width — never broken per character. */
+body .rbfw-gf-wrap .ec-card .ec-cmp-title,
+body .rbfw-gf-wrap .ec-card .ec-cmp-text,
+body .rbfw-gf-wrap .ec-card p,
+body .rbfw-gf-wrap .ec-card span {
+	overflow-wrap: break-word;
+	word-break: normal;
+	hyphens: none;
+}
+
+/* Multi-input fields (Name, Address) stack in a narrow column. */
+body .rbfw-gf-wrap .ginput_complex {
+	display: grid !important;
+	grid-template-columns: 1fr !important;
+	gap: 10px !important;
+}
+
+/* Page/step footer: let the buttons wrap rather than push the form wide. */
+body .rbfw-gf-wrap .gform_page_footer,
+body .rbfw-gf-wrap .gform_footer {
+	display: flex !important;
+	flex-wrap: wrap !important;
+	gap: 10px !important;
+	width: 100% !important;
+}
+
+body .rbfw-gf-wrap .gform_page_footer input[type="submit"],
+body .rbfw-gf-wrap .gform_page_footer input[type="button"],
+body .rbfw-gf-wrap .gform_footer input[type="submit"] {
+	width: auto !important;
+	max-width: 100% !important;
+}
+
+/* The step progress bar must never be the thing that forces the overflow. */
+body .rbfw-gf-wrap .gf_progressbar,
+body .rbfw-gf-wrap .gf_progressbar_wrapper {
+	width: 100% !important;
+	max-width: 100% !important;
+}
+
+/* Validation summaries and long words break instead of stretching the column. */
+/**
+ * overflow-wrap only breaks a word that cannot fit on a line of its own.
+ * `word-break: break-word` is deliberately NOT used here: in a tight column it
+ * breaks mid-word at any character, which is what turned "Corporate / Family
+ * Day" into a vertical column of single letters.
+ */
+body .rbfw-gf-wrap .gform_validation_errors,
+body .rbfw-gf-wrap .gfield_description,
+body .rbfw-gf-wrap .gfield_label,
+body .rbfw-gf-wrap .gform_wrapper p {
+	overflow-wrap: break-word;
+	word-break: normal;
+	hyphens: none;
+}
+
+/* Choice labels read as labels, not as justified text. */
+body .rbfw-gf-wrap .gchoice label {
+	display: block;
+	text-align: center;
+	overflow-wrap: break-word;
+	word-break: normal;
+	hyphens: none;
+	line-height: 1.3;
+}
+
+/* A wide table inside a form scrolls in its own box, never the page. */
+body .rbfw-gf-wrap table {
+	display: block;
+	overflow-x: auto;
+	max-width: 100%;
+}
+
+/**
+ * Roomier containers get the multi-column layout back. Container queries, so
+ * this reflects the space the form actually has — a wide viewport with a narrow
+ * booking column stays single-column, which is the case on the rental pages.
+ */
+@container rbfwgf (min-width: 560px) {
+	body .rbfw-gf-wrap .gform_fields {
+		grid-template-columns: repeat(12, 1fr) !important;
+	}
+	body .rbfw-gf-wrap .gfield--width-full     { grid-column: span 12 !important; }
+	body .rbfw-gf-wrap .gfield--width-half     { grid-column: span 6 !important; }
+	body .rbfw-gf-wrap .gfield--width-third    { grid-column: span 4 !important; }
+	body .rbfw-gf-wrap .gfield--width-two-thirds { grid-column: span 8 !important; }
+	body .rbfw-gf-wrap .gfield--width-quarter  { grid-column: span 3 !important; }
+	body .rbfw-gf-wrap .gfield--width-three-quarter { grid-column: span 9 !important; }
+	body .rbfw-gf-wrap .gfield--width-five     { grid-column: span 5 !important; }
+	body .rbfw-gf-wrap .gfield--width-seven    { grid-column: span 7 !important; }
+
+	body .rbfw-gf-wrap .ginput_complex {
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+	}
+
+	/* Room for three cards per row once the container can carry them. */
+	body .rbfw-gf-wrap .ec-card {
+		flex-basis: calc(33.333% - 12px) !important;
+	}
+}
+
+@container rbfwgf (min-width: 860px) {
+	body .rbfw-gf-wrap .ec-card {
+		flex-basis: calc(25% - 12px) !important;
+	}
+}
+
+/**
+ * Give the card back its generous inset wherever there is room for it, so a
+ * wide placement still looks like the design the styling plugin intended.
+ */
+@container rbfwgf (min-width: 560px) {
+	body .rbfw-gf-wrap .gform_wrapper,
+	body .rbfw-gf-wrap [id^="gform_wrapper_"] {
+		padding: 32px !important;
+	}
+}
+
+@container rbfwgf (min-width: 860px) {
+	body .rbfw-gf-wrap .gform_wrapper,
+	body .rbfw-gf-wrap [id^="gform_wrapper_"] {
+		padding: 48px !important;
+	}
+}
+
+/**
+ * The section heading is this module's own markup, sitting outside the card. Keep
+ * it optically aligned with the card's left border rather than its inner text,
+ * and stop the descenders colliding with the card below.
+ */
+.rbfw-gf-title {
+	padding: 0 2px;
+}
+
+/* Browsers without container query support: keep the safe single column, but
+   don't leave the choice cards uncomfortably tight. */
+@supports not (container-type: inline-size) {
+	body .rbfw-gf-wrap .gfield_radio,
+	body .rbfw-gf-wrap .gfield_checkbox {
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+	}
+}
+
+/* ── Gate + status notes ─────────────────────────────────────────────────── */
+
+.rbfw-gf-gate-note,
+.rbfw-gf-done {
+	margin: 12px 0 0;
+	padding: 10px 14px;
+	border-radius: 4px;
+	font-size: 0.9em;
+	line-height: 1.5;
+	overflow-wrap: break-word;
+}
+
+.rbfw-gf-gate-note {
+	background: #fff8e5;
+	border-left: 4px solid #f0b429;
+	color: #6b4e00;
+}
+
+.rbfw-gf-done {
+	background: #eef8f1;
+	border-left: 4px solid #2c9a5f;
+	color: #1c5c39;
+}
+
+/**
+ * The booking form is hidden, not removed: its scripts bind on page load and the
+ * plugin's availability AJAX expects its inputs to be in the DOM.
+ */
+form.mp_rbfw_ticket_form.rbfw-gf-gated {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.rbfw-gf-wrap * {
+		animation: none !important;
+		transition: none !important;
+	}
+}

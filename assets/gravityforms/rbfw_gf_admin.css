@@ -1,0 +1,113 @@
+/**
+ * Classic edit-screen metabox only.
+ *
+ * The modern editor panel deliberately has no styles here — it renders with the
+ * editor's own .rbfw-me-card / .rbfw-me-field classes so it matches the sections
+ * shipped with the editor and picks up any future restyle of them automatically.
+ */
+
+.rbfw-gf-panel .rbfw-gf-field {
+	display: block;
+	margin: 0 0 14px;
+}
+
+.rbfw-gf-panel .rbfw-gf-field label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.rbfw-gf-panel .rbfw-gf-help {
+	display: block;
+	margin-top: 4px;
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.rbfw-gf-entry-box p {
+	margin: 0 0 8px;
+}
+
+.rbfw-gf-entry-box p:last-child {
+	margin-bottom: 0;
+}
+
+.rbfw-gf-entry-box .rbfw-gf-muted {
+	color: #646970;
+}
+
+/* ── Booking questions on the Bookings listing ───────────────────────────── */
+
+.rbfw-gf-answers-row > td {
+	background: #f6f7f7;
+	border-top: 0;
+	padding: 0 12px 12px;
+}
+
+.rbfw-gf-answers {
+	margin: 0;
+	font-size: 13px;
+}
+
+.rbfw-gf-answers > summary {
+	cursor: pointer;
+	padding: 8px 0;
+	color: #2271b1;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	list-style: revert;
+}
+
+.rbfw-gf-answers > summary .dashicons {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+}
+
+.rbfw-gf-answers[open] > summary {
+	font-weight: 600;
+}
+
+.rbfw-gf-answers .rbfw-gf-entry-link {
+	margin-left: auto;
+	font-weight: 400;
+	font-size: 12px;
+}
+
+.rbfw-gf-answers-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	overflow: hidden;
+	table-layout: fixed;
+}
+
+.rbfw-gf-answers-table th,
+.rbfw-gf-answers-table td {
+	padding: 7px 12px;
+	border-bottom: 1px solid #f0f0f1;
+	text-align: left;
+	vertical-align: top;
+	overflow-wrap: break-word;
+	word-break: normal;
+}
+
+.rbfw-gf-answers-table th {
+	width: 34%;
+	font-weight: 600;
+	color: #1d2327;
+	background: #fbfbfc;
+}
+
+.rbfw-gf-answers-table tr:last-child th,
+.rbfw-gf-answers-table tr:last-child td {
+	border-bottom: 0;
+}
+
+@media screen and (max-width: 782px) {
+	.rbfw-gf-answers-table th { width: 42%; }
+}
