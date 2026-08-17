@@ -83,6 +83,11 @@ require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_Normalizer.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Reservation_Sync.php';
 require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Booking_List_Table.php';
 
+// ---- Gravity Forms integration (inert unless Gravity Forms is active) ----
+// Attaches an admin-chosen Gravity Form to a rental item and folds the answers
+// into rbfw_regf_info, so they surface wherever registration data already does.
+require_once RBFW_PLUGIN_DIR . '/inc/gravityforms/RBFW_GF_Bridge.php';
+
 
 
 add_action('init', 'rbfw_new_installation_or_update');

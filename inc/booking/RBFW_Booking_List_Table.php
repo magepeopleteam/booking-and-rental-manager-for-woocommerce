@@ -32,6 +32,9 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 		const MENU_SLUG = 'rbfw_booking_orders';
 		const PER_PAGE  = 20;
 
+		/** Columns in the listing — the colspan any injected full-width row must use. */
+		const COLUMN_COUNT = 7;
+
 		public function __construct() {
 			// Stand down entirely when Pro is active — Pro owns the same menu slug.
 			if ( function_exists( 'rbfw_check_pro_active' ) && rbfw_check_pro_active() ) {
@@ -277,6 +280,17 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 				</td>
 			</tr>
 			<?php
+			/**
+			 * Extra full-width row directly beneath a booking.
+			 *
+			 * A listener must emit a complete <tr> whose cell spans
+			 * self::COLUMN_COUNT columns, or the table markup breaks. Used by the
+			 * Gravity Forms module to show the customer's answers inline, since the
+			 * free listing has no per-booking detail view of its own.
+			 *
+			 * @param array $row Normalised booking row.
+			 */
+			do_action( 'rbfw_booking_list_after_row', $row );
 		}
 
 		private function render_pagination( $current, $pages, $total ) {
