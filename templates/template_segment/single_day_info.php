@@ -463,7 +463,9 @@ if(isset($_POST['post_id'])){
                     <ul class="rbfw-ul">
                         <li class="duration-costing rbfw-cond">
                             <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
-                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            <span class="price-figure">
+                                <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            </span>
                         </li>
 
                         <?php
@@ -489,18 +491,24 @@ if(isset($_POST['post_id'])){
                             <?php // Carries both class names: different scripts target this row by each of them. ?>
                             <li class="resource-costing extra_service_cost rbfw-cond" style="display: none">
                                 <?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>
-                                <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                                <span class="price-figure">
+                                    <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                                </span>
                             </li>
                         <?php } ?>
 
                         <li class="variation-costing rbfw-cond" style="display: none">
                             <?php echo esc_html__( 'Variations','booking-and-rental-manager-for-woocommerce' ); ?>
-                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            <span class="price-figure">
+                                <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            </span>
                         </li>
 
                         <li class="subtotal">
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
-                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            <span class="price-figure">
+                                <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            </span>
                         </li>
 
                         <?php // Tax the item is configured for, as WooCommerce will charge it. ?>
