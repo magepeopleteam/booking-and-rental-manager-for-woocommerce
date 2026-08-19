@@ -977,7 +977,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			// indent sub-categories beneath their parent.
 			$all_cat_terms   = $this->order_cat_terms_hierarchically( $all_cat_terms );
 			$saved_cat_meta  = $post_id ? get_post_meta( $post_id, 'rbfw_categories', true ) : [];
-			$saved_cat_meta  = is_array( $saved_cat_meta ) ? $saved_cat_meta : ( $saved_cat_meta ? maybe_unserialize( $saved_cat_meta ) : [] );
+			$saved_cat_meta  = is_array( $saved_cat_meta ) ? $saved_cat_meta : ( $saved_cat_meta ? rbfw_safe_unserialize( $saved_cat_meta ) : [] );
 			// Flatten any comma-separated values stored as a single element
 			$_flat = [];
 			foreach ( (array) $saved_cat_meta as $_val ) {
@@ -990,7 +990,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 
 			/* ── Feature categories repeater ── */
 			$raw_features    = $post_id ? get_post_meta( $post_id, 'rbfw_feature_category', true ) : [];
-			if ( is_serialized( $raw_features ) ) $raw_features = unserialize( $raw_features );
+			if ( is_serialized( $raw_features ) ) $raw_features = rbfw_safe_unserialize( $raw_features );
 			$feature_categories = is_array( $raw_features ) ? $raw_features : [];
 
 			$tabs = [

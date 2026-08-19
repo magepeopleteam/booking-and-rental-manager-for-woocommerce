@@ -288,7 +288,7 @@ function rbfw_delete_order_callback() {
  * @return array { 'all' => full ticket array, 'key' => first key, 'ticket' => first entry }
  */
 function rbfw_get_order_first_ticket( $post_id ) {
-    $all = maybe_unserialize( get_post_meta( $post_id, 'rbfw_ticket_info', true ) );
+    $all = rbfw_safe_unserialize( get_post_meta( $post_id, 'rbfw_ticket_info', true ) );
     if ( ! is_array( $all ) || empty( $all ) ) {
         return array( 'all' => array(), 'key' => null, 'ticket' => array() );
     }

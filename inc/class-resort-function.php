@@ -349,7 +349,7 @@
 					$content       = '';
 					$checkin_date  = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
 					$checkout_date = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
-					$post_id       = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+					$post_id       = rbfw_ajax_item_id( 'post_id' );
 					$active_tab       = isset( $_POST['active_tab'] ) ?  sanitize_text_field( wp_unslash( $_POST['active_tab'] ) )  : '';
 					$origin     = $checkin_date ? date_create( $checkin_date ) : false;
 					$target     = $checkout_date ? date_create( $checkout_date ) : false;
@@ -482,34 +482,39 @@
 
                 check_ajax_referer( 'rbfw_get_resort_sessional_day_wise_price_action', 'nonce' );
 
-                if ( isset( $_POST['post_id'] ) ) {
+                // Authorise the item itself — the nonce is public to every visitor.
+                $post_id = rbfw_ajax_item_id( 'post_id' );
 
-                    $post_id = $_POST['post_id'];
-                    $price = $_POST['price'];
-                    $total_days = $_POST['total_days'];
-                    $checkout_date = $_POST['checkout_date'];
-                    $checkin_date = $_POST['checkin_date'];
-                    $room_type = $_POST['room_type'];
-                    $active_tab = $_POST['active_tab'];
+                $price         = isset( $_POST['price'] ) ? floatval( wp_unslash( $_POST['price'] ) ) : 0;
+                $total_days    = isset( $_POST['total_days'] ) ? absint( wp_unslash( $_POST['total_days'] ) ) : 0;
+                $checkout_date = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
+                $checkin_date  = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
+                $room_type     = isset( $_POST['room_type'] ) ? sanitize_text_field( wp_unslash( $_POST['room_type'] ) ) : '';
+                $active_tab    = isset( $_POST['active_tab'] ) ? sanitize_text_field( wp_unslash( $_POST['active_tab'] ) ) : '';
 
-                    $all_infos      = '<div class="rbfw_container">';
-                    $all_infos .= '<div class="rbfw_header">Price Details</div>';
+                $all_infos  = '<div class="rbfw_container">';
+                $all_infos .= '<div class="rbfw_header">Price Details</div>';
 
-                    $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
-                    $book_dates = getAllDates( $checkin_date, $checkout_date );
+                $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+                $book_dates = (array) getAllDates( $checkin_date, $checkout_date );
 
-                        for($d = 0; $d < $total_days; $d++) {
-                            $all_infos .='<div class="rbfw_entry">';
-                            if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type, $active_tab)) != 'not_found') {
-                                $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
-                            } else {
-                                $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
-                            }
-                            $all_infos .='</div>';
+                    // Bound the loop by the dates we actually resolved: total_days is
+                    // client-supplied, so an inflated value must not spin the server or
+                    // read past the end of the array.
+                    $total_days = min( $total_days, count( $book_dates ) );
+
+                    for($d = 0; $d < $total_days; $d++) {
+                        $all_infos .='<div class="rbfw_entry">';
+                        if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type, $active_tab)) != 'not_found') {
+                            $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
+                        } else {
+                            $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
                         }
+                        $all_infos .='</div>';
+                    }
 
-                    $all_infos .= '</div>';
-                }
+                $all_infos .= '</div>';
+
                 wp_send_json_success( $all_infos );
             }
 

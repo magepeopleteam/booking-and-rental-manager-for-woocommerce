@@ -51,7 +51,8 @@
 			public function rbfw_sd_pickup_times_availability() {
 				check_ajax_referer( 'rbfw_service_type_timely_stock_action', 'nonce' );
 
-				$post_id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+				// A valid nonce is not authorisation: verify the caller may read this item.
+				$post_id = rbfw_ajax_item_id( 'post_id', false );
 				$date    = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 				$times   = ( isset( $_POST['times'] ) && is_array( $_POST['times'] ) )
 					? array_map( 'sanitize_text_field', wp_unslash( $_POST['times'] ) )
@@ -452,7 +453,7 @@
                 check_ajax_referer( $ajax_action, 'nonce' );
 
 				if ( isset( $_POST['post_id'] ) ) {
-					$id                 = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+					$id                 = rbfw_ajax_item_id( 'post_id' );
 					$selected_date      = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 					$is_muffin_template = isset( $_POST['is_muffin_template'] ) ? sanitize_text_field( wp_unslash( $_POST['is_muffin_template'] ) ) : '';
 					$time_slot_switch   = isset( $_POST['time_slot_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['time_slot_switch'] ) ) : '';
@@ -475,7 +476,7 @@
 				global $rbfw;
 				$content                 = '';
 				$sd_input_data_sabitized = RBFW_Function::data_sanitize($_POST);
-				$post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
+				$post_id             = rbfw_ajax_item_id( 'post_id' );
 				$bikecarsd_price     = 0;
 				$service_price       = 0;
 				$total_service_price = 0;
@@ -566,7 +567,7 @@
 
                 check_ajax_referer( 'particular_time_date_dependent_action', 'nonce' );
 
-				$post_id           = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+				$post_id           = rbfw_ajax_item_id( 'post_id' );
 				$selected_date     = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 				$type              = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
 				$selector          = ( isset( $_POST['selector'] ) && sanitize_text_field( wp_unslash( $_POST['selector'] ) ) ) ? sanitize_text_field( wp_unslash( $_POST['selector'] ) ) : '.rbfw-select.rbfw-time-price.pickup_time';
@@ -583,7 +584,7 @@
 			public function rbfw_bikecarsd_sold_out_times() {
 				check_ajax_referer( 'rbfw_bikecarsd_sold_out_times_action', 'nonce' );
 
-				$post_id       = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : 0;
+				$post_id       = rbfw_ajax_item_id( 'post_id', false );
 				$selected_date = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 
 				$sold_out_times = array();
@@ -600,7 +601,7 @@
 				}*/
                 check_ajax_referer( 'rbfw_service_type_timely_stock_action', 'nonce' );
 
-				$post_id                  = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+				$post_id                  = rbfw_ajax_item_id( 'post_id' );
 				$start_date               = isset( $_POST['rbfw_bikecarsd_selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bikecarsd_selected_date'] ) ) : '';
 				$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : '';
 				$start_time               = isset( $_POST['pickup_time'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_time'] ) ) : '00:00';

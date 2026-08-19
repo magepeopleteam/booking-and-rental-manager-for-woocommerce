@@ -18,7 +18,7 @@
 	$enable_daily_rate                  = get_post_meta( $rbfw_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_daily_rate', true ) : 'yes';
 	$enable_hourly_rate                 = get_post_meta( $rbfw_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 	$rbfw_enable_daywise_price          = get_post_meta( $rbfw_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_daywise_price', true ) : 'no';
-	$rbfw_related_post_arr              = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : [];
+	$rbfw_related_post_arr              = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? rbfw_safe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : [];
 	$post_review_rating_style2          = function_exists( 'rbfw_review_display_average_rating' ) ? rbfw_review_display_average_rating( $post_id, 'muffin', 'style2' ) : '';
 	$post_review_average                = function_exists( 'rbfw_review_get_average_by_id' ) ? rbfw_review_get_average_by_id( $post_id ) : '';
 	$post_review_average_hygenic        = function_exists( 'rbfw_review_get_average_by_id' ) ? rbfw_review_get_average_by_id( $post_id, 'hygenic' ) : '';

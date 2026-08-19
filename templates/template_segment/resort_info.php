@@ -5,7 +5,9 @@ check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 
 $start_date = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
 $end_date   = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
-$post_id    = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+// Authorise the requested item, not just the nonce: without this the resort
+// availability/pricing table is readable for drafts, private and trashed items.
+$post_id    = rbfw_ajax_item_id( 'post_id' );
 $origin     = $start_date ? date_create( $start_date ) : false;
 $target     = $end_date ? date_create( $end_date ) : false;
 $interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;

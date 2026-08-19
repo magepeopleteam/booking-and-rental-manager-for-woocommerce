@@ -48,7 +48,8 @@ if ( ! class_exists( 'RBFW_Coupon_Native' ) ) {
 
 			$raw     = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
 			$item_id = isset( $raw['rbfw_post_id'] ) ? absint( $raw['rbfw_post_id'] ) : 0;
-			if ( ! $item_id || get_post_type( $item_id ) !== 'rbfw_item' ) {
+			// Type alone is not enough — an unpublished item must not be priced either.
+			if ( ! rbfw_can_view_item( $item_id ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Invalid rental item.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 

@@ -226,7 +226,7 @@
 				$old_key = strtolower( trim( $old_name ) );
 				foreach ( (array) $post_ids as $pid ) {
 					$cats = get_post_meta( $pid, 'rbfw_categories', true );
-					$cats = is_array( $cats ) ? $cats : ( $cats ? maybe_unserialize( $cats ) : array() );
+					$cats = is_array( $cats ) ? $cats : ( $cats ? rbfw_safe_unserialize( $cats ) : array() );
 					if ( ! is_array( $cats ) ) {
 						continue;
 					}
@@ -277,7 +277,7 @@
 			}
 
 			public function select_category( $post_id ) {
-				$rbfw_categories = get_post_meta( $post_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_categories', true ) ) : [];
+				$rbfw_categories = get_post_meta( $post_id, 'rbfw_categories', true ) ? rbfw_safe_unserialize( get_post_meta( $post_id, 'rbfw_categories', true ) ) : [];
 				// Hierarchically ordered rent types ( parent first, children indented ).
 				$terms = $this->rbfw_get_rent_type_list();
                 global $rbfw;
@@ -688,7 +688,7 @@
 					'placeholder' => 'Features Name',
 				);
 				$option_value     = get_post_meta( $post_id, $options['id'], true );
-				$options['value'] = is_serialized( $option_value ) ? unserialize( $option_value ) : $option_value;
+				$options['value'] = is_serialized( $option_value ) ? rbfw_safe_unserialize( $option_value ) : $option_value;
 				$id = isset( $option['id'] ) ? $option['id'] : "";
 				$field_name  = isset( $options['field_name'] ) ? $options['field_name'] : $id;
 				$conditions  = isset( $options['conditions'] ) ? $options['conditions'] : array();

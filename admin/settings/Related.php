@@ -43,7 +43,7 @@
                     <div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw w-100">
                         <select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 							<?php
-								$releted_post_id = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : [];
+								$releted_post_id = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? rbfw_safe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : [];
 								$the_query       = new WP_Query( array(
 									'post_type'      => 'rbfw_item',
 									'posts_per_page' => - 1,
@@ -74,7 +74,7 @@
 
 			public static function render_for_modern_editor( int $post_id ): void {
 				$selected_ids = get_post_meta( $post_id, 'rbfw_releted_rbfw', true );
-				$selected_ids = $selected_ids ? maybe_unserialize( $selected_ids ) : [];
+				$selected_ids = $selected_ids ? rbfw_safe_unserialize( $selected_ids ) : [];
 				$selected_ids = is_array( $selected_ids ) ? array_map( 'intval', $selected_ids ) : [];
 
 				$all_posts = get_posts( [
@@ -134,8 +134,26 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-					$related_categories = isset( $_POST['rbfw_releted_rbfw'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_releted_rbfw'] ) : [];
-					// Update the post meta
+					/*
+					 * This meta is a list of related rental item IDs and nothing else.
+					 * It used to be stored as whatever was posted, run through
+					 * sanitize_text_field() — which happily preserves a serialized
+					 * payload. update_post_meta() then wrote that string verbatim and
+					 * get_post_meta() handed it to unserialize() inside WordPress core
+					 * on the next page load, giving a contributor PHP object injection.
+					 * Cast to integers and drop everything else; the modern editor
+					 * already saves it this way.
+					 */
+					$related_categories = array();
+					if ( isset( $_POST['rbfw_releted_rbfw'] ) && is_array( $_POST['rbfw_releted_rbfw'] ) ) {
+						$related_categories = array_values(
+							array_unique(
+								array_filter(
+									array_map( 'absint', wp_unslash( $_POST['rbfw_releted_rbfw'] ) )
+								)
+							)
+						);
+					}
 					update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
 				}
 			}

@@ -6,7 +6,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
     return;
 }
     // Sanitize input values
-    $id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
+    $id = rbfw_ajax_item_id( 'post_id' );
     $es_service_price = isset( $_POST['es_service_price'] ) ? floatval( $_POST['es_service_price'] ) : 0;
     $duration_cost = isset( $_POST['duration_price'] ) ? floatval( $_POST['duration_price'] ) : 0;
     $sub_total_price = $duration_cost + $es_service_price;
