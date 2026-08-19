@@ -11,11 +11,11 @@
 	$enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
 	$enable_hourly_rate = get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) : 'yes';
 	$time_format = get_post_meta($rbfw_id, 'rbfw_time_format', true) ? get_post_meta($rbfw_id, 'rbfw_time_format', true) : '12';
-	$availabe_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
-	$off_dates_list = get_post_meta($rbfw_id, 'rbfw_off_dates', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_off_dates', true)) : [];
+	$availabe_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+	$off_dates_list = get_post_meta($rbfw_id, 'rbfw_off_dates', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_off_dates', true)) : [];
 
-	$checkin_location = get_post_meta($rbfw_id, 'rbfw_checkin_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_checkin_data', true)) : [];
-	$dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
+	$checkin_location = get_post_meta($rbfw_id, 'rbfw_checkin_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_checkin_data', true)) : [];
+	$dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
 
 	$extra_service_list = get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) ? get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) : [];
 	$rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
@@ -255,7 +255,7 @@
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
                 <?php // resort_script.js gates dates through rbfw_off_day_dates(), which reads this
                       // field; without it the Buffer Time Before setting is silently ignored here. ?>
-                <input type="hidden" name="rbfw_buffer_time" id="rbfw_buffer_time"  value='<?php echo esc_attr( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0 ); ?>'>
+                <input type="hidden" name="rbfw_buffer_time" id="rbfw_buffer_time"  value='<?php echo esc_attr( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0 ); ?>'>
                 <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">

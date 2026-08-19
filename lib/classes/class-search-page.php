@@ -112,7 +112,8 @@
 
 				$all_cat_features = '';
 				if ( isset( $_POST['post_id'] ) ) {
-					$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
+					// Authorise the item before reading its meta: the nonce is public.
+					$post_id               = rbfw_ajax_item_id( 'post_id' );
 
 
                     $rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
@@ -257,6 +258,14 @@
 						}
 						$args           = array(
 							'post_type'      => 'rbfw_item',
+							/*
+							 * admin-ajax.php defines WP_ADMIN, so WP_Query treats this
+							 * request as an admin one and, with no post_status, folds in
+							 * the protected statuses shown in the admin "All" list —
+							 * i.e. drafts and pending items leak into public results.
+							 * Pin the status explicitly.
+							 */
+							'post_status'    => 'publish',
 							's'              => $search_by_title,
 							'orderby'        => 'ID',
 							'order'          => 'DESC',
@@ -373,7 +382,7 @@
 				 */
 				$post_featured_img = get_the_post_thumbnail_url( $post_id, 'full' );
 				if ( empty( $post_featured_img ) ) {
-					$gallery_images = maybe_unserialize( get_post_meta( $post_id, 'rbfw_gallery_images', true ) );
+					$gallery_images = rbfw_safe_unserialize( get_post_meta( $post_id, 'rbfw_gallery_images', true ) );
 					if ( ! empty( $gallery_images ) && is_array( $gallery_images ) ) {
 						$first_image       = absint( reset( $gallery_images ) );
 						$post_featured_img = $first_image ? wp_get_attachment_image_url( $first_image, 'full' ) : '';

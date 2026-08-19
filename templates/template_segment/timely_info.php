@@ -4,7 +4,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
     return;
 }
  // Nonce verification
-    $id = isset($_POST['post_id']) ? intval(wp_unslash($_POST['post_id'])) : 0;
+    $id = rbfw_ajax_item_id( 'post_id' );
     $service_price = isset($_POST['service_price']) ? sanitize_text_field(wp_unslash($_POST['service_price'])) : '';
     $start_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? sanitize_text_field(wp_unslash($_POST['rbfw_bikecarsd_selected_date'])) : '';
     $start_time = isset($_POST['start_time']) ? sanitize_text_field(wp_unslash($_POST['start_time'])) : '';

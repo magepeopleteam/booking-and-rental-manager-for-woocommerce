@@ -8,7 +8,9 @@ global $rbfw;
 check_ajax_referer( $ajax_action, 'nonce' );
 
 if(isset($_POST['post_id'])){
-    $id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
+    // The nonce proves the request came from one of our pages, not that this
+    // particular item may be read. Authorise the ID before touching its meta.
+    $id = rbfw_ajax_item_id( 'post_id' );
 
     $selected_time = isset($_POST['selected_time']) ? sanitize_text_field(wp_unslash($_POST['selected_time'])) : '';
 
@@ -123,7 +125,7 @@ if(isset($_POST['post_id'])){
     $manage_inventory_as_timely =  get_post_meta($id, 'manage_inventory_as_timely', true) ? get_post_meta($id, 'manage_inventory_as_timely', true) : 'off';
     $enable_specific_duration =  get_post_meta($id, 'enable_specific_duration', true) ? get_post_meta($id, 'enable_specific_duration', true) : 'off';
     $rbfw_time_slot_switch = !empty(get_post_meta($id,'rbfw_time_slot_switch',true)) ? get_post_meta($id,'rbfw_time_slot_switch',true) : 'off';
-    $available_times = get_post_meta($id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($id, 'rdfw_available_time', true)) : [];
+    $available_times = get_post_meta($id, 'rdfw_available_time', true) ? rbfw_safe_unserialize(get_post_meta($id, 'rdfw_available_time', true)) : [];
 
 
     if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){

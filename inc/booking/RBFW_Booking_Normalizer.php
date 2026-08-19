@@ -504,7 +504,7 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 
 			$raw = get_post_meta( $id, 'rbfw_ticket_info', true );
 			if ( is_string( $raw ) && '' !== $raw ) {
-				$raw = maybe_unserialize( $raw );
+				$raw = rbfw_safe_unserialize( $raw );
 			}
 			if ( ! is_array( $raw ) || empty( $raw ) ) {
 				return $out;

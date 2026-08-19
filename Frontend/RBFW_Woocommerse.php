@@ -2816,8 +2816,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $rbfw_service_price_data_actual = wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) ? wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) : [];
                     $rbfw_id                        = $item_values->get_meta( '_rbfw_id' );
                     if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
-                        $ticket_info     = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
-                        $wc_deposit_meta = wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ) : [];
+                        $ticket_info     = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? rbfw_safe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
+                        $wc_deposit_meta = wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ? rbfw_safe_unserialize( wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ) : [];
                         $this->rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $wc_order_id, $start_date, $end_date, $rbfw_service_price_data_actual );
                     }
                 }

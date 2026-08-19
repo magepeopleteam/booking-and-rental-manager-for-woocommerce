@@ -26,13 +26,13 @@ $enable_hourly_rate = get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) ?
 $rbfw_enable_daywise_price = get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) : 'no';
 
 //$availabe_time = rbfw_get_available_times($rbfw_id);
-$availabe_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+$availabe_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 
-$off_dates_list = get_post_meta($rbfw_id, 'rbfw_off_dates', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_off_dates', true)) : [];
+$off_dates_list = get_post_meta($rbfw_id, 'rbfw_off_dates', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_off_dates', true)) : [];
 
 $location_switch = !empty(get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true)) ? get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true) : '';
-$pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
-$dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
+$pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
+$dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
 
 $extra_service_list = get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) ? get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) : [];
 
@@ -111,12 +111,12 @@ $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', tru
 if($rbfw_particular_switch=='off'){
     $particulars_data = [];
 }else{
-    $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+    $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
 }
 
-$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
+$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 
-$rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
+$rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
 
 
 ?>
@@ -597,7 +597,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     if(!is_array($rbfw_service_category_price)){
                         $rbfw_service_category_price  = json_decode($rbfw_service_category_price, true);
                     }
-                    $option_value  = is_serialized($rbfw_service_category_price) ? unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
+                    $option_value  = is_serialized($rbfw_service_category_price) ? rbfw_safe_unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
                     $has_valid_services = false;
                     if ( is_array( $option_value ) ) {
                         foreach ( $option_value as $_cat_item ) {

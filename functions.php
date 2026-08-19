@@ -216,14 +216,7 @@ function rbfw_prepare_feature_category_meta_value( $value ) {
             return array();
         }
 
-        if ( version_compare( PHP_VERSION, '7.0.0', '>=' ) ) {
-            $value = @unserialize( $value, array( 'allowed_classes' => false ) );
-        } else {
-            $value = @unserialize( $value );
-            if ( is_object( $value ) ) {
-                return array();
-            }
-        }
+        $value = rbfw_safe_unserialize( $value );
     } elseif ( is_array( $value ) ) {
         $value = wp_unslash( $value );
     } else {
@@ -355,7 +348,7 @@ function want_loco_translate()
 
 
 function rbfw_update_settings(){
-    $payment_settings = maybe_unserialize('a:6:{s:19:"rbfw_payment_system";s:3:"wps";s:17:"rbfw_mps_currency";s:3:"USD";s:26:"rbfw_mps_currency_position";s:4:"left";s:32:"rbfw_mps_currency_decimal_number";s:1:"2";s:25:"rbfw_mps_checkout_account";s:2:"on";s:24:"rbfw_mps_payment_gateway";a:1:{s:7:"offline";s:7:"offline";}}');
+    $payment_settings = rbfw_safe_unserialize('a:6:{s:19:"rbfw_payment_system";s:3:"wps";s:17:"rbfw_mps_currency";s:3:"USD";s:26:"rbfw_mps_currency_position";s:4:"left";s:32:"rbfw_mps_currency_decimal_number";s:1:"2";s:25:"rbfw_mps_checkout_account";s:2:"on";s:24:"rbfw_mps_payment_gateway";a:1:{s:7:"offline";s:7:"offline";}}');
 
     if (get_option('rbfw_basic_payment_settings') === false) {
 
@@ -363,7 +356,7 @@ function rbfw_update_settings(){
 
     }
 
-    $pdf_settings = maybe_unserialize('a:9:{s:13:"rbfw_send_pdf";s:3:"yes";s:13:"rbfw_pdf_logo";s:0:"";s:11:"rbfw_pdf_bg";s:0:"";s:16:"rbfw_pdf_address";s:0:"";s:14:"rbfw_pdf_phone";s:0:"";s:17:"rbfw_pdf_tc_title";s:0:"";s:16:"rbfw_pdf_tc_text";s:0:"";s:17:"rbfw_pdf_bg_color";s:0:"";s:19:"rbfw_pdf_text_color";s:0:"";}');
+    $pdf_settings = rbfw_safe_unserialize('a:9:{s:13:"rbfw_send_pdf";s:3:"yes";s:13:"rbfw_pdf_logo";s:0:"";s:11:"rbfw_pdf_bg";s:0:"";s:16:"rbfw_pdf_address";s:0:"";s:14:"rbfw_pdf_phone";s:0:"";s:17:"rbfw_pdf_tc_title";s:0:"";s:16:"rbfw_pdf_tc_text";s:0:"";s:17:"rbfw_pdf_bg_color";s:0:"";s:19:"rbfw_pdf_text_color";s:0:"";}');
 
     if (get_option('rbfw_basic_pdf_settings') === false) {
 
@@ -532,7 +525,7 @@ function rbfw_add_term_condition_item( $post_id ) {
 
 
     if ( $check_condition && $check_condition == 'yes' ) {
-        $conditions = get_post_meta( $post_id, 'mep_event_term', true ) ? maybe_unserialize( get_post_meta( $post_id, 'mep_event_term', true ) ) : [];
+        $conditions = get_post_meta( $post_id, 'mep_event_term', true ) ? rbfw_safe_unserialize( get_post_meta( $post_id, 'mep_event_term', true ) ) : [];
 
         if ( sizeof( $conditions ) > 0 ) {
             foreach ( $conditions as $condition ) {

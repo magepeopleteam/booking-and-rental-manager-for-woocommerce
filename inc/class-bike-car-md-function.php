@@ -55,25 +55,27 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
         function rbfw_day_wise_sold_out_check(){
 
             check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
-            
-            $post_id = $_POST['post_id']; 
-            $month = $_POST['month'];
-            $year = $_POST['year'];
 
+            // The nonce only proves the request came from one of our own pages; it
+            // says nothing about which item may be read. Authorise the ID itself,
+            // otherwise anyone can page through unpublished listings' inventory.
+            $post_id = rbfw_ajax_item_id( 'post_id' );
+            $month   = isset( $_POST['month'] ) ? absint( wp_unslash( $_POST['month'] ) ) : 0;
+            $year    = isset( $_POST['year'] ) ? absint( wp_unslash( $_POST['year'] ) ) : 0;
 
-            for($i=0;$i<=1;$i++){
-                if($i==0){
-                    $total_days_month = 30;
-                    if (function_exists('cal_days_in_month')) {
-                        $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                    }
-                    $day_wise_imventory = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
-                }
+            if ( $month < 1 || $month > 12 || $year < 1970 || $year > 2100 ) {
+                wp_send_json_error( array( 'message' => esc_html__( 'Invalid date requested.', 'booking-and-rental-manager-for-woocommerce' ) ), 400 );
             }
+
+            $total_days_month = 30;
+            if (function_exists('cal_days_in_month')) {
+                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            }
+            $day_wise_imventory = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
 
             $result = [];
 
-            foreach ($day_wise_imventory as $date => $value) {
+            foreach ( (array) $day_wise_imventory as $date => $value ) {
                 if ($value == 0) {
                     $result[] = date('Y-m-d', strtotime($date));
                 }
@@ -94,7 +96,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
 
             global $rbfw;
-            $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+            $post_id = rbfw_ajax_item_id( 'post_id' );
 
             $start_date = isset($_POST['pickup_date'])?sanitize_text_field(wp_unslash($_POST['pickup_date'])):'';
             $end_date = isset($_POST['dropoff_date'])?sanitize_text_field(wp_unslash($_POST['dropoff_date'])):'';
@@ -258,8 +260,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             }*/
             check_ajax_referer( 'rbfw_multi_items_ajax_price_calculation_action', 'nonce' );
 
-
-            $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+            $post_id = rbfw_ajax_item_id( 'post_id' );
 
             $start_date = isset($_POST['pickup_date'])?sanitize_text_field(wp_unslash($_POST['pickup_date'])):'';
             $start_time = isset($_POST['pickup_time'])?sanitize_text_field(wp_unslash($_POST['pickup_time'])):'';
@@ -341,8 +342,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             }*/
             check_ajax_referer( 'rbfw_bikecarmd_ajax_min_max_and_offdays_info_action', 'nonce' );
 
-
-            $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+            $post_id = rbfw_ajax_item_id( 'post_id' );
 
             $rbfw_minimum_booking_day = 0;
             $rbfw_maximum_booking_day = 0;

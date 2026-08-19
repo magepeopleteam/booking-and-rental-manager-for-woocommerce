@@ -82,7 +82,7 @@
                         }
 
 
-                        $options['value'] = is_serialized( $rbfw_service_category_price ) ? unserialize( $rbfw_service_category_price ) : $rbfw_service_category_price;
+                        $options['value'] = is_serialized( $rbfw_service_category_price ) ? rbfw_safe_unserialize( $rbfw_service_category_price ) : $rbfw_service_category_price;
 
                         $id = isset( $options['id'] ) ? $options['id'] : "";
 							if ( empty( $id ) ) {

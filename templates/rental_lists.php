@@ -40,7 +40,7 @@ function render_mep_events_by_status( $posts ) {
             $price_type = $item_type[$rbfw_rent_type];
 
 
-            $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
+            $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? rbfw_safe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
             $rbfw_categories_items = implode(',', $rbfw_categories);
             $status = get_post_status( $rental_id );
             $edit_link   = get_edit_post_link( $rental_id );
@@ -108,7 +108,7 @@ function fount_post_number_by_category(){
     $category_counts = [];
 
     foreach ( $results as $row ) {
-        $categories = maybe_unserialize( $row->meta_value );
+        $categories = rbfw_safe_unserialize( $row->meta_value );
         if ( is_array($categories) && count($categories) === 1 ) {
             $cat = strtolower(trim($categories[0]));
 

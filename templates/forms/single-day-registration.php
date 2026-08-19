@@ -8,15 +8,15 @@
 	$rbfw_product_id = get_post_meta( $rbfw_id, "link_wc_product", true ) ? get_post_meta( $rbfw_id, "link_wc_product", true ) : $rbfw_id;
 
     $location_switch = !empty(get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true)) ? get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true) : '';
-    $pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
-    $dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
+    $pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
+    $dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
 
     $manage_inventory_as_timely =  get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) ? get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) : 'off';
     $enable_specific_duration =  get_post_meta($rbfw_id, 'enable_specific_duration', true) ? get_post_meta($rbfw_id, 'enable_specific_duration', true) : 'off';
 
     $rbfw_item_stock_quantity_timely = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity_timely',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity_timely',true) : 0;
 
-    $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+    $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 
 
     $rbfw_enable_time_picker = get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) ? get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) : 'no';
@@ -30,9 +30,9 @@
     $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
 
     $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off';
-    $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
-    $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
-    $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
+    $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+    $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
+    $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_safe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
 
     /* Item Variations (e.g. Size S/M/L/XL) — supported on Single Day items. */
     $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
@@ -507,7 +507,7 @@
                 <?php
 
                 $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
-                $available_times = get_post_meta($post_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
+                $available_times = get_post_meta($post_id, 'rdfw_available_time', true) ? rbfw_safe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
 
 
               //  echo '<pre>';print_r($available_times);echo '<pre>';

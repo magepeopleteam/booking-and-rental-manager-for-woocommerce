@@ -1,6 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Function.php';
+// Access-control helpers for the public AJAX surface. Loaded straight after
+// RBFW_Function so every endpoint (and template) can call the guards.
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_security.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Payment_Status_Checker.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Frontend.php';
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Super_Slider.php';
@@ -108,7 +111,7 @@ function rbfw_new_installation_or_update(){
 
          $enable_specific_duration =  get_post_meta(get_the_ID(), 'enable_specific_duration', true) ? get_post_meta(get_the_ID(), 'enable_specific_duration', true) : 'off';
             $rbfw_time_slot_switch = !empty(get_post_meta(get_the_ID(),'rbfw_time_slot_switch',true)) ? get_post_meta(get_the_ID(),'rbfw_time_slot_switch',true) : 'off';
-            $available_times = get_post_meta(get_the_ID(), 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta(get_the_ID(), 'rdfw_available_time', true)) : [];
+            $available_times = get_post_meta(get_the_ID(), 'rdfw_available_time', true) ? rbfw_safe_unserialize(get_post_meta(get_the_ID(), 'rdfw_available_time', true)) : [];
             $enable_hourly_rate = get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) ? get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) : 'no';
 
             if($rbfw_time_slot_switch == 'on' && !empty($available_times) &&  $enable_specific_duration =='off' ){

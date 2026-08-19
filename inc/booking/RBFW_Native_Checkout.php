@@ -64,7 +64,7 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			}
 
 			$posted_item_id             = isset( $_POST['item_id'] ) ? absint( wp_unslash( $_POST['item_id'] ) ) : 0;
-			$rbfw_native_fields_item_id = ( $posted_item_id && get_post_type( $posted_item_id ) === 'rbfw_item' ) ? $posted_item_id : 0;
+			$rbfw_native_fields_item_id = rbfw_can_view_item( $posted_item_id ) ? $posted_item_id : 0;
 
 			$template = RBFW_Function::get_template_path( 'layout/native_checkout_fields.php' );
 			if ( ! $template || ! file_exists( $template ) ) {
@@ -98,7 +98,8 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 
 			// 2. Item.
 			$item_id = isset( $_POST['rbfw_post_id'] ) ? absint( wp_unslash( $_POST['rbfw_post_id'] ) ) : 0;
-			if ( ! $item_id || get_post_type( $item_id ) !== 'rbfw_item' ) {
+			// Type + publicly-viewable status: booking an unpublished item is not allowed.
+			if ( ! rbfw_can_view_item( $item_id ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Invalid rental item.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 

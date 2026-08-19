@@ -415,7 +415,7 @@
                                     $billing_phone = $order->get_billing_phone();
                                     $billing_email = $order->get_billing_email();
                                     $ticket_infos      = get_post_meta( $post_id, 'rbfw_ticket_info', true );
-                                    $ticket_info_array = maybe_unserialize( $ticket_infos );
+                                    $ticket_info_array = rbfw_safe_unserialize( $ticket_infos );
                                     $rbfw_start_datetime = '';
                                     $rbfw_end_datetime   = '';
                                     $rbfw_start_time     = '';

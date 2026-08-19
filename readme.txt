@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.5
+Stable tag: 2.7.6
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -165,6 +165,12 @@ Appsero does not collect data by default. Data collection starts only after user
 Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+2.7.6
+Security: fixed rental availability, pricing and inventory data being readable for items that are not published. Booking endpoints now check that the requested item may actually be viewed, instead of only checking that the request came from the site, so drafts, pending, private and trashed items are no longer exposed to visitors. Administrators previewing an unpublished item are unaffected.
+Security: fixed unpublished items being priced, coupon-discounted and added to the cart through the search, quick-add, coupon and standalone checkout endpoints.
+Security: fixed draft and pending items leaking into public search results and into the sidebar filter options.
+Security: fixed a PHP object injection issue. Serialized payloads can no longer be stored in the plugin's post meta, every value the plugin reads back is decoded with object creation disabled, and any payload already saved on the site is cleaned up automatically on the next admin page load.
+Security: the item pricing form builder in the editor is no longer reachable by logged-out visitors and now requires edit permission.
 2.7.5
 Delivery and Collection added (Pro): distance-band pricing with a base fee, a free radius and a maximum distance, editable labels, and a per-item opt-out. Collection can be priced the same as delivery, on its own bands, or free.
 Customers pick a named delivery zone ("3 - 5 km - $5.00") instead of guessing a distance, and delivery and collection are shown, stored and invoiced as two separate lines. Every amount is recomputed on the server from the stored bands, so the browser can never lower the fee.

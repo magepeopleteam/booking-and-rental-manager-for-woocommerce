@@ -10,8 +10,9 @@
 			public function __construct() {
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
+				// Admin-only: this builds the item editor's pricing rows and its nonce is
+				// localised on the wp-admin scripts only, so there is no nopriv variant.
 				add_action( 'wp_ajax_rbfw_load_duration_form', [ $this, 'rbfw_load_duration_form' ] );
-				add_action( 'wp_ajax_nopriv_rbfw_load_duration_form', [ $this, 'rbfw_load_duration_form' ] );
                 add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
                 add_action( 'admin_notices', array( $this, 'render_pricing_save_errors_notice' ) );
 
@@ -77,6 +78,7 @@
 			public function rbfw_load_duration_form() {
 
                 check_ajax_referer( 'rbfw_duration_form_action', 'nonce' );
+                rbfw_ajax_require_cap( 'edit_posts' );
 
                 // Check and sanitize inputs
 				$manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : '';
@@ -1402,7 +1404,7 @@
                     <div class="time-slots-container">
                         <div class="time-slots" id="time-slots-container">
                             <?php
-                            $rdfw_available_time        = get_post_meta( $post_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rdfw_available_time', true ) ) : [];
+                            $rdfw_available_time        = get_post_meta( $post_id, 'rdfw_available_time', true ) ? rbfw_safe_unserialize( get_post_meta( $post_id, 'rdfw_available_time', true ) ) : [];
                             $array_dimension = RBFW_Frontend::count_array_dimensions($rdfw_available_time);
                             if($array_dimension == 1){
                                 $i = 1;

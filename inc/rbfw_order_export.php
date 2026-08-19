@@ -274,7 +274,7 @@ function rbfw_collect_export_rows( $filters ) {
 		$billing_phone = $order->get_billing_phone();
 		$billing_email = $order->get_billing_email();
 
-		$ticket_info_array = maybe_unserialize( get_post_meta( $post_id, 'rbfw_ticket_info', true ) );
+		$ticket_info_array = rbfw_safe_unserialize( get_post_meta( $post_id, 'rbfw_ticket_info', true ) );
 		if ( empty( $ticket_info_array ) || ! is_array( $ticket_info_array ) ) {
 			continue;
 		}

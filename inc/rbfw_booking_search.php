@@ -100,7 +100,7 @@ function rbfw_booking_search_range_blocked( $rbfw_id, $start_ts, $end_ts ) {
 	}
 
 	$off_dates_raw = get_post_meta( $rbfw_id, 'rbfw_off_dates', true );
-	$off_dates_raw = $off_dates_raw ? maybe_unserialize( $off_dates_raw ) : array();
+	$off_dates_raw = $off_dates_raw ? rbfw_safe_unserialize( $off_dates_raw ) : array();
 	if ( is_string( $off_dates_raw ) ) {
 		$off_dates_raw = array_map( 'trim', explode( ',', $off_dates_raw ) );
 	}
@@ -197,7 +197,7 @@ function rbfw_booking_search_item_in_location( $rbfw_id, $slug, $name ) {
 	}
 
 	$pickup_data = get_post_meta( $rbfw_id, 'rbfw_pickup_data', true );
-	$pickup_data = $pickup_data ? maybe_unserialize( $pickup_data ) : array();
+	$pickup_data = $pickup_data ? rbfw_safe_unserialize( $pickup_data ) : array();
 	foreach ( (array) $pickup_data as $row ) {
 		$loc = is_array( $row ) ? ( $row['location'] ?? ( $row['name'] ?? '' ) ) : $row;
 		if ( is_string( $loc ) && '' !== $loc && ( sanitize_title( $loc ) === $slug || $loc === $name ) ) {
@@ -656,8 +656,7 @@ function rbfw_booking_quick_add_ajax() {
 	$end      = isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : '';
 	$location = isset( $_POST['location'] ) ? sanitize_title( wp_unslash( $_POST['location'] ) ) : '';
 
-	global $rbfw;
-	if ( ! $rbfw_id || get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+	if ( ! rbfw_can_view_item( $rbfw_id ) ) {
 		wp_send_json_error( array( 'message' => __( 'Invalid rental item.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
@@ -764,8 +763,7 @@ function rbfw_booking_search_item_form_ajax() {
 	$start   = isset( $_POST['start'] ) ? sanitize_text_field( wp_unslash( $_POST['start'] ) ) : '';
 	$end     = isset( $_POST['end'] ) ? sanitize_text_field( wp_unslash( $_POST['end'] ) ) : '';
 
-	global $rbfw;
-	if ( ! $rbfw_id || get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+	if ( ! rbfw_can_view_item( $rbfw_id ) ) {
 		wp_send_json_error( array( 'message' => __( 'Invalid rental item.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 

@@ -32,7 +32,7 @@
 
 	if ( ! defined( 'RBFW_GF_ASSET_VER' ) ) {
 		// Tied to the plugin version so a plugin update busts the asset cache.
-		define( 'RBFW_GF_ASSET_VER', defined( 'RBFW_VERSION' ) ? RBFW_VERSION : '2.7.5' );
+		define( 'RBFW_GF_ASSET_VER', defined( 'RBFW_VERSION' ) ? RBFW_VERSION : '2.7.6' );
 	}
 
 	if ( ! class_exists( 'RBFW_GF_Bridge' ) ) {
