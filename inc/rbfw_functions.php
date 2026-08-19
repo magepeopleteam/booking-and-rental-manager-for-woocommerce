@@ -4489,7 +4489,29 @@ function rbfw_security_deposit( $post_id, $sub_total_price ) {
 			}
 		}
 
-		return array( 'security_deposit_amount' => $security_deposit_amount, 'security_deposit_desc' => $security_deposit_desc );
+		/**
+		 * Filters the calculated security-deposit charge.
+		 *
+		 * The PRO deposit manager uses this seam to keep an included deposit visible as
+		 * a liability without adding it to the payable rental total. With no add-on the
+		 * returned values are unchanged, preserving the historical core behaviour.
+		 *
+		 * @param array $deposit {
+		 *     @type float  $security_deposit_amount Calculated amount added to the total.
+		 *     @type string $security_deposit_desc   Formatted amount.
+		 * }
+		 * @param int   $post_id        Rental item ID.
+		 * @param float $sub_total_price Rental subtotal used for percentage deposits.
+		 */
+		return apply_filters(
+			'rbfw_security_deposit',
+			array(
+				'security_deposit_amount' => $security_deposit_amount,
+				'security_deposit_desc'   => $security_deposit_desc,
+			),
+			(int) $post_id,
+			(float) $sub_total_price
+		);
     }
 
 	/****************************************************
