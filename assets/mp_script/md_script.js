@@ -1103,7 +1103,7 @@ function rbfw_multi_items_ajax_price_calculation(){
                 jQuery('.security_deposit').hide();
             }
 
-            jQuery('.total .price-figure').text( wc_price_rbfw(rbfw_management_price + response.total_price));
+            rbfwMdRenderTotal(rbfw_management_price + response.total_price);
 
             rbfwApplyMdDurationCostingResponse(response);
             rbfwUpdateMultipleItemsDurationDates(response.start_date, response.end_date);
@@ -1201,7 +1201,7 @@ function calculateAdditional() {
 
 
     jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
+    rbfwMdRenderTotal(total_price);
 
 }
 
@@ -1293,7 +1293,7 @@ function calculateTotalExtraService() {
 
 
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').html(wc_price_rbfw(total_price - discount_price));
+    rbfwMdRenderTotal(total_price - discount_price);
 
     if(parseFloat(discount_price) > 0){ 
          jQuery('.discount span').text(wc_price_rbfw(discount_price));
@@ -1338,7 +1338,7 @@ function calculateTotalManagementPrice() {
 
     jQuery('.security_deposit span').html(wc_price_rbfw(rbfw_security_deposit_actual_amount));
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').html(wc_price_rbfw(total_price));
+    rbfwMdRenderTotal(total_price);
 
 }
 
@@ -1445,7 +1445,7 @@ function calculateTotalSingleItem() {
 
     jQuery('.resource-costing.rbfw-cond').show();
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').html(wc_price_rbfw(total_price));
+    rbfwMdRenderTotal(total_price);
 
 }
 
@@ -1565,7 +1565,7 @@ function calculateTotalMultipleItems(only_calculation=false) {
         }
 
         jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
-        jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
+        rbfwMdRenderTotal(total_price);
 
 
     }else{
@@ -1800,7 +1800,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                 jQuery('.security_deposit').hide();
             }
 
-            jQuery('.total .price-figure').text( wc_price_rbfw(rbfw_management_price + response.total_price));
+            rbfwMdRenderTotal(rbfw_management_price + response.total_price);
             rbfwApplyMdDurationCostingResponse(response, $wrapper);
             jQuery('#rbfw_duration_price').val(response.duration_price);
 
@@ -1970,6 +1970,64 @@ function rbfw_service_price_calculation(total_days){
     jQuery('#rbfw_service_price').val(total);
     rbfwScheduleMdPriceCalculation();
 }
+
+/** Last total rendered, before delivery — see rbfw_price_calculation_md(). */
+var rbfwMdTotalWithoutDelivery = null;
+
+/**
+ * The booking summary's Price row for every multi-day / multiple-items flow.
+ *
+ * Five different functions in this file compute a total (the two AJAX responses, the
+ * resource, service and fee recalculations). Each one used to write `.total .price-figure`
+ * itself, which is why Delivery & Collection never reached the multi-day total: there was
+ * no single place to add it, and no way for the delivery block to ask for a repaint.
+ *
+ * Callers keep owning the rental arithmetic and pass the total WITHOUT delivery; the
+ * delivery legs are folded in here and the base is remembered so that ticking delivery can
+ * repaint the row without re-running a price calculation the choice cannot affect.
+ *
+ * Display only. rbfw_apply_delivery_charge() re-prices both legs server-side from the band
+ * table at add-to-cart, so nothing here decides what the customer is charged.
+ *
+ * @param {number} total_price Total before delivery and collection.
+ * @return {void}
+ */
+function rbfwMdRenderTotal(total_price) {
+    rbfwMdTotalWithoutDelivery = parseFloat(total_price) || 0;
+
+    var rbfw_delivery_price = parseFloat(window.rbfwDeliveryTotal) || 0;
+
+    jQuery('.total .price-figure').html(wc_price_rbfw(rbfwMdTotalWithoutDelivery + rbfw_delivery_price));
+
+    /* Delivery and collection are billed as two legs and may be priced by different band
+       tables, so the summary lists them separately rather than as one merged figure. */
+    if (typeof window.rbfwRenderDeliveryLines === 'function') {
+        window.rbfwRenderDeliveryLines();
+    }
+}
+
+/**
+ * Repaint the multi-day total after a Delivery & Collection change.
+ *
+ * The delivery choice changes nothing about the rental itself, so this deliberately does
+ * NOT re-run a price calculation — it re-renders the last total with the new delivery
+ * figure. rbfw_delivery.js looks this up by name; without it that script fell through to
+ * rbfw_price_calculation_sd(), which is always defined (md_script and sd_script are
+ * enqueued together) and rebuilt the summary from the single-day fields alone, wiping the
+ * whole duration cost out of a multi-day total.
+ *
+ * @return {void}
+ */
+window.rbfw_price_calculation_md = function () {
+    if (rbfwMdTotalWithoutDelivery === null) {
+        // Nothing priced yet (no dates chosen). Still show whichever legs were ticked.
+        if (typeof window.rbfwRenderDeliveryLines === 'function') {
+            window.rbfwRenderDeliveryLines();
+        }
+        return;
+    }
+    rbfwMdRenderTotal(rbfwMdTotalWithoutDelivery);
+};
 
 /**
  * The booking summary's Tax line — one implementation shared by every booking type.

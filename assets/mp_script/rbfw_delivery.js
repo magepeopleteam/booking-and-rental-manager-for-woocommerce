@@ -174,18 +174,54 @@
 			collection: ( data && data.collection ) ? data.collection : 0
 		};
 
-		// Nudge the pricing engine to repaint with the new figure. Each item type has its
-		// own recalculation entry point, so try the known ones and fall back to updating
-		// just our own line when none is present (e.g. a flow with no live summary).
-		var recalc = window.rbfw_price_calculation_sd   // single day / timely
-			|| window.rbfw_price_calculation_md         // multi day
-			|| window.calculateTotal;
-		if ( typeof recalc === 'function' ) {
-			try { recalc(); return; } catch ( err ) { /* fall through to the local update */ }
+		repaintTotals();
+	} );
+
+	/**
+	 * Recalculation entry points, keyed by the summary box the booking form on the page
+	 * actually rendered.
+	 *
+	 * Taking the FIRST function that happens to be defined was wrong. Every booking script
+	 * is enqueued on every rental page (see RBFW_Dependencies::rbfw_enqueue_scripts), so
+	 * rbfw_price_calculation_sd is ALWAYS defined — including on a multi-day item, where it
+	 * rebuilt the summary from the single-day fields alone. The multi-day duration cost
+	 * lives in #rbfw_duration_price, which that function never reads, so choosing delivery
+	 * dropped the entire rental off the Price row and left only the delivery legs and fees.
+	 * In Standalone mode that was not merely cosmetic: rbfw_native_checkout.js posts the
+	 * displayed total minus delivery, so the booking was created for the fees alone.
+	 *
+	 * Matching on the summary markup keeps each item type with its own arithmetic.
+	 */
+	var RECALC_BY_SUMMARY = [
+		// Multi day and multiple items — both render '.rbfw_bikecarmd_price_result'.
+		[ '.rbfw_bikecarmd_price_result', 'rbfw_price_calculation_md' ],
+		// Single day, plus the step / timely flows.
+		[ '.rbfw_bikecarsd_price_summary, .rbfw_bikecarsd_price_summary_only', 'rbfw_price_calculation_sd' ]
+	];
+
+	/**
+	 * Ask the booking form's own pricing engine to repaint with the new delivery figure.
+	 *
+	 * Falls back to updating just our own two lines when the page has no live summary, or
+	 * when the engine throws — a delivery quote must never be able to break the form.
+	 */
+	function repaintTotals() {
+		for ( var i = 0; i < RECALC_BY_SUMMARY.length; i++ ) {
+			if ( ! $( RECALC_BY_SUMMARY[ i ][ 0 ] ).length ) { continue; }
+
+			var recalc = window[ RECALC_BY_SUMMARY[ i ][ 1 ] ];
+			if ( typeof recalc !== 'function' ) { continue; }
+
+			try {
+				recalc();
+				return;
+			} catch ( err ) {
+				break; // Fall through to the local update below.
+			}
 		}
 
 		rbfwRenderDeliveryLines();
-	} );
+	}
 
 	/** Fill the two cost lines from the last quote. Shared with the pricing scripts. */
 	function rbfwRenderDeliveryLines() {
