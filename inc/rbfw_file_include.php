@@ -36,6 +36,9 @@ if ( is_admin() ) {
 	require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Delivery_Settings.php';
 }
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
+// Shared inventory for Multiple Items rows linked to an existing rental item.
+// Loaded right after the inventory engine, whose counters it extends.
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shared_inventory.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shortcodes.php';

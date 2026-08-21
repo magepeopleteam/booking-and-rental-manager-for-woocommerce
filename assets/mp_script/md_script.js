@@ -1133,13 +1133,37 @@ function rbfw_multi_items_ajax_price_calculation(){
 
             });
 
-            /*extra service */
+            /* Item rows. The server keys the stock map by the item's row index in
+               multiple_items_info, which is NOT the DOM index once a row is hidden
+               for having no stock — so read data-mi-key and only fall back to the
+               positional index for markup that predates it. */
+            var mi_stock = response.max_available_qty.extra_service_instock || {};
+            jQuery(".rbfw_muiti_items_qty").each(function(index) {
+                var $input = jQuery(this);
+                var key = $input.data('mi-key');
+                var stock = (typeof key !== 'undefined' && typeof mi_stock[key] !== 'undefined')
+                    ? mi_stock[key]
+                    : mi_stock[index];
 
-            jQuery(".rbfw_muiti_items_qty").each(function(index, value) {
-                if(response.max_available_qty.extra_service_instock[index]==0){
-                    jQuery(this).val(0);
+                if (typeof stock === 'undefined' || stock === '' || stock === null) {
+                    return;
                 }
-                jQuery(this).attr('max',response.max_available_qty.extra_service_instock[index]);
+                stock = parseInt(stock, 10) || 0;
+
+                $input.attr('max', stock);
+                if (stock <= 0 || (parseInt($input.val(), 10) || 0) > stock) {
+                    $input.val(stock > 0 ? Math.min(parseInt($input.val(), 10) || 0, stock) : 0);
+                }
+                $input.prop('disabled', stock <= 0);
+
+                var $row = $input.closest('.rbfw-resource-item');
+                $row.find('.es_stock').text('(' + stock + ')');
+                $row.find('.rbfw-mi-max-available').text(
+                    (rbfw_translation && rbfw_translation.max_available
+                        ? rbfw_translation.max_available
+                        : 'Max available') + ': ' + stock
+                );
+                $row.toggleClass('rbfw_mi_sold_out', stock <= 0);
             });
 
             calculateAdditional(true);

@@ -654,7 +654,15 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			];
 			foreach ( $array_meta as $key ) {
 				if ( isset( $_POST[ $key ] ) ) {
-					update_post_meta( $post_id, $key, RBFW_Function::data_sanitize( wp_unslash( $_POST[ $key ] ) ) );
+					$_meta_value = RBFW_Function::data_sanitize( wp_unslash( $_POST[ $key ] ) );
+					if ( 'multiple_items_info' === $key && function_exists( 'rbfw_mi_normalize_rows' ) ) {
+						// Shared inventory: same normalisation the classic editor applies.
+						$_meta_value = rbfw_mi_normalize_rows( $_meta_value );
+					}
+					update_post_meta( $post_id, $key, $_meta_value );
+					if ( 'multiple_items_info' === $key && function_exists( 'rbfw_mi_sync_source_map' ) ) {
+						rbfw_mi_sync_source_map( $post_id, is_array( $_meta_value ) ? $_meta_value : [] );
+					}
 				}
 			}
 

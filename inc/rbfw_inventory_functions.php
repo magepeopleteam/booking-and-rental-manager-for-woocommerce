@@ -453,6 +453,14 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
     /*end variation inventory*/
 
+    /* Multiple Items packages that share this item's stock hold units too, so a
+       package booking has to shrink what the individual rental can still sell. */
+    if ( function_exists( 'rbfw_mi_bundle_booked_units' ) ) {
+        $shared_start = $pickup_datetime ? $pickup_datetime : $start_date;
+        $shared_end   = $dropoff_datetime ? $dropoff_datetime : $end_date;
+        $remaining_stock -= rbfw_mi_bundle_booked_units( $post_id, $shared_start, $shared_end );
+        $remaining_stock  = max( 0, $remaining_stock );
+    }
 
     /*start extra service inventory*/
 
@@ -505,11 +513,30 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
 
     /*start extra service inventory*/
 
-    $multiple_items_instock = [];
+    /* Initialised up front: it is returned unconditionally, and an item with no
+       rows configured previously returned an undefined variable. */
+    $extra_service_instock = [];
     $multiple_items_info = get_post_meta($post_id, 'multiple_items_info', true);
 
     if (!empty($multiple_items_info)) {
         foreach ($multiple_items_info as $service => $es) {
+            /* Rows linked to an existing rental item read their remaining units from
+               that shared pool (individual bookings + every package that draws on it)
+               instead of this package's private per-row counter. */
+            $shared_remaining = null;
+            if ( function_exists( 'rbfw_mi_row_available_qty' ) ) {
+                $shared_remaining = rbfw_mi_row_available_qty(
+                    $post_id,
+                    $es,
+                    $pickup_datetime ? $pickup_datetime : $start_date,
+                    $dropoff_datetime ? $dropoff_datetime : $end_date
+                );
+            }
+            if ( null !== $shared_remaining ) {
+                $extra_service_instock[$service] = max( 0, (int) $shared_remaining );
+                continue;
+            }
+
             $service_q = [];
             foreach ($date_range as $date) {
                 $qty = total_multi_items_quantity($es['item_name'], $date, $rbfw_inventory, $inventory_based_on_return);
@@ -721,6 +748,15 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
             if ( ! empty( $variant_instock ) ) {
                 $remaining_stock = max($variant_instock);
             }
+        }
+
+        /* Same deduction for the month calendar: a day is only bookable once the
+           packages sharing this item's stock have taken their units. $date is
+           d-m-Y here, while the shared engine works on datetimes. */
+        if ( function_exists( 'rbfw_mi_bundle_units_on_date' ) ) {
+            $shared_day_ymd = $year . '-' . str_pad( $month, 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $i, 2, '0', STR_PAD_LEFT );
+            $remaining_stock -= rbfw_mi_bundle_units_on_date( $post_id, $shared_day_ymd );
+            $remaining_stock  = max( 0, $remaining_stock );
         }
 
         $day_wise_inventory[$date] = $remaining_stock;
@@ -1035,7 +1071,21 @@ function rbfw_inventory_item_stock_totals( $post_id ) {
     }
 
     $item_stock = 0;
-    if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
+    if ( 'multiple_items' === $rent_type ) {
+        /* A package has no stock of its own — rbfw_item_stock_quantity is often a
+           leftover from a rent-type change. Its real capacity is the sum of what
+           each sub-item row can offer: a private counter, or the linked item's
+           pool capped by the row's Qty. */
+        $mi_rows = get_post_meta( $post_id, 'multiple_items_info', true );
+        foreach ( (array) $mi_rows as $mi_row ) {
+            if ( ! is_array( $mi_row ) ) {
+                continue;
+            }
+            $item_stock += function_exists( 'rbfw_mi_row_display_stock' )
+                ? (int) rbfw_mi_row_display_stock( $mi_row )
+                : (int) ( $mi_row['available_qty'] ?? 0 );
+        }
+    } elseif ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
         if ( $manage_inventory_as_timely == 'on' ) {
             $timely     = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
             $item_stock = ! empty( $timely ) ? $timely : 0;
@@ -1103,6 +1153,27 @@ function rbfw_inventory_stock_model( $post_id ) {
         $key   = 'multi_items';
         $label = __( 'Multiple Items · per sub-item', 'booking-and-rental-manager-for-woocommerce' );
         $title = __( 'Each sub-item carries its own quantity and is booked independently.', 'booking-and-rental-manager-for-woocommerce' );
+
+        /* Rows linked to an existing rental item no longer hold private stock, so
+           saying they are booked independently would be wrong for those. */
+        $mi_rows   = get_post_meta( $post_id, 'multiple_items_info', true );
+        $mi_shared = array();
+        if ( is_array( $mi_rows ) && function_exists( 'rbfw_mi_row_source_id' ) ) {
+            foreach ( $mi_rows as $mi_row ) {
+                $mi_source = rbfw_mi_row_source_id( $mi_row );
+                if ( $mi_source ) {
+                    $mi_shared[ $mi_source ] = rbfw_mi_source_title( $mi_source );
+                }
+            }
+        }
+        if ( ! empty( $mi_shared ) ) {
+            $label = __( 'Multiple Items · shared inventory', 'booking-and-rental-manager-for-woocommerce' );
+            $title = sprintf(
+                /* translators: %s: comma-separated list of linked rental item names. */
+                __( 'Some sub-items draw their stock from an existing rental item (%s) instead of a private counter, so bookings made here and on that item reduce the same pool.', 'booking-and-rental-manager-for-woocommerce' ),
+                implode( ', ', array_filter( $mi_shared ) )
+            );
+        }
     } elseif ( 'bike_car_sd' === $rent_type || 'appointment' === $rent_type ) {
         $type_name = ( 'appointment' === $rent_type )
             ? __( 'Appointment', 'booking-and-rental-manager-for-woocommerce' )
@@ -1694,7 +1765,18 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                             $rbfw_service_info = !empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
                             $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 
-                            if($rent_type == 'bike_car_sd' || $rent_type == 'appointment' || $rent_type == 'resort') {
+                            if( $rent_type == 'multiple_items' ) {
+                                /* Package bookings record their chosen sub-items under
+                                   rbfw_service_info as { item_name, item_qty }; the line's
+                                   rbfw_item_quantity is always 1 and would undercount. */
+                                if ( ! empty( $rbfw_service_info ) ) {
+                                    foreach ( $rbfw_service_info as $mi_line ) {
+                                        if ( is_array( $mi_line ) && isset( $mi_line['item_qty'] ) ) {
+                                            $sold_item_qty += max( 0, (int) $mi_line['item_qty'] );
+                                        }
+                                    }
+                                }
+                            } elseif($rent_type == 'bike_car_sd' || $rent_type == 'appointment' || $rent_type == 'resort') {
                                 if (!empty($rbfw_type_info)) {
                                     foreach ($rbfw_type_info as $key => $type_info) {
                                         $sold_item_qty += $type_info;
@@ -1736,6 +1818,21 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     }
                     $remaining_item_stock = $rbfw_item_stock_quantity - (int)$sold_item_qty;
                     $remaining_es_stock = $total_es_qty - $sold_es_qty;
+                }
+
+                /* Units of this item held by Multiple Items packages that share its
+                   stock. Those bookings live on the package's post, not this one, so
+                   without this the row would report them as still available. */
+                $mi_shared_sold = 0;
+                if ( 'multiple_items' !== $rent_type && function_exists( 'rbfw_mi_bundle_units_on_date' ) ) {
+                    $mi_day_ts = strtotime( str_replace( '/', '-', $current_date ) );
+                    if ( $mi_day_ts ) {
+                        $mi_shared_sold = (int) rbfw_mi_bundle_units_on_date( $post_id, gmdate( 'Y-m-d', $mi_day_ts ) );
+                    }
+                }
+                if ( $mi_shared_sold > 0 ) {
+                    $sold_item_qty        += $mi_shared_sold;
+                    $remaining_item_stock  = $rbfw_item_stock_quantity - (int) $sold_item_qty;
                 }
 
 
@@ -1824,7 +1921,24 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     </td>
 
 
-                    <td class="rbfw_text_center" data-th="<?php esc_attr_e('Item Sold Qty','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_qty_badge <?php echo esc_attr( $sold_item_qty > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html($sold_item_qty); ?></span></td>
+                    <td class="rbfw_text_center" data-th="<?php esc_attr_e('Item Sold Qty','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <span class="rbfw_inv_qty_badge <?php echo esc_attr( $sold_item_qty > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html($sold_item_qty); ?></span>
+                        <?php if ( $mi_shared_sold > 0 ) : ?>
+                            <span class="rbfw_inv_shared_note" title="<?php
+                                printf(
+                                    /* translators: %d: units booked through Multiple Items packages. */
+                                    esc_attr__( '%d of these are booked through Multiple Items packages that share this item\'s stock.', 'booking-and-rental-manager-for-woocommerce' ),
+                                    esc_attr( $mi_shared_sold )
+                                );
+                            ?>"><?php
+                                printf(
+                                    /* translators: %d: units booked through Multiple Items packages. */
+                                    esc_html__( 'incl. %d shared', 'booking-and-rental-manager-for-woocommerce' ),
+                                    esc_html( $mi_shared_sold )
+                                );
+                            ?></span>
+                        <?php endif; ?>
+                    </td>
                     <td class="rbfw_text_center rbfw_inv_td_es_stock" data-th="<?php esc_attr_e('Extra Service Stock','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_pill <?php echo esc_attr( $es_state ); ?>"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></span></td>
                     <td class="rbfw_text_center rbfw_inv_td_es_sold" data-th="<?php esc_attr_e('Extra Service Sold Qty','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_qty_badge <?php echo esc_attr( $sold_es_qty > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html($sold_es_qty); ?></span></td>
                     <td class="rbfw_text_center" data-th="<?php esc_attr_e('Category Service','booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw_inv_pill <?php echo esc_attr( $cat_state ); ?>"><?php echo esc_html( $cat_stock ); ?>/<?php echo esc_html( $cat_total ); ?></span></td>
@@ -1964,7 +2078,18 @@ function rbfw_get_stock_details(){
                             $rbfw_service_info = !empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
                             $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 
-                            if($rent_type == 'bike_car_sd' || $rent_type == 'appointment' || $rent_type == 'resort') {
+                            if( $rent_type == 'multiple_items' ) {
+                                /* Package bookings record their chosen sub-items under
+                                   rbfw_service_info as { item_name, item_qty }; the line's
+                                   rbfw_item_quantity is always 1 and would undercount. */
+                                if ( ! empty( $rbfw_service_info ) ) {
+                                    foreach ( $rbfw_service_info as $mi_line ) {
+                                        if ( is_array( $mi_line ) && isset( $mi_line['item_qty'] ) ) {
+                                            $sold_item_qty += max( 0, (int) $mi_line['item_qty'] );
+                                        }
+                                    }
+                                }
+                            } elseif($rent_type == 'bike_car_sd' || $rent_type == 'appointment' || $rent_type == 'resort') {
                                 if (!empty($rbfw_type_info)) {
                                     foreach ($rbfw_type_info as $name => $qty) {
                                         $sold_item_qty += $qty;
@@ -2078,6 +2203,16 @@ function rbfw_get_stock_details(){
 
 
 
+                    /* Units held by Multiple Items packages sharing this item's stock —
+                       booked on the package's post, so absent from the loop above. Keeps
+                       the modal hero agreeing with the table row it was opened from. */
+                    if ( 'multiple_items' !== $rent_type && function_exists( 'rbfw_mi_bundle_units_on_date' ) ) {
+                        $mi_hero_ts = strtotime( str_replace( '/', '-', $data_date ) );
+                        if ( $mi_hero_ts ) {
+                            $sold_item_qty += (int) rbfw_mi_bundle_units_on_date( $data_id, gmdate( 'Y-m-d', $mi_hero_ts ) );
+                        }
+                    }
+
                     $remaining_item_stock = (float)$rbfw_item_stock_quantity - (float)$sold_item_qty;
                     $rbfw_resort_room_data = $rbfw_resort_room_data_closing;
                     $rbfw_bike_car_sd_data = $rbfw_bike_car_sd_data_closing;
@@ -2120,6 +2255,125 @@ function rbfw_get_stock_details(){
                         </div>
                         <?php echo rbfw_inv_icon('layers','rbfw_inv_avail_icon'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?>
                     </div>
+
+                    <?php
+                    /* Multiple Items: one line per sub-item, showing where its stock comes
+                       from and what is actually left for the selected date. */
+                    $mi_detail_rows = ( 'multiple_items' === $rent_type ) ? get_post_meta( $data_id, 'multiple_items_info', true ) : [];
+                    $mi_detail_rows = is_array( $mi_detail_rows ) ? $mi_detail_rows : [];
+                    if ( ! empty( $mi_detail_rows ) ) :
+                        $mi_day_ts  = strtotime( str_replace( '/', '-', $data_date ) );
+                        $mi_day_ymd = $mi_day_ts ? gmdate( 'Y-m-d', $mi_day_ts ) : gmdate( 'Y-m-d' );
+                        ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Sub-item Info','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <table class="rbfw_inv_mini_table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e('Item','booking-and-rental-manager-for-woocommerce'); ?></th>
+                                        <th><?php esc_html_e('Inventory Source','booking-and-rental-manager-for-woocommerce'); ?></th>
+                                        <th class="rbfw_inv_ta_r"><?php esc_html_e('Cap','booking-and-rental-manager-for-woocommerce'); ?></th>
+                                        <th class="rbfw_inv_ta_r"><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ( $mi_detail_rows as $mi_row ) :
+                                    if ( ! is_array( $mi_row ) ) {
+                                        continue;
+                                    }
+                                    $mi_src   = function_exists( 'rbfw_mi_row_source_id' ) ? rbfw_mi_row_source_id( $mi_row ) : 0;
+                                    $mi_cap   = (int) ( $mi_row['available_qty'] ?? 0 );
+                                    $mi_avail = $mi_src
+                                        ? (int) rbfw_mi_row_available_qty( $data_id, $mi_row, $mi_day_ymd . ' 00:00', $mi_day_ymd . ' 23:59' )
+                                        : max( 0, $mi_cap - (int) total_multi_items_quantity( $mi_row['item_name'] ?? '', $data_date, get_post_meta( $data_id, 'rbfw_inventory', true ), $inventory_based_on_return ) );
+                                    ?>
+                                    <tr>
+                                        <td><?php echo esc_html( $mi_row['item_name'] ?? '' ); ?></td>
+                                        <td>
+                                            <?php if ( $mi_src ) : ?>
+                                                <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $mi_src . '&action=edit' ) ); ?>" class="rbfw_inv_shared_link"><?php echo esc_html( rbfw_mi_source_title( $mi_src ) ); ?></a>
+                                                <span class="rbfw_inv_shared_pool"><?php
+                                                    printf(
+                                                        /* translators: %d: units of stock on the linked rental item. */
+                                                        esc_html__( 'shared pool: %d', 'booking-and-rental-manager-for-woocommerce' ),
+                                                        esc_html( rbfw_mi_source_stock( $mi_src ) )
+                                                    );
+                                                ?></span>
+                                            <?php else : ?>
+                                                <span class="rbfw_inv_shared_pool"><?php esc_html_e('Own inventory','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="rbfw_inv_qty_cell"><?php echo esc_html( $mi_cap > 0 ? $mi_cap : esc_html__( 'all', 'booking-and-rental-manager-for-woocommerce' ) ); ?></td>
+                                        <td class="rbfw_inv_qty_cell"><span class="rbfw_inv_pill <?php echo esc_attr( $mi_avail > 0 ? 'rbfw_inv_ok' : 'rbfw_inv_out' ); ?>"><?php echo esc_html( $mi_avail ); ?></span></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    /* The other side of the link: packages drawing on THIS item's stock. */
+                    $mi_consumers = ( 'multiple_items' !== $rent_type && function_exists( 'rbfw_mi_get_source_parents' ) )
+                        ? rbfw_mi_get_source_parents( $data_id )
+                        : [];
+                    if ( ! empty( $mi_consumers ) ) :
+                        $mi_day_ts2  = strtotime( str_replace( '/', '-', $data_date ) );
+                        $mi_day_ymd2 = $mi_day_ts2 ? gmdate( 'Y-m-d', $mi_day_ts2 ) : gmdate( 'Y-m-d' );
+                        ?>
+                        <div class="rbfw_inv_modal_section">
+                            <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('clone'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e('Shared With Packages','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <table class="rbfw_inv_mini_table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e('Package','booking-and-rental-manager-for-woocommerce'); ?></th>
+                                        <th class="rbfw_inv_ta_r"><?php esc_html_e('Booked From This Item','booking-and-rental-manager-for-woocommerce'); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php
+                                $mi_consumer_shown = 0;
+                                foreach ( $mi_consumers as $mi_parent ) {
+                                    if ( get_post_type( $mi_parent ) !== 'rbfw_item' ) {
+                                        continue;
+                                    }
+                                    $mi_consumer_shown++;
+                                    /* Per-package figure: temporarily narrow the index to this
+                                       one parent so the shared counter reports its share alone. */
+                                    $mi_parent_rows = get_post_meta( $mi_parent, 'multiple_items_info', true );
+                                    $mi_parent_used = 0;
+                                    $mi_parent_inv  = get_post_meta( $mi_parent, 'rbfw_inventory', true );
+                                    if ( is_array( $mi_parent_rows ) && is_array( $mi_parent_inv ) ) {
+                                        $mi_names = [];
+                                        foreach ( $mi_parent_rows as $mi_pr ) {
+                                            if ( is_array( $mi_pr ) && isset( $mi_pr['source_id'] ) && (int) $mi_pr['source_id'] === (int) $data_id && ! empty( $mi_pr['item_name'] ) ) {
+                                                $mi_names[] = (string) $mi_pr['item_name'];
+                                            }
+                                        }
+                                        foreach ( $mi_parent_inv as $mi_entry ) {
+                                            if ( ! is_array( $mi_entry ) || empty( $mi_entry['booked_dates'] ) || ! in_array( $data_date, (array) $mi_entry['booked_dates'], true ) ) {
+                                                continue;
+                                            }
+                                            if ( ! in_array( $mi_entry['rbfw_order_status'] ?? '', rbfw_get_blocking_order_statuses(), true ) ) {
+                                                continue;
+                                            }
+                                            $mi_parent_used += rbfw_mi_entry_units_for_source( $mi_entry, $data_id, $mi_names );
+                                        }
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td><a href="<?php echo esc_url( admin_url( 'post.php?post=' . $mi_parent . '&action=edit' ) ); ?>" class="rbfw_inv_shared_link"><?php echo esc_html( rbfw_mi_source_title( $mi_parent ) ); ?></a></td>
+                                        <td class="rbfw_inv_qty_cell"><span class="rbfw_inv_qty_badge <?php echo esc_attr( $mi_parent_used > 0 ? 'rbfw_inv_qty_pos' : 'rbfw_inv_qty_zero' ); ?>"><?php echo esc_html( $mi_parent_used ); ?></span></td>
+                                    </tr>
+                                <?php } ?>
+                                <?php if ( ! $mi_consumer_shown ) { ?>
+                                    <tr><td colspan="2"><?php esc_html_e('No packages currently draw on this item.','booking-and-rental-manager-for-woocommerce'); ?></td></tr>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <p class="rbfw_inv_modal_hint"><?php esc_html_e('These packages share this item\'s stock, so their bookings are already counted in the Available Quantity above.','booking-and-rental-manager-for-woocommerce'); ?></p>
+                        </div>
+                    <?php endif; ?>
 
                     <?php if(!empty($rbfw_resort_room_data) && $rent_type == 'resort'){ ?>
                     <div class="rbfw_inv_modal_section">
@@ -2515,7 +2769,59 @@ function rbfw_get_stock_edit_form() {
         <form class="rbfw_inv_edit_stock_form" data-post-id="<?php echo esc_attr( $post_id ); ?>">
             <div class="rbfw_inv_modal_body">
 
-                <?php if ( $rent_type === 'resort' ) : ?>
+                <?php if ( $rent_type === 'multiple_items' ) : ?>
+
+                    <?php
+                    $mi_rows = get_post_meta( $post_id, 'multiple_items_info', true );
+                    $mi_rows = is_array( $mi_rows ) ? $mi_rows : [];
+                    ?>
+                    <div class="rbfw_inv_modal_section">
+                        <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('box'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Sub-item Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <?php if ( ! empty( $mi_rows ) ) : ?>
+                            <table class="rbfw_inv_mini_table">
+                                <thead>
+                                    <tr>
+                                        <th><?php esc_html_e( 'Item', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php esc_html_e( 'Inventory Source', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th class="rbfw_inv_ta_r"><?php esc_html_e( 'Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ( $mi_rows as $mi_i => $mi_row ) :
+                                    $mi_src = function_exists( 'rbfw_mi_row_source_id' ) ? rbfw_mi_row_source_id( $mi_row ) : 0;
+                                    ?>
+                                    <tr>
+                                        <td><?php echo esc_html( $mi_row['item_name'] ?? '' ); ?></td>
+                                        <td>
+                                            <?php if ( $mi_src ) : ?>
+                                                <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $mi_src . '&action=edit' ) ); ?>" class="rbfw_inv_shared_link">
+                                                    <?php echo esc_html( rbfw_mi_source_title( $mi_src ) ); ?>
+                                                </a>
+                                                <span class="rbfw_inv_shared_pool"><?php
+                                                    printf(
+                                                        /* translators: %d: units of stock on the linked rental item. */
+                                                        esc_html__( 'shared pool: %d', 'booking-and-rental-manager-for-woocommerce' ),
+                                                        esc_html( rbfw_mi_source_stock( $mi_src ) )
+                                                    );
+                                                ?></span>
+                                            <?php else : ?>
+                                                <span class="rbfw_inv_shared_pool"><?php esc_html_e( 'Own inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="rbfw_inv_qty_cell"><input type="number" min="0" step="1" class="rbfw_inv_qty_input" name="qty[mi][<?php echo esc_attr( $mi_i ); ?>]" value="<?php echo esc_attr( $mi_row['available_qty'] ?? 0 ); ?>"></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                            <p class="rbfw_inv_modal_hint">
+                                <?php esc_html_e( 'For a linked row, Qty is a cap on the shared pool — set 0 to offer the linked item\'s full stock. Change the pool itself on that item. For an "Own inventory" row, Qty is its private stock.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </p>
+                        <?php else : ?>
+                            <div class="rbfw_inv_empty_modal_note"><?php esc_html_e( 'No sub-items configured. Add them on the item\'s Pricing tab first.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                        <?php endif; ?>
+                    </div>
+
+                <?php elseif ( $rent_type === 'resort' ) : ?>
 
                     <div class="rbfw_inv_modal_section">
                         <div class="rbfw_inv_section_label"><?php echo rbfw_inv_icon('bed'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static SVG ?> <?php esc_html_e( 'Room Stock', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -2669,7 +2975,24 @@ function rbfw_update_inventory_stock() {
 
     $qty = isset( $_POST['qty'] ) && is_array( $_POST['qty'] ) ? $_POST['qty'] : [];
 
-    if ( $rent_type === 'resort' ) {
+    if ( $rent_type === 'multiple_items' ) {
+
+        /* A package's stock lives on its sub-item rows. Writing the flat
+           rbfw_item_stock_quantity here (the old fall-through) changed nothing a
+           package actually reads. */
+        $mi_rows = get_post_meta( $post_id, 'multiple_items_info', true );
+        $mi_rows = is_array( $mi_rows ) ? $mi_rows : [];
+        $posted  = isset( $qty['mi'] ) && is_array( $qty['mi'] ) ? $qty['mi'] : [];
+
+        foreach ( $posted as $i => $value ) {
+            $i = absint( $i );
+            if ( isset( $mi_rows[ $i ] ) && is_array( $mi_rows[ $i ] ) ) {
+                $mi_rows[ $i ]['available_qty'] = (int) rbfw_inv_sanitize_qty( $value );
+            }
+        }
+        update_post_meta( $post_id, 'multiple_items_info', $mi_rows );
+
+    } elseif ( $rent_type === 'resort' ) {
 
         $room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
         $room_data = is_array( $room_data ) ? $room_data : [];
@@ -2939,13 +3262,25 @@ function rbfw_inventory_entry_variation_qty( $inventory, $value ) {
  */
 function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_end_datetime, $args = array() ) {
 	$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
-	if ( empty( $inventory ) || ! is_array( $inventory ) ) {
-		return 0;
-	}
+	$inventory = is_array( $inventory ) ? $inventory : array();
 
 	$variation_value  = isset( $args['variation_value'] ) ? (string) $args['variation_value'] : '';
 	$type_key         = isset( $args['type_key'] ) ? (string) $args['type_key'] : '';
 	$exclude_order_id = isset( $args['exclude_order_id'] ) ? (int) $args['exclude_order_id'] : 0;
+	/* Units this item has committed through Multiple Items packages that share its
+	   stock. Skipped when the caller already counts them separately (the shared
+	   engine itself), and when a per-room / per-size filter is in play — a package
+	   books whole units and cannot target a room type or a size. */
+	$shared_booked = 0;
+	if ( empty( $args['skip_shared'] ) && '' === $variation_value && '' === $type_key
+		&& function_exists( 'rbfw_mi_bundle_booked_units' ) ) {
+		$shared_booked = rbfw_mi_bundle_booked_units(
+			$post_id,
+			$req_start_datetime,
+			$req_end_datetime,
+			array( 'exclude_order_id' => $exclude_order_id )
+		);
+	}
 
 	$blocking          = rbfw_get_blocking_order_statuses();
 	$mepp_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
@@ -3043,7 +3378,7 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 		}
 	}
 
-	return $total_booked;
+	return $total_booked + $shared_booked;
 }
 
 /**
@@ -3315,9 +3650,15 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
  * @param array $sibling_lines Other cart lines competing for the same stock.
  * @return array[]
  */
-function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = array() ) {
+function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = array(), $cart_lines = null ) {
 	$checks    = array();
 	$rent_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+
+	/* Cart lines competing for a SHARED pool can belong to a different item than
+	   $rbfw_id (an individual rental vs a package that includes it), so they are
+	   passed separately from $sibling_lines, which is same-item only. Null means
+	   the caller has no cart context — nothing extra is counted. */
+	$shared_args = is_array( $cart_lines ) ? array( 'cart_lines' => $cart_lines ) : array();
 
 	$start_dt = ! empty( $values['rbfw_start_datetime'] ) ? $values['rbfw_start_datetime'] : '';
 	$end_dt   = ! empty( $values['rbfw_end_datetime'] ) ? $values['rbfw_end_datetime'] : '';
@@ -3367,6 +3708,12 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 				}
 			}
 
+			/* Packages sharing this item's stock: their committed orders are already
+			   folded into $remaining, so only their pending cart lines are added here. */
+			if ( is_array( $cart_lines ) && function_exists( 'rbfw_mi_cart_bundle_units' ) ) {
+				$cart_used += rbfw_mi_cart_bundle_units( $rbfw_id, $cart_lines, $start_dt, $end_dt );
+			}
+
 			$available = max( 0, $remaining - $cart_used );
 			$checks[]  = array(
 				'ok'        => ( $requested <= $available ),
@@ -3412,6 +3759,10 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	/* ---- Multiple items: one check per chosen item ---- */
 	if ( 'multiple_items' === $rent_type ) {
 		$lines = isset( $values['multiple_items_info'] ) && is_array( $values['multiple_items_info'] ) ? $values['multiple_items_info'] : array();
+		/* Units this same booking has already claimed from each shared pool. Two rows
+		   of one package may point at the same rental item, and each must be measured
+		   against what the earlier rows left rather than the full pool. */
+		$shared_claimed = array();
 		foreach ( $lines as $li ) {
 			if ( ! is_array( $li ) || empty( $li['item_name'] ) ) {
 				continue;
@@ -3420,12 +3771,27 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			if ( $req_qty < 1 ) {
 				continue;
 			}
-			$stock     = isset( $li['available_qty'] ) ? (int) $li['available_qty'] : null;
-			if ( null === $stock ) {
-				continue; // unknown -> fail open
+			/* Linked rows are validated against the shared pool: the source item's
+			   stock minus its own bookings, minus every package that draws on it,
+			   minus the competing cart lines. Unlinked rows keep the private counter. */
+			$shared_available = function_exists( 'rbfw_mi_row_available_qty' )
+				? rbfw_mi_row_available_qty( $rbfw_id, $li, $start_dt, $end_dt, $shared_args )
+				: null;
+
+			if ( null !== $shared_available ) {
+				$li_source                    = rbfw_mi_row_source_id( $li );
+				$already                      = isset( $shared_claimed[ $li_source ] ) ? (int) $shared_claimed[ $li_source ] : 0;
+				$available                    = (int) $shared_available - $already;
+				$shared_claimed[ $li_source ] = $already + $req_qty;
+			} else {
+				$stock = isset( $li['available_qty'] ) ? (int) $li['available_qty'] : null;
+				if ( null === $stock ) {
+					continue; // unknown -> fail open
+				}
+				$booked    = rbfw_count_overlapping_multi_item_qty( $rbfw_id, $start_dt, $end_dt, $li['item_name'] );
+				$available = $stock - $booked;
 			}
-			$booked    = rbfw_count_overlapping_multi_item_qty( $rbfw_id, $start_dt, $end_dt, $li['item_name'] );
-			$available = $stock - $booked;
+
 			$checks[]  = array(
 				'ok'        => ( $req_qty <= $available ),
 				'requested' => $req_qty,
@@ -3570,6 +3936,11 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	$stock     = rbfw_get_effective_item_stock( $rbfw_id );
 	$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt );
 	$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt );
+	/* Packages sharing this item's stock: $booked already covers their orders,
+	   so only their still-pending cart lines are added. */
+	if ( is_array( $cart_lines ) && function_exists( 'rbfw_mi_cart_bundle_units' ) ) {
+		$used += rbfw_mi_cart_bundle_units( $rbfw_id, $cart_lines, $start_dt, $end_dt );
+	}
 	$available = $stock - $booked - $used;
 	$checks[]  = array(
 		'ok'        => ( $requested <= $available ),
