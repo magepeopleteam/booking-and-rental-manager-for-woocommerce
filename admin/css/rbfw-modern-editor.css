@@ -5250,6 +5250,18 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding: 12px 16px !important;
 }
 
+/* Shared inventory: extra "Inventory Source" column (see admin_style.css). */
+.rbfw-me-pricing-classic-wrap .rbfw-mi-items-card.rbfw-mi-has-source .item-row {
+    grid-template-columns: minmax(150px, 1.2fr) minmax(150px, 1.2fr) 92px repeat(var(--rbfw-mi-rate-count, 4), minmax(100px, 1fr)) 36px !important;
+    min-width: 900px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_multiple_items .rbfw-mi-source-input {
+    max-width: 100% !important;
+    min-height: 34px !important;
+    width: 100% !important;
+}
+
 .rbfw-me-pricing-classic-wrap .rbfw-mi-items-head {
     background: #f0f4fb !important;
     border-bottom: 1px solid #dde4ef !important;
@@ -9572,3 +9584,71 @@ textarea.rbfw-me-field-invalid {
     text-transform: uppercase;
 }
 .rbfw-me-loc-inv-name { color: #1f2733; font-size: 13px; font-weight: 600; }
+
+/* ── Multiple Items: shared-inventory column, Qty cell and tooltips ──────── */
+.rbfw-me-pricing-classic-wrap .rbfw_multiple_items .rbfw-mi-qty-wrap {
+    align-items: center !important;
+    display: flex !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_multiple_items .rbfw-mi-qty-wrap .qty-input {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-items-head .rbfw-mi-tip {
+    margin-left: 4px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-tip {
+    align-items: center !important;
+    color: #8a94a6 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-tip:hover,
+.rbfw-me-pricing-classic-wrap .rbfw-mi-tip:focus {
+    color: #1a56db !important;
+    outline: none !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-tip.is-hidden {
+    visibility: hidden !important;
+}
+
+/* Tooltip bubble for the Multiple Items help icons. Appended to <body> so the
+   horizontally scrolling items card cannot clip it; positioned by JS. */
+.rbfw-mi-tip-bubble {
+    background: #1f2937;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, .22);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    left: 0;
+    letter-spacing: 0;
+    line-height: 1.5;
+    max-width: 320px;
+    opacity: 0;
+    padding: 9px 12px;
+    pointer-events: none;
+    position: fixed;
+    text-transform: none;
+    top: 0;
+    transition: opacity .12s ease;
+    visibility: hidden;
+    white-space: normal;
+    width: max-content;
+    z-index: 160000;
+}
+
+.rbfw-mi-tip-bubble.is-visible {
+    opacity: 1;
+    visibility: visible;
+}

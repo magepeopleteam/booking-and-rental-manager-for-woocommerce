@@ -6411,6 +6411,20 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     min-width: 820px;
 }
 
+/* Shared inventory adds an "Inventory Source" column between name and qty.
+   Scoped to the opt-in wrapper class so the original grid is untouched when
+   the feature is switched off. */
+#rbfw_add_meta_box .rbfw-mi-items-card.rbfw-mi-has-source .item-row {
+    grid-template-columns: minmax(170px, 1.2fr) minmax(170px, 1.2fr) 96px repeat(var(--rbfw-mi-rate-count, 4), minmax(120px, 1fr)) 36px;
+    min-width: 1000px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-source-input {
+    max-width: 100%;
+    min-height: 36px;
+    width: 100%;
+}
+
 #rbfw_add_meta_box .rbfw-mi-items-head {
     background: #eef3fb;
     border-bottom: 1px solid #d3dbe9;
@@ -7617,6 +7631,10 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 
     #rbfw_add_meta_box .rbfw_multiple_items .item-row {
         grid-template-columns: minmax(170px, 1fr) 64px repeat(var(--rbfw-mi-rate-count, 4), 112px) 36px;
+    }
+
+    #rbfw_add_meta_box .rbfw-mi-items-card.rbfw-mi-has-source .item-row {
+        grid-template-columns: minmax(150px, 1fr) minmax(150px, 1fr) 92px repeat(var(--rbfw-mi-rate-count, 4), 112px) 36px;
     }
 }
 
@@ -9535,4 +9553,108 @@ a.rbfw-switch-to-modern .rbfw-switch-to-modern__icon {
 
 a.rbfw-switch-to-modern .rbfw-switch-to-modern__label {
     line-height: 1.4;
+}
+
+/* ── Multiple Items: shared-inventory column, Qty cell and tooltips ──────── */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-qty-wrap {
+    align-items: center;
+    display: flex;
+    gap: 6px;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-qty-wrap .qty-input {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box .rbfw-mi-items-head .rbfw-mi-tip {
+    margin-left: 4px;
+}
+
+#rbfw_add_meta_box .rbfw-mi-tip {
+    align-items: center;
+    color: #8a94a6;
+    cursor: pointer;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 13px;
+    line-height: 1;
+    transition: color .15s ease;
+}
+
+#rbfw_add_meta_box .rbfw-mi-tip:hover,
+#rbfw_add_meta_box .rbfw-mi-tip:focus {
+    color: #1a56db;
+    outline: none;
+}
+
+#rbfw_add_meta_box .rbfw-mi-tip.is-hidden {
+    visibility: hidden;
+}
+
+/* Tooltip bubble for the Multiple Items help icons. Appended to <body> so the
+   horizontally scrolling items card cannot clip it; positioned by JS. */
+.rbfw-mi-tip-bubble {
+    background: #1f2937;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, .22);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    left: 0;
+    letter-spacing: 0;
+    line-height: 1.5;
+    max-width: 320px;
+    opacity: 0;
+    padding: 9px 12px;
+    pointer-events: none;
+    position: fixed;
+    text-transform: none;
+    top: 0;
+    transition: opacity .12s ease;
+    visibility: hidden;
+    white-space: normal;
+    width: max-content;
+    z-index: 160000;
+}
+
+.rbfw-mi-tip-bubble.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ── Inventory page: shared-inventory (Multiple Items) surfaces ──────────── */
+.rbfw_inv_shared_note {
+    color: #7a5a1f;
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 3px;
+}
+
+.rbfw_inv_shared_link {
+    color: #1a56db;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.rbfw_inv_shared_link:hover {
+    text-decoration: underline;
+}
+
+.rbfw_inv_shared_pool {
+    color: #6b7790;
+    display: block;
+    font-size: 11px;
+    line-height: 1.3;
+    margin-top: 2px;
+}
+
+.rbfw_inv_modal_hint {
+    color: #6b7790;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 8px 0 0;
 }

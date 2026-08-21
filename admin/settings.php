@@ -194,6 +194,18 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 
 
             array(
+                'name' => 'rbfw_mi_shared_inventory',
+                'label' => esc_html__( 'Multiple Items shared inventory', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "Let a Multiple Items rental draw its stock from an existing rental item instead of a private counter. When a row is linked, both the individual rental and every package that includes it share one pool for the selected date and time. Rows left on their own inventory are unaffected.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+
+            array(
                 'name' => 'inventory_based_on_return',
                 'label' => esc_html__( 'Inventory manage based on return', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to inventory manage based on return, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),

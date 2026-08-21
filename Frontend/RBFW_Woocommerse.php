@@ -403,16 +403,23 @@ if (!class_exists('RBFW_Woocommerce')) {
             }
 
             // Other lines for the same item already in the cart compete for the stock.
-            $siblings = array();
+            // $cart_lines carries every rental line: with Multiple Items shared
+            // inventory a line for a DIFFERENT item can hold the same units.
+            $siblings   = array();
+            $cart_lines = array();
             if ( function_exists( 'WC' ) && WC()->cart ) {
                 foreach ( WC()->cart->get_cart() as $ci ) {
-                    if ( isset( $ci['rbfw_id'] ) && (int) $ci['rbfw_id'] === (int) $rbfw_id ) {
+                    if ( ! isset( $ci['rbfw_id'] ) ) {
+                        continue;
+                    }
+                    $cart_lines[] = $ci;
+                    if ( (int) $ci['rbfw_id'] === (int) $rbfw_id ) {
                         $siblings[] = $ci;
                     }
                 }
             }
 
-            $checks  = rbfw_check_rental_availability( $rbfw_id, $values, $siblings );
+            $checks  = rbfw_check_rental_availability( $rbfw_id, $values, $siblings, $cart_lines );
             $blocked = false;
             foreach ( $checks as $check ) {
                 if ( empty( $check['ok'] ) ) {
@@ -533,6 +540,10 @@ if (!class_exists('RBFW_Woocommerce')) {
             }
 
             $seen = array(); // rbfw_id => array of already-validated line values (siblings)
+            // Every line validated so far, regardless of item: Multiple Items shared
+            // inventory lets two different items draw on one pool, so the running
+            // total has to be cart-wide, not per item.
+            $processed = array();
 
             foreach ( WC()->cart->get_cart() as $values ) {
                 $rbfw_id = isset( $values['rbfw_id'] ) ? $values['rbfw_id'] : 0;
@@ -541,7 +552,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
 
                 $siblings = isset( $seen[ $rbfw_id ] ) ? $seen[ $rbfw_id ] : array();
-                $checks   = rbfw_check_rental_availability( $rbfw_id, $values, $siblings );
+                $checks   = rbfw_check_rental_availability( $rbfw_id, $values, $siblings, $processed );
                 foreach ( $checks as $check ) {
                     if ( empty( $check['ok'] ) ) {
                         wc_add_notice( $this->rbfw_availability_notice( $check ), 'error' );
@@ -549,6 +560,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
 
                 $seen[ $rbfw_id ][] = $values;
+                $processed[]        = $values;
             }
         }
 
@@ -641,6 +653,15 @@ if (!class_exists('RBFW_Woocommerce')) {
             return $billing;
         }
 
+        /**
+         * Rebuild the chosen Multiple Items lines from the stored configuration.
+         *
+         * @param int    $rbfw_id         Multiple Items rental id.
+         * @param array  $submitted_items Posted rows (quantities only are trusted).
+         * @param string $duration_type   hourly|daily|weekly|monthly.
+         * @param int    $duration_qty    Number of those units.
+         * @return array{items:array,total:float}
+         */
         private function rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_items, $duration_type, $duration_qty ) {
             $stored_items = get_post_meta( $rbfw_id, 'multiple_items_info', true );
             $stored_items = is_array( $stored_items ) ? $stored_items : array();
@@ -666,12 +687,22 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $quantity = min( $quantity, $available );
                 }
 
+                /* Shared inventory: record which existing rental item this row draws
+                   from. Deliberately NOT clamped to the shared pool here — silently
+                   shrinking the line would hide the problem from the customer. The
+                   requested quantity is carried through so rbfw_check_rental_availability()
+                   can reject it at add-to-cart with a real "only N left" notice. */
+                $source_id = function_exists( 'rbfw_mi_row_source_id' ) ? rbfw_mi_row_source_id( $stored_item ) : 0;
+
                 $unit_price = isset( $stored_item[ $price_key ] ) ? (float) $stored_item[ $price_key ] : 0;
                 $total     += $unit_price * $quantity * $billing['multiplier'];
                 $items[]    = array(
                     'item_name'  => isset( $stored_item['item_name'] ) ? sanitize_text_field( $stored_item['item_name'] ) : '',
                     'item_qty'   => $quantity,
                     'item_price' => $unit_price,
+                    /* Stored on the line so the source item can be identified later even
+                       if the row is renamed or unlinked. 0 for a private-stock row. */
+                    'source_id'  => $source_id,
                 );
             }
 

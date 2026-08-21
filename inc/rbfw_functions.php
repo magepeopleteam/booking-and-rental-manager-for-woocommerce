@@ -1771,6 +1771,16 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         }
     }
 
+    /* Multiple Items packages sharing this item's stock hold units for the same
+       window, so subtract them before reporting what is still free. */
+    if ( function_exists( 'rbfw_mi_bundle_booked_units' ) ) {
+        $total_booked += rbfw_mi_bundle_booked_units(
+            $post_id,
+            $start_date . ' ' . $start_time,
+            $end_date . ' ' . $end_time
+        );
+    }
+
     return max( 0, $total_stock - $total_booked );
 }
 	/****************************************************
@@ -3241,6 +3251,14 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 						update_post_meta( $new_post_id, $meta_key, rbfw_safe_unserialize( $meta_values[0] ) );
 					}
 					update_post_meta( $new_post_id, 'rbfw_inventory', '' );
+
+					/* A duplicated Multiple Items rental carries the same shared-inventory
+					   links, so the copy has to appear in the source -> parents index too —
+					   otherwise its bookings would never draw down the linked item's stock. */
+					if ( function_exists( 'rbfw_mi_sync_source_map' ) ) {
+						$rbfw_dup_rows = get_post_meta( $new_post_id, 'multiple_items_info', true );
+						rbfw_mi_sync_source_map( $new_post_id, is_array( $rbfw_dup_rows ) ? $rbfw_dup_rows : array() );
+					}
 				}
 			}
 		}
