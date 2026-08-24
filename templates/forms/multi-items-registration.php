@@ -435,8 +435,15 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                                     <div class="rbfw_bikecarmd_es_table">
                                         <?php
                                         $c = 0;
-                                        foreach ($multiple_items_info as $key=>$item) { ?>
-                                            <?php if(isset($item['item_name']) && $item['available_qty'] > 0){ ?>
+                                        foreach ($multiple_items_info as $key=>$item) {
+                                            /* Rows linked to an existing rental item show that item's pool
+                                               (capped by this package's own Qty) instead of a private counter.
+                                               The exact figure for the chosen date/time arrives over AJAX. */
+                                            $rbfw_mi_row_stock = function_exists( 'rbfw_mi_row_display_stock' )
+                                                ? rbfw_mi_row_display_stock( $item )
+                                                : (int) ( $item['available_qty'] ?? 0 );
+                                            ?>
+                                            <?php if(isset($item['item_name']) && $rbfw_mi_row_stock > 0){ ?>
                                                 <div class="rbfw-resource-item">
                                                     <div class="resource-title-qty">
                                                         <?php echo esc_html($item['item_name']); ?>
@@ -458,7 +465,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                                                     <div>
                                                         <?php  if($available_qty_info_switch == 'yes'){ ?>
-                                                            <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($item['available_qty']).')'; ?></span></i>
+                                                            <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($rbfw_mi_row_stock).')'; ?></span></i>
                                                         <?php } ?>
                                                     </div>
 
@@ -467,9 +474,11 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                                                         <div class="rbfw_qty_input">
                                                             <a class="rbfw_qty_minus rbfw_multi_items_qty_minus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-minus"></i></a>
                                                             <input type="hidden" name="multiple_items_info[<?php echo esc_attr($c); ?>][item_price]" class="rbfw_item_peice">
-                                                            <input name="multiple_items_info[<?php echo esc_attr($c); ?>][item_qty]" type="number" min="0" max="<?php echo esc_html($item['available_qty']); ?>" value="0" class="rbfw_muiti_items_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price-hourly="<?php echo esc_attr($item['hourly_price']); ?>" data-price-daily="<?php echo esc_attr($item['daily_price']); ?>" data-price-weekly="<?php echo esc_attr($item['weekly_price']); ?>" data-price-monthly="<?php echo esc_attr($item['monthly_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>"/>
+                                                            <input name="multiple_items_info[<?php echo esc_attr($c); ?>][item_qty]" type="number" min="0" max="<?php echo esc_attr($rbfw_mi_row_stock); ?>" value="0" class="rbfw_muiti_items_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-mi-key="<?php echo esc_attr($key); ?>" data-price-hourly="<?php echo esc_attr($item['hourly_price']); ?>" data-price-daily="<?php echo esc_attr($item['daily_price']); ?>" data-price-weekly="<?php echo esc_attr($item['weekly_price']); ?>" data-price-monthly="<?php echo esc_attr($item['monthly_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>"/>
                                                             <a class="rbfw_qty_plus rbfw_multi_items_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
                                                         </div>
+                                                        <?php /* Filled in by md_script.js once a date and duration are picked. */ ?>
+                                                        <span class="rbfw-mi-max-available" data-mi-key="<?php echo esc_attr($key); ?>"></span>
                                                     </div>
 
                                                     <input type="hidden" name="multiple_items_info[<?php echo esc_attr($c); ?>][item_name]" value="<?php echo esc_attr($item['item_name']); ?>">

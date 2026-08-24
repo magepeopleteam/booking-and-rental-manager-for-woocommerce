@@ -388,6 +388,14 @@
                     ],
                 ];
 
+                /* Shared inventory: a row may draw its stock from an existing rental item
+                   instead of its own private counter. The column is only rendered when the
+                   feature is switched on globally, so an untouched site keeps the old grid. */
+                $rbfw_mi_shared_on      = function_exists( 'rbfw_mi_shared_inventory_enabled' ) && rbfw_mi_shared_inventory_enabled();
+                $rbfw_mi_source_options = $rbfw_mi_shared_on ? rbfw_mi_get_source_options( $post_id ) : [];
+                // Shown as a disabled group so a missing item is explained, not just absent.
+                $rbfw_mi_source_blocked = $rbfw_mi_shared_on ? rbfw_mi_get_ineligible_sources( $post_id ) : [];
+
                 ?>
 
                 <section class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
@@ -432,9 +440,17 @@
                             </div>
                         </div>
 
-                        <div class="rbfw-mi-card rbfw-mi-items-card">
+                        <div class="rbfw-mi-card rbfw-mi-items-card <?php echo esc_attr( $rbfw_mi_shared_on ? 'rbfw-mi-has-source' : '' ); ?>">
                             <div class="rbfw-mi-items-head item-row">
                                 <div><?php esc_html_e( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <?php if ( $rbfw_mi_shared_on ) : ?>
+                                    <div>
+                                        <?php esc_html_e( 'Inventory Source', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                        <span class="rbfw-mi-tip" tabindex="0" role="button"
+                                              aria-label="<?php esc_attr_e( 'About Inventory Source', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                              data-rbfw-tip="<?php esc_attr_e( 'Leave a row on "Own inventory" to give it a private stock counter, or link it to an existing rental item so both share one pool for the selected date and time — booking it here reduces what that item has left, and booking that item reduces what this package can offer. Only rentals with a single stock pool can be linked: Multiple Day, Dress, Equipment, Others, and Single Day with "Manage inventory as timely" switched on.', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-circle-info"></i></span>
+                                    </div>
+                                <?php endif; ?>
                                 <div><?php esc_html_e( 'Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="hourly-field <?php echo esc_attr( $enabled_price_types['hourly'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Hourly ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="daily-field <?php echo esc_attr( $enabled_price_types['daily'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Daily ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -451,9 +467,58 @@
                                             <input type="text" value="<?php echo esc_attr( $item_price['item_name'] ?? '' ); ?>" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][item_name]" class="item-name-input" placeholder="<?php esc_attr_e( 'Enter item name', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                         </div>
 
+                                        <?php if ( $rbfw_mi_shared_on ) :
+                                            $rbfw_mi_row_source = isset( $item_price['source_id'] ) ? absint( $item_price['source_id'] ) : 0;
+                                            ?>
+                                            <div class="form-group rbfw-mi-source-field">
+                                                <label><?php esc_html_e('Inventory Source','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                                <select name="multiple_items_info[<?php echo esc_attr( $i ); ?>][source_id]" class="rbfw-mi-source-input">
+                                                    <option value=""><?php esc_html_e( 'Own inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                                    <?php foreach ( $rbfw_mi_source_options as $rbfw_mi_src_id => $rbfw_mi_src_title ) : ?>
+                                                        <option value="<?php echo esc_attr( $rbfw_mi_src_id ); ?>" data-stock="<?php echo esc_attr( rbfw_mi_source_stock( $rbfw_mi_src_id ) ); ?>" <?php selected( $rbfw_mi_row_source, $rbfw_mi_src_id ); ?>><?php echo esc_html( $rbfw_mi_src_title ); ?></option>
+                                                    <?php endforeach; ?>
+                                                    <?php if ( $rbfw_mi_row_source && ! isset( $rbfw_mi_source_options[ $rbfw_mi_row_source ] ) ) : ?>
+                                                        <?php /* Linked item no longer qualifies (deleted, or its rent type changed).
+                                                                 Keep it selectable so saving the row does not silently unlink it. */ ?>
+                                                        <?php $rbfw_mi_gone_title = rbfw_mi_source_title( $rbfw_mi_row_source ); ?>
+                                                        <option value="<?php echo esc_attr( $rbfw_mi_row_source ); ?>" selected>
+                                                            <?php echo esc_html( '' !== $rbfw_mi_gone_title ? $rbfw_mi_gone_title : '#' . $rbfw_mi_row_source ); ?>
+                                                            <?php esc_html_e( '(unavailable)', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                        </option>
+                                                    <?php endif; ?>
+                                                    <?php if ( ! empty( $rbfw_mi_source_blocked ) ) : ?>
+                                                        <optgroup label="<?php esc_attr_e( 'Cannot share stock', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                            <?php foreach ( $rbfw_mi_source_blocked as $rbfw_mi_blocked_label ) : ?>
+                                                                <option value="" disabled><?php echo esc_html( $rbfw_mi_blocked_label ); ?></option>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endif; ?>
+                                                </select>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <div class="form-group">
                                             <label><?php esc_html_e('Qty','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                            <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][available_qty]" class="qty-input" min="0" value="<?php echo esc_attr( $item_price['available_qty'] ?? 1 ); ?>" placeholder="1">
+                                            <div class="rbfw-mi-qty-wrap">
+                                                <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][available_qty]" class="qty-input" min="0" value="<?php echo esc_attr( $item_price['available_qty'] ?? 1 ); ?>" placeholder="1">
+                                                <?php
+                                                /* Qty caps a linked row, so the tooltip names the pool it is
+                                                   capping — a default of 1 otherwise hides a stock of 10.
+                                                   Kept as a tooltip so the row height never changes. */
+                                                $rbfw_mi_row_tip = '';
+                                                if ( $rbfw_mi_shared_on && ! empty( $rbfw_mi_row_source ) ) {
+                                                    $rbfw_mi_row_tip = sprintf(
+                                                        /* translators: %d: units of stock on the linked rental item. */
+                                                        __( 'Qty is a cap on the shared pool, not the stock itself. The linked item has %d in stock — set 0 to offer all of it, or a lower number to offer at most that many through this package.', 'booking-and-rental-manager-for-woocommerce' ),
+                                                        rbfw_mi_source_stock( $rbfw_mi_row_source )
+                                                    );
+                                                }
+                                                ?>
+                                                <span class="rbfw-mi-tip rbfw-mi-qty-tip<?php echo esc_attr( '' === $rbfw_mi_row_tip ? ' is-hidden' : '' ); ?>"
+                                                      tabindex="0" role="button"
+                                                      aria-label="<?php esc_attr_e( 'About this quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+                                                      data-rbfw-tip="<?php echo esc_attr( $rbfw_mi_row_tip ); ?>"><i class="fas fa-circle-info"></i></span>
+                                            </div>
                                         </div>
 
                                         <div class="form-group hourly-field <?php echo esc_attr( $enabled_price_types['hourly'] ? '' : 'disabled-field' ); ?>">
@@ -562,6 +627,57 @@
                     <script>
                         let rowCounter = <?php echo esc_js( count( $multiple_items_rows ) ); ?>;
                         let enabledPriceTypes = <?php echo wp_json_encode( $enabled_price_types ); ?>;
+                        /* Shared inventory: options for the per-row "Inventory Source" select.
+                           Empty object when the feature is off, in which case no column is drawn. */
+                        const rbfwMiSharedOn = <?php echo $rbfw_mi_shared_on ? 'true' : 'false'; ?>;
+                        <?php
+                        /* JS needs each source's pool as well as its name, so it is a
+                           separate payload from the id => title map the markup above uses. */
+                        $rbfw_mi_source_js = [];
+                        foreach ( $rbfw_mi_source_options as $rbfw_mi_js_id => $rbfw_mi_js_title ) {
+                            $rbfw_mi_source_js[ $rbfw_mi_js_id ] = [
+                                'label' => $rbfw_mi_js_title,
+                                'stock' => rbfw_mi_source_stock( $rbfw_mi_js_id ),
+                            ];
+                        }
+                        ?>
+                        const rbfwMiSourceOptions = <?php echo wp_json_encode( $rbfw_mi_source_js ); ?>;
+                        const rbfwMiBlockedOptions = <?php echo wp_json_encode( array_values( $rbfw_mi_source_blocked ) ); ?>;
+                        const rbfwMiOwnLabel = '<?php echo esc_js( __( 'Own inventory', 'booking-and-rental-manager-for-woocommerce' ) ); ?>';
+                        const rbfwMiSourceLabel = '<?php echo esc_js( __( 'Inventory Source', 'booking-and-rental-manager-for-woocommerce' ) ); ?>';
+                        const rbfwMiBlockedLabel = '<?php echo esc_js( __( 'Cannot share stock', 'booking-and-rental-manager-for-woocommerce' ) ); ?>';
+                        const rbfwMiQtyHint = '<?php echo esc_js( __( 'Qty is a cap on the shared pool, not the stock itself. The linked item has %d in stock — set 0 to offer all of it, or a lower number to offer at most that many through this package.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>';
+
+                        function rbfwMiEscapeHtml(value) {
+                            return String(value).replace(/[&<>"']/g, function (c) {
+                                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+                            });
+                        }
+
+                        function buildSourceField(itemIndex) {
+                            if (!rbfwMiSharedOn) {
+                                return '';
+                            }
+                            let options = '<option value="">' + rbfwMiEscapeHtml(rbfwMiOwnLabel) + '</option>';
+                            Object.keys(rbfwMiSourceOptions).forEach(function (id) {
+                                var src = rbfwMiSourceOptions[id];
+                                options += '<option value="' + rbfwMiEscapeHtml(id) + '" data-stock="' + rbfwMiEscapeHtml(src.stock) + '">'
+                                    + rbfwMiEscapeHtml(src.label) + '</option>';
+                            });
+                            if (rbfwMiBlockedOptions.length) {
+                                options += '<optgroup label="' + rbfwMiEscapeHtml(rbfwMiBlockedLabel) + '">';
+                                rbfwMiBlockedOptions.forEach(function (label) {
+                                    options += '<option value="" disabled>' + rbfwMiEscapeHtml(label) + '</option>';
+                                });
+                                options += '</optgroup>';
+                            }
+                            return `
+                                <div class="form-group rbfw-mi-source-field">
+                                    <label>${rbfwMiEscapeHtml(rbfwMiSourceLabel)}</label>
+                                    <select name="multiple_items_info[${itemIndex}][source_id]" class="rbfw-mi-source-input">${options}</select>
+                                </div>
+                            `;
+                        }
                         const priceTypeLabels = {
                             hourly: '<?php echo esc_js( __( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ) ); ?>',
                             daily: '<?php echo esc_js( __( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ) ); ?>',
@@ -632,9 +748,14 @@
                                     <input type="text" name="multiple_items_info[${itemIndex}][item_name]" class="item-name-input" placeholder="<?php echo esc_js( __( 'Enter item name', 'booking-and-rental-manager-for-woocommerce' ) ); ?>">
                                 </div>
 
+                                ${buildSourceField(itemIndex)}
+
                                 <div class="form-group">
                                     <label><?php echo esc_js( __( 'Qty', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
-                                    <input type="number" name="multiple_items_info[${itemIndex}][available_qty]" class="qty-input" min="0" value="1" placeholder="1">
+                                    <div class="rbfw-mi-qty-wrap">
+                                        <input type="number" name="multiple_items_info[${itemIndex}][available_qty]" class="qty-input" min="0" value="1" placeholder="1">
+                                        <span class="rbfw-mi-tip rbfw-mi-qty-tip is-hidden" tabindex="0" role="button" data-rbfw-tip=""><i class="fas fa-circle-info"></i></span>
+                                    </div>
                                 </div>
 
                                 ${buildPriceField('hourly', itemIndex)}
@@ -687,6 +808,132 @@
                                 }
                             });
                         }
+
+                        /* Picking a source fills an empty Item Name with the linked item's title,
+                           and adopts that item's stock as this row's Qty. Qty is a CAP on the shared
+                           pool, so leaving it at the default 1 would quietly offer one unit of a pool
+                           of ten. Only a default-looking Qty (blank, 0 or 1) is overwritten, and only
+                           at the moment the source is changed — a figure the admin chose deliberately
+                           survives. */
+                        document.addEventListener('change', function (event) {
+                            const select = event.target;
+                            if (!select || !select.classList || !select.classList.contains('rbfw-mi-source-input')) {
+                                return;
+                            }
+                            const row = select.closest('.item-row');
+                            if (!row) {
+                                return;
+                            }
+                            const option = select.options[select.selectedIndex];
+                            const label = option ? option.textContent.trim() : '';
+                            const stock = option ? parseInt(option.getAttribute('data-stock'), 10) : NaN;
+
+                            const nameInput = row.querySelector('.item-name-input');
+                            if (nameInput && !nameInput.value.trim() && select.value) {
+                                nameInput.value = label;
+                            }
+
+                            const qtyInput = row.querySelector('.qty-input');
+                            const tip = row.querySelector('.rbfw-mi-qty-tip');
+
+                            if (!select.value || isNaN(stock)) {
+                                if (tip) {
+                                    tip.setAttribute('data-rbfw-tip', '');
+                                    tip.classList.add('is-hidden');
+                                }
+                                return;
+                            }
+
+                            if (qtyInput) {
+                                const current = qtyInput.value.trim();
+                                if (current === '' || parseInt(current, 10) <= 1) {
+                                    qtyInput.value = stock;
+                                }
+                            }
+                            if (tip) {
+                                tip.setAttribute('data-rbfw-tip', rbfwMiQtyHint.replace('%d', stock));
+                                tip.classList.remove('is-hidden');
+                            }
+                        });
+
+                        /* Tooltips. The rows sit in a horizontally scrolling card, so an
+                           absolutely-positioned bubble would be clipped by that overflow —
+                           one shared element on <body> with fixed positioning is immune.
+                           Opens on hover and on keyboard focus, and toggles on click so it
+                           also works on touch. */
+                        (function () {
+                            if (window.rbfwMiTipReady) { return; }
+                            window.rbfwMiTipReady = true;
+
+                            var bubble = null;
+                            var pinned = null;
+
+                            function el() {
+                                if (!bubble) {
+                                    bubble = document.createElement('div');
+                                    bubble.className = 'rbfw-mi-tip-bubble';
+                                    document.body.appendChild(bubble);
+                                }
+                                return bubble;
+                            }
+
+                            function show(trigger) {
+                                var text = trigger.getAttribute('data-rbfw-tip');
+                                if (!text) { return; }
+                                var b = el();
+                                b.textContent = text;
+                                b.classList.add('is-visible');
+
+                                var r = trigger.getBoundingClientRect();
+                                var w = b.offsetWidth;
+                                var h = b.offsetHeight;
+                                var left = r.left + (r.width / 2) - (w / 2);
+                                left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
+                                var top = r.top - h - 10;
+                                if (top < 8) { top = r.bottom + 10; }
+                                b.style.left = left + 'px';
+                                b.style.top = top + 'px';
+                            }
+
+                            function hide() {
+                                if (bubble) { bubble.classList.remove('is-visible'); }
+                            }
+
+                            document.addEventListener('mouseover', function (e) {
+                                var t = e.target.closest ? e.target.closest('.rbfw-mi-tip') : null;
+                                if (t && !pinned) { show(t); }
+                            });
+                            document.addEventListener('mouseout', function (e) {
+                                var t = e.target.closest ? e.target.closest('.rbfw-mi-tip') : null;
+                                if (!t || pinned) { return; }
+                                // Moving between the trigger and its icon is not leaving it.
+                                if (e.relatedTarget && t.contains(e.relatedTarget)) { return; }
+                                hide();
+                            });
+                            document.addEventListener('focusin', function (e) {
+                                var t = e.target.closest ? e.target.closest('.rbfw-mi-tip') : null;
+                                if (t) { show(t); }
+                            });
+                            document.addEventListener('focusout', function (e) {
+                                var t = e.target.closest ? e.target.closest('.rbfw-mi-tip') : null;
+                                if (t && !pinned) { hide(); }
+                            });
+                            document.addEventListener('click', function (e) {
+                                var t = e.target.closest ? e.target.closest('.rbfw-mi-tip') : null;
+                                if (t) {
+                                    e.preventDefault();
+                                    if (pinned === t) { pinned = null; hide(); }
+                                    else { pinned = t; show(t); }
+                                    return;
+                                }
+                                if (pinned) { pinned = null; hide(); }
+                            });
+                            document.addEventListener('keydown', function (e) {
+                                if (e.key === 'Escape' && pinned) { pinned = null; hide(); }
+                            });
+                            window.addEventListener('scroll', function () { if (pinned) { show(pinned); } else { hide(); } }, true);
+                            window.addEventListener('resize', hide);
+                        })();
 
                         updateRowGridLayout();
                         updateRemoveButtons();
@@ -1850,7 +2097,16 @@
 
                         $item_name = trim( (string) ( $row['item_name'] ?? '' ) );
                         $qty       = trim( (string) ( $row['available_qty'] ?? '' ) );
+                        $source_id = absint( $row['source_id'] ?? 0 );
                         $has_price = false;
+
+                        /* A row linked to an existing rental item inherits that item's title
+                           when the admin leaves the name blank (see the save routine), so an
+                           empty name must not block the save here either. */
+                        if ( $item_name === '' && $source_id > 0 ) {
+                            $source_title = function_exists( 'rbfw_mi_source_title' ) ? rbfw_mi_source_title( $source_id ) : get_the_title( $source_id );
+                            $item_name    = $source_title ? $source_title : '#' . $source_id;
+                        }
 
                         foreach ( $enabled_types as $type => $enabled ) {
                             if ( ! $enabled ) {
@@ -1863,7 +2119,7 @@
                             }
                         }
 
-                        if ( $item_name === '' && $qty === '' && ! $has_price ) {
+                        if ( $item_name === '' && $qty === '' && ! $has_price && $source_id < 1 ) {
                             continue;
                         }
 
@@ -1989,9 +2245,16 @@
                             $daily_price   = isset( $item['daily_price'] ) ? trim( (string) $item['daily_price'] ) : '';
                             $weekly_price  = isset( $item['weekly_price'] ) ? trim( (string) $item['weekly_price'] ) : '';
                             $monthly_price = isset( $item['monthly_price'] ) ? trim( (string) $item['monthly_price'] ) : '';
+                            $source_id     = isset( $item['source_id'] ) ? absint( $item['source_id'] ) : 0;
 
-                            return $item_name !== '' || $hourly_price !== '' || $daily_price !== '' || $weekly_price !== '' || $monthly_price !== '';
+                            return $item_name !== '' || $source_id > 0 || $hourly_price !== '' || $daily_price !== '' || $weekly_price !== '' || $monthly_price !== '';
                         } ) );
+
+                        // Shared inventory: store the link as an explicit (source_id,
+                        // inventory_source) pair and inherit the source's title when blank.
+                        if ( function_exists( 'rbfw_mi_normalize_rows' ) ) {
+                            $multiple_items_info = rbfw_mi_normalize_rows( $multiple_items_info );
+                        }
                     }
 
 
@@ -2068,6 +2331,11 @@
 
                     update_post_meta( $post_id, 'pricing_types', $pricing_types );
                     update_post_meta( $post_id, 'multiple_items_info', $multiple_items_info );
+                    if ( function_exists( 'rbfw_mi_sync_source_map' ) ) {
+                        // Keep the source -> parents index current so the individual rental
+                        // knows which packages draw from its stock.
+                        rbfw_mi_sync_source_map( $post_id, is_array( $multiple_items_info ) ? $multiple_items_info : [] );
+                    }
 
 
 					update_post_meta( $post_id, 'rbfw_resort_room_data', $rbfw_resort_room_data );

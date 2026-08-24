@@ -9434,6 +9434,29 @@ i.fas.fa-minus {
     margin-top: 0;
 }
 
+/* ── Shared inventory: live "Max available" hint under the stepper ── */
+.rbfw_multi_items_right .rbfw_bikecarmd_es_table .rbfw-mi-max-available {
+    color: #2f855a;
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.rbfw_multi_items_right .rbfw_bikecarmd_es_table .rbfw-mi-max-available:empty {
+    display: none;
+}
+
+.rbfw_multi_items_right .rbfw_bikecarmd_es_table .rbfw-resource-item.rbfw_mi_sold_out .rbfw-mi-max-available {
+    color: #b91c1c;
+}
+
+.rbfw_multi_items_right .rbfw_bikecarmd_es_table .rbfw-resource-item.rbfw_mi_sold_out {
+    opacity: .72;
+}
+
 /* ── Available qty badge ── */
 .rbfw_multi_items_right .rbfw_bikecarmd_es_table .resource-qty {
     background: #f0f4fb;
