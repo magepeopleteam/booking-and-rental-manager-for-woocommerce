@@ -94,9 +94,9 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 		/**
 		 * Build the context from a Standalone (native checkout) POST payload — exactly one item.
 		 *
-		 * The standalone form computes prices client-side; v1 uses the posted duration price as
-		 * the discount BASE (a ceiling) and the engine recomputes the discount VALUE server-side.
-		 * The base subtotal itself remains partly client-derived (documented pre-existing gap).
+		 * RBFW_Native_Checkout replaces all accepted price aliases in this payload with the
+		 * authoritative server-side quote before this context is built. The form values are
+		 * therefore selection data only, never payment authority.
 		 *
 		 * @param array $post Sanitized POST array.
 		 * @return array
@@ -126,10 +126,8 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 				}
 				$days = $days > 0 ? $days : 1.0;
 
-				// Base price: the booking SUBTOTAL (rental + services + variations, excluding the
-				// management fee and the security deposit) — the same definition the WooCommerce
-				// context uses. Falls back to the posted grand total. Client-derived, so it is only
-				// ever a ceiling: the engine recomputes the discount VALUE server-side.
+				// Base price: the checkout's authoritative pre-delivery quote. The native checkout
+				// replaces all three accepted aliases before calling this method.
 				$base = 0.0;
 				foreach ( array( 'rbfw_subtotal', 'rbfw_sub_total', 'rbfw_total' ) as $pk ) {
 					if ( isset( $post[ $pk ] ) && '' !== $post[ $pk ] ) {

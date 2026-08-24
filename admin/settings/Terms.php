@@ -140,9 +140,9 @@
 				$rbfw_term   = get_post_meta( $post_id, 'mep_event_term', true );
 				$rbfw_term   = is_array( $rbfw_term ) ? $rbfw_term : [];
 				$rbfw_term[] = [
-					'rbfw_term_required' => sanitize_text_field( $_POST['rbfw_term_required'] ?? 'no' ),
-					'rbfw_term_title'    => sanitize_text_field( $_POST['rbfw_term_title'] ),
-					'rbfw_term_url'      => esc_url_raw( $_POST['rbfw_term_url'] ?? '' ),
+					'rbfw_term_required' => sanitize_text_field( wp_unslash( $_POST['rbfw_term_required'] ?? 'no' ) ),
+					'rbfw_term_title'    => sanitize_text_field( wp_unslash( $_POST['rbfw_term_title'] ) ),
+					'rbfw_term_url'      => esc_url_raw( wp_unslash( $_POST['rbfw_term_url'] ?? '' ) ),
 				];
 				update_post_meta( $post_id, 'mep_event_term', $rbfw_term );
 				ob_start();
@@ -166,9 +166,9 @@
 					wp_send_json_error( [ 'message' => __( 'Term not found.', 'booking-and-rental-manager-for-woocommerce' ) ] );
 				}
 				$rbfw_term[ $item_id ] = [
-					'rbfw_term_required' => sanitize_text_field( $_POST['rbfw_term_required'] ?? 'no' ),
-					'rbfw_term_title'    => sanitize_text_field( $_POST['rbfw_term_title']    ?? '' ),
-					'rbfw_term_url'      => esc_url_raw( $_POST['rbfw_term_url']              ?? '' ),
+					'rbfw_term_required' => sanitize_text_field( wp_unslash( $_POST['rbfw_term_required'] ?? 'no' ) ),
+					'rbfw_term_title'    => sanitize_text_field( wp_unslash( $_POST['rbfw_term_title'] ?? '' ) ),
+					'rbfw_term_url'      => esc_url_raw( wp_unslash( $_POST['rbfw_term_url'] ?? '' ) ),
 				];
 				update_post_meta( $post_id, 'mep_event_term', $rbfw_term );
 				ob_start();
@@ -303,7 +303,7 @@
                                 <div>
                                     <p class="term_title"><?php echo esc_html( $value['rbfw_term_title'] ); ?></p>
                                     <p class="term_url">
-                                        <a target="_blank" href="<?php echo esc_html( $value['rbfw_term_url'] ); ?>">
+										<a target="_blank" rel="noopener noreferrer" href="<?php echo esc_url( $value['rbfw_term_url'] ); ?>">
                                             <?php esc_html_e('View Terms & Conditions','booking-and-rental-manager-for-woocommerce'); ?>
                                         </a>
                                     </p>
@@ -366,9 +366,9 @@
 			
 				// Sanitize and update data
 				$new_data = [
-					'rbfw_term_required'   => sanitize_text_field( $_POST['rbfw_term_required'] ),
-					'rbfw_term_title'   => sanitize_text_field( $_POST['rbfw_term_title'] ),
-					'rbfw_term_url' => wp_kses_post( $_POST['rbfw_term_url'] ),
+					'rbfw_term_required' => sanitize_text_field( wp_unslash( $_POST['rbfw_term_required'] ) ),
+					'rbfw_term_title'    => sanitize_text_field( wp_unslash( $_POST['rbfw_term_title'] ) ),
+					'rbfw_term_url'      => esc_url_raw( wp_unslash( $_POST['rbfw_term_url'] ) ),
 				];
 			
 				$rbfw_term[ $term_item_id ] = $new_data;
@@ -421,9 +421,9 @@
 			
 				// Sanitize user inputs
 				$new_data = [
-					'rbfw_term_required'   => sanitize_text_field( $_POST['rbfw_term_required'] ),
-					'rbfw_term_title'   => sanitize_text_field( $_POST['rbfw_term_title'] ),
-					'rbfw_term_url'   => sanitize_text_field( $_POST['rbfw_term_url'] ),
+					'rbfw_term_required' => sanitize_text_field( wp_unslash( $_POST['rbfw_term_required'] ) ),
+					'rbfw_term_title'    => sanitize_text_field( wp_unslash( $_POST['rbfw_term_title'] ) ),
+					'rbfw_term_url'      => esc_url_raw( wp_unslash( $_POST['rbfw_term_url'] ) ),
                 ];
 			
 				// Retrieve existing term meta
