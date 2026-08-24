@@ -6,8 +6,12 @@ if (!class_exists('RBFW_Woocommerce')) {
     class RBFW_Woocommerce
     {
 
-        public function __construct()
+        public function __construct( $register_hooks = true )
         {
+            if ( ! $register_hooks ) {
+                return;
+            }
+
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_booking_nonce'), 4, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
@@ -812,13 +816,15 @@ if (!class_exists('RBFW_Woocommerce')) {
             );
         }
 
-        public function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
+        public function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id, $request_data = null ) {
 
-            if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+            $request_data = is_array( $request_data ) ? $request_data : $_POST;
+
+            if ( ! ( isset( $request_data['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $request_data['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
                 return;
             }
 
-            $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
+            $sd_input_data_sabitized = RBFW_Function::data_sanitize( wp_unslash( $request_data ) );
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
             $_raw = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true );
@@ -966,8 +972,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_bikecarsd_selected_date = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $bikecarsd_selected_date      = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $rbfw_bikecarsd_selected_time = isset( $sd_input_data_sabitized['rbfw_start_time'] ) ? $sd_input_data_sabitized['rbfw_start_time'] : '';
-                $end_date = isset( $_POST['rbfw_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_date'] ) ) : '';
-                $end_time = isset( $_POST['rbfw_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_time'] ) ) : '';
+                $end_date = isset( $sd_input_data_sabitized['rbfw_end_date'] ) ? sanitize_text_field( $sd_input_data_sabitized['rbfw_end_date'] ) : '';
+                $end_time = isset( $sd_input_data_sabitized['rbfw_end_time'] ) ? sanitize_text_field( $sd_input_data_sabitized['rbfw_end_time'] ) : '';
                 if ( ! ( $end_date && $end_time ) ) {
                     $end_date = $bikecarsd_selected_date;
                 }
@@ -1188,8 +1194,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $start_date                = isset( $sd_input_data_sabitized['rbfw_pickup_start_date'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_date'] : '';
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
-                $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
-                $durationQty = isset($_POST['durationQty'])?max( 1, absint(sanitize_text_field(wp_unslash($_POST['durationQty'])))):1;
+                $durationType = isset( $sd_input_data_sabitized['durationType'] ) ? sanitize_text_field( $sd_input_data_sabitized['durationType'] ) : '';
+                $durationQty  = isset( $sd_input_data_sabitized['durationQty'] ) ? max( 1, absint( $sd_input_data_sabitized['durationQty'] ) ) : 1;
                 if ( ! in_array( $durationType, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ) {
                     $durationType = 'daily';
                 }
@@ -3045,8 +3051,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
 
     }
-    new RBFW_Woocommerce();
+    if ( RBFW_Function::has_woocommerce() ) {
+        new RBFW_Woocommerce();
+    }
 }
-
-
-

@@ -530,11 +530,11 @@ function rbfw_add_term_condition_item( $post_id ) {
         if ( sizeof( $conditions ) > 0 ) {
             foreach ( $conditions as $condition ) {
 
-                $required = $condition['rbfw_term_required'] == 'on' ? 'required' : '';
+                $required = isset( $condition['rbfw_term_required'] ) && in_array( $condition['rbfw_term_required'], array( 'on', 'yes' ), true );
                 ?>
                 <label class="rbfw-term-condition">
-                    <input type="checkbox" name="accept_term[]" <?php echo $required; ?> />
-                    <a href="<?php echo $condition['rbfw_term_url']; ?>" target="_blank"><?php echo $condition['rbfw_term_title']; ?></a>
+                    <input type="checkbox" name="accept_term[]" <?php echo esc_attr( $required ? 'required' : '' ); ?> />
+                    <a href="<?php echo esc_url( $condition['rbfw_term_url'] ?? '' ); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html( $condition['rbfw_term_title'] ?? '' ); ?></a>
                 </label>
                 <?php
             }
@@ -597,7 +597,3 @@ function rbfw_maybe_migrate_stock_1000_default() {
 
 	update_option( 'rbfw_stock_1000_migrated', 'done' );
 }
-
-
-
-
