@@ -666,6 +666,25 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                                     </li>
                                 <?php } ?>
 
+                                <?php
+                                /* Delivery & Collection. Two separately billed legs that may be
+                                   priced by different band tables, so each gets its own line.
+                                   Placed after the fees because that is where the charge lands:
+                                   it is added to the Total Price row, not to the Subtotal. Both
+                                   start hidden; rbfw_delivery.js reveals whichever apply. */
+                                if ( function_exists( 'rbfw_delivery_enabled_for_item' ) && rbfw_delivery_enabled_for_item( $rbfw_id ) ) :
+                                    $rbfw_delivery_labels = rbfw_delivery_settings();
+                                    ?>
+                                    <li class="rbfw-delivery-costing" style="display:none;">
+                                        <?php echo esc_html( $rbfw_delivery_labels['delivery_label'] ); ?>
+                                        <span class="rbfw-delivery-cost-value"><?php echo wp_kses( wc_price( 0 ), rbfw_allowed_html() ); ?></span>
+                                    </li>
+                                    <li class="rbfw-collection-costing" style="display:none;">
+                                        <?php echo esc_html( $rbfw_delivery_labels['collection_label'] ); ?>
+                                        <span class="rbfw-collection-cost-value"><?php echo wp_kses( wc_price( 0 ), rbfw_allowed_html() ); ?></span>
+                                    </li>
+                                <?php endif; ?>
+
                                 <li class="discount" style="display:none;">
                                     <?php esc_html_e('Discount','booking-and-rental-manager-for-woocommerce'); ?>
                                     <span></span>
