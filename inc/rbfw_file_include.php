@@ -48,6 +48,10 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 
+// Authoritative standalone price quote. Loaded in EVERY mode: the coupon context is too,
+// and it must never be left without a server-side price to fall back on.
+require_once RBFW_PLUGIN_DIR . '/inc/booking/RBFW_Native_Quote.php';
+
 // ---- Unified coupon engine (mode-agnostic core; loads in every mode) ----
 require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon_Post_Type.php';
 require_once RBFW_PLUGIN_DIR . '/inc/coupon/RBFW_Coupon.php';
