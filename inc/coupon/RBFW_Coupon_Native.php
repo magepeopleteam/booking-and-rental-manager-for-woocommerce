@@ -53,14 +53,24 @@ if ( ! class_exists( 'RBFW_Coupon_Native' ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Invalid rental item.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 
-			$ctx = RBFW_Coupon_Context::from_native_post( $raw );
+			// Price the booking exactly the way the checkout will. Previewing against the
+			// browser's own numbers would show a discount the checkout then declines to honour
+			// — and, before the payload was de-fanged, a forged one could be talked into a
+			// discount here that the customer would reasonably expect to be charged.
+			$quote = RBFW_Native_Quote::build( $item_id, $raw );
+			if ( is_wp_error( $quote ) ) {
+				wp_send_json_error( array( 'message' => $quote->get_error_message() ) );
+			}
+			$raw = RBFW_Native_Quote::sanitize_payload( $raw, $quote );
+
+			$ctx = RBFW_Coupon_Context::from_native_quote( $item_id, $quote );
 			$res = RBFW_Coupon_Engine::resolve( $ctx, $code );
 
 			if ( '' !== trim( $code ) && '' !== $res['manual_error'] ) {
 				wp_send_json_error( array( 'message' => $res['manual_error'] ) );
 			}
 
-			$gross     = self::posted_total( $raw, $ctx );
+			$gross     = self::gross_total( $item_id, $raw, $quote );
 			$discount  = min( (float) $res['total_discount'], $gross );
 			$new_total = max( 0, $gross - $discount );
 
@@ -84,11 +94,54 @@ if ( ! class_exists( 'RBFW_Coupon_Native' ) ) {
 			) );
 		}
 
-		/** The client-computed grand total (pre-coupon). Used only as a ceiling. */
-		public static function posted_total( $raw, $ctx ) {
-			if ( isset( $raw['rbfw_total'] ) && '' !== $raw['rbfw_total'] ) {
-				return max( 0, (float) preg_replace( '/[^0-9.]/', '', (string) $raw['rbfw_total'] ) );
+		/**
+		 * The authoritative grand total this booking would be charged before any coupon:
+		 * the repriced rental subtotal plus delivery/collection quoted from the shop's own
+		 * distance bands. Mirrors RBFW_Native_Checkout::process() so the previewed total and
+		 * the charged total are the same number.
+		 *
+		 * A delivery choice the shop refuses is simply left out here rather than failing the
+		 * preview — the customer is still filling the form, and the checkout is where a refused
+		 * distance has to stop the booking.
+		 *
+		 * @param int   $item_id Rental item ID.
+		 * @param array $raw     De-fanged booking payload.
+		 * @param array $quote   RBFW_Native_Quote::build() result.
+		 * @return float
+		 */
+		public static function gross_total( $item_id, $raw, $quote ) {
+			$gross = isset( $quote['subtotal'] ) ? max( 0, (float) $quote['subtotal'] ) : 0.0;
+
+			if ( ! function_exists( 'rbfw_delivery_quote' ) || ! function_exists( 'rbfw_delivery_input_from_form' ) ) {
+				return $gross;
 			}
+
+			$choice = rbfw_delivery_input_from_form( $raw );
+			if ( empty( $choice['delivery'] ) && empty( $choice['collection'] ) ) {
+				return $gross;
+			}
+
+			$delivery = rbfw_delivery_quote(
+				$item_id,
+				isset( $choice['distance'] ) ? $choice['distance'] : 0,
+				! empty( $choice['delivery'] ),
+				! empty( $choice['collection'] )
+			);
+
+			if ( '' === $delivery['error'] ) {
+				$gross += max( 0, (float) $delivery['total'] );
+			}
+
+			return $gross;
+		}
+
+		/**
+		 * Back-compat shim for add-ons that called this before the preview was made
+		 * authoritative. The posted total is no longer consulted at all.
+		 *
+		 * @deprecated Use gross_total().
+		 */
+		public static function posted_total( $raw, $ctx ) {
 			return isset( $ctx['subtotal'] ) ? max( 0, (float) $ctx['subtotal'] ) : 0.0;
 		}
 	}

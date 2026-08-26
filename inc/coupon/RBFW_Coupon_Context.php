@@ -45,41 +45,10 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 						continue;
 					}
 
-					$qty        = isset( $ci['rbfw_item_quantity'] ) ? absint( $ci['rbfw_item_quantity'] ) : ( isset( $ci['quantity'] ) ? absint( $ci['quantity'] ) : 1 );
-					$line_total = isset( $ci['rbfw_tp'] ) ? (float) $ci['rbfw_tp'] : 0.0;
-					$line_total = max( 0, $line_total );
+					$line = self::line_from_priced_data( $item_id, $ci, (string) $key );
 
-					// The discountable BASE is the rental subtotal: the line total minus the
-					// mandatory management/handling fee. (The security deposit is never part of
-					// rbfw_tp — it is added separately as a WooCommerce cart fee.) Defining it this
-					// way makes WooCommerce and Standalone agree, and guarantees base <= line_total
-					// so a coupon can never drive a line negative even when a large external
-					// multi-day discount has already reduced rbfw_tp.
-					$management = isset( $ci['rbfw_management_price'] ) && is_numeric( $ci['rbfw_management_price'] )
-						? max( 0, (float) $ci['rbfw_management_price'] )
-						: 0.0;
-					$base_price = max( 0, $line_total - $management );
-
-					// duration_price drives only the free_days per-unit rate; never above the base.
-					$duration_price = min( self::resolve_duration_price( $ci, $base_price ), $base_price );
-					$duration_units = self::resolve_duration_units( $ci );
-
-					$desc = self::item_descriptor( $item_id );
-
-					$items[] = array(
-						'item_id'         => $item_id,
-						'rent_type'       => $desc['rent_type'],
-						'rent_type_names' => $desc['rent_type_names'],
-						'locations'       => $desc['locations'],
-						'qty'             => max( 1, $qty ),
-						'duration_units'  => $duration_units,
-						'unit'            => isset( $ci['duration_type'] ) ? (string) $ci['duration_type'] : '',
-						'duration_price'  => max( 0, $duration_price ),
-						'base_price'      => $base_price,
-						'line_total'      => $line_total,
-						'line_key'        => (string) $key,
-					);
-					$subtotal += $line_total;
+					$items[]   = $line;
+					$subtotal += $line['line_total'];
 
 					$start = self::extract_line_start_date( $ci );
 					if ( $start ) {
@@ -94,9 +63,19 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 		/**
 		 * Build the context from a Standalone (native checkout) POST payload — exactly one item.
 		 *
-		 * RBFW_Native_Checkout replaces all accepted price aliases in this payload with the
-		 * authoritative server-side quote before this context is built. The form values are
-		 * therefore selection data only, never payment authority.
+		 * The payload is *selection* data only. Nothing monetary in it is believed: this method
+		 * reprices the booking from the item's own stored configuration through RBFW_Native_Quote
+		 * and builds the line from that, exactly as the WooCommerce path builds its lines from
+		 * the priced cart item.
+		 *
+		 * That matters because the engine's free_days rate is `duration_price / duration_units`.
+		 * When either side of that division could come from the browser, a caller only had to
+		 * post one unpatched alias — `rbfw_total_days=1` against a five-day booking, say — to
+		 * collapse the rate onto the whole duration price and take the total to zero. Repricing
+		 * removes the division's inputs from the attacker's reach instead of filtering names.
+		 *
+		 * Fails CLOSED: if the booking cannot be repriced, the context carries no lines, so no
+		 * coupon can target it and no discount is produced.
 		 *
 		 * @param array $post Sanitized POST array.
 		 * @return array
@@ -104,92 +83,120 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 		public static function from_native_post( $post ) {
 			$post    = is_array( $post ) ? $post : array();
 			$item_id = isset( $post['rbfw_post_id'] ) ? absint( $post['rbfw_post_id'] ) : 0;
+			$email   = isset( $post['rbfw_billing_email'] ) ? sanitize_email( $post['rbfw_billing_email'] ) : self::current_email();
 
-			$items    = array();
-			$subtotal = 0.0;
+			$quote = ( $item_id && class_exists( 'RBFW_Native_Quote' ) )
+				? RBFW_Native_Quote::build( $item_id, $post )
+				: new WP_Error( 'rbfw_pricing_unavailable', '' );
 
-			if ( $item_id && get_post_type( $item_id ) === 'rbfw_item' ) {
-				$qty  = isset( $post['rbfw_item_quantity'] ) ? absint( $post['rbfw_item_quantity'] ) : 1;
-				$days = 0.0;
-				foreach ( array( 'rbfw_total_days', 'total_days', 'rbfw_duration_days' ) as $dk ) {
-					if ( isset( $post[ $dk ] ) && '' !== $post[ $dk ] ) {
-						$days = (float) self::to_number( $post[ $dk ] );
-						break;
-					}
-				}
-				// Only the multi-items form posts a days field; multi-day, single-day and resort
-				// bookings carry dates instead. Falling straight through to 1 made a "1 free day"
-				// coupon worth the WHOLE duration price on a five-day rental, so derive the billed
-				// units from the posted date span exactly as the WooCommerce context does.
-				if ( $days <= 0 ) {
-					$days = self::native_duration_units( $post );
-				}
-				$days = $days > 0 ? $days : 1.0;
-
-				// Base price: the checkout's authoritative pre-delivery quote. The native checkout
-				// replaces all three accepted aliases before calling this method.
-				$base = 0.0;
-				foreach ( array( 'rbfw_subtotal', 'rbfw_sub_total', 'rbfw_total' ) as $pk ) {
-					if ( isset( $post[ $pk ] ) && '' !== $post[ $pk ] ) {
-						$base = (float) self::to_number( $post[ $pk ] );
-						break;
-					}
-				}
-				$base = max( 0, $base );
-
-				// Duration-only figure (drives the free_days per-unit rate); never above the base.
-				// The key differs per rent type exactly as it does in the cart (resort posts
-				// rbfw_room_duration_price, single-day rbfw_bikecarsd_duration_price), so all
-				// three are accepted instead of silently charging free days at the full subtotal.
-				$duration = $base;
-				foreach ( array( 'rbfw_duration_price', 'rbfw_bikecarsd_duration_price', 'rbfw_room_duration_price' ) as $pk ) {
-					if ( isset( $post[ $pk ] ) && '' !== $post[ $pk ] ) {
-						$duration = min( max( 0, (float) self::to_number( $post[ $pk ] ) ), $base );
-						break;
-					}
-				}
-
-				$desc = self::item_descriptor( $item_id );
-
-				$items[] = array(
-					'item_id'         => $item_id,
-					'rent_type'       => $desc['rent_type'],
-					'rent_type_names' => $desc['rent_type_names'],
-					'locations'       => $desc['locations'],
-					'qty'             => max( 1, $qty ),
-					'duration_units'  => $days,
-					'unit'            => '',
-					'duration_price'  => $duration,
-					'base_price'      => $base,
-					'line_total'      => $base,
-					'line_key'        => 'native_0',
-				);
-				$subtotal = $base;
+			if ( is_wp_error( $quote ) ) {
+				return self::finalize( array(), 0.0, array(), 'standalone', $email );
 			}
 
-			// The booking's start date, which the weekday / blackout / booking-window rules are
-			// judged on. Every registration template names this field differently — single-day
-			// rbfw_bikecarsd_selected_date, multi-day & multi-items rbfw_pickup_start_date,
-			// resort rbfw_start_datetime — and a name that is missing here does not fail loudly:
-			// the context quietly falls back to "today", so the rule is evaluated against the
-			// wrong day. Cover them all.
+			return self::from_native_quote( $item_id, $quote, $email );
+		}
+
+		/**
+		 * Build the context from an authoritative standalone quote — the preferred entry point.
+		 *
+		 * Callers that have already priced the booking (the native checkout, the live coupon
+		 * preview) pass their quote straight in rather than making this class reprice it.
+		 *
+		 * @param int         $item_id Rental item ID.
+		 * @param array       $quote   RBFW_Native_Quote::build() result: subtotal + cart_data.
+		 * @param string|null $email   Customer email; falls back to the current user's.
+		 * @return array
+		 */
+		public static function from_native_quote( $item_id, $quote, $email = null ) {
+			$item_id = absint( $item_id );
+			$email   = ( null === $email ) ? self::current_email() : $email;
+
+			// build() returns a WP_Error when the booking cannot be priced. Accept that here
+			// rather than making every caller remember to check: an unpriceable booking must
+			// produce an empty context, never a fatal and never a discountable one.
+			$quote     = is_array( $quote ) ? $quote : array();
+			$cart_data = ( isset( $quote['cart_data'] ) && is_array( $quote['cart_data'] ) ) ? $quote['cart_data'] : array();
+			$subtotal  = isset( $quote['subtotal'] ) ? max( 0, (float) $quote['subtotal'] ) : 0.0;
+
+			if ( ! $item_id || ! $cart_data || get_post_type( $item_id ) !== 'rbfw_item' ) {
+				return self::finalize( array(), 0.0, array(), 'standalone', $email );
+			}
+
+			$line = self::line_from_priced_data( $item_id, $cart_data, 'native_0' );
+
+			// The standalone grand total can exceed the cart line total: an "additional" security
+			// deposit is a separate WooCommerce cart fee in the other mode, but part of the one
+			// figure here. Record it on line_total so the coupon's spend rules judge what the
+			// customer actually pays — while base_price stays the rental-only, discountable part,
+			// so a refundable deposit is never discounted away.
+			$line['line_total'] = max( $line['line_total'], $subtotal );
+
 			$dates = array();
-			foreach ( array( 'rbfw_bikecarsd_selected_date', 'rbfw_pickup_start_date', 'rbfw_start_datetime', 'rbfw_start_date' ) as $dk ) {
-				$d = self::first_scalar( isset( $post[ $dk ] ) ? $post[ $dk ] : '' );
-				if ( '' !== $d ) {
-					$dates[] = $d;
-					break;
-				}
+			$start = self::extract_line_start_date( $cart_data );
+			if ( $start ) {
+				$dates[] = $start;
 			}
 
-			$email = isset( $post['rbfw_billing_email'] ) ? sanitize_email( $post['rbfw_billing_email'] ) : self::current_email();
-
-			return self::finalize( $items, $subtotal, $dates, 'standalone', $email );
+			return self::finalize( array( $line ), $line['line_total'], $dates, 'standalone', $email );
 		}
 
 		/* -------------------------------------------------------------------------
 		 * Helpers
 		 * ---------------------------------------------------------------------- */
+
+		/**
+		 * Normalize one server-priced rental line into the engine's item shape.
+		 *
+		 * The single builder behind BOTH modes. `$data` is whatever rbfw_add_cart_item_func()
+		 * produced — a WooCommerce cart item, or the standalone quote's cart_data, which is the
+		 * same array from the same function. Sharing it is what actually guarantees the promise
+		 * in this file's header (identical coupon behaviour in either mode); two builders reading
+		 * the same keys drifted apart once already.
+		 *
+		 * @param int    $item_id  Rental item ID.
+		 * @param array  $data     Priced cart-style data for the line.
+		 * @param string $line_key Stable key for this line.
+		 * @return array
+		 */
+		public static function line_from_priced_data( $item_id, $data, $line_key ) {
+			$data = is_array( $data ) ? $data : array();
+
+			$qty = isset( $data['rbfw_item_quantity'] )
+				? absint( $data['rbfw_item_quantity'] )
+				: ( isset( $data['quantity'] ) ? absint( $data['quantity'] ) : 1 );
+
+			$line_total = isset( $data['rbfw_tp'] ) ? max( 0, (float) $data['rbfw_tp'] ) : 0.0;
+
+			// The discountable BASE is the rental subtotal: the line total minus the
+			// mandatory management/handling fee. (The security deposit is never part of
+			// rbfw_tp — it is added separately as a WooCommerce cart fee.) Defining it this
+			// way makes WooCommerce and Standalone agree, and guarantees base <= line_total
+			// so a coupon can never drive a line negative even when a large external
+			// multi-day discount has already reduced rbfw_tp.
+			$management = isset( $data['rbfw_management_price'] ) && is_numeric( $data['rbfw_management_price'] )
+				? max( 0, (float) $data['rbfw_management_price'] )
+				: 0.0;
+			$base_price = max( 0, $line_total - $management );
+
+			// duration_price drives only the free_days per-unit rate; never above the base.
+			$duration_price = min( self::resolve_duration_price( $data, $base_price ), $base_price );
+
+			$desc = self::item_descriptor( $item_id );
+
+			return array(
+				'item_id'         => $item_id,
+				'rent_type'       => $desc['rent_type'],
+				'rent_type_names' => $desc['rent_type_names'],
+				'locations'       => $desc['locations'],
+				'qty'             => max( 1, $qty ),
+				'duration_units'  => self::resolve_duration_units( $data ),
+				'unit'            => isset( $data['duration_type'] ) ? (string) $data['duration_type'] : '',
+				'duration_price'  => max( 0, $duration_price ),
+				'base_price'      => $base_price,
+				'line_total'      => $line_total,
+				'line_key'        => (string) $line_key,
+			);
+		}
 
 		protected static function finalize( $items, $subtotal, $dates, $mode, $email ) {
 			$ctx = array(
@@ -257,18 +264,13 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 		 * Billed units for a line. `total_days` is only set on the multi-day/others/multiple_items
 		 * paths; single-day and resort lines have none, so derive nights from the date span.
 		 * Always >= 1 so the free_days per-unit rate can never divide by zero.
+		 *
+		 * Both keys it reads are written by the pricing code, never by the browser — the shared
+		 * implementation lives with the quote so there is exactly one answer to "how many units
+		 * is this booking billed for".
 		 */
 		protected static function resolve_duration_units( $ci ) {
-			if ( isset( $ci['total_days'] ) && is_numeric( $ci['total_days'] ) && (float) $ci['total_days'] > 0 ) {
-				return (float) $ci['total_days'];
-			}
-			$start = isset( $ci['rbfw_start_date'] ) ? strtotime( (string) $ci['rbfw_start_date'] ) : 0;
-			$end   = isset( $ci['rbfw_end_date'] ) ? strtotime( (string) $ci['rbfw_end_date'] ) : 0;
-			if ( $start && $end && $end > $start ) {
-				$days = ( $end - $start ) / DAY_IN_SECONDS;
-				return max( 1.0, round( $days ) );
-			}
-			return 1.0;
+			return RBFW_Native_Quote::billed_units( $ci );
 		}
 
 		protected static function extract_line_start_date( $ci ) {
@@ -303,39 +305,6 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 			return $stamps ? gmdate( 'Y-m-d', min( $stamps ) ) : current_time( 'Y-m-d' );
 		}
 
-		/**
-		 * Billed units for a standalone booking, derived from the posted date span when the form
-		 * carries no days field. Always >= 1 so the free_days per-unit rate cannot divide by zero.
-		 */
-		protected static function native_duration_units( $post ) {
-			$start = 0;
-			foreach ( array( 'rbfw_pickup_start_date', 'rbfw_start_datetime', 'rbfw_start_date', 'rbfw_bikecarsd_selected_date' ) as $k ) {
-				$start = strtotime( self::first_scalar( isset( $post[ $k ] ) ? $post[ $k ] : '' ) );
-				if ( $start ) {
-					break;
-				}
-			}
-			$end = 0;
-			foreach ( array( 'rbfw_pickup_end_date', 'rbfw_end_datetime', 'rbfw_end_date' ) as $k ) {
-				$end = strtotime( self::first_scalar( isset( $post[ $k ] ) ? $post[ $k ] : '' ) );
-				if ( $end ) {
-					break;
-				}
-			}
-			if ( $start && $end && $end > $start ) {
-				return max( 1.0, round( ( $end - $start ) / DAY_IN_SECONDS ) );
-			}
-			return 1.0;
-		}
-
-		/** A posted value as a single sanitized string (duplicate form fields can arrive as arrays). */
-		protected static function first_scalar( $value ) {
-			if ( is_array( $value ) ) {
-				$value = reset( $value );
-			}
-			return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : '';
-		}
-
 		protected static function current_email() {
 			if ( is_user_logged_in() ) {
 				$u = wp_get_current_user();
@@ -352,10 +321,6 @@ if ( ! class_exists( 'RBFW_Coupon_Context' ) ) {
 				}
 			}
 			return '';
-		}
-
-		protected static function to_number( $v ) {
-			return preg_replace( '/[^0-9.\-]/', '', (string) $v );
 		}
 	}
 }

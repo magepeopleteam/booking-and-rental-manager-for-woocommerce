@@ -127,23 +127,17 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 
 			// 6. Rebuild the rental price from the item's stored pricing configuration. The
 			// browser total is display-only and must never be used as a payment authority.
-			$quote = $this->authoritative_quote( $item_id, $item_type, $raw );
+			$quote = RBFW_Native_Quote::build( $item_id, $raw );
 			if ( is_wp_error( $quote ) ) {
 				wp_send_json_error( array( 'message' => $quote->get_error_message() ) );
 			}
 			$subtotal = $quote['subtotal'];
 
-			// Coupon targeting/free-day calculations also consume the sanitized form payload.
-			// Replace every accepted client price alias with the authoritative values before
-			// that context is built, so a forged auxiliary price cannot inflate a discount.
-			$raw['rbfw_subtotal'] = $subtotal;
-			$raw['rbfw_sub_total'] = $subtotal;
-			$raw['rbfw_total'] = $subtotal;
-			foreach ( array( 'rbfw_duration_price', 'rbfw_bikecarsd_duration_price', 'rbfw_room_duration_price', 'total_days' ) as $price_key ) {
-				if ( isset( $quote['cart_data'][ $price_key ] ) ) {
-					$raw[ $price_key ] = $quote['cart_data'][ $price_key ];
-				}
-			}
+			// Everything downstream — the coupon context, add-on pricing filters, and the copy of
+			// the payload stored on the booking — reads from $raw. Overwrite every money and
+			// billed-duration echo it carries with the authoritative figures FIRST, so none of
+			// them can still speak for the customer's browser.
+			$raw = RBFW_Native_Quote::sanitize_payload( $raw, $quote );
 
 			// 6a. Delivery & Collection. Resolved from the stored bands, NOT from the posted
 			// total, and added on top. A distance the shop refuses (beyond the configured
@@ -188,7 +182,10 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 
 			if ( class_exists( 'RBFW_Coupon_Engine' ) && RBFW_Coupon_Engine::is_enabled() ) {
 				$posted_code = isset( $_POST['rbfw_coupon_code'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_coupon_code'] ) ) : '';
-				$ctx         = RBFW_Coupon_Context::from_native_post( $raw );
+				// Built from the QUOTE, not the payload: the free_days rate is
+				// duration_price / duration_units, and both sides of that division have to be
+				// server-computed or a forged duration turns one free day into a free booking.
+				$ctx         = RBFW_Coupon_Context::from_native_quote( $item_id, $quote, $email );
 				$resolution  = RBFW_Coupon_Engine::resolve( $ctx, $posted_code );
 
 				// A code was typed but is not (or no longer) valid — refuse rather than silently
@@ -282,115 +279,6 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			}
 
 			wp_send_json_success( $response );
-		}
-
-		/**
-		 * Build the same authoritative quote used by the WooCommerce cart path.
-		 *
-		 * Delivery is deliberately disabled in this quote because process() validates and
-		 * adds it once from the stored delivery bands immediately afterward.
-		 *
-		 * @param int    $item_id   Rental item ID.
-		 * @param string $item_type Rental item type.
-		 * @param array  $raw       Sanitized booking form payload.
-		 * @return array|WP_Error
-		 */
-		private function authoritative_quote( $item_id, $item_type, $raw ) {
-			if ( ! class_exists( 'RBFW_Woocommerce' ) ) {
-				require_once RBFW_PLUGIN_DIR . '/Frontend/RBFW_Woocommerse.php';
-			}
-
-			if ( ! class_exists( 'RBFW_Woocommerce' ) ) {
-				return new WP_Error( 'rbfw_pricing_unavailable', esc_html__( 'Could not calculate the booking price. Please refresh and try again.', 'booking-and-rental-manager-for-woocommerce' ) );
-			}
-
-			$pricing_input                            = is_array( $raw ) ? $raw : array();
-			$pricing_input['nonce']                  = wp_create_nonce( 'rbfw_ajax_action' );
-			$pricing_input['rbfw_delivery_wanted']   = 'no';
-			$pricing_input['rbfw_collection_wanted'] = 'no';
-
-			$calculator = new RBFW_Woocommerce( false );
-			// Some legacy/add-on pricing filters still inspect $_POST instead of the request
-			// array passed to the cart builder. Give them the same sanitized pricing payload,
-			// then restore the real native-checkout request immediately afterward.
-			$native_post = $_POST;
-			$_POST       = wp_slash( $pricing_input );
-			try {
-				$cart_data = $calculator->rbfw_add_cart_item_func( array(), $item_id, $pricing_input );
-			} finally {
-				$_POST = $native_post;
-			}
-
-			if ( ! is_array( $cart_data ) || ! isset( $cart_data['rbfw_tp'] ) || ! is_numeric( $cart_data['rbfw_tp'] ) ) {
-				return new WP_Error( 'rbfw_price_calculation_failed', esc_html__( 'Could not calculate the booking price. Please review your selection and try again.', 'booking-and-rental-manager-for-woocommerce' ) );
-			}
-			if ( ! $this->quote_has_valid_selection( $item_type, $cart_data ) ) {
-				return new WP_Error( 'rbfw_invalid_booking_selection', esc_html__( 'Please choose valid rental dates and quantities before booking.', 'booking-and-rental-manager-for-woocommerce' ) );
-			}
-
-			$subtotal = max( 0, (float) $cart_data['rbfw_tp'] );
-
-			// The historical cart builder includes deposits in the resort total, while the
-			// other item types carry an additional deposit as metadata. Match the public total
-			// without double-charging Pro's "included in price" deposit policy.
-			$deposit_mode = isset( $cart_data['rbfw_security_deposit_price_mode'] ) ? sanitize_key( $cart_data['rbfw_security_deposit_price_mode'] ) : 'additional';
-			if ( 'resort' !== $item_type && 'included' !== $deposit_mode && ! empty( $cart_data['security_deposit_amount'] ) ) {
-				$subtotal += max( 0, (float) $cart_data['security_deposit_amount'] );
-			}
-
-			return array(
-				'subtotal'  => $subtotal,
-				'cart_data' => $cart_data,
-			);
-		}
-
-		/**
-		 * Reject incomplete forged requests while allowing legitimately free rentals.
-		 *
-		 * @param string $item_type Rental item type.
-		 * @param array  $cart_data Authoritative cart-style quote data.
-		 * @return bool
-		 */
-		private function quote_has_valid_selection( $item_type, $cart_data ) {
-			$start_date = isset( $cart_data['rbfw_start_date'] ) ? (string) $cart_data['rbfw_start_date'] : '';
-			$end_date   = isset( $cart_data['rbfw_end_date'] ) ? (string) $cart_data['rbfw_end_date'] : '';
-			if ( '' === trim( $start_date ) || '' === trim( $end_date ) || false === strtotime( $start_date ) || false === strtotime( $end_date ) ) {
-				return false;
-			}
-
-			if ( in_array( $item_type, array( 'bike_car_sd', 'appointment' ), true ) ) {
-				return $this->has_positive_quantity( $cart_data['rbfw_type_info'] ?? array() );
-			}
-			if ( 'resort' === $item_type ) {
-				return $this->has_positive_quantity( $cart_data['rbfw_room_info'] ?? array() );
-			}
-			if ( 'multiple_items' === $item_type ) {
-				foreach ( (array) ( $cart_data['multiple_items_info'] ?? array() ) as $line ) {
-					if ( is_array( $line ) && ! empty( $line['item_qty'] ) ) {
-						return true;
-					}
-				}
-
-				return false;
-			}
-
-			return isset( $cart_data['rbfw_item_quantity'] ) && absint( $cart_data['rbfw_item_quantity'] ) > 0;
-		}
-
-		/**
-		 * Whether a flat selection map contains at least one positive quantity.
-		 *
-		 * @param array $quantities Quantity map.
-		 * @return bool
-		 */
-		private function has_positive_quantity( $quantities ) {
-			foreach ( (array) $quantities as $quantity ) {
-				if ( is_numeric( $quantity ) && (float) $quantity > 0 ) {
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 		/**

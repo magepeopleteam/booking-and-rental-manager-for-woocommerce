@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.6
+Stable tag: 2.7.7
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -165,6 +165,9 @@ Appsero does not collect data by default. Data collection starts only after user
 Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+2.7.7
+Security: fixed the Standalone (Custom Payment) checkout being talked into a zero or reduced booking total. The rental price is now rebuilt on the server from the item's own pricing configuration for every standalone booking, and every price and duration field the browser sends is overwritten with that figure before anything reads it — including the coupon engine, which previously derived a free-day rate from a posted day count and could be made to discount a whole multi-day rental as "one free day". The coupon preview shown while booking is calculated the same way, so the discount a customer is shown is the discount they get. Bookings that cannot be repriced are refused instead of being saved at the submitted amount.
+Security: order requests (Pro) now seed their quote from a server-side reprice of the rental rather than from the estimate the browser submitted, and auto-approval refuses to send a quote whose rental price could not be verified.
 2.7.6
 Shared inventory added for Multiple Items rentals. Each item row in a Multiple Items package can now be linked to an existing rental item instead of carrying its own private stock counter, the same way a WooCommerce Product Bundle draws on its component's stock — except that the pool is also scoped to the selected rental date and time. Booking two units through the package immediately reduces what the individual rental has left for that window, and booking them individually reduces what the package can offer, in both directions and across every package that draws on the same item. The row's Qty stays meaningful as the maximum this package may offer. Rows left on their own inventory behave exactly as before, and the whole feature can be switched off under Settings, General.
 Gravity Forms integration added. Any Gravity Form can be attached to any rental item as Booking Questions, from either the classic or the modern editor. The customer's answers travel with the booking into the cart, the WooCommerce order, the booking record, the Bookings screen and the confirmation e-mail, and are shown in a collapsible row beneath each booking. Three modes per item: asked before the booking form appears, optional alongside it, or the Gravity form itself as the order form. A Global Settings switch applies order-form mode to every rental that has a form, for shops running a single ordering flow. Fields are matched by type rather than by id, so editing a form in Gravity Forms cannot break the mapping, and both the WooCommerce and the Standalone checkout are covered. Note that when the Gravity form is the order form the dates come from that form, so availability, inventory and off days no longer restrict the booking.
