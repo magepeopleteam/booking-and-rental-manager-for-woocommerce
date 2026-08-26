@@ -3586,6 +3586,32 @@ if ( ! function_exists( 'rbfw_format_duration_unit' ) ) {
 	}
 }
 
+if ( ! function_exists( 'rbfw_md_hourly_rollover_applies' ) ) {
+	/**
+	 * Whether the leftover part-period should roll over into one extra billed day.
+	 *
+	 * The monthly/weekly pricing branches bill `$days + 1` when an item has
+	 * "hourly threshold" enabled and the leftover hours reach that threshold.
+	 * The old guard was `$hours >= $rbfw_hourly_threshold` alone, which is true
+	 * for `0 >= 0` — so a date-only booking (no time picker, so `$interval->h`
+	 * is always 0) on an item with the threshold ticked but left at 0 silently
+	 * billed a phantom extra day. A rollover only makes sense when there really
+	 * is a leftover partial period AND a real, positive threshold to compare it
+	 * against, which is how the daily/hybrid paths already guard it.
+	 *
+	 * @param string $enabled   'yes' when the item enables the hourly threshold.
+	 * @param mixed  $hours     Leftover hours beyond the whole days.
+	 * @param mixed  $threshold Configured rollover threshold in hours.
+	 * @return bool
+	 */
+	function rbfw_md_hourly_rollover_applies( $enabled, $hours, $threshold ) {
+		$hours     = (float) $hours;
+		$threshold = (float) $threshold;
+
+		return 'yes' === $enabled && $hours > 0 && $threshold > 0 && $hours >= $threshold;
+	}
+}
+
 function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, $dropoff_datetime = 0, $start_date = '', $end_date = '', $star_time = '', $end_time = '', $rbfw_enable_time_slot = '') {
     global $rbfw;
 
@@ -3682,7 +3708,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
                         $rbfw_enable_hourly_threshold = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true );
                         $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
 
-                        if($rbfw_enable_hourly_threshold=='yes' && $hours >= $rbfw_hourly_threshold){
+                        if ( rbfw_md_hourly_rollover_applies( $rbfw_enable_hourly_threshold, $hours, $rbfw_hourly_threshold ) ) {
                             $actual_days = $days+1;
                             // Leftover days (day-wise aware; flat daily when day-wise is off).
                             $duration_price += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $days, $actual_days, $rbfw_daily_rate );
@@ -3735,7 +3761,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
                 $rbfw_enable_hourly_threshold = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true );
                 $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
 
-                if($rbfw_enable_hourly_threshold=='yes' && $hours >= $rbfw_hourly_threshold){
+                if ( rbfw_md_hourly_rollover_applies( $rbfw_enable_hourly_threshold, $hours, $rbfw_hourly_threshold ) ) {
                     $thresold_days = $daysWeeks+1;
                     // Leftover days (day-wise aware; flat daily when day-wise is off).
                     $duration_price += rbfw_daywise_days_sum( $post_id, $start_date, $total_days - $daysWeeks, $thresold_days, $rbfw_daily_rate );
