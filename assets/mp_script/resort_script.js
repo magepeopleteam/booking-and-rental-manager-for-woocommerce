@@ -1,3 +1,21 @@
+/* Stock cap reader, shared with md_script.js (which loads first). Defined here
+   defensively so this file still reads a cap correctly on its own: an absent or
+   blank max means the row does not track stock (no cap), while a literal max="0"
+   is a real sold-out and must hold at 0. Reading it as
+   `parseInt(input.attr('max')) || N` turned that 0 into the fallback N, letting
+   the +/- buttons raise the value past a cap the browser still enforced — the
+   native form validation then refused the booking with "The value must be 0." */
+if (typeof rbfwStepMax !== 'function') {
+    window.rbfwStepMax = function ($input) {
+        var raw = $input.attr('max');
+        if (raw === undefined || raw === null || raw === '') {
+            return Infinity;
+        }
+        var n = parseInt(raw, 10);
+        return isNaN(n) ? Infinity : n;
+    };
+}
+
 
 let room_prices_arr = {};
 let service_prices_arr = {};
@@ -158,7 +176,7 @@ jQuery(document).on('input','.rbfw_room_qty',function(e) {
 /*jQuery('.rbfw_room_qty_plus').on('click', function() {*/
 jQuery(document).on('click','.rbfw_room_qty_plus',function(e) {
     let input = jQuery(this).siblings('input[type="number"]');
-    let max = parseInt(input.attr('max')) || 9999;
+    let max = rbfwStepMax(input);
     let current = parseInt(input.val()) || 0;
     if (current < max) {
         input.val(current + 1).trigger('input');
@@ -184,7 +202,7 @@ jQuery(document).on('input','.rbfw_service_qty_resort',function(e) {
 
 jQuery(document).on('click','.rbfw_service_qty_plus',function(e) {
     let input = jQuery(this).siblings('input[type="number"]');
-    let max = parseInt(input.attr('max')) || 9999;
+    let max = rbfwStepMax(input);
     let current = parseInt(input.val()) || 0;
     if (current < max) {
         input.val(current + 1).trigger('input');

@@ -242,6 +242,31 @@ function rbfw_update_inventory($order_id, $current_status = null) {
     }
 }
 
+/**
+ * Remaining units for a service row whose stock field may never have been filled in.
+ *
+ * The Stock / Qty inputs on the Extra Service screens are optional and save as an
+ * empty string when left blank, which the old `(int) $raw - $booked` arithmetic
+ * collapsed to 0 — indistinguishable from a genuinely sold-out row. Everything
+ * downstream then treated an untracked service as unavailable: the front end wrote
+ * max="0" onto its quantity input and the browser refused the whole booking form.
+ *
+ * Returning null for "no stock configured" keeps that case distinct all the way out
+ * to the callers: isset() is false for it in PHP, `null == 0` is false in JS, and
+ * jQuery's .attr('max', null) removes the attribute instead of writing a cap.
+ *
+ * @param mixed $raw    Configured stock as stored in post meta.
+ * @param int   $booked Units already taken for the requested dates.
+ * @return int|null Remaining units, or null when the row does not track stock.
+ */
+function rbfw_service_remaining_stock( $raw, $booked ) {
+	if ( is_array( $raw ) || null === $raw || '' === trim( (string) $raw ) ) {
+		return null;
+	}
+
+	return (int) $raw - (int) $booked;
+}
+
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null,$rbfw_enable_time_slot='off'){
 
 
@@ -408,7 +433,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                         foreach($date_range as $date){
                             $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
                         }
-                        $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
+                        $service_stock[] = rbfw_service_remaining_stock(
+                            isset($single['stock_quantity']) ? $single['stock_quantity'] : '',
+                            max(array_column($service_q, $single['title']))
+                        );
                     }
                 }
             }
@@ -477,7 +505,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             }
 
             $max_qty = !empty($service_q) ? max($service_q) : 0;
-            $extra_service_instock[$service] = $es['service_qty'] - $max_qty;
+            $extra_service_instock[$service] = rbfw_service_remaining_stock(
+                isset($es['service_qty']) ? $es['service_qty'] : '',
+                $max_qty
+            );
         }
     }
 
@@ -543,7 +574,10 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
                 $service_q[] = $qty;
             }
             $max_qty = !empty($service_q) ? max($service_q) : 0;
-            $extra_service_instock[$service] = $es['available_qty'] - $max_qty;
+            $extra_service_instock[$service] = rbfw_service_remaining_stock(
+                isset($es['available_qty']) ? $es['available_qty'] : '',
+                $max_qty
+            );
         }
     }
     /*end extra service inventory*/
@@ -567,7 +601,10 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
                     foreach($date_range as $date){
                         $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
                     }
-                    $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
+                    $service_stock[] = rbfw_service_remaining_stock(
+                        isset($single['stock_quantity']) ? $single['stock_quantity'] : '',
+                        max(array_column($service_q, $single['title']))
+                    );
                 }
             }
         }
