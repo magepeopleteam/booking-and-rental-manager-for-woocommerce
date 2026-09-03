@@ -1,5 +1,57 @@
 
 
+/**
+ * Reads a quantity input's stock cap.
+ *
+ * An absent or blank max means the row does not track stock, so there is no cap
+ * (Infinity). A literal max="0" is a real "sold out" and must cap at 0 — reading
+ * it as `parseInt(input.attr('max')) || N` turned that 0 into the fallback N,
+ * so the +/- buttons happily raised the value above a max the browser itself
+ * still enforced, and the native form validation then refused the whole booking
+ * with "The value must be 0." Mirrors rbfwStepperMax() in rbfw_script.js.
+ */
+function rbfwStepMax($input) {
+    var raw = $input.attr('max');
+    if (raw === undefined || raw === null || raw === '') {
+        return Infinity;
+    }
+    var n = parseInt(raw, 10);
+    return isNaN(n) ? Infinity : n;
+}
+
+/**
+ * Applies a server-reported stock figure to a quantity input.
+ *
+ * null/undefined/'' means "stock not configured" and must clear any stale max
+ * rather than write one, otherwise the input keeps a cap from an earlier date
+ * selection. A number is written as-is, 0 included.
+ */
+function rbfwApplyStockMax($input, stock) {
+    if (!rbfwHasStock(stock)) {
+        $input.removeAttr('max');
+        return;
+    }
+    var cap = parseInt(stock, 10);
+    $input.attr('max', cap);
+    /* Re-selecting dates can lower the cap below a quantity the customer already
+       entered. attr('value', ...) does not move an input the user has touched, so
+       clamp the live value here — otherwise the field silently keeps a quantity
+       the browser then refuses to submit. */
+    if ((parseInt($input.val(), 10) || 0) > cap) {
+        $input.val(cap);
+    }
+}
+
+/** True when the server sent a real stock figure rather than "not tracked". */
+function rbfwHasStock(stock) {
+    return stock !== null && typeof stock !== 'undefined' && stock !== '' && !isNaN(parseInt(stock, 10));
+}
+
+/** True only when the server reported a real, exhausted stock figure. */
+function rbfwIsSoldOut(stock) {
+    return rbfwHasStock(stock) && parseInt(stock, 10) <= 0;
+}
+
 // Holds sold-out dates returned from loadDisabledDates
 var disabledDates = [];
 
@@ -799,7 +851,7 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
 jQuery(document).on('input', '.rbfw_muiti_items_qty', function () {
     let $input = jQuery(this);
     let val = parseInt($input.val()) || 0;
-    const max = parseInt($input.attr('max'));
+    const max = rbfwStepMax($input);
     if (val > max) {
         val = max;
         jQuery(this).val(val); // Set it back to max
@@ -811,7 +863,7 @@ jQuery(document).on('input', '.rbfw_muiti_items_qty', function () {
 jQuery(document).on('click', '.rbfw_multi_items_qty_plus', function () {
     const row = jQuery(this).closest('.rbfw-resource-item');
     const input = row.find('.rbfw_muiti_items_qty');
-    const max = parseInt(input.attr('max')) || 100;
+    const max = rbfwStepMax(input);
     let value = parseInt(input.val()) || 0;
     if (value < max) {
         input.val(value + 1).trigger('input');
@@ -870,7 +922,7 @@ jQuery(document).on('click', '.rbfw_service_quantity_plus', function(e) {
     }
     let input = jQuery(this).siblings('input');
     let val = parseInt(input.val()) || 0;
-    let max = parseInt(input.attr('max')) || 9999;
+    let max = rbfwStepMax(input);
     if (val < max) {
         input.val(val + 1).trigger('change');
     }
@@ -944,7 +996,7 @@ jQuery(document).on('click', '.rbfw_bikecarmd_es_qty_plus', function(e) {
     let input = jQuery(this).siblings('input');
     console.log('input',input);
     let val = parseInt(input.val()) || 0;
-    let max = parseInt(input.attr('max')) || 9999;
+    let max = rbfwStepMax(input);
     if (val < max) {
         input.val(val + 1).trigger('change');
     }
@@ -966,7 +1018,7 @@ jQuery(document).on('click', '.rbfw_bikecarmd_es_qty_minus', function(e) {
 jQuery(document).on('input', '.rbfw_muiti_items_additional_service_qty', function () {
     let $input = jQuery(this);
     let val = parseInt($input.val()) || 0;
-    const max = parseInt($input.attr('max'));
+    const max = rbfwStepMax($input);
     if (val > max) {
         val = max;
         jQuery(this).val(val); // Set it back to max
@@ -978,7 +1030,7 @@ jQuery(document).on('input', '.rbfw_muiti_items_additional_service_qty', functio
 jQuery(document).on('click', '.rbfw_additional_service_qty_plus', function () {
     const row = jQuery(this).closest('.service-price-item');
     const input = row.find('.rbfw_muiti_items_additional_service_qty');
-    const max = parseInt(input.attr('max')) || 100;
+    const max = rbfwStepMax(input);
     let value = parseInt(input.val()) || 0;
     if (value < max) {
         input.val(value + 1).trigger('input');
@@ -1118,7 +1170,10 @@ function rbfw_multi_items_ajax_price_calculation(){
 
             /*multiple service price day wise*/
             jQuery(".service-price-item").each(function(index, value) {
-                if(response.max_available_qty.service_stock[index]==0){
+                /* null = this service does not track stock, so it is never sold out
+                   and must carry no max at all. Only a real figure of 0 sells out. */
+                var svc_stock = (response.max_available_qty.service_stock || [])[index];
+                if(rbfwIsSoldOut(svc_stock)){
                     jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                     jQuery(this).find(".rbfw_service_price_data").data('quantity',0);
@@ -1126,10 +1181,7 @@ function rbfw_multi_items_ajax_price_calculation(){
                     jQuery(this).find(".rbfw-sold-out").hide().removeClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").show();
                 }
-                if(response.max_available_qty.service_stock[index]==0){
-                    jQuery(this).find(".rbfw_muiti_items_additional_service_qty").attr('value',response.max_available_qty.service_stock[index]);
-                }
-                jQuery(this).find(".rbfw_muiti_items_additional_service_qty").attr('max',response.max_available_qty.service_stock[index]);
+                rbfwApplyStockMax(jQuery(this).find(".rbfw_muiti_items_additional_service_qty"), svc_stock);
 
             });
 
@@ -1866,7 +1918,8 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             /*multiple service price day wise*/
             var service_stock = max_qty_data.service_stock || [];
             jQuery(".service-price-item").each(function(index, value) {
-                if(service_stock[index]==0){
+                var svc_stock = service_stock[index];
+                if(rbfwIsSoldOut(svc_stock)){
                     jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                     jQuery(this).find(".rbfw_service_price_data").data('quantity',0);
@@ -1874,32 +1927,30 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                     jQuery(this).find(".rbfw-sold-out").hide().removeClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").show();
                 }
-                if(service_stock[index]==0){
-                    jQuery(this).find(".rbfw_service_info_stock").attr('value',service_stock[index]);
-                }
-                jQuery(this).find(".rbfw_service_info_stock").attr('max',service_stock[index]);
+                rbfwApplyStockMax(jQuery(this).find(".rbfw_service_info_stock"), svc_stock);
 
-                jQuery(this).find(".remaining_stock").text('('+service_stock[index]+')');
+                /* Untracked services have no figure to count down, so leave the
+                   counter blank rather than rendering "(null)". Visibility of the
+                   surrounding .available-stock label stays with
+                   rbfw_service_price_calculation(), which owns it. */
+                jQuery(this).find(".remaining_stock").text(rbfwHasStock(svc_stock) ? '('+svc_stock+')' : '');
             });
 
             /*extra service */
 
             var extra_service_instock = max_qty_data.extra_service_instock || [];
             jQuery(".rbfw_bikecarmd_es_qty").each(function(index, value) {
-                if(extra_service_instock[index]==0){
-                    jQuery(this).val(0);
-                }
-                jQuery(this).attr('max',extra_service_instock[index]);
+                rbfwApplyStockMax(jQuery(this), extra_service_instock[index]);
             });
             jQuery(".es_stock").each(function(index, value) {
-                if(extra_service_instock[index]==0){
+                if(rbfwIsSoldOut(extra_service_instock[index])){
                     jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                 }
-                jQuery(this).text(extra_service_instock[index]);
+                jQuery(this).text(rbfwHasStock(extra_service_instock[index]) ? extra_service_instock[index] : '');
             });
             jQuery(".rbfw_bikecarmd_es_hidden_input_box").each(function(index, value) {
-                if(extra_service_instock[index]==0){
+                if(rbfwIsSoldOut(extra_service_instock[index])){
                     jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                 }else{

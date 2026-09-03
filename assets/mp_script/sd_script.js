@@ -1,3 +1,21 @@
+/* Stock cap reader, shared with md_script.js (which loads first). Defined here
+   defensively so this file still reads a cap correctly on its own: an absent or
+   blank max means the row does not track stock (no cap), while a literal max="0"
+   is a real sold-out and must hold at 0. Reading it as
+   `parseInt(input.attr('max')) || N` turned that 0 into the fallback N, letting
+   the +/- buttons raise the value past a cap the browser still enforced — the
+   native form validation then refused the booking with "The value must be 0." */
+if (typeof rbfwStepMax !== 'function') {
+    window.rbfwStepMax = function ($input) {
+        var raw = $input.attr('max');
+        if (raw === undefined || raw === null || raw === '') {
+            return Infinity;
+        }
+        var n = parseInt(raw, 10);
+        return isNaN(n) ? Infinity : n;
+    };
+}
+
 (function($) {
     
     $(document).ready(function() {
@@ -400,7 +418,7 @@
 
 
                 let $input = jQuery(this).siblings(".rbfw_bikecarsd_qty");
-                let max = parseInt($input.attr("max")) || 999;
+                let max = rbfwStepMax($input);
                 let value = parseInt($input.val()) || 0;
                 if (value < max) {
                     $input.val(value + 1).trigger("input");
@@ -438,7 +456,7 @@
         $(document).on("click", ".rbfw_servicesd_qty_plus", function(e) {
             e.preventDefault();
             let $input = $(this).siblings(".rbfw_servicesd_qty");
-            let max = parseInt($input.attr("max")) || 999;
+            let max = rbfwStepMax($input);
             let value = parseInt($input.val()) || 0;
             if (value < max) {
                 $input.val(value + 1).trigger("input");
@@ -468,7 +486,7 @@
         jQuery('body').on('click','.rbfw_timely_es_qty_plus',function (e) {
             e.preventDefault();
             var service_quantity = parseInt(jQuery(this).prev('input').val());
-            var max_value = parseInt(jQuery(this).prev('input').attr('max'));
+            var max_value = rbfwStepMax(jQuery(this).prev('input'));
             if(max_value > service_quantity){
                 let actual_quantity = service_quantity + 1
                 jQuery(this).prev('input').val(actual_quantity );
@@ -494,7 +512,7 @@
         jQuery('body').on('click','.rbfw_timely_es_qty_minus',function (e) {
             e.preventDefault();
             var service_quantity = parseInt(jQuery(this).next('input').val());
-            var max_value = parseInt(jQuery(this).next('input').attr('max'));
+            var max_value = rbfwStepMax(jQuery(this).next('input'));
             if(max_value >= service_quantity && service_quantity > 0 ){
                 let actual_quantity = service_quantity - 1
                 jQuery(this).next('input').val(actual_quantity);
@@ -518,7 +536,7 @@
         jQuery('body').on('change','.rbfw_timely_es_qty',function (e) {
             e.preventDefault();
             let service_quantity = parseInt(jQuery(this).val());
-            let max_value = parseInt(jQuery(this).attr('max'));
+            let max_value = rbfwStepMax(jQuery(this));
             if(service_quantity > max_value){
                 jQuery(this).val(max_value);
                 service_quantity = max_value;
