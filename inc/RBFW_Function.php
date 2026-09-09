@@ -38,16 +38,18 @@
 
 			public static function get_all_template() {
 				
-				$template_path = RBFW_Function::get_template_path('single/');
-				$template_path  = glob( $template_path . "*" );
-				
+				$template_path = RBFW_TEMPLATE_PATH . 'single/';
+				$template_path  = glob( $template_path . "*" ) ?: array();
+
+				$template_lists = array();
 				foreach ( $template_path as $template_dir ) {
 					if(is_dir($template_dir)){
 						$template_name = preg_replace("/[^a-zA-Z0-9]/", "",(ucfirst(basename($template_dir,''))));
 						$template_lists[ $template_name ] = $template_name.' Template';
 					}
-					
+
 				}
+				$templates = array();
 				foreach ( $template_lists as $key => $value ) {
 					$templates[ $key ] = $value;
 				}
