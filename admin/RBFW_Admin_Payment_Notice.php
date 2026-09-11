@@ -27,7 +27,10 @@ if ( ! class_exists( 'RBFW_Admin_Payment_Notice' ) ) {
 
 		public function __construct( $checker = null ) {
 			$this->checker = ( $checker instanceof RBFW_Payment_Status_Checker ) ? $checker : new RBFW_Payment_Status_Checker();
-			add_action( 'admin_notices', array( $this, 'render' ) );
+			// Hidden by request — no WooCommerce payment gateway is enabled yet, but
+			// the warning was noise during local development. render() (and every
+			// check it runs) is left intact below; re-add this line to bring it back.
+			// add_action( 'admin_notices', array( $this, 'render' ) );
 		}
 
 		public function render() {
