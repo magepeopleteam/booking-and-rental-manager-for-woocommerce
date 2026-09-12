@@ -542,22 +542,24 @@
 				/* Slim "no payment method" banner under the step bar. Hidden along with the
 				   rest of the editor while its loading skeleton is up, so it doesn't flash
 				   on its own above an otherwise blank page.
-				   Deliberately kept to the SAME footprint as the flat strip it replaces:
-				   full bleed, ~38px tall. 8px block padding + a 22px tall control is the
-				   budget — don't grow the icon chip or the CTA past that or the step bar
-				   and the editor body below start getting pushed down.
-				   Colour split: the chip is --me-danger because it flags a real blocker,
-				   the CTA is --me-primary because it is the primary action on this screen. */
+				   Deliberately kept close to the footprint of the flat strip it replaces —
+				   full bleed, a compact single row — so it doesn't push the sticky step bar
+				   and the editor body below it down by much.
+				   Left icon + message, right CTA button (the standard "alert bar" layout)
+				   instead of the old centered text; one danger palette throughout instead of
+				   mixing --me-danger (the icon) with --me-primary (the old CTA), since this
+				   is one blocking issue, not two different kinds of information. */
 				.rbfw-me-wrap.is-loading .rbfw-me-payment-notice{opacity:0;pointer-events:none;}
-				.rbfw-me-payment-notice{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;width:100%;box-sizing:border-box;text-align:center;padding:8px 22px;margin:0;background:linear-gradient(90deg,var(--me-primary-soft,#eef3ff) 0%,#f6f9ff 100%);border-top:1px solid rgba(26,86,219,.16);border-bottom:1px solid rgba(26,86,219,.16);font-size:13px;font-weight:600;color:var(--me-text-secondary,#334155);line-height:1.4;}
-				.rbfw-me-payment-notice__icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--me-danger,#dc2626);box-shadow:0 2px 6px rgba(220,38,38,.28);}
+				.rbfw-me-payment-notice{display:flex;align-items:center;flex-wrap:wrap;gap:12px;width:100%;box-sizing:border-box;padding:9px 24px;margin:0;background:linear-gradient(90deg,#fef2f2 0%,#fff7f7 100%);border-top:1px solid #fecaca;border-bottom:1px solid #fecaca;font-size:13px;font-weight:600;color:#7f1d1d;line-height:1.4;}
+				.rbfw-me-payment-notice__icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--me-danger,#dc2626);box-shadow:0 2px 6px rgba(220,38,38,.3);}
 				.rbfw-me-payment-notice__icon .dashicons{font-size:13px;width:13px;height:13px;line-height:1;color:#fff;}
-				.rbfw-me-payment-notice__text{color:var(--me-text-secondary,#334155);}
-				.rbfw-me-payment-notice-link{display:inline-flex;align-items:center;gap:4px;padding:2px 12px;border-radius:20px;background:#fff;border:1px solid var(--me-primary,#1a56db);color:var(--me-primary,#1a56db);font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;box-shadow:0 1px 2px rgba(15,23,42,.05);transition:background .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;}
+				.rbfw-me-payment-notice__text{flex:1 1 auto;min-width:160px;text-align:left;color:#7f1d1d;}
+				.rbfw-me-payment-notice-link{flex:0 0 auto;margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;background:var(--me-danger,#dc2626);border:1px solid var(--me-danger,#dc2626);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 2px 8px rgba(220,38,38,.25);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease;}
 				.rbfw-me-payment-notice-link .dashicons{font-size:13px;width:13px;height:13px;line-height:1;color:inherit;transition:transform .15s ease;}
-				.rbfw-me-payment-notice-link:hover{background:var(--me-primary,#1a56db);border-color:var(--me-primary-dk,#1347b8);color:#fff;box-shadow:0 3px 10px rgba(26,86,219,.28);}
+				.rbfw-me-payment-notice-link:hover{background:#b91c1c;border-color:#b91c1c;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.32);transform:translateY(-1px);}
 				.rbfw-me-payment-notice-link:hover .dashicons{transform:translateX(2px);}
-				@media (prefers-reduced-motion:reduce){.rbfw-me-payment-notice-link,.rbfw-me-payment-notice-link .dashicons{transition:none;}.rbfw-me-payment-notice-link:hover .dashicons{transform:none;}}
+				@media (max-width:640px){.rbfw-me-payment-notice{justify-content:flex-start;}.rbfw-me-payment-notice-link{margin-left:0;flex-basis:100%;justify-content:center;}}
+				@media (prefers-reduced-motion:reduce){.rbfw-me-payment-notice-link,.rbfw-me-payment-notice-link .dashicons{transition:none;}.rbfw-me-payment-notice-link:hover{transform:none;}.rbfw-me-payment-notice-link:hover .dashicons{transform:none;}}
 
 				/* Payment Method popup. */
 				.rbfw-payment-modal{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100001;align-items:center;justify-content:center;padding:20px;}
