@@ -43,13 +43,24 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 		}
 
 		/**
-		 * Replaces the taxonomy's auto-added "Categories" submenu (which would
-		 * otherwise still point at edit-tags.php) with this page, in the same
-		 * position under Rental Items.
+		 * The native "Rent Item Type" taxonomy submenu (auto-added by
+		 * register_taxonomy()'s show_in_menu) is the one visible entry now —
+		 * this page is registered as before (so its capability check, hook
+		 * suffix, and the edit-tags.php/term.php redirects in
+		 * redirect_legacy_screens() all keep working exactly the same), but
+		 * immediately hidden from the sidebar so it doesn't show up as a
+		 * second, redundant "Categories" row next to it.
+		 *
+		 * (An earlier version tried to do the reverse — hide the native
+		 * submenu and keep this one — via remove_submenu_page() with a plain
+		 * '&' in the slug. That never actually worked: WP core's own taxonomy
+		 * menu registration in wp-admin/menu.php builds that slug with a
+		 * literal '&amp;' — e.g. "edit-tags.php?taxonomy=%s&amp;post_type=$post_type"
+		 * — not '&', so the removal silently failed to match and both menu
+		 * items showed up. Not worth reproducing that string just to remove
+		 * it again now that the desired outcome has flipped.)
 		 */
 		public function register_menu(): void {
-			remove_submenu_page( 'edit.php?post_type=rbfw_item', 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=rbfw_item' );
-
 			self::$hook = add_submenu_page(
 				'edit.php?post_type=rbfw_item',
 				__( 'Categories', 'booking-and-rental-manager-for-woocommerce' ),
@@ -58,6 +69,13 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 				self::PAGE_SLUG,
 				[ $this, 'render_page' ]
 			);
+
+			// Hide the row, not the page: remove_submenu_page() only strips the
+			// nav link, so this screen stays fully reachable at its own URL —
+			// which is exactly what "Rent Item Type" (and any legacy
+			// edit-tags.php/term.php link, via redirect_legacy_screens() below)
+			// still redirects to.
+			remove_submenu_page( 'edit.php?post_type=rbfw_item', self::PAGE_SLUG );
 		}
 
 		/**
