@@ -321,6 +321,48 @@ if (!class_exists('RbfwImportDemo')) {
 			$this->run_full_import();
 		}
 
+		/**
+		 * Backfill rbfw_item_caregory terms onto sample items that were created
+		 * by an older version of the importer, before per-item categories existed.
+		 * Matches purely on the exact post_title from retnal_data(), touches only
+		 * rbfw_item posts that currently have zero terms in the taxonomy, and
+		 * never creates or duplicates a post.
+		 *
+		 * @return int Number of items that received categories.
+		 */
+		public function backfill_missing_categories() {
+			$by_title = array();
+			foreach ($this->retnal_data() as $item) {
+				if (!empty($item['title']) && !empty($item['categories'])) {
+					$by_title[$item['title']] = $item['categories'];
+				}
+			}
+			if (empty($by_title)) {
+				return 0;
+			}
+
+			$post_ids = get_posts(array(
+				'post_type'   => 'rbfw_item',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'fields'      => 'ids',
+			));
+
+			$updated = 0;
+			foreach ($post_ids as $post_id) {
+				$existing = wp_get_post_terms($post_id, 'rbfw_item_caregory', array('fields' => 'ids'));
+				if (!is_wp_error($existing) && !empty($existing)) {
+					continue; // Already has categories — leave it alone.
+				}
+				$title = get_post_field('post_title', $post_id, 'raw');
+				if (isset($by_title[$title])) {
+					$this->assign_categories($post_id, $by_title[$title]);
+					$updated++;
+				}
+			}
+			return $updated;
+		}
+
 		public static function check_plugin($plugin_dir_name, $plugin_file): int {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			$plugin_dir = ABSPATH . 'wp-content/plugins/' . $plugin_dir_name;
