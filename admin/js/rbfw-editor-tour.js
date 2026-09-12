@@ -60,7 +60,22 @@
 			{ selector: '[data-rbfw-tour="features"]', tab: 'general', title: t.step_title_features, text: t.step_text_features },
 
 			// ── Pricing tab ──────────────────────────────────────────
-			{ selector: '[data-rbfw-tour="pricing"]', tab: 'pricing', title: t.step_title_pricing, text: t.step_text_pricing },
+			// Rent type: shown separately from the rest of Pricing because it's
+			// the one choice that changes what every other field on this tab
+			// even means — bikes/boats price by time slot, resorts by night,
+			// appointments by service duration, and so on.
+			{
+				selector: '.rbfw-tent-types',
+				tab: 'pricing',
+				title: t.step_title_rent_type,
+				text: function () { return currentRentTypeCopy(t.step_text_rent_type_current, t.step_text_rent_type_fallback); }
+			},
+			{
+				selector: '[data-rbfw-tour="pricing"]',
+				tab: 'pricing',
+				title: t.step_title_pricing,
+				text: function () { return currentRentTypeReminder(t.step_text_pricing_current, t.step_text_pricing); }
+			},
 			{ selector: '[data-rbfw-tour="extra-service"]', tab: 'pricing', title: t.step_title_extra_service, text: t.step_text_extra_service },
 			{ selector: '.rbfw-me-inventory-card', tab: 'pricing', title: t.step_title_inventory, text: t.step_text_inventory },
 			{ selector: '.rbfw-me-buffer-card', tab: 'pricing', title: t.step_title_buffer, text: t.step_text_buffer },
@@ -131,6 +146,41 @@
 			return $t.length ? $t : null;
 		}
 
+		// A step's title/text can be a plain string or a function returning one
+		// (used where the copy depends on live page state, e.g. which rent type
+		// is currently selected).
+		function resolveCopy(value) {
+			return (typeof value === 'function') ? value() : value;
+		}
+
+		// The rent type picker (top of the Pricing card, .rbfw-tent-types) already
+		// carries each type's own real name + description as data-rent-type-desc
+		// on its .rbfw-rent-type cards (see RBFW_Pricing::rent_type() in
+		// admin/settings/Pricing.php) — reused here instead of duplicating that
+		// copy, so the tour always matches whichever type is actually selected.
+		function currentRentTypeName() {
+			var $sel = $('.rbfw-rent-type.selected').first();
+			return $sel.length ? $.trim($sel.clone().find('.icon').remove().end().text()) : '';
+		}
+
+		function currentRentTypeCopy(prefixTemplate, fallback) {
+			var name = currentRentTypeName();
+			var $sel = $('.rbfw-rent-type.selected').first();
+			if (!name || !$sel.length) {
+				return fallback;
+			}
+			var desc = $.trim(String($sel.attr('data-rent-type-desc') || '')).replace(/<\/?b>/g, '');
+			var text = prefixTemplate.replace('%s', name);
+			return desc ? (text + ' ' + desc) : text;
+		}
+
+		// Shorter variant for steps that just need to remind the admin which
+		// type they're in, without repeating the full description again.
+		function currentRentTypeReminder(template, fallback) {
+			var name = currentRentTypeName();
+			return name ? template.replace('%s', name) : fallback;
+		}
+
 		function position($target) {
 			var rect = $target[0].getBoundingClientRect();
 			var pad = 8;
@@ -182,8 +232,8 @@
 							.replace('%1$d', index + 1)
 							.replace('%2$d', STEPS.length)
 					);
-					$tooltip.find('.rbfw-tour-tip__title').text(step.title);
-					$tooltip.find('.rbfw-tour-tip__text').text(step.text);
+					$tooltip.find('.rbfw-tour-tip__title').text(resolveCopy(step.title));
+					$tooltip.find('.rbfw-tour-tip__text').text(resolveCopy(step.text));
 					$tooltip.find('.rbfw-tour-back').prop('disabled', index === 0);
 					$tooltip.find('.rbfw-tour-next').text(
 						index === STEPS.length - 1 ? rbfwEditorTour.i18n.finish : rbfwEditorTour.i18n.next

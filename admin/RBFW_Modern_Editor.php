@@ -467,6 +467,13 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'step_text_features'            => __( 'List grouped feature highlights (e.g. "Bike Features": Disc Brakes, Bottle Holder) shown on the item page.', 'booking-and-rental-manager-for-woocommerce' ),
 
 					// Pricing tab
+					/* translators: %s: the rent type name, e.g. "Single day". */
+					'step_title_rent_type'          => __( 'Rent type', 'booking-and-rental-manager-for-woocommerce' ),
+					/* translators: %s: the rent type name, e.g. "Single day". */
+					'step_text_rent_type_current'   => __( "This item is set as: %s.", 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_rent_type_fallback'  => __( 'This is the single most important choice on this tab — it decides which pricing, availability, and booking fields apply to this item. Each rent type is built for a different kind of business: single-day time slots, multi-day date ranges, resort stays, appointments, or multi-item bundles.', 'booking-and-rental-manager-for-woocommerce' ),
+					/* translators: %s: the rent type name, e.g. "Single day". */
+					'step_text_pricing_current'     => __( "Since this item is a %s rental, the fields below are tailored to that: set the rates that actually apply here.", 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_pricing'            => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_pricing'             => __( 'Set hourly, daily, or other rates and pricing types depending on how this item is rented.', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_extra_service'      => __( 'Extra services', 'booking-and-rental-manager-for-woocommerce' ),
