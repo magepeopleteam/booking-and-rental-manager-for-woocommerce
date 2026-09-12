@@ -50,14 +50,8 @@
 		 * is skipped automatically rather than shown pointing at nothing.
 		 */
 		var STEPS = [
-			// ── Orientation ──────────────────────────────────────────
-			{ selector: '.rbfw-me-tabs', title: t.step_title_tabs, text: t.step_text_tabs },
-
 			// ── General tab ──────────────────────────────────────────
 			{ selector: '[data-rbfw-tour="basic-info"]', tab: 'general', title: t.step_title_name, text: t.step_text_name },
-			{ selector: '[data-rbfw-tour="description"]', tab: 'general', title: t.step_title_description, text: t.step_text_description },
-			{ selector: '.rbfw-me-rent-type-card', tab: 'general', title: t.step_title_categories, text: t.step_text_categories },
-			{ selector: '[data-rbfw-tour="features"]', tab: 'general', title: t.step_title_features, text: t.step_text_features },
 
 			// ── Pricing tab ──────────────────────────────────────────
 			// Rent type: shown separately from the rest of Pricing because it's
@@ -78,20 +72,28 @@
 			},
 
 			/*
-			 * One of these five is skipped automatically for any given item —
-			 * only the wrapper matching its actual rbfw_item_type is visible;
-			 * the rest render but stay hidden (verified directly against a real
-			 * item of each type). Single Day and Appointment share the exact
-			 * same wrapper markup (.rbfw_bike_car_sd_wrapper) in
-			 * admin/settings/Pricing.php, so they get one combined step rather
-			 * than two that would never both fire anyway.
+			 * Each rent type's own pricing fields, broken into their real,
+			 * uniquely-targetable sub-cards (verified directly against a live
+			 * item of every type) rather than one combined step per type —
+			 * only the card(s) matching the item's actual rbfw_item_type are
+			 * ever visible; the rest render but stay hidden and are skipped
+			 * automatically.
 			 */
+			// Single Day + Appointment share the exact same wrapper markup
+			// (.rbfw_bike_car_sd_wrapper) in admin/settings/Pricing.php.
 			{ selector: '.rbfw_bike_car_sd_wrapper', tab: 'pricing', title: t.step_title_sd_pricing, text: t.step_text_sd_pricing },
-			{ selector: '.rbfw_general_price_config_wrapper', tab: 'pricing', title: t.step_title_md_pricing, text: t.step_text_md_pricing },
-			{ selector: '.rbfw_resort_price_config_wrapper', tab: 'pricing', title: t.step_title_resort_pricing, text: t.step_text_resort_pricing },
-			// Multiple Items gets its pricing broken into its own 3 real cards
-			// (RBFW_Pricing::multiple_items()) rather than one combined step,
-			// per feedback asking for each pricing option shown separately.
+			// Appointment adds two of its own cards on top of that shared
+			// session/time-slot pricing (RBFW_Pricing::appointment()).
+			{ selector: '.rbfw_switch_sd_appointment_row', tab: 'pricing', title: t.step_title_appt_max_qty, text: t.step_text_appt_max_qty },
+			{ selector: '.appointment-onday', tab: 'pricing', title: t.step_title_appt_ondays, text: t.step_text_appt_ondays },
+			// Multiple Day (RBFW_Pricing::md_price_config()) has 3 real cards.
+			{ selector: '[data-rbfw-tour="md-duration-rates"]', tab: 'pricing', title: t.step_title_md_duration, text: t.step_text_md_duration },
+			{ selector: '[data-rbfw-tour="md-time-config"]', tab: 'pricing', title: t.step_title_md_time_config, text: t.step_text_md_time_config },
+			{ selector: '#rbfw-daywise-config-wrapper', tab: 'pricing', title: t.step_title_md_daywise, text: t.step_text_md_daywise },
+			// Resort (RBFW_Pricing::resort_price_config()) has 2 real sections.
+			{ selector: '[data-rbfw-tour="resort-daylong"]', tab: 'pricing', title: t.step_title_resort_daylong, text: t.step_text_resort_daylong },
+			{ selector: '[data-rbfw-tour="resort-rooms"]', tab: 'pricing', title: t.step_title_resort_rooms, text: t.step_text_resort_rooms },
+			// Multiple Items (RBFW_Pricing::multiple_items()) has 3 real cards.
 			{ selector: '.rbfw-mi-price-types-card', tab: 'pricing', title: t.step_title_mi_types, text: t.step_text_mi_types },
 			{ selector: '.rbfw-mi-items-card', tab: 'pricing', title: t.step_title_mi_items, text: t.step_text_mi_items },
 			{ selector: '#rbfw-pricing-thresholds-card', tab: 'pricing', title: t.step_title_mi_thresholds, text: t.step_text_mi_thresholds },
@@ -108,17 +110,11 @@
 			{ selector: '.rbfw-me-location-card', tab: 'advanced', title: t.step_title_location, text: t.step_text_location },
 			{ selector: '[data-rbfw-tour="template"]', tab: 'advanced', title: t.step_title_template, text: t.step_text_template },
 			{ selector: '.rbfw-me-additional-gallery-card', tab: 'advanced', title: t.step_title_additional_gallery, text: t.step_text_additional_gallery },
-			{ selector: '[data-rbfw-tour="faq"]', tab: 'advanced', title: t.step_title_faq, text: t.step_text_faq },
 			{ selector: '[data-rbfw-tour="tax-settings"]', tab: 'advanced', title: t.step_title_tax, text: t.step_text_tax },
 			{ selector: '[data-rbfw-tour="security-deposit"]', tab: 'advanced', title: t.step_title_deposit, text: t.step_text_deposit },
-			{ selector: '[data-rbfw-tour="related-items"]', tab: 'advanced', title: t.step_title_related, text: t.step_text_related },
-			{ selector: '[data-rbfw-tour="terms"]', tab: 'advanced', title: t.step_title_terms, text: t.step_text_terms },
 
 			// ── Sidebar (visible regardless of active tab) ──────────
-			{ selector: '[data-rbfw-tour="featured-image"]', title: t.step_title_image, text: t.step_text_image },
-			{ selector: '[data-rbfw-tour="gallery"]', title: t.step_title_gallery, text: t.step_text_gallery },
 			{ selector: '.rbfw-me-payment-card', title: t.step_title_payment, text: t.step_text_payment },
-			{ selector: '[data-rbfw-tour="status"]', title: t.step_title_status, text: t.step_text_status },
 
 			// ── Header ───────────────────────────────────────────────
 			{ selector: '.rbfw-me-publish-group', title: t.step_title_publish, text: t.step_text_publish }

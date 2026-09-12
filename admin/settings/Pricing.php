@@ -1038,7 +1038,7 @@
 				} else {
 					echo esc_attr( 'none' );
 				} ?>;">
-                    <section class="bg-light mt-5">
+                    <section class="bg-light mt-5" data-rbfw-tour="resort-daylong">
                         <div>
                             <label>
 								<?php echo esc_html__( 'Day-long Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -1050,7 +1050,7 @@
                             <span class="slider round"></span>
                         </label>
                     </section>
-                    <section>
+                    <section data-rbfw-tour="resort-rooms">
                         <div class="w-100">
 							<?php do_action( 'rbfw_before_resort_price_table' ); ?>
                             <div style="overflow-x:auto;">
@@ -1343,7 +1343,7 @@
                     <div class="rbfw_multi_day_price_conf">
 
                         <!-- DURATION RATES Card -->
-                        <div class="md-price-card">
+                        <div class="md-price-card" data-rbfw-tour="md-duration-rates">
                             <div class="md-card-header">Duration Rates</div>
 
                             <!-- Monthly Price -->
@@ -1439,7 +1439,7 @@
                         </div><!-- /.md-price-card Duration Rates -->
 
                         <!-- TIME CONFIGURATION Card -->
-                        <div class="md-price-card">
+                        <div class="md-price-card" data-rbfw-tour="md-time-config">
                             <div class="md-card-header">Time Configuration</div>
 
                             <div class="item md-time-toggle-row">
