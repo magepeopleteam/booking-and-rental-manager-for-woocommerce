@@ -285,7 +285,6 @@
 }
 .rbfw_search_item{
     position: relative;
-    width: 100%;
     min-width: 0;
 }
 .rbfw_search_item select,
