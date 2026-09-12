@@ -411,10 +411,8 @@ if (!class_exists('RbfwImportDemo')) {
 			return array(
 				'Appointment'        => $base . 'clinic?lock=2',
 				'Bike'               => $base . 'bicycle?lock=3',
-				'Boat'               => $base . 'boat?lock=2',
 				'Car'                => $base . 'car?lock=1',
 				'Consultation'       => $base . 'businessmeeting?lock=1',
-				'Costume'            => $base . 'costumeparty?lock=1',
 				'Dress'              => $base . 'weddingdress?lock=1',
 				'Equipment'          => $base . 'constructiontools?lock=1',
 				'Healthcare Service' => $base . 'hospital?lock=1',
@@ -424,7 +422,6 @@ if (!class_exists('RbfwImportDemo')) {
 				'Tent'               => $base . 'camping?lock=1',
 				'Tools & Gear'       => $base . 'handtools?lock=1',
 				'Vacation Package'   => $base . 'tropicalbeach?lock=1',
-				'Yacht'              => $base . 'yacht?lock=1',
 			);
 		}
 
@@ -1113,7 +1110,7 @@ if (!class_exists('RbfwImportDemo')) {
 				[
 					'title'      => 'Dress - Muffin Template',
 					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-					'categories' => ['Dress', 'Costume'],
+					'categories' => ['Dress'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','3:00 PM','16:00','5:00 PM','21:00'],
 						'rbfw_item_type' => 'dress',

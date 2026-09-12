@@ -74,7 +74,7 @@ function insert_dummy_taxonomy_terms() {
     $value = get_option('rbfw_taxonomy_imported');
 
     if( $value!='yes' ){
-        $terms = array('Bike', 'Car', 'Equipment', 'Yacht', 'Boat', 'Helicopter', 'Dress', 'Tent', 'Resort');
+        $terms = array('Bike', 'Car', 'Equipment', 'Helicopter', 'Dress', 'Tent', 'Resort');
         foreach ($terms as $term) {
             // Check if the term already exists
             if (!term_exists($term, 'rbfw_item_caregory')) {
