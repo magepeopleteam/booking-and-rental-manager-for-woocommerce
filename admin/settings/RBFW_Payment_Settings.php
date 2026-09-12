@@ -1066,7 +1066,8 @@
 				$btn_text     = $is_installed
 					? __( 'Activate WooCommerce Now', 'booking-and-rental-manager-for-woocommerce' )
 					: __( 'Install &amp; Activate Now', 'booking-and-rental-manager-for-woocommerce' );
-				return '<button type="button" class="button button-primary rbfw-install-wc-trigger" style="white-space:nowrap;">' . wp_kses_post( $btn_text ) . '</button>';
+				$icon = '<svg class="rbfw-install-wc-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>';
+				return '<button type="button" class="button button-primary rbfw-install-wc-trigger">' . $icon . '<span>' . wp_kses_post( $btn_text ) . '</span></button>';
 			}
 
 			/** Styles for the Booking Mode selector + its auto-detected notices. Printed once. */
@@ -1117,6 +1118,15 @@
 				.rbfw-bm-card-cta{display:block;margin-top:10px;}
 				.rbfw-bm-card-cta .button{white-space:nowrap;}
 				.rbfw-bm-card-cta--hint{font-size:11.5px;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:6px 9px;line-height:1.45;}
+				/* "Install & Activate Now" CTA — a real button instead of the flat WP-core
+				   button-primary, so it reads as the one action this disabled card wants you
+				   to take. Selector specificity (3 classes) is kept deliberately above
+				   .wp-core-ui .button-primary's so these rules win regardless of style order. */
+				.rbfw-install-wc-trigger.button.button-primary{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;padding:7px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--rbfw-pay-accent),#164d76);color:#fff;font-size:12.5px;font-weight:600;letter-spacing:.2px;text-shadow:none;box-shadow:0 2px 8px rgba(34,113,177,.28);transition:transform .15s ease,box-shadow .15s ease,background .15s ease;}
+				.rbfw-install-wc-trigger.button.button-primary:hover{background:linear-gradient(135deg,#1a5c94,#123f61);color:#fff;box-shadow:0 6px 16px rgba(34,113,177,.35);transform:translateY(-1px);}
+				.rbfw-install-wc-trigger.button.button-primary:active{transform:translateY(0);box-shadow:0 2px 6px rgba(34,113,177,.28);}
+				.rbfw-install-wc-trigger.button.button-primary:focus-visible{outline:2px solid #fff;box-shadow:0 0 0 4px rgba(34,113,177,.35);}
+				.rbfw-install-wc-trigger__icon{width:14px;height:14px;flex:0 0 auto;}
 				.rbfw-bm-gateway-warning{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;}
 				.rbfw-bm-gateway-warning p{margin:0;}
 				.rbfw-bm-auto-note{display:flex;align-items:flex-start;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:10px;padding:12px 16px;margin:4px 0 14px;font-size:12.5px;}
