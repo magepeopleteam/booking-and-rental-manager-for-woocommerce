@@ -480,6 +480,7 @@ if (!class_exists('RbfwImportDemo')) {
 
 				case 'finalize':
 					$this->set_related_products($state['post_ids']);
+					$this->assign_category_images($state['image_ids']);
 					$state['stage'] = 'done';
 					break;
 			}
@@ -620,6 +621,86 @@ if (!class_exists('RbfwImportDemo')) {
 				wp_set_object_terms($post_id, $term_ids, 'rbfw_item_caregory');
 				update_post_meta($post_id, 'rbfw_categories', $category_names);
 			}
+		}
+
+		/**
+		 * Give every rbfw_item_caregory term a real category image (term meta
+		 * `rentiva_category_image_id`, read by RBFW_Category_Manager and the
+		 * Rentiva theme's category grid/hero templates), reusing the same
+		 * sample images already downloaded for the items instead of fetching
+		 * anything new. Cycles through the pool so terms get distinct pictures
+		 * and never overwrites a category that already has one (e.g. set by
+		 * hand in the Categories admin page).
+		 *
+		 * @param int[] $image_ids Attachment IDs downloaded in the images stage.
+		 */
+		private function assign_category_images($image_ids) {
+			$image_ids = array_values(array_map('intval', (array) $image_ids));
+			$count     = count($image_ids);
+			if ($count === 0) {
+				return;
+			}
+
+			$terms = get_terms(array('taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false));
+			if (is_wp_error($terms) || empty($terms)) {
+				return;
+			}
+
+			$i = 0;
+			foreach ($terms as $term) {
+				if (get_term_meta($term->term_id, 'rentiva_category_image_id', true)) {
+					continue; // Already has an image — leave it alone.
+				}
+				update_term_meta($term->term_id, 'rentiva_category_image_id', $image_ids[$i % $count]);
+				$i++;
+			}
+		}
+
+		/**
+		 * Backfill category images for a site whose dummy items were already
+		 * imported before category images existed. Reuses the sample image
+		 * pool from any already-imported item's gallery, since the import
+		 * state (and its freshly-downloaded image_ids) no longer exists once
+		 * the import has finished.
+		 *
+		 * @return int Number of categories that received an image.
+		 */
+		public function backfill_category_images() {
+			$sample = get_posts(array(
+				'post_type'   => 'rbfw_item',
+				'post_status' => 'any',
+				'numberposts' => 1,
+				'fields'      => 'ids',
+			));
+			if (empty($sample)) {
+				return 0;
+			}
+			$image_ids = get_post_meta($sample[0], 'rbfw_gallery_images', true);
+			if (empty($image_ids) || !is_array($image_ids)) {
+				return 0;
+			}
+
+			$terms = get_terms(array('taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false));
+			if (is_wp_error($terms) || empty($terms)) {
+				return 0;
+			}
+
+			$before = 0;
+			foreach ($terms as $term) {
+				if (get_term_meta($term->term_id, 'rentiva_category_image_id', true)) {
+					$before++;
+				}
+			}
+
+			$this->assign_category_images($image_ids);
+
+			$after = 0;
+			foreach ($terms as $term) {
+				if (get_term_meta($term->term_id, 'rentiva_category_image_id', true)) {
+					$after++;
+				}
+			}
+			return $after - $before;
 		}
 
 		/**
