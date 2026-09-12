@@ -43,6 +43,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shared_inventory.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shortcodes.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_rent_types_shortcode.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_item_search.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_booking_search.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';

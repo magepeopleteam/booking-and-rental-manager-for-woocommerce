@@ -415,6 +415,10 @@ function rbfw_page_create() {
         'booking-search' => [
             'title' => 'Booking Search',
             'content' => '[rbfw_booking_search]'
+        ],
+        'rent-types' => [
+            'title' => 'Rent Types',
+            'content' => '[rbfw_rent_types]'
         ]
     ];
 

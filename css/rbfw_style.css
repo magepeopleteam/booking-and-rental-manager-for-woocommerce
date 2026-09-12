@@ -14263,6 +14263,106 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     .rbfw-archive-body { padding: 20px 16px 40px; }
 }
 
+/* ── [rbfw_rent_types]: "browse by rent type" grid ─────────────────────
+   Sits inside the theme's normal content column (a shortcode, not a full
+   template like rbfw-category.php above), so no full-bleed header here —
+   just the same title/count/empty-state language as that archive page. */
+.rbfw-rt-archive { margin: 0 0 24px; }
+.rbfw-rt-archive-head { margin-bottom: 22px; }
+.rbfw-rt-archive-title {
+    margin: 0 0 6px; padding: 0;
+    font-size: 28px; line-height: 1.2; font-weight: 700; color: #111827;
+}
+.rbfw-rt-archive-count { margin: 0; font-size: 13.5px; color: #6b7280; }
+
+.rbfw-rt-grid {
+    --rbfw-rt-cols: 4;
+    display: grid;
+    grid-template-columns: repeat(var(--rbfw-rt-cols), 1fr);
+    gap: 22px;
+}
+.rbfw-rt-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #eef0f2;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, .05);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+.rbfw-rt-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, .12);
+    border-color: #e5e7eb;
+    color: inherit;
+}
+.rbfw-rt-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: #f3f4f6;
+    overflow: hidden;
+}
+.rbfw-rt-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 300ms ease;
+}
+.rbfw-rt-card:hover .rbfw-rt-card__media img { transform: scale(1.06); }
+.rbfw-rt-card__count {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 3px 11px;
+    border-radius: 999px;
+    background: rgba(17, 24, 39, .72);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .2px;
+}
+.rbfw-rt-card__body {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.rbfw-rt-card__title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.3;
+}
+.rbfw-rt-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--rbfw_color_primary, #ff3726);
+}
+.rbfw-rt-card__cta i {
+    font-size: 10px;
+    transition: transform 180ms ease;
+}
+.rbfw-rt-card:hover .rbfw-rt-card__cta i { transform: translateX(4px); }
+
+@media (max-width: 1024px) {
+    .rbfw-rt-grid { --rbfw-rt-cols: 3; }
+}
+@media (max-width: 700px) {
+    .rbfw-rt-grid { --rbfw-rt-cols: 2; gap: 14px; }
+    .rbfw-rt-archive-title { font-size: 22px; }
+}
+@media (max-width: 420px) {
+    .rbfw-rt-grid { --rbfw-rt-cols: 1; }
+}
+
 /* ── List view: an actual row ─────────────────────────────────────────
    The layout was defined across two stylesheets and the later one won, so the
    image kept its full-width grid sizing while the card was already flex-row —
