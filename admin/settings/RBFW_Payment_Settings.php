@@ -550,15 +550,15 @@
 				   mixing --me-danger (the icon) with --me-primary (the old CTA), since this
 				   is one blocking issue, not two different kinds of information. */
 				.rbfw-me-wrap.is-loading .rbfw-me-payment-notice{opacity:0;pointer-events:none;}
-				.rbfw-me-payment-notice{display:flex;align-items:center;flex-wrap:wrap;gap:12px;width:100%;box-sizing:border-box;padding:9px 24px;margin:0;background:linear-gradient(90deg,#fef2f2 0%,#fff7f7 100%);border-top:1px solid #fecaca;border-bottom:1px solid #fecaca;font-size:13px;font-weight:600;color:#7f1d1d;line-height:1.4;}
+				.rbfw-me-payment-notice{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;width:100%;box-sizing:border-box;padding:9px 24px;margin:0;background:linear-gradient(90deg,#fef2f2 0%,#fff7f7 100%);border-top:1px solid #fecaca;border-bottom:1px solid #fecaca;font-size:13px;font-weight:600;color:#7f1d1d;line-height:1.4;text-align:center;}
 				.rbfw-me-payment-notice__icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--me-danger,#dc2626);box-shadow:0 2px 6px rgba(220,38,38,.3);}
 				.rbfw-me-payment-notice__icon .dashicons{font-size:13px;width:13px;height:13px;line-height:1;color:#fff;}
-				.rbfw-me-payment-notice__text{flex:1 1 auto;min-width:160px;text-align:left;color:#7f1d1d;}
-				.rbfw-me-payment-notice-link{flex:0 0 auto;margin-left:auto;display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;background:var(--me-danger,#dc2626);border:1px solid var(--me-danger,#dc2626);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 2px 8px rgba(220,38,38,.25);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease;}
+				.rbfw-me-payment-notice__text{flex:0 1 auto;text-align:center;color:#7f1d1d;}
+				.rbfw-me-payment-notice-link{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;background:var(--me-danger,#dc2626);border:1px solid var(--me-danger,#dc2626);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 2px 8px rgba(220,38,38,.25);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease;}
 				.rbfw-me-payment-notice-link .dashicons{font-size:13px;width:13px;height:13px;line-height:1;color:inherit;transition:transform .15s ease;}
 				.rbfw-me-payment-notice-link:hover{background:#b91c1c;border-color:#b91c1c;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.32);transform:translateY(-1px);}
 				.rbfw-me-payment-notice-link:hover .dashicons{transform:translateX(2px);}
-				@media (max-width:640px){.rbfw-me-payment-notice{justify-content:flex-start;}.rbfw-me-payment-notice-link{margin-left:0;flex-basis:100%;justify-content:center;}}
+				@media (max-width:640px){.rbfw-me-payment-notice-link{flex-basis:100%;justify-content:center;}}
 				@media (prefers-reduced-motion:reduce){.rbfw-me-payment-notice-link,.rbfw-me-payment-notice-link .dashicons{transition:none;}.rbfw-me-payment-notice-link:hover{transform:none;}.rbfw-me-payment-notice-link:hover .dashicons{transform:none;}}
 
 				/* Payment Method popup. */
