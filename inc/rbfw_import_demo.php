@@ -393,9 +393,10 @@ if (!class_exists('RbfwImportDemo')) {
 		/**
 		 * One dedicated, on-topic photo per known rbfw_item_caregory rent type
 		 * (the 9 seeded by insert_dummy_taxonomy_terms() in taxonomy_register.php,
-		 * plus the 12 introduced by the sample items' own 'categories' entries
-		 * below) — replaces the old behaviour of cycling every category through
-		 * the same shared pool of 10 generic item photos regardless of name.
+		 * plus the extra rent types introduced by the sample items' own
+		 * 'categories' entries below) — replaces the old behaviour of cycling
+		 * every category through the same shared pool of 10 generic item
+		 * photos regardless of name.
 		 *
 		 * Each URL is a free, keyword-matched Creative Commons photo from
 		 * loremflickr.com/Flickr; the `lock` parameter pins it to one specific,
@@ -414,17 +415,12 @@ if (!class_exists('RbfwImportDemo')) {
 				'Car'                => $base . 'car?lock=1',
 				'Consultation'       => $base . 'businessmeeting?lock=1',
 				'Costume'            => $base . 'costumeparty?lock=1',
-				'Daily Rental'       => $base . 'carrental?lock=1',
 				'Dress'              => $base . 'weddingdress?lock=1',
 				'Equipment'          => $base . 'constructiontools?lock=1',
-				'Fashion Wear'       => $base . 'fashion?lock=1',
 				'Healthcare Service' => $base . 'hospital?lock=1',
 				'Helicopter'         => $base . 'helicopter?lock=1',
 				'Hotel & Stay'       => $base . 'hotel?lock=4',
-				'Hourly Rental'      => $base . 'alarmclock?lock=1',
-				'Multi-Day Rental'   => $base . 'highway?lock=1',
 				'Resort'             => $base . 'beachresort?lock=1',
-				'Single Day Rental'  => $base . 'sunrise?lock=1',
 				'Tent'               => $base . 'camping?lock=1',
 				'Tools & Gear'       => $base . 'handtools?lock=1',
 				'Vacation Package'   => $base . 'tropicalbeach?lock=1',
@@ -914,7 +910,7 @@ if (!class_exists('RbfwImportDemo')) {
 				[
 					'title'      => 'Bike/Car For Single Day Multiple Slot - Classic Template',
 					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...',
-					'categories' => ['Bike', 'Car', 'Single Day Rental'],
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'00:00','00:30','01:00','06:00','08:00','08:30','09:00','09:30',
@@ -1078,7 +1074,7 @@ if (!class_exists('RbfwImportDemo')) {
 				[
 					'title'      => 'Bike/Car For Multiple Day - Muffin Template',
 					'content'    => 'A bike rental or bike hire business rents out bicycles for short periods of time, usually for a few hours.',
-					'categories' => ['Bike', 'Car', 'Multi-Day Rental'],
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','21:00'],
 						'rbfw_item_type' => 'bike_car_md',
@@ -1117,7 +1113,7 @@ if (!class_exists('RbfwImportDemo')) {
 				[
 					'title'      => 'Dress - Muffin Template',
 					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-					'categories' => ['Dress', 'Fashion Wear', 'Costume'],
+					'categories' => ['Dress', 'Costume'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','3:00 PM','16:00','5:00 PM','21:00'],
 						'rbfw_item_type' => 'dress',
@@ -1161,7 +1157,7 @@ if (!class_exists('RbfwImportDemo')) {
 				[
 					'title'      => 'Bike/Car For Single Day - Classic Template',
 					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-					'categories' => ['Bike', 'Car', 'Daily Rental'],
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'10:00 AM','10:00 PM','10:30 AM','10:30 PM','11:30 AM','11:30 PM',
@@ -1214,7 +1210,7 @@ if (!class_exists('RbfwImportDemo')) {
 				[
 					'title'      => 'Bike/Car For Single Day multi hour - Classic Template',
 					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-					'categories' => ['Bike', 'Car', 'Hourly Rental'],
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'00:00','00:30','01:00','06:00','08:00','08:30','09:00','09:30',
