@@ -271,57 +271,125 @@
 /*Search Short Code*/
 
 .rbfw_search_container {
-    background-color: #f3f3f3;
-    padding: 10px;
+    --rbfw_search_radius: 16px;
+    background-color: #fff;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     justify-content: space-between;
-    gap: 5px;
+    gap: 10px;
+    border-radius: var(--rbfw_search_radius);
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    border: 1px solid #eef0f2;
 }
 .rbfw_search_item{
     position: relative;
     width: 100%;
 }
-.rbfw_search_item select{
-    width: 100%;
-    padding:10px;
-    border-radius: 0;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    font-size: 16px;
-}
-.rbfw_search_item input{
+.rbfw_search_item select,
+.rbfw_search_item input[type="text"]{
     width: 100%;
     box-sizing: border-box;
-    padding:10px;
-    border-radius: 0;
-    border: 1px solid #ddd;
+    padding: 13px 16px;
+    border-radius: 10px;
+    border: 1.5px solid #e5e7eb;
+    background-color: #fbfbfc;
+    font-size: 15px;
+    color: #1f2937;
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+.rbfw_search_item select{
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 38px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px;
+}
+.rbfw_search_item select:hover,
+.rbfw_search_item input[type="text"]:hover{
+    border-color: #cbd5e1;
+}
+.rbfw_search_item select:focus,
+.rbfw_search_item input[type="text"]:focus{
+    outline: none;
+    border-color: var(--rbfw_color_primary);
     background-color: #fff;
-    font-size: 16px;
+    box-shadow: 0 0 0 3px rgba(255, 55, 38, 0.12);
 }
 #rbfw_rent_item_search_calendar_icon{
     position: absolute;
-    right:5px;
-    top:50%;
-    font-size: 10px;
+    right: 16px;
+    top: 50%;
+    font-size: 13px;
+    color: #9ca3af;
     transform: translateY(-50%);
     text-align: right;
+    pointer-events: none;
 }
 .rbfw_rent_item_search_submit {
+    width: 100%;
     background-color: var(--rbfw_color_primary);
-    color: white;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
     cursor: pointer;
     text-align: center;
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding: 14px 20px;
+    box-shadow: 0 4px 14px rgba(255, 55, 38, 0.25);
+    transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+.rbfw_rent_item_search_submit:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(255, 55, 38, 0.32);
+}
+.rbfw_rent_item_search_submit:active{
+    transform: translateY(0);
 }
 @media (min-width:768px) {
     .rbfw_search_container{
         flex-direction: row;
         align-items: center;
         justify-content: stretch;
-        padding: 25px;
-    }    
+        padding: 10px;
+        border-radius: 999px;
+        gap: 0;
+    }
+    .rbfw_search_item{
+        flex: 1 1 0;
+        padding: 0 18px;
+    }
+    .rbfw_search_item:not(:last-child){
+        border-right: 1px solid #eef0f2;
+    }
+    .rbfw_search_item select,
+    .rbfw_search_item input[type="text"]{
+        border: none;
+        border-radius: 8px;
+        background-color: transparent;
+        padding: 8px 30px 8px 8px;
+        margin: 0 -8px;
+    }
+    .rbfw_search_item select:focus,
+    .rbfw_search_item input[type="text"]:focus{
+        background-color: #fff7f6;
+    }
+    .rbfw_search_item:last-child{
+        flex: 0 0 auto;
+        padding: 0 0 0 10px;
+    }
+    .rbfw_rent_item_search_submit{
+        width: auto;
+        min-width: 140px;
+        border-radius: 999px;
+    }
 }
 /* shortcode end */
 

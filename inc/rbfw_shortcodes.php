@@ -859,6 +859,12 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
 
     <?php }else{ ?>
+        <?php
+            // Only show the Pickup Location field when there is at least one pickup
+            // location to choose from — an always-empty dropdown (just its own
+            // placeholder option) isn't a usable filter.
+            $has_locations = ! empty( get_rbfw_pickup_data_wp_query() );
+        ?>
         <section class="rbfw_rent_item_search_elementor_section">
             <div class="rbfw_rent_item_search_elementor_container">
                 <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
@@ -870,7 +876,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                         <div class="rbfw_search_item">
                             <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category', $type_label );?>
                         </div>
-                        <?php if( $hide_location !== 'yes' ): ?>
+                        <?php if( $hide_location !== 'yes' && $has_locations ): ?>
                         <div class="rbfw_search_item">
                             <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location', $location_label );?>
                         </div>
