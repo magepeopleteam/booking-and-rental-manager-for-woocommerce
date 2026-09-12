@@ -829,16 +829,89 @@
 .rbfw-cat-image-field {
 	display: flex;
 	align-items: center;
-	gap: 0.75rem;
+	gap: 1rem;
 	flex-wrap: wrap;
+}
+
+.rbfw-cat-image-field__preview {
+	width: 88px;
+	height: 88px;
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--rbfw-cat-radius-lg);
+	border: 1.5px dashed var(--rbfw-cat-border);
+	background: var(--rbfw-cat-border-subtle);
+	color: var(--rbfw-cat-muted);
+	overflow: hidden;
+	transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .rbfw-cat-image-field__preview img {
 	display: block;
-	max-width: 90px;
-	height: auto;
-	border-radius: var(--rbfw-cat-radius);
-	border: 1px solid var(--rbfw-cat-border);
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
+	border: none;
+}
+
+.rbfw-cat-image-field__preview .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+}
+
+.rbfw-cat-image-field__actions {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+
+.rbfw-cat-image-field__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 7px 14px;
+	border-radius: var(--rbfw-cat-radius-pill);
+	border: 1.5px solid transparent;
+	font-size: 12.5px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.rbfw-cat-image-field__btn:hover {
+	transform: translateY(-1px);
+}
+
+.rbfw-cat-image-field__btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+
+.rbfw-cat-image-field__btn--select {
+	color: var(--rbfw-cat-primary-dk);
+	background: var(--rbfw-cat-primary-soft);
+	border-color: var(--rbfw-cat-primary-soft);
+}
+
+.rbfw-cat-image-field__btn--select:hover {
+	background: #e0e9fc;
+	border-color: #c7d7f5;
+}
+
+.rbfw-cat-image-field__btn--remove {
+	color: var(--rbfw-cat-danger);
+	background: var(--rbfw-cat-danger-bg);
+	border-color: var(--rbfw-cat-danger-bg);
+}
+
+.rbfw-cat-image-field__btn--remove:hover {
+	background: #fee2e2;
 }
 
 .rbfw-cat-modal__footer {

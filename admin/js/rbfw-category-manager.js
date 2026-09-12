@@ -29,13 +29,13 @@
 			termId: document.getElementById( 'rbfw-cat-term-id' ),
 			name: document.getElementById( 'rbfw-cat-name' ),
 			slug: document.getElementById( 'rbfw-cat-slug' ),
-			parent: document.getElementById( 'rbfw-cat-parent' ),
 			description: document.getElementById( 'rbfw-cat-description' ),
 			imageId: document.getElementById( 'rbfw-cat-image-id' ),
 		};
 		var imagePreview = document.getElementById( 'rbfw-cat-image-preview' );
 		var imageSelectBtn = document.getElementById( 'rbfw-cat-image-select' );
 		var imageRemoveBtn = document.getElementById( 'rbfw-cat-image-remove' );
+		var imagePreviewEmptyHtml = '<span class="dashicons dashicons-format-image" aria-hidden="true"></span>';
 
 		/* ---------------------------------------------------------------
 		 * Media picker — same wp.media() pattern as any other admin image
@@ -55,7 +55,7 @@
 				frame.on( 'select', function () {
 					var attachment = frame.state().get( 'selection' ).first().toJSON();
 					fields.imageId.value = attachment.id;
-					imagePreview.innerHTML = '<img src="' + attachment.url + '" style="max-width:150px;height:auto;" />';
+					imagePreview.innerHTML = '<img src="' + attachment.url + '" alt="" />';
 					imageRemoveBtn.style.display = '';
 				} );
 
@@ -67,7 +67,7 @@
 			imageRemoveBtn.addEventListener( 'click', function ( event ) {
 				event.preventDefault();
 				fields.imageId.value = '';
-				imagePreview.innerHTML = '';
+				imagePreview.innerHTML = imagePreviewEmptyHtml;
 				imageRemoveBtn.style.display = 'none';
 			} );
 		}
@@ -80,19 +80,9 @@
 			form.reset();
 			fields.termId.value = '0';
 			fields.imageId.value = '';
-			imagePreview.innerHTML = '';
+			imagePreview.innerHTML = imagePreviewEmptyHtml;
 			imageRemoveBtn.style.display = 'none';
 			hideError();
-			toggleParentOption( null, true );
-		}
-
-		function toggleParentOption( termId, enabled ) {
-			var options = fields.parent.querySelectorAll( 'option' );
-			options.forEach( function ( option ) {
-				if ( null === termId || option.value === String( termId ) ) {
-					option.disabled = ! enabled && null !== termId;
-				}
-			} );
 		}
 
 		function showError( message ) {
@@ -131,16 +121,14 @@
 			fields.termId.value = term.id;
 			fields.name.value = term.name || '';
 			fields.slug.value = term.slug || '';
-			fields.parent.value = term.parent ? String( term.parent ) : '0';
 			fields.description.value = term.description || '';
 			fields.imageId.value = term.imageId || '';
 
 			if ( term.imageUrl ) {
-				imagePreview.innerHTML = '<img src="' + term.imageUrl + '" style="max-width:150px;height:auto;" />';
+				imagePreview.innerHTML = '<img src="' + term.imageUrl + '" alt="" />';
 				imageRemoveBtn.style.display = '';
 			}
 
-			toggleParentOption( term.id, false );
 			openModal();
 		}
 
@@ -268,7 +256,6 @@
 			body.set( 'term_id', fields.termId.value );
 			body.set( 'name', fields.name.value );
 			body.set( 'slug', fields.slug.value );
-			body.set( 'parent', fields.parent.value );
 			body.set( 'description', fields.description.value );
 			body.set( 'image_id', fields.imageId.value );
 
@@ -293,7 +280,6 @@
 					}
 
 					upsertCard( response.data.termId, response.data.cardHtml );
-					maybeAddAsParentOption( response.data.termId, fields.name.value );
 					closeModal();
 				} )
 				.catch( function () {
@@ -321,18 +307,6 @@
 			}
 
 			refreshView();
-		}
-
-		function maybeAddAsParentOption( termId, name ) {
-			var alreadyThere = fields.parent.querySelector( 'option[value="' + termId + '"]' );
-			if ( alreadyThere ) {
-				alreadyThere.textContent = name;
-				return;
-			}
-			var option = document.createElement( 'option' );
-			option.value = termId;
-			option.textContent = name;
-			fields.parent.appendChild( option );
 		}
 
 		function maybeShowEmptyState() {

@@ -468,19 +468,9 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 								<input type="text" id="rbfw-cat-name" name="name" required maxlength="200">
 							</div>
 
-							<div class="rbfw-cat-field rbfw-cat-field--half">
+							<div class="rbfw-cat-field">
 								<label for="rbfw-cat-slug"><?php esc_html_e( 'Slug', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<input type="text" id="rbfw-cat-slug" name="slug" placeholder="<?php esc_attr_e( 'Auto-generated from name', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-							</div>
-
-							<div class="rbfw-cat-field rbfw-cat-field--half">
-								<label for="rbfw-cat-parent"><?php esc_html_e( 'Parent Category', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-								<select id="rbfw-cat-parent" name="parent">
-									<option value="0"><?php esc_html_e( '— None —', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-									<?php foreach ( $terms as $term ) : ?>
-										<option value="<?php echo (int) $term->term_id; ?>"><?php echo esc_html( $term->name ); ?></option>
-									<?php endforeach; ?>
-								</select>
 							</div>
 
 							<div class="rbfw-cat-field">
@@ -491,10 +481,20 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 							<div class="rbfw-cat-field">
 								<label><?php esc_html_e( 'Category Image', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class="rbfw-cat-image-field">
-									<div class="rbfw-cat-image-field__preview" id="rbfw-cat-image-preview"></div>
-									<input type="hidden" id="rbfw-cat-image-id" name="image_id" value="">
-									<button type="button" class="button" id="rbfw-cat-image-select"><?php esc_html_e( 'Select image', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-									<button type="button" class="button" id="rbfw-cat-image-remove" style="display:none"><?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+									<div class="rbfw-cat-image-field__preview" id="rbfw-cat-image-preview">
+										<span class="dashicons dashicons-format-image" aria-hidden="true"></span>
+									</div>
+									<div class="rbfw-cat-image-field__actions">
+										<input type="hidden" id="rbfw-cat-image-id" name="image_id" value="">
+										<button type="button" class="rbfw-cat-image-field__btn rbfw-cat-image-field__btn--select" id="rbfw-cat-image-select">
+											<span class="dashicons dashicons-upload" aria-hidden="true"></span>
+											<?php esc_html_e( 'Select image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+										</button>
+										<button type="button" class="rbfw-cat-image-field__btn rbfw-cat-image-field__btn--remove" id="rbfw-cat-image-remove" style="display:none">
+											<span class="dashicons dashicons-trash" aria-hidden="true"></span>
+											<?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>
+										</button>
+									</div>
 								</div>
 								<p class="description"><?php esc_html_e( 'Shown on the front-end category grid and its hero tile.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 							</div>
@@ -530,7 +530,10 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 			$term_id  = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 			$name     = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 			$slug     = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-			$parent   = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : 0;
+			// The modal no longer exposes a Parent field. Kept accepted (not required)
+			// so an existing sub-category isn't silently flattened to top-level just by
+			// being edited here — omitted from $_POST, its current parent is left alone.
+			$parent   = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : null;
 			$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 			$image_id = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
 
@@ -540,14 +543,18 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 
 			// A category can't be its own parent (wp_update_term() already rejects
 			// making it a descendant of itself, but not this direct self-parent case).
-			if ( $term_id && $parent === $term_id ) {
+			if ( $term_id && null !== $parent && $parent === $term_id ) {
 				wp_send_json_error( [ 'message' => __( 'A category cannot be its own parent.', 'booking-and-rental-manager-for-woocommerce' ) ] );
 			}
 
 			$args = [
-				'parent'      => $parent,
 				'description' => $desc,
 			];
+			if ( null !== $parent ) {
+				$args['parent'] = $parent;
+			} elseif ( ! $term_id ) {
+				$args['parent'] = 0; // New category, no parent field sent: top-level.
+			}
 			if ( '' !== $slug ) {
 				$args['slug'] = $slug;
 			}
