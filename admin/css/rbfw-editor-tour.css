@@ -1,0 +1,123 @@
+/**
+ * Section-by-section guided tour (admin/js/rbfw-editor-tour.js).
+ * Tokens reuse the modern editor's own --me-* variables (see
+ * admin/css/rbfw-modern-editor.css's .rbfw-me-wrap) so the tour reads as
+ * part of the same product instead of a bolted-on widget.
+ */
+body.rbfw-tour-active {
+    overflow: hidden;
+}
+
+.rbfw-tour-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100200;
+    background: rgba(15, 23, 42, .55);
+    pointer-events: none;
+}
+
+/* The "hole" in the overlay: a transparent box whose oversized box-shadow
+   paints everything OUTSIDE it, so the real overlay div above only needs to
+   sit underneath for browsers where box-shadow spread alone wouldn't quite
+   reach the corners. */
+.rbfw-tour-spot {
+    position: fixed;
+    z-index: 100201;
+    border-radius: 10px;
+    box-shadow: 0 0 0 9999px rgba(15, 23, 42, .55);
+    outline: 2px solid var(--me-primary, #1a56db);
+    outline-offset: 2px;
+    pointer-events: none;
+    transition: top .25s ease, left .25s ease, width .25s ease, height .25s ease;
+}
+
+.rbfw-tour-tip {
+    position: fixed;
+    z-index: 100202;
+    width: 300px;
+    max-width: calc(100vw - 24px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, .25);
+    padding: 16px 18px;
+    transition: top .25s ease, left .25s ease;
+}
+
+.rbfw-tour-tip__step {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--me-primary, #1a56db);
+    margin-bottom: 6px;
+}
+
+.rbfw-tour-tip__title {
+    margin: 0 0 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--me-text, #0f172a);
+}
+
+.rbfw-tour-tip__text {
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--me-text-secondary, #334155);
+}
+
+.rbfw-tour-tip__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.rbfw-tour-tip__nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rbfw-tour-btn {
+    border: none;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .12s ease, color .12s ease;
+}
+
+.rbfw-tour-btn--ghost {
+    background: none;
+    color: var(--me-muted, #64748b);
+}
+.rbfw-tour-btn--ghost:hover {
+    background: var(--me-border-subtle, #f1f5f9);
+    color: var(--me-text, #0f172a);
+}
+.rbfw-tour-btn--ghost:disabled {
+    opacity: .4;
+    cursor: default;
+    pointer-events: none;
+}
+
+.rbfw-tour-btn--primary {
+    background: var(--me-primary, #1a56db);
+    color: #fff;
+}
+.rbfw-tour-btn--primary:hover {
+    background: var(--me-primary-dk, #1347b8);
+}
+
+@media (max-width: 480px) {
+    .rbfw-tour-tip { width: calc(100vw - 24px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rbfw-tour-spot,
+    .rbfw-tour-tip {
+        transition: none;
+    }
+}

@@ -3031,6 +3031,18 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 .rbfw-me-help-link--docs { border-bottom: 1px solid var(--me-border); margin-bottom: 0; }
 .rbfw-me-help-link--docs:hover { border-left-color: #00a32a; background: #f0fdf4; }
+/* This one variant is a <button>, not an <a> (it triggers the JS tour rather
+   than navigating), so it needs the usual native-chrome reset. */
+.rbfw-me-help-link--button {
+    width: 100%;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+.rbfw-me-help-link--button:hover { border-left-color: var(--me-primary); }
 .rbfw-me-help-link--pro .rbfw-me-help-link__icon { color: #f59e0b; }
 .rbfw-me-help-link--docs .rbfw-me-help-link__icon { color: #00a32a; }
 .rbfw-me-help-link__icon {

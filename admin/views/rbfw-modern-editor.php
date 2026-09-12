@@ -749,6 +749,19 @@
 				<div class="rbfw-me-card__body">
 
 					<div class="rbfw-me-help-divider">
+						<span><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<button type="button" class="rbfw-me-help-link rbfw-me-help-link--button" id="rbfw-me-tour-restart">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-lightbulb"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Take a Tour', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'A quick walkthrough of this editor', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</button>
+
+					<div class="rbfw-me-help-divider">
 						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
 
