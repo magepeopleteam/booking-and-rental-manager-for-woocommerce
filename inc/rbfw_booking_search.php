@@ -677,7 +677,13 @@ function rbfw_booking_quick_add_ajax() {
 		wp_send_json_error( array( 'message' => __( 'The selected dates include an off day for this rental.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
-	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+	// class_exists('WooCommerce') is the actual standalone-mode check here — the
+	// plugin's own WC()->cart fallback (inc/rbfw_wc_fallbacks.php) makes both
+	// function_exists('WC') and WC()->cart truthy even when WooCommerce isn't
+	// active, so checking only those would let a standalone site reach cart
+	// write methods (add_to_cart(), calculate_totals()) the fallback doesn't
+	// implement and fatal.
+	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'WC' ) || ! WC()->cart ) {
 		wp_send_json_error( array( 'message' => __( 'The cart is unavailable right now. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
@@ -798,7 +804,13 @@ function rbfw_booking_modal_add_ajax() {
 		wp_send_json_error( array( 'message' => __( 'Invalid booking submission.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
-	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+	// class_exists('WooCommerce') is the actual standalone-mode check here — the
+	// plugin's own WC()->cart fallback (inc/rbfw_wc_fallbacks.php) makes both
+	// function_exists('WC') and WC()->cart truthy even when WooCommerce isn't
+	// active, so checking only those would let a standalone site reach cart
+	// write methods (add_to_cart(), calculate_totals()) the fallback doesn't
+	// implement and fatal.
+	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'WC' ) || ! WC()->cart ) {
 		wp_send_json_error( array( 'message' => __( 'The cart is unavailable right now. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
@@ -858,7 +870,13 @@ function rbfw_booking_modal_add_ajax() {
 function rbfw_booking_checkout_form_ajax() {
 	check_ajax_referer( 'rbfw_booking_search_action', 'nonce' );
 
-	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+	// class_exists('WooCommerce') is the actual standalone-mode check here — the
+	// plugin's own WC()->cart fallback (inc/rbfw_wc_fallbacks.php) makes both
+	// function_exists('WC') and WC()->cart truthy even when WooCommerce isn't
+	// active, so checking only those would let a standalone site reach cart
+	// write methods (add_to_cart(), calculate_totals()) the fallback doesn't
+	// implement and fatal.
+	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'WC' ) || ! WC()->cart ) {
 		wp_send_json_error( array( 'message' => __( 'The cart is unavailable right now. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
@@ -893,7 +911,13 @@ function rbfw_booking_checkout_form_ajax() {
 function rbfw_booking_empty_cart_ajax() {
 	check_ajax_referer( 'rbfw_booking_search_action', 'nonce' );
 
-	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+	// class_exists('WooCommerce') is the actual standalone-mode check here — the
+	// plugin's own WC()->cart fallback (inc/rbfw_wc_fallbacks.php) makes both
+	// function_exists('WC') and WC()->cart truthy even when WooCommerce isn't
+	// active, so checking only those would let a standalone site reach cart
+	// write methods (add_to_cart(), calculate_totals()) the fallback doesn't
+	// implement and fatal.
+	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'WC' ) || ! WC()->cart ) {
 		wp_send_json_error( array( 'message' => __( 'The cart is unavailable right now. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
@@ -917,7 +941,13 @@ function rbfw_booking_empty_cart_ajax() {
 function rbfw_booking_bar_details_ajax() {
 	check_ajax_referer( 'rbfw_booking_search_action', 'nonce' );
 
-	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+	// class_exists('WooCommerce') is the actual standalone-mode check here — the
+	// plugin's own WC()->cart fallback (inc/rbfw_wc_fallbacks.php) makes both
+	// function_exists('WC') and WC()->cart truthy even when WooCommerce isn't
+	// active, so checking only those would let a standalone site reach cart
+	// write methods (add_to_cart(), calculate_totals()) the fallback doesn't
+	// implement and fatal.
+	if ( ! class_exists( 'WooCommerce' ) || ! function_exists( 'WC' ) || ! WC()->cart ) {
 		wp_send_json_error( array( 'message' => __( 'The cart is unavailable right now. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 	}
 
