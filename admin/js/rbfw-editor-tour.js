@@ -32,58 +32,61 @@
 		 * once a gateway is configured) are skipped automatically rather
 		 * than shown against nothing.
 		 */
+		// i18n shorthand — every step's title/text is looked up here by key so
+		// the list below stays readable; see RBFW_Modern_Editor::enqueue_assets()
+		// for the actual translatable strings.
+		var t = rbfwEditorTour.i18n;
+
+		/*
+		 * One step per distinct section rather than one per tab: each targets
+		 * either a stable existing class (.rbfw-me-rent-type-card,
+		 * .rbfw-me-inventory-card, ...) or a data-rbfw-tour="..." attribute added
+		 * specifically for this tour where no unique class already existed
+		 * (see the matching data-rbfw-tour values in
+		 * admin/views/rbfw-modern-editor.php). `tab`, when set, is the data-tab
+		 * to switch to first. A step whose target isn't visible when reached
+		 * (an optional/toggled-off section, a Pro-only add-on card that isn't
+		 * installed, the Payment Method card once a gateway is configured, ...)
+		 * is skipped automatically rather than shown pointing at nothing.
+		 */
 		var STEPS = [
-			{
-				selector: '#rbfw_me_post_title',
-				tab: 'general',
-				title: rbfwEditorTour.i18n.step_title_name,
-				text: rbfwEditorTour.i18n.step_text_name
-			},
-			{
-				selector: '.rbfw-me-tabs',
-				title: rbfwEditorTour.i18n.step_title_tabs,
-				text: rbfwEditorTour.i18n.step_text_tabs
-			},
-			{
-				selector: '.rbfw-me-rent-type-card',
-				tab: 'general',
-				title: rbfwEditorTour.i18n.step_title_categories,
-				text: rbfwEditorTour.i18n.step_text_categories
-			},
-			{
-				selector: '.rbfw-me-panel[data-panel="pricing"]',
-				tab: 'pricing',
-				title: rbfwEditorTour.i18n.step_title_pricing,
-				text: rbfwEditorTour.i18n.step_text_pricing
-			},
-			{
-				selector: '.rbfw-me-panel[data-panel="offday"]',
-				tab: 'offday',
-				title: rbfwEditorTour.i18n.step_title_offday,
-				text: rbfwEditorTour.i18n.step_text_offday
-			},
-			{
-				selector: '.rbfw-me-panel[data-panel="advanced"]',
-				tab: 'advanced',
-				title: rbfwEditorTour.i18n.step_title_advanced,
-				text: rbfwEditorTour.i18n.step_text_advanced
-			},
-			{
-				selector: '.rbfw-me-card--sidebar:has(.rbfw-me-thumb-preview)',
-				tab: 'general',
-				title: rbfwEditorTour.i18n.step_title_image,
-				text: rbfwEditorTour.i18n.step_text_image
-			},
-			{
-				selector: '.rbfw-me-payment-card',
-				title: rbfwEditorTour.i18n.step_title_payment,
-				text: rbfwEditorTour.i18n.step_text_payment
-			},
-			{
-				selector: '.rbfw-me-publish-group',
-				title: rbfwEditorTour.i18n.step_title_publish,
-				text: rbfwEditorTour.i18n.step_text_publish
-			}
+			// ── Orientation ──────────────────────────────────────────
+			{ selector: '.rbfw-me-tabs', title: t.step_title_tabs, text: t.step_text_tabs },
+
+			// ── General tab ──────────────────────────────────────────
+			{ selector: '[data-rbfw-tour="basic-info"]', tab: 'general', title: t.step_title_name, text: t.step_text_name },
+			{ selector: '[data-rbfw-tour="description"]', tab: 'general', title: t.step_title_description, text: t.step_text_description },
+			{ selector: '.rbfw-me-rent-type-card', tab: 'general', title: t.step_title_categories, text: t.step_text_categories },
+			{ selector: '[data-rbfw-tour="features"]', tab: 'general', title: t.step_title_features, text: t.step_text_features },
+
+			// ── Pricing tab ──────────────────────────────────────────
+			{ selector: '[data-rbfw-tour="pricing"]', tab: 'pricing', title: t.step_title_pricing, text: t.step_text_pricing },
+			{ selector: '[data-rbfw-tour="extra-service"]', tab: 'pricing', title: t.step_title_extra_service, text: t.step_text_extra_service },
+			{ selector: '.rbfw-me-inventory-card', tab: 'pricing', title: t.step_title_inventory, text: t.step_text_inventory },
+			{ selector: '.rbfw-me-buffer-card', tab: 'pricing', title: t.step_title_buffer, text: t.step_text_buffer },
+			{ selector: '[data-rbfw-tour="fee-management"]', tab: 'pricing', title: t.step_title_fees, text: t.step_text_fees },
+
+			// ── Off Days tab ─────────────────────────────────────────
+			{ selector: '.rbfw-me-panel[data-panel="offday"]', tab: 'offday', title: t.step_title_offday, text: t.step_text_offday },
+
+			// ── Advanced tab ─────────────────────────────────────────
+			{ selector: '.rbfw-me-location-card', tab: 'advanced', title: t.step_title_location, text: t.step_text_location },
+			{ selector: '[data-rbfw-tour="template"]', tab: 'advanced', title: t.step_title_template, text: t.step_text_template },
+			{ selector: '.rbfw-me-additional-gallery-card', tab: 'advanced', title: t.step_title_additional_gallery, text: t.step_text_additional_gallery },
+			{ selector: '[data-rbfw-tour="faq"]', tab: 'advanced', title: t.step_title_faq, text: t.step_text_faq },
+			{ selector: '[data-rbfw-tour="tax-settings"]', tab: 'advanced', title: t.step_title_tax, text: t.step_text_tax },
+			{ selector: '[data-rbfw-tour="security-deposit"]', tab: 'advanced', title: t.step_title_deposit, text: t.step_text_deposit },
+			{ selector: '[data-rbfw-tour="related-items"]', tab: 'advanced', title: t.step_title_related, text: t.step_text_related },
+			{ selector: '[data-rbfw-tour="terms"]', tab: 'advanced', title: t.step_title_terms, text: t.step_text_terms },
+
+			// ── Sidebar (visible regardless of active tab) ──────────
+			{ selector: '[data-rbfw-tour="featured-image"]', title: t.step_title_image, text: t.step_text_image },
+			{ selector: '[data-rbfw-tour="gallery"]', title: t.step_title_gallery, text: t.step_text_gallery },
+			{ selector: '.rbfw-me-payment-card', title: t.step_title_payment, text: t.step_text_payment },
+			{ selector: '[data-rbfw-tour="status"]', title: t.step_title_status, text: t.step_text_status },
+
+			// ── Header ───────────────────────────────────────────────
+			{ selector: '.rbfw-me-publish-group', title: t.step_title_publish, text: t.step_text_publish }
 		];
 
 		var current = -1;

@@ -452,24 +452,67 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'skip'     => __( 'Skip tour', 'booking-and-rental-manager-for-woocommerce' ),
 					'finish'   => __( 'Finish', 'booking-and-rental-manager-for-woocommerce' ),
 
-					'step_title_name'       => __( 'Name your item', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_name'        => __( 'Start with a clear, descriptive title — it\'s the first thing customers see.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_tabs'       => __( 'Section tabs', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_tabs'        => __( 'Everything about this item lives here: General info, Pricing, Off Days, and Advanced settings.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_categories' => __( 'Rent types', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_categories'  => __( 'Pick one or more rent types (categories) for this item, or add a new one right from here.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_pricing'    => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_pricing'     => __( 'Set hourly, daily, or other rates depending on how this item is rented.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_offday'     => __( 'Off days', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_offday'      => __( 'Block out dates when this item isn\'t available for booking.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_advanced'   => __( 'Advanced settings', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_advanced'    => __( 'Inventory, delivery/location, and other fine-tuning live here.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_image'      => __( 'Featured image', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_image'       => __( 'Add a featured photo — listings with a clear photo get booked more often.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_payment'    => __( 'Payment method', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_payment'     => __( 'Shows your active payment setup at a glance, and lets you configure one if none is active yet.', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_publish'    => __( "You're ready!", 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_publish'     => __( 'Publish (or save as a draft) whenever you\'re happy with this item.', 'booking-and-rental-manager-for-woocommerce' ),
+					// Orientation
+					'step_title_tabs'              => __( 'Section tabs', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_tabs'                => __( 'Everything about this item lives here: General info, Pricing, Off Days, and Advanced settings.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// General tab
+					'step_title_name'               => __( 'Name your item', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_name'                => __( 'Start with a clear, descriptive title and subtitle — this is the first thing customers see.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_description'        => __( 'Description', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_description'         => __( 'Write the full description customers see on the item page. Switch to CODE to paste raw HTML.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_categories'         => __( 'Rent types', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_categories'          => __( 'Pick one or more rent types (categories) for this item, or add a new one right from here.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_features'           => __( 'Item features', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_features'            => __( 'List grouped feature highlights (e.g. "Bike Features": Disc Brakes, Bottle Holder) shown on the item page.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// Pricing tab
+					'step_title_pricing'            => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_pricing'             => __( 'Set hourly, daily, or other rates and pricing types depending on how this item is rented.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_extra_service'      => __( 'Extra services', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_extra_service'       => __( 'Optional paid add-ons customers can attach to their booking (helmets, insurance, etc.).', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_inventory'          => __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_inventory'           => __( 'Manage stock quantity, return-date availability and item variations.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_buffer'             => __( 'Buffer time', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_buffer'              => __( 'Reserve extra hours before and after each booking for cleaning or turnaround.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_fees'               => __( 'Fee management', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_fees'                => __( 'Add extra fees with their own calculation type and frequency.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// Off Days tab
+					'step_title_offday'             => __( 'Off days', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_offday'              => __( 'Block out dates when this item isn\'t available for booking.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// Advanced tab
+					'step_title_location'           => __( 'Location', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_location'            => __( 'Configure pick-up and drop-off locations for this item.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_template'           => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_template'            => __( 'Choose how this item\'s page looks to customers.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_additional_gallery' => __( 'Additional gallery', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_additional_gallery'  => __( 'A second gallery section shown on the item page (Muffin template only).', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_faq'                => __( 'FAQ', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_faq'                 => __( 'Add frequently asked questions shown on this item\'s page.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_tax'                => __( 'Tax settings', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_tax'                 => __( 'Turn on and configure tax for this specific item.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_deposit'            => __( 'Security deposit', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_deposit'             => __( 'Require a refundable deposit before this item can be booked.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_related'            => __( 'Related items', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_related'             => __( 'Choose other rental items to show on this item\'s page.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_terms'              => __( 'Terms', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_terms'               => __( 'Add rental terms and conditions specific to this item.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// Sidebar
+					'step_title_image'              => __( 'Featured image', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_image'               => __( 'Add a featured photo — listings with a clear photo get booked more often.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_gallery'            => __( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_gallery'             => __( 'Add more photos shown in this item\'s image gallery.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_payment'            => __( 'Payment method', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_payment'             => __( 'Shows your active payment setup at a glance, and lets you configure one if none is active yet.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_status'             => __( 'Status', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_status'              => __( 'Set this item to Draft, Published, or Private.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// Header
+					'step_title_publish'            => __( "You're ready!", 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_publish'             => __( 'Publish (or save as a draft) whenever you\'re happy with this item.', 'booking-and-rental-manager-for-woocommerce' ),
 				],
 			] );
 
