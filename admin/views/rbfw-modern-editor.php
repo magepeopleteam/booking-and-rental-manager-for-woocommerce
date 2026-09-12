@@ -176,8 +176,10 @@
 							<?php foreach ( $all_cat_terms as $term ) :
 								$checked   = in_array( strtolower( trim( $term->name ) ), $saved_cat_names, true );
 								$cat_depth = isset( $term->depth ) ? (int) $term->depth : 0;
+								$image_id  = (int) get_term_meta( $term->term_id, 'rentiva_category_image_id', true );
+								$image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'thumbnail' ) : '';
 							?>
-								<label class="rbfw-me-checkbox-label rbfw-rt-chip<?php echo $cat_depth > 0 ? ' rbfw-rt-chip--child' : ''; ?>" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>" data-parent="<?php echo esc_attr( (int) $term->parent ); ?>" data-depth="<?php echo esc_attr( $cat_depth ); ?>" style="--rbfw-rt-depth: <?php echo esc_attr( $cat_depth ); ?>;">
+								<label class="rbfw-me-checkbox-label rbfw-rt-chip<?php echo $cat_depth > 0 ? ' rbfw-rt-chip--child' : ''; ?>" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>" data-parent="<?php echo esc_attr( (int) $term->parent ); ?>" data-depth="<?php echo esc_attr( $cat_depth ); ?>" data-image-id="<?php echo esc_attr( $image_id ); ?>" data-image-url="<?php echo esc_url( $image_url ); ?>" style="--rbfw-rt-depth: <?php echo esc_attr( $cat_depth ); ?>;">
 									<input
 										type="checkbox"
 										class="rbfw-me-cat-checkbox"
@@ -211,11 +213,22 @@
 									<input class="rbfw-me-input" type="text" id="rbfw-me-rent-type-modal-input" maxlength="200" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
 								</div>
 								<div class="rbfw-me-field">
-									<label class="rbfw-me-field__label" for="rbfw-me-rent-type-modal-parent"><?php esc_html_e( 'Parent category', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw-me-field__optional">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
-									<select class="rbfw-me-input" id="rbfw-me-rent-type-modal-parent">
-										<option value="0"><?php esc_html_e( '— None (top level) —', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-									</select>
-									<p class="rbfw-me-field__hint"><?php esc_html_e( 'Pick a parent to create a sub-category.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									<label class="rbfw-me-field__label"><?php esc_html_e( 'Rent type image', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw-me-field__optional">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
+									<div class="rbfw-rt-image-field">
+										<div class="rbfw-rt-image-field__preview" id="rbfw-me-rent-type-modal-image-preview">
+											<span class="dashicons dashicons-format-image" aria-hidden="true"></span>
+										</div>
+										<div class="rbfw-rt-image-field__actions">
+											<input type="hidden" id="rbfw-me-rent-type-modal-image-id" value="">
+											<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary" id="rbfw-me-rent-type-modal-image-select">
+												<span class="dashicons dashicons-upload"></span> <?php esc_html_e( 'Select Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</button>
+											<button type="button" class="rbfw-me-btn rbfw-me-btn--danger" id="rbfw-me-rent-type-modal-image-remove" style="display:none">
+												<span class="dashicons dashicons-trash"></span>
+											</button>
+										</div>
+									</div>
+									<p class="rbfw-me-field__hint"><?php esc_html_e( 'Shown on the front-end category grid.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 								</div>
 							</div>
 							<div class="rbfw-me-faq-modal__foot">

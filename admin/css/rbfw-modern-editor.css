@@ -7853,6 +7853,43 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     font-size: 13px;
 }
 #rbfw-me-faq-msg .rbfw-me-error { color: var(--me-danger); }
+
+/* ── Rent type image field (Add/Edit Rent Type modal) ──────── */
+.rbfw-rt-image-field {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.rbfw-rt-image-field__preview {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1.5px dashed var(--me-border);
+    background: #f6f7f9;
+    color: var(--me-muted);
+    overflow: hidden;
+}
+.rbfw-rt-image-field__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.rbfw-rt-image-field__preview .dashicons {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+}
+.rbfw-rt-image-field__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
 #rbfw-me-faq-msg .rbfw-me-success { color: #0a7d3a; }
 
 /* ── Front-end Display Settings ─────────────────────────────── */
