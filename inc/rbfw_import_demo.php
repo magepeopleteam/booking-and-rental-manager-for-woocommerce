@@ -391,6 +391,48 @@ if (!class_exists('RbfwImportDemo')) {
 		}
 
 		/**
+		 * One dedicated, on-topic photo per known rbfw_item_caregory rent type
+		 * (the 9 seeded by insert_dummy_taxonomy_terms() in taxonomy_register.php,
+		 * plus the 12 introduced by the sample items' own 'categories' entries
+		 * below) — replaces the old behaviour of cycling every category through
+		 * the same shared pool of 10 generic item photos regardless of name.
+		 *
+		 * Each URL is a free, keyword-matched Creative Commons photo from
+		 * loremflickr.com/Flickr; the `lock` parameter pins it to one specific,
+		 * hand-picked image rather than a random one so re-imports stay
+		 * consistent. Every entry here was reviewed by hand for relevance and
+		 * to avoid photos whose subject is a real, identifiable person.
+		 *
+		 * @return array<string,string> Rent type name => image URL.
+		 */
+		private static function category_image_urls() {
+			$base = 'https://loremflickr.com/640/480/';
+			return array(
+				'Appointment'        => $base . 'clinic?lock=2',
+				'Bike'               => $base . 'bicycle?lock=3',
+				'Boat'               => $base . 'boat?lock=2',
+				'Car'                => $base . 'car?lock=1',
+				'Consultation'       => $base . 'businessmeeting?lock=1',
+				'Costume'            => $base . 'costumeparty?lock=1',
+				'Daily Rental'       => $base . 'carrental?lock=1',
+				'Dress'              => $base . 'weddingdress?lock=1',
+				'Equipment'          => $base . 'constructiontools?lock=1',
+				'Fashion Wear'       => $base . 'fashion?lock=1',
+				'Healthcare Service' => $base . 'hospital?lock=1',
+				'Helicopter'         => $base . 'helicopter?lock=1',
+				'Hotel & Stay'       => $base . 'hotel?lock=4',
+				'Hourly Rental'      => $base . 'alarmclock?lock=1',
+				'Multi-Day Rental'   => $base . 'highway?lock=1',
+				'Resort'             => $base . 'beachresort?lock=1',
+				'Single Day Rental'  => $base . 'sunrise?lock=1',
+				'Tent'               => $base . 'camping?lock=1',
+				'Tools & Gear'       => $base . 'handtools?lock=1',
+				'Vacation Package'   => $base . 'tropicalbeach?lock=1',
+				'Yacht'              => $base . 'yacht?lock=1',
+			);
+		}
+
+		/**
 		 * Raise memory & time limits as far as the host allows. These are safe
 		 * no-ops where disabled, so a locked-down host simply keeps its limit
 		 * and relies on each chunk staying small.
@@ -425,11 +467,12 @@ if (!class_exists('RbfwImportDemo')) {
 			$state = get_option(self::STATE_OPTION);
 			if (!is_array($state)) {
 				$state = array(
-					'stage'       => 'images',
-					'image_index' => 0,
-					'image_ids'   => array(),
-					'post_index'  => 0,
-					'post_ids'    => array(),
+					'stage'                 => 'images',
+					'image_index'           => 0,
+					'image_ids'             => array(),
+					'post_index'            => 0,
+					'post_ids'              => array(),
+					'category_image_index'  => 0,
 				);
 			}
 			return $state;
@@ -438,13 +481,19 @@ if (!class_exists('RbfwImportDemo')) {
 		/**
 		 * Advance the import by exactly one small unit of work and persist it.
 		 * Stages: images (one download each) → posts (one item each) →
-		 * finalize (cross-link) → done.
+		 * category_images (one dedicated category photo each) → finalize
+		 * (cross-link + fallback images for any unmapped category) → done.
 		 *
 		 * @return array The updated state.
 		 */
 		public function process_step() {
 			$this->raise_limits();
 			$state = $this->get_state();
+			// Back-compat: a state persisted by an older version of this file (mid-import
+			// at the moment this code was updated) won't have this key yet.
+			if (!isset($state['category_image_index'])) {
+				$state['category_image_index'] = 0;
+			}
 
 			switch ($state['stage']) {
 				case 'images':
@@ -474,12 +523,29 @@ if (!class_exists('RbfwImportDemo')) {
 						$state['post_index']++;
 					}
 					if ($state['post_index'] >= count($data)) {
+						$state['stage'] = 'category_images';
+					}
+					break;
+
+				case 'category_images':
+					$this->load_media_stack();
+					$cat_urls  = self::category_image_urls();
+					$cat_names = array_keys($cat_urls);
+					if (isset($cat_names[$state['category_image_index']])) {
+						$name = $cat_names[$state['category_image_index']];
+						$this->assign_one_category_image($name, $cat_urls[$name]);
+						$state['category_image_index']++;
+					}
+					if ($state['category_image_index'] >= count($cat_names)) {
 						$state['stage'] = 'finalize';
 					}
 					break;
 
 				case 'finalize':
 					$this->set_related_products($state['post_ids']);
+					// Any category the site owner added that isn't one of our known
+					// rent types (so category_image_urls() has nothing for it) still
+					// gets a picture, reusing the sample pool already downloaded above.
 					$this->assign_category_images($state['image_ids']);
 					$state['stage'] = 'done';
 					break;
@@ -523,11 +589,13 @@ if (!class_exists('RbfwImportDemo')) {
 		 * @return array
 		 */
 		private function progress_payload($state) {
-			$total_images = count(self::image_urls());
-			$total_posts  = count($this->retnal_data());
-			$total        = $total_images + $total_posts + 1; // +1 for the finalize step.
-			$done_units   = min($state['image_index'], $total_images)
+			$total_images   = count(self::image_urls());
+			$total_posts    = count($this->retnal_data());
+			$total_cat_imgs = count(self::category_image_urls());
+			$total          = $total_images + $total_posts + $total_cat_imgs + 1; // +1 for the finalize step.
+			$done_units     = min($state['image_index'], $total_images)
 				+ min($state['post_index'], $total_posts)
+				+ min($state['category_image_index'], $total_cat_imgs)
 				+ ($state['stage'] === 'done' ? 1 : 0);
 			$progress = $total > 0 ? (int) round(($done_units / $total) * 100) : 100;
 
@@ -546,6 +614,14 @@ if (!class_exists('RbfwImportDemo')) {
 						__('Creating rental items (%1$d of %2$d)...', 'booking-and-rental-manager-for-woocommerce'),
 						min($state['post_index'] + 1, $total_posts),
 						$total_posts
+					);
+					break;
+				case 'category_images':
+					$message = sprintf(
+						/* translators: 1: current category number, 2: total categories. */
+						__('Adding category images (%1$d of %2$d)...', 'booking-and-rental-manager-for-woocommerce'),
+						min($state['category_image_index'] + 1, $total_cat_imgs),
+						$total_cat_imgs
 					);
 					break;
 				case 'done':
@@ -654,6 +730,62 @@ if (!class_exists('RbfwImportDemo')) {
 				update_term_meta($term->term_id, 'rentiva_category_image_id', $image_ids[$i % $count]);
 				$i++;
 			}
+		}
+
+		/**
+		 * Download and assign ONE category's dedicated image (category_image_urls()),
+		 * one call per process_step() chunk — same "tiny unit of work" pattern as
+		 * the images stage. Skips the term entirely if it doesn't exist (a rent
+		 * type from a previous run of retnal_data() that's since been renamed) or
+		 * already has an image (never overwrites a hand-picked one).
+		 *
+		 * @param string $name Rent type / term name.
+		 * @param string $url  Image URL to download.
+		 */
+		private function assign_one_category_image($name, $url) {
+			$term = term_exists($name, 'rbfw_item_caregory');
+			if (!$term) {
+				return;
+			}
+			$term_id = (int) (is_array($term) ? $term['term_id'] : $term);
+			if (get_term_meta($term_id, 'rentiva_category_image_id', true)) {
+				return; // Already has an image — leave it alone.
+			}
+
+			// media_sideload_image() requires the URL's path to literally end in an
+			// image extension (.jpg/.png/...); these category photo URLs don't carry
+			// one (loremflickr.com/WxH/keyword?lock=N — a real JPEG, just an
+			// extensionless path), so it always rejects them with "Invalid image URL".
+			// Fetch and attach by hand instead, the same way WP's own uploader does.
+			$response = wp_remote_get($url, array('timeout' => 20));
+			if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
+				return;
+			}
+			$body = wp_remote_retrieve_body($response);
+			if ('' === $body) {
+				return;
+			}
+
+			$upload = wp_upload_bits(sanitize_title($name) . '-rent-type.jpg', null, $body);
+			if (!empty($upload['error'])) {
+				return;
+			}
+
+			$filetype   = wp_check_filetype($upload['file'], null);
+			$attachment = array(
+				'post_mime_type' => $filetype['type'] ? $filetype['type'] : 'image/jpeg',
+				'post_title'     => $name . ' — Rent Type',
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$attach_id = wp_insert_attachment($attachment, $upload['file']);
+			if (is_wp_error($attach_id) || !$attach_id) {
+				return;
+			}
+			$attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
+			wp_update_attachment_metadata($attach_id, $attach_data);
+
+			update_term_meta($term_id, 'rentiva_category_image_id', (int) $attach_id);
 		}
 
 		/**
