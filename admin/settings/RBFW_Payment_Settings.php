@@ -204,9 +204,13 @@
 				$this->editor_payment_styles();
 
 				$gateway_names = $this->get_active_gateway_names();
+				// get_active_gateway_names() is read entirely through the same checker
+				// has_gateway_for_active_mode() counts (see its own docblock), so
+				// $gateway_names is never empty here while $has_gateway is true, or
+				// vice versa — the two always agree.
 				$has_gateway   = $this->has_gateway_for_active_mode();
 				?>
-				<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-payment-card<?php echo $has_gateway ? '' : ' is-warning'; ?>">
+				<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-payment-card"<?php echo $has_gateway ? '' : ' style="display:none;"'; ?>>
 					<div class="rbfw-me-card__head">
 						<h3>
 							<span class="dashicons dashicons-money-alt" aria-hidden="true"></span>
@@ -224,16 +228,8 @@
 							<strong><?php echo esc_html( $gateway_names ? implode( ', ', $gateway_names ) : __( 'None', 'booking-and-rental-manager-for-woocommerce' ) ); ?></strong>
 						</div>
 
-						<?php
-							// Both rows are always emitted, with the inactive one hidden: the
-							// refresh after a gateway is enabled only toggles visibility, and
-							// jQuery cannot show an element that was never rendered.
-						?>
-						<p class="rbfw-me-payment-link"<?php echo $gateway_names ? '' : ' style="display:none;"'; ?>>
+						<p class="rbfw-me-payment-link">
 							<a href="#" data-rbfw-payment-modal-open><?php esc_html_e( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-						</p>
-						<p class="rbfw-me-payment-warning"<?php echo $has_gateway ? ' style="display:none;"' : ''; ?>>
-							<a href="#" data-rbfw-payment-modal-open><?php esc_html_e( 'Configure payment method', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 						</p>
 					</div>
 				</div>
@@ -408,13 +404,13 @@
 							if (!res || !res.success || !res.data) { return; }
 							var d = res.data;
 
-							// Sidebar Payment Method card.
+							// Sidebar Payment Method card — complementary to the banner below:
+							// shown only once a gateway is active, hidden otherwise, so the two
+							// are never visible at the same time.
 							var $card = $('.rbfw-me-payment-card');
-							$card.toggleClass('is-warning', !d.has_gateway);
+							$card.toggle(!!d.has_gateway);
 							$card.find('.rbfw-me-payment-row[data-field="mode"] strong').text(d.mode_label);
 							$card.find('.rbfw-me-payment-row[data-field="gateway"] strong').text(d.gateway_names);
-							$card.find('.rbfw-me-payment-link').toggle(!!d.has_names);
-							$card.find('.rbfw-me-payment-warning').toggle(!d.has_gateway);
 
 							// Banner under the step bar.
 							var $notice = $('#rbfw-me-payment-notice');
@@ -514,8 +510,10 @@
 				$printed = true;
 				?>
 				<style id="rbfw-editor-payment-styles">
-				/* Payment Method sidebar card — inherits .rbfw-me-card--sidebar chrome. */
-				.rbfw-me-payment-card.is-warning{border-color:rgba(220,38,38,.30);}
+				/* Payment Method sidebar card — inherits .rbfw-me-card--sidebar chrome.
+				   Only ever shown while a gateway is active (complementary to the
+				   "no payment method" banner below: exactly one of the two is visible
+				   at a time), so it never needs its own warning state. */
 				/* PALETTE — the editor's own tokens (see .rbfw-me-wrap in
 				   admin/css/rbfw-modern-editor.css), never ad-hoc colours:
 				     primary   --me-primary #1a56db / --me-primary-dk #1347b8 / --me-primary-soft #eef3ff
@@ -534,10 +532,9 @@
 				.rbfw-me-payment-row + .rbfw-me-payment-row{border-top:1px solid var(--me-border-subtle,#f1f5f9);}
 				.rbfw-me-payment-row span{color:var(--me-muted,#64748b);font-weight:500;}
 				.rbfw-me-payment-row strong{color:var(--me-text,#0f172a);font-weight:700;text-align:right;overflow-wrap:anywhere;}
-				.rbfw-me-payment-link,.rbfw-me-payment-warning{margin:8px 0 0;padding-top:10px;border-top:1px solid var(--me-border-subtle,#f1f5f9);font-size:12.5px;}
+				.rbfw-me-payment-link{margin:8px 0 0;padding-top:10px;border-top:1px solid var(--me-border-subtle,#f1f5f9);font-size:12.5px;}
 				.rbfw-me-payment-link a{color:var(--me-primary,#1a56db);font-weight:600;text-decoration:none;}
-				.rbfw-me-payment-warning a{color:var(--me-danger,#dc2626);font-weight:600;text-decoration:none;}
-				.rbfw-me-payment-link a:hover,.rbfw-me-payment-warning a:hover{text-decoration:underline;}
+				.rbfw-me-payment-link a:hover{text-decoration:underline;}
 
 				/* Slim "no payment method" banner under the step bar. Hidden along with the
 				   rest of the editor while its loading skeleton is up, so it doesn't flash
