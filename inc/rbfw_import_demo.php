@@ -543,7 +543,41 @@ if (!class_exists('RbfwImportDemo')) {
 					update_post_meta($post_id, $meta_key, $meta_value);
 				}
 			}
+
+			if (!empty($data['categories']) && is_array($data['categories'])) {
+				$this->assign_categories($post_id, $data['categories']);
+			}
+
 			return (int) $post_id;
+		}
+
+		/**
+		 * Assign 2-3 sample rbfw_item_caregory terms to an imported item, creating
+		 * any term that doesn't exist yet (same pattern as insert_dummy_taxonomy_terms()
+		 * in admin/taxonomy_register.php).
+		 *
+		 * @param int      $post_id
+		 * @param string[] $category_names
+		 */
+		private function assign_categories($post_id, $category_names) {
+			$term_ids = array();
+			foreach ($category_names as $name) {
+				$name = trim((string) $name);
+				if ($name === '') {
+					continue;
+				}
+				$term = term_exists($name, 'rbfw_item_caregory');
+				if (!$term) {
+					$term = wp_insert_term($name, 'rbfw_item_caregory');
+				}
+				if (!is_wp_error($term) && isset($term['term_id'])) {
+					$term_ids[] = (int) $term['term_id'];
+				}
+			}
+			if (!empty($term_ids)) {
+				wp_set_object_terms($post_id, $term_ids, 'rbfw_item_caregory');
+				update_post_meta($post_id, 'rbfw_categories', $category_names);
+			}
 		}
 
 		/**
@@ -623,8 +657,9 @@ if (!class_exists('RbfwImportDemo')) {
 		public function retnal_data() {
 			return [
 				[
-					'title'   => 'Bike/Car For Single Day Multiple Slot - Classic Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...',
+					'title'      => 'Bike/Car For Single Day Multiple Slot - Classic Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...',
+					'categories' => ['Bike', 'Car', 'Single Day Rental'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'00:00','00:30','01:00','06:00','08:00','08:30','09:00','09:30',
@@ -660,8 +695,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Resort - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'title'      => 'Resort - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'categories' => ['Resort', 'Hotel & Stay', 'Vacation Package'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','14:00','17:00','21:00'],
 						'rbfw_item_type' => 'resort',
@@ -713,8 +749,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Doctor Appointment - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'title'      => 'Doctor Appointment - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'categories' => ['Appointment', 'Healthcare Service', 'Consultation'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00 AM','10:00 PM','10:30 AM','10:30 PM','11:00 AM','11:30 AM','11:30 PM','12:00 PM','12:30 PM'],
 						'rbfw_item_type' => 'appointment',
@@ -751,8 +788,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Equipment - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Equipment - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Equipment', 'Tools & Gear'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','21:00'],
 						'rbfw_item_type' => 'equipment',
@@ -783,8 +821,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Bike/Car For Multiple Day - Muffin Template',
-					'content' => 'A bike rental or bike hire business rents out bicycles for short periods of time, usually for a few hours.',
+					'title'      => 'Bike/Car For Multiple Day - Muffin Template',
+					'content'    => 'A bike rental or bike hire business rents out bicycles for short periods of time, usually for a few hours.',
+					'categories' => ['Bike', 'Car', 'Multi-Day Rental'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','21:00'],
 						'rbfw_item_type' => 'bike_car_md',
@@ -821,8 +860,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Dress - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Dress - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Dress', 'Fashion Wear', 'Costume'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','3:00 PM','16:00','5:00 PM','21:00'],
 						'rbfw_item_type' => 'dress',
@@ -864,8 +904,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Bike/Car For Single Day - Classic Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Bike/Car For Single Day - Classic Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Bike', 'Car', 'Daily Rental'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'10:00 AM','10:00 PM','10:30 AM','10:30 PM','11:30 AM','11:30 PM',
@@ -916,8 +957,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Bike/Car For Single Day multi hour - Classic Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Bike/Car For Single Day multi hour - Classic Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Bike', 'Car', 'Hourly Rental'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'00:00','00:30','01:00','06:00','08:00','08:30','09:00','09:30',
