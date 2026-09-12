@@ -52,29 +52,30 @@ if ( ! class_exists( 'RBFW_Woo_Installer' ) ) {
 		}
 
 		/**
-		 * Runs on admin_init. If the transient from activation exists
-		 * and WooCommerce IS active, redirect to rental lists page.
+		 * Runs on admin_init. If the transient from activation exists, send the
+		 * admin to the onboarding welcome screen (RBFW_Onboarding) instead of
+		 * dropping straight into the rental items list — the plugin works
+		 * equally well with or without WooCommerce (Standalone mode), so this no
+		 * longer waits on WooCommerce being active first.
 		 */
 		public function handle_activation_redirect() {
 			if ( ! get_transient( 'rbfw_plugin_activated' ) ) {
 				return;
 			}
+			delete_transient( 'rbfw_plugin_activated' );
 
 			// Don't redirect on multi-site bulk activations
 			if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
-				delete_transient( 'rbfw_plugin_activated' );
 				return;
 			}
 
-			// WooCommerce is active → redirect immediately
-			if ( $this->is_woo_active() ) {
-				delete_transient( 'rbfw_plugin_activated' );
-				wp_safe_redirect( admin_url( 'edit.php?post_type=rbfw_item' ) );
+			if ( class_exists( 'RBFW_Onboarding' ) ) {
+				wp_safe_redirect( RBFW_Onboarding::url() );
 				exit;
 			}
 
-			// WooCommerce is NOT active → clear transient, popup will show via should_show_popup()
-			delete_transient( 'rbfw_plugin_activated' );
+			wp_safe_redirect( admin_url( 'edit.php?post_type=rbfw_item' ) );
+			exit;
 		}
 
 		/**
