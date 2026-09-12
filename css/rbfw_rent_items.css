@@ -391,6 +391,25 @@
         border-radius: 999px;
     }
 }
+/* flatpickr theming — the only frontend flatpickr instance is this pickup-date
+   field, so a global accent override is safe and keeps the popup calendar
+   visually part of the same design instead of flatpickr's default blue. */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover,
+.flatpickr-day.selected.today{
+    background: var(--rbfw_color_primary);
+    border-color: var(--rbfw_color_primary);
+}
+.flatpickr-day.today{
+    border-color: var(--rbfw_color_primary);
+}
+.flatpickr-day.today:hover{
+    background: var(--rbfw_color_primary);
+    color: #fff;
+}
+.flatpickr-day:hover{
+    background: #fdece9;
+}
 /* shortcode end */
 
 /* Item name search shortcode */

@@ -180,7 +180,10 @@
             let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
             let todayFormatted = flatpickr.formatDate(today, "d-m-Y");
-            let calendar = flatpickr(".rbfw_flatpicker", {
+            // Target the actual text input, not its wrapping .rbfw_flatpicker div —
+            // initializing flatpickr on the wrapper itself mutated the div with
+            // flatpickr's own classes/attributes instead of the input.
+            let calendar = flatpickr(".rbfw_flatpicker input", {
                 disableMobile: "true",
                 dateFormat: rbfw_js_variables.timeFormat,
                 defaultDate: todayFormatted,

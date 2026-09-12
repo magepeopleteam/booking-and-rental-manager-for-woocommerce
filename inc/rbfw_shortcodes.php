@@ -787,6 +787,13 @@ function rbfw_rent_search_shortcode( $atts = null ){
     $location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
     $type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
     $pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
+    // rbfw_rent_search_ac_shortcode() uses the literal string 'Pickup date' as an
+    // internal "no date chosen yet" sentinel (compared elsewhere against that same
+    // string). It's meant for that comparison, not for display — show the field
+    // empty (falls back to its placeholder) rather than that raw sentinel text.
+    if ( 'Pickup date' === $pickup_date ) {
+        $pickup_date = '';
+    }
 
     ob_start();
     ?>
