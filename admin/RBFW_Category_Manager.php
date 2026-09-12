@@ -418,11 +418,11 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 					<?php endif; ?>
 				</div>
 				<div class="rbfw-cat-card__actions">
-					<button type="button" class="rbfw-cat-card__edit" data-action="edit">
-						<span class="dashicons dashicons-edit" aria-hidden="true"></span> <?php esc_html_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<button type="button" class="rbfw-cat-card__edit" data-action="edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Edit category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+						<span class="dashicons dashicons-edit" aria-hidden="true"></span>
 					</button>
-					<button type="button" class="rbfw-cat-card__delete" data-action="delete">
-						<span class="dashicons dashicons-trash" aria-hidden="true"></span> <?php esc_html_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<button type="button" class="rbfw-cat-card__delete" data-action="delete" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Delete category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+						<span class="dashicons dashicons-trash" aria-hidden="true"></span>
 					</button>
 				</div>
 			</div>
