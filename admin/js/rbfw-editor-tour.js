@@ -76,6 +76,26 @@
 				title: t.step_title_pricing,
 				text: function () { return currentRentTypeReminder(t.step_text_pricing_current, t.step_text_pricing); }
 			},
+
+			/*
+			 * One of these five is skipped automatically for any given item —
+			 * only the wrapper matching its actual rbfw_item_type is visible;
+			 * the rest render but stay hidden (verified directly against a real
+			 * item of each type). Single Day and Appointment share the exact
+			 * same wrapper markup (.rbfw_bike_car_sd_wrapper) in
+			 * admin/settings/Pricing.php, so they get one combined step rather
+			 * than two that would never both fire anyway.
+			 */
+			{ selector: '.rbfw_bike_car_sd_wrapper', tab: 'pricing', title: t.step_title_sd_pricing, text: t.step_text_sd_pricing },
+			{ selector: '.rbfw_general_price_config_wrapper', tab: 'pricing', title: t.step_title_md_pricing, text: t.step_text_md_pricing },
+			{ selector: '.rbfw_resort_price_config_wrapper', tab: 'pricing', title: t.step_title_resort_pricing, text: t.step_text_resort_pricing },
+			// Multiple Items gets its pricing broken into its own 3 real cards
+			// (RBFW_Pricing::multiple_items()) rather than one combined step,
+			// per feedback asking for each pricing option shown separately.
+			{ selector: '.rbfw-mi-price-types-card', tab: 'pricing', title: t.step_title_mi_types, text: t.step_text_mi_types },
+			{ selector: '.rbfw-mi-items-card', tab: 'pricing', title: t.step_title_mi_items, text: t.step_text_mi_items },
+			{ selector: '#rbfw-pricing-thresholds-card', tab: 'pricing', title: t.step_title_mi_thresholds, text: t.step_text_mi_thresholds },
+
 			{ selector: '[data-rbfw-tour="extra-service"]', tab: 'pricing', title: t.step_title_extra_service, text: t.step_text_extra_service },
 			{ selector: '.rbfw-me-inventory-card', tab: 'pricing', title: t.step_title_inventory, text: t.step_text_inventory },
 			{ selector: '.rbfw-me-buffer-card', tab: 'pricing', title: t.step_title_buffer, text: t.step_text_buffer },

@@ -476,6 +476,22 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'step_text_pricing_current'     => __( "Since this item is a %s rental, the fields below are tailored to that: set the rates that actually apply here.", 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_pricing'            => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_pricing'             => __( 'Set hourly, daily, or other rates and pricing types depending on how this item is rented.', 'booking-and-rental-manager-for-woocommerce' ),
+
+					// Type-specific pricing cards (only one of these five is ever
+					// visible for a given item — see rbfw-editor-tour.js).
+					'step_title_sd_pricing'         => __( 'Time-slot pricing', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_sd_pricing'          => __( 'Set prices per time slot — morning, evening, hourly, or full-day. Used by both Single Day rentals and Appointments.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_md_pricing'         => __( 'Duration rates', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_md_pricing'          => __( 'Set hourly, daily, weekly, and monthly rates for this multi-day item, plus day-wise pricing if needed.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_resort_pricing'     => __( 'Room & night rates', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_resort_pricing'      => __( 'Set per-night, day-night, or day-long rates for this resort\'s room types.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_mi_types'           => __( 'Enable price types', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_mi_types'            => __( 'Turn on which pricing durations — hourly, daily, weekly, monthly — apply to this bundle.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_mi_items'           => __( 'Items & prices', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_mi_items'            => __( 'Add each item in this bundle with its own quantity and price per enabled duration.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_mi_thresholds'      => __( 'Pricing automation', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_mi_thresholds'       => __( 'Set thresholds so a booking automatically upgrades to the next rate tier — e.g. hourly switches to daily after a set number of hours.', 'booking-and-rental-manager-for-woocommerce' ),
+
 					'step_title_extra_service'      => __( 'Extra services', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_extra_service'       => __( 'Optional paid add-ons customers can attach to their booking (helmets, insurance, etc.).', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_inventory'          => __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ),
