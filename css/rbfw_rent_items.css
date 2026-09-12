@@ -286,6 +286,7 @@
 .rbfw_search_item{
     position: relative;
     width: 100%;
+    min-width: 0;
 }
 .rbfw_search_item select,
 .rbfw_search_item input[type="text"]{
@@ -357,7 +358,7 @@
     .rbfw_search_container{
         flex-direction: row;
         align-items: center;
-        justify-content: stretch;
+        justify-content: flex-start;
         padding: 10px;
         border-radius: 999px;
         gap: 0;
