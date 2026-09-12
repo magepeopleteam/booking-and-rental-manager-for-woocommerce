@@ -552,9 +552,8 @@
 	color: var(--rbfw-cat-danger);
 }
 
-.rbfw-cat-card__edit .dashicons,
-.rbfw-cat-card__delete .dashicons {
-	font-size: 16px;
+.rbfw-cat-card__edit svg,
+.rbfw-cat-card__delete svg {
 	width: 16px;
 	height: 16px;
 }
