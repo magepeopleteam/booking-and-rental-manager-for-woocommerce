@@ -416,41 +416,50 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 						</span>
 					<?php endif; ?>
 
-					<?php if ( $archive_url ) : ?>
-						<div class="rbfw-cat-card__menu">
-							<button type="button" class="rbfw-cat-card__menu-btn" data-action="menu" aria-label="<?php esc_attr_e( 'More actions', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-expanded="false">
-								<span class="dashicons dashicons-ellipsis"></span>
-							</button>
-							<div class="rbfw-cat-card__menu-panel" hidden>
-								<a href="<?php echo esc_url( $archive_url ); ?>" target="_blank" rel="noopener noreferrer">
-									<span class="dashicons dashicons-external"></span> <?php esc_html_e( 'View on Front End', 'booking-and-rental-manager-for-woocommerce' ); ?>
-								</a>
+					<?php
+					/*
+					 * Edit/Delete used to live in their own full-width footer strip
+					 * below the title/description — a whole extra row per card just
+					 * for two icon buttons. Moved into the media corner instead,
+					 * grouped with the existing "More actions" (⋮) button so all of
+					 * a card's actions sit in one compact top-right cluster.
+					 */
+					?>
+					<div class="rbfw-cat-card__overlay-actions">
+						<button type="button" class="rbfw-cat-card__edit" data-action="edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Edit category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+								<path d="M12 20h9"></path>
+								<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+							</svg>
+						</button>
+						<button type="button" class="rbfw-cat-card__delete" data-action="delete" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Delete category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+								<path d="M3 6h18"></path>
+								<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+								<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+								<path d="M10 11v6"></path>
+								<path d="M14 11v6"></path>
+							</svg>
+						</button>
+						<?php if ( $archive_url ) : ?>
+							<div class="rbfw-cat-card__menu">
+								<button type="button" class="rbfw-cat-card__menu-btn" data-action="menu" aria-label="<?php esc_attr_e( 'More actions', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-expanded="false">
+									<span class="dashicons dashicons-ellipsis"></span>
+								</button>
+								<div class="rbfw-cat-card__menu-panel" hidden>
+									<a href="<?php echo esc_url( $archive_url ); ?>" target="_blank" rel="noopener noreferrer">
+										<span class="dashicons dashicons-external"></span> <?php esc_html_e( 'View on Front End', 'booking-and-rental-manager-for-woocommerce' ); ?>
+									</a>
+								</div>
 							</div>
-						</div>
-					<?php endif; ?>
+						<?php endif; ?>
+					</div>
 				</div>
 				<div class="rbfw-cat-card__body">
 					<h3 class="rbfw-cat-card__title"><?php echo esc_html( $term->name ); ?></h3>
 					<?php if ( $term->description ) : ?>
 						<p class="rbfw-cat-card__description"><?php echo esc_html( $term->description ); ?></p>
 					<?php endif; ?>
-				</div>
-				<div class="rbfw-cat-card__actions">
-					<button type="button" class="rbfw-cat-card__edit" data-action="edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Edit category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-							<path d="M12 20h9"></path>
-							<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-						</svg>
-					</button>
-					<button type="button" class="rbfw-cat-card__delete" data-action="delete" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Delete category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-							<path d="M3 6h18"></path>
-							<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-							<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
-							<path d="M10 11v6"></path>
-							<path d="M14 11v6"></path>
-						</svg>
-					</button>
 				</div>
 			</div>
 			<?php

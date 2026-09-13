@@ -415,10 +415,22 @@
 	font-weight: 700;
 }
 
-.rbfw-cat-card__menu {
+/* Edit/Delete + the "More actions" (⋮) menu now share one compact
+   top-right cluster over the thumbnail, instead of Edit/Delete sitting in
+   their own full-width footer strip below the title — that saved a whole
+   row of height on every card. */
+.rbfw-cat-card__overlay-actions {
 	position: absolute;
 	top: 0.5rem;
 	right: 0.5rem;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.rbfw-cat-card__menu {
+	position: relative;
 }
 
 .rbfw-cat-card__menu-btn {
@@ -486,7 +498,11 @@
 }
 
 .rbfw-cat-card__body {
-	padding: 0.85rem 1.05rem 0.25rem;
+	/* Bottom padding used to be tight (0.25rem) because the actions footer
+	   used to follow right after, with its own padding below that. Now
+	   .rbfw-cat-card__body is the card's last element, so it needs its own
+	   breathing room at the bottom. */
+	padding: 0.85rem 1.05rem 1rem;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -511,29 +527,23 @@
 	-webkit-box-orient: vertical;
 }
 
-.rbfw-cat-card__actions {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 0.5rem;
-	padding: 0.6rem 0.75rem;
-	border-top: 1px solid var(--rbfw-cat-border);
-	margin-top: 0.75rem;
-}
-
+/* Sit over the thumbnail now (.rbfw-cat-card__overlay-actions above), same
+   white-circle-on-image treatment as .rbfw-cat-card__menu-btn so all three
+   buttons in the cluster read as one group. */
 .rbfw-cat-card__edit,
 .rbfw-cat-card__delete {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 32px;
-	height: 32px;
+	width: 26px;
+	height: 26px;
 	padding: 0;
-	background: var(--rbfw-cat-border-subtle);
+	background: rgba(255, 255, 255, 0.9);
 	border: none;
 	border-radius: 50%;
-	color: var(--rbfw-cat-muted);
+	color: var(--rbfw-cat-text);
 	cursor: pointer;
+	box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
 	transition: background-color 120ms ease, color 120ms ease, transform 120ms ease;
 }
 
@@ -580,16 +590,6 @@
 	justify-content: center;
 }
 
-.rbfw-cat-grid.is-list-view .rbfw-cat-card__actions {
-	flex-direction: column;
-	justify-content: center;
-	border-top: none;
-	border-left: 1px solid var(--rbfw-cat-border);
-	margin-top: 0;
-	width: 64px;
-	flex-shrink: 0;
-}
-
 @media (max-width: 600px) {
 	.rbfw-cat-grid.is-list-view .rbfw-cat-card {
 		flex-direction: column;
@@ -598,14 +598,6 @@
 	.rbfw-cat-grid.is-list-view .rbfw-cat-card__media {
 		width: 100%;
 		height: 130px;
-	}
-
-	.rbfw-cat-grid.is-list-view .rbfw-cat-card__actions {
-		flex-direction: row;
-		justify-content: center;
-		width: auto;
-		border-left: none;
-		border-top: 1px solid var(--rbfw-cat-border);
 	}
 }
 
