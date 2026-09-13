@@ -204,9 +204,13 @@
 				$this->editor_payment_styles();
 
 				$gateway_names = $this->get_active_gateway_names();
+				// get_active_gateway_names() is read entirely through the same checker
+				// has_gateway_for_active_mode() counts (see its own docblock), so
+				// $gateway_names is never empty here while $has_gateway is true, or
+				// vice versa — the two always agree.
 				$has_gateway   = $this->has_gateway_for_active_mode();
 				?>
-				<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-payment-card<?php echo $has_gateway ? '' : ' is-warning'; ?>">
+				<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-payment-card"<?php echo $has_gateway ? '' : ' style="display:none;"'; ?>>
 					<div class="rbfw-me-card__head">
 						<h3>
 							<span class="dashicons dashicons-money-alt" aria-hidden="true"></span>
@@ -224,16 +228,8 @@
 							<strong><?php echo esc_html( $gateway_names ? implode( ', ', $gateway_names ) : __( 'None', 'booking-and-rental-manager-for-woocommerce' ) ); ?></strong>
 						</div>
 
-						<?php
-							// Both rows are always emitted, with the inactive one hidden: the
-							// refresh after a gateway is enabled only toggles visibility, and
-							// jQuery cannot show an element that was never rendered.
-						?>
-						<p class="rbfw-me-payment-link"<?php echo $gateway_names ? '' : ' style="display:none;"'; ?>>
+						<p class="rbfw-me-payment-link">
 							<a href="#" data-rbfw-payment-modal-open><?php esc_html_e( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-						</p>
-						<p class="rbfw-me-payment-warning"<?php echo $has_gateway ? ' style="display:none;"' : ''; ?>>
-							<a href="#" data-rbfw-payment-modal-open><?php esc_html_e( 'Configure payment method', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 						</p>
 					</div>
 				</div>
@@ -408,13 +404,13 @@
 							if (!res || !res.success || !res.data) { return; }
 							var d = res.data;
 
-							// Sidebar Payment Method card.
+							// Sidebar Payment Method card — complementary to the banner below:
+							// shown only once a gateway is active, hidden otherwise, so the two
+							// are never visible at the same time.
 							var $card = $('.rbfw-me-payment-card');
-							$card.toggleClass('is-warning', !d.has_gateway);
+							$card.toggle(!!d.has_gateway);
 							$card.find('.rbfw-me-payment-row[data-field="mode"] strong').text(d.mode_label);
 							$card.find('.rbfw-me-payment-row[data-field="gateway"] strong').text(d.gateway_names);
-							$card.find('.rbfw-me-payment-link').toggle(!!d.has_names);
-							$card.find('.rbfw-me-payment-warning').toggle(!d.has_gateway);
 
 							// Banner under the step bar.
 							var $notice = $('#rbfw-me-payment-notice');
@@ -514,8 +510,10 @@
 				$printed = true;
 				?>
 				<style id="rbfw-editor-payment-styles">
-				/* Payment Method sidebar card — inherits .rbfw-me-card--sidebar chrome. */
-				.rbfw-me-payment-card.is-warning{border-color:rgba(220,38,38,.30);}
+				/* Payment Method sidebar card — inherits .rbfw-me-card--sidebar chrome.
+				   Only ever shown while a gateway is active (complementary to the
+				   "no payment method" banner below: exactly one of the two is visible
+				   at a time), so it never needs its own warning state. */
 				/* PALETTE — the editor's own tokens (see .rbfw-me-wrap in
 				   admin/css/rbfw-modern-editor.css), never ad-hoc colours:
 				     primary   --me-primary #1a56db / --me-primary-dk #1347b8 / --me-primary-soft #eef3ff
@@ -534,30 +532,31 @@
 				.rbfw-me-payment-row + .rbfw-me-payment-row{border-top:1px solid var(--me-border-subtle,#f1f5f9);}
 				.rbfw-me-payment-row span{color:var(--me-muted,#64748b);font-weight:500;}
 				.rbfw-me-payment-row strong{color:var(--me-text,#0f172a);font-weight:700;text-align:right;overflow-wrap:anywhere;}
-				.rbfw-me-payment-link,.rbfw-me-payment-warning{margin:8px 0 0;padding-top:10px;border-top:1px solid var(--me-border-subtle,#f1f5f9);font-size:12.5px;}
+				.rbfw-me-payment-link{margin:8px 0 0;padding-top:10px;border-top:1px solid var(--me-border-subtle,#f1f5f9);font-size:12.5px;}
 				.rbfw-me-payment-link a{color:var(--me-primary,#1a56db);font-weight:600;text-decoration:none;}
-				.rbfw-me-payment-warning a{color:var(--me-danger,#dc2626);font-weight:600;text-decoration:none;}
-				.rbfw-me-payment-link a:hover,.rbfw-me-payment-warning a:hover{text-decoration:underline;}
+				.rbfw-me-payment-link a:hover{text-decoration:underline;}
 
 				/* Slim "no payment method" banner under the step bar. Hidden along with the
 				   rest of the editor while its loading skeleton is up, so it doesn't flash
 				   on its own above an otherwise blank page.
-				   Deliberately kept to the SAME footprint as the flat strip it replaces:
-				   full bleed, ~38px tall. 8px block padding + a 22px tall control is the
-				   budget — don't grow the icon chip or the CTA past that or the step bar
-				   and the editor body below start getting pushed down.
-				   Colour split: the chip is --me-danger because it flags a real blocker,
-				   the CTA is --me-primary because it is the primary action on this screen. */
+				   Deliberately kept close to the footprint of the flat strip it replaces —
+				   full bleed, a compact single row — so it doesn't push the sticky step bar
+				   and the editor body below it down by much.
+				   Left icon + message, right CTA button (the standard "alert bar" layout)
+				   instead of the old centered text; one danger palette throughout instead of
+				   mixing --me-danger (the icon) with --me-primary (the old CTA), since this
+				   is one blocking issue, not two different kinds of information. */
 				.rbfw-me-wrap.is-loading .rbfw-me-payment-notice{opacity:0;pointer-events:none;}
-				.rbfw-me-payment-notice{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;width:100%;box-sizing:border-box;text-align:center;padding:8px 22px;margin:0;background:linear-gradient(90deg,var(--me-primary-soft,#eef3ff) 0%,#f6f9ff 100%);border-top:1px solid rgba(26,86,219,.16);border-bottom:1px solid rgba(26,86,219,.16);font-size:13px;font-weight:600;color:var(--me-text-secondary,#334155);line-height:1.4;}
-				.rbfw-me-payment-notice__icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--me-danger,#dc2626);box-shadow:0 2px 6px rgba(220,38,38,.28);}
+				.rbfw-me-payment-notice{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;width:100%;box-sizing:border-box;padding:9px 24px;margin:0;background:linear-gradient(90deg,#fef2f2 0%,#fff7f7 100%);border-top:1px solid #fecaca;border-bottom:1px solid #fecaca;font-size:13px;font-weight:600;color:#7f1d1d;line-height:1.4;text-align:center;}
+				.rbfw-me-payment-notice__icon{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--me-danger,#dc2626);box-shadow:0 2px 6px rgba(220,38,38,.3);}
 				.rbfw-me-payment-notice__icon .dashicons{font-size:13px;width:13px;height:13px;line-height:1;color:#fff;}
-				.rbfw-me-payment-notice__text{color:var(--me-text-secondary,#334155);}
-				.rbfw-me-payment-notice-link{display:inline-flex;align-items:center;gap:4px;padding:2px 12px;border-radius:20px;background:#fff;border:1px solid var(--me-primary,#1a56db);color:var(--me-primary,#1a56db);font-size:12.5px;font-weight:700;text-decoration:none;cursor:pointer;box-shadow:0 1px 2px rgba(15,23,42,.05);transition:background .15s ease,border-color .15s ease,color .15s ease,box-shadow .15s ease;}
+				.rbfw-me-payment-notice__text{flex:0 1 auto;text-align:center;color:#7f1d1d;}
+				.rbfw-me-payment-notice-link{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:20px;background:var(--me-danger,#dc2626);border:1px solid var(--me-danger,#dc2626);color:#fff;font-size:12.5px;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer;box-shadow:0 2px 8px rgba(220,38,38,.25);transition:background .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease;}
 				.rbfw-me-payment-notice-link .dashicons{font-size:13px;width:13px;height:13px;line-height:1;color:inherit;transition:transform .15s ease;}
-				.rbfw-me-payment-notice-link:hover{background:var(--me-primary,#1a56db);border-color:var(--me-primary-dk,#1347b8);color:#fff;box-shadow:0 3px 10px rgba(26,86,219,.28);}
+				.rbfw-me-payment-notice-link:hover{background:#b91c1c;border-color:#b91c1c;color:#fff;box-shadow:0 4px 12px rgba(220,38,38,.32);transform:translateY(-1px);}
 				.rbfw-me-payment-notice-link:hover .dashicons{transform:translateX(2px);}
-				@media (prefers-reduced-motion:reduce){.rbfw-me-payment-notice-link,.rbfw-me-payment-notice-link .dashicons{transition:none;}.rbfw-me-payment-notice-link:hover .dashicons{transform:none;}}
+				@media (max-width:640px){.rbfw-me-payment-notice-link{flex-basis:100%;justify-content:center;}}
+				@media (prefers-reduced-motion:reduce){.rbfw-me-payment-notice-link,.rbfw-me-payment-notice-link .dashicons{transition:none;}.rbfw-me-payment-notice-link:hover{transform:none;}.rbfw-me-payment-notice-link:hover .dashicons{transform:none;}}
 
 				/* Payment Method popup. */
 				.rbfw-payment-modal{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:100001;align-items:center;justify-content:center;padding:20px;}
@@ -1066,7 +1065,8 @@
 				$btn_text     = $is_installed
 					? __( 'Activate WooCommerce Now', 'booking-and-rental-manager-for-woocommerce' )
 					: __( 'Install &amp; Activate Now', 'booking-and-rental-manager-for-woocommerce' );
-				return '<button type="button" class="button button-primary rbfw-install-wc-trigger" style="white-space:nowrap;">' . wp_kses_post( $btn_text ) . '</button>';
+				$icon = '<svg class="rbfw-install-wc-trigger__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>';
+				return '<button type="button" class="button button-primary rbfw-install-wc-trigger">' . $icon . '<span>' . wp_kses_post( $btn_text ) . '</span></button>';
 			}
 
 			/** Styles for the Booking Mode selector + its auto-detected notices. Printed once. */
@@ -1117,6 +1117,15 @@
 				.rbfw-bm-card-cta{display:block;margin-top:10px;}
 				.rbfw-bm-card-cta .button{white-space:nowrap;}
 				.rbfw-bm-card-cta--hint{font-size:11.5px;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:6px 9px;line-height:1.45;}
+				/* "Install & Activate Now" CTA — a real button instead of the flat WP-core
+				   button-primary, so it reads as the one action this disabled card wants you
+				   to take. Selector specificity (3 classes) is kept deliberately above
+				   .wp-core-ui .button-primary's so these rules win regardless of style order. */
+				.rbfw-install-wc-trigger.button.button-primary{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;padding:7px 16px;border:none;border-radius:8px;background:linear-gradient(135deg,var(--rbfw-pay-accent),#164d76);color:#fff;font-size:12.5px;font-weight:600;letter-spacing:.2px;text-shadow:none;box-shadow:0 2px 8px rgba(34,113,177,.28);transition:transform .15s ease,box-shadow .15s ease,background .15s ease;}
+				.rbfw-install-wc-trigger.button.button-primary:hover{background:linear-gradient(135deg,#1a5c94,#123f61);color:#fff;box-shadow:0 6px 16px rgba(34,113,177,.35);transform:translateY(-1px);}
+				.rbfw-install-wc-trigger.button.button-primary:active{transform:translateY(0);box-shadow:0 2px 6px rgba(34,113,177,.28);}
+				.rbfw-install-wc-trigger.button.button-primary:focus-visible{outline:2px solid #fff;box-shadow:0 0 0 4px rgba(34,113,177,.35);}
+				.rbfw-install-wc-trigger__icon{width:14px;height:14px;flex:0 0 auto;}
 				.rbfw-bm-gateway-warning{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 12px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;}
 				.rbfw-bm-gateway-warning p{margin:0;}
 				.rbfw-bm-auto-note{display:flex;align-items:flex-start;gap:10px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;border-radius:10px;padding:12px 16px;margin:4px 0 14px;font-size:12.5px;}
@@ -1447,6 +1456,9 @@
 				$st_live_sec = esc_attr( $this->opt( 'rbfw_stripe_live_sec' ) );
 				$off_enabled = $this->opt( 'rbfw_offline_enable' ) === 'on';
 				$off_label   = esc_attr( $this->opt( 'rbfw_offline_label', __( 'Offline Payment', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				// Default ON — unlike the toggles above, an install that has never touched
+				// this setting should still offer self-service reconfirmation.
+				$off_reconfirm = $this->opt( 'rbfw_offline_reconfirm_enable', 'on' ) === 'on';
 				$nonce       = wp_create_nonce( 'rbfw_save_gateway' );
 				$is_pro      = $this->is_pro();
 				?>
@@ -1589,6 +1601,14 @@
 								<label class="rbfw-gw-label"><?php esc_html_e( 'Heading', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<input type="text" data-field="rbfw_offline_label" value="<?php echo $off_label; ?>" placeholder="<?php esc_attr_e( 'e.g. Pay on Pickup / Bank Transfer', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 								<p style="margin:8px 0 0;font-size:12px;color:#6b7280;"><?php esc_html_e( 'Shown above the payment choices on the frontend payment step.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+							</div>
+							<hr class="rbfw-gw-divider">
+							<div class="rbfw-gw-toggle-row">
+								<div>
+									<div class="rbfw-gw-toggle-label"><?php esc_html_e( 'Reconfirm Booking Button', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+									<div class="rbfw-gw-toggle-sub"><?php esc_html_e( 'On the booking confirmation page, let the customer confirm a pending offline booking themselves via an emailed OTP, instead of waiting for a call.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+								</div>
+								<label class="rbfw-gw-switch"><input type="checkbox" data-field="rbfw_offline_reconfirm_enable" <?php checked( $off_reconfirm ); ?>><span class="rbfw-gw-slider"></span></label>
 							</div>
 							<hr class="rbfw-gw-divider">
 							<?php $this->render_offline_methods(); ?>
@@ -1896,7 +1916,7 @@
 				$allowed = array(
 					'paypal'  => array( 'rbfw_paypal_enable', 'rbfw_paypal_sandbox', 'rbfw_paypal_client_id', 'rbfw_paypal_secret' ),
 					'stripe'  => array( 'rbfw_stripe_enable', 'rbfw_stripe_sandbox', 'rbfw_stripe_test_pub', 'rbfw_stripe_test_sec', 'rbfw_stripe_live_pub', 'rbfw_stripe_live_sec' ),
-					'offline' => array( 'rbfw_offline_enable', 'rbfw_offline_label' ),
+					'offline' => array( 'rbfw_offline_enable', 'rbfw_offline_label', 'rbfw_offline_reconfirm_enable' ),
 				);
 
 				if ( ! isset( $allowed[ $gateway ] ) ) {

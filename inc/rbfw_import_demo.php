@@ -321,6 +321,48 @@ if (!class_exists('RbfwImportDemo')) {
 			$this->run_full_import();
 		}
 
+		/**
+		 * Backfill rbfw_item_caregory terms onto sample items that were created
+		 * by an older version of the importer, before per-item categories existed.
+		 * Matches purely on the exact post_title from retnal_data(), touches only
+		 * rbfw_item posts that currently have zero terms in the taxonomy, and
+		 * never creates or duplicates a post.
+		 *
+		 * @return int Number of items that received categories.
+		 */
+		public function backfill_missing_categories() {
+			$by_title = array();
+			foreach ($this->retnal_data() as $item) {
+				if (!empty($item['title']) && !empty($item['categories'])) {
+					$by_title[$item['title']] = $item['categories'];
+				}
+			}
+			if (empty($by_title)) {
+				return 0;
+			}
+
+			$post_ids = get_posts(array(
+				'post_type'   => 'rbfw_item',
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'fields'      => 'ids',
+			));
+
+			$updated = 0;
+			foreach ($post_ids as $post_id) {
+				$existing = wp_get_post_terms($post_id, 'rbfw_item_caregory', array('fields' => 'ids'));
+				if (!is_wp_error($existing) && !empty($existing)) {
+					continue; // Already has categories — leave it alone.
+				}
+				$title = get_post_field('post_title', $post_id, 'raw');
+				if (isset($by_title[$title])) {
+					$this->assign_categories($post_id, $by_title[$title]);
+					$updated++;
+				}
+			}
+			return $updated;
+		}
+
 		public static function check_plugin($plugin_dir_name, $plugin_file): int {
 			include_once ABSPATH . 'wp-admin/includes/plugin.php';
 			$plugin_dir = ABSPATH . 'wp-content/plugins/' . $plugin_dir_name;
@@ -346,6 +388,41 @@ if (!class_exists('RbfwImportDemo')) {
 				$urls[] = $base . 'image' . $i . '.jpeg';
 			}
 			return $urls;
+		}
+
+		/**
+		 * One dedicated, on-topic photo per known rbfw_item_caregory rent type
+		 * (the 9 seeded by insert_dummy_taxonomy_terms() in taxonomy_register.php,
+		 * plus the extra rent types introduced by the sample items' own
+		 * 'categories' entries below) — replaces the old behaviour of cycling
+		 * every category through the same shared pool of 10 generic item
+		 * photos regardless of name.
+		 *
+		 * Each URL is a free, keyword-matched Creative Commons photo from
+		 * loremflickr.com/Flickr; the `lock` parameter pins it to one specific,
+		 * hand-picked image rather than a random one so re-imports stay
+		 * consistent. Every entry here was reviewed by hand for relevance and
+		 * to avoid photos whose subject is a real, identifiable person.
+		 *
+		 * @return array<string,string> Rent type name => image URL.
+		 */
+		private static function category_image_urls() {
+			$base = 'https://loremflickr.com/640/480/';
+			return array(
+				'Appointment'        => $base . 'clinic?lock=2',
+				'Bike'               => $base . 'bicycle?lock=3',
+				'Car'                => $base . 'car?lock=1',
+				'Consultation'       => $base . 'businessmeeting?lock=1',
+				'Dress'              => $base . 'weddingdress?lock=1',
+				'Equipment'          => $base . 'constructiontools?lock=1',
+				'Healthcare Service' => $base . 'hospital?lock=1',
+				'Helicopter'         => $base . 'helicopter?lock=1',
+				'Hotel & Stay'       => $base . 'hotel?lock=4',
+				'Resort'             => $base . 'beachresort?lock=1',
+				'Tent'               => $base . 'camping?lock=1',
+				'Tools & Gear'       => $base . 'handtools?lock=1',
+				'Vacation Package'   => $base . 'tropicalbeach?lock=1',
+			);
 		}
 
 		/**
@@ -383,11 +460,12 @@ if (!class_exists('RbfwImportDemo')) {
 			$state = get_option(self::STATE_OPTION);
 			if (!is_array($state)) {
 				$state = array(
-					'stage'       => 'images',
-					'image_index' => 0,
-					'image_ids'   => array(),
-					'post_index'  => 0,
-					'post_ids'    => array(),
+					'stage'                 => 'images',
+					'image_index'           => 0,
+					'image_ids'             => array(),
+					'post_index'            => 0,
+					'post_ids'              => array(),
+					'category_image_index'  => 0,
 				);
 			}
 			return $state;
@@ -396,13 +474,19 @@ if (!class_exists('RbfwImportDemo')) {
 		/**
 		 * Advance the import by exactly one small unit of work and persist it.
 		 * Stages: images (one download each) → posts (one item each) →
-		 * finalize (cross-link) → done.
+		 * category_images (one dedicated category photo each) → finalize
+		 * (cross-link + fallback images for any unmapped category) → done.
 		 *
 		 * @return array The updated state.
 		 */
 		public function process_step() {
 			$this->raise_limits();
 			$state = $this->get_state();
+			// Back-compat: a state persisted by an older version of this file (mid-import
+			// at the moment this code was updated) won't have this key yet.
+			if (!isset($state['category_image_index'])) {
+				$state['category_image_index'] = 0;
+			}
 
 			switch ($state['stage']) {
 				case 'images':
@@ -432,12 +516,30 @@ if (!class_exists('RbfwImportDemo')) {
 						$state['post_index']++;
 					}
 					if ($state['post_index'] >= count($data)) {
+						$state['stage'] = 'category_images';
+					}
+					break;
+
+				case 'category_images':
+					$this->load_media_stack();
+					$cat_urls  = self::category_image_urls();
+					$cat_names = array_keys($cat_urls);
+					if (isset($cat_names[$state['category_image_index']])) {
+						$name = $cat_names[$state['category_image_index']];
+						$this->assign_one_category_image($name, $cat_urls[$name]);
+						$state['category_image_index']++;
+					}
+					if ($state['category_image_index'] >= count($cat_names)) {
 						$state['stage'] = 'finalize';
 					}
 					break;
 
 				case 'finalize':
 					$this->set_related_products($state['post_ids']);
+					// Any category the site owner added that isn't one of our known
+					// rent types (so category_image_urls() has nothing for it) still
+					// gets a picture, reusing the sample pool already downloaded above.
+					$this->assign_category_images($state['image_ids']);
 					$state['stage'] = 'done';
 					break;
 			}
@@ -480,11 +582,13 @@ if (!class_exists('RbfwImportDemo')) {
 		 * @return array
 		 */
 		private function progress_payload($state) {
-			$total_images = count(self::image_urls());
-			$total_posts  = count($this->retnal_data());
-			$total        = $total_images + $total_posts + 1; // +1 for the finalize step.
-			$done_units   = min($state['image_index'], $total_images)
+			$total_images   = count(self::image_urls());
+			$total_posts    = count($this->retnal_data());
+			$total_cat_imgs = count(self::category_image_urls());
+			$total          = $total_images + $total_posts + $total_cat_imgs + 1; // +1 for the finalize step.
+			$done_units     = min($state['image_index'], $total_images)
 				+ min($state['post_index'], $total_posts)
+				+ min($state['category_image_index'], $total_cat_imgs)
 				+ ($state['stage'] === 'done' ? 1 : 0);
 			$progress = $total > 0 ? (int) round(($done_units / $total) * 100) : 100;
 
@@ -503,6 +607,14 @@ if (!class_exists('RbfwImportDemo')) {
 						__('Creating rental items (%1$d of %2$d)...', 'booking-and-rental-manager-for-woocommerce'),
 						min($state['post_index'] + 1, $total_posts),
 						$total_posts
+					);
+					break;
+				case 'category_images':
+					$message = sprintf(
+						/* translators: 1: current category number, 2: total categories. */
+						__('Adding category images (%1$d of %2$d)...', 'booking-and-rental-manager-for-woocommerce'),
+						min($state['category_image_index'] + 1, $total_cat_imgs),
+						$total_cat_imgs
 					);
 					break;
 				case 'done':
@@ -543,7 +655,177 @@ if (!class_exists('RbfwImportDemo')) {
 					update_post_meta($post_id, $meta_key, $meta_value);
 				}
 			}
+
+			if (!empty($data['categories']) && is_array($data['categories'])) {
+				$this->assign_categories($post_id, $data['categories']);
+			}
+
 			return (int) $post_id;
+		}
+
+		/**
+		 * Assign 2-3 sample rbfw_item_caregory terms to an imported item, creating
+		 * any term that doesn't exist yet (same pattern as insert_dummy_taxonomy_terms()
+		 * in admin/taxonomy_register.php).
+		 *
+		 * @param int      $post_id
+		 * @param string[] $category_names
+		 */
+		private function assign_categories($post_id, $category_names) {
+			$term_ids = array();
+			foreach ($category_names as $name) {
+				$name = trim((string) $name);
+				if ($name === '') {
+					continue;
+				}
+				$term = term_exists($name, 'rbfw_item_caregory');
+				if (!$term) {
+					$term = wp_insert_term($name, 'rbfw_item_caregory');
+				}
+				if (!is_wp_error($term) && isset($term['term_id'])) {
+					$term_ids[] = (int) $term['term_id'];
+				}
+			}
+			if (!empty($term_ids)) {
+				wp_set_object_terms($post_id, $term_ids, 'rbfw_item_caregory');
+				update_post_meta($post_id, 'rbfw_categories', $category_names);
+			}
+		}
+
+		/**
+		 * Give every rbfw_item_caregory term a real category image (term meta
+		 * `rentiva_category_image_id`, read by RBFW_Category_Manager and the
+		 * Rentiva theme's category grid/hero templates), reusing the same
+		 * sample images already downloaded for the items instead of fetching
+		 * anything new. Cycles through the pool so terms get distinct pictures
+		 * and never overwrites a category that already has one (e.g. set by
+		 * hand in the Categories admin page).
+		 *
+		 * @param int[] $image_ids Attachment IDs downloaded in the images stage.
+		 */
+		private function assign_category_images($image_ids) {
+			$image_ids = array_values(array_map('intval', (array) $image_ids));
+			$count     = count($image_ids);
+			if ($count === 0) {
+				return;
+			}
+
+			$terms = get_terms(array('taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false));
+			if (is_wp_error($terms) || empty($terms)) {
+				return;
+			}
+
+			$i = 0;
+			foreach ($terms as $term) {
+				if (get_term_meta($term->term_id, 'rentiva_category_image_id', true)) {
+					continue; // Already has an image — leave it alone.
+				}
+				update_term_meta($term->term_id, 'rentiva_category_image_id', $image_ids[$i % $count]);
+				$i++;
+			}
+		}
+
+		/**
+		 * Download and assign ONE category's dedicated image (category_image_urls()),
+		 * one call per process_step() chunk — same "tiny unit of work" pattern as
+		 * the images stage. Skips the term entirely if it doesn't exist (a rent
+		 * type from a previous run of retnal_data() that's since been renamed) or
+		 * already has an image (never overwrites a hand-picked one).
+		 *
+		 * @param string $name Rent type / term name.
+		 * @param string $url  Image URL to download.
+		 */
+		private function assign_one_category_image($name, $url) {
+			$term = term_exists($name, 'rbfw_item_caregory');
+			if (!$term) {
+				return;
+			}
+			$term_id = (int) (is_array($term) ? $term['term_id'] : $term);
+			if (get_term_meta($term_id, 'rentiva_category_image_id', true)) {
+				return; // Already has an image — leave it alone.
+			}
+
+			// media_sideload_image() requires the URL's path to literally end in an
+			// image extension (.jpg/.png/...); these category photo URLs don't carry
+			// one (loremflickr.com/WxH/keyword?lock=N — a real JPEG, just an
+			// extensionless path), so it always rejects them with "Invalid image URL".
+			// Fetch and attach by hand instead, the same way WP's own uploader does.
+			$response = wp_remote_get($url, array('timeout' => 20));
+			if (is_wp_error($response) || 200 !== (int) wp_remote_retrieve_response_code($response)) {
+				return;
+			}
+			$body = wp_remote_retrieve_body($response);
+			if ('' === $body) {
+				return;
+			}
+
+			$upload = wp_upload_bits(sanitize_title($name) . '-rent-type.jpg', null, $body);
+			if (!empty($upload['error'])) {
+				return;
+			}
+
+			$filetype   = wp_check_filetype($upload['file'], null);
+			$attachment = array(
+				'post_mime_type' => $filetype['type'] ? $filetype['type'] : 'image/jpeg',
+				'post_title'     => $name . ' — Rent Type',
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+			$attach_id = wp_insert_attachment($attachment, $upload['file']);
+			if (is_wp_error($attach_id) || !$attach_id) {
+				return;
+			}
+			$attach_data = wp_generate_attachment_metadata($attach_id, $upload['file']);
+			wp_update_attachment_metadata($attach_id, $attach_data);
+
+			update_term_meta($term_id, 'rentiva_category_image_id', (int) $attach_id);
+		}
+
+		/**
+		 * Backfill category images for a site whose dummy items were already
+		 * imported before category images existed. Reuses the sample image
+		 * pool from any already-imported item's gallery, since the import
+		 * state (and its freshly-downloaded image_ids) no longer exists once
+		 * the import has finished.
+		 *
+		 * @return int Number of categories that received an image.
+		 */
+		public function backfill_category_images() {
+			$sample = get_posts(array(
+				'post_type'   => 'rbfw_item',
+				'post_status' => 'any',
+				'numberposts' => 1,
+				'fields'      => 'ids',
+			));
+			if (empty($sample)) {
+				return 0;
+			}
+			$image_ids = get_post_meta($sample[0], 'rbfw_gallery_images', true);
+			if (empty($image_ids) || !is_array($image_ids)) {
+				return 0;
+			}
+
+			$terms = get_terms(array('taxonomy' => 'rbfw_item_caregory', 'hide_empty' => false));
+			if (is_wp_error($terms) || empty($terms)) {
+				return 0;
+			}
+
+			$before = 0;
+			foreach ($terms as $term) {
+				if (get_term_meta($term->term_id, 'rentiva_category_image_id', true)) {
+					$before++;
+				}
+			}
+
+			$this->assign_category_images($image_ids);
+
+			$after = 0;
+			foreach ($terms as $term) {
+				if (get_term_meta($term->term_id, 'rentiva_category_image_id', true)) {
+					$after++;
+				}
+			}
+			return $after - $before;
 		}
 
 		/**
@@ -623,8 +905,9 @@ if (!class_exists('RbfwImportDemo')) {
 		public function retnal_data() {
 			return [
 				[
-					'title'   => 'Bike/Car For Single Day Multiple Slot - Classic Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...',
+					'title'      => 'Bike/Car For Single Day Multiple Slot - Classic Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam...',
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'00:00','00:30','01:00','06:00','08:00','08:30','09:00','09:30',
@@ -660,8 +943,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Resort - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'title'      => 'Resort - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'categories' => ['Resort', 'Hotel & Stay', 'Vacation Package'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','14:00','17:00','21:00'],
 						'rbfw_item_type' => 'resort',
@@ -713,8 +997,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Doctor Appointment - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'title'      => 'Doctor Appointment - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua....',
+					'categories' => ['Appointment', 'Healthcare Service', 'Consultation'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00 AM','10:00 PM','10:30 AM','10:30 PM','11:00 AM','11:30 AM','11:30 PM','12:00 PM','12:30 PM'],
 						'rbfw_item_type' => 'appointment',
@@ -751,8 +1036,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Equipment - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Equipment - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Equipment', 'Tools & Gear'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','21:00'],
 						'rbfw_item_type' => 'equipment',
@@ -783,8 +1069,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Bike/Car For Multiple Day - Muffin Template',
-					'content' => 'A bike rental or bike hire business rents out bicycles for short periods of time, usually for a few hours.',
+					'title'      => 'Bike/Car For Multiple Day - Muffin Template',
+					'content'    => 'A bike rental or bike hire business rents out bicycles for short periods of time, usually for a few hours.',
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','21:00'],
 						'rbfw_item_type' => 'bike_car_md',
@@ -821,8 +1108,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Dress - Muffin Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Dress - Muffin Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Dress'],
 					'postmeta' => [
 						'rdfw_available_time' => ['10:00','11:00','12:00','13:00','14:00','3:00 PM','16:00','5:00 PM','21:00'],
 						'rbfw_item_type' => 'dress',
@@ -864,8 +1152,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Bike/Car For Single Day - Classic Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Bike/Car For Single Day - Classic Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'10:00 AM','10:00 PM','10:30 AM','10:30 PM','11:30 AM','11:30 PM',
@@ -916,8 +1205,9 @@ if (!class_exists('RbfwImportDemo')) {
 					],
 				],
 				[
-					'title'   => 'Bike/Car For Single Day multi hour - Classic Template',
-					'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'title'      => 'Bike/Car For Single Day multi hour - Classic Template',
+					'content'    => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+					'categories' => ['Bike', 'Car'],
 					'postmeta' => [
 						'rdfw_available_time' => [
 							'00:00','00:30','01:00','06:00','08:00','08:30','09:00','09:30',

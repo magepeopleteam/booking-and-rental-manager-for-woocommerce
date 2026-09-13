@@ -73,8 +73,16 @@ $rbfw_has_auto_coupons = class_exists( 'RBFW_Coupon_Engine' )
 	@keyframes rbfw-native-spin{to{transform:rotate(360deg);}}
 	.rbfw-native-modal__note{margin:10px 0 0;font-size:12px;color:#777;text-align:center;}
 	.rbfw-native-coupon{margin:0 0 16px;padding:12px 14px;border:1px dashed #d7dae0;border-radius:8px;background:#fbfbfc;}
-	.rbfw-native-coupon__label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:8px;}
-	.rbfw-native-coupon__row{display:flex;gap:8px;}
+	/* Folded by default: only the label (and the applied-coupon summary, if
+	   one's already active) shows until it's clicked — the input/Apply row
+	   and any message from a previous attempt stay hidden until then. */
+	.rbfw-native-coupon__label{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;font-size:13px;font-weight:600;color:#374151;margin-bottom:0;user-select:none;}
+	.rbfw-native-coupon__label::after{content:'+';flex:0 0 auto;font-size:16px;line-height:1;color:#9aa1ab;transition:transform .15s ease;}
+	.rbfw-native-coupon.is-open .rbfw-native-coupon__label{margin-bottom:8px;}
+	.rbfw-native-coupon.is-open .rbfw-native-coupon__label::after{content:'\2212';}
+	.rbfw-native-coupon__row,.rbfw-native-coupon__msg{display:none;}
+	.rbfw-native-coupon.is-open .rbfw-native-coupon__row{display:flex;gap:8px;}
+	.rbfw-native-coupon.is-open .rbfw-native-coupon__msg{display:block;}
 	.rbfw-native-coupon__input{flex:1;min-width:0;padding:9px 11px;border:1px solid #cfd4da;border-radius:6px;box-sizing:border-box;text-transform:uppercase;}
 	.rbfw-native-coupon__apply,.rbfw-native-coupon__remove{flex:0 0 auto;cursor:pointer;border:0;border-radius:6px;padding:9px 16px;font-size:13px;font-weight:600;color:#fff;background:var(--color_theme,#f12971);}
 	.rbfw-native-coupon__remove{background:transparent;color:#6b7280;text-decoration:underline;padding:2px 4px;font-weight:500;}

@@ -623,23 +623,23 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 
 .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__head {
-    background: linear-gradient(180deg, #f4f7ff 0%, #f8f9fd 100%) !important;
-    border-bottom: 1px solid var(--me-border) !important;
-    padding: 20px 24px 18px !important;
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde1ec !important;
+    padding: 14px 20px !important;
 }
 
 .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__head h2 {
-    color: #0f172a !important;
-    font-size: 17px !important;
+    color: #1d2327 !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
-    letter-spacing: -0.01em !important;
-    margin: 0 0 6px !important;
+    letter-spacing: normal !important;
+    margin: 0 0 3px !important;
 }
 
 .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offday-days) > .rbfw-me-card__head p {
-    color: #64748b !important;
-    font-size: 13px !important;
-    line-height: 1.55 !important;
+    color: #2ea2cc !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
     margin: 0 !important;
 }
 
@@ -772,23 +772,23 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 
 .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__head {
-    background: linear-gradient(180deg, #f4f7ff 0%, #f8f9fd 100%) !important;
-    border-bottom: 1px solid var(--me-border) !important;
-    padding: 20px 24px 18px !important;
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde1ec !important;
+    padding: 14px 20px !important;
 }
 
 .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__head h2 {
-    color: #0f172a !important;
-    font-size: 17px !important;
+    color: #1d2327 !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
-    letter-spacing: -0.01em !important;
-    margin: 0 0 6px !important;
+    letter-spacing: normal !important;
+    margin: 0 0 3px !important;
 }
 
 .rbfw-me-panel[data-panel="offday"] .rbfw-me-card:has(.rbfw-me-offdate-list) > .rbfw-me-card__head p {
-    color: #64748b !important;
-    font-size: 13px !important;
-    line-height: 1.55 !important;
+    color: #2ea2cc !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
     margin: 0 !important;
 }
 
@@ -2477,15 +2477,25 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     overflow: hidden;
     box-shadow: var(--me-shadow);
     transition: box-shadow var(--me-transition), border-color var(--me-transition);
+    /* A small gap between the card's own edge and its head/body so the
+       head's background reads as a distinct block sitting inside the
+       card rather than flush against it. */
+    padding: 5px;
 }
 .rbfw-me-card:hover {
     box-shadow: var(--me-shadow-hover);
     border-color: #dbeafe;
 }
+/* Every card head across the editor now matches the Pricing tab's own
+   sub-section header look (RBFW_Pricing::panel_header(), rendered as
+   section.bg-light — see .rbfw-me-pricing-classic-wrap section.bg-light
+   further down) — same background, border, and label/description
+   treatment everywhere instead of two different header styles. */
 .rbfw-me-card__head {
-    padding: var(--me-space-lg) var(--me-space-xl) 16px;
-    border-bottom: 1px solid var(--me-border-subtle);
-    background: linear-gradient(180deg, #fafbfd 0%, #fff 100%);
+    padding: 14px 20px;
+    border-bottom: 1px solid #dde1ec;
+    background: #f0f4fb;
+    border-radius: calc(var(--me-radius) - 5px) calc(var(--me-radius) - 5px) 0 0;
 }
 .rbfw-me-card__head--with-toggle {
     display: flex;
@@ -2495,24 +2505,34 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 .rbfw-me-card__head h2,
 .rbfw-me-card__head h3 {
-    margin: 0 0 4px;
-    font-size: 16px;
+    margin: 0 0 3px;
+    font-size: 14px;
     font-weight: 600;
-    color: var(--me-text);
-    letter-spacing: -0.01em;
-    line-height: 1.35;
+    color: #1d2327;
+    letter-spacing: normal;
+    line-height: 1.4;
 }
 .rbfw-me-card__head p {
     margin: 0;
-    font-size: 13px;
-    color: var(--me-muted);
-    line-height: 1.55;
+    font-size: 12px;
+    font-weight: 400;
+    color: #2ea2cc;
+    line-height: 1.4;
 }
 .rbfw-me-card__body {
     padding: 22px var(--me-space-xl);
     display: flex;
     flex-direction: column;
     gap: 18px;
+    border-radius: 0 0 calc(var(--me-radius) - 5px) calc(var(--me-radius) - 5px);
+    border: 1px solid #eee;
+}
+/* Headless cards (Pricing, Extra Service — RBFW_Pricing's own panel_header()
+   inside acts as the visible header) have no .rbfw-me-card__head sibling
+   above them, so the body itself is the top-most block and needs all 4
+   corners rounded rather than just the bottom 2. */
+.rbfw-me-card__body:first-child {
+    border-radius: calc(var(--me-radius) - 5px);
 }
 .rbfw-me-card--sidebar .rbfw-me-card__head { padding: 14px 18px 12px; }
 .rbfw-me-card--sidebar .rbfw-me-card__body { padding: 16px 18px; gap: var(--me-space-md); }
@@ -2551,11 +2571,54 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--me-border);
+    border-radius: var(--me-radius-sm);
+    background: #fff;
+    transition: border-color var(--me-transition), background var(--me-transition);
+}
+.rbfw-me-field--toggle-row + .rbfw-me-field--toggle-row {
+    margin-top: 10px;
+}
+.rbfw-me-field--toggle-row:hover {
+    border-color: #cbd5e1;
+}
+/* Highlight the whole row while its own toggle is on, so an enabled setting
+   reads as "active" at a glance instead of only the little switch changing
+   color (:has() support is assumed here — WP admin's minimum browsers all
+   ship it; a row simply stays in its plain/unhighlighted look without it). */
+.rbfw-me-field--toggle-row:has(.rbfw-me-toggle__input:checked) {
+    border-color: var(--me-primary);
+    background: rgba(26, 86, 219, .04);
+}
+.rbfw-me-field--toggle-row .rbfw-me-field__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: rgba(26, 86, 219, .08);
+    color: var(--me-primary);
+    transition: background var(--me-transition), color var(--me-transition);
+    font-size: 17px !important;
+    width: 34px !important;
+    height: 34px !important;
+}
+.rbfw-me-field--toggle-row:has(.rbfw-me-toggle__input:checked) .rbfw-me-field__icon {
+    background: var(--me-primary);
+    color: #fff;
 }
 .rbfw-me-field--toggle-row .rbfw-me-field__info { flex: 1; min-width: 0; }
 .rbfw-me-field--toggle-row .rbfw-me-field__info strong { font-size: 13px; display: block; margin-bottom: 2px; }
-.rbfw-me-field--toggle-row .rbfw-me-field__info p { font-size: 12px; color: var(--me-muted); margin: 0; }
+.rbfw-me-field--toggle-row .rbfw-me-field__info p,
+.rbfw-me-field--toggle-row .rbfw-me-field__desc {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--me-muted);
+    margin: 0;
+}
 
 .rbfw-me-row {
     display: grid;
@@ -3031,6 +3094,18 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 .rbfw-me-help-link--docs { border-bottom: 1px solid var(--me-border); margin-bottom: 0; }
 .rbfw-me-help-link--docs:hover { border-left-color: #00a32a; background: #f0fdf4; }
+/* This one variant is a <button>, not an <a> (it triggers the JS tour rather
+   than navigating), so it needs the usual native-chrome reset. */
+.rbfw-me-help-link--button {
+    width: 100%;
+    background: none;
+    border: none;
+    border-left: 3px solid transparent;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+}
+.rbfw-me-help-link--button:hover { border-left-color: var(--me-primary); }
 .rbfw-me-help-link--pro .rbfw-me-help-link__icon { color: #f59e0b; }
 .rbfw-me-help-link--docs .rbfw-me-help-link__icon { color: #00a32a; }
 .rbfw-me-help-link__icon {
@@ -3665,7 +3740,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-pricing-classic-wrap {
     border: 1px solid #ddd !important;
     border-radius: 10px !important;
-    margin: 16px 20px !important;
+    margin: 5px !important;
     overflow: hidden !important;
     padding: 0 !important;
 }
@@ -6871,6 +6946,11 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-card:has(.rbfw_fee_management_wrapper) > .rbfw-me-card__head {
     display: none !important;
 }
+/* ...and since that head is hidden, its body is the top-most visible
+   block in the padded gap — round all 4 corners, not just the bottom 2. */
+.rbfw-me-card:has(.rbfw_fee_management_wrapper) > .rbfw-me-card__body {
+    border-radius: calc(var(--me-radius) - 5px) !important;
+}
 
 /* ── Extra Service Price Settings table ─────────────────────── */
 
@@ -7853,6 +7933,43 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     font-size: 13px;
 }
 #rbfw-me-faq-msg .rbfw-me-error { color: var(--me-danger); }
+
+/* ── Rent type image field (Add/Edit Rent Type modal) ──────── */
+.rbfw-rt-image-field {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.rbfw-rt-image-field__preview {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1.5px dashed var(--me-border);
+    background: #f6f7f9;
+    color: var(--me-muted);
+    overflow: hidden;
+}
+.rbfw-rt-image-field__preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.rbfw-rt-image-field__preview .dashicons {
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+}
+.rbfw-rt-image-field__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
 #rbfw-me-faq-msg .rbfw-me-success { color: #0a7d3a; }
 
 /* ── Front-end Display Settings ─────────────────────────────── */
@@ -9502,6 +9619,11 @@ textarea.rbfw-me-field-invalid {
 .rbfw-me-card--collapsible > .rbfw-me-card__head { cursor: pointer; }
 .rbfw-me-card--collapsible > .rbfw-me-card__head .rbfw-me-offday-block-switch { cursor: default; }
 .rbfw-me-card--collapsible.is-collapsed > .rbfw-me-card__body { display: none; }
+/* Body is hidden while collapsed, so the head is the only visible block —
+   round all 4 corners instead of just the top 2. */
+.rbfw-me-card--collapsible.is-collapsed > .rbfw-me-card__head {
+    border-radius: calc(var(--me-radius) - 5px);
+}
 .rbfw-me-card__caret {
     color: var(--me-muted);
     flex-shrink: 0;

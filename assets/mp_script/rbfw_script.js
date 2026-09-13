@@ -1232,9 +1232,19 @@ jQuery(function ($) {
             var rate = parseFloat($form.find('.rbfw_sd_price_input').val()) || 0;
             $form.find('#rbfw_service_price').val(rate.toFixed(2));
             if (typeof rbfw_price_calculation_sd === 'function') rbfw_price_calculation_sd();
-        } else if ($form.find('#rbfw_item_quantity_md').length) {
+        } else if ($form.find('.rbfw_bike_car_md_item_wrapper').length) {
             // Multi-day: schedule the AJAX price recalculation so the variation
-            // surcharge is included in the live subtotal/total.
+            // surcharge is included in the live subtotal/total, and — for items with
+            // variations but no standalone Quantity dropdown (rbfw_enable_md_type_item_qty
+            // = no, the normal setup for a variation-priced item like a dress with
+            // Colour/Size steppers instead of a single Quantity field) — so the Book Now
+            // button ever gets re-enabled at all. This used to check for
+            // #rbfw_item_quantity_md specifically, but that <select> only renders when
+            // the standalone Quantity dropdown is ALSO enabled; when it's off, that
+            // element never exists, this branch was never entered, and clicking a
+            // variation stepper could never re-run the price/availability check that
+            // enables the button (md_script.js's own AJAX success handler) — leaving
+            // Book Now stuck disabled even after picking dates and a quantity.
             if (typeof rbfwScheduleMdPriceCalculation === 'function') {
                 rbfwScheduleMdPriceCalculation();
             }

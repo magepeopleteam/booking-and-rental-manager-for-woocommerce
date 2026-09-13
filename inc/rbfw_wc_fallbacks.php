@@ -37,6 +37,7 @@ if ( ! function_exists( 'rbfw_define_woocommerce_fallbacks' ) ) {
 			class RBFW_WC_Cart_Fallback {
 				public function get_cart() { return array(); }
 				public function get_cart_contents_count() { return 0; }
+				public function get_cart_total() { return function_exists( 'wc_price' ) ? wc_price( 0 ) : '0'; }
 				public function is_empty() { return true; }
 				public function empty_cart() {}
 			}

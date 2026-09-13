@@ -415,10 +415,22 @@
 	font-weight: 700;
 }
 
-.rbfw-cat-card__menu {
+/* Edit/Delete + the "More actions" (⋮) menu now share one compact
+   top-right cluster over the thumbnail, instead of Edit/Delete sitting in
+   their own full-width footer strip below the title — that saved a whole
+   row of height on every card. */
+.rbfw-cat-card__overlay-actions {
 	position: absolute;
 	top: 0.5rem;
 	right: 0.5rem;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.rbfw-cat-card__menu {
+	position: relative;
 }
 
 .rbfw-cat-card__menu-btn {
@@ -486,7 +498,11 @@
 }
 
 .rbfw-cat-card__body {
-	padding: 0.85rem 1.05rem 0.25rem;
+	/* Bottom padding used to be tight (0.25rem) because the actions footer
+	   used to follow right after, with its own padding below that. Now
+	   .rbfw-cat-card__body is the card's last element, so it needs its own
+	   breathing room at the bottom. */
+	padding: 0.85rem 1.05rem 1rem;
 	flex: 1;
 	display: flex;
 	flex-direction: column;
@@ -511,31 +527,29 @@
 	-webkit-box-orient: vertical;
 }
 
-.rbfw-cat-card__actions {
-	display: flex;
-	border-top: 1px solid var(--rbfw-cat-border);
-	margin-top: 0.75rem;
-}
-
+/* Sit over the thumbnail now (.rbfw-cat-card__overlay-actions above), same
+   white-circle-on-image treatment as .rbfw-cat-card__menu-btn so all three
+   buttons in the cluster read as one group. */
 .rbfw-cat-card__edit,
 .rbfw-cat-card__delete {
-	flex: 1;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 0.35rem;
-	padding: 0.6rem 0.5rem;
-	background: none;
+	width: 26px;
+	height: 26px;
+	padding: 0;
+	background: rgba(255, 255, 255, 0.9);
 	border: none;
-	font-size: 12.5px;
-	font-weight: 600;
-	color: var(--rbfw-cat-muted);
+	border-radius: 50%;
+	color: var(--rbfw-cat-text);
 	cursor: pointer;
-	transition: background-color 120ms ease, color 120ms ease;
+	box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
+	transition: background-color 120ms ease, color 120ms ease, transform 120ms ease;
 }
 
-.rbfw-cat-card__edit {
-	border-right: 1px solid var(--rbfw-cat-border);
+.rbfw-cat-card__edit:hover,
+.rbfw-cat-card__delete:hover {
+	transform: translateY(-1px);
 }
 
 .rbfw-cat-card__edit:hover {
@@ -548,11 +562,10 @@
 	color: var(--rbfw-cat-danger);
 }
 
-.rbfw-cat-card__edit .dashicons,
-.rbfw-cat-card__delete .dashicons {
-	font-size: 15px;
-	width: 15px;
-	height: 15px;
+.rbfw-cat-card__edit svg,
+.rbfw-cat-card__delete svg {
+	width: 16px;
+	height: 16px;
 }
 
 /* List view — same card markup, laid out as a row -------------------------- */
@@ -577,20 +590,6 @@
 	justify-content: center;
 }
 
-.rbfw-cat-grid.is-list-view .rbfw-cat-card__actions {
-	flex-direction: column;
-	border-top: none;
-	border-left: 1px solid var(--rbfw-cat-border);
-	margin-top: 0;
-	width: 110px;
-	flex-shrink: 0;
-}
-
-.rbfw-cat-grid.is-list-view .rbfw-cat-card__edit {
-	border-right: none;
-	border-bottom: 1px solid var(--rbfw-cat-border);
-}
-
 @media (max-width: 600px) {
 	.rbfw-cat-grid.is-list-view .rbfw-cat-card {
 		flex-direction: column;
@@ -599,18 +598,6 @@
 	.rbfw-cat-grid.is-list-view .rbfw-cat-card__media {
 		width: 100%;
 		height: 130px;
-	}
-
-	.rbfw-cat-grid.is-list-view .rbfw-cat-card__actions {
-		flex-direction: row;
-		width: auto;
-		border-left: none;
-		border-top: 1px solid var(--rbfw-cat-border);
-	}
-
-	.rbfw-cat-grid.is-list-view .rbfw-cat-card__edit {
-		border-bottom: none;
-		border-right: 1px solid var(--rbfw-cat-border);
 	}
 }
 
@@ -834,16 +821,89 @@
 .rbfw-cat-image-field {
 	display: flex;
 	align-items: center;
-	gap: 0.75rem;
+	gap: 1rem;
 	flex-wrap: wrap;
+}
+
+.rbfw-cat-image-field__preview {
+	width: 88px;
+	height: 88px;
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--rbfw-cat-radius-lg);
+	border: 1.5px dashed var(--rbfw-cat-border);
+	background: var(--rbfw-cat-border-subtle);
+	color: var(--rbfw-cat-muted);
+	overflow: hidden;
+	transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .rbfw-cat-image-field__preview img {
 	display: block;
-	max-width: 90px;
-	height: auto;
-	border-radius: var(--rbfw-cat-radius);
-	border: 1px solid var(--rbfw-cat-border);
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 0;
+	border: none;
+}
+
+.rbfw-cat-image-field__preview .dashicons {
+	font-size: 28px;
+	width: 28px;
+	height: 28px;
+}
+
+.rbfw-cat-image-field__actions {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.5rem;
+}
+
+.rbfw-cat-image-field__btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 7px 14px;
+	border-radius: var(--rbfw-cat-radius-pill);
+	border: 1.5px solid transparent;
+	font-size: 12.5px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease, transform 120ms ease;
+}
+
+.rbfw-cat-image-field__btn:hover {
+	transform: translateY(-1px);
+}
+
+.rbfw-cat-image-field__btn .dashicons {
+	font-size: 14px;
+	width: 14px;
+	height: 14px;
+}
+
+.rbfw-cat-image-field__btn--select {
+	color: var(--rbfw-cat-primary-dk);
+	background: var(--rbfw-cat-primary-soft);
+	border-color: var(--rbfw-cat-primary-soft);
+}
+
+.rbfw-cat-image-field__btn--select:hover {
+	background: #e0e9fc;
+	border-color: #c7d7f5;
+}
+
+.rbfw-cat-image-field__btn--remove {
+	color: var(--rbfw-cat-danger);
+	background: var(--rbfw-cat-danger-bg);
+	border-color: var(--rbfw-cat-danger-bg);
+}
+
+.rbfw-cat-image-field__btn--remove:hover {
+	background: #fee2e2;
 }
 
 .rbfw-cat-modal__footer {

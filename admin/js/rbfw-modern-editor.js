@@ -1440,7 +1440,7 @@
                 var indent = depth > 0 ? ' style="margin-left:' + (depth * 18) + 'px;"' : '';
                 var prefix = depth > 0 ? '<span class="rbfw-rt-sub-indicator" aria-hidden="true">↳ </span>' : '';
                 $grid.append(
-                    '<label class="rbfw-me-checkbox-label rbfw-rt-chip' + (checked ? ' is-checked' : '') + (depth > 0 ? ' rbfw-rt-child' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '"' + indent + '>' +
+                    '<label class="rbfw-me-checkbox-label rbfw-rt-chip' + (checked ? ' is-checked' : '') + (depth > 0 ? ' rbfw-rt-child' : '') + '" data-term-id="' + rtEsc(rt.term_id) + '" data-name="' + rtEsc(rt.name) + '" data-parent="' + rtEsc(rt.parent || 0) + '" data-depth="' + depth + '" data-image-id="' + rtEsc(rt.image_id || 0) + '" data-image-url="' + rtEsc(rt.image_url || '') + '"' + indent + '>' +
                         '<input type="checkbox" class="rbfw-me-cat-checkbox" data-name="' + rtEsc(rt.name) + '"' + checkedAttr + ' />' +
                         '<span>' + prefix + rtEsc(rt.name.charAt(0).toUpperCase() + rt.name.slice(1)) + '</span>' +
                         meActionsHtml() +
@@ -1451,49 +1451,28 @@
             $wrap.find('.rbfw-me-rent-type-empty').toggleClass('rbfw-me-hidden', rentTypes.length > 0);
         }
 
-        // Build the parent <select> options from the currently rendered chips.
-        // Excludes the term being edited (and its descendants) to prevent cycles.
-        function mePopulateParents(excludeTermId) {
-            var $select = $wrap.find('#rbfw-me-rent-type-modal-parent');
-            if (!$select.length) { return; }
-            excludeTermId = parseInt(excludeTermId, 10) || 0;
-            var prev = String($select.val() || '0');
+        var rtImagePlaceholderHtml = '<span class="dashicons dashicons-format-image" aria-hidden="true"></span>';
 
-            var excluded = {};
-            if (excludeTermId) {
-                excluded[excludeTermId] = true;
-                var changed = true;
-                while (changed) {
-                    changed = false;
-                    $wrap.find('.rbfw-me-rent-type-card .rbfw-rt-chip').each(function () {
-                        var tid = parseInt($(this).data('term-id'), 10) || 0;
-                        var pid = parseInt($(this).data('parent'), 10) || 0;
-                        if (pid && excluded[pid] && !excluded[tid]) { excluded[tid] = true; changed = true; }
-                    });
-                }
-            }
-
-            $select.find('option:not(:first)').remove();
-            $wrap.find('.rbfw-me-rent-type-card .rbfw-rt-chip').each(function () {
-                var $chip = $(this);
-                var tid   = parseInt($chip.data('term-id'), 10) || 0;
-                if (!tid || excluded[tid]) { return; }
-                var depth = parseInt($chip.data('depth'), 10) || 0;
-                var label = (depth > 0 ? new Array(depth + 1).join('— ') : '') + String($chip.data('name'));
-                $select.append('<option value="' + rtEsc(tid) + '">' + rtEsc(label) + '</option>');
-            });
-            if ($select.find('option[value="' + prev + '"]').length) { $select.val(prev); } else { $select.val('0'); }
-        }
-
-        function openRentTypeModal(mode, termId, name, parentId) {
+        function openRentTypeModal(mode, termId, name, imageId, imageUrl) {
             meEditTermId = mode === 'edit' ? (parseInt(termId, 10) || 0) : 0;
             var isEdit = meEditTermId > 0;
             var $modal = $wrap.find('#rbfw-me-rent-type-modal');
             $modal.find('.rbfw-me-faq-modal__head h3').text(isEdit ? 'Rename Rent Type' : 'Add New Rent Type');
             $modal.find('#rbfw-me-rent-type-modal-save').text(isEdit ? 'Save Changes' : 'Add Rent Type');
             $modal.find('#rbfw-me-rent-type-modal-input').val(name || '');
-            mePopulateParents(meEditTermId);
-            $modal.find('#rbfw-me-rent-type-modal-parent').val(String(parseInt(parentId, 10) || 0));
+
+            var $preview = $modal.find('#rbfw-me-rent-type-modal-image-preview');
+            var $removeBtn = $modal.find('#rbfw-me-rent-type-modal-image-remove');
+            imageId = parseInt(imageId, 10) || 0;
+            $modal.find('#rbfw-me-rent-type-modal-image-id').val(imageId || '');
+            if (imageId && imageUrl) {
+                $preview.html('<img src="' + imageUrl + '" alt="" />');
+                $removeBtn.show();
+            } else {
+                $preview.html(rtImagePlaceholderHtml);
+                $removeBtn.hide();
+            }
+
             $modal.addClass('is-open');
             setTimeout(function () { $modal.find('#rbfw-me-rent-type-modal-input').trigger('focus'); }, 50);
         }
@@ -1526,7 +1505,7 @@
         $wrap.on('click', '.rbfw-me-rent-type-card .rbfw-rt-edit', function (e) {
             e.preventDefault(); e.stopPropagation();
             var $chip = $(this).closest('.rbfw-rt-chip');
-            openRentTypeModal('edit', $chip.data('term-id'), $chip.data('name'), $chip.data('parent'));
+            openRentTypeModal('edit', $chip.data('term-id'), $chip.data('name'), $chip.data('image-id'), $chip.data('image-url'));
         });
 
         // Delete a rent type.
@@ -1558,11 +1537,39 @@
             closeRentTypeModal();
         });
 
+        // Rent type image — same wp.media() pattern used for the item's featured image.
+        var rtMediaFrame;
+        $wrap.on('click', '#rbfw-me-rent-type-modal-image-select', function (e) {
+            e.preventDefault();
+            if (rtMediaFrame) { rtMediaFrame.open(); return; }
+            rtMediaFrame = wp.media({
+                title:    rbfwModernEditor_i18n('Select Image') || 'Select Image',
+                button:   { text: rbfwModernEditor_i18n('Use this image') || 'Use this image' },
+                multiple: false,
+                library:  { type: 'image' }
+            });
+            rtMediaFrame.on('select', function () {
+                var attachment = rtMediaFrame.state().get('selection').first().toJSON();
+                $wrap.find('#rbfw-me-rent-type-modal-image-id').val(attachment.id);
+                $wrap.find('#rbfw-me-rent-type-modal-image-preview').html('<img src="' + attachment.url + '" alt="" />');
+                $wrap.find('#rbfw-me-rent-type-modal-image-remove').show();
+            });
+            rtMediaFrame.open();
+        });
+
+        $wrap.on('click', '#rbfw-me-rent-type-modal-image-remove', function (e) {
+            e.preventDefault();
+            $wrap.find('#rbfw-me-rent-type-modal-image-id').val('');
+            $wrap.find('#rbfw-me-rent-type-modal-image-preview').html(rtImagePlaceholderHtml);
+            $(this).hide();
+        });
+
         $wrap.on('click', '#rbfw-me-rent-type-modal-save', function () {
             var $input = $wrap.find('#rbfw-me-rent-type-modal-input');
             var name   = $.trim($input.val());
             if (!name) { $input.trigger('focus'); return; }
             if (name.length > 200) { name = name.substring(0, 200); }
+            var imageId = parseInt($wrap.find('#rbfw-me-rent-type-modal-image-id').val(), 10) || 0;
 
             if (meEditTermId > 0) {
                 $.post(window.ajaxurl, {
@@ -1570,7 +1577,7 @@
                     nonce:  meNonce(),
                     term_id: meEditTermId,
                     name:   name,
-                    parent: parseInt($wrap.find('#rbfw-me-rent-type-modal-parent').val(), 10) || 0
+                    image_id: imageId
                 }, function (resp) {
                     if (resp && resp.success) {
                         var cur = (meHidden().val() || '').split(',').filter(Boolean).map(function (n) {
@@ -1588,7 +1595,7 @@
                     action: 'rbfw_rent_type_add',
                     nonce:  meNonce(),
                     name:   name,
-                    parent: parseInt($wrap.find('#rbfw-me-rent-type-modal-parent').val(), 10) || 0
+                    image_id: imageId
                 }, function (resp) {
                     if (resp && resp.success) {
                         rebuildRentTypes(resp.data.rent_types, resp.data.added_name);

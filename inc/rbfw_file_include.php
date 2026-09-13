@@ -21,6 +21,7 @@ require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Settings.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Admin_Payment_Notice.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Pro_Features_Notice.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Category_Manager.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Onboarding.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_frontend_display.php';
@@ -43,6 +44,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shared_inventory.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shortcodes.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_rent_types_shortcode.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_item_search.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_booking_search.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';
@@ -162,6 +164,7 @@ function rbfw_free_woocommerce_integrate(){
     if ( ! RBFW_Function::use_wc() ) {
         require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Native_Checkout.php");
         require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Confirmation.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Reconfirm.php");
         // Coupon engine: standalone application layer (live preview endpoint). The authoritative
         // recompute happens inside RBFW_Native_Checkout::process().
         require_once(RBFW_PLUGIN_DIR . "/inc/coupon/RBFW_Coupon_Native.php");

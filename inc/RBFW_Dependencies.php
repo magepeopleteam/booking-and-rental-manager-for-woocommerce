@@ -153,7 +153,7 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
 			// loading popup js
 			wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), filemtime( RBFW_PLUGIN_DIR . '/css/rbfw_style.css' ));
-			wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array());
+			wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array(), filemtime( RBFW_PLUGIN_DIR . '/css/rbfw_rent_items.css' ));
 			wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 			wp_enqueue_script('rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true);
 			wp_enqueue_script('md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true);
@@ -369,7 +369,7 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
 			// loading popup js
 			wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), filemtime( RBFW_PLUGIN_DIR . '/css/rbfw_style.css' ));
-			wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array());
+			wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array(), filemtime( RBFW_PLUGIN_DIR . '/css/rbfw_rent_items.css' ));
 			wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 			// mage icon
 			wp_enqueue_style('mage-icons', RBFW_PLUGIN_URL . '/assets/mage-icon/css/mage-icon.css', array(), time());

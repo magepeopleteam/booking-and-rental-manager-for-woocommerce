@@ -43,13 +43,24 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 		}
 
 		/**
-		 * Replaces the taxonomy's auto-added "Categories" submenu (which would
-		 * otherwise still point at edit-tags.php) with this page, in the same
-		 * position under Rental Items.
+		 * The native "Rent Item Type" taxonomy submenu (auto-added by
+		 * register_taxonomy()'s show_in_menu) is the one visible entry now —
+		 * this page is registered as before (so its capability check, hook
+		 * suffix, and the edit-tags.php/term.php redirects in
+		 * redirect_legacy_screens() all keep working exactly the same), but
+		 * immediately hidden from the sidebar so it doesn't show up as a
+		 * second, redundant "Categories" row next to it.
+		 *
+		 * (An earlier version tried to do the reverse — hide the native
+		 * submenu and keep this one — via remove_submenu_page() with a plain
+		 * '&' in the slug. That never actually worked: WP core's own taxonomy
+		 * menu registration in wp-admin/menu.php builds that slug with a
+		 * literal '&amp;' — e.g. "edit-tags.php?taxonomy=%s&amp;post_type=$post_type"
+		 * — not '&', so the removal silently failed to match and both menu
+		 * items showed up. Not worth reproducing that string just to remove
+		 * it again now that the desired outcome has flipped.)
 		 */
 		public function register_menu(): void {
-			remove_submenu_page( 'edit.php?post_type=rbfw_item', 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=rbfw_item' );
-
 			self::$hook = add_submenu_page(
 				'edit.php?post_type=rbfw_item',
 				__( 'Categories', 'booking-and-rental-manager-for-woocommerce' ),
@@ -58,6 +69,13 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 				self::PAGE_SLUG,
 				[ $this, 'render_page' ]
 			);
+
+			// Hide the row, not the page: remove_submenu_page() only strips the
+			// nav link, so this screen stays fully reachable at its own URL —
+			// which is exactly what "Rent Item Type" (and any legacy
+			// edit-tags.php/term.php link, via redirect_legacy_screens() below)
+			// still redirects to.
+			remove_submenu_page( 'edit.php?post_type=rbfw_item', self::PAGE_SLUG );
 		}
 
 		/**
@@ -398,32 +416,50 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 						</span>
 					<?php endif; ?>
 
-					<?php if ( $archive_url ) : ?>
-						<div class="rbfw-cat-card__menu">
-							<button type="button" class="rbfw-cat-card__menu-btn" data-action="menu" aria-label="<?php esc_attr_e( 'More actions', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-expanded="false">
-								<span class="dashicons dashicons-ellipsis"></span>
-							</button>
-							<div class="rbfw-cat-card__menu-panel" hidden>
-								<a href="<?php echo esc_url( $archive_url ); ?>" target="_blank" rel="noopener noreferrer">
-									<span class="dashicons dashicons-external"></span> <?php esc_html_e( 'View on Front End', 'booking-and-rental-manager-for-woocommerce' ); ?>
-								</a>
+					<?php
+					/*
+					 * Edit/Delete used to live in their own full-width footer strip
+					 * below the title/description — a whole extra row per card just
+					 * for two icon buttons. Moved into the media corner instead,
+					 * grouped with the existing "More actions" (⋮) button so all of
+					 * a card's actions sit in one compact top-right cluster.
+					 */
+					?>
+					<div class="rbfw-cat-card__overlay-actions">
+						<button type="button" class="rbfw-cat-card__edit" data-action="edit" title="<?php esc_attr_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Edit category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+								<path d="M12 20h9"></path>
+								<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+							</svg>
+						</button>
+						<button type="button" class="rbfw-cat-card__delete" data-action="delete" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Delete category', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+								<path d="M3 6h18"></path>
+								<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+								<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+								<path d="M10 11v6"></path>
+								<path d="M14 11v6"></path>
+							</svg>
+						</button>
+						<?php if ( $archive_url ) : ?>
+							<div class="rbfw-cat-card__menu">
+								<button type="button" class="rbfw-cat-card__menu-btn" data-action="menu" aria-label="<?php esc_attr_e( 'More actions', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-expanded="false">
+									<span class="dashicons dashicons-ellipsis"></span>
+								</button>
+								<div class="rbfw-cat-card__menu-panel" hidden>
+									<a href="<?php echo esc_url( $archive_url ); ?>" target="_blank" rel="noopener noreferrer">
+										<span class="dashicons dashicons-external"></span> <?php esc_html_e( 'View on Front End', 'booking-and-rental-manager-for-woocommerce' ); ?>
+									</a>
+								</div>
 							</div>
-						</div>
-					<?php endif; ?>
+						<?php endif; ?>
+					</div>
 				</div>
 				<div class="rbfw-cat-card__body">
 					<h3 class="rbfw-cat-card__title"><?php echo esc_html( $term->name ); ?></h3>
 					<?php if ( $term->description ) : ?>
 						<p class="rbfw-cat-card__description"><?php echo esc_html( $term->description ); ?></p>
 					<?php endif; ?>
-				</div>
-				<div class="rbfw-cat-card__actions">
-					<button type="button" class="rbfw-cat-card__edit" data-action="edit">
-						<span class="dashicons dashicons-edit" aria-hidden="true"></span> <?php esc_html_e( 'Edit', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</button>
-					<button type="button" class="rbfw-cat-card__delete" data-action="delete">
-						<span class="dashicons dashicons-trash" aria-hidden="true"></span> <?php esc_html_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</button>
 				</div>
 			</div>
 			<?php
@@ -459,19 +495,9 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 								<input type="text" id="rbfw-cat-name" name="name" required maxlength="200">
 							</div>
 
-							<div class="rbfw-cat-field rbfw-cat-field--half">
+							<div class="rbfw-cat-field">
 								<label for="rbfw-cat-slug"><?php esc_html_e( 'Slug', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<input type="text" id="rbfw-cat-slug" name="slug" placeholder="<?php esc_attr_e( 'Auto-generated from name', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-							</div>
-
-							<div class="rbfw-cat-field rbfw-cat-field--half">
-								<label for="rbfw-cat-parent"><?php esc_html_e( 'Parent Category', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-								<select id="rbfw-cat-parent" name="parent">
-									<option value="0"><?php esc_html_e( '— None —', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-									<?php foreach ( $terms as $term ) : ?>
-										<option value="<?php echo (int) $term->term_id; ?>"><?php echo esc_html( $term->name ); ?></option>
-									<?php endforeach; ?>
-								</select>
 							</div>
 
 							<div class="rbfw-cat-field">
@@ -482,10 +508,20 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 							<div class="rbfw-cat-field">
 								<label><?php esc_html_e( 'Category Image', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class="rbfw-cat-image-field">
-									<div class="rbfw-cat-image-field__preview" id="rbfw-cat-image-preview"></div>
-									<input type="hidden" id="rbfw-cat-image-id" name="image_id" value="">
-									<button type="button" class="button" id="rbfw-cat-image-select"><?php esc_html_e( 'Select image', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-									<button type="button" class="button" id="rbfw-cat-image-remove" style="display:none"><?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+									<div class="rbfw-cat-image-field__preview" id="rbfw-cat-image-preview">
+										<span class="dashicons dashicons-format-image" aria-hidden="true"></span>
+									</div>
+									<div class="rbfw-cat-image-field__actions">
+										<input type="hidden" id="rbfw-cat-image-id" name="image_id" value="">
+										<button type="button" class="rbfw-cat-image-field__btn rbfw-cat-image-field__btn--select" id="rbfw-cat-image-select">
+											<span class="dashicons dashicons-upload" aria-hidden="true"></span>
+											<?php esc_html_e( 'Select image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+										</button>
+										<button type="button" class="rbfw-cat-image-field__btn rbfw-cat-image-field__btn--remove" id="rbfw-cat-image-remove" style="display:none">
+											<span class="dashicons dashicons-trash" aria-hidden="true"></span>
+											<?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>
+										</button>
+									</div>
 								</div>
 								<p class="description"><?php esc_html_e( 'Shown on the front-end category grid and its hero tile.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 							</div>
@@ -521,7 +557,10 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 			$term_id  = isset( $_POST['term_id'] ) ? absint( wp_unslash( $_POST['term_id'] ) ) : 0;
 			$name     = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
 			$slug     = isset( $_POST['slug'] ) ? sanitize_title( wp_unslash( $_POST['slug'] ) ) : '';
-			$parent   = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : 0;
+			// The modal no longer exposes a Parent field. Kept accepted (not required)
+			// so an existing sub-category isn't silently flattened to top-level just by
+			// being edited here — omitted from $_POST, its current parent is left alone.
+			$parent   = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : null;
 			$desc     = isset( $_POST['description'] ) ? sanitize_textarea_field( wp_unslash( $_POST['description'] ) ) : '';
 			$image_id = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
 
@@ -531,14 +570,18 @@ if ( ! class_exists( 'RBFW_Category_Manager' ) ) {
 
 			// A category can't be its own parent (wp_update_term() already rejects
 			// making it a descendant of itself, but not this direct self-parent case).
-			if ( $term_id && $parent === $term_id ) {
+			if ( $term_id && null !== $parent && $parent === $term_id ) {
 				wp_send_json_error( [ 'message' => __( 'A category cannot be its own parent.', 'booking-and-rental-manager-for-woocommerce' ) ] );
 			}
 
 			$args = [
-				'parent'      => $parent,
 				'description' => $desc,
 			];
+			if ( null !== $parent ) {
+				$args['parent'] = $parent;
+			} elseif ( ! $term_id ) {
+				$args['parent'] = 0; // New category, no parent field sent: top-level.
+			}
 			if ( '' !== $slug ) {
 				$args['slug'] = $slug;
 			}

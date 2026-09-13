@@ -115,7 +115,7 @@
 
 			<!-- General ─────────────────────────────────────────────────── -->
 			<div class="rbfw-me-panel is-active" data-panel="general">
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="basic-info">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Basic Information', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p><?php esc_html_e( 'Set the rental item name, type, and subtitle.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -129,7 +129,7 @@
 							<label class="rbfw-me-field__label" for="rbfw_me_subtitle"><?php esc_html_e( 'Subtitle', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 							<input class="rbfw-me-input" type="text" id="rbfw_me_subtitle" name="rbfw_item_sub_title" value="<?php echo esc_attr( $m['rbfw_item_sub_title'] ?? '' ); ?>" placeholder="<?php esc_attr_e( 'Short description shown in hero…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
 						</div>
-						<div class="rbfw-me-field">
+						<div class="rbfw-me-field" data-rbfw-tour="description">
 							<div class="rbfw-me-editor-label-row">
 								<label class="rbfw-me-field__label"><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class="rbfw-me-editor-switch">
@@ -176,8 +176,10 @@
 							<?php foreach ( $all_cat_terms as $term ) :
 								$checked   = in_array( strtolower( trim( $term->name ) ), $saved_cat_names, true );
 								$cat_depth = isset( $term->depth ) ? (int) $term->depth : 0;
+								$image_id  = (int) get_term_meta( $term->term_id, 'rentiva_category_image_id', true );
+								$image_url = $image_id ? wp_get_attachment_image_url( $image_id, 'thumbnail' ) : '';
 							?>
-								<label class="rbfw-me-checkbox-label rbfw-rt-chip<?php echo $cat_depth > 0 ? ' rbfw-rt-chip--child' : ''; ?>" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>" data-parent="<?php echo esc_attr( (int) $term->parent ); ?>" data-depth="<?php echo esc_attr( $cat_depth ); ?>" style="--rbfw-rt-depth: <?php echo esc_attr( $cat_depth ); ?>;">
+								<label class="rbfw-me-checkbox-label rbfw-rt-chip<?php echo $cat_depth > 0 ? ' rbfw-rt-chip--child' : ''; ?>" data-term-id="<?php echo esc_attr( $term->term_id ); ?>" data-name="<?php echo esc_attr( $term->name ); ?>" data-parent="<?php echo esc_attr( (int) $term->parent ); ?>" data-depth="<?php echo esc_attr( $cat_depth ); ?>" data-image-id="<?php echo esc_attr( $image_id ); ?>" data-image-url="<?php echo esc_url( $image_url ); ?>" style="--rbfw-rt-depth: <?php echo esc_attr( $cat_depth ); ?>;">
 									<input
 										type="checkbox"
 										class="rbfw-me-cat-checkbox"
@@ -211,11 +213,22 @@
 									<input class="rbfw-me-input" type="text" id="rbfw-me-rent-type-modal-input" maxlength="200" placeholder="<?php esc_attr_e( 'e.g. Bike, Car, Equipment…', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
 								</div>
 								<div class="rbfw-me-field">
-									<label class="rbfw-me-field__label" for="rbfw-me-rent-type-modal-parent"><?php esc_html_e( 'Parent category', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw-me-field__optional">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
-									<select class="rbfw-me-input" id="rbfw-me-rent-type-modal-parent">
-										<option value="0"><?php esc_html_e( '— None (top level) —', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-									</select>
-									<p class="rbfw-me-field__hint"><?php esc_html_e( 'Pick a parent to create a sub-category.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+									<label class="rbfw-me-field__label"><?php esc_html_e( 'Rent type image', 'booking-and-rental-manager-for-woocommerce' ); ?> <span class="rbfw-me-field__optional">(<?php esc_html_e( 'optional', 'booking-and-rental-manager-for-woocommerce' ); ?>)</span></label>
+									<div class="rbfw-rt-image-field">
+										<div class="rbfw-rt-image-field__preview" id="rbfw-me-rent-type-modal-image-preview">
+											<span class="dashicons dashicons-format-image" aria-hidden="true"></span>
+										</div>
+										<div class="rbfw-rt-image-field__actions">
+											<input type="hidden" id="rbfw-me-rent-type-modal-image-id" value="">
+											<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary" id="rbfw-me-rent-type-modal-image-select">
+												<span class="dashicons dashicons-upload"></span> <?php esc_html_e( 'Select Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</button>
+											<button type="button" class="rbfw-me-btn rbfw-me-btn--danger" id="rbfw-me-rent-type-modal-image-remove" style="display:none">
+												<span class="dashicons dashicons-trash"></span>
+											</button>
+										</div>
+									</div>
+									<p class="rbfw-me-field__hint"><?php esc_html_e( 'Shown on the front-end category grid.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 								</div>
 							</div>
 							<div class="rbfw-me-faq-modal__foot">
@@ -227,7 +240,7 @@
 				</div>
 
 				<!-- Item Features ─────────────────────────────────── -->
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="features">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Item Features Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p><?php esc_html_e( 'Add all features as category if needed.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -323,13 +336,13 @@
 			<!-- Pricing ─────────────────────────────────────────────────── -->
 			<div class="rbfw-me-panel" data-panel="pricing" data-item-type="<?php echo esc_attr( get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd' ); ?>">
 				<?php $GLOBALS['rbfw_modern_editor_rendering'] = true; ?>
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="pricing">
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
 						<?php RBFW_Pricing::render_for_modern_editor( $post_id ); ?>
 					</div>
 				</div>
 
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="extra-service">
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
 						<?php RBFW_Extra_Service::render_for_modern_editor( $post_id ); ?>
 					</div>
@@ -398,7 +411,7 @@
 				</div>
 				<?php endif; ?>
 
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="fee-management">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Fee Management', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p><?php esc_html_e( 'Configure multiple fees with different calculation types and frequencies.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -441,7 +454,7 @@
 				$templates      = RBFW_Function::get_all_template();
 				$current_tpl    = $m['rbfw_single_template'] ?? 'Default';
 				?>
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="template">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Template', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p><?php esc_html_e( 'Choose how this rental item page looks to customers.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -514,7 +527,7 @@
 				</div>
 
 				<!-- FAQ Settings ────────────────────────────────────────── -->
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="faq">
 					<div class="rbfw-me-card__body">
 						<?php RBFW_Faq_Settings::render_for_modern_editor( $post_id ); ?>
 					</div>
@@ -522,7 +535,7 @@
 
 				<!-- Tax Settings ─────────────────────────────────────────── -->
 				<?php $tax_enabled = ( $m['rbfw_enable_tax_settings'] ?? '' ) === 'yes'; ?>
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="tax-settings">
 					<div class="rbfw-me-card__head rbfw-me-card__head--with-toggle">
 						<div>
 							<h2><?php esc_html_e( 'Tax Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -540,7 +553,7 @@
 
 				<!-- Security Deposit ─────────────────────────────────────── -->
 				<?php $deposit_enabled = ( $m['rbfw_enable_security_deposit'] ?? '' ) === 'yes'; ?>
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="security-deposit">
 					<div class="rbfw-me-card__head rbfw-me-card__head--with-toggle">
 						<div>
 							<h2><?php esc_html_e( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -558,7 +571,7 @@
 
 				<!-- Related Items ────────────────────────────────────────── -->
 				<?php $related_enabled = ( $m['rbfw_enable_related_items'] ?? '' ) === 'yes'; ?>
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="related-items">
 					<div class="rbfw-me-card__head rbfw-me-card__head--with-toggle">
 						<div>
 							<h2><?php esc_html_e( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -594,7 +607,7 @@
 
 				<!-- Term Settings ────────────────────────────────────────── -->
 				<?php $term_enabled = ( $m['rbfw_enable_term_content'] ?? '' ) === 'yes'; ?>
-				<div class="rbfw-me-card">
+				<div class="rbfw-me-card" data-rbfw-tour="terms">
 					<div class="rbfw-me-card__head rbfw-me-card__head--with-toggle">
 						<div>
 							<h2><?php esc_html_e( 'Term Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -644,7 +657,7 @@
 				do_action( 'rbfw_modern_editor_sidebar_top', $post_id );
 			?>
 
-			<div class="rbfw-me-card rbfw-me-card--sidebar">
+			<div class="rbfw-me-card rbfw-me-card--sidebar" data-rbfw-tour="featured-image">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Featured Image', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
@@ -669,7 +682,7 @@
 			</div>
 
 			<!-- Gallery ─────────────────────────────────────────── -->
-			<div class="rbfw-me-card rbfw-me-card--sidebar">
+			<div class="rbfw-me-card rbfw-me-card--sidebar" data-rbfw-tour="gallery">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
@@ -703,7 +716,7 @@
 				</div>
 			</div>
 
-			<div class="rbfw-me-card rbfw-me-card--sidebar">
+			<div class="rbfw-me-card rbfw-me-card--sidebar" data-rbfw-tour="status">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
@@ -734,6 +747,19 @@
 					<h3><?php esc_html_e( 'Resources & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
 				<div class="rbfw-me-card__body">
+
+					<div class="rbfw-me-help-divider">
+						<span><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<button type="button" class="rbfw-me-help-link rbfw-me-help-link--button" id="rbfw-me-tour-restart">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-lightbulb"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Take a Tour', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'A quick walkthrough of this editor', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</button>
 
 					<div class="rbfw-me-help-divider">
 						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>

@@ -7,6 +7,10 @@
 	}
 	if ( ! class_exists( 'RBFW_General_Info' ) ) {
 		class RBFW_General_Info {
+			// Same term meta key RBFW_Category_Manager uses for its own Category Image
+			// field, so an image set from either admin screen shows up in both.
+			const IMAGE_META_KEY = 'rentiva_category_image_id';
+
 			public function __construct() {
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
@@ -46,11 +50,14 @@
 					if ( (int) $term->parent !== (int) $parent ) {
 						continue;
 					}
+					$image_id = (int) get_term_meta( $term->term_id, self::IMAGE_META_KEY, true );
 					$out[] = array(
-						'term_id' => (int) $term->term_id,
-						'name'    => $term->name,
-						'parent'  => (int) $term->parent,
-						'depth'   => (int) $depth,
+						'term_id'   => (int) $term->term_id,
+						'name'      => $term->name,
+						'parent'    => (int) $term->parent,
+						'depth'     => (int) $depth,
+						'image_id'  => $image_id,
+						'image_url' => $image_id ? (string) wp_get_attachment_image_url( $image_id, 'thumbnail' ) : '',
 					);
 					$out = array_merge(
 						$out,
@@ -89,6 +96,12 @@
 				if ( is_wp_error( $res ) ) {
 					wp_send_json_error( array( 'message' => sanitize_text_field( $res->get_error_message() ) ) );
 				}
+
+				$image_id = isset( $_POST['image_id'] ) ? absint( wp_unslash( $_POST['image_id'] ) ) : 0;
+				if ( $image_id ) {
+					update_term_meta( (int) $res['term_id'], self::IMAGE_META_KEY, $image_id );
+				}
+
 				wp_send_json_success( array(
 					'rent_types' => $this->rbfw_get_rent_type_list(),
 					'added_name' => $name,
@@ -118,9 +131,12 @@
 				}
 				$old_name = $term->name;
 
-				// Optional parent change.
-				$parent = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : 0;
-				if ( $parent > 0 ) {
+				// Optional parent change. The Rename modal no longer exposes a Parent
+				// field, so this is normally absent — leave the term's current parent
+				// untouched rather than defaulting it to 0 and flattening a
+				// sub-category just because it was renamed or re-imaged here.
+				$parent = isset( $_POST['parent'] ) ? absint( wp_unslash( $_POST['parent'] ) ) : null;
+				if ( null !== $parent && $parent > 0 ) {
 					$parent_term = get_term( $parent, 'rbfw_item_caregory' );
 					if ( ! $parent_term || is_wp_error( $parent_term ) ) {
 						wp_send_json_error( array( 'message' => esc_html__( 'The selected parent category no longer exists.', 'booking-and-rental-manager-for-woocommerce' ) ) );
@@ -138,7 +154,7 @@
 				if ( $old_name !== $name ) {
 					$update_args['name'] = $name;
 				}
-				if ( (int) $term->parent !== (int) $parent ) {
+				if ( null !== $parent && (int) $term->parent !== $parent ) {
 					$update_args['parent'] = $parent;
 				}
 				if ( ! empty( $update_args ) ) {
@@ -150,6 +166,16 @@
 				if ( $old_name !== $name ) {
 					$this->rbfw_sync_rent_type_meta( $this->rbfw_get_items_with_term( $term_id ), $old_name, $name );
 				}
+
+				if ( isset( $_POST['image_id'] ) ) {
+					$image_id = absint( wp_unslash( $_POST['image_id'] ) );
+					if ( $image_id ) {
+						update_term_meta( $term_id, self::IMAGE_META_KEY, $image_id );
+					} else {
+						delete_term_meta( $term_id, self::IMAGE_META_KEY );
+					}
+				}
+
 				wp_send_json_success( array(
 					'rent_types' => $this->rbfw_get_rent_type_list(),
 					'term_id'    => $term_id,

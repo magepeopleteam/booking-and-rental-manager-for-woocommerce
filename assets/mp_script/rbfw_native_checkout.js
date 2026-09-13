@@ -299,6 +299,11 @@
 
 		$(document).on('click', '[data-rbfw-native-close]', closeModal);
 		$(document).on('click', '[data-rbfw-native-submit]', submitBooking);
+		// Folded by default (see the CSS in native_checkout_modal.php) — clicking
+		// the "Have a coupon?" label reveals the input/Apply row.
+		$(document).on('click', '[data-rbfw-native-coupon] > .rbfw-native-coupon__label', function () {
+			$(this).closest('[data-rbfw-native-coupon]').toggleClass('is-open');
+		});
 		$(document).on('click', '[data-rbfw-native-coupon-apply]', applyCoupon);
 		$(document).on('click', '[data-rbfw-native-coupon-remove]', removeCoupon);
 		// Enter inside the coupon input applies the coupon (never submits the booking).
