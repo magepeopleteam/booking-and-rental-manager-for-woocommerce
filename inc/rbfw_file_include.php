@@ -164,6 +164,7 @@ function rbfw_free_woocommerce_integrate(){
     if ( ! RBFW_Function::use_wc() ) {
         require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Native_Checkout.php");
         require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Confirmation.php");
+        require_once(RBFW_PLUGIN_DIR . "/inc/booking/RBFW_Booking_Reconfirm.php");
         // Coupon engine: standalone application layer (live preview endpoint). The authoritative
         // recompute happens inside RBFW_Native_Checkout::process().
         require_once(RBFW_PLUGIN_DIR . "/inc/coupon/RBFW_Coupon_Native.php");
