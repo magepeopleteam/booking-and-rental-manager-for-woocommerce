@@ -424,10 +424,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                                 <i class="fas fa-lock"></i>
                                 <span><?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-                            <div class="rbfw-sd-trust-item">
-                                <i class="far fa-calendar-times"></i>
-                                <span><?php esc_html_e( 'Free cancellation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
                         </div>
                     </div>
 

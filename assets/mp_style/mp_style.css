@@ -757,10 +757,14 @@
         background-color: var(--color_active);
     }
     /*******Icon indicator***************/
+    /* Bottom-right, side by side (not vertically centered on the left/right
+       edges) so they sit clear of the hero's own bottom-anchored badge/
+       title/price content instead of overlapping it. */
     div.superSlider .iconIndicator {
         position: absolute;
         z-index: 1;
-        top: calc(50% - 15px);
+        top: auto;
+        bottom: 20px;
         font-size: 30px;
         cursor: pointer;
         color: #FFF;
@@ -769,7 +773,8 @@
         color: #FFF;
     }
     div.superSlider .iconIndicator.prevItem {
-        left: 20px;
+        left: auto;
+        right: 86px;
     }
     div.superSlider .iconIndicator.nextItem {
         right: 20px;
