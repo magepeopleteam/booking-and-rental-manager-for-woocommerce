@@ -43,6 +43,27 @@ body.rbfw-tour-active {
     transition: top .25s ease, left .25s ease;
 }
 
+/* Pointer tail connecting the tip back to the exact element it's describing
+   (the spotlight already highlights the element itself, but the tail makes
+   the association obvious at a glance, the way Eventin's own tour popup
+   does) — a plain rotated square tucked half behind the tip's own edge, its
+   left offset set in JS (position()) to line up with the target's center. */
+.rbfw-tour-tip__arrow {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #fff;
+    transform: translateX(-50%) rotate(45deg);
+}
+.rbfw-tour-tip--arrow-top .rbfw-tour-tip__arrow {
+    top: -7px;
+    box-shadow: -2px -2px 4px rgba(15, 23, 42, .06);
+}
+.rbfw-tour-tip--arrow-bottom .rbfw-tour-tip__arrow {
+    bottom: -7px;
+    box-shadow: 2px 2px 4px rgba(15, 23, 42, .06);
+}
+
 .rbfw-tour-tip__step {
     font-size: 11px;
     font-weight: 700;

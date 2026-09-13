@@ -2551,11 +2551,54 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--me-border);
+    border-radius: var(--me-radius-sm);
+    background: #fff;
+    transition: border-color var(--me-transition), background var(--me-transition);
+}
+.rbfw-me-field--toggle-row + .rbfw-me-field--toggle-row {
+    margin-top: 10px;
+}
+.rbfw-me-field--toggle-row:hover {
+    border-color: #cbd5e1;
+}
+/* Highlight the whole row while its own toggle is on, so an enabled setting
+   reads as "active" at a glance instead of only the little switch changing
+   color (:has() support is assumed here — WP admin's minimum browsers all
+   ship it; a row simply stays in its plain/unhighlighted look without it). */
+.rbfw-me-field--toggle-row:has(.rbfw-me-toggle__input:checked) {
+    border-color: var(--me-primary);
+    background: rgba(26, 86, 219, .04);
+}
+.rbfw-me-field--toggle-row .rbfw-me-field__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: rgba(26, 86, 219, .08);
+    color: var(--me-primary);
+    transition: background var(--me-transition), color var(--me-transition);
+    font-size: 17px !important;
+    width: 34px !important;
+    height: 34px !important;
+}
+.rbfw-me-field--toggle-row:has(.rbfw-me-toggle__input:checked) .rbfw-me-field__icon {
+    background: var(--me-primary);
+    color: #fff;
 }
 .rbfw-me-field--toggle-row .rbfw-me-field__info { flex: 1; min-width: 0; }
 .rbfw-me-field--toggle-row .rbfw-me-field__info strong { font-size: 13px; display: block; margin-bottom: 2px; }
-.rbfw-me-field--toggle-row .rbfw-me-field__info p { font-size: 12px; color: var(--me-muted); margin: 0; }
+.rbfw-me-field--toggle-row .rbfw-me-field__info p,
+.rbfw-me-field--toggle-row .rbfw-me-field__desc {
+    display: block;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--me-muted);
+    margin: 0;
+}
 
 .rbfw-me-row {
     display: grid;

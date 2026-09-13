@@ -50,10 +50,26 @@
 		 * is skipped automatically rather than shown pointing at nothing.
 		 */
 		var STEPS = [
+			// ── Orientation ──────────────────────────────────────────
+			// Points at the General tab button itself (not just the tab panel
+			// content) so the very first thing the admin sees is literally
+			// "start here", the same action-first opening Eventin's own tour
+			// uses on its Create Event button.
+			{ selector: '.rbfw-me-tab[data-tab="general"]', tab: 'general', title: t.step_title_general_tab, text: t.step_text_general_tab },
+
 			// ── General tab ──────────────────────────────────────────
-			{ selector: '[data-rbfw-tour="basic-info"]', tab: 'general', title: t.step_title_name, text: t.step_text_name },
+			// The Name input itself, not the whole Basic Information card —
+			// keeps the spotlight tight on the one field this step is about.
+			{ selector: '#rbfw_me_post_title', tab: 'general', title: t.step_title_name, text: t.step_text_name },
+			// Rent Item Type: the taxonomy checkbox grid (RBFW_Category_Manager),
+			// not the whole Category Settings card — these work like WooCommerce
+			// product categories, driving front-end filtering/browsing by type.
+			{ selector: '.rbfw-me-checkbox-grid', tab: 'general', title: t.step_title_rent_item_type, text: t.step_text_rent_item_type },
 
 			// ── Pricing tab ──────────────────────────────────────────
+			// Points at the Pricing tab button itself, mirroring the General
+			// tab orientation step above, before diving into its fields.
+			{ selector: '.rbfw-me-tab[data-tab="pricing"]', tab: 'pricing', title: t.step_title_pricing_tab, text: t.step_text_pricing_tab },
 			// Rent type: shown separately from the rest of Pricing because it's
 			// the one choice that changes what every other field on this tab
 			// even means — bikes/boats price by time slot, resorts by night,
@@ -63,12 +79,6 @@
 				tab: 'pricing',
 				title: t.step_title_rent_type,
 				text: function () { return currentRentTypeCopy(t.step_text_rent_type_current, t.step_text_rent_type_fallback); }
-			},
-			{
-				selector: '[data-rbfw-tour="pricing"]',
-				tab: 'pricing',
-				title: t.step_title_pricing,
-				text: function () { return currentRentTypeReminder(t.step_text_pricing_current, t.step_text_pricing); }
 			},
 
 			/*
@@ -80,8 +90,13 @@
 			 * automatically.
 			 */
 			// Single Day + Appointment share the exact same wrapper markup
-			// (.rbfw_bike_car_sd_wrapper) in admin/settings/Pricing.php.
-			{ selector: '.rbfw_bike_car_sd_wrapper', tab: 'pricing', title: t.step_title_sd_pricing, text: t.step_text_sd_pricing },
+			// (.rbfw_bike_car_sd_wrapper) in admin/settings/Pricing.php — split
+			// into its own 2 real sub-parts rather than one combined step:
+			// the item-wise pricing table (RBFW_Pricing::bike_car_single_day())
+			// and the time-picker/slots toggle it shares with Multiple Day
+			// (the tail end of RBFW_Pricing::md_price_config()).
+			{ selector: '[data-rbfw-tour="sd-price-table"]', tab: 'pricing', title: t.step_title_sd_pricing, text: t.step_text_sd_pricing },
+			{ selector: '.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper', tab: 'pricing', title: t.step_title_sd_time_picker, text: t.step_text_sd_time_picker },
 			// Appointment adds two of its own cards on top of that shared
 			// session/time-slot pricing (RBFW_Pricing::appointment()).
 			{ selector: '.rbfw_switch_sd_appointment_row', tab: 'pricing', title: t.step_title_appt_max_qty, text: t.step_text_appt_max_qty },
@@ -104,7 +119,7 @@
 			{ selector: '[data-rbfw-tour="fee-management"]', tab: 'pricing', title: t.step_title_fees, text: t.step_text_fees },
 
 			// ── Off Days tab ─────────────────────────────────────────
-			{ selector: '.rbfw-me-panel[data-panel="offday"]', tab: 'offday', title: t.step_title_offday, text: t.step_text_offday },
+			{ selector: '[data-rbfw-tour="offday"]', tab: 'offday', title: t.step_title_offday, text: t.step_text_offday },
 
 			// ── Advanced tab ─────────────────────────────────────────
 			{ selector: '.rbfw-me-location-card', tab: 'advanced', title: t.step_title_location, text: t.step_text_location },
@@ -129,6 +144,7 @@
 			$spot = $('<div class="rbfw-tour-spot"></div>').appendTo('body');
 			$tooltip = $(
 				'<div class="rbfw-tour-tip" role="dialog" aria-live="polite">' +
+					'<div class="rbfw-tour-tip__arrow"></div>' +
 					'<div class="rbfw-tour-tip__step"></div>' +
 					'<h4 class="rbfw-tour-tip__title"></h4>' +
 					'<p class="rbfw-tour-tip__text"></p>' +
@@ -190,13 +206,6 @@
 			return desc ? (text + ' ' + desc) : text;
 		}
 
-		// Shorter variant for steps that just need to remind the admin which
-		// type they're in, without repeating the full description again.
-		function currentRentTypeReminder(template, fallback) {
-			var name = currentRentTypeName();
-			return name ? template.replace('%s', name) : fallback;
-		}
-
 		function position($target) {
 			var rect = $target[0].getBoundingClientRect();
 			var pad = 8;
@@ -210,12 +219,14 @@
 			var tipWidth = $tooltip.outerWidth();
 			var tipHeight = $tooltip.outerHeight();
 			var spaceBelow = window.innerHeight - rect.bottom;
-			var top;
+			var top, tipIsBelowTarget;
 
 			if (spaceBelow > tipHeight + 24 || spaceBelow > rect.top) {
 				top = rect.bottom + 16;
+				tipIsBelowTarget = true;
 			} else {
 				top = rect.top - tipHeight - 16;
+				tipIsBelowTarget = false;
 			}
 			top = Math.max(12, Math.min(top, window.innerHeight - tipHeight - 12));
 
@@ -223,6 +234,18 @@
 			left = Math.max(12, Math.min(left, window.innerWidth - tipWidth - 12));
 
 			$tooltip.css({ top: top + 'px', left: left + 'px' });
+
+			// Arrow: attaches to whichever edge faces the target (top edge,
+			// pointing up, when the tip sits below it; bottom edge, pointing
+			// down, when the tip sits above it) and slides along that edge to
+			// stay under the target's actual center even when the tip itself
+			// has been shifted sideways to stay on-screen.
+			var targetCenter = rect.left + (rect.width / 2);
+			var arrowLeft = Math.max(16, Math.min(targetCenter - left, tipWidth - 16));
+			$tooltip
+				.toggleClass('rbfw-tour-tip--arrow-top', tipIsBelowTarget)
+				.toggleClass('rbfw-tour-tip--arrow-bottom', !tipIsBelowTarget)
+				.find('.rbfw-tour-tip__arrow').css('left', arrowLeft + 'px');
 		}
 
 		function renderStep(index) {

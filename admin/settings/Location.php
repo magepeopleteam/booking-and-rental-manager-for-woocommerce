@@ -297,7 +297,8 @@
 					'rbfw-me-pickup-locations',
 					'rbfw_pickup_locations',
 					$locations,
-					$pickup_slugs
+					$pickup_slugs,
+					'location-alt'
 				);
 
 				self::render_modern_location_group(
@@ -308,7 +309,8 @@
 					'rbfw-me-dropoff-locations',
 					'rbfw_dropoff_locations',
 					$locations,
-					$dropoff_slugs
+					$dropoff_slugs,
+					'location'
 				);
 
 				self::render_modern_location_inventory( $post_id, $locations );
@@ -338,6 +340,7 @@
 				$enabled = ( 'no' !== get_post_meta( $post_id, 'rbfw_enable_delivery', true ) );
 				?>
 				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<span class="rbfw-me-field__icon dashicons dashicons-car" aria-hidden="true"></span>
 					<div class="rbfw-me-field__info">
 						<strong><?php esc_html_e( 'Allow Delivery & Collection', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
 						<span class="rbfw-me-field__desc">
@@ -362,6 +365,7 @@
 				$rows    = self::location_inventory_rows( $post_id );
 				?>
 				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<span class="rbfw-me-field__icon dashicons dashicons-tag" aria-hidden="true"></span>
 					<div class="rbfw-me-field__info">
 						<strong><?php esc_html_e( 'Location Inventory & Price', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
 						<span class="rbfw-me-field__desc"><?php esc_html_e( 'Customers choose a pick-up location first; each location has its own stock and price added to the booking total.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
@@ -423,10 +427,11 @@
 			 * separated value (of sanitize_title() values) that the modern AJAX
 			 * save reads.
 			 */
-			private static function render_modern_location_group( $title, $desc, $enable_name, $enabled, $reveal_class, $hidden_name, $locations, $selected_slugs ) {
+			private static function render_modern_location_group( $title, $desc, $enable_name, $enabled, $reveal_class, $hidden_name, $locations, $selected_slugs, $icon = 'location-alt' ) {
 				$csv = implode( ',', array_map( 'sanitize_title', (array) $selected_slugs ) );
 				?>
 				<div class="rbfw-me-field rbfw-me-field--toggle-row">
+					<span class="rbfw-me-field__icon dashicons dashicons-<?php echo esc_attr( $icon ); ?>" aria-hidden="true"></span>
 					<div class="rbfw-me-field__info">
 						<strong><?php echo esc_html( $title ); ?></strong>
 						<span class="rbfw-me-field__desc"><?php echo esc_html( $desc ); ?></span>

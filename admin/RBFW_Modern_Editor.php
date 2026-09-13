@@ -452,28 +452,34 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'skip'     => __( 'Skip tour', 'booking-and-rental-manager-for-woocommerce' ),
 					'finish'   => __( 'Finish', 'booking-and-rental-manager-for-woocommerce' ),
 
+					// Orientation
+					'step_title_general_tab'        => __( 'Start here: General', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_general_tab'         => __( 'This tab is where you name the item, write its description, pick rent types, and list its features.', 'booking-and-rental-manager-for-woocommerce' ),
+
 					// General tab
 					'step_title_name'               => __( 'Name your item', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_name'                => __( 'Start with a clear, descriptive title and subtitle — this is the first thing customers see.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_rent_item_type'     => __( 'Rent item type', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_rent_item_type'      => __( 'Assign one or more rent item types here — they work like categories, letting customers filter and browse items by type on the front end.', 'booking-and-rental-manager-for-woocommerce' ),
 
 					// Pricing tab
+					'step_title_pricing_tab'        => __( 'Pricing tab', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_pricing_tab'         => __( 'Every rate and pricing option for this item lives on this tab — what you see here changes based on the rent type you pick.', 'booking-and-rental-manager-for-woocommerce' ),
 					/* translators: %s: the rent type name, e.g. "Single day". */
 					'step_title_rent_type'          => __( 'Rent type', 'booking-and-rental-manager-for-woocommerce' ),
 					/* translators: %s: the rent type name, e.g. "Single day". */
 					'step_text_rent_type_current'   => __( "This item is set as: %s.", 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_rent_type_fallback'  => __( 'This is the single most important choice on this tab — it decides which pricing, availability, and booking fields apply to this item. Each rent type is built for a different kind of business: single-day time slots, multi-day date ranges, resort stays, appointments, or multi-item bundles.', 'booking-and-rental-manager-for-woocommerce' ),
-					/* translators: %s: the rent type name, e.g. "Single day". */
-					'step_text_pricing_current'     => __( "Since this item is a %s rental, the fields below are tailored to that: set the rates that actually apply here.", 'booking-and-rental-manager-for-woocommerce' ),
-					'step_title_pricing'            => __( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_pricing'             => __( 'Set hourly, daily, or other rates and pricing types depending on how this item is rented.', 'booking-and-rental-manager-for-woocommerce' ),
 
 					// Type-specific pricing cards — each rent type gets its own
 					// real, uniquely-targetable sub-cards (only the one matching
 					// the item's actual rbfw_item_type is ever visible; the rest
 					// render but stay hidden and are skipped automatically — see
 					// rbfw-editor-tour.js).
-					'step_title_sd_pricing'         => __( 'Time-slot pricing', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_sd_pricing'          => __( 'Set prices per time slot — morning, evening, hourly, or full-day. Used by both Single Day rentals and Appointments.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_sd_pricing'         => __( 'Rental pricing options', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_sd_pricing'          => __( 'Add each rental option here with its own name, price, and stock — the same table is used by both Single Day rentals and Appointments.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_title_sd_time_picker'     => __( 'Time slots', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_sd_time_picker'      => __( 'Turn this on to sell by specific time slots (e.g. 9:00–10:00) instead of a plain hourly or daily rate, and manage which slots are available.', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_appt_max_qty'       => __( 'Booking limit per slot', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_appt_max_qty'        => __( 'Set the maximum number of bookings allowed per session or time slot for this appointment.', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_appt_ondays'        => __( 'Appointment days', 'booking-and-rental-manager-for-woocommerce' ),

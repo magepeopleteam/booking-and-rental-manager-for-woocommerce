@@ -252,7 +252,7 @@
 			</div>
 
 			<!-- Off Day Settings -->
-			<div class="rbfw-me-card">
+			<div class="rbfw-me-card" data-rbfw-tour="offday">
 				<div class="rbfw-me-card__head">
 					<h2><?php esc_html_e( 'Off Day Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 					<p><?php esc_html_e( 'Select the days that are unavailable for booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>

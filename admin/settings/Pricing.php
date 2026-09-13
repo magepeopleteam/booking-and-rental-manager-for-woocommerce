@@ -219,7 +219,7 @@
                             </label>
                         </section>
                     </div>
-                    <section>
+                    <section data-rbfw-tour="sd-price-table">
                         <div class="w-100">
                             <div style="overflow-x: auto;">
                                 <table class='form-table rbfw_bike_car_sd_price_table'>

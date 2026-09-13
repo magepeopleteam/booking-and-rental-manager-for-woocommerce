@@ -224,6 +224,56 @@ if ( ! class_exists( 'RBFW_Onboarding' ) ) {
 					.rbfw-ob-actions { flex-direction: column-reverse; width: 100%; }
 					.rbfw-ob-btn { width: 100%; }
 				}
+				.rbfw-ob-review {
+					margin-top: 28px;
+					padding: 22px 26px;
+					background: #fafafa;
+					border: 1px solid #f1f1f4;
+					border-radius: 14px;
+					text-align: left;
+				}
+				.rbfw-ob-review-stars {
+					color: #f59e0b;
+					font-size: 13px;
+					letter-spacing: 2px;
+				}
+				.rbfw-ob-review-title {
+					margin: 0 0 6px;
+					font-size: 14.5px;
+					font-weight: 700;
+					color: #111827;
+					text-align: center;
+				}
+				.rbfw-ob-review-text {
+					margin: 0 0 14px;
+					font-size: 13px;
+					line-height: 1.6;
+					color: #4b5563;
+				}
+				.rbfw-ob-review-author {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 9px;
+				}
+				.rbfw-ob-review-avatar {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 28px;
+					height: 28px;
+					flex: 0 0 auto;
+					border-radius: 50%;
+					background: var(--rbfw_color_primary, #ff3726);
+					color: #fff;
+					font-size: 12px;
+					font-weight: 700;
+				}
+				.rbfw-ob-review-handle {
+					font-size: 12.5px;
+					font-weight: 600;
+					color: #6b7280;
+				}
 			</style>
 
 			<div class="rbfw-ob-screen">
@@ -283,6 +333,16 @@ if ( ! class_exists( 'RBFW_Onboarding' ) ) {
 						<a href="<?php echo esc_url( $setup_url ); ?>" class="rbfw-ob-btn rbfw-ob-btn--primary">
 							<?php esc_html_e( "Let's set up your first rental item", 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</a>
+					</div>
+
+					<div class="rbfw-ob-review">
+						<p class="rbfw-ob-review-title"><?php esc_html_e( 'Great Pluguin and Great smart people.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<p class="rbfw-ob-review-text">&ldquo;<?php esc_html_e( 'Mage People are smart good people and they have good pluguins that you can use in your website. They help me a lot in everything. I use 2 pluguins with them for the last 3 years and i am very happy. This plugin for rent is very amazing and i hope they improve betters thing in the future. Great price good people.', 'booking-and-rental-manager-for-woocommerce' ); ?>&rdquo;</p>
+						<div class="rbfw-ob-review-author">
+							<span class="rbfw-ob-review-avatar" aria-hidden="true">R</span>
+							<span class="rbfw-ob-review-handle">@ruedasmiami</span>
+							<span class="rbfw-ob-review-stars" aria-hidden="true">★★★★★</span>
+						</div>
 					</div>
 				</div>
 			</div>
