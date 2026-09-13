@@ -1456,6 +1456,9 @@
 				$st_live_sec = esc_attr( $this->opt( 'rbfw_stripe_live_sec' ) );
 				$off_enabled = $this->opt( 'rbfw_offline_enable' ) === 'on';
 				$off_label   = esc_attr( $this->opt( 'rbfw_offline_label', __( 'Offline Payment', 'booking-and-rental-manager-for-woocommerce' ) ) );
+				// Default ON — unlike the toggles above, an install that has never touched
+				// this setting should still offer self-service reconfirmation.
+				$off_reconfirm = $this->opt( 'rbfw_offline_reconfirm_enable', 'on' ) === 'on';
 				$nonce       = wp_create_nonce( 'rbfw_save_gateway' );
 				$is_pro      = $this->is_pro();
 				?>
@@ -1598,6 +1601,14 @@
 								<label class="rbfw-gw-label"><?php esc_html_e( 'Heading', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<input type="text" data-field="rbfw_offline_label" value="<?php echo $off_label; ?>" placeholder="<?php esc_attr_e( 'e.g. Pay on Pickup / Bank Transfer', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 								<p style="margin:8px 0 0;font-size:12px;color:#6b7280;"><?php esc_html_e( 'Shown above the payment choices on the frontend payment step.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+							</div>
+							<hr class="rbfw-gw-divider">
+							<div class="rbfw-gw-toggle-row">
+								<div>
+									<div class="rbfw-gw-toggle-label"><?php esc_html_e( 'Reconfirm Booking Button', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+									<div class="rbfw-gw-toggle-sub"><?php esc_html_e( 'On the booking confirmation page, let the customer confirm a pending offline booking themselves via an emailed OTP, instead of waiting for a call.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+								</div>
+								<label class="rbfw-gw-switch"><input type="checkbox" data-field="rbfw_offline_reconfirm_enable" <?php checked( $off_reconfirm ); ?>><span class="rbfw-gw-slider"></span></label>
 							</div>
 							<hr class="rbfw-gw-divider">
 							<?php $this->render_offline_methods(); ?>
@@ -1905,7 +1916,7 @@
 				$allowed = array(
 					'paypal'  => array( 'rbfw_paypal_enable', 'rbfw_paypal_sandbox', 'rbfw_paypal_client_id', 'rbfw_paypal_secret' ),
 					'stripe'  => array( 'rbfw_stripe_enable', 'rbfw_stripe_sandbox', 'rbfw_stripe_test_pub', 'rbfw_stripe_test_sec', 'rbfw_stripe_live_pub', 'rbfw_stripe_live_sec' ),
-					'offline' => array( 'rbfw_offline_enable', 'rbfw_offline_label' ),
+					'offline' => array( 'rbfw_offline_enable', 'rbfw_offline_label', 'rbfw_offline_reconfirm_enable' ),
 				);
 
 				if ( ! isset( $allowed[ $gateway ] ) ) {

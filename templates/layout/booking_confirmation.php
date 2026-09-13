@@ -34,6 +34,22 @@ if ( $booking_id ) {
 	}
 }
 
+// "Reconfirm Booking Yourself" — only offered while the booking is genuinely still
+// pending, the feature is on (Payments -> Custom Payment -> Offline Payment, default on),
+// and there's an email on file to send the code to.
+$rbfw_show_reconfirm = false;
+$rbfw_reconfirm_nonce = '';
+if ( $booking_id
+	&& class_exists( 'RBFW_Booking_Normalizer' )
+	&& 'pending' === RBFW_Booking_Normalizer::normalize_status( $rbfw_real_status )
+	&& class_exists( 'RBFW_Function' ) && RBFW_Function::offline_reconfirm_enabled()
+	&& class_exists( 'RBFW_Booking_Reconfirm' )
+	&& get_post_meta( $booking_id, 'rbfw_customer_email', true )
+) {
+	$rbfw_show_reconfirm  = true;
+	$rbfw_reconfirm_nonce = wp_create_nonce( RBFW_Booking_Reconfirm::nonce_action( $booking_id ) );
+}
+
 switch ( $status ) {
 	case 'success':
 		$title = esc_html__( 'Booking confirmed', 'booking-and-rental-manager-for-woocommerce' );
@@ -157,6 +173,21 @@ if ( $booking_id ) {
 	.rbfw-bc__btn--primary:hover{background:var(--rbfw-bc-primary-dark);color:#fff;transform:translateY(-1px);}
 	.rbfw-bc__btn--ghost{background:transparent;border:1px solid var(--rbfw-bc-border);color:var(--rbfw-bc-fg);}
 	.rbfw-bc__btn--ghost:hover{border-color:var(--rbfw-bc-primary);color:var(--rbfw-bc-primary);}
+	.rbfw-bc__btn:disabled{opacity:.6;cursor:default;transform:none !important;}
+	/* Reconfirm-yourself panel */
+	.rbfw-bc__reconfirm{margin:0 0 22px;padding:18px 20px;border:1px dashed var(--rbfw-bc-border);border-radius:calc(var(--rbfw-bc-radius) - 4px);text-align:left;background:#fffdf7;}
+	.rbfw-bc__reconfirm-text{margin:0 0 12px;font-size:13px;line-height:1.6;color:var(--rbfw-bc-muted);}
+	.rbfw-bc__reconfirm-text strong{color:var(--rbfw-bc-fg);}
+	.rbfw-bc__reconfirm-otp{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--rbfw-bc-border);}
+	.rbfw-bc__reconfirm.is-open .rbfw-bc__reconfirm-otp{display:block;}
+	.rbfw-bc__reconfirm.is-open .rbfw-bc__reconfirm-start{display:none;}
+	.rbfw-bc__reconfirm-row{display:flex;gap:8px;flex-wrap:wrap;}
+	.rbfw-bc__reconfirm-input{flex:1;min-width:140px;padding:.7rem .9rem;border:1px solid var(--rbfw-bc-border);border-radius:8px;font-size:16px;letter-spacing:.35em;text-align:center;font-weight:700;box-sizing:border-box;}
+	.rbfw-bc__reconfirm-msg{margin:10px 0 0;font-size:12.5px;line-height:1.5;min-height:1.2em;}
+	.rbfw-bc__reconfirm-msg.error{color:#dc2626;}
+	.rbfw-bc__reconfirm-msg.success{color:var(--rbfw-bc-primary-dark);font-weight:600;}
+	.rbfw-bc__reconfirm-resend{display:inline-block;margin-top:10px;font-size:12px;color:var(--rbfw-bc-muted);text-decoration:underline;cursor:pointer;background:none;border:0;padding:0;}
+	.rbfw-bc__reconfirm-resend:disabled{cursor:default;text-decoration:none;opacity:.6;}
 	@media (max-width:480px){.rbfw-bc{padding:26px 18px 22px;}.rbfw-bc__details{padding:2px 14px;}}
 </style>
 <div class="rbfw-bc <?php echo esc_attr( $class ); ?>" role="status">
@@ -189,6 +220,119 @@ if ( $booking_id ) {
 				</div>
 			<?php endforeach; ?>
 		</div>
+	<?php endif; ?>
+
+	<?php if ( $rbfw_show_reconfirm ) : ?>
+		<div class="rbfw-bc__reconfirm" data-rbfw-reconfirm data-booking-id="<?php echo esc_attr( $booking_id ); ?>" data-nonce="<?php echo esc_attr( $rbfw_reconfirm_nonce ); ?>">
+			<p class="rbfw-bc__reconfirm-text">
+				<?php
+				echo wp_kses(
+					__( '<strong>Don\'t want to wait for a call?</strong> If you confirm this booking yourself, no one will call you to confirm it — it will be confirmed as your booking right away.', 'booking-and-rental-manager-for-woocommerce' ),
+					array( 'strong' => array() )
+				);
+				?>
+			</p>
+
+			<div class="rbfw-bc__reconfirm-start">
+				<button type="button" class="rbfw-bc__btn rbfw-bc__btn--primary" data-rbfw-reconfirm-send>
+					<?php esc_html_e( 'Reconfirm Booking Yourself', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+			</div>
+
+			<div class="rbfw-bc__reconfirm-otp">
+				<p class="rbfw-bc__reconfirm-text">
+					<?php esc_html_e( "We've emailed a 6-digit code to your address on file. Enter it below to confirm your booking yourself.", 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</p>
+				<div class="rbfw-bc__reconfirm-row">
+					<input type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" class="rbfw-bc__reconfirm-input" data-rbfw-reconfirm-otp-input>
+					<button type="button" class="rbfw-bc__btn rbfw-bc__btn--primary" data-rbfw-reconfirm-verify>
+						<?php esc_html_e( 'Confirm Booking', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+				</div>
+				<button type="button" class="rbfw-bc__reconfirm-resend" data-rbfw-reconfirm-resend>
+					<?php esc_html_e( "Didn't get a code? Resend", 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+			</div>
+
+			<p class="rbfw-bc__reconfirm-msg" data-rbfw-reconfirm-msg aria-live="polite"></p>
+		</div>
+		<script>
+		(function () {
+			// The panel this script tag immediately follows — not a page-wide lookup, so
+			// this still targets the right instance if this template is ever included
+			// more than once on a page.
+			var panel = document.currentScript.previousElementSibling;
+			if ( ! panel ) { return; }
+			var msg     = panel.querySelector('[data-rbfw-reconfirm-msg]');
+			var sendBtn = panel.querySelector('[data-rbfw-reconfirm-send]');
+			var verifyBtn = panel.querySelector('[data-rbfw-reconfirm-verify]');
+			var resendBtn = panel.querySelector('[data-rbfw-reconfirm-resend]');
+			var otpInput  = panel.querySelector('[data-rbfw-reconfirm-otp-input]');
+			var bookingId = panel.getAttribute('data-booking-id');
+			var nonce     = panel.getAttribute('data-nonce');
+			var ajaxUrl   = ( typeof rbfw_ajax_url !== 'undefined' && rbfw_ajax_url ) ? rbfw_ajax_url : ( typeof rbfw_ajax_front !== 'undefined' ? rbfw_ajax_front.rbfw_ajaxurl : '/wp-admin/admin-ajax.php' );
+
+			function setMsg( text, type ) {
+				msg.textContent = text || '';
+				msg.className = 'rbfw-bc__reconfirm-msg' + ( type ? ' ' + type : '' );
+			}
+
+			function post( action, extra, done ) {
+				var data = new URLSearchParams();
+				data.set( 'action', action );
+				data.set( 'booking_id', bookingId );
+				data.set( 'nonce', nonce );
+				for ( var k in extra ) { data.set( k, extra[ k ] ); }
+				fetch( ajaxUrl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data.toString() } )
+					.then( function ( r ) { return r.json(); } )
+					.then( done )
+					.catch( function () { done( { success: false, data: { message: '<?php echo esc_js( __( 'Network error. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>' } } ); } );
+			}
+
+			function sendOtp( isResend ) {
+				var btn = isResend ? resendBtn : sendBtn;
+				btn.disabled = true;
+				setMsg( '<?php echo esc_js( __( 'Sending…', 'booking-and-rental-manager-for-woocommerce' ) ); ?>' );
+				post( 'rbfw_reconfirm_send_otp', {}, function ( res ) {
+					btn.disabled = false;
+					if ( res && res.success ) {
+						panel.classList.add( 'is-open' );
+						setMsg( ( res.data && res.data.message ) || '', 'success' );
+						otpInput.value = '';
+						otpInput.focus();
+					} else {
+						setMsg( ( res && res.data && res.data.message ) || '<?php echo esc_js( __( 'Something went wrong. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>', 'error' );
+					}
+				} );
+			}
+
+			sendBtn.addEventListener( 'click', function () { sendOtp( false ); } );
+			resendBtn.addEventListener( 'click', function () { sendOtp( true ); } );
+
+			verifyBtn.addEventListener( 'click', function () {
+				var otp = ( otpInput.value || '' ).replace( /\D/g, '' );
+				if ( otp.length !== 6 ) {
+					setMsg( '<?php echo esc_js( __( 'Please enter the 6-digit code from your email.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>', 'error' );
+					return;
+				}
+				verifyBtn.disabled = true;
+				setMsg( '<?php echo esc_js( __( 'Confirming…', 'booking-and-rental-manager-for-woocommerce' ) ); ?>' );
+				post( 'rbfw_reconfirm_verify_otp', { otp: otp }, function ( res ) {
+					if ( res && res.success ) {
+						setMsg( ( res.data && res.data.message ) || '', 'success' );
+						setTimeout( function () { window.location.reload(); }, 1200 );
+					} else {
+						verifyBtn.disabled = false;
+						setMsg( ( res && res.data && res.data.message ) || '<?php echo esc_js( __( 'Something went wrong. Please try again.', 'booking-and-rental-manager-for-woocommerce' ) ); ?>', 'error' );
+					}
+				} );
+			} );
+
+			otpInput.addEventListener( 'keydown', function ( e ) {
+				if ( e.key === 'Enter' ) { e.preventDefault(); verifyBtn.click(); }
+			} );
+		})();
+		</script>
 	<?php endif; ?>
 
 	<div class="rbfw-bc__actions">

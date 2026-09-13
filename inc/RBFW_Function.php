@@ -519,6 +519,17 @@
 			}
 
 			/**
+			 * Whether a customer can reconfirm their own pending offline booking from the
+			 * confirmation page (an emailed OTP, instead of waiting for a call). Default ON
+			 * — an install that has never touched this setting should still offer it.
+			 * Payments → Custom Payment → Offline Payment → "Reconfirm Booking Button"
+			 * (rbfw_payment_settings[rbfw_offline_reconfirm_enable]).
+			 */
+			public static function offline_reconfirm_enabled(): bool {
+				return self::get_settings( 'rbfw_offline_reconfirm_enable', 'rbfw_payment_settings', 'on' ) !== 'off';
+			}
+
+			/**
 			 * Whether a customer must be logged in to place / view a booking.
 			 *
 			 * Scoped to the standalone (custom payment) flow: in WooCommerce mode,

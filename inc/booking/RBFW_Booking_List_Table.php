@@ -263,7 +263,14 @@ if ( ! class_exists( 'RBFW_Booking_List_Table' ) ) {
 				</td>
 				<td><?php echo esc_html( $row['item_name'] ); ?></td>
 				<td><strong><?php echo wp_kses_post( $row['total'] ); ?></strong></td>
-				<td><span class="rbfwfb-status <?php echo esc_attr( $row['status_class'] ); ?>"><?php echo esc_html( $row['status_label'] ); ?></span></td>
+				<td>
+					<span class="rbfwfb-status <?php echo esc_attr( $row['status_class'] ); ?>"><?php echo esc_html( $row['status_label'] ); ?></span>
+					<?php if ( ! $is_woo && 'customer_otp' === get_post_meta( $row['id'], 'rbfw_confirmed_by', true ) ) : ?>
+						<br><small class="rbfwfb-sub" title="<?php esc_attr_e( 'The customer confirmed this booking themselves via an emailed one-time code — no staff action was taken.', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+							<span class="dashicons dashicons-email-alt"></span> <?php esc_html_e( 'via OTP', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</small>
+					<?php endif; ?>
+				</td>
 				<td><?php echo esc_html( $row['date'] ); ?></td>
 				<td class="rbfwfb-col-actions">
 					<span class="rbfwfb-locked-action" title="<?php esc_attr_e( 'Available in PRO', 'booking-and-rental-manager-for-woocommerce' ); ?>">
