@@ -10107,7 +10107,6 @@ i.fas.fa-minus {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    border: 1px solid #E2E8F0;
     border-radius: 8px;
     overflow: hidden;
     margin-bottom: 14px;
@@ -10194,6 +10193,31 @@ i.fas.fa-minus {
     border: 1px solid #e2e8f0;
     border-radius: 4px;
     padding: 0;
+}
+
+/* Price column — was plain inherited gray text; matched to the same
+   weight/color as the type title so all three columns read at the same
+   level instead of the price looking like secondary/muted content. */
+.mp_right_section table.rbfw_bikecarsd_price_table tbody td .woocommerce-Price-amount {
+    font-weight: 600;
+    color: #111827;
+    font-size: 13px;
+}
+
+/* Enable/Disable column (Optional Add-ons table): the switch's wrapper
+   was a bare `float: right` (rbfw_style.css line ~1888) — floats don't
+   vertically center against the cell's own padding, so the toggle could
+   sit slightly off from the row's text baseline, and the switch's own
+   `margin-right: 10px` (meant for when a stepper sits beside it) left an
+   uneven gap on this switch-only column. Flexed and centered instead. */
+.mp_right_section .rbfw_service_price_wrap {
+    float: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.mp_right_section .rbfw_service_price_wrap .switch {
+    margin-right: 0 !important;
 }
 
 /* ---- Booking Summary / Costing box ---- */
@@ -11583,26 +11607,46 @@ i.fas.fa-minus {
     line-height: 1.4;
 }
 
-/* --- Trust badges grid --- */
+/* --- Trust badges list ---
+   Was a bare 2-col grid of plain gray icon+text pairs, sitting flush under
+   the price row with nothing to separate the two and a 3rd item left
+   dangling alone under column 1. Redesigned with a divider to break it
+   from the price box above and a small green icon badge — reusing the
+   same green as the "Available Today" badge above (line ~11496) so these
+   read as the same "you're covered" signal instead of a different gray
+   one. Down to 2 items now ("Free cancellation" removed from the markup
+   in each *-registration.php template), so they sit on one line instead
+   of stacking. */
 .mp_right_section .rbfw-sd-trust-grid,
 .rbfw_muff_registration_wrapper .rbfw-sd-trust-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 12px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 18px;
+    padding-top: 14px;
+    border-top: 1px solid #eef0f3;
 }
 .mp_right_section .rbfw-sd-trust-item,
 .rbfw_muff_registration_wrapper .rbfw-sd-trust-item {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
     font-size: 13px;
     color: #374151;
     font-weight: 500;
 }
 .mp_right_section .rbfw-sd-trust-item i,
 .rbfw_muff_registration_wrapper .rbfw-sd-trust-item i {
-    font-size: 14px;
-    color: #6b7280;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 11px;
     flex-shrink: 0;
 }
 /* ======================================================

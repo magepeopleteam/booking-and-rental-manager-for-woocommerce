@@ -187,10 +187,6 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                     <i class="fas fa-lock"></i>
                     <span><?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                 </div>
-                <div class="rbfw-sd-trust-item">
-                    <i class="far fa-calendar-times"></i>
-                    <span><?php esc_html_e( 'Free cancellation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                </div>
             </div>
         </div>
 
