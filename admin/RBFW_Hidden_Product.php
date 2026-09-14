@@ -12,6 +12,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
             // Standalone mode that later switched to WooCommerce mode).
             add_action('admin_init', array($this, 'maybe_backfill_hidden_products'));
             add_action('admin_init', array($this, 'maybe_backfill_product_tax'));
+            add_action('admin_init', array($this, 'maybe_repair_default_product_tax'));
             // Drop dangling links the moment a backing product is permanently deleted, so
             // the item is detected as needing repair instead of pointing at a gone id.
             add_action('before_delete_post', array($this, 'unlink_deleted_hidden_product'));
@@ -245,6 +246,55 @@ if (!class_exists('RBFW_Hidden_Product')) {
             return $fixed;
         }
 
+        /**
+         * One-time repair for rentals the 2.7.5 tax mirror silently made non-taxable.
+         *
+         * That release resolved an item with no explicit Tax Status to "none" and stamped it
+         * on the backing product. Since the modern editor's Tax card is off by default, the
+         * next save of any never-configured item switched its tax off at checkout — the
+         * product had previously carried no _tax_status at all, which WooCommerce reads as
+         * its default, "taxable".
+         *
+         * Only products currently sitting at "none" are re-resolved, and only the unconfigured
+         * ones change: an item explicitly set to Tax Status = None still resolves to "none"
+         * and is written back unchanged, so a deliberate choice is never overturned.
+         *
+         * @return int Products corrected.
+         */
+        public function maybe_repair_default_product_tax() {
+            if (get_option('rbfw_product_tax_default_repair_done')) {
+                return 0;
+            }
+            if (!function_exists('rbfw_booking_mode') || rbfw_booking_mode() !== 'woocommerce') {
+                return 0; // Standalone has no backing products; retry after a mode switch.
+            }
+
+            global $wpdb;
+            $pairs = $wpdb->get_results(
+                "SELECT p.ID AS item_id, link.meta_value AS product_id
+                   FROM {$wpdb->posts} p
+                   INNER JOIN {$wpdb->postmeta} link ON link.post_id = p.ID AND link.meta_key = 'link_wc_product'
+                   INNER JOIN {$wpdb->postmeta} ptax ON ptax.post_id = link.meta_value AND ptax.meta_key = '_tax_status'
+                  WHERE p.post_type = 'rbfw_item'
+                    AND p.post_status <> 'trash'
+                    AND ptax.meta_value = 'none'"
+            );
+
+            $fixed = 0;
+            foreach ((array) $pairs as $pair) {
+                $product_id = (int) $pair->product_id;
+                if (!$product_id || get_post_type($product_id) !== 'product') {
+                    continue;
+                }
+                $this->sync_tax_to_product((int) $pair->item_id, $product_id);
+                $fixed++;
+            }
+
+            update_option('rbfw_product_tax_default_repair_done', 1);
+
+            return $fixed;
+        }
+
         /** Items repaired per admin request, so a large backlog never stalls a page load. */
         const REPAIR_BATCH = 25;
 
@@ -462,41 +512,9 @@ if (!class_exists('RBFW_Hidden_Product')) {
          * @return array{status:string,class:string}
          */
         private function resolve_item_tax($item_id) {
-            $status = (string) get_post_meta($item_id, '_tax_status', true);
-            $class  = (string) get_post_meta($item_id, '_tax_class', true);
-
-            /*
-             * The modern editor keeps the tax fields behind an "Enable tax settings" toggle.
-             * A collapsed section still posts its selects, so an item switched back to off
-             * would otherwise stay taxable on the strength of leftover values.
-             */
-            if ('no' === get_post_meta($item_id, 'rbfw_enable_tax_settings', true)) {
-                return array('status' => 'none', 'class' => '');
-            }
-
-            // Unset, or the "Select Tax Status" placeholder option.
-            if ( ! in_array($status, array('taxable', 'shipping', 'none'), true)) {
-                $status = 'none';
-            }
-
-            if ('none' === $status) {
-                return array('status' => 'none', 'class' => '');
-            }
-
-            /*
-             * WooCommerce's Standard class IS the empty string — its own product screen posts
-             * value="" for it. The rental tax tab offers value="standard" instead, and storing
-             * that verbatim made WC_Tax look up a class slug that no rate row carries, so a
-             * "taxable / Standard" rental still came out with zero tax.
-             */
-            if ('standard' === $class) {
-                $class = '';
-            }
-            if ('' !== $class && class_exists('WC_Tax') && ! in_array($class, WC_Tax::get_tax_class_slugs(), true)) {
-                $class = '';
-            }
-
-            return array('status' => $status, 'class' => $class);
+            /* One definition, shared with the booking summary (rbfw_item_tax_info), so the
+               quoted figure and the charged figure can never drift apart. */
+            return rbfw_resolve_item_tax($item_id);
         }
 
         /**

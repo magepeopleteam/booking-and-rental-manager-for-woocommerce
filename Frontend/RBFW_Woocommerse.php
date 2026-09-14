@@ -979,25 +979,31 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
                 $rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
 
-                // Single-day item variations: the base rental is charged ONCE. Each
-                // selected value only adds its own price (surcharge, computed below) and
-                // reserves per-value stock (from rbfw_variation_info, independent of this
-                // quantity). So the duration rate must never be multiplied by the variation
-                // total — force the base quantity to 1 whenever a value is selected. Done
-                // server-side too (not just in JS) so the cart price is authoritative.
+                /* Single-day item variations: the per-value steppers REPLACE the standalone
+                   Quantity selector (the booking script hides it while they are on screen),
+                   so the SUM of the selected quantities is how many units are being rented.
+                   Derive the base quantity from them here, server-side, so the cart price is
+                   authoritative and cannot be lowered — or raised — by the browser.
+
+                   2.7.4 forced this to 1 ("charge the base rate once"): renting two bikes then
+                   cost the same as renting one, and the item-level timely stock was only
+                   decremented by a single unit, so the remaining units stayed bookable. The
+                   per-value surcharge is still added separately below, and per-value stock is
+                   still enforced from rbfw_variation_info, so neither is double counted. */
                 if ( get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes'
                     && isset( $sd_input_data_sabitized['rbfw_variation_qty'] )
                     && is_array( $sd_input_data_sabitized['rbfw_variation_qty'] ) ) {
+                    $rbfw_variation_total_qty = 0;
                     foreach ( $sd_input_data_sabitized['rbfw_variation_qty'] as $rbfw_vq_values ) {
                         if ( ! is_array( $rbfw_vq_values ) ) {
                             continue;
                         }
                         foreach ( $rbfw_vq_values as $rbfw_vq ) {
-                            if ( (int) $rbfw_vq > 0 ) {
-                                $rbfw_item_quantity = 1;
-                                break 2;
-                            }
+                            $rbfw_variation_total_qty += max( 0, (int) $rbfw_vq );
                         }
+                    }
+                    if ( $rbfw_variation_total_qty > 0 ) {
+                        $rbfw_item_quantity = $rbfw_variation_total_qty;
                     }
                 }
 

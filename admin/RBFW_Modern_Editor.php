@@ -949,12 +949,22 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				update_post_meta( $post_id, 'rbfw_releted_rbfw', $related );
 			}
 
-			/* Tax */
-			if ( isset( $_POST['_tax_status'] ) ) {
-				update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
-			}
-			if ( isset( $_POST['_tax_class'] ) ) {
-				update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+			/* Tax.
+			   With the Tax Settings card switched off the item carries no tax choice at all:
+			   the collapsed section still posts its selects, so the stored values are dropped
+			   rather than kept as invisible leftovers. The item then follows WooCommerce's own
+			   default (taxable) — to charge no tax, switch the card on and pick Tax Status =
+			   None. */
+			if ( 'yes' === $tax_settings_enable ) {
+				if ( isset( $_POST['_tax_status'] ) ) {
+					update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
+				}
+				if ( isset( $_POST['_tax_class'] ) ) {
+					update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+				}
+			} else {
+				delete_post_meta( $post_id, '_tax_status' );
+				delete_post_meta( $post_id, '_tax_class' );
 			}
 
 			/* Off Day Settings */
