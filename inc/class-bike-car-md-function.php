@@ -26,6 +26,41 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             add_action('wp_ajax_rbfw_day_wise_sold_out_check', array($this, 'rbfw_day_wise_sold_out_check'));
             add_action('wp_ajax_nopriv_rbfw_day_wise_sold_out_check', array($this,'rbfw_day_wise_sold_out_check'));
+
+            add_action('wp_ajax_rbfw_md_time_availability', array($this, 'rbfw_md_time_availability'));
+            add_action('wp_ajax_nopriv_rbfw_md_time_availability', array($this,'rbfw_md_time_availability'));
+        }
+
+        /**
+         * AJAX: which pickup / return time options of a timed multi-day item are still free.
+         *
+         * The time dropdowns were drawn from the configured times alone, so an hour someone
+         * had already rented (09:00-10:00) stayed selectable. Each option is evaluated with
+         * the add-to-cart gate's own counter (rbfw_md_time_options_availability()), so what
+         * the dropdown offers is what the gate accepts.
+         */
+        public function rbfw_md_time_availability() {
+            check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
+
+            // A valid nonce is not authorisation: verify the caller may read this item.
+            $post_id     = rbfw_ajax_item_id( 'post_id' );
+            $date        = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
+            $pickup_date = isset( $_POST['pickup_date'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_date'] ) ) : '';
+            $pickup_time = isset( $_POST['pickup_time'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_time'] ) ) : '';
+            $times       = ( isset( $_POST['times'] ) && is_array( $_POST['times'] ) )
+                ? array_slice( array_map( 'sanitize_text_field', wp_unslash( $_POST['times'] ) ), 0, 200 )
+                : array();
+
+            $is_ymd = static function ( $value ) {
+                return (bool) preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value );
+            };
+            if ( ! $is_ymd( $date ) || empty( $times ) || ( '' !== $pickup_date && ! $is_ymd( $pickup_date ) ) ) {
+                wp_send_json_success( array( 'avail' => array() ) );
+            }
+
+            wp_send_json_success( array(
+                'avail' => rbfw_md_time_options_availability( $post_id, $date, $times, $pickup_date, $pickup_time ),
+            ) );
         }
 
 

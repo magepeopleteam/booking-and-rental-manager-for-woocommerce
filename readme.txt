@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.7
+Stable tag: 2.7.8
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -165,6 +165,11 @@ Appsero does not collect data by default. Data collection starts only after user
 Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+2.7.8
+Fixed multi-day rentals booked with pickup and return times being double-booked. With "Inventory Management by Return Date" off, every booking was released a day early so its return day could be rented again — right for date-only rentals, wrong once times are involved. A one-night rental handed back earlier in the day than it was collected (10:00 to 09:00 the next morning) ended up finishing before it started and reserved nothing at all, and a longer rental freed its final day while the item was still out, so a second customer could book the same unit and the remaining stock went negative. Bookings made with times are now held until their real return time, which already leaves the rest of the return day bookable. Date-only rentals, buffer time and "Inventory Management by Return Date" behave exactly as before.
+Fixed a date-only booking releasing its last day at midnight, so a booking carrying times could still be taken on a day the item was out. This shows up on items that are booked both ways, because opening an item from the search results hides the time picker.
+Pickup Time and Return Time now show which times are already taken on multi-day items. Both dropdowns are checked against existing bookings using the same rules that validate the booking itself, so an hour that is already rented cannot be selected — while an item returned at 10:00 can still be picked up again at 10:30 the same morning.
+Fixed the return-date calendar greying out a whole day on time-based items after changing month, when only part of that day was actually booked.
 2.7.7
 Shared inventory added for Multiple Items rentals. Each item row in a Multiple Items package can now be linked to an existing rental item instead of carrying its own private stock counter, the same way a WooCommerce Product Bundle draws on its component's stock — except that the pool is also scoped to the selected rental date and time. Booking two units through the package immediately reduces what the individual rental has left for that window, and booking them individually reduces what the package can offer, in both directions and across every package that draws on the same item. The row's Qty stays meaningful as the maximum this package may offer. Rows left on their own inventory behave exactly as before, and the whole feature can be switched off under Settings, General.
 Fixed Standalone Multiple Items bookings not decrementing their sub-item inventory because the saved service lines were empty.

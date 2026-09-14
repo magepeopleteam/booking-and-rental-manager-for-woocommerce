@@ -310,7 +310,12 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
             return rbfw_enhanced_dropoff_beforeShowDay(date);
         },
         onChangeMonthYear: function (year, month) {
-            loadDisabledDates(post_id, year, month);
+            // Same rule as the pickup calendar: timed items are gated per time option
+            // (rbfwMdDisableBookedTimes), not per day — a one-hour booking must not
+            // grey out the whole return day.
+            if (jQuery('#rbfw_enable_time_slot').val() !== 'yes') {
+                loadDisabledDates(post_id, year, month);
+            }
         },
     });
 });
@@ -2188,6 +2193,98 @@ function loadDisabledDates(post_id, year, month) {
         }
     });
 }
+
+/**
+ * Timed multi-day items: disable the pickup / return time options an existing
+ * booking already holds, so 09:00-10:00 can't be picked once that hour is rented
+ * out. The server checks each option with the add-to-cart gate's own overlap
+ * counter (action rbfw_md_time_availability), so the dropdown and the gate agree.
+ *
+ * Only options disabled here carry .rbfw-md-booked-time, so a time another rule
+ * disabled (past time, return before pickup) is never re-enabled by this.
+ *
+ * @param {jQuery} $select The <select> getAvailableTimes() just filled.
+ * @param {string} date    Y-m-d of those options.
+ * @param {string} fieldId 'pickup_time' or 'dropoff_time'.
+ * @param {string} mode    getAvailableTimes()'s is_calendar argument.
+ */
+function rbfwMdDisableBookedTimes($select, date, fieldId, mode) {
+    if (mode === 'calendar' || !$select.length || !date) {
+        return;
+    }
+    if (jQuery('#rbfw_rent_type').val() !== 'bike_car_md' || jQuery('#rbfw_enable_time_slot').val() !== 'yes') {
+        return;
+    }
+    if (typeof rbfw_ajax_front === 'undefined' || !rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation) {
+        return;
+    }
+
+    var data = {
+        action: 'rbfw_md_time_availability',
+        nonce: rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation,
+        post_id: jQuery('#rbfw_post_id').val(),
+        selected_date: date,
+        times: []
+    };
+    if (fieldId === 'dropoff_time') {
+        // A return time is only free relative to the chosen pickup.
+        data.pickup_date = rbfwGetMdHiddenPickupDate();
+        data.pickup_time = jQuery('#pickup_time').val() || '';
+        if (!data.pickup_date || !data.pickup_time) {
+            return;
+        }
+    } else if (fieldId !== 'pickup_time') {
+        return;
+    }
+
+    $select.find('option').each(function () {
+        var t = jQuery(this).val();
+        if (t) {
+            data.times.push(t);
+        }
+    });
+    if (!data.times.length) {
+        return;
+    }
+
+    // Only the latest request for this select may apply its answer.
+    var seq = (parseInt($select.data('rbfwMdSeq'), 10) || 0) + 1;
+    $select.data('rbfwMdSeq', seq);
+
+    jQuery.post(rbfw_ajax_front.rbfw_ajaxurl, data, function (resp) {
+        if ($select.data('rbfwMdSeq') !== seq || !resp || !resp.success || !resp.data || !resp.data.avail) {
+            return;
+        }
+        var avail = resp.data.avail;
+        var bookedLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.sold_out) ? rbfw_translation.sold_out : 'Sold Out';
+        $select.find('option').each(function () {
+            var $opt = jQuery(this);
+            var t = $opt.val();
+            if (!t || !Object.prototype.hasOwnProperty.call(avail, t)) {
+                return;
+            }
+            if (avail[t] === false) {
+                if (!$opt.prop('disabled')) {
+                    $opt.prop('disabled', true).addClass('rbfw-md-booked-time').attr('title', bookedLabel);
+                }
+            } else if ($opt.hasClass('rbfw-md-booked-time')) {
+                $opt.prop('disabled', false).removeClass('rbfw-md-booked-time').attr('title', '');
+            }
+        });
+        // A time that has just become unavailable can't stay selected.
+        if ($select.find('option:selected').hasClass('rbfw-md-booked-time')) {
+            $select.val('').trigger('change');
+        }
+    }, 'json');
+}
+
+// The free return times depend on the pickup, so re-check them when it changes.
+jQuery(document).on('change', '#pickup_time', function () {
+    var dropoffDate = rbfwGetMdHiddenDropoffDate();
+    if (dropoffDate) {
+        rbfwMdDisableBookedTimes(jQuery('#dropoff_time'), dropoffDate, 'dropoff_time');
+    }
+});
 
 /**
  * Auto-select the next available pickup date for the multiple_items form.

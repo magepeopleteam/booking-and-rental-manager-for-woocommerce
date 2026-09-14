@@ -685,6 +685,11 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
     // and disable them so customers cannot select an unavailable slot.
     rbfwDisableSoldOutTimes( jQuery( timeSelect ), givenDate, is_calendar );
 
+    // Timed multi-day items: grey out the times an existing booking already holds.
+    if ( typeof rbfwMdDisableBookedTimes === 'function' ) {
+        rbfwMdDisableBookedTimes( jQuery( timeSelect ), givenDate, pickup_time_particular, is_calendar );
+    }
+
 }
 
 /**

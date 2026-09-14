@@ -360,7 +360,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                         $inventory_end_date = $datetime->format('Y-m-d');
                         $inventory_end_time = $datetime->format('H:i');
                     } else {
-                        if ($stock_manage_on_return_date == 'no') {
+                        /* Timed bookings keep their real return time (see rbfw_md_entry_is_timed()). */
+                        if ($stock_manage_on_return_date == 'no' && ! rbfw_md_entry_is_timed($post_id, $inventory_start_time, $inventory_end_time)) {
                             $date = new DateTime($inventory_end_date);
                             $date->modify('-1 day');
                             $adjusted_end_date = $date->format('Y-m-d');
@@ -369,6 +370,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                                inverted range which overlaps nothing, so the unit reads as
                                free on the very day it is rented out. Clamp to the start. */
                             $inventory_end_date = ($adjusted_end_date < $inventory_start_date) ? $inventory_start_date : $adjusted_end_date;
+                        }
+                        if (rbfw_md_entry_holds_whole_days($post_id, $inventory_start_time, $inventory_end_time)) {
+                            $inventory_end_time = '23:59';
                         }
                     }
 
@@ -3377,7 +3381,8 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 			} catch ( Exception $e ) {
 				continue;
 			}
-		} elseif ( 'no' === $stock_manage_on_return_date ) {
+		} elseif ( 'no' === $stock_manage_on_return_date && ! rbfw_md_entry_is_timed( $post_id, $inv_start_time, $inv_end_time ) ) {
+			// Date-only bookings free the return date; timed ones hold until their return time.
 			try {
 				$dt = new DateTime( $inv_end_date );
 				$dt->modify( '-1 day' );
@@ -3390,6 +3395,9 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 			} catch ( Exception $e ) {
 				continue;
 			}
+		}
+		if ( ! $buffer_after && rbfw_md_entry_holds_whole_days( $post_id, $inv_start_time, $inv_end_time ) ) {
+			$inv_end_time = '23:59';
 		}
 
 		try {
@@ -3416,6 +3424,153 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 	}
 
 	return $total_booked + $shared_booked;
+}
+
+/**
+ * Whether a stored multi-day booking was made with real pickup and return times.
+ *
+ * With "Inventory Management by Return Date" off, a booking is ended one day early so the
+ * return date can be rented again. That only fits DATE-ONLY rentals, whose return day is a
+ * whole day. A timed booking has to be held until its real return time: pulling it back a
+ * day cut its last day short (a second customer could book the bike while it was still
+ * out, and stock went negative), and on a one-night rental handed back earlier in the day
+ * than it was collected (16th 10:00 -> 17th 09:00) the end landed before the start, so the
+ * booking blocked nothing at all. The real end already frees the rest of the return day.
+ *
+ * Keyed on the item's time picker, and midnight-to-midnight counts as date-only: that is
+ * what the form posts through its hidden time fields when the picker is off or bypassed
+ * from the search page, so those bookings keep the date-only behaviour.
+ *
+ * @param int    $post_id    rbfw_item id.
+ * @param string $start_time Stored pickup time.
+ * @param string $end_time   Stored return time.
+ * @return bool
+ */
+function rbfw_md_entry_is_timed( $post_id, $start_time, $end_time ) {
+	$start_time = trim( (string) $start_time );
+	$end_time   = trim( (string) $end_time );
+	if ( '' === $start_time || '' === $end_time || 'yes' !== get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ) {
+		return false;
+	}
+	try {
+		$start = new DateTime( $start_time );
+		$end   = new DateTime( $end_time );
+	} catch ( Exception $e ) {
+		return false;
+	}
+	return ! ( '00:00' === $start->format( 'H:i' ) && '00:00' === $end->format( 'H:i' ) );
+}
+
+/**
+ * Whether a stored multi-day booking holds whole days rather than exact times.
+ *
+ * A date-only booking has no return time (or the hidden midnight the form posts), so its
+ * last held day ended at 00:00 and was released to any request carrying a time: 10:00-11:00
+ * on a day the unit was already out slipped through. Such a booking holds its last held
+ * day until 23:59. Date-only requests start at 00:00, so they get the same answer as
+ * before; only timed requests change.
+ *
+ * @param int    $post_id    rbfw_item id.
+ * @param string $start_time Stored pickup time.
+ * @param string $end_time   Stored return time.
+ * @return bool
+ */
+function rbfw_md_entry_holds_whole_days( $post_id, $start_time, $end_time ) {
+	if ( rbfw_md_entry_is_timed( $post_id, $start_time, $end_time ) ) {
+		return false;
+	}
+	$end_time = trim( (string) $end_time );
+	if ( '' === $end_time ) {
+		return true;
+	}
+	try {
+		$end = new DateTime( '2000-01-01 ' . $end_time );
+	} catch ( Exception $e ) {
+		return false;
+	}
+	return '00:00' === $end->format( 'H:i' );
+}
+
+/**
+ * Units of a multi-day item still free across a whole [start, end] window.
+ *
+ * The add-to-cart gate's arithmetic (rbfw_check_rental_availability()) without a cart:
+ * the item stock — or, with item variations, the best-stocked size — minus every
+ * overlapping booking and package hold.
+ *
+ * @param int    $post_id  rbfw_item id.
+ * @param string $start_dt Window start, 'Y-m-d H:i'.
+ * @param string $end_dt   Window end, 'Y-m-d H:i'.
+ * @return int
+ */
+function rbfw_md_window_remaining_units( $post_id, $start_dt, $end_dt ) {
+	if ( 'yes' === get_post_meta( $post_id, 'rbfw_enable_variations', true ) ) {
+		$best = null;
+		$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+		foreach ( ( is_array( $data ) ? $data : array() ) as $row ) {
+			$values = ( isset( $row['value'] ) && is_array( $row['value'] ) ) ? $row['value'] : array();
+			foreach ( $values as $single ) {
+				if ( empty( $single['name'] ) || ! isset( $single['quantity'] ) ) {
+					continue;
+				}
+				$left = max( 0, (int) $single['quantity'] )
+					- rbfw_count_overlapping_booked_qty( $post_id, $start_dt, $end_dt, array( 'variation_value' => (string) $single['name'] ) );
+				$best = ( null === $best ) ? $left : max( $best, $left );
+			}
+		}
+		if ( null !== $best ) {
+			return $best;
+		}
+	}
+	return rbfw_get_effective_item_stock( $post_id ) - rbfw_count_overlapping_booked_qty( $post_id, $start_dt, $end_dt );
+}
+
+/**
+ * Bookable state of each pickup or return time option of a timed multi-day item.
+ *
+ * Pickup options: is a unit free at that moment? Return options (a pickup is given): is
+ * one free for the whole [pickup, return] window? A return at or before the pickup is
+ * never bookable. Same overlap rules as the add-to-cart gate, so the dropdown only offers
+ * what the gate will accept.
+ *
+ * @param int      $post_id     rbfw_item id.
+ * @param string   $date        Y-m-d of the options.
+ * @param string[] $times       Option values as the form posts them ("09:00", "9:00 AM").
+ * @param string   $pickup_date Y-m-d of the chosen pickup; makes $times return times.
+ * @param string   $pickup_time Chosen pickup time.
+ * @return array<string,bool> Option value => bookable. Empty when the item is not time-gated.
+ */
+function rbfw_md_time_options_availability( $post_id, $date, $times, $pickup_date = '', $pickup_time = '' ) {
+	$main_types = apply_filters( 'rbfw_availability_main_unit_types', array( 'bike_car_md', 'dress', 'equipment', 'others' ) );
+	if ( 'yes' !== get_post_meta( $post_id, 'rbfw_enable_time_picker', true )
+		|| ! in_array( get_post_meta( $post_id, 'rbfw_item_type', true ), $main_types, true ) ) {
+		return array();
+	}
+
+	// Normalised exactly like the cart build: gmdate( 'Y-m-d H:i', strtotime( date . ' ' . time ) ).
+	$pickup_dt = '';
+	if ( '' !== $pickup_date ) {
+		$ts = ( '' !== trim( (string) $pickup_time ) ) ? strtotime( $pickup_date . ' ' . $pickup_time ) : false;
+		if ( false === $ts ) {
+			return array();
+		}
+		$pickup_dt = gmdate( 'Y-m-d H:i', $ts );
+	}
+
+	$avail = array();
+	foreach ( (array) $times as $time ) {
+		$ts = ( '' !== trim( (string) $time ) ) ? strtotime( $date . ' ' . $time ) : false;
+		if ( false === $ts ) {
+			continue;
+		}
+		$option_dt = gmdate( 'Y-m-d H:i', $ts );
+		if ( '' !== $pickup_dt && $option_dt <= $pickup_dt ) {
+			$avail[ $time ] = false;
+			continue;
+		}
+		$avail[ $time ] = rbfw_md_window_remaining_units( $post_id, ( '' !== $pickup_dt ) ? $pickup_dt : $option_dt, $option_dt ) > 0;
+	}
+	return $avail;
 }
 
 /**
