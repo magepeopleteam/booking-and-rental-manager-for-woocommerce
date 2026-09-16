@@ -1664,7 +1664,6 @@
 							success: function(res){
 								if(res.success){
 									$msg.css({'color':'#0f5132','background':'#d1e7dd','border':'1px solid #badbcc'}).text(res.data).fadeIn(200);
-									setTimeout(function(){ $msg.fadeOut(400); }, 1200);
 									var $badge=$('.'+gateway+'-card .gateway-status');
 									if($badge.length){
 										var isEnabled = fields['rbfw_'+gateway+'_enable']==='on';
@@ -1675,6 +1674,11 @@
 									// no-gateway warning, the locked Custom Payment card) was
 									// rendered server-side and would stay stale until reload.
 									$(document).trigger('rbfw:payment-updated');
+									// The save succeeded — let the admin read the confirmation,
+									// then close the modal instead of leaving it open.
+									setTimeout(function(){
+										$btn.closest('.rbfw-gw-modal').fadeOut(200, function(){ $msg.hide(); });
+									}, 900);
 								} else {
 									$msg.css({'color':'#842029','background':'#f8d7da','border':'1px solid #f5c2c7'}).text(res.data).fadeIn(200);
 									setTimeout(function(){ $msg.fadeOut(400); }, 1500);
