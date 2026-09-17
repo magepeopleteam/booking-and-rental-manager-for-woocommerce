@@ -169,9 +169,38 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_script('select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array('jquery'), null, true);
 
 
+            /* Duration options the variation repeater prices against (rent types
+               for Single Day, enabled rate types for multi-day). Read from the
+               item being edited so a row added by JS offers the same inputs
+               RBFW_Inventory::variation_price_cell() renders server-side. */
+            $rbfw_edited_item_id = 0;
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only screen hints.
+            if ( isset( $_GET['item_id'] ) ) {
+                $rbfw_edited_item_id = absint( $_GET['item_id'] ); // Modern editor (edit.php?page=rbfw_modern_editor&item_id=…).
+            } elseif ( isset( $_GET['post'] ) ) {
+                $rbfw_edited_item_id = absint( $_GET['post'] );    // Classic post.php editor.
+            } else {
+                $rbfw_edited_post = get_post();
+                if ( $rbfw_edited_post instanceof WP_Post ) {
+                    $rbfw_edited_item_id = (int) $rbfw_edited_post->ID;
+                }
+            }
+            // phpcs:enable WordPress.Security.NonceVerification.Recommended
+            $rbfw_variation_price_options = array();
+            if ( $rbfw_edited_item_id && 'rbfw_item' === get_post_type( $rbfw_edited_item_id ) && function_exists( 'rbfw_get_variation_price_options' ) ) {
+                foreach ( rbfw_get_variation_price_options( $rbfw_edited_item_id ) as $rbfw_duration_key => $rbfw_duration_label ) {
+                    $rbfw_variation_price_options[] = array(
+                        'key'   => $rbfw_duration_key,
+                        'label' => $rbfw_duration_label,
+                    );
+                }
+            }
+
             wp_localize_script('rbfw_script', 'rbfw_translation', array(
                 'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                 'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                'variation_price_options' => $rbfw_variation_price_options,
+                'any_duration' => __('Any duration', 'booking-and-rental-manager-for-woocommerce'),
                 'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
                 'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
                 'max_available' => __('Max available', 'booking-and-rental-manager-for-woocommerce'),

@@ -115,9 +115,13 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'no';
 
-            // Per-value variation surcharge for the live multi-day total.
+            /* Per-value variation surcharge for the live multi-day total. Priced
+               against the booked duration units (months/weeks/days/hours) so a
+               value charging per day bills per day; values with no per-duration
+               price keep their single flat surcharge. Same call the add-to-cart
+               path makes, so the preview and the cart cannot disagree. */
             $rbfw_variation_surcharge = 0.0;
-            if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) && function_exists( 'rbfw_get_variation_price_for_value' ) ) {
+            if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) && function_exists( 'rbfw_get_variation_md_surcharge' ) ) {
                 foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $field_id => $values ) {
                     if ( ! is_array( $values ) ) {
                         continue;
@@ -128,7 +132,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         if ( '' === $value_name || $qty <= 0 ) {
                             continue;
                         }
-                        $unit_price                = rbfw_get_variation_price_for_value( $post_id, $value_name );
+                        $unit_price                = rbfw_get_variation_md_surcharge( $post_id, $value_name, $pickup_datetime, $dropoff_datetime, $rbfw_enable_time_slot );
                         $rbfw_variation_surcharge += $unit_price * $qty;
                     }
                 }

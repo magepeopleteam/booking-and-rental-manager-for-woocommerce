@@ -1143,7 +1143,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                             if ( $chosen_qty <= 0 ) {
                                 continue;
                             }
-                            $unit_price                = rbfw_get_variation_price_for_value( $rbfw_id, $level_two_name );
+                            /* Priced against the rent types actually booked ($rbfw_type_info
+                               is rent_type => qty), so a value charging per full day bills
+                               per full day. Values with no per-duration price fall back to
+                               the single flat surcharge, unchanged. */
+                            $unit_price                = rbfw_calc_variation_surcharge( $rbfw_id, $level_two_name, $rbfw_type_info );
                             $variation_info[ $i ]      = array(
                                 'field_id'    => $field_id,
                                 'field_label' => $field_label,
@@ -1422,7 +1426,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                             if ( $chosen_qty <= 0 ) {
                                 continue;
                             }
-                            $unit_price                = rbfw_get_variation_price_for_value( $rbfw_id, $level_two_name );
+                            /* Priced through the item's own duration engine with this
+                               value's rates, so a value charging per day bills per booked
+                               day under the same rules as the base price. Values with no
+                               per-duration price keep the single flat surcharge. */
+                            $unit_price                = rbfw_get_variation_md_surcharge( $rbfw_id, $level_two_name, $pickup_datetime, $dropoff_datetime, $rbfw_enable_time_slot );
                             $variation_info[ $i ]      = array(
                                 'field_id'    => $field_id,
                                 'field_label' => $field_label,

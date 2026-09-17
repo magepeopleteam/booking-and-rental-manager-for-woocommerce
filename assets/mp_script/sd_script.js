@@ -639,6 +639,58 @@ function calculateTotal() {
 }
 
 
+/**
+ * Rent-type quantities currently chosen, keyed by rent type -- the same keys a
+ * variation value's per-duration prices are saved under, so the two line up.
+ *
+ * @return {Object} { "Full Day": 2, "Hourly": 3 }
+ */
+function rbfw_get_selected_duration_units() {
+    var units = {};
+    jQuery('.rbfw_bikecarsd_qty').each(function () {
+        var type = jQuery(this).attr('data-type');
+        var qty = parseInt(jQuery(this).val(), 10) || 0;
+        if (!type || qty <= 0) {
+            return;
+        }
+        units[type] = (units[type] || 0) + qty;
+    });
+    return units;
+}
+
+/**
+ * Surcharge for ONE unit of a variation value, mirroring PHP's
+ * rbfw_calc_variation_surcharge(): a value priced per duration bills per booked
+ * rent type (2 full days x 1000 = 2000); a value with no per-duration price
+ * falls back to its single flat price. Display only -- the server recomputes
+ * this authoritatively at add-to-cart.
+ *
+ * @param {jQuery} $input Variation quantity input carrying data-price/data-prices.
+ * @param {Object} units  Output of rbfw_get_selected_duration_units().
+ * @return {number}
+ */
+function rbfw_variation_unit_price($input, units) {
+    var prices = {};
+    try {
+        prices = JSON.parse($input.attr('data-prices') || '{}') || {};
+    } catch (e) {
+        prices = {};
+    }
+    var keys = Object.keys(prices);
+    if (!keys.length) {
+        return parseFloat($input.attr('data-price')) || 0;
+    }
+    var total = 0;
+    for (var i = 0; i < keys.length; i++) {
+        var count = parseFloat(units[keys[i]]) || 0;
+        var price = parseFloat(prices[keys[i]]) || 0;
+        if (count > 0 && price > 0) {
+            total += count * price;
+        }
+    }
+    return total;
+}
+
 function rbfw_price_calculation_sd(){
     // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
     let rbfw_service_price = parseFloat(jQuery('#rbfw_service_price').val()) || 0;
@@ -648,11 +700,14 @@ function rbfw_price_calculation_sd(){
     // recalc so it survives any handler that rewrites #rbfw_service_price (which
     // now holds the duration cost ONLY). Rendered as its own summary line, never
     // folded into Duration Cost. Server re-computes this authoritatively at add-to-cart.
+    var rbfw_duration_units = rbfw_get_selected_duration_units();
     var rbfw_variation_surcharge = 0;
     jQuery('.rbfw-variation-qty-input').each(function () {
         var q = parseInt(jQuery(this).val(), 10) || 0;
-        var p = parseFloat(jQuery(this).attr('data-price')) || 0;
-        rbfw_variation_surcharge += q * p;
+        if (q <= 0) {
+            return;
+        }
+        rbfw_variation_surcharge += q * rbfw_variation_unit_price(jQuery(this), rbfw_duration_units);
     });
 
     var sub_total_price = rbfw_service_price + rbfw_es_service_price + rbfw_variation_surcharge;
