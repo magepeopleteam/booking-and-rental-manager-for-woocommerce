@@ -5379,6 +5379,27 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 						$price               = function_exists( 'wc_format_decimal' ) ? wc_format_decimal( $val['price'] ) : (string) (float) $val['price'];
 						$clean_val['price']  = ( '' === $price ) ? '' : (string) max( 0, (float) $price );
 					}
+					/* Per-duration surcharges (rbfw_get_variation_price_options()): one
+					   optional price per rent type / rate type. Empty inputs are dropped
+					   rather than stored as 0, so "no price for this duration" stays
+					   distinguishable from "free for this duration". */
+					if ( ! empty( $val['prices'] ) && is_array( $val['prices'] ) ) {
+						$clean_prices = array();
+						foreach ( $val['prices'] as $duration_key => $duration_price ) {
+							$duration_key = trim( (string) $duration_key );
+							if ( '' === $duration_key || '' === trim( (string) $duration_price ) ) {
+								continue;
+							}
+							$duration_price = function_exists( 'wc_format_decimal' ) ? wc_format_decimal( $duration_price ) : (string) (float) $duration_price;
+							if ( '' === $duration_price ) {
+								continue;
+							}
+							$clean_prices[ $duration_key ] = (string) max( 0, (float) $duration_price );
+						}
+						if ( ! empty( $clean_prices ) ) {
+							$clean_val['prices'] = $clean_prices;
+						}
+					}
 					$values[] = $clean_val;
 				}
 			}

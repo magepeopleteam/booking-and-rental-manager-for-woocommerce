@@ -43,6 +43,56 @@
 				<?php
 			}
 
+			/**
+			 * Render the Price cell for one variation value.
+			 *
+			 * A variation surcharge is always EXTRA on top of the item's own
+			 * duration price. Items that price per duration (Single Day rent
+			 * types, or the multi-day rate types that are switched on) get one
+			 * optional input per duration, so a value can cost e.g. 1000 per
+			 * full day; the "Any duration" field is the original single Price
+			 * and stays the fallback for values that set no per-duration price.
+			 *
+			 * @param int   $post_id     rbfw_item id.
+			 * @param int   $row_index   Variation (field) index.
+			 * @param int   $value_index Value index inside that variation.
+			 * @param array $value       Stored value row ( name/quantity/price/prices ).
+			 * @return void
+			 */
+			public function variation_price_cell( $post_id, $row_index, $value_index, $value = array() ) {
+				$options = function_exists( 'rbfw_get_variation_price_options' ) ? rbfw_get_variation_price_options( $post_id ) : array();
+				$stored  = ( is_array( $value ) && ! empty( $value['prices'] ) && is_array( $value['prices'] ) ) ? $value['prices'] : array();
+				$flat    = ( is_array( $value ) && isset( $value['price'] ) ) ? $value['price'] : '';
+				$base    = 'rbfw_variations_data[' . (int) $row_index . '][value][' . (int) $value_index . ']';
+				?>
+                <div class="rbfw_variation_prices">
+                    <label class="rbfw_variation_price_row">
+                        <span><?php echo empty( $options ) ? esc_html__( 'Price', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'Any duration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <input type="number" step="0.01" min="0" name="<?php echo esc_attr( $base ); ?>[price]" value="<?php echo esc_attr( $flat ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                    </label>
+					<?php foreach ( $options as $duration_key => $duration_label ) : ?>
+                        <label class="rbfw_variation_price_row">
+                            <span><?php echo esc_html( $duration_label ); ?></span>
+                            <input type="number" step="0.01" min="0" name="<?php echo esc_attr( $base ); ?>[prices][<?php echo esc_attr( $duration_key ); ?>]" value="<?php echo esc_attr( isset( $stored[ $duration_key ] ) ? $stored[ $duration_key ] : '' ); ?>" placeholder="0.00">
+                        </label>
+					<?php endforeach; ?>
+					<?php
+						/* A price saved for a duration this item no longer offers (rent
+						   type renamed, rate type switched off) has no input above, so
+						   carry it through the save instead of silently dropping it. */
+						foreach ( $stored as $duration_key => $duration_price ) {
+							if ( isset( $options[ $duration_key ] ) ) {
+								continue;
+							}
+							?>
+                            <input type="hidden" name="<?php echo esc_attr( $base ); ?>[prices][<?php echo esc_attr( $duration_key ); ?>]" value="<?php echo esc_attr( $duration_price ); ?>">
+							<?php
+						}
+					?>
+                </div>
+				<?php
+			}
+
 			public function variation_settings( $post_id ) {
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 				$rbfw_variations_data   = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
@@ -99,7 +149,7 @@
                                                                 <input type="number" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][quantity]" value="<?php echo esc_attr( $value['quantity'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                                             </td>
                                                             <td>
-                                                                <input type="number" step="0.01" min="0" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][price]" value="<?php echo esc_attr( isset( $value['price'] ) ? $value['price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+																<?php $this->variation_price_cell( $post_id, $i, $c, $value ); ?>
                                                             </td>
                                                             <td>
                                                                 <input type="checkbox" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][selected_value]" value="<?php echo esc_attr( $value['name'] ); ?>" class="rbfw_variation_selected_value" <?php if ( $value['name'] == $selected_value ) {
@@ -174,7 +224,7 @@
                                                     <input type="number" name="rbfw_variations_data[0][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                                 </td>
                                                 <td>
-                                                    <input type="number" step="0.01" min="0" name="rbfw_variations_data[0][value][0][price]" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+													<?php $this->variation_price_cell( $post_id, 0, 0 ); ?>
                                                 </td>
                                                 <td>
                                                     <input type="checkbox" name="rbfw_variations_data[0][selected_value]" class="rbfw_variation_selected_value">

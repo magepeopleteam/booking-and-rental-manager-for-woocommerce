@@ -14462,3 +14462,34 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     .rbfw_rent_list_style_list .rbfw_rent_list_lists_info,
     .rbfw_rent_list_style_list .rbfw_inner_details { padding: 14px 16px; }
 }
+
+/* Variation value prices (Inventory tab): the flat "Any duration" surcharge
+   plus one input per duration the item prices by. Kept compact so the value
+   row stays readable when an item offers several rent types. */
+.rbfw_variation_prices {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 190px;
+}
+
+.rbfw_variation_price_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+}
+
+.rbfw_variation_price_row span {
+    font-size: 12px;
+    line-height: 1.3;
+    color: #50575e;
+    white-space: nowrap;
+}
+
+.rbfw_variation_price_row input[type="number"] {
+    width: 96px;
+    max-width: 96px;
+    flex: 0 0 96px;
+}
