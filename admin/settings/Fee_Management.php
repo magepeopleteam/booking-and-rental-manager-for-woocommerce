@@ -231,6 +231,27 @@
 					.wprently_fee-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 					.wprently_fee-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; }
 
+					/* Action icon buttons (duplicate / delete) — the shared
+					   .mp_event_remove_move styles only cover the inventory and
+					   discount cards, so give the fee table its own compact
+					   icon-button styling or the two buttons overlap. */
+					.wprently_fee-table .mp_event_remove_move {
+						display: inline-flex; gap: 6px; align-items: center;
+					}
+					.wprently_fee-table .mp_event_remove_move .button {
+						display: inline-flex; align-items: center; justify-content: center;
+						width: 30px; height: 30px; min-height: 0; padding: 0;
+						border: 1px solid #e2e8f0; border-radius: 6px;
+						background: #fff; color: #4a5568;
+						font-size: 13px; line-height: 1; cursor: pointer;
+						box-shadow: none;
+					}
+					.wprently_fee-table .mp_event_remove_move .button:hover {
+						border-color: #e91e63; color: #e91e63; background: #fdf2f8;
+					}
+					.wprently_fee-table .mp_event_remove_move .button.remove-row:hover {
+						border-color: #e53e3e; color: #e53e3e; background: #fef2f2;
+					}
 					.wprently_fee-add-wrap { display: flex; justify-content: center; margin-top: 16px; }
 					.wprently_fee-add-btn { 
 						width: 200px; 
@@ -418,7 +439,7 @@
 
 					<td>
 						<div class="mp_event_remove_move">
-							<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>
+							<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-copy"></i></button>
 							<button type="button" class="button remove-row" onclick="rbfwDeleteFeeRow(this)" title="<?php echo esc_attr__( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                 <i class="fas fa-trash-can"></i>
                             </button>
@@ -511,12 +532,15 @@
 
 							<td>
 								<div class="mp_event_remove_move">
-									<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>
+									<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-copy"></i></button>
 									<button type="button" class="button" onclick="rbfwDeleteFeeRow(this)" title="<?php echo esc_attr__( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></button>
 								</div>
 							</td>
 						`;
-                        if (current_item_type === 'bike_car_md' || current_item_type === 'resort') {
+                        // Match the PHP-rendered rows (render_fee_row): the Frequency
+                        // column shows for the same item types there, so JS-added
+                        // rows and saved rows always line up.
+                        if (['bike_car_md', 'resort', 'dress', 'equipment', 'others'].indexOf(current_item_type) !== -1) {
                             jQuery(row).find('.fee-frequency-td').css('display', 'table-cell');
                         } else {
                             jQuery(row).find('.fee-frequency-td').css('display', 'none');
@@ -529,11 +553,11 @@
 					 * @param {HTMLElement} btn
 					 * @since 1.0.0
 					 */
-					function rbfwDeleteFeeRow(btn) { alert(12);
-						/*if (confirm('<?php echo esc_js( __( 'Are you sure you want to delete this fee?', 'booking-and-rental-manager-for-woocommerce' ) ); ?>')) {
+					function rbfwDeleteFeeRow(btn) {
+						if (confirm('<?php echo esc_js( __( 'Are you sure you want to delete this fee?', 'booking-and-rental-manager-for-woocommerce' ) ); ?>')) {
 							btn.closest('tr').remove();
 							rbfwReindexFeeRows();
-						}*/
+						}
 					}
 
 					/**
