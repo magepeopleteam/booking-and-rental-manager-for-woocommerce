@@ -382,6 +382,9 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
     // Fall back to 0 when the buffer field is absent/empty: NaN here would make
     // setHours() below produce an Invalid Date, silently disabling the past-time check.
     var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val()) || 0;
+    // Tooltips for unbookable slots: already started vs still inside the buffer window.
+    var rbfw_past_time_label = (typeof rbfw_translation !== 'undefined' && rbfw_translation.past_time) ? rbfw_translation.past_time : 'Past Time';
+    var rbfw_buffer_time_label = (typeof rbfw_translation !== 'undefined' && rbfw_translation.not_available) ? rbfw_translation.not_available : 'Not available';
 
 
     var scheduleJson = [];
@@ -491,7 +494,8 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
                         if (actual_booking_date_time >= actual_booking_date_time_format) {
                             time_enable = true;
-                            past_time = 'Past time';
+                            // Already started = past; still ahead but inside the buffer window = not bookable yet.
+                            past_time = (current_date_time >= actual_booking_date_time_format) ? rbfw_past_time_label : rbfw_buffer_time_label;
                         }else{
                             time_enable = false;
                             past_time = '';
@@ -511,7 +515,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         const a = document.createElement("a");
                         if(time_enable){
                             a.className = "rbfw_bikecarsd_time_disable";
-                            a.title = "Past Time";
+                            a.title = past_time;
                         }else{
                             a.className = "rbfw_bikecarsd_time";
                         }
@@ -531,6 +535,8 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
                         option.disabled = time_enable;
                         option.title = past_time;
+                        // sd_script.js must not re-enable this slot when it refreshes sold-out state.
+                        if (time_enable) { option.setAttribute('data-rbfw-time-blocked', '1'); }
                         timeSelect.appendChild(option);
                     }
                 }
@@ -566,7 +572,8 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
                     if (actual_booking_date_time >= actual_booking_date_time_format) {
                         time_enable = true;
-                        past_time = 'Past time';
+                        // Already started = past; still ahead but inside the buffer window = not bookable yet.
+                        past_time = (current_date_time >= actual_booking_date_time_format) ? rbfw_past_time_label : rbfw_buffer_time_label;
                     }else{
                         time_enable = false;
                         past_time = '';
@@ -589,7 +596,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         const a = document.createElement("a");
                         if (time_enable) {
                             a.className = "rbfw_bikecarsd_time_disable";
-                            a.title = "Past Time";
+                            a.title = past_time;
                         } else {
                             a.className = "rbfw_bikecarsd_time";
                         }
@@ -610,6 +617,8 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
                         option.disabled = time_enable;
                         option.title = past_time;
+                        // sd_script.js must not re-enable this slot when it refreshes sold-out state.
+                        if (time_enable) { option.setAttribute('data-rbfw-time-blocked', '1'); }
                         timeSelect.appendChild(option);
                     }
                 }

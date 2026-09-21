@@ -199,6 +199,8 @@ if (! class_exists('RBFW_Dependencies')) {
             wp_localize_script('rbfw_script', 'rbfw_translation', array(
                 'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                 'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                'past_time' => __('Past Time', 'booking-and-rental-manager-for-woocommerce'),
+                'not_available' => __('Not available', 'booking-and-rental-manager-for-woocommerce'),
                 'variation_price_options' => $rbfw_variation_price_options,
                 'any_duration' => __('Any duration', 'booking-and-rental-manager-for-woocommerce'),
                 'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
@@ -414,6 +416,8 @@ if (! class_exists('RBFW_Dependencies')) {
 				'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
 				'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
 				'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+				'past_time' => __('Past Time', 'booking-and-rental-manager-for-woocommerce'),
+				'not_available' => __('Not available', 'booking-and-rental-manager-for-woocommerce'),
 				'sold_out' => __('Sold Out', 'booking-and-rental-manager-for-woocommerce'),
 				'off_label' => __('Off', 'booking-and-rental-manager-for-woocommerce'),
 				'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),

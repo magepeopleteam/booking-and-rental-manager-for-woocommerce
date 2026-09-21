@@ -879,8 +879,8 @@ function rbfwApplyPickupSoldOut(type) {
         }
         var base = opt.getAttribute('data-rbfw-base-label');
 
-        // Never override the past-time disabling done in getAvailableTimes().
-        var pastDisabled = (opt.title === 'Past time' || opt.title === 'Past Time');
+        // Never override the past/buffer-time disabling done in getAvailableTimes().
+        var pastDisabled = opt.hasAttribute('data-rbfw-time-blocked') || opt.title === 'Past time' || opt.title === 'Past Time';
         if (soldOut) {
             opt.disabled = true;
             opt.classList.add('rbfw-pickup-sold-out');
