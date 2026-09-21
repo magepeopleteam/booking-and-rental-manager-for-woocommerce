@@ -2968,6 +2968,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
     text-decoration: none;
 }
 
+/* Past or inside the buffer window: not bookable, so it must look unavailable. */
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable {
     width: 31.33%;
     text-align: center;
@@ -2977,6 +2978,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
     opacity: 1;
     font-size: 14px;
     text-decoration: none;
+    cursor: not-allowed;
 }
 
 
@@ -3051,16 +3053,19 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     border-radius:5px;
 }
 
+/* Same greyed, struck-through look as a sold-out slot. */
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable span.rbfw_bikecarsd_time_span {
     display: block;
     padding: 5px 10px;
     text-transform: none;
-    border: 1px solid #e1e1e1;
-    color: #000;
-    font-size: 1rem;
-    background-color: #fff;
-    height:40px;
-    border-radius:5px;
+    border: 1px solid #ddd;
+    color: #999;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    height: 35px;
+    border-radius: 5px;
+    text-decoration: line-through;
+    cursor: not-allowed;
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled span.rbfw_bikecarsd_time_span {
