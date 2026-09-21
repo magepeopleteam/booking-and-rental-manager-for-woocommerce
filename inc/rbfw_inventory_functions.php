@@ -640,6 +640,69 @@ function total_multi_items_quantity($service,$date,$inventory,$inventory_based_o
 }
 
 
+/**
+ * Get the best available quantity among a Multiple Items rental's sub-items.
+ *
+ * Multiple Items rentals do not use the parent `rbfw_item_stock_quantity` value.
+ * Each configured row has its own private quantity or draws from a linked rental
+ * item's shared inventory. The month calendar therefore remains bookable while
+ * at least one selectable row has stock.
+ *
+ * @param int    $post_id                   Rental item ID.
+ * @param string $date                      Calendar date in d-m-Y format.
+ * @param array  $multiple_items_info       Configured Multiple Items rows.
+ * @param array  $rbfw_inventory            Stored rental inventory.
+ * @param string $inventory_based_on_return Inventory return setting.
+ * @return int Positive when the date is bookable, otherwise zero.
+ */
+function rbfw_multi_items_day_available_qty( $post_id, $date, $multiple_items_info, $rbfw_inventory, $inventory_based_on_return ) {
+    if ( empty( $multiple_items_info ) || ! is_array( $multiple_items_info ) ) {
+        // Incomplete configuration must not make the whole calendar unusable.
+        return 1;
+    }
+
+    $calendar_date = DateTime::createFromFormat( '!d-m-Y', $date );
+    $date_ymd      = $calendar_date ? $calendar_date->format( 'Y-m-d' ) : '';
+    $best_stock    = 0;
+    $has_valid_row = false;
+
+    foreach ( $multiple_items_info as $row ) {
+        if ( ! is_array( $row ) || empty( $row['item_name'] ) ) {
+            continue;
+        }
+
+        $has_valid_row = true;
+        $remaining     = null;
+
+        if ( $date_ymd && function_exists( 'rbfw_mi_row_available_qty' ) ) {
+            $remaining = rbfw_mi_row_available_qty(
+                $post_id,
+                $row,
+                $date_ymd . ' 00:00',
+                $date_ymd . ' 23:59'
+            );
+        }
+
+        if ( null === $remaining ) {
+            $booked    = total_multi_items_quantity( $row['item_name'], $date, $rbfw_inventory, $inventory_based_on_return );
+            $remaining = rbfw_service_remaining_stock(
+                isset( $row['available_qty'] ) ? $row['available_qty'] : '',
+                $booked
+            );
+        }
+
+        // A blank quantity means this row does not track stock and stays bookable.
+        if ( null === $remaining ) {
+            return 1;
+        }
+
+        $best_stock = max( $best_stock, (int) $remaining );
+    }
+
+    return $has_valid_row ? max( 0, $best_stock ) : 1;
+}
+
+
 
 
 
@@ -677,6 +740,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     ];
     $rbfw_variations_data_raw = get_post_meta( $post_id, 'rbfw_variations_data', true );
     $rbfw_variations_data     = $rbfw_variations_data_raw ? $rbfw_variations_data_raw : [];
+    $multiple_items_info      = ( 'multiple_items' === $rent_type ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
     // Pre-compute base stock (same value for every day in the month)
     $base_total_stock = 0;
@@ -707,6 +771,18 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         $total_stock = $base_total_stock;
         $date = str_pad($i, 2, '0', STR_PAD_LEFT).'-'.str_pad($month, 2, '0', STR_PAD_LEFT).'-'.$year;
         $date_range[] = $date;
+
+
+        if ( 'multiple_items' === $rent_type ) {
+            $day_wise_inventory[ $date ] = rbfw_multi_items_day_available_qty(
+                $post_id,
+                $date,
+                $multiple_items_info,
+                is_array( $rbfw_inventory ) ? $rbfw_inventory : [],
+                $inventory_based_on_return
+            );
+            continue;
+        }
 
 
 
