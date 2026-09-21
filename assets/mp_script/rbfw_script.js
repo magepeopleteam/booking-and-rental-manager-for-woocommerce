@@ -167,24 +167,26 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 /**
  * Per-item "Block Booking If Date Range Contains Off Days" flag, printed as a
  * hidden input by the booking form templates. Items saved before the flag
- * existed have no input / an empty value — both count as enabled.
+ * existed have no input / an empty value, so item-level range blocking is off.
  *
- * The flag gates ONLY rule 3 (a pickup→return range may not span an off day).
- * Off days / off dates themselves stay unselectable as pickup or return
- * regardless of the flag — that is the plugin's normal off-day behavior.
+ * The per-item flag gates rule 3 (a pickup→return range may not span an item
+ * off day). A configured global closure always enables the same range gate.
+ * Off days / off dates themselves stay unselectable as pickup or return.
  */
 function rbfw_offday_blocking_enabled() {
     var $flag = jQuery('#rbfw_block_offday_booking');
-    // Opt-in: interior-range blocking only when the admin explicitly turned it
-    // on. A missing flag or any non-'on' value means blocking stays off.
-    return $flag.length > 0 && $flag.val() === 'on';
+    var globalOffDates = [];
+    try { globalOffDates = JSON.parse(jQuery('#rbfw_global_offday_range').val()) || []; } catch (e) {}
+    // Per-item interior blocking remains opt-in. Global closures always block
+    // an overlapping rental, even when both selected endpoints are outside it.
+    return ($flag.length > 0 && $flag.val() === 'on') || globalOffDates.length > 0;
 }
 
 /**
- * Rule 3 of the off-day blocking feature: true when any weekly off day or off
- * date range falls strictly BETWEEN the selected pickup date and a candidate
- * return date. The endpoints themselves are covered by rules 1–2 (the normal
- * off-day disable in rbfw_off_day_dates), so only the interior is scanned.
+ * Rule 3 of the off-day blocking feature: true when an applicable off date
+ * falls strictly BETWEEN the selected pickup date and a candidate return date.
+ * Global closures always apply; item rules apply only when their toggle is on.
+ * Endpoints are covered by rbfw_off_day_dates(), so only the interior is scanned.
  *
  * @param {string} pickup_iso Selected pickup date, YYYY-MM-DD.
  * @param {Date}   end_date   Candidate return date from beforeShowDay.
@@ -192,10 +194,13 @@ function rbfw_offday_blocking_enabled() {
 function rbfw_range_contains_off_day(pickup_iso, end_date) {
     if (!pickup_iso) return false;
 
-    var off_days = [], offday_range = [];
+    var off_days = [], offday_range = [], global_offday_range = [];
     try { off_days     = JSON.parse(jQuery('#rbfw_off_days').val())     || []; } catch (e) {}
     try { offday_range = JSON.parse(jQuery('#rbfw_offday_range').val()) || []; } catch (e) {}
-    if (!off_days.length && !offday_range.length) return false;
+    try { global_offday_range = JSON.parse(jQuery('#rbfw_global_offday_range').val()) || []; } catch (e) {}
+    if (!off_days.length && !offday_range.length && !global_offday_range.length) return false;
+
+    var itemRangeBlocking = jQuery('#rbfw_block_offday_booking').val() === 'on';
 
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var d = new Date(pickup_iso + 'T00:00:00');
@@ -205,9 +210,12 @@ function rbfw_range_contains_off_day(pickup_iso, end_date) {
     var end = new Date(end_date.getFullYear(), end_date.getMonth(), end_date.getDate());
     var guard = 0; // hard cap so a corrupt date can never loop forever
     while (d < end && guard++ < 1100) {
-        if (jQuery.inArray(weekday[d.getDay()], off_days) >= 0) return true;
         var ddmmyyyy = ("0" + d.getDate()).slice(-2) + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + d.getFullYear();
-        if (jQuery.inArray(ddmmyyyy, offday_range) >= 0) return true;
+        if (jQuery.inArray(ddmmyyyy, global_offday_range) >= 0) return true;
+        if (itemRangeBlocking && (
+            jQuery.inArray(weekday[d.getDay()], off_days) >= 0 ||
+            jQuery.inArray(ddmmyyyy, offday_range) >= 0
+        )) return true;
         d.setDate(d.getDate() + 1);
     }
     return false;
@@ -247,11 +255,13 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
     var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
 
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+    var rbfw_global_offday_range = [];
+    try { rbfw_global_offday_range = JSON.parse(jQuery("#rbfw_global_offday_range").val()) || []; } catch (e) {}
 
 
 
 
-    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || jQuery.inArray( date_in, rbfw_global_offday_range )>= 0 || (date <  date_today) ){
 
         if(type=='md'){
             if((date <  date_today)){

@@ -575,6 +575,10 @@ if (!class_exists('RBFW_Woocommerce')) {
          * @return string
          */
         private function rbfw_availability_notice( $check ) {
+			if ( ! empty( $check['message'] ) ) {
+				return esc_html( $check['message'] );
+			}
+
             $label     = isset( $check['label'] ) ? $check['label'] : __( 'This rental', 'booking-and-rental-manager-for-woocommerce' );
             $available = isset( $check['available'] ) ? (int) $check['available'] : 0;
 

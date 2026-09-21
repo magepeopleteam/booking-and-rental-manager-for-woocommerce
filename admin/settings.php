@@ -21,6 +21,10 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 			'id'    => 'rbfw_basic_style_settings',
 			'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
+		array(
+			'id'    => 'rbfw_global_off_dates_settings',
+			'title' => '<i class="fa-regular fa-calendar-xmark"></i>' . esc_html__( 'Global Off Dates', 'booking-and-rental-manager-for-woocommerce' ),
+		),
         array(
             'id'    => 'rbfw_custom_style_settings',
             'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' )
@@ -315,6 +319,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 			),
 
 		),
+		'rbfw_global_off_dates_settings' => array(
+			array(
+				'name'              => 'ranges',
+				'label'             => esc_html__( 'Unavailable Date Ranges', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'              => esc_html__( 'These dates are unavailable for every rental item. The website and all rental pages remain online.', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'              => 'text',
+				'callback'          => 'rbfw_render_global_off_date_ranges',
+				'sanitize_callback' => 'rbfw_sanitize_global_off_date_ranges',
+				'default'           => array(),
+			),
+		),
         'rbfw_custom_style_settings' => array(
             array(
                 'name'    => 'rbfw_custom_css',
@@ -326,6 +341,128 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 	);
 
 	return apply_filters('rbfw_settings_field', $settings_fields );
+}
+
+/**
+ * Validate the repeatable global closure ranges before Settings API storage.
+ *
+ * @param mixed $ranges Submitted rows.
+ * @return array<int,array{from_date:string,to_date:string}>
+ */
+function rbfw_sanitize_global_off_date_ranges( $ranges ) {
+	$clean = array();
+	$seen  = array();
+
+	foreach ( is_array( $ranges ) ? $ranges : array() as $range ) {
+		if ( ! is_array( $range ) ) {
+			continue;
+		}
+
+		$from = isset( $range['from_date'] ) ? sanitize_text_field( wp_unslash( $range['from_date'] ) ) : '';
+		$to   = isset( $range['to_date'] ) ? sanitize_text_field( wp_unslash( $range['to_date'] ) ) : '';
+		$from = rbfw_validate_global_off_date_value( $from );
+		$to   = rbfw_validate_global_off_date_value( $to );
+
+		if ( '' === $from || '' === $to ) {
+			continue;
+		}
+		if ( $from > $to ) {
+			$temp = $from;
+			$from = $to;
+			$to   = $temp;
+		}
+
+		$key = $from . '|' . $to;
+		if ( isset( $seen[ $key ] ) ) {
+			continue;
+		}
+
+		$seen[ $key ] = true;
+		$clean[]      = array(
+			'from_date' => $from,
+			'to_date'   => $to,
+		);
+	}
+
+	return $clean;
+}
+
+/**
+ * Accept only real ISO calendar dates.
+ *
+ * @param string $value Candidate date.
+ * @return string
+ */
+function rbfw_validate_global_off_date_value( $value ) {
+	if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $value ) ) {
+		return '';
+	}
+
+	$date   = DateTimeImmutable::createFromFormat( '!Y-m-d', $value, wp_timezone() );
+	$errors = DateTimeImmutable::getLastErrors();
+	if ( ! $date || ( is_array( $errors ) && ( $errors['warning_count'] || $errors['error_count'] ) ) ) {
+		return '';
+	}
+
+	return $date->format( 'Y-m-d' ) === $value ? $value : '';
+}
+
+/**
+ * Render repeatable start/end controls on the Global Off Dates settings tab.
+ *
+ * @param array $args Settings API field arguments.
+ * @return void
+ */
+function rbfw_render_global_off_date_ranges( $args ) {
+	$options = get_option( $args['section'], array() );
+	$ranges  = isset( $options[ $args['id'] ] ) && is_array( $options[ $args['id'] ] ) ? $options[ $args['id'] ] : array();
+	if ( empty( $ranges ) ) {
+		$ranges[] = array( 'from_date' => '', 'to_date' => '' );
+	}
+	?>
+	<div class="rbfw-global-off-dates" data-section="<?php echo esc_attr( $args['section'] ); ?>" data-field="<?php echo esc_attr( $args['id'] ); ?>">
+		<div class="rbfw-global-off-dates__rows">
+			<?php foreach ( $ranges as $index => $range ) : ?>
+				<div class="rbfw-global-off-dates__row">
+					<label>
+						<span><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<input type="date" name="<?php echo esc_attr( $args['section'] ); ?>[<?php echo esc_attr( $args['id'] ); ?>][<?php echo esc_attr( $index ); ?>][from_date]" value="<?php echo esc_attr( isset( $range['from_date'] ) ? $range['from_date'] : '' ); ?>">
+					</label>
+					<label>
+						<span><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<input type="date" name="<?php echo esc_attr( $args['section'] ); ?>[<?php echo esc_attr( $args['id'] ); ?>][<?php echo esc_attr( $index ); ?>][to_date]" value="<?php echo esc_attr( isset( $range['to_date'] ) ? $range['to_date'] : '' ); ?>">
+					</label>
+					<button type="button" class="button rbfw-global-off-dates__remove"><?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+				</div>
+			<?php endforeach; ?>
+		</div>
+		<button type="button" class="button rbfw-global-off-dates__add"><?php esc_html_e( 'Add Another Range', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+		<p class="description"><?php echo esc_html( $args['desc'] ); ?></p>
+	</div>
+	<style>
+		.rbfw-global-off-dates__row{display:flex;align-items:flex-end;gap:12px;margin:0 0 12px}.rbfw-global-off-dates__row label{display:flex;flex-direction:column;gap:4px}.rbfw-global-off-dates__remove{margin-bottom:1px!important}@media(max-width:782px){.rbfw-global-off-dates__row{align-items:stretch;flex-direction:column}.rbfw-global-off-dates__remove{align-self:flex-start}}
+	</style>
+	<script>
+		jQuery(function($){
+			$('.rbfw-global-off-dates').each(function(){
+				var $wrap=$(this),$rows=$wrap.find('.rbfw-global-off-dates__rows'),nextIndex=$rows.children().length;
+				$wrap.on('click','.rbfw-global-off-dates__add',function(){
+					var index=nextIndex++,section=$wrap.data('section'),field=$wrap.data('field');
+					var $row=$rows.children().first().clone();
+					$row.find('input').val('').each(function(){
+						var key=$(this).attr('name').indexOf('[from_date]')!==-1?'from_date':'to_date';
+						$(this).attr('name',section+'['+field+']['+index+']['+key+']');
+					});
+					$rows.append($row);
+				});
+				$wrap.on('click','.rbfw-global-off-dates__remove',function(){
+					var $row=$(this).closest('.rbfw-global-off-dates__row');
+					if($rows.children().length>1){$row.remove();}else{$row.find('input').val('');}
+				});
+			});
+		});
+	</script>
+	<?php
 }
 
 

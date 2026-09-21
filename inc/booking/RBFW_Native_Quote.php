@@ -130,6 +130,13 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 			if ( ! self::has_valid_selection( $item_type, $cart_data ) ) {
 				return new WP_Error( 'rbfw_invalid_booking_selection', esc_html__( 'Please choose valid rental dates and quantities before booking.', 'booking-and-rental-manager-for-woocommerce' ) );
 			}
+			$start_datetime = isset( $cart_data['rbfw_start_datetime'] ) ? $cart_data['rbfw_start_datetime'] : '';
+			$end_datetime   = isset( $cart_data['rbfw_end_datetime'] ) ? $cart_data['rbfw_end_datetime'] : '';
+			if ( function_exists( 'rbfw_global_off_dates_overlap' )
+				&& $start_datetime
+				&& rbfw_global_off_dates_overlap( $start_datetime, $end_datetime ) ) {
+				return new WP_Error( 'rbfw_global_off_date', esc_html__( 'The selected dates include a global off date. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ) );
+			}
 
 			$subtotal = max( 0, (float) $cart_data['rbfw_tp'] );
 

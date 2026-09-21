@@ -3458,6 +3458,104 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 		return array( $management_info, $management_price );
 	}
 
+	/**
+	 * Global closure ranges configured under Rent Item > Settings.
+	 *
+	 * @return array<int,array{from_date:string,to_date:string}>
+	 */
+	function rbfw_get_global_off_date_ranges() {
+		$settings = get_option( 'rbfw_global_off_dates_settings', array() );
+		$ranges   = is_array( $settings ) && isset( $settings['ranges'] ) && is_array( $settings['ranges'] ) ? $settings['ranges'] : array();
+		$clean    = array();
+
+		foreach ( $ranges as $range ) {
+			if ( ! is_array( $range ) || empty( $range['from_date'] ) || empty( $range['to_date'] ) ) {
+				continue;
+			}
+			$from_value = (string) $range['from_date'];
+			$to_value   = (string) $range['to_date'];
+			if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $from_value ) || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $to_value ) ) {
+				continue;
+			}
+			$from = DateTimeImmutable::createFromFormat( '!Y-m-d', $from_value, wp_timezone() );
+			$to   = DateTimeImmutable::createFromFormat( '!Y-m-d', $to_value, wp_timezone() );
+			if ( ! $from || ! $to || $from->format( 'Y-m-d' ) !== $from_value || $to->format( 'Y-m-d' ) !== $to_value ) {
+				continue;
+			}
+			if ( $from > $to ) {
+				$temp = $from;
+				$from = $to;
+				$to   = $temp;
+			}
+			$clean[] = array(
+				'from_date' => $from->format( 'Y-m-d' ),
+				'to_date'   => $to->format( 'Y-m-d' ),
+			);
+		}
+
+		$clean = apply_filters( 'rbfw_global_off_date_ranges', $clean );
+
+		return is_array( $clean ) ? $clean : array();
+	}
+
+	/**
+	 * Flatten global ranges for the existing jQuery datepicker contract.
+	 *
+	 * @return string JSON array of d-m-Y dates.
+	 */
+	function rbfw_global_off_dates() {
+		$off_dates = array();
+		$limit     = max( 1, (int) apply_filters( 'rbfw_global_off_dates_max_days', 20000 ) );
+
+		foreach ( rbfw_get_global_off_date_ranges() as $range ) {
+			$current = new DateTimeImmutable( $range['from_date'], wp_timezone() );
+			$end     = new DateTimeImmutable( $range['to_date'], wp_timezone() );
+			while ( $current <= $end && count( $off_dates ) < $limit ) {
+				$off_dates[ $current->format( 'd-m-Y' ) ] = true;
+				$current = $current->modify( '+1 day' );
+			}
+			if ( count( $off_dates ) >= $limit ) {
+				break;
+			}
+		}
+
+		return wp_json_encode( array_keys( $off_dates ) );
+	}
+
+	/**
+	 * Whether a requested date span intersects a global closure range.
+	 *
+	 * @param string $start Any date understood by DateTimeImmutable.
+	 * @param string $end   Any date understood by DateTimeImmutable.
+	 * @return bool
+	 */
+	function rbfw_global_off_dates_overlap( $start, $end = '' ) {
+		if ( '' === trim( (string) $start ) ) {
+			return false;
+		}
+		try {
+			$start_date = new DateTimeImmutable( (string) $start, wp_timezone() );
+			$end_date   = new DateTimeImmutable( '' !== (string) $end ? (string) $end : (string) $start, wp_timezone() );
+		} catch ( Exception $e ) {
+			return false;
+		}
+		$start_date = $start_date->setTime( 0, 0 );
+		$end_date   = $end_date->setTime( 0, 0 );
+		if ( $end_date < $start_date ) {
+			return false;
+		}
+
+		foreach ( rbfw_get_global_off_date_ranges() as $range ) {
+			$range_start = new DateTimeImmutable( $range['from_date'], wp_timezone() );
+			$range_end   = new DateTimeImmutable( $range['to_date'], wp_timezone() );
+			if ( $start_date <= $range_end && $range_start <= $end_date ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	function rbfw_off_dates( $post_id ) {
 		$off_dates       = [];
 		$off_date_ranges = get_post_meta( $post_id, 'rbfw_offday_range', true );
@@ -3483,8 +3581,8 @@ if ( ! function_exists( 'rbfw_is_off_day' ) ) {
 	 *
 	 * Mirrors the rule the datepicker already applies in `rbfw_off_day_dates()`
 	 * (assets/mp_script/rbfw_script.js): a date is off when its weekday is listed
-	 * in the item's weekly Off Days, or when the date itself falls inside one of
-	 * the configured Off Day ranges. Keeping the two in step is the point — server
+	 * in the item's weekly Off Days, a per-item range, or a global closure range.
+	 * Keeping the server and calendar rules in step is the point — server
 	 * side badges that disagree with the calendar are what made the
 	 * "Available Today" badge claim a day the calendar had greyed out.
 	 *
@@ -3506,6 +3604,10 @@ if ( ! function_exists( 'rbfw_is_off_day' ) ) {
 				: new DateTimeImmutable( $date, wp_timezone() );
 		} catch ( Exception $e ) {
 			return false; // Unparseable date: never claim it is an Off Day.
+		}
+
+		if ( rbfw_global_off_dates_overlap( $moment->format( 'Y-m-d' ) ) ) {
+			return true;
 		}
 
 		/*

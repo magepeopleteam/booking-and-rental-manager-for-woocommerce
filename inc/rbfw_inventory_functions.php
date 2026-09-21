@@ -3962,6 +3962,17 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	}
 
 	$item_name = get_the_title( $rbfw_id );
+	if ( function_exists( 'rbfw_global_off_dates_overlap' ) && rbfw_global_off_dates_overlap( $start_dt, $end_dt ) ) {
+		$checks[] = array(
+			'ok'        => false,
+			'requested' => 1,
+			'available' => 0,
+			'label'     => $item_name,
+			'message'   => __( 'The selected dates include a global off date. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+
+		return $checks;
+	}
 
 	/* ---- Single-day timely inventory: validate the exact requested window. ---- */
 	if ( 'bike_car_sd' === $rent_type && 'on' === get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true ) ) {
