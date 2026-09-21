@@ -2202,11 +2202,13 @@ function rbfwMIAutoSelectNextAvailableDate() {
     var today_enable = (typeof rbfw_js_variables !== 'undefined') ? rbfw_js_variables.rbfw_today_booking_enable : 'no';
     var buffer_time  = parseInt(jQuery('#rbfw_buffer_time').val()) || 0;
     var weekdays     = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
-    var off_days     = [];
-    var offday_range = [];
+    var off_days            = [];
+    var offday_range        = [];
+    var global_offday_range = [];
 
     try { off_days     = JSON.parse(jQuery('#rbfw_off_days').val())    || []; } catch(e) {}
     try { offday_range = JSON.parse(jQuery('#rbfw_offday_range').val()) || []; } catch(e) {}
+    try { global_offday_range = JSON.parse(jQuery('#rbfw_global_offday_range').val()) || []; } catch(e) {}
 
     // Determine the earliest bookable day
     var candidate = new Date();
@@ -2231,6 +2233,7 @@ function rbfwMIAutoSelectNextAvailableDate() {
         if (
             jQuery.inArray(day_name, off_days)    < 0 &&
             jQuery.inArray(ddmmyyyy, offday_range) < 0 &&
+            jQuery.inArray(ddmmyyyy, global_offday_range) < 0 &&
             disabledDates.indexOf(iso) === -1
         ) {
             // Format for the visible text input using the site's datepicker format
@@ -2245,7 +2248,6 @@ function rbfwMIAutoSelectNextAvailableDate() {
         candidate.setDate(candidate.getDate() + 1);
     }
 }
-
 
 
 

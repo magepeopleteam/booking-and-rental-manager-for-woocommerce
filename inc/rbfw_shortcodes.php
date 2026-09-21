@@ -829,6 +829,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                     <input type="hidden" id="rbfw_datewise_minmax" value="[]">
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days" value="[]">
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" value="[]">
+					<input type="hidden" id="rbfw_global_offday_range" value='<?php echo esc_attr( rbfw_global_off_dates() ); ?>'>
 
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">

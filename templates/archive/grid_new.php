@@ -16,22 +16,7 @@
 	$post_featured_img     = ! empty( $post_featured_img_url ) ? $post_featured_img_url : $gallery_image;
 	$post_link         = get_the_permalink();
 	$book_now_label    = __( 'Book Now', 'booking-and-rental-manager-for-woocommerce' );
-	$rbfw_offday_range = get_post_meta( get_the_id(), 'rbfw_offday_range', true ) ? get_post_meta( get_the_id(), 'rbfw_offday_range', true ) : 'no';
-	$continue = false;
-	if ( $rbfw_offday_range !== 'no' && ! empty( $pickup_date ) ) {
-		foreach ( $rbfw_offday_range as $date_rang ) {
-			$start_date = $date_rang['from_date'];
-			$end_date   = $date_rang['to_date'];
-			$check_date = $pickup_date;
-			$startDateTime = DateTime::createFromFormat( 'd-m-Y', $start_date );
-			$endDateTime   = DateTime::createFromFormat( 'd-m-Y', $end_date );
-			$checkDateTime = DateTime::createFromFormat( 'd-m-Y', $check_date );
-			if ( $checkDateTime >= $startDateTime && $checkDateTime <= $endDateTime ) {
-				//error_log(print_r(['$continue' => $continue], true));
-				$continue = true;
-			}
-		}
-	}
+	$continue = ! empty( $pickup_date ) && function_exists( 'rbfw_is_off_day' ) && rbfw_is_off_day( $post_id, $pickup_date );
 	if ( ! $continue ) {
 
 
