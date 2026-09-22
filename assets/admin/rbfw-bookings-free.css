@@ -138,3 +138,39 @@
 
 /* Source badge moved into the Booking column */
 .rbfwfb-table td .rbfwfb-source { margin-top: 6px; }
+
+/* SecureHold WP deposit details under a booking */
+.rbfw-sh-booking-row td {
+    background: #f8fbff;
+    border-top: 0;
+    padding: 8px 14px 12px;
+}
+.rbfw-sh-booking {
+    align-items: center;
+    color: #334155;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    gap: 6px 10px;
+    line-height: 1.5;
+}
+.rbfw-sh-booking .dashicons {
+    color: #3157b7;
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+.rbfw-sh-badge {
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 9px;
+}
+.rbfw-sh-badge.is-held { background: #e0ecff; color: #1d4ed8; }
+.rbfw-sh-badge.is-captured { background: #fff4e5; color: #b45309; }
+.rbfw-sh-badge.is-released { background: #e8f7ee; color: #15803d; }
+.rbfw-sh-badge.is-failed { background: #fdecec; color: #b42318; }
+.rbfw-sh-badge.is-charged,
+.rbfw-sh-badge.is-pending { background: #f1f5f9; color: #475569; }
+.rbfw-sh-detail { color: #64748b; flex: 1 1 320px; }
+.rbfw-sh-link { font-weight: 600; white-space: nowrap; }

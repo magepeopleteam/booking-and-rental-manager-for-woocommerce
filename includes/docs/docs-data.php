@@ -345,6 +345,32 @@ return array(
 				'body'  => 'Stripe and PayPal gateways for the Standalone checkout are provided by Pro (inc/gateways). The Standalone currency format is set in Settings → Checkout Page.',
 			),
 		),
+		'integrations' => array(
+			array(
+				'name'        => 'SecureHold WP',
+				'version'     => '3.4.11 or later',
+				'logo'        => 'assets/images/securehold-icon.png',
+				'description' => 'A compatible third-party option for merchants who want to use a separate Stripe authorization hold instead of charging and later refunding a fixed WpRently security deposit.',
+				'requirements' => array(
+					'WooCommerce checkout mode and the official WooCommerce Stripe Gateway.',
+					'A linked WooCommerce rental product with a fixed WpRently security deposit.',
+					'SecureHold\'s own Stripe API keys, in the same test/live mode as the Stripe gateway.',
+					'The MagePeople compatibility option enabled in SecureHold.',
+					'SecureHold\'s Default Hold Amount set to 0, so it only holds fixed WpRently deposits.',
+					'A Stripe authorization duration that suits the merchant\'s rental period.',
+				),
+				'limitation'  => 'Percentage-based and other unsupported WpRently deposits continue through the normal WpRently checkout flow. SecureHold controls the compatible fixed deposit hold and prevents that amount from also being added to the WooCommerce payable total. Until every requirement is met, and always in the Standalone checkout, WpRently keeps charging the deposit as part of the booking total.',
+				'test_steps'  => array(
+					'Enable Stripe test mode in both SecureHold and the official WooCommerce Stripe Gateway.',
+					'Link one WooCommerce rental product with a €100 rental price and a fixed €500 WpRently security deposit.',
+					'Place a booking through the normal WooCommerce checkout and confirm the customer pays €100.',
+					'Confirm SecureHold creates a separate €500 Stripe authorization and the deposit is not added to the WooCommerce payable total.',
+					'Confirm a percentage-based or otherwise unsupported deposit continues through the normal WpRently checkout flow, with no SecureHold hold added.',
+				),
+				'docs_url'    => 'https://secureholdwp.com/docs/',
+				'support_url' => 'https://secureholdwp.com/support/',
+			),
+		),
 		'emails' => array(
 			array( 'name' => 'WooCommerce booking confirmation',   'plan' => 'free', 'trigger' => 'Order reaches a status in Settings → Email "Send Email on".', 'body' => 'Confirmation email with the booking summary; optional PDF attachment (Pro).' ),
 			array( 'name' => 'Standalone customer confirmation',    'plan' => 'free', 'trigger' => 'A Standalone booking is placed (native_email_enable = Enabled).', 'body' => 'Customer email using native_customer_email_subject/content; booking summary appended automatically.' ),

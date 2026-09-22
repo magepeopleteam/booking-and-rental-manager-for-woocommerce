@@ -825,6 +825,20 @@
 						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
 					</a>
 
+					<div class="rbfw-me-help-divider">
+						<span><?php esc_html_e( 'Compatible Integrations', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<!-- SecureHold WP -->
+					<a href="https://secureholdwp.com/docs/" target="_blank" rel="noopener noreferrer" class="rbfw-me-help-link">
+						<img class="rbfw-me-help-link__logo" src="<?php echo esc_url( RBFW_PLUGIN_URL . '/assets/images/securehold-icon.png' ); ?>" alt="">
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'SecureHold WP', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Stripe authorization holds for fixed security deposits (3.4.11+)', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
 				</div>
 			</div>
 		</aside>
