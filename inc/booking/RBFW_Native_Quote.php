@@ -140,11 +140,11 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 
 			$subtotal = max( 0, (float) $cart_data['rbfw_tp'] );
 
-			// The historical cart builder includes deposits in the resort total, while the
-			// other item types carry an additional deposit as metadata. Match the public total
-			// without double-charging Pro's "included in price" deposit policy.
+			// The cart builder carries an additional deposit as metadata for every item type
+			// (WooCommerce charges it as a separate cart fee). Match the public total without
+			// double-charging Pro's "included in price" deposit policy.
 			$deposit_mode = isset( $cart_data['rbfw_security_deposit_price_mode'] ) ? sanitize_key( $cart_data['rbfw_security_deposit_price_mode'] ) : 'additional';
-			if ( 'resort' !== $item_type && 'included' !== $deposit_mode && ! empty( $cart_data['security_deposit_amount'] ) ) {
+			if ( 'included' !== $deposit_mode && ! empty( $cart_data['security_deposit_amount'] ) ) {
 				$subtotal += max( 0, (float) $cart_data['security_deposit_amount'] );
 			}
 
