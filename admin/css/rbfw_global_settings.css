@@ -503,6 +503,226 @@
     color: #fff !important;
 }
 
+/* ── Third-party integrations ── */
+.rbfw_global_settings .rbfw-integration-card {
+    background: #fff;
+    border: 1px solid #dbe3ee;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+.rbfw_global_settings .rbfw-integration-card.is-ready {
+    border-color: #a7d7b5;
+}
+
+.rbfw_global_settings .rbfw-integration-card-head {
+    align-items: flex-start;
+    background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
+    border-bottom: 1px solid #e5ebf3;
+    display: flex;
+    gap: 16px;
+    padding: 20px;
+}
+
+.rbfw_global_settings .rbfw-integration-card-head > img {
+    background: #fff;
+    border: 1px solid #dbe3ee;
+    border-radius: 12px;
+    height: 64px;
+    object-fit: contain;
+    padding: 5px;
+    width: 64px;
+}
+
+.rbfw_global_settings .rbfw-integration-card-head > div {
+    flex: 1;
+    min-width: 0;
+}
+
+.rbfw_global_settings .rbfw-integration-eyebrow {
+    color: #3157b7;
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.rbfw_global_settings .rbfw-integration-card-head h3 {
+    color: #172033;
+    font-size: 20px;
+    line-height: 1.25;
+    margin: 0 0 5px;
+}
+
+.rbfw_global_settings .rbfw-integration-card-head p {
+    color: #5b6678;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0;
+    max-width: 680px;
+}
+
+.rbfw_global_settings .rbfw-integration-ready-badge {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 999px;
+    color: #9a3412;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 10px;
+}
+
+.rbfw_global_settings .rbfw-integration-ready-badge.is-ready {
+    background: #ecfdf3;
+    border-color: #a7d7b5;
+    color: #18763b;
+}
+
+.rbfw_global_settings .rbfw-integration-card-body {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.8fr);
+    padding: 20px;
+}
+
+.rbfw_global_settings .rbfw-integration-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rbfw_global_settings .rbfw-integration-status-row {
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e6ebf2;
+    border-radius: 7px;
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+}
+
+.rbfw_global_settings .rbfw-integration-status-icon {
+    align-items: center;
+    background: #fff7ed;
+    border-radius: 50%;
+    color: #c2410c;
+    display: flex;
+    flex-shrink: 0;
+    height: 28px;
+    justify-content: center;
+    width: 28px;
+}
+
+.rbfw_global_settings .rbfw-integration-status-icon.is-ready {
+    background: #ecfdf3;
+    color: #18864b;
+}
+
+.rbfw_global_settings .rbfw-integration-status-icon.is-advice {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.rbfw_global_settings .rbfw-integration-status-icon .dashicons {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+}
+
+.rbfw_global_settings .rbfw-integration-status-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.rbfw_global_settings .rbfw-integration-status-copy strong {
+    color: #243047;
+    font-size: 12.5px;
+}
+
+.rbfw_global_settings .rbfw-integration-status-copy small {
+    color: #69758a;
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+
+.rbfw_global_settings .rbfw-integration-notes {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 15px 16px;
+}
+
+.rbfw_global_settings .rbfw-integration-notes h4 {
+    color: #243047;
+    font-size: 13px;
+    margin: 0 0 8px;
+}
+
+.rbfw_global_settings .rbfw-integration-notes ul {
+    color: #566176;
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0 0 10px 18px;
+}
+
+.rbfw_global_settings .rbfw-integration-notes li {
+    margin-bottom: 5px;
+}
+
+.rbfw_global_settings .rbfw-integration-notes p {
+    border-top: 1px solid #e1e7ef;
+    color: #69758a;
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin: 10px 0 0;
+    padding-top: 10px;
+}
+
+.rbfw_global_settings .rbfw-integration-actions {
+    align-items: center;
+    border-top: 1px solid #e5ebf3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 14px 20px;
+}
+
+.rbfw_global_settings .rbfw-integration-actions .button {
+    align-items: center;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 36px;
+    text-decoration: none;
+}
+
+.rbfw_global_settings .rbfw-integration-plugin-action.is-busy,
+.rbfw_global_settings .rbfw-integration-plugin-action:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.rbfw_global_settings .rbfw-integration-action-status {
+    color: #5b6678;
+    font-size: 12px;
+    line-height: 1.4;
+    margin-left: 4px;
+}
+
+.rbfw_global_settings .rbfw-integration-action-status.is-success {
+    color: #18763b;
+    font-weight: 600;
+}
+
+.rbfw_global_settings .rbfw-integration-action-status.is-error {
+    color: #b42318;
+    font-weight: 600;
+}
+
 /* ── Responsive ── */
 @media only screen and (max-width: 1200px) {
     .rbfw_global_settings .rbfw-gs-layout {
@@ -579,6 +799,31 @@
     .rbfw_global_settings .metabox-holder table.form-table td input[type="number"],
     .rbfw_global_settings .metabox-holder table.form-table td select {
         max-width: 100%;
+    }
+
+    .rbfw_global_settings .rbfw-integration-card-head {
+        flex-wrap: wrap;
+        padding: 16px;
+    }
+    .rbfw_global_settings .rbfw-integration-ready-badge {
+        margin-left: 80px;
+        margin-top: -10px;
+    }
+    .rbfw_global_settings .rbfw-integration-card-body {
+        grid-template-columns: 1fr;
+        padding: 16px;
+    }
+    .rbfw_global_settings .rbfw-integration-actions {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 14px 16px;
+    }
+    .rbfw_global_settings .rbfw-integration-actions .button {
+        width: 100%;
+    }
+
+    .rbfw_global_settings .rbfw-integration-action-status {
+        margin-left: 0;
     }
 
     /* License tab: the addon license table (columns registered by other

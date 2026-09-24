@@ -3115,6 +3115,13 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     color: var(--me-primary);
     flex-shrink: 0;
 }
+.rbfw-me-help-link__logo {
+    border-radius: 4px;
+    flex-shrink: 0;
+    height: 20px;
+    object-fit: contain;
+    width: 20px;
+}
 .rbfw-me-help-link__text {
     flex: 1;
     min-width: 0;

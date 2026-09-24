@@ -14498,3 +14498,33 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     max-width: 96px;
     flex: 0 0 96px;
 }
+
+/* SecureHold WP: security deposit held on the card instead of charged */
+.rbfw-securehold-deposit-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    background: #f0f6ff;
+    border: 1px solid #cfe0fb;
+    border-radius: 6px;
+    color: #1e3a66;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.rbfw-securehold-deposit-note .fa-lock {
+    margin-top: 2px;
+    color: #3157b7;
+}
+
+.rbfw-securehold-deposit-note .woocommerce-Price-amount {
+    font-weight: 600;
+}
+
+.rbfw-deposit-notices .rbfw-securehold-deposit-note,
+.rbfw-securehold-deposit-note.rbfw-deposit-notice-held,
+.rbfw-securehold-deposit-note.rbfw-deposit-notice-charged {
+    margin: 12px 0 0;
+}

@@ -113,6 +113,12 @@ Need help or want to suggest an improvement? Use the [support form](https://mage
 
 The plugin is designed to work with standards-compliant WordPress themes.
 
+= Compatible third-party integrations =
+
+SecureHold WP 3.4.11 or later can use a fixed security deposit configured on a rental item as a separate Stripe authorization hold. The compatible fixed deposit is not added to the WooCommerce payable total; percentage-based and otherwise unsupported deposits continue through the normal WpRently checkout flow.
+
+Requirements: WooCommerce checkout mode, the official WooCommerce Stripe Gateway, SecureHold's own Stripe API keys in the same test/live mode, a linked WooCommerce rental product, a fixed WpRently security deposit, and the MagePeople compatibility option enabled in SecureHold. Until all of these are in place, and always in the Standalone checkout, WpRently keeps charging the deposit as part of the booking total. Set SecureHold's Default Hold Amount to 0 (Rent Item > Settings > Integrations offers this in one click) so it does not add its own hold to rentals whose percentage deposit WpRently already charges. Make sure Stripe's authorization duration is suitable for the rental period. See the [SecureHold documentation](https://secureholdwp.com/docs/) or [SecureHold support](https://secureholdwp.com/support/) for setup help.
+
 == Installation ==
 
 1. Go to `Plugins > Add New` in the WordPress dashboard.
@@ -166,6 +172,12 @@ Learn more about how [Appsero collects and uses data](https://appsero.com/privac
 
 == Changelog ==
 = 2.7.9 =
+* New: SecureHold WP 3.4.11+ integration for fixed WpRently security deposits. Settings > Integrations runs every setup step in place, without leaving the page: installing or activating WooCommerce, SecureHold and the official Stripe gateway, switching bookings to the WooCommerce checkout, enabling SecureHold's MagePeople compatibility, and turning off SecureHold's global default hold so it only holds WpRently deposits. The panel reports Ready only when the Stripe gateway and SecureHold's own Stripe keys are set in the same mode.
+* New: When SecureHold holds a deposit on the customer's card, the booking form, cart and checkout say so and no longer add it to the total. Deposits that are charged instead show "included in your total". For carts with rentals this replaces SecureHold's own checkout notice. The Bookings page shows each order's deposit hold (amount, status, automatic release date) or, for charged deposits, a reminder that they are refunded from the order.
+* Fixed: A deposit SecureHold took over but could not hold (Standalone checkout, or Stripe not connected yet) was dropped from the charge. It is now charged as before.
+* Fixed: Resort bookings charged the security deposit twice at WooCommerce checkout, once inside the room price and again as the Security Deposit fee.
+* Fixed: The Security Deposit shown on an order line could differ from the amount charged (for example $34.80 for a $35.09 fee), because it was recalculated from rounded-down prices.
+* Fixed: A PHP 8.1 deprecation notice on the rental items list page.
 * New: Global Off Dates. A new Global Off Dates tab in Settings lets you add date ranges when every rental item is closed, such as holidays or business-wide downtime, while the website stays online. These dates are blocked in all booking calendars (Single Day, Multiple Day, Resort, Multiple Items) and in search, and are also enforced on the server during search, availability checks, WooCommerce add-to-cart and checkout, and Standalone booking. A rental period cannot span a closed range. Each item's own off days and off dates work as before.
 * New: Per-duration variation pricing. Each item variation value, such as a size or a brand, can now have a separate price for each duration the item is rented by: Hourly, Half Day, Daily, Weekly and Monthly, or the item's own rent types for Single Day and Appointment items. This price is charged per booked unit on top of the item's rate. For multi-day rentals it is split into months, weeks, days and hours using the same rules as the item's base price. The existing single price field is kept as "Any duration" and is still used when no per-duration price is set, so current prices do not change. The live price preview and the cart use the same calculation.
 * New: Booking confirmation page for Standalone (Custom Payment) bookings. After checkout, customers see a dedicated page with the booking status, booking reference and full order details (item, pickup and return, quantity, subtotal, discount, total, payment method). Previously a short notice was shown above the rental item page.
