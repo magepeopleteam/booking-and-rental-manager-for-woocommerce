@@ -197,6 +197,7 @@
 .rbfw-fee-management-section .rbfw_bikecarmd_es_table td {
     display: block;
     flex: 0 0 auto;
+    width: auto;
     padding: 0;
     border: 0;
     background: none;
@@ -210,8 +211,9 @@
     margin: 0;
     padding: 0;
 }
-/* Title cell (middle) — grows and pushes the price to the right */
-.rbfw-fee-management-section .resource-title-qty {
+/* Title cell (middle) — grows and pushes the price to the right. Keyed on
+   td.resource-title-qty so it outranks the generic cell reset above. */
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table td.resource-title-qty {
     flex: 1 1 auto;
     min-width: 0;
     display: flex;
@@ -249,7 +251,7 @@
         padding: 10px 12px;
         gap: 10px;
     }
-    .rbfw-fee-management-section .resource-title-qty {
+    .rbfw-fee-management-section .rbfw_bikecarmd_es_table td.resource-title-qty {
         font-size: 13.5px;
     }
 }
