@@ -949,12 +949,21 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				update_post_meta( $post_id, 'rbfw_releted_rbfw', $related );
 			}
 
-			/* Tax */
+			/* Tax — WooCommerce taxes the hidden linked product, so mirror it there too. */
+			$tax_product_id = get_post_meta( $post_id, 'link_wc_product', true );
 			if ( isset( $_POST['_tax_status'] ) ) {
-				update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
+				$tax_status = sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) );
+				update_post_meta( $post_id, '_tax_status', $tax_status );
+				if ( $tax_product_id ) {
+					update_post_meta( $tax_product_id, '_tax_status', $tax_status );
+				}
 			}
 			if ( isset( $_POST['_tax_class'] ) ) {
-				update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+				$tax_class = sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) );
+				update_post_meta( $post_id, '_tax_class', $tax_class );
+				if ( $tax_product_id ) {
+					update_post_meta( $tax_product_id, '_tax_class', $tax_class );
+				}
 			}
 
 			/* Off Day Settings */

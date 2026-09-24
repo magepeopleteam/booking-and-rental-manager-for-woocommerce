@@ -16,7 +16,8 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
         // Order API, not postmeta: under HPOS the order is not in postmeta at all, so the
         // old _order_tax read returned nothing and no booking ever recorded its tax.
         $order_tax = rbfw_wc_order_tax_total($wc_order_id);
-        $total_cost = get_post_meta($wc_order_id, '_order_total', true);
+        $wc_order = function_exists('wc_get_order') ? wc_get_order($wc_order_id) : false;
+        $total_cost = $wc_order ? $wc_order->get_total() : get_post_meta($wc_order_id, '_order_total', true);
         $rbfw_link_order_id = get_post_meta($wc_order_id, '_rbfw_link_order_id', true);
         $rbfw_pin = get_post_meta($rbfw_link_order_id, 'rbfw_pin', true);
 

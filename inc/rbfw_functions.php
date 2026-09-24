@@ -4110,7 +4110,9 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
 
         if ( $start_date === $end_date ) {
             $rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true );
-            if ( $span_hours && $rbfw_enable_hourly_rate === 'no' ) {
+            // No time span (date-only booking, pickup and return on the same day) is a
+            // whole day: bill the daily rate instead of 0 hours at the hourly rate.
+            if ( ! $span_hours || $rbfw_enable_hourly_rate === 'no' ) {
                 return (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, $span_hours, $enable_daily, $total_days, $start_date, $end_date );
             }
             return (float) rbfw_md_price_for_hours_period( $post_id, $span_hours, $day, $date, $daily_rate, $hourly_rate, $seasonal_prices, $enable_daily );

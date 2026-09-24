@@ -159,14 +159,14 @@
 				$count = 1;
 				foreach ( $image_ids as $id ) {
 					$image_url = RBFW_Function::get_image_url( '', $id );
-					if ( $count < 4 ) {
+					// The 4th tile only becomes the "+N more" tile when there are more than 4 images.
+					if ( $count < 4 || ( $count == 4 && sizeof( $image_ids ) <= 4 ) ) {
 						?>
                         <div class="sliderShowcaseItem" data-slide-target="<?php echo esc_html( $count ); ?>" data-placeholder>
                             <div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
                         </div>
 						<?php
-					}
-					if ( $count == 4 ) {
+					} elseif ( $count == 4 ) {
 						?>
                         <div class="sliderShowcaseItem" data-target-popup="superSlider" data-placeholder>
                             <div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
