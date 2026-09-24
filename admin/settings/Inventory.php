@@ -50,8 +50,9 @@
 			 * duration price. Items that price per duration (Single Day rent
 			 * types, or the multi-day rate types that are switched on) get one
 			 * optional input per duration, so a value can cost e.g. 1000 per
-			 * full day; the "Any duration" field is the original single Price
-			 * and stays the fallback for values that set no per-duration price.
+			 * full day. Only enabled durations are offered. Existing non-zero
+			 * flat prices remain editable as a legacy fallback, so opening and
+			 * saving an older item cannot silently change its booking charges.
 			 *
 			 * @param int   $post_id     rbfw_item id.
 			 * @param int   $row_index   Variation (field) index.
@@ -66,10 +67,14 @@
 				$base    = 'rbfw_variations_data[' . (int) $row_index . '][value][' . (int) $value_index . ']';
 				?>
                 <div class="rbfw_variation_prices">
+                    <?php if ( empty( $options ) || (float) $flat > 0 ) : ?>
                     <label class="rbfw_variation_price_row">
-                        <span><?php echo empty( $options ) ? esc_html__( 'Price', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'Any duration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <span><?php echo empty( $options ) ? esc_html__( 'Price', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'Legacy flat price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         <input type="number" step="0.01" min="0" name="<?php echo esc_attr( $base ); ?>[price]" value="<?php echo esc_attr( $flat ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                     </label>
+                    <?php else : ?>
+                        <input type="hidden" name="<?php echo esc_attr( $base ); ?>[price]" value="<?php echo esc_attr( $flat ); ?>">
+                    <?php endif; ?>
 					<?php foreach ( $options as $duration_key => $duration_label ) : ?>
                         <label class="rbfw_variation_price_row">
                             <span><?php echo esc_html( $duration_label ); ?></span>

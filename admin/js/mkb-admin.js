@@ -1783,17 +1783,12 @@
         }
     });
     // Day long price
-    $(document).on('click', 'input[name=rbfw_enable_resort_daylong_price]', function (e) {
-        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
-        var status = jQuery(this).val();
-        if (status === 'yes') {
-            jQuery(this).val('no');
-            jQuery('.resort_day_long_price').hide();
-        }
-        if (status === 'no') {
-            jQuery(this).val('yes');
-            jQuery('.resort_day_long_price').show();
-        }
+    // Shared by both editors. Derive the saved value from the checked state;
+    // the modern editor deliberately skips the legacy value-inverting handlers.
+    $(document).on('change', 'input[name=rbfw_enable_resort_daylong_price]', function () {
+        $(this).val(this.checked ? 'yes' : 'no');
+        $(this).closest('.rbfw_resort_price_config_wrapper')
+            .find('.resort_day_long_price').toggle(this.checked);
     });
     // ================toggle switch===================
 
@@ -2196,9 +2191,8 @@ jQuery(document).ready(function () {
  * Price cell markup for one variation value row.
  *
  * Mirrors RBFW_Inventory::variation_price_cell() so a row added here saves
- * exactly like a server-rendered one: the legacy flat surcharge ("Any
- * duration"), plus one optional input per duration this item prices by (Single
- * Day rent types, or the multi-day rate types that are switched on). The
+ * exactly like a server-rendered one: one input per enabled duration, or a
+ * flat Price when the item has no duration options. The
  * option list is localised in RBFW_Dependencies as rbfw_translation
  * .variation_price_options; with none, only the flat Price input renders,
  * which is what every pre-existing item shows.
@@ -2220,9 +2214,12 @@ function rbfw_variation_price_cell_html(rowKey, valueKey) {
     };
     var priceLabel = rbfw_admin_i18n('price', 'Price');
     var html = '<div class="rbfw_variation_prices">';
-    html += '<label class="rbfw_variation_price_row"><span>'
-        + (options.length ? esc(rbfw_admin_i18n('any_duration', 'Any duration')) : esc(priceLabel))
-        + '</span><input type="number" step="0.01" min="0" name="' + esc(base) + '[price]" placeholder="' + esc(priceLabel) + '"></label>';
+    if (!options.length) {
+        html += '<label class="rbfw_variation_price_row"><span>' + esc(priceLabel)
+            + '</span><input type="number" step="0.01" min="0" name="' + esc(base) + '[price]" placeholder="' + esc(priceLabel) + '"></label>';
+    } else {
+        html += '<input type="hidden" name="' + esc(base) + '[price]" value="">';
+    }
     for (var i = 0; i < options.length; i++) {
         html += '<label class="rbfw_variation_price_row"><span>' + esc(options[i].label) + '</span>'
             + '<input type="number" step="0.01" min="0" name="' + esc(base) + '[prices][' + esc(options[i].key) + ']" placeholder="0.00"></label>';
