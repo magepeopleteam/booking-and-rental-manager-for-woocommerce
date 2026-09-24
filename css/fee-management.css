@@ -188,7 +188,7 @@
     box-shadow: 0 5px 16px rgba(16, 24, 40, .08);
 }
 /* Highlight a fee that is switched on */
-.rbfw-fee-management-section .rbfw_bikecarmd_es_table tr:has(.rbfw-management-price:checked) {
+.rbfw-fee-management-section .rbfw_bikecarmd_es_table tr:has(.rbfw-management-price:checked, .rbfw-management-price-resort:checked) {
     border-color: var(--rbfw-fee-accent);
     background: color-mix(in srgb, var(--rbfw-fee-accent) 6%, #fff);
 }
@@ -252,4 +252,25 @@
     .rbfw-fee-management-section .resource-title-qty {
         font-size: 13.5px;
     }
+}
+/* Resort fees share the booking fee layout while retaining the resort card. */
+.mp_default_theme .rbfw_resort_es_price_table.rbfw-fee-management-section .rbfw-single-right-heading,
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table.rbfw-fee-management-section .rbfw-single-right-heading {
+    padding: 16px !important;
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4;
+    border-bottom: 1px solid #e7e9ee !important;
+}
+.rbfw_resort_es_price_table.rbfw-fee-management-section .item-content.rbfw-resource {
+    padding: 12px;
+    box-sizing: border-box;
+}
+.rbfw_resort_es_price_table.rbfw-fee-management-section .rbfw_bikecarmd_es_table td {
+    width: auto;
+}
+.rbfw_resort_es_price_table.rbfw-fee-management-section .rbfw_bikecarmd_es_table .resource-title-qty {
+    flex: 1 1 0;
+    display: flex;
 }

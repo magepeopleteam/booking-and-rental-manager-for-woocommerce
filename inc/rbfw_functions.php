@@ -5228,44 +5228,40 @@ if (!function_exists('rbfw_day_row_md')) {
 
 
 
-function findMinimumPrice($items,$pricing_display_for_listing='') {
-    $minPrice = PHP_INT_MAX;
-    $minItem  = null;
-    $minType  = null;
+/** Return the lowest configured rate, preferring the requested listing duration. */
+function findMinimumPrice( $items, $pricing_display_for_listing = '' ) {
+    $result = array( 'item_name' => null, 'price_type' => null, 'price' => 0.0 );
+    $price_types = array( 'hourly_price', 'daily_price', 'weekly_price', 'monthly_price' );
+    $preferred = $pricing_display_for_listing . '_price';
+    $passes = in_array( $preferred, $price_types, true ) ? array( array( $preferred ), $price_types ) : array( $price_types );
 
-    foreach ($items as $item) {
-        foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
-
-            if ($priceType==$pricing_display_for_listing.'_price' && !empty($item[$priceType]) && $item[$priceType] < $minPrice) {
-
-                $minPrice = $item[$priceType];
-                $minItem  = $item['item_name'];
-                $minType  = $priceType;
-
+    foreach ( $passes as $types ) {
+        foreach ( (array) $items as $item ) {
+            foreach ( $types as $type ) {
+                // An explicit zero is a valid price; a blank or invalid value is not.
+                if ( ! is_array( $item ) || ! isset( $item[ $type ] ) || ! is_numeric( $item[ $type ] ) ) {
+                    continue;
+                }
+                $price = (float) $item[ $type ];
+                if ( ! is_finite( $price ) || $price < 0 ) {
+                    continue;
+                }
+                if ( null === $result['price_type'] || $price < $result['price'] ) {
+                    $result = array(
+                        'item_name'  => isset( $item['item_name'] ) ? $item['item_name'] : null,
+                        'price_type' => $type,
+                        'price'      => $price,
+                    );
+                }
             }
-
+        }
+        if ( null !== $result['price_type'] ) {
+            break;
         }
     }
 
-   if($minPrice==PHP_INT_MAX){
-       foreach ($items as $item) {
-           foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
-               if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
-                   $minPrice = $item[$priceType];
-                   $minItem  = $item['item_name'];
-                   $minType  = $priceType;
-               }
-           }
-       }
-   }
-
-    return [
-        'item_name' => $minItem,
-        'price_type' => $minType,
-        'price' => $minPrice
-    ];
+    return $result;
 }
-
 
 
 /**

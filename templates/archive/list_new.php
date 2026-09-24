@@ -27,8 +27,9 @@
         $pricing_display_for_listing = rbfw_get_option( 'pricing_display_for_listing', 'rbfw_basic_gen_settings' );
 
         $price = 0;
+        $price_label = $prices_start_at;
 
-        if ($rbfw_rent_type == 'bike_car_md') {
+        if ( in_array( $rbfw_rent_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true ) ) {
 
             $hourly_rate_label = __('Hourly rate', 'booking-and-rental-manager-for-woocommerce');
             $daily_rate_label = __('Daily rate', 'booking-and-rental-manager-for-woocommerce');
@@ -256,13 +257,19 @@
                 $price = $smallest_price;
             }
             $price_label = $prices_start_at;
-        } else{
+        } elseif ($rbfw_rent_type == 'multiple_items'){
 
             $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
             $result = findMinimumPrice($multiple_items_info,$pricing_display_for_listing);
             $price = $result['price'];
-            $price_label = ($result['price_type']=='hourly_price')?'Hourly':(($result['price_type']=='daily_price')?'Daily':(($result['price_type']=='weekly_price')?'Weekly':'Monthly'));
+            $rate_labels = array(
+                'hourly_price'  => __( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ),
+                'daily_price'   => __( 'Daily', 'booking-and-rental-manager-for-woocommerce' ),
+                'weekly_price'  => __( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ),
+                'monthly_price' => __( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ),
+            );
+            $price_label = isset( $rate_labels[ $result['price_type'] ] ) ? $rate_labels[ $result['price_type'] ] : $prices_start_at;
 
         }
 

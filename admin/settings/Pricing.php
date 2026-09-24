@@ -1029,7 +1029,7 @@
 			}
 
 			public function resort_price_config( $post_id ) {
-				$rbfw_enable_resort_daylong_price = get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) : 'no';
+				$rbfw_enable_resort_daylong_price = get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) : 'no';
 				$rbfw_item_type                   = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_resort_room_data            = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
 				?>
@@ -1116,7 +1116,7 @@
                                                 </td>
                                                 <td class="resort_day_long_price"
                                                     style="display: <?php echo ( $rbfw_item_type === 'resort' && $rbfw_enable_resort_daylong_price === 'yes' )
-													    ? esc_attr( 'block' )
+													    ? esc_attr( 'table-cell' )
 													    : esc_attr( 'none' ); ?>;">
                                                     <input
                                                         type="number"
