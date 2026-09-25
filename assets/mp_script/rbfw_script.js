@@ -1227,12 +1227,13 @@ jQuery(function ($) {
         $form.find('.timely_quqntity_table').hide();
         $form.find('.rbfw_quantity_md').hide();
 
-        // Single-day variations charge the base rental rate ONCE: a value's price is
-        // added separately as a surcharge, so its quantity must NOT multiply the
-        // duration rate. Keep the submitted base quantity at 1 for the timely
-        // single-day form; multi-day still lets the steppers own the quantity.
+        // The steppers own the Quantity for every mode: each selected unit is a unit
+        // being rented, so the summed quantity drives the base rental exactly as it
+        // does for multi-day. A value's own price is added separately, on top, as a
+        // per-unit surcharge. (2.7.4 pinned the timely single-day form to 1, which
+        // charged one rate no matter how many units were booked.)
         var isSdTimely = $form.find('.rbfw_quantiry_area_sd').length > 0;
-        var qtyToSet   = isSdTimely ? 1 : totalQty;
+        var qtyToSet   = totalQty;
 
         // Mirror the base quantity into whichever quantity field the form submits so
         // the server sees it. Add the option when it is a <select>.
@@ -1250,11 +1251,11 @@ jQuery(function ($) {
         else $btn.prop('disabled', true).addClass('rbfw_disabled_button');
 
         if (isSdTimely) {
-            // Timely single-day: #rbfw_service_price holds the duration cost ONLY, and
-            // the base rental is charged once (rate × 1). The per-value surcharge is
-            // summed and rendered as its own line by rbfw_price_calculation_sd().
+            // Timely single-day: #rbfw_service_price holds the duration cost ONLY
+            // (totalQty × rate). The per-value surcharge is summed and rendered as
+            // its own line by rbfw_price_calculation_sd().
             var rate = parseFloat($form.find('.rbfw_sd_price_input').val()) || 0;
-            $form.find('#rbfw_service_price').val(rate.toFixed(2));
+            $form.find('#rbfw_service_price').val((totalQty * rate).toFixed(2));
             if (typeof rbfw_price_calculation_sd === 'function') rbfw_price_calculation_sd();
         } else if ($form.find('.rbfw_bike_car_md_item_wrapper').length) {
             // Multi-day: schedule the AJAX price recalculation so the variation
