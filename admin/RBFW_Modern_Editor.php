@@ -949,20 +949,33 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				update_post_meta( $post_id, 'rbfw_releted_rbfw', $related );
 			}
 
-			/* Tax — WooCommerce taxes the hidden linked product, so mirror it there too. */
-			$tax_product_id = get_post_meta( $post_id, 'link_wc_product', true );
-			if ( isset( $_POST['_tax_status'] ) ) {
-				$tax_status = sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) );
-				update_post_meta( $post_id, '_tax_status', $tax_status );
-				if ( $tax_product_id ) {
-					update_post_meta( $tax_product_id, '_tax_status', $tax_status );
+			/* Tax.
+			   With the Tax Settings card switched off the item carries no tax choice at all:
+			   the collapsed section still posts its selects, so the stored values are dropped
+			   rather than kept as invisible leftovers. The item then follows WooCommerce's own
+			   default (taxable) — to charge no tax, switch the card on and pick Tax Status =
+			   None. */
+			if ( 'yes' === $tax_settings_enable ) {
+				if ( isset( $_POST['_tax_status'] ) ) {
+					update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
 				}
+				if ( isset( $_POST['_tax_class'] ) ) {
+					update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+				}
+			} else {
+				delete_post_meta( $post_id, '_tax_status' );
+				delete_post_meta( $post_id, '_tax_class' );
 			}
-			if ( isset( $_POST['_tax_class'] ) ) {
-				$tax_class = sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) );
-				update_post_meta( $post_id, '_tax_class', $tax_class );
-				if ( $tax_product_id ) {
-					update_post_meta( $tax_product_id, '_tax_class', $tax_class );
+			/* WooCommerce taxes the hidden linked product, and this save's save_post sync ran
+			   (inside wp_update_post above) before the tax meta was written — mirror the
+			   resolved value now so the product never lags one save behind the item. */
+			$tax_product_id = (int) get_post_meta( $post_id, 'link_wc_product', true );
+			if ( $tax_product_id && 'product' === get_post_type( $tax_product_id ) ) {
+				$tax = rbfw_resolve_item_tax( $post_id );
+				update_post_meta( $tax_product_id, '_tax_status', $tax['status'] );
+				update_post_meta( $tax_product_id, '_tax_class', $tax['class'] );
+				if ( function_exists( 'wc_delete_product_transients' ) ) {
+					wc_delete_product_transients( $tax_product_id );
 				}
 			}
 

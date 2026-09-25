@@ -4345,6 +4345,65 @@ function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' 
 
 
 /**
+ * The tax status and class WooCommerce should apply to a rental item, normalized.
+ *
+ * One definition shared by the checkout mirror (RBFW_Hidden_Product::sync_tax_to_product(),
+ * which stamps these onto the backing product WooCommerce actually charges against) and by
+ * the booking summary on the item page, so the figure the customer is quoted is the figure
+ * they are charged.
+ *
+ * An item with no explicit choice keeps WooCommerce's OWN default, "taxable". It used to
+ * fall back to "none" here, on the assumption that a freshly created hidden product was
+ * already "none" — it is not: create_hidden_wc_product() writes no _tax_status at all, and
+ * WC_Product::set_tax_status() turns an empty value into "taxable". Mirroring "none" onto
+ * the product therefore switched tax OFF at checkout for every rental whose Tax tab had
+ * never been touched, the moment that item was next saved. To charge no tax on an item,
+ * set Tax Status = None on it explicitly.
+ *
+ * @param int $item_id Rental item id.
+ * @return array{status:string,class:string} status: taxable|shipping|none, class: WC slug ('' = Standard).
+ */
+function rbfw_resolve_item_tax( $item_id ) {
+	$item_id = absint( $item_id );
+	if ( ! $item_id ) {
+		return array( 'status' => 'taxable', 'class' => '' );
+	}
+
+	/*
+	 * The item's own choice is the only input, whichever editor made it. The modern editor
+	 * deletes both keys when its Tax Settings card is switched off, so "card off" already
+	 * means "unconfigured" — reading the toggle here as well would let a stale "off" flag
+	 * override a Tax Status later set from the classic Tax tab.
+	 */
+	$status = (string) get_post_meta( $item_id, '_tax_status', true );
+	$class  = (string) get_post_meta( $item_id, '_tax_class', true );
+
+	// Unset, or the "Select Tax Status" placeholder option -> WooCommerce's default.
+	if ( ! in_array( $status, array( 'taxable', 'shipping', 'none' ), true ) ) {
+		$status = 'taxable';
+	}
+
+	if ( 'none' === $status ) {
+		return array( 'status' => 'none', 'class' => '' );
+	}
+
+	/*
+	 * WooCommerce's Standard class IS the empty string — its own product screen posts
+	 * value="" for it. The rental tax tab offers value="standard" instead, and storing
+	 * that verbatim made WC_Tax look up a class slug that no rate row carries, so a
+	 * "taxable / Standard" rental still came out with zero tax.
+	 */
+	if ( 'standard' === $class ) {
+		$class = '';
+	}
+	if ( '' !== $class && class_exists( 'WC_Tax' ) && ! in_array( $class, WC_Tax::get_tax_class_slugs(), true ) ) {
+		$class = '';
+	}
+
+	return array( 'status' => $status, 'class' => $class );
+}
+
+/**
  * The tax WooCommerce will apply to a rental, resolved for display in the booking summary.
  *
  * The item's own _tax_status / _tax_class are the source of truth (both editors write them,
@@ -4366,18 +4425,13 @@ function rbfw_item_tax_info( $item_id ) {
 	if ( ! $item_id || ! class_exists( 'WC_Tax' ) || 'yes' !== get_option( 'woocommerce_calc_taxes' ) ) {
 		return $none;
 	}
-	if ( 'taxable' !== get_post_meta( $item_id, '_tax_status', true ) ) {
+	/* Same resolution the backing product is mirrored with, so the summary can never
+	   promise a tax the checkout will not charge (or hide one that it will). */
+	$item_tax = rbfw_resolve_item_tax( $item_id );
+	if ( 'taxable' !== $item_tax['status'] ) {
 		return $none;
 	}
-	if ( 'no' === get_post_meta( $item_id, 'rbfw_enable_tax_settings', true ) ) {
-		return $none;
-	}
-
-	// WooCommerce's Standard class is the empty string; the rental tax tab offers "standard".
-	$tax_class = (string) get_post_meta( $item_id, '_tax_class', true );
-	if ( 'standard' === $tax_class ) {
-		$tax_class = '';
-	}
+	$tax_class = $item_tax['class'];
 
 	$rates = WC_Tax::get_rates( $tax_class );
 	if ( empty( $rates ) ) {
