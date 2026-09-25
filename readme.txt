@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.7
+Stable tag: 2.8.0
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -50,6 +50,7 @@ Use it for car rentals, bike rentals, equipment rentals, dress rentals, appointm
 * Frontend customer booking dashboard
 * Order list with booking details
 * Tax settings and WooCommerce payment gateway support
+* SecureHold WP integration: hold fixed security deposits on the customer's card as a separate Stripe authorization instead of charging them
 * Responsive layouts and multilingual translation support
 * Shortcodes for rental lists and single-item booking forms
 
@@ -162,24 +163,36 @@ Yes. Use the included `[rent-list]` and `[rent-add-to-cart]` shortcodes to place
 * [Bus Ticket Booking with Seat Reservation](https://wordpress.org/plugins/bus-ticket-booking-with-seat-reservation/)
 * [WooCommerce Events Manager](https://wordpress.org/plugins/mage-eventpress/)
 
-== Privacy Policy ==
 
-Booking and Rental Manager for WooCommerce uses the [Appsero](https://appsero.com) SDK to collect basic telemetry data only after the user gives permission through the admin notice. This helps with troubleshooting and product improvements.
+## Privacy Policy 
+This Plugin uses [Appneck](https://appneck.com) SDK to collect some telemetry data upon the user's confirmation to troubleshoot problems faster & make product improvements.
+Appneck SDK *does not gather any data by default.* The SDK only starts gathering basic telemetry data *when a user allows it via the admin notice. We collect the data to ensure a great user experience for all our users. Integrating Appneck SDK **DOES NOT IMMEDIATELY* start gathering data, *without confirmation from users in any case.*
 
-Appsero does not collect data by default. Data collection starts only after user consent.
-
-Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
+Learn more about how [Appsero collects and uses data](https://appneck.com/privacy-policy/).
 
 == Changelog ==
-= 2.7.9 =
-* New: SecureHold WP 3.4.11+ integration for fixed WpRently security deposits. Settings > Integrations runs every setup step in place, without leaving the page: installing or activating WooCommerce, SecureHold and the official Stripe gateway, switching bookings to the WooCommerce checkout, enabling SecureHold's MagePeople compatibility, and turning off SecureHold's global default hold so it only holds WpRently deposits. The panel reports Ready only when the Stripe gateway and SecureHold's own Stripe keys are set in the same mode.
+= 2.8.0 =
+* **New: SecureHold WP integration (highlight of this release).** A fixed WpRently security deposit can now be held on the customer's card as a separate Stripe authorization hold through SecureHold WP 3.4.11 or later, instead of being charged with the booking. The customer pays only the rental; the hold is released automatically, or you can capture it from SecureHold if needed.
+* New: Settings > Integrations runs every SecureHold setup step in place, without leaving the page: installing or activating WooCommerce, SecureHold and the official Stripe gateway, switching bookings to the WooCommerce checkout, enabling SecureHold's MagePeople compatibility, and turning off SecureHold's global default hold so it only holds WpRently deposits. The panel reports Ready only when the Stripe gateway and SecureHold's own Stripe keys are set in the same mode.
 * New: When SecureHold holds a deposit on the customer's card, the booking form, cart and checkout say so and no longer add it to the total. Deposits that are charged instead show "included in your total". For carts with rentals this replaces SecureHold's own checkout notice. The Bookings page shows each order's deposit hold (amount, status, automatic release date) or, for charged deposits, a reminder that they are refunded from the order.
 * Fixed: A deposit SecureHold took over but could not hold (Standalone checkout, or Stripe not connected yet) was dropped from the charge. It is now charged as before.
 * Fixed: Resort bookings charged the security deposit twice at WooCommerce checkout, once inside the room price and again as the Security Deposit fee.
 * Fixed: The Security Deposit shown on an order line could differ from the amount charged (for example $34.80 for a $35.09 fee), because it was recalculated from rounded-down prices.
-* Fixed: A PHP 8.1 deprecation notice on the rental items list page.
+* Improved: The rent list grid and list layouts now show per-duration prices for Dress, Equipment and Others items too, and the "from" price uses the item's own listing duration first.
+* Improved: The "Any duration" variation price field is only shown when the item has no duration options or already has a flat price saved.
+* Fixed: A fatal error at WooCommerce checkout, most often with the block checkout and taxes enabled, when fees were saved to the order.
+* Fixed: Tax Status and Tax Class set in the modern editor were not applied at checkout, because they were not copied to the rental item's linked WooCommerce product.
 * Fixed: Rental items whose tax settings had never been changed stopped being taxed after the next save, so orders showed Tax $0.00. An item with no tax status set now uses the WooCommerce default (taxable), and the tax shown in the booking summary is the tax charged at checkout. Items affected by this are repaired automatically; items set to Tax Status = None are not changed.
+* Fixed: On sites using WooCommerce High-Performance Order Storage (HPOS), a booking's order total was read as empty. It is now read through the WooCommerce order API.
+* Fixed: Multi-day bookings with both daily and hourly rates cost $0 when pickup and return were on the same date without times. A date-only same-day booking is now billed as one day; same-day bookings with times are still priced by the hour.
 * Fixed: Single-day rentals with item variations charged and reserved only one unit. When the per-size steppers replace the Quantity selector, booking two items was priced as one and the other units stayed available. The quantity now follows the steppers, and each size is still checked against its own stock.
+* Fixed: The day-long price switch could save the opposite of what was shown. It now saves the selected state in both the classic and modern editors.
+* Fixed: The resort pricing table in the editor could load values from the wrong item and did not line up as a table.
+* Fixed: The fee price overflowed past the right edge of the Fee Management card on narrow single-day, multi-day and multiple-items booking forms, and the resort fee section was misaligned.
+* Fixed: The image slider showed a "+0" tile over the last image when a gallery had exactly four images.
+* Fixed: A PHP 8.1 deprecation notice on the rental items list page.
+
+= 2.7.9 =
 * New: Global Off Dates. A new Global Off Dates tab in Settings lets you add date ranges when every rental item is closed, such as holidays or business-wide downtime, while the website stays online. These dates are blocked in all booking calendars (Single Day, Multiple Day, Resort, Multiple Items) and in search, and are also enforced on the server during search, availability checks, WooCommerce add-to-cart and checkout, and Standalone booking. A rental period cannot span a closed range. Each item's own off days and off dates work as before.
 * New: Per-duration variation pricing. Each item variation value, such as a size or a brand, can now have a separate price for each duration the item is rented by: Hourly, Half Day, Daily, Weekly and Monthly, or the item's own rent types for Single Day and Appointment items. This price is charged per booked unit on top of the item's rate. For multi-day rentals it is split into months, weeks, days and hours using the same rules as the item's base price. The existing single price field is kept as "Any duration" and is still used when no per-duration price is set, so current prices do not change. The live price preview and the cart use the same calculation.
 * New: Booking confirmation page for Standalone (Custom Payment) bookings. After checkout, customers see a dedicated page with the booking status, booking reference and full order details (item, pickup and return, quantity, subtotal, discount, total, payment method). Previously a short notice was shown above the rental item page.
