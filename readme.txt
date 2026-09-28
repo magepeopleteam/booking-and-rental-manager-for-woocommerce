@@ -55,11 +55,26 @@ Use it for car rentals, bike rentals, equipment rentals, dress rentals, appointm
 
 = Pro features =
 
-* Booking calendar with order details
-* Reports with order details
-* CSV export for reports
-* PDF booking receipts
-* Booking-related email features
+* Delivery & collection charges
+* Registration forms
+* Drag-and-drop form builder
+* Request booking (quote and approval)
+* Item reviews
+* Customer portal
+* Edit a booking after purchase
+* Choose visible columns
+* Security deposit ledger
+* Edit stock from the inventory screen
+* Booking calendar
+* Google Calendar sync
+* A4 PDF receipt
+* Thermal / POS receipt
+* Customisable PDF templates
+* WooCommerce booking email
+* Quote request emails
+* Google review request email
+* Reports page
+* Bookings export
 
 [View Pro version](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
 
@@ -115,9 +130,7 @@ The plugin is designed to work with standards-compliant WordPress themes.
 
 = Compatible third-party integrations =
 
-SecureHold WP 3.4.11 or later can use a fixed security deposit configured on a rental item as a separate Stripe authorization hold. The compatible fixed deposit is not added to the WooCommerce payable total; percentage-based and otherwise unsupported deposits continue through the normal WpRently checkout flow.
-
-Requirements: WooCommerce checkout mode, the official WooCommerce Stripe Gateway, SecureHold's own Stripe API keys in the same test/live mode, a linked WooCommerce rental product, a fixed WpRently security deposit, and the MagePeople compatibility option enabled in SecureHold. Until all of these are in place, and always in the Standalone checkout, WpRently keeps charging the deposit as part of the booking total. Set SecureHold's Default Hold Amount to 0 (Rent Item > Settings > Integrations offers this in one click) so it does not add its own hold to rentals whose percentage deposit WpRently already charges. Make sure Stripe's authorization duration is suitable for the rental period. See the [SecureHold documentation](https://secureholdwp.com/docs/) or [SecureHold support](https://secureholdwp.com/support/) for setup help.
+SecureHold WP 3.4.11+ can hold a fixed WpRently security deposit as a separate Stripe authorization instead of adding it to the WooCommerce total, once WooCommerce checkout, the Stripe Gateway and SecureHold's MagePeople compatibility option are all set up; see [SecureHold docs](https://secureholdwp.com/docs/) for setup help.
 
 == Installation ==
 
@@ -155,9 +168,17 @@ Yes. Use the included `[rent-list]` and `[rent-add-to-cart]` shortcodes to place
 5. Rental list layout for browsing available items.
 6. Booking order details in the admin area.
 
+== Addons for this plugin ==
+
+* [Booking and Rental Manager Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
+* [Addon: Seasonal Pricing](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/) — Apply different rental prices based on seasons, dates, or time ranges.
+* [Addon: Backend Order](https://mage-people.com/product/backend-order-addon-wprently/) — Create and manage rental orders directly from the admin dashboard.
+* [Addon: Min and Max Booking Day](https://mage-people.com/product/min-and-max-booking-day-for-booking-and-rental-plugin/) — Set minimum and maximum booking limits for rental items.
+* [Addon: Discount Over X Days](https://mage-people.com/product/pricing-discount-over-x-day-addon-for-rental-and-booking-plugin/) — Set discounts based on the number of rental days.
+* [Addon: Multi Day Price Saver](https://mage-people.com/product/multi-day-price-saver-addon-for-wprently/) — Offer special discounts for multi-day rentals to encourage longer bookings.
+
 == Other plugins ==
 
-* [Booking and Rental Manager for WooCommerce Addon: Seasonal Pricing](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/)
 * [Bus Booking Manager](https://wordpress.org/plugins/bus-booking-manager/)
 * [Bus Ticket Booking with Seat Reservation](https://wordpress.org/plugins/bus-ticket-booking-with-seat-reservation/)
 * [WooCommerce Events Manager](https://wordpress.org/plugins/mage-eventpress/)
