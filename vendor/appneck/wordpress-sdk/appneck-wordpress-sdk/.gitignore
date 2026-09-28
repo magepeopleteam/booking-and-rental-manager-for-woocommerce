@@ -1,0 +1,10 @@
+# PHPUnit result caches. Named by phpunit.xml / phpunit-integration.xml's own
+# cacheDirectory settings, so running either suite always creates them.
+.phpunit.cache/
+.phpunit.cache-integration/
+
+# Composer dev dependencies. This package deliberately ships as a bundled
+# directory with NO vendor/ (see bootstrap.php) — a vendor/ here is only ever
+# a local development artifact and must never reach a plugin's bundle.
+/vendor/
+composer.lock
