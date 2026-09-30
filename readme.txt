@@ -133,6 +133,9 @@ The plugin is designed to work with standards-compliant WordPress themes.
 
 SecureHold WP 3.4.11+ can hold a fixed WpRently security deposit as a separate Stripe authorization instead of adding it to the WooCommerce total, once WooCommerce checkout, the Stripe Gateway and SecureHold's MagePeople compatibility option are all set up; see [SecureHold docs](https://secureholdwp.com/docs/) for setup help.
 
+In each Rent Item's Security Deposit settings, "Multiply fixed deposit by booked quantity" charges the fixed amount for every booked unit, including each room or multiple-item unit. It is off for existing items; percentage deposits continue to use the rental subtotal. SecureHold's static hold does not support this option and requires a compatible SecureHold update to fall back to WpRently checkout.
+
+
 == Installation ==
 
 1. Go to `Plugins > Add New` in the WordPress dashboard.
@@ -193,6 +196,7 @@ Learn more about how [Appsero collects and uses data](https://appneck.com/privac
 
 == Changelog ==
 = 2.8.0 =
+* New: Optional per-item fixed security deposit multiplied by booked quantity. The rental form and checkout use the selected room, item, or rental count; existing fixed and percentage deposits retain their behavior.
 * **New: SecureHold WP integration (highlight of this release).** A fixed WpRently security deposit can now be held on the customer's card as a separate Stripe authorization hold through SecureHold WP 3.4.11 or later, instead of being charged with the booking. The customer pays only the rental; the hold is released automatically, or you can capture it from SecureHold if needed.
 * New: Settings > Integrations runs every SecureHold setup step in place, without leaving the page: installing or activating WooCommerce, SecureHold and the official Stripe gateway, switching bookings to the WooCommerce checkout, enabling SecureHold's MagePeople compatibility, and turning off SecureHold's global default hold so it only holds WpRently deposits. The panel reports Ready only when the Stripe gateway and SecureHold's own Stripe keys are set in the same mode.
 * New: When SecureHold holds a deposit on the customer's card, the booking form, cart and checkout say so and no longer add it to the total. Deposits that are charged instead show "included in your total". For carts with rentals this replaces SecureHold's own checkout notice. The Bookings page shows each order's deposit hold (amount, status, automatic release date) or, for charged deposits, a reminder that they are refunded from the order.

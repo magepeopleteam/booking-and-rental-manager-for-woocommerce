@@ -946,7 +946,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
                 $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info  );
 
-                $security_deposit                           = rbfw_security_deposit( $rbfw_id, $sub_total_price );
+                $security_deposit                           = rbfw_security_deposit( $rbfw_id, $sub_total_price, array_sum( array_map( 'absint', $rbfw_room_info ) ) );
                 // The deposit is charged once, as the "Security Deposit" cart fee built from
                 // rbfw_ticket_info (custom_taxable_fee()), like every other item type.
                 $total_price                                = $discounted_total;
@@ -1178,7 +1178,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date , $rbfw_management_info , $rbfw_management_price, $variation_info);
 
                 $sub_total_price                                 = apply_filters( 'rbfw_cart_base_price', $sub_total_price );
-                $security_deposit                                = rbfw_security_deposit( $rbfw_id, $sub_total_price );
+                $security_deposit                                = rbfw_security_deposit( $rbfw_id, $sub_total_price, array_sum( array_map( 'absint', $rbfw_type_info ) ) );
                 $total_price                                     = $sub_total_price + $rbfw_management_price;
 
                 $cart_item_data['rbfw_item_quantity']            = $rbfw_item_quantity;
@@ -1266,7 +1266,8 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
 
-                $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price );
+                $deposit_quantity = array_sum( array_map( static function ( $item ) { return isset( $item['item_qty'] ) ? absint( $item['item_qty'] ) : 0; }, $multiple_items_info ) );
+                $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price, $deposit_quantity );
                 $total_price                                      = $sub_total_price + $rbfw_management_price - $discount_amount;
                 $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $multiple_items_info , $rbfw_category_wise_info,$total_days,$durationQty, $rbfw_regf_info, $security_deposit,$rbfw_management_info,$rbfw_management_price,$rbfw_multi_item_price);
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
@@ -1519,7 +1520,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $discount_amount = $discount_arr['discount_amount'];
                     }
                 }
-                $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price );
+                $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price, $rbfw_item_quantity );
                 $total_price                                      = $sub_total_price + $rbfw_management_price - $discount_amount;
                 $rbfw_ticket_info                                 = $this->rbfw_cart_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price + $rbfw_extra_service_price, $total_price, $rbfw_service_info, $variation_info, $discount_type, $discount_amount, $rbfw_regf_info, $rbfw_service_infos, $total_days, $security_deposit , $rbfw_management_info, $rbfw_management_price);
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;

@@ -914,6 +914,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			update_post_meta( $post_id, 'rbfw_security_deposit_type', $deposit_type );
 			$deposit_amount = isset( $_POST['rbfw_security_deposit_amount'] ) ? absint( $_POST['rbfw_security_deposit_amount'] ) : 0;
 			update_post_meta( $post_id, 'rbfw_security_deposit_amount', $deposit_amount );
+			$deposit_per_quantity = ( isset( $_POST['rbfw_security_deposit_per_quantity'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_per_quantity'] ) ) ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_security_deposit_per_quantity', $deposit_per_quantity );
 
 			/* Front-end Display Settings enable toggle */
 			$frontend_display_enable = ( isset( $_POST['rbfw_enable_frontend_display'] ) && $_POST['rbfw_enable_frontend_display'] === 'yes' ) ? 'yes' : 'no';
@@ -1223,7 +1225,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_item_quantity', 'rbfw_enable_md_type_item_qty', 'rbfw_enable_extra_service_qty',
 				'rbfw_item_stock_quantity', 'stock_manage_on_return_date', 'rbfw_enable_variations',
 				'rbfw_enable_security_deposit', 'rbfw_security_deposit_type',
-				'rbfw_security_deposit_amount', 'rbfw_security_deposit_label',
+				'rbfw_security_deposit_amount', 'rbfw_security_deposit_label', 'rbfw_security_deposit_per_quantity',
 				'rbfw_enable_faq_content', 'rbfw_enable_term_content', 'rbfw_item_terms_conditions',
 				'rbfw_enable_pick_point',
 				'rbfw_enable_additional_gallary',

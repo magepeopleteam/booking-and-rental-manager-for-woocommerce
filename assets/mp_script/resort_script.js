@@ -1,3 +1,10 @@
+function rbfwResortDepositQuantity() {
+    if (jQuery('#rbfw_security_deposit_per_quantity').val() !== 'yes') return 1;
+    var rooms = 0;
+    jQuery('.rbfw_room_qty').each(function () { rooms += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+    return rooms;
+}
+
 /* Stock cap reader, shared with md_script.js (which loads first). Defined here
    defensively so this file still reads a cap correctly on its own: an absent or
    blank max means the row does not track stock (no cap), while a literal max="0"
@@ -280,7 +287,7 @@ function calculateTotalDurationPrice() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
         }
     }
 
@@ -354,7 +361,7 @@ function calculateTotalResortExtraService() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
         }
     }
 
@@ -431,7 +438,7 @@ function calculateTotalManagementPriceResort() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
         }
     }
 

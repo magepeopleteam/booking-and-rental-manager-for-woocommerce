@@ -1,3 +1,20 @@
+function rbfwSdDepositQuantity() {
+    if (jQuery('#rbfw_security_deposit_per_quantity').val() !== 'yes') return 1;
+    var $rentTypes = jQuery('.rbfw_bikecarsd_qty');
+    if ($rentTypes.length) {
+        var rentedUnits = 0;
+        $rentTypes.each(function () { rentedUnits += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+        return rentedUnits;
+    }
+    var $variations = jQuery('.rbfw-variation-qty-input');
+    if ($variations.length) {
+        var units = 0;
+        $variations.each(function () { units += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+        return units;
+    }
+    return Math.max(0, parseInt(jQuery('#rbfw_item_quantity').val(), 10) || 0);
+}
+
 /* Stock cap reader, shared with md_script.js (which loads first). Defined here
    defensively so this file still reads a cap correctly on its own: an absent or
    blank max means the row does not track stock (no cap), while a literal max="0"
@@ -758,7 +775,7 @@ function rbfw_price_calculation_sd(){
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwSdDepositQuantity();
         }
     }
 
@@ -787,6 +804,8 @@ function rbfw_price_calculation_sd(){
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
+    }else{
+        jQuery('.security_deposit').hide();
     }
 
 
@@ -1045,5 +1064,3 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
         }
     });
 }
-
-

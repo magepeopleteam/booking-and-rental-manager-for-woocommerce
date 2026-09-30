@@ -248,7 +248,7 @@
 					if ( $subtotal_price > 0 ):
 						$total_price = (float) $subtotal_price;
 					endif;
-					$security_deposit = rbfw_security_deposit( $product_id, $total_price );
+					$security_deposit = rbfw_security_deposit( $product_id, $total_price, array_sum( array_map( 'absint', $rbfw_room_info ) ) );
 					$total_price      = $total_price + $security_deposit['security_deposit_amount'];
 					$percent          = 0;
 					if ( function_exists( 'rbfw_get_discount_array' ) ) {
@@ -433,7 +433,9 @@
 
 
 
-                    $security_deposit = rbfw_security_deposit( $post_id, $subtotal_price );
+                    $deposit_rooms = is_array( $room_price_arr ) ? $room_price_arr : array();
+                    $deposit_quantity = array_sum( array_map( static function ( $room ) { return is_array( $room ) && isset( $room['data_qty'] ) ? absint( $room['data_qty'] ) : 0; }, $deposit_rooms ) );
+                    $security_deposit = rbfw_security_deposit( $post_id, $subtotal_price, $deposit_quantity );
 					if ( $security_deposit['security_deposit_amount'] ) {
 						$content .= '<li class="subtotal">' . ( ! empty( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
 					}
