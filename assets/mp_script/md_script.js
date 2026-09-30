@@ -1,3 +1,14 @@
+function rbfwMdDepositQuantity() {
+    if (jQuery('#rbfw_security_deposit_per_quantity').val() !== 'yes') return 1;
+    var $items = jQuery('.rbfw_muiti_items_qty');
+    if ($items.length) {
+        var units = 0;
+        $items.each(function () { units += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+        return units;
+    }
+    return Math.max(0, parseInt(jQuery('#rbfw_item_quantity_md').val(), 10) || 0);
+}
+
 
 
 /**
@@ -1107,6 +1118,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             'durationType': durationType,
             'durationQty': durationQty,
             'rbfw_duration_price': rbfw_duration_price,
+            'deposit_quantity': rbfwMdDepositQuantity(),
             'rbfw_service_category_price': rbfw_service_category_price,
             'rbfw_available_time': rbfw_available_time,
             'nonce' : rbfw_ajax_front.nonce_multi_items_ajax_price_calculation
@@ -1264,7 +1276,7 @@ function calculateAdditional() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
         }
     }
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
@@ -1347,7 +1359,7 @@ function calculateTotalExtraService() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
         }
     }
 
@@ -1402,7 +1414,7 @@ function calculateTotalManagementPrice() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
         }
     }
 
@@ -1511,7 +1523,7 @@ function calculateTotalSingleItem() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
              rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
         }
     }
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
@@ -1628,7 +1640,7 @@ function calculateTotalMultipleItems(only_calculation=false) {
             if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
                 rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
             }else{
-                rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+                rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
             }
         }
         var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
@@ -2248,7 +2260,6 @@ function rbfwMIAutoSelectNextAvailableDate() {
         candidate.setDate(candidate.getDate() + 1);
     }
 }
-
 
 
 

@@ -4675,7 +4675,8 @@ function rbfw_trim_zeros_number( $number ) {
 	return rtrim( rtrim( number_format( (float) $number, 4, '.', '' ), '0' ), '.' );
 }
 
-function rbfw_security_deposit( $post_id, $sub_total_price ) {
+/** Calculate a deposit for the rental subtotal and the booked unit count. */
+function rbfw_security_deposit( $post_id, $sub_total_price, $quantity = 1 ) {
 		$security_deposit_amount      = 0;
 		$security_deposit_desc        = 0;
 		$rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
@@ -4686,7 +4687,8 @@ function rbfw_security_deposit( $post_id, $sub_total_price ) {
 				$security_deposit_amount = $rbfw_security_deposit_amount * $sub_total_price / 100;
 				$security_deposit_desc   = wc_price( $security_deposit_amount );
 			} else {
-				$security_deposit_amount = $rbfw_security_deposit_amount;
+				$per_quantity = 'yes' === get_post_meta( $post_id, 'rbfw_security_deposit_per_quantity', true );
+				$security_deposit_amount = max( 0, (float) $rbfw_security_deposit_amount ) * ( $per_quantity ? max( 0, (int) $quantity ) : 1 );
 				$security_deposit_desc   = wc_price( $security_deposit_amount );
 			}
 		}

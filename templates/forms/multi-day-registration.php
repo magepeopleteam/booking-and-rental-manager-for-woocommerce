@@ -883,6 +883,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
                 <input type="hidden" name="rbfw_security_deposit_amount" id="rbfw_security_deposit_amount"  value="<?php echo esc_attr($rbfw_security_deposit_amount); ?>">
+                <input type="hidden" id="rbfw_security_deposit_per_quantity" value="<?php echo esc_attr( get_post_meta( $rbfw_id, 'rbfw_security_deposit_per_quantity', true ) ); ?>">
 
                 <input type="hidden" name="rbfw_discount_number" id="rbfw_discount_number"  value="">
                 <input type="hidden" name="rbfw_discount_type" id="rbfw_discount_type"  value="">

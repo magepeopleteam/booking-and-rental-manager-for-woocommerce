@@ -216,6 +216,9 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 				'total'           => $total,
 				'item_type'       => $item_type,
 				'quantity'        => $quantity,
+				'security_deposit_amount' => isset( $quote['cart_data']['rbfw_security_deposit_liability_amount'] )
+					? max( 0, (float) $quote['cart_data']['rbfw_security_deposit_liability_amount'] )
+					: ( isset( $quote['cart_data']['security_deposit_amount'] ) ? max( 0, (float) $quote['cart_data']['security_deposit_amount'] ) : 0 ),
 				'ticket_info'     => $ticket_info,
 				'raw'             => $raw,
 			) );

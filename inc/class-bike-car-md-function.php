@@ -158,7 +158,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $total_days = $duration_price_info['total_days'];
             $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):0;
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_management_price + (float)$rbfw_service_price + (float)$rbfw_variation_surcharge;
-            $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
+            $security_deposit = rbfw_security_deposit($post_id,$sub_total_price,$item_quantity);
 
             $pricing_applied = isset( $duration_price_info['pricing_applied'] ) ? $duration_price_info['pricing_applied'] : 'No';
 
@@ -307,7 +307,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $max_available_qty = rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
 
-            $security_deposit = rbfw_security_deposit($post_id,$rbfw_multi_item_price);
+            $deposit_quantity = isset( $_POST['deposit_quantity'] ) ? absint( wp_unslash( $_POST['deposit_quantity'] ) ) : 0;
+            $security_deposit = rbfw_security_deposit($post_id,$rbfw_multi_item_price,$deposit_quantity);
 
             echo wp_json_encode( array(
                 'duration_price' => '',
