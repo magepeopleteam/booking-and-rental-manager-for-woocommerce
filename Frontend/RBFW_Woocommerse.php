@@ -608,7 +608,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                    Assigning into that NULL auto-creates an array holding only rbfw_id,
                    which is how dataless 0,00 rental lines used to reach checkout.
                    rbfw_validate_booking_nonce() already rejects this at add-to-cart;
-                   this is the belt-and-braces stop for any other caller. */
+                   this is the belt-and-braces stop for any other caller. A WP_Error
+                   means the request was refused (e.g. a malformed quantity): say why. */
+                if ( is_wp_error( $built ) ) {
+                    throw new Exception( $built->get_error_message() );
+                }
                 if ( ! is_array( $built ) ) {
                     throw new Exception(
                         esc_html__( 'Your booking session has expired. Please reload the page and select your dates again.', 'booking-and-rental-manager-for-woocommerce' )
@@ -619,6 +623,25 @@ if (!class_exists('RBFW_Woocommerce')) {
             $cart_item_data['rbfw_id'] = $product_id;
 
             return $cart_item_data;
+        }
+
+        /**
+         * A posted quantity as a whole number, or a customer-facing rejection.
+         *
+         * Quantities multiply straight into the booking price, so a negative, fractional or
+         * non-numeric one is refused rather than coerced (see RBFW_Function::parse_posted_quantity()).
+         *
+         * @param mixed $raw Raw posted value.
+         * @param int   $min Smallest accepted quantity: 0 for "not selected" rows, 1 for a base quantity.
+         * @return int|WP_Error The quantity, or a WP_Error when it is not a whole number or is below $min.
+         */
+        private function rbfw_posted_quantity( $raw, $min = 0 ) {
+            $quantity = RBFW_Function::parse_posted_quantity( $raw );
+            if ( null === $quantity || $quantity < $min ) {
+                return new WP_Error( 'rbfw_invalid_quantity', esc_html__( 'Please enter a valid quantity.', 'booking-and-rental-manager-for-woocommerce' ) );
+            }
+
+            return $quantity;
         }
 
         private function rbfw_get_multi_items_billing( $rbfw_id, $duration_type, $duration_qty ) {
@@ -835,14 +858,24 @@ if (!class_exists('RBFW_Woocommerce')) {
             $rbfw_enable_extra_service_qty = $_raw ?: 'no';
 
 
-            $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
+            // Every posted quantity is a price multiplier, so each must be a whole number: a
+            // malformed one refuses the request with a WP_Error (see rbfw_posted_quantity()).
+            // Zero on a row means "not selected"; the base quantity is held to at least 1 where it
+            // multiplies a price.
+            $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? $this->rbfw_posted_quantity( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
+            if ( is_wp_error( $rbfw_item_quantity ) ) {
+                return $rbfw_item_quantity;
+            }
             $rbfw_service_info_all = (isset( $sd_input_data_sabitized['rbfw_service_info'] ) && is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
 
             $rbfw_service_info             = array();
             if ( ! empty( $rbfw_service_info_all ) ) {
                 foreach ( $rbfw_service_info_all as $key => $value ) {
                     $service_name = ! empty( $value['service_name'] ) ? $value['service_name'] : '';
-                    $service_qty  = ! empty( $value['service_qty'] ) ? $value['service_qty'] : 0;
+                    $service_qty  = $this->rbfw_posted_quantity( isset( $value['service_qty'] ) ? $value['service_qty'] : 0 );
+                    if ( is_wp_error( $service_qty ) ) {
+                        return $service_qty;
+                    }
                     if ( $service_qty > 0 ) {
                         $rbfw_service_info[ $service_name ] = $service_qty;
                     }
@@ -899,9 +932,12 @@ if (!class_exists('RBFW_Woocommerce')) {
                 foreach ( $rbfw_room_info_all as $key => $value ) {
                     if( isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_qty']) && isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_price']) && isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_type']) ) {
                         $room_type = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_type'];
-                        $room_qty = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_qty'];
+                        $room_qty = $this->rbfw_posted_quantity( $sd_input_data_sabitized['rbfw_room_info'][$i]['room_qty'] );
+                        if ( is_wp_error( $room_qty ) ) {
+                            return $room_qty;
+                        }
                         $room_price = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_price'];
-                        if (!empty($room_qty)) {
+                        if ($room_qty > 0) {
                             $rbfw_room_info[$room_type] = $room_qty;
                             $rbfw_room_price[$room_type] = $room_price;
                         }
@@ -1016,14 +1052,23 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_type_info_all = isset( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_info'] : [];
                 $rbfw_type_info = array();
                 if ( isset( $sd_input_data_sabitized['service_type'] ) ) {
+                    // The chosen service/duration is booked once per unit: at least one unit, and
+                    // after any variation-derived quantity above has had its say.
+                    $rbfw_item_quantity = $this->rbfw_posted_quantity( $rbfw_item_quantity, 1 );
+                    if ( is_wp_error( $rbfw_item_quantity ) ) {
+                        return $rbfw_item_quantity;
+                    }
                     $rbfw_type_info[ $sd_input_data_sabitized['service_type'] ] = $rbfw_item_quantity;
                 } else {
                     $a = 1;
                     foreach ( $rbfw_type_info_all as $key => $value ) {
                         if ( ! empty( $rbfw_type_info_all[ $a ]['rent_type'] ) ) {
                             $rent_type = $rbfw_type_info_all[ $a ]['rent_type'];
-                            $rent_qty  = $rbfw_type_info_all[ $a ]['qty'];
-                            if ( ! empty( $rent_qty ) && $rent_qty > 0 ) {
+                            $rent_qty  = $this->rbfw_posted_quantity( isset( $rbfw_type_info_all[ $a ]['qty'] ) ? $rbfw_type_info_all[ $a ]['qty'] : 0 );
+                            if ( is_wp_error( $rent_qty ) ) {
+                                return $rent_qty;
+                            }
+                            if ( $rent_qty > 0 ) {
                                 $rbfw_type_info[ $rent_type ] = $rent_qty;
                             }
                         }
@@ -1303,6 +1348,12 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             } else {
                 global $rbfw;
+                // Multiplies the duration, service and fee prices below: a zero quantity would price
+                // the whole booking at nothing while still taking the dates.
+                $rbfw_item_quantity        = $this->rbfw_posted_quantity( $rbfw_item_quantity, 1 );
+                if ( is_wp_error( $rbfw_item_quantity ) ) {
+                    return $rbfw_item_quantity;
+                }
                 $start_date                = isset( $sd_input_data_sabitized['rbfw_pickup_start_date'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_date'] : '';
 
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
@@ -1357,7 +1408,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                             if ( 'cat_title' === $key_ser || ! is_array( $item ) || empty( $item['name'] ) ) {
                                 continue;
                             }
-                            $service_qty = isset( $item['quantity'] ) ? (float) $item['quantity'] : 0;
+                            $service_qty = $this->rbfw_posted_quantity( isset( $item['quantity'] ) ? $item['quantity'] : 0 );
+                            if ( is_wp_error( $service_qty ) ) {
+                                return $service_qty;
+                            }
                             if ( $service_qty <= 0 ) {
                                 continue; // service not selected
                             }

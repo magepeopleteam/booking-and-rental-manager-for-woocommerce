@@ -33,6 +33,42 @@
 				return $array;
 			}
 
+			/**
+			 * Parse a customer-posted quantity into a whole number.
+			 *
+			 * Quantities are price multipliers, and every booking form posts them as whole numbers
+			 * (<select> options, number inputs with min="0"). A negative, fractional, exponent or
+			 * non-numeric value can only come from a hand-built request, and coercing it is unsafe:
+			 * absint( '-5' ) is 5, while intval( '0.9' ) is 0 and (float) '1e309' is INF, each of which
+			 * prices the line at, or near, zero. Such values are reported as invalid instead.
+			 *
+			 * @param mixed $value Raw posted value.
+			 * @return int|null Whole number >= 0 (an empty value is 0, "not selected"), or null when
+			 *                  the value is not a whole number.
+			 */
+			public static function parse_posted_quantity( $value ) {
+				if ( is_int( $value ) ) {
+					return $value >= 0 ? $value : null;
+				}
+				if ( null === $value ) {
+					return 0;
+				}
+				if ( ! is_string( $value ) ) {
+					return null;
+				}
+				$value = trim( $value );
+				if ( '' === $value ) {
+					return 0;
+				}
+				// Whole digits only (a trailing ".0" is tolerated); the length cap keeps the cast clear of
+				// integer overflow and of absurd values no stock level can satisfy.
+				if ( ! preg_match( '/^\d{1,9}(\.0+)?$/', $value ) ) {
+					return null;
+				}
+
+				return (int) $value;
+			}
+
 
 			//***********Template********************//
 
