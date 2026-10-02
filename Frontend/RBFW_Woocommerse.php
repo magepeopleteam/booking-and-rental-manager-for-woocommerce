@@ -1348,6 +1348,17 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             } else {
                 global $rbfw;
+                /* "Bill base price per variation unit": the per-value steppers replace the
+                   standalone Quantity row, so the SUM of the chosen quantities is how many
+                   units are rented. Derived here, server-side, so the cart price is
+                   authoritative and cannot be lowered — or raised — by the browser. Left
+                   alone (base billed once, variations as add-ons) unless the item opts in. */
+                if ( rbfw_variations_multiply_base( $rbfw_id ) ) {
+                    $rbfw_variation_units = rbfw_variation_units( $rbfw_id, isset( $sd_input_data_sabitized['rbfw_variation_qty'] ) ? $sd_input_data_sabitized['rbfw_variation_qty'] : array() );
+                    if ( $rbfw_variation_units > 0 ) {
+                        $rbfw_item_quantity = $rbfw_variation_units;
+                    }
+                }
                 // Multiplies the duration, service and fee prices below: a zero quantity would price
                 // the whole booking at nothing while still taking the dates.
                 $rbfw_item_quantity        = $this->rbfw_posted_quantity( $rbfw_item_quantity, 1 );

@@ -874,6 +874,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$rbfw_enable_variations = ( isset( $_POST['rbfw_enable_variations'] ) && $_POST['rbfw_enable_variations'] === 'yes' ) ? 'yes' : 'no';
 			update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 
+			$rbfw_variation_multiply_base = ( isset( $_POST['rbfw_variation_multiply_base'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_variation_multiply_base'] ) ) ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_variation_multiply_base', $rbfw_variation_multiply_base );
+
 			$rbfw_variations_data = [];
 			if ( isset( $_POST['rbfw_variations_data'] ) && is_array( $_POST['rbfw_variations_data'] ) ) {
 				$rbfw_variations_data = rbfw_clean_variations_data( RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) ) );

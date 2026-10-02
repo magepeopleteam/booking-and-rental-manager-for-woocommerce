@@ -765,6 +765,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                                     <span class="rbfw_pricing_applied mds">
                                         (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
                                     </span>
+                                    <span class="rbfw-costing-note rbfw-duration-note"></span>
                                 </span>
                                 <span class="price-figure" data-price="">
                                 </span>
@@ -777,7 +778,10 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                             </li>
 
                             <li class="variation-costing rbfw-cond" style="display:none;">
-                                <?php esc_html_e('Variations','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span>
+                                    <?php esc_html_e('Variations','booking-and-rental-manager-for-woocommerce'); ?>
+                                    <span class="rbfw-costing-note rbfw-variation-note"></span>
+                                </span>
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
@@ -893,6 +897,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
+                <input type="hidden" id="rbfw_variation_multiply_base" value="<?php echo esc_attr( rbfw_variations_multiply_base( $rbfw_id ) ? 'yes' : 'no' ); ?>">
                 <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_attr($input_stock_quantity); ?>">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
                 <input type="hidden" name="total_days" id="rbfw_total_days" value="0">
