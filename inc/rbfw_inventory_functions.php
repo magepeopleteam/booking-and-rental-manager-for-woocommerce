@@ -3546,6 +3546,57 @@ function rbfw_get_variation_md_surcharge( $post_id, $value, $pickup_datetime, $d
 }
 
 /**
+ * Whether a multi-day item bills its base price once per booked variation unit.
+ *
+ * Off (the default, and what every existing item does): the base duration price
+ * is charged once and each variation value is only a per-unit surcharge on top.
+ * On: the variation steppers ARE the quantity selector (the form hides the
+ * standalone Quantity row while they show), so the base price — and everything
+ * that scales with the item quantity — is multiplied by the total number of
+ * variation units chosen, the way the single-day form already bills them.
+ *
+ * @param int $post_id rbfw_item id.
+ * @return bool
+ */
+function rbfw_variations_multiply_base( $post_id ) {
+	return 'yes' === get_post_meta( $post_id, 'rbfw_enable_variations', true )
+		&& 'yes' === get_post_meta( $post_id, 'rbfw_variation_multiply_base', true );
+}
+
+/**
+ * Total units chosen across an item's variation values.
+ *
+ * Only values that exist in the item's own variation set are counted, so a
+ * posted key that is not configured cannot inflate the unit count.
+ *
+ * @param int   $post_id rbfw_item id.
+ * @param mixed $posted  Posted rbfw_variation_qty[ field_id ][ value_name ] => qty.
+ * @return int
+ */
+function rbfw_variation_units( $post_id, $posted ) {
+	$variation_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( ! is_array( $posted ) || ! is_array( $variation_data ) ) {
+		return 0;
+	}
+
+	$units = 0;
+	foreach ( $variation_data as $field ) {
+		if ( ! is_array( $field ) || empty( $field['field_id'] ) || empty( $field['value'] ) || ! is_array( $field['value'] ) ) {
+			continue;
+		}
+		$qty_map = ( isset( $posted[ $field['field_id'] ] ) && is_array( $posted[ $field['field_id'] ] ) ) ? $posted[ $field['field_id'] ] : array();
+		foreach ( $field['value'] as $value ) {
+			$name = isset( $value['name'] ) ? $value['name'] : '';
+			if ( '' !== $name && isset( $qty_map[ $name ] ) ) {
+				$units += max( 0, (int) $qty_map[ $name ] );
+			}
+		}
+	}
+
+	return $units;
+}
+
+/**
  * Whether a stored inventory entry booked a given variation value.
  *
  * @param array  $inventory Single rbfw_inventory entry.

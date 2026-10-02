@@ -346,6 +346,27 @@
 				<?php
 			}
 
+			public function variation_multiply_base_toggle( $post_id ) {
+				$multiply_base = 'yes' === get_post_meta( $post_id, 'rbfw_variation_multiply_base', true );
+
+				// Multi-day only: the single-day form already bills the base price per variation unit.
+				// Shares the Multiple Item Choosing row's class so the editor's type switch hides both together.
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$show_multi     = in_array( $rbfw_item_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true );
+				?>
+                <section class="rbfw_switch_md_type_item_qty rbfw_variation_multiply_base"<?php echo $show_multi ? '' : ' style="display:none"'; ?>>
+                    <div>
+                        <label><?php esc_html_e( 'Charge base price per variation unit', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <p><?php esc_html_e( 'Off: the base price is charged once and each variation is only an add-on. On: the base price is multiplied by the total variation quantity chosen (1 Small + 2 Medium = 3 units), and extra services, fees and the security deposit follow the same unit count. Works when Item variation is enabled and the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="rbfw_variation_multiply_base" value="yes" <?php checked( $multiply_base ); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+				<?php
+			}
+
 			/**
 			 * Render the Inventory section for the modern editor.
 			 *
@@ -367,6 +388,7 @@
 				$renderer->stock_manage_return_date( $post_id );
 				$renderer->quantity_box_toggle( $post_id );
 				$renderer->variation_table_switch_on_off( $post_id );
+				$renderer->variation_multiply_base_toggle( $post_id );
 				$renderer->variation_settings( $post_id );
 			}
 
@@ -382,6 +404,7 @@
 					<?php $this->stock_manage_return_date( $post_id ); ?>
 					<?php $this->quantity_box_toggle( $post_id ); ?>
 					<?php $this->variation_table_switch_on_off( $post_id ); ?>
+					<?php $this->variation_multiply_base_toggle( $post_id ); ?>
 					<?php $this->variation_settings( $post_id ); ?>
                 </div>
 				<?php
@@ -408,6 +431,7 @@
 
 					update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
+					update_post_meta( $post_id, 'rbfw_variation_multiply_base', ( isset( $_POST['rbfw_variation_multiply_base'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_variation_multiply_base'] ) ) ) ? 'yes' : 'no' );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 					update_post_meta( $post_id, 'stock_manage_on_return_date', $stock_manage_on_return_date );
 					update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
