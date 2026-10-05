@@ -39,11 +39,11 @@
                     <h1><?php esc_html_e( 'Booking and Rental Manager for WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
                     <p><?php esc_html_e( 'A complete rental & booking solution for your business. It is perfect to offer all types of rental and booking services — bikes, cars, resorts, equipment, dresses and more.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     <div class="rbfw_welcome_hero_actions">
-                        <a href="<?php echo esc_url( 'https://booking.mage-people.com/' ); ?>" class="rbfw_welcome_btn rbfw_welcome_btn_primary" target="_blank" rel="noopener">
+                        <a href="<?php echo esc_url( 'https://www.wprently.com/' ); ?>" class="rbfw_welcome_btn rbfw_welcome_btn_primary" target="_blank" rel="noopener">
                             <span class="dashicons dashicons-visibility"></span>
                             <?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </a>
-                        <a href="<?php echo esc_url( 'https://docs.mage-people.com/rent-and-booking-manager/' ); ?>" class="rbfw_welcome_btn rbfw_welcome_btn_ghost_light" target="_blank" rel="noopener">
+                        <a href="<?php echo esc_url( 'https://docs.mage-people.com/docs/wprently/' ); ?>" class="rbfw_welcome_btn rbfw_welcome_btn_ghost_light" target="_blank" rel="noopener">
                             <span class="dashicons dashicons-book"></span>
                             <?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </a>
@@ -78,7 +78,7 @@
                                     <div class="rbfw_welcome_card_icon"><span class="dashicons dashicons-welcome-learn-more"></span></div>
                                     <h3><?php esc_html_e( '1. Read the Docs', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
                                     <p><?php esc_html_e( 'Step-by-step setup guide covering installation, configuration and your first booking item.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                                    <a href="<?php echo esc_url( 'https://docs.mage-people.com/rent-and-booking-manager/' ); ?>" target="_blank" rel="noopener" class="rbfw_welcome_card_link">
+                                    <a href="<?php echo esc_url( 'https://docs.mage-people.com/docs/wprently/' ); ?>" target="_blank" rel="noopener" class="rbfw_welcome_card_link">
                                         <?php esc_html_e( 'Open Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         <span class="dashicons dashicons-arrow-right-alt"></span>
                                     </a>
@@ -705,7 +705,7 @@
 						'style' => __( 'grid or list — Default: grid', 'booking-and-rental-manager-for-woocommerce' ),
 						'show'  => __( 'Number of items to show (integer). Default: -1 (all).', 'booking-and-rental-manager-for-woocommerce' ),
 					),
-					'demo'      => 'https://booking.mage-people.com/rents-list-style/',
+					'demo'      => 'https://www.wprently.com/rents-list-style/',
 				),
 				array(
 					'icon'      => 'grid-view',
@@ -715,7 +715,7 @@
 						'style' => __( 'grid or list — Default: grid', 'booking-and-rental-manager-for-woocommerce' ),
 						'show'  => __( 'Number of items to show (integer). Default: -1 (all).', 'booking-and-rental-manager-for-woocommerce' ),
 					),
-					'demo'      => 'https://booking.mage-people.com/rents-grid-style/',
+					'demo'      => 'https://www.wprently.com/rents-grid-style/',
 				),
 				array(
 					'icon'      => 'dashboard',
@@ -725,7 +725,7 @@
 						'style' => __( 'grid or list — Default: grid', 'booking-and-rental-manager-for-woocommerce' ),
 						'type'  => __( 'bike_car_sd, bike_car_md, resort, equipment, dress, others. Default: show all.', 'booking-and-rental-manager-for-woocommerce' ),
 					),
-					'demo'      => 'https://booking.mage-people.com/',
+					'demo'      => 'https://www.wprently.com/',
 				),
 				array(
 					'icon'      => 'admin-generic',
