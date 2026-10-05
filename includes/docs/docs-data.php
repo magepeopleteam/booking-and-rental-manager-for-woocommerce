@@ -61,7 +61,7 @@ return array(
 		'steps' => array(
 			array(
 				'title' => 'Run the Quick Setup',
-				'url'   => $rbfw_item_base . '&page=rbfw_quick_setup',
+				'url'   => 'admin.php?page=rbfw_onboarding',
 				'body'  => 'Open Rent Item → Quick Setup. It creates the required pages (search, cart, checkout, thank-you) and lets you pick WooCommerce or Standalone mode. This is the fastest way to a working store.',
 			),
 			array(
@@ -116,7 +116,7 @@ return array(
 			array( 'title' => 'Add New',          'slug' => 'post-new.php?post_type=rbfw_item',            'cap' => 'edit_posts',    'plan' => 'free', 'desc' => 'Create an item in the modern step-by-step editor.' ),
 			array( 'title' => 'Categories',       'slug' => 'edit-tags.php?taxonomy=rbfw_item_caregory&post_type=rbfw_item', 'cap' => 'manage_categories', 'plan' => 'free', 'desc' => 'Rental Types / categories (drives the search "type" filter).' ),
 			array( 'title' => 'Locations',        'slug' => 'edit-tags.php?taxonomy=rbfw_item_location&post_type=rbfw_item',  'cap' => 'manage_categories', 'plan' => 'free', 'desc' => 'Pickup / drop-off locations.' ),
-			array( 'title' => 'Quick Setup',      'slug' => $rbfw_item_base . '&page=rbfw_quick_setup',    'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Guided first-run wizard (creates pages, picks mode).' ),
+			array( 'title' => 'Quick Setup',      'slug' => 'admin.php?page=rbfw_onboarding',    'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Guided first-run wizard (creates pages, picks mode).' ),
 			array( 'title' => 'Time Slots',       'slug' => $rbfw_item_base . '&page=rbfw_time_slots',     'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Reusable time-slot presets for hourly/appointment items.' ),
 			array( 'title' => 'Inventory',        'slug' => $rbfw_item_base . '&page=rbfw_inventory',      'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Stock/availability grid by item, location and date.' ),
 			array( 'title' => 'Coupons',          'slug' => 'edit.php?post_type=rbfw_coupon',              'cap' => 'edit_posts',    'plan' => 'free', 'desc' => 'Discount/coupon engine (works in WooCommerce and Standalone).' ),

@@ -725,15 +725,15 @@
 							<div class="rbfw-gs-card">
 								<h4><i class="fas fa-book"></i> <?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
 								<ul class="rbfw-gs-links">
-									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
-									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'Configuration Guide', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
-									<li><a href="https://www.wprently.com/docs/" target="_blank" rel="noopener"><?php esc_html_e( 'View All Docs', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://docs.mage-people.com/docs/wprently/" target="_blank" rel="noopener"><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://docs.mage-people.com/docs/wprently/" target="_blank" rel="noopener"><?php esc_html_e( 'Configuration Guide', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
+									<li><a href="https://docs.mage-people.com/docs/wprently/" target="_blank" rel="noopener"><?php esc_html_e( 'View All Docs', 'booking-and-rental-manager-for-woocommerce' ); ?></a></li>
 								</ul>
 							</div>
 							<div class="rbfw-gs-card">
 								<h4><i class="fas fa-puzzle-piece"></i> <?php esc_html_e( 'Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
 								<p><?php esc_html_e( 'Extend your plugin with our powerful addon collection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-								<a href="https://mage-people.com/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-outline"><?php esc_html_e( 'Browse Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+								<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#addons" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-outline"><?php esc_html_e( 'Browse Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 							</div>
 						</aside>
 					</div>
