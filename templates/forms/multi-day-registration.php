@@ -320,12 +320,22 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                                                 $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
                                                 $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
                                                 $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
+                                                // Weekly / monthly seasonal rates: listed only when that duration rate is on and the season sets one.
+                                                $sp_price_w = ( $rbfw_enable_weekly_rate == 'yes' && isset( $sp['rbfw_sp_price_w'] ) && is_numeric( $sp['rbfw_sp_price_w'] ) && (float) $sp['rbfw_sp_price_w'] > 0 ) ? $sp['rbfw_sp_price_w'] : '';
+                                                $sp_price_m = ( $rbfw_enable_monthly_rate == 'yes' && isset( $sp['rbfw_sp_price_m'] ) && is_numeric( $sp['rbfw_sp_price_m'] ) && (float) $sp['rbfw_sp_price_m'] > 0 ) ? $sp['rbfw_sp_price_m'] : '';
+                                                $sp_cols    = 1 + ( $rbfw_enable_time_picker == 'yes' ? 1 : 0 ) + ( '' !== $sp_price_w ? 1 : 0 ) + ( '' !== $sp_price_m ? 1 : 0 );
                                             ?>
-                                                <tr><td <?php echo ( $rbfw_enable_time_picker == 'yes' ) ? 'colspan="2"' : ''; ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $start_date ) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $end_date ) ); ?></strong></td></tr>
+                                                <tr><td <?php echo ( $sp_cols > 1 ) ? 'colspan="' . esc_attr( $sp_cols ) . '"' : ''; ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $start_date ) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $end_date ) ); ?></strong></td></tr>
                                                 <tr>
                                                     <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_d ), rbfw_allowed_html() ); ?></td>
                                                     <?php if ( $rbfw_enable_time_picker == 'yes' ) : ?>
                                                     <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_h ), rbfw_allowed_html() ); ?></td>
+                                                    <?php endif; ?>
+                                                    <?php if ( '' !== $sp_price_w ) : ?>
+                                                    <td><strong><?php esc_html_e( 'Weekly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_w ), rbfw_allowed_html() ); ?></td>
+                                                    <?php endif; ?>
+                                                    <?php if ( '' !== $sp_price_m ) : ?>
+                                                    <td><strong><?php esc_html_e( 'Monthly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_m ), rbfw_allowed_html() ); ?></td>
                                                     <?php endif; ?>
                                                 </tr>
                                             <?php endforeach; ?>
