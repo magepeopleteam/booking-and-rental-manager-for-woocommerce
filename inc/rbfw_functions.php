@@ -4040,6 +4040,49 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
     return $price;
 }
 
+/**
+ * Count how many of the billed rental days fall on a Saturday or Sunday, for
+ * a per-day fee whose "Apply On" is set to Weekends Only.
+ *
+ * $total_days (when passed) is preferred over re-deriving the day count from
+ * $start_date/$end_date, because it already matches whatever day the caller
+ * actually billed (e.g. resort's "count extra day" adjustment) -- counting
+ * weekends against a different day span than what was billed would silently
+ * disagree with the rest of the invoice.
+ *
+ * @param string $start_date  'Y-m-d' (or 'Y-m-d H:i[:s]') rental start date.
+ * @param string $end_date    Unused unless $total_days is not provided.
+ * @param int    $total_days  Number of billed days starting at $start_date.
+ * @return int Number of weekend days within that span.
+ */
+function rbfw_count_weekend_days( $start_date, $end_date = '', $total_days = 0 ) {
+    $start_date = substr( (string) $start_date, 0, 10 );
+    if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $start_date ) ) {
+        return 0;
+    }
+
+    $days = (int) $total_days;
+    if ( $days <= 0 ) {
+        $end_date = substr( (string) $end_date, 0, 10 );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $end_date ) ) {
+            return 0;
+        }
+        $days = (int) round( ( strtotime( $end_date ) - strtotime( $start_date ) ) / DAY_IN_SECONDS ) + 1;
+    }
+    $days = max( 0, $days );
+
+    $weekend_count = 0;
+    $cursor        = strtotime( $start_date );
+    for ( $i = 0; $i < $days; $i++ ) {
+        $weekday = (int) gmdate( 'N', $cursor + ( $i * DAY_IN_SECONDS ) ); // ISO-8601: 6=Sat, 7=Sun
+        if ( $weekday >= 6 ) {
+            $weekend_count++;
+        }
+    }
+
+    return $weekend_count;
+}
+
 function rbfw_get_time_diff_in_hours($start, $end) {
     $diff = date_diff(new DateTime($start), new DateTime($end));
     return $diff->h + ($diff->i / 60);
@@ -5359,9 +5402,6 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 				continue;
 			}
 			$label = isset( $row['field_label'] ) ? trim( (string) $row['field_label'] ) : '';
-			if ( '' === $label ) {
-				continue; // No label -> unusable, skip it.
-			}
 			// Keep only value entries that actually carry a name; normalise quantity + price.
 			$values = array();
 			if ( ! empty( $row['value'] ) && is_array( $row['value'] ) ) {
@@ -5382,8 +5422,25 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 					$values[] = $clean_val;
 				}
 			}
-			$row['value'] = $values;
-			$clean[]      = $row;
+			if ( '' === $label ) {
+				// The admin UI no longer shows a required "Field Label" box per group
+				// (it's just an "Item Variations" chip list now), so a blank label no
+				// longer means "untouched row" — it means "admin didn't bother naming
+				// the group". Only an ALSO-empty group (no real chips either) is the
+				// genuinely blank "add new" row this function was written to drop;
+				// a group with real chips gets an auto label instead of losing its data.
+				if ( empty( $values ) ) {
+					continue;
+				}
+				$label = sprintf(
+					/* translators: %d: 1-based position of this variation group. */
+					__( 'Variation %d', 'booking-and-rental-manager-for-woocommerce' ),
+					count( $clean ) + 1
+				);
+			}
+			$row['field_label'] = $label;
+			$row['value']       = $values;
+			$clean[]            = $row;
 		}
 		return $clean;
 	}

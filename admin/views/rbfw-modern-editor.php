@@ -148,6 +148,9 @@
 										'media_buttons' => true,
 										'teeny'         => false,
 										'quicktags'     => true,
+										'tinymce'       => [
+											'content_style' => 'body{padding:14px 16px !important;background:#fff !important;}',
+										],
 									]
 								);
 								?>
@@ -656,6 +659,268 @@
 				 */
 				do_action( 'rbfw_modern_editor_sidebar_top', $post_id );
 			?>
+
+			<!-- Frontend Preview (Pricing step only) ─────────────────────────
+			     Shown instead of the Featured Image/Gallery/Status cards while
+			     the Pricing tab is active -- mirrors the live price breakdown a
+			     customer would see on the frontend booking form, computed from
+			     this screen's own (not-yet-saved) rate fields via JS so admins
+			     can sanity-check pricing before saving. Covers Single Day/
+			     Appointment (option + qty), Multiple Day/Equipment/Dress/Others
+			     (date range), Resort (room + date range) and Multiple Items
+			     (duration type/qty + pickup date + per-item qty). -->
+			<?php
+				$rbfw_gen_settings       = get_option( 'rbfw_basic_gen_settings' );
+				$rbfw_count_extra_day_fp = ( is_array( $rbfw_gen_settings ) && isset( $rbfw_gen_settings['rbfw_count_extra_day_enable'] ) ) ? $rbfw_gen_settings['rbfw_count_extra_day_enable'] : 'on';
+			?>
+			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-frontend-preview" style="display:none" data-currency="<?php echo esc_attr( get_woocommerce_currency_symbol() ); ?>" data-count-extra-day="<?php echo esc_attr( $rbfw_count_extra_day_fp ); ?>">
+				<div class="rbfw-me-card__head">
+					<h3><?php esc_html_e( 'Frontend Preview', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+					<p><?php esc_html_e( 'What a customer would see and pay right now.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+				</div>
+				<div class="rbfw-me-card__body rbfw-me-fp-body">
+					<!-- Featured image + item name, mirrored live from the Title field and
+					     the Featured Image card -- what a customer sees before they even
+					     start booking. -->
+					<div class="rbfw-me-fp-feature">
+						<div class="rbfw-me-fp-feature-img">
+							<span class="rbfw-me-fp-feature-placeholder">
+								<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"></rect><circle cx="9" cy="9" r="1.5" fill="currentColor" stroke="none"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+							</span>
+						</div>
+						<div class="rbfw-me-fp-feature-name">&nbsp;</div>
+					</div>
+
+					<!-- Multiple Day only: badges + summary heading, shown above the
+					     price box instead of the plain "From $X" line the other types
+					     use (toggled by updateVisibility() via the --boxed modifier
+					     below and this block's own display). -->
+					<div class="rbfw-me-fp-md-summary-head" style="display:none">
+						<div class="rbfw-me-fp-badges">
+							<span class="rbfw-me-fp-badge rbfw-me-fp-badge--available"><span class="rbfw-me-fp-badge-dot"></span><?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span class="rbfw-me-fp-badge rbfw-me-fp-badge--bestseller"><?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<h4 class="rbfw-me-fp-md-title"><?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
+						<p class="rbfw-me-fp-md-subtitle"><?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+
+					<div class="rbfw-me-fp-pricerow">
+						<span class="rbfw-me-fp-pricerow-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<span class="rbfw-me-fp-pricerow-plain"><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<strong class="rbfw-me-fp-from-amt">&nbsp;</strong>
+						<span class="rbfw-me-fp-pricerow-unit">/ <?php esc_html_e( 'Day', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<!-- Multiple Day only: trust badges under the price box. -->
+					<div class="rbfw-me-fp-trustrow" style="display:none">
+						<span class="rbfw-me-fp-trust">
+							<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 11 15 16 9"></polyline></svg>
+							<?php esc_html_e( 'Instant confirmation', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</span>
+						<span class="rbfw-me-fp-trust">
+							<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
+							<?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</span>
+					</div>
+
+					<!-- Calendar: Single Day only -- a plain display/booking-detail date, it
+					     doesn't affect price (rbfw_bikecarsd_price_calculation is date-independent). -->
+					<div class="rbfw-me-fp-field rbfw-me-fp-calendar-field" style="display:none">
+						<label class="rbfw-me-fp-label"><?php esc_html_e( 'Select Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<div class="rbfw-me-fp-cal">
+							<div class="rbfw-me-fp-cal-month"></div>
+							<div class="rbfw-me-fp-cal-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+							<div class="rbfw-me-fp-cal-grid"></div>
+							<div class="rbfw-me-fp-cal-legend">
+								<span><i class="rbfw-me-fp-cal-dot rbfw-me-fp-cal-dot--weekend"></i><?php esc_html_e( 'Weekend', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+								<span><i class="rbfw-me-fp-cal-dot rbfw-me-fp-cal-dot--off"></i><?php esc_html_e( 'Unavailable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+						</div>
+					</div>
+
+					<!-- Time Slot chips: Single Day / Appointment only -->
+					<div class="rbfw-me-fp-field rbfw-me-fp-sd-time-field" style="display:none">
+						<label class="rbfw-me-fp-label"><?php esc_html_e( 'Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<div class="rbfw-me-fp-chips rbfw-me-fp-sd-time-chips"></div>
+					</div>
+
+					<!-- Single Day / Appointment: rental option rows + qty stepper -->
+					<div class="rbfw-me-fp-sd-controls">
+						<div class="rbfw-me-fp-section-divider"></div>
+						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Rental Option', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-optrows rbfw-me-fp-sd-optrows"></div>
+						<div class="rbfw-me-fp-field rbfw-me-fp-field--inline rbfw-me-fp-sd-qty-field" style="display:none">
+							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-me-fp-stepper">
+								<div class="rbfw-me-fp-stepper-pill rbfw-me-fp-sd-stepper">
+									<button type="button" class="rbfw-me-fp-step-minus" data-step="-1">&minus;</button>
+									<span class="rbfw-me-fp-sd-qty-val">1</span>
+									<button type="button" class="rbfw-me-fp-step-plus" data-step="1">+</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Multiple Items: duration-type pills, top half of a card that
+					     visually continues into the Pickup Date/Time card below it
+					     (see .is-mi-card / .is-mi in the CSS -- matching borders, no
+					     gap, so the two physical elements read as one card). The
+					     Rental Duration qty picker itself lives inside the pickup row
+					     below (rbfw-me-fp-mi-duration-field), paired with Pickup Date. -->
+					<div class="rbfw-me-fp-mi-controls">
+						<div class="rbfw-me-fp-section-divider"></div>
+						<p class="rbfw-me-fp-section-label rbfw-me-fp-mi-duration-title"><?php esc_html_e( 'Rental Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-chips rbfw-me-fp-mi-duration-chips"></div>
+					</div>
+
+					<!-- Multiple Day / Resort: Pickup Date+Time, Return Date+Time paired per row.
+					     The Time fields are selects (not chips) styled to match the date
+					     fields -- only Multiple Day shows them (Time Picker on), hidden for
+					     Resort. Resort additionally wraps both rows in a bordered card with
+					     its own "Check-In & Check-Out Date" header (rbfw-me-fp-resort-dates-*,
+					     toggled in updateVisibility()) -- the rows/fields/inputs themselves
+					     are unchanged so recalcResort()/recalc() keep working unmodified. -->
+					<div class="rbfw-me-fp-resort-dates-card" style="display:none">
+						<div class="rbfw-me-fp-resort-dates-head">
+							<span><?php esc_html_e( 'Check-In & Check-Out Date', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+						</div>
+						<div class="rbfw-me-fp-resort-dates-body">
+					<div class="rbfw-me-fp-row rbfw-me-fp-pickup-row">
+						<!-- Multiple Items only: pairs with Pickup Date below in the same
+						     row (see .is-mi flex-wrap rules in the CSS); the real data is
+						     still the same qty $miControls stores, just presented as a
+						     "1 Day"-style dropdown instead of a +/- stepper. -->
+						<div class="rbfw-me-fp-field rbfw-me-fp-mi-duration-field" style="display:none">
+							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Rental Duration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-me-fp-dtfield">
+								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+								<select class="rbfw-me-fp-mi-qty-select"></select>
+								<svg class="rbfw-me-fp-dtfield-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+							</div>
+						</div>
+						<div class="rbfw-me-fp-field">
+							<div class="rbfw-me-fp-resort-date-top">
+								<label class="rbfw-me-fp-label rbfw-me-fp-start-label"><?php esc_html_e( 'Pickup Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<button type="button" class="rbfw-me-fp-dtfield-clear rbfw-me-fp-start-clear" aria-label="<?php esc_attr_e( 'Clear pickup date', 'booking-and-rental-manager-for-woocommerce' ); ?>" tabindex="-1">&times;</button>
+							</div>
+							<div class="rbfw-me-fp-dtfield">
+								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+								<span class="rbfw-me-fp-dtfield-display"></span>
+								<input type="date" class="rbfw-me-fp-start">
+							</div>
+						</div>
+						<div class="rbfw-me-fp-field rbfw-me-fp-md-start-time-field" style="display:none">
+							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Pickup Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-me-fp-dtfield">
+								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+								<select class="rbfw-me-fp-md-start-time"></select>
+								<svg class="rbfw-me-fp-dtfield-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+							</div>
+						</div>
+					</div>
+					<div class="rbfw-me-fp-row rbfw-me-fp-return-row">
+						<div class="rbfw-me-fp-field">
+							<div class="rbfw-me-fp-resort-date-top">
+								<label class="rbfw-me-fp-label rbfw-me-fp-end-label"><?php esc_html_e( 'Return Date', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<button type="button" class="rbfw-me-fp-dtfield-clear rbfw-me-fp-end-clear" aria-label="<?php esc_attr_e( 'Clear return date', 'booking-and-rental-manager-for-woocommerce' ); ?>" tabindex="-1">&times;</button>
+							</div>
+							<div class="rbfw-me-fp-dtfield">
+								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+								<span class="rbfw-me-fp-dtfield-display"></span>
+								<input type="date" class="rbfw-me-fp-end">
+							</div>
+						</div>
+						<div class="rbfw-me-fp-field rbfw-me-fp-md-end-time-field" style="display:none">
+							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Return Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-me-fp-dtfield">
+								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+								<select class="rbfw-me-fp-md-end-time"></select>
+								<svg class="rbfw-me-fp-dtfield-chev" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+							</div>
+						</div>
+					</div>
+						</div>
+					</div>
+
+					<!-- Resort only: gates the Room Type section behind an explicit
+					     Continue tap -- updateVisibility()/recalcResort() keep the room
+					     rows, qty, summary and Book button hidden until this is clicked
+					     (see the resortRoomsRevealed flag in the JS). -->
+					<button type="button" class="rbfw-me-fp-resort-continue-btn" style="display:none">
+						<?php esc_html_e( 'Continue', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+
+					<div class="rbfw-me-fp-duration-banner" style="display:none">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+						<span class="rbfw-me-fp-duration-text"></span>
+					</div>
+
+					<!-- Resort: room rows + package + qty stepper -- sits after the
+					     "X night(s)" duration banner above, per the approved layout. -->
+					<div class="rbfw-me-fp-resort-controls">
+						<div class="rbfw-me-fp-section-divider"></div>
+						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Room Type', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-optrows rbfw-me-fp-resort-optrows"></div>
+						<div class="rbfw-me-fp-field rbfw-me-fp-resort-package">
+							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Package', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<select class="rbfw-me-fp-select rbfw-me-fp-resort-pkg">
+								<option value="daynight"><?php esc_html_e( 'Day & Night', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+								<option value="daylong"><?php esc_html_e( 'Day Long', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+							</select>
+						</div>
+						<div class="rbfw-me-fp-field rbfw-me-fp-field--inline">
+							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<div class="rbfw-me-fp-stepper">
+								<div class="rbfw-me-fp-stepper-pill rbfw-me-fp-resort-stepper">
+									<button type="button" class="rbfw-me-fp-step-minus" data-step="-1">&minus;</button>
+									<span class="rbfw-me-fp-resort-qty-val">1</span>
+									<button type="button" class="rbfw-me-fp-step-plus" data-step="1">+</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="rbfw-me-fp-warn-slot"></div>
+
+					<!-- Multiple Items: one qty stepper per linked item row, revealed once
+					     duration + pickup date are set (see recalcMi()). -->
+					<div class="rbfw-me-fp-mi-items" style="display:none">
+						<div class="rbfw-me-fp-section-divider"></div>
+						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Items', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-mi-item-rows"></div>
+					</div>
+
+					<!-- Variations (Size/Color/etc.): single-select pills per field, price surcharge -->
+					<div class="rbfw-me-fp-variations" style="display:none">
+						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Options', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-variations-groups"></div>
+					</div>
+
+					<!-- Extra Services (basic table for SD/Appointment/Multiple Items, category-wise for MD family) -->
+					<div class="rbfw-me-fp-extras" style="display:none">
+						<div class="rbfw-me-fp-section-divider"></div>
+						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Extra Services', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-extras-rows"></div>
+					</div>
+
+					<div class="rbfw-me-fp-summary">
+						<p class="rbfw-me-fp-summary-title"><?php esc_html_e( 'Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<div class="rbfw-me-fp-summary-rows"></div>
+						<div class="rbfw-me-fp-summary-total">
+							<span><?php esc_html_e( 'Total', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<strong class="rbfw-me-fp-total-amt">$0.00</strong>
+						</div>
+					</div>
+
+					<div class="rbfw-me-fp-book-btn-wrap">
+						<button type="button" class="rbfw-me-fp-book-btn" tabindex="-1"><?php esc_html_e( 'Book Now', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+						<span class="rbfw-me-fp-book-btn-tip"><?php esc_html_e( 'Preview only — this button doesn\'t place a real booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<p class="rbfw-me-fp-note"><?php esc_html_e( 'Based on the rate fields on this screen, including unsaved changes. Extra services, variations, fees, day-wise and seasonal pricing add-ons are not reflected here.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+				</div>
+			</div>
 
 			<div class="rbfw-me-card rbfw-me-card--sidebar" data-rbfw-tour="featured-image">
 				<div class="rbfw-me-card__head">

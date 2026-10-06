@@ -148,7 +148,7 @@
                             </p>
                         </div>
                         <div class="item_stock_quantity">
-                            <input type="number" name="rbfw_buffer_time" id="rbfw_buffer_time" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
+                            <input type="number" name="rbfw_buffer_time" id="rbfw_buffer_time" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </section>
 
@@ -162,7 +162,7 @@
                             </p>
                         </div>
                         <div class="item_stock_quantity">
-                            <input type="number" name="rbfw_buffer_time_after" id="rbfw_buffer_time_after" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
+                            <input type="number" name="rbfw_buffer_time_after" id="rbfw_buffer_time_after" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </section>
 
@@ -197,11 +197,11 @@
 				<div class="rbfw-me-row rbfw-me-row--2 rbfw-me-offday-buffer">
 					<div class="rbfw-me-field">
 						<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time Before (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<input type="number" name="rbfw_buffer_time" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
+						<input type="number" name="rbfw_buffer_time" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					</div>
 					<div class="rbfw-me-field">
 						<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
+						<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					</div>
 				</div>
 				<?php

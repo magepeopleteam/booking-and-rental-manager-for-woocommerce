@@ -724,6 +724,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 						'calculation_type' => sanitize_text_field( wp_unslash( $fee['calculation_type'] ?? 'fixed' ) ),
 						'amount'           => floatval( $fee['amount'] ?? 0 ),
 						'frequency'        => sanitize_text_field( wp_unslash( $fee['frequency']        ?? 'one-time' ) ),
+						'apply_on'         => sanitize_text_field( wp_unslash( $fee['apply_on']         ?? 'all-days' ) ),
 						'priority'         => sanitize_text_field( wp_unslash( $fee['priority']         ?? 'optional' ) ),
 						'refundable'       => sanitize_text_field( wp_unslash( $fee['refundable']       ?? 'no' ) ),
 						'color'            => sanitize_text_field( wp_unslash( $fee['color']            ?? 'security' ) ),

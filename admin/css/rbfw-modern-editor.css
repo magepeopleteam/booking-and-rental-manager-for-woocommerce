@@ -31,6 +31,11 @@
     --me-radius-lg:     12px;
     --me-header-h:      60px;
     --me-tab-h:         48px;
+    /* .rbfw-me-tabs's real rendered height (15px+10px padding + 28px step
+       circle + 10px gap + ~18px label line) — --me-tab-h above is a looser
+       approximation used elsewhere, too short to offset the sticky sidebar
+       below the tabs bar without the two overlapping. */
+    --me-tabs-actual-h: 83px;
     --me-shadow:        0 1px 2px rgba(15, 23, 42, .04), 0 4px 12px rgba(15, 23, 42, .04);
     --me-shadow-hover:  0 4px 16px rgba(15, 23, 42, .08);
     --me-space-xs:      8px;
@@ -460,7 +465,7 @@
     gap: 0;
     background: #fff;
     border-bottom: 1px solid var(--me-border);
-    padding: 22px 32px 20px;
+    padding: 15px 28px 10px;
     overflow-x: auto;
     position: sticky;
     top: calc(32px + var(--me-header-h));
@@ -500,7 +505,7 @@
 .rbfw-me-tab:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 19px;
+    top: 13px;
     left: calc(50% + 20px);
     width: calc(100% - 40px);
     height: 2px;
@@ -511,8 +516,8 @@
 .rbfw-me-tab.is-done:not(:last-child)::after { background: var(--me-primary); }
 /* Step circle */
 .rbfw-me-step-circle {
-    width: 42px;
-    height: 42px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: #f8fafc;
     border: 2px solid var(--me-border);
@@ -947,12 +952,41 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding-bottom: 88px;
 }
 
+/* Sticky must sit on the sidebar itself, not on a card inside it: a sticky
+   element's "room to move" comes from its own containing block, which for a
+   card inside <aside> is the aside's own box. On the Pricing panel every
+   other sidebar card is hidden (.is-previewing-pricing below), so the aside
+   shrinks to exactly the Frontend Preview card's height and there is no
+   slack left for it to stick within. Making the <aside> itself sticky uses
+   .rbfw-me-body as the containing block instead, which stays tall (matching
+   .rbfw-me-main), so it always has room regardless of which cards show. */
 .rbfw-me-sidebar {
-    width: 360px;
+    width: 430px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: var(--me-space-lg);
+    position: sticky;
+    top: calc(32px + var(--me-header-h) + var(--me-tabs-actual-h) + 20px);
+    max-height: calc(100vh - (32px + var(--me-header-h) + var(--me-tabs-actual-h) + 20px) - 24px);
+    /* The sidebar itself no longer scrolls as one block -- that would also
+       drag the Frontend Preview card's own head out of view. Instead only
+       that card's body scrolls internally; see the rules below. */
+    overflow-y: hidden;
+}
+
+/* Frontend Preview: head ("Frontend Preview" title + subtitle) stays put,
+   only its body scrolls when the live preview content runs long. */
+.rbfw-me-sidebar .rbfw-me-card.rbfw-me-frontend-preview {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: 100%;
+}
+.rbfw-me-sidebar .rbfw-me-card.rbfw-me-frontend-preview > .rbfw-me-card__body.rbfw-me-fp-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
 }
 
 /* ── Panels ─────────────────────────────────────────────────── */
@@ -2537,6 +2571,757 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-card--sidebar .rbfw-me-card__head { padding: 14px 18px 12px; }
 .rbfw-me-card--sidebar .rbfw-me-card__body { padding: 16px 18px; gap: var(--me-space-md); }
 
+/* ── Frontend Preview (Pricing step sidebar) ─────────────────────
+   Visual language ported 1:1 from the approved design prototype's
+   "lp-*" (live preview) classes -- same colors, sizes and spacing,
+   renamed to rbfw-me-fp- to avoid colliding with anything else on
+   this screen. The card chrome itself stays the editor's own
+   .rbfw-me-card / .rbfw-me-card--sidebar so it matches its siblings
+   (Featured Image, Gallery, ...). */
+.rbfw-me-sidebar.is-previewing-pricing .rbfw-me-card--sidebar:not(.rbfw-me-frontend-preview) {
+    display: none;
+}
+.rbfw-me-fp-pricerow { font-size: 13px; color: var(--me-muted); margin-bottom: 4px; }
+.rbfw-me-fp-pricerow strong { color: var(--me-text); font-size: 15px; }
+
+/* Multiple Day only: badges + "Instant Booking Summary" heading, shown in
+   place of the other types' plain feature-name-led layout. */
+.rbfw-me-fp-md-summary-head { margin-bottom: 12px; }
+.rbfw-me-fp-badges {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.rbfw-me-fp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+}
+.rbfw-me-fp-badge--available { background: #e8f8ee; color: #15803d; }
+.rbfw-me-fp-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+.rbfw-me-fp-badge--bestseller { background: #fde8ec; color: #be123c; }
+.rbfw-me-fp-md-title {
+    margin: 0 0 4px;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--me-text);
+    line-height: 1.3;
+}
+.rbfw-me-fp-md-subtitle {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--me-muted);
+    line-height: 1.5;
+}
+
+/* Boxed "Starting from" price stat (Multiple Day only) — the other types
+   keep the plain "From $X" line this same markup renders by default. */
+.rbfw-me-fp-pricerow-label,
+.rbfw-me-fp-pricerow-unit { display: none; }
+.rbfw-me-fp-pricerow--boxed {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 6px;
+    background: #f8fafc;
+    border: 1px solid #eef1f6;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 14px 0;
+}
+.rbfw-me-fp-pricerow--boxed .rbfw-me-fp-pricerow-label {
+    display: block;
+    width: 100%;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+.rbfw-me-fp-pricerow--boxed .rbfw-me-fp-pricerow-plain { display: none; }
+.rbfw-me-fp-pricerow--boxed .rbfw-me-fp-from-amt {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--me-text);
+}
+.rbfw-me-fp-pricerow--boxed .rbfw-me-fp-pricerow-unit {
+    display: inline;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--me-muted);
+}
+
+/* Trust badges row (Multiple Day only) */
+.rbfw-me-fp-trustrow {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--me-border-subtle);
+}
+.rbfw-me-fp-trust {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #475569;
+}
+.rbfw-me-fp-trust svg { color: #16a34a; flex-shrink: 0; }
+
+/* Featured image + item name — mirrors the Featured Image card and Title
+   field live, so this reads as "what the customer sees" before any of the
+   booking fields below. */
+.rbfw-me-fp-feature { margin-bottom: 14px; }
+.rbfw-me-fp-feature-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--me-radius);
+    overflow: hidden;
+    background: linear-gradient(135deg, #c3d4fb, #8fabf3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.rbfw-me-fp-feature-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.rbfw-me-fp-feature-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 1.5px solid rgba(255,255,255,.75);
+    color: rgba(255,255,255,.9);
+}
+.rbfw-me-fp-feature-img.has-image .rbfw-me-fp-feature-placeholder { display: none; }
+.rbfw-me-fp-feature-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--me-text);
+    line-height: 1.3;
+}
+
+.rbfw-me-fp-section-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    color: #94A3B8;
+    text-transform: uppercase;
+    margin: 4px 0 10px;
+}
+/* Leads each distinct section (Rental Option, Price Breakdown, Options,
+   Extra Services) so the preview reads as a sequence of separate steps
+   rather than one continuous list of fields. Lives as the first child of
+   each section's own (conditionally shown/hidden) wrapper, so it only
+   appears alongside a section that's actually visible. */
+.rbfw-me-fp-section-divider {
+    height: 1px;
+    background: var(--me-border-subtle);
+    margin: 4px 0 16px;
+}
+.rbfw-me-fp-field { margin-bottom: 14px; }
+.rbfw-me-fp-field--inline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--me-border-subtle);
+    border-radius: var(--me-radius-sm);
+    padding: 10px 12px;
+}
+.rbfw-me-fp-field--inline .rbfw-me-fp-label { margin-bottom: 0; }
+.rbfw-me-fp-label { display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 6px; }
+
+.rbfw-me-fp-optrows { display: flex; flex-direction: column; margin-bottom: 4px; }
+.rbfw-me-fp-optrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 12.5px;
+    color: #334155;
+    background: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: left;
+}
+.rbfw-me-fp-optrow:hover { border-color: #C7D7FB; }
+.rbfw-me-fp-optrow.sel { border-color: var(--me-primary); background: var(--me-primary-soft); color: var(--me-text); }
+.rbfw-me-fp-optrow strong { font-weight: 700; }
+
+.rbfw-me-fp-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.rbfw-me-fp-row .rbfw-me-fp-field { margin-bottom: 0; flex: 1; }
+
+/* Pickup/Return wrapper card — chrome-less by default (Multiple Day /
+   Multiple Items keep their plain stacked date+time rows exactly as
+   before); Resort gets the bordered "Check-In & Check-Out Date" card
+   look via the .is-resort modifier (set in updateVisibility()). */
+.rbfw-me-fp-resort-dates-card { margin: 0; }
+.rbfw-me-fp-resort-dates-head { display: none; }
+.rbfw-me-fp-resort-date-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+.rbfw-me-fp-dtfield-clear { display: none; }
+.rbfw-me-fp-dtfield-display { display: none; }
+
+.rbfw-me-fp-resort-dates-card.is-resort {
+    border: 1.5px solid #dce4fb;
+    border-radius: 12px;
+    padding: 14px 16px 16px;
+    background: #fff;
+    margin-bottom: 16px;
+}
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-resort-dates-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--me-text);
+    margin-bottom: 14px;
+}
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-resort-dates-head svg { color: var(--me-primary); flex-shrink: 0; }
+/* Two columns (Pickup / Return) side by side. An earlier version used
+   `display: contents` on .rbfw-me-fp-row so its field children became
+   direct flex items here -- display:contents is known to break click/focus
+   targeting on nested form controls in some browser versions, which is the
+   likely cause of the date picker not opening. Making the rows themselves
+   the flex items (each just flex:1, no display:contents) gives the same
+   two-column look without that risk. */
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-resort-dates-body { display: flex; gap: 12px; }
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-row {
+    flex: 1;
+    margin-bottom: 0;
+}
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 0;
+}
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-dtfield-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 50%;
+    background: #eef1f6;
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-family: inherit;
+    padding: 0;
+}
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-dtfield-clear:hover { background: #e2e8f0; color: #1e293b; }
+/* The native date input is shown directly -- no overlay, no hidden/
+   transparent layering. Two different overlay techniques (input absolutely
+   positioned + opacity:0; then input in-flow + color:transparent with a
+   painted-over formatted span) each broke differently across browsers --
+   either the picker stopped opening, or the native text kept painting
+   underneath the overlay text and double-exposed. A plain styled native
+   input is what actually works reliably everywhere, at the cost of the
+   exact "08 Oct 2026" formatting -- the browser's own date format shows
+   instead. */
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-dtfield {
+    background: transparent;
+    border: none;
+    padding: 0;
+    height: auto;
+    margin-top: 4px;
+}
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-dtfield > svg:first-child { display: none; }
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-dtfield-display { display: none; }
+.rbfw-me-fp-resort-dates-card.is-resort .rbfw-me-fp-dtfield input[type="date"] {
+    display: block;
+    width: 100%;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--me-text);
+    cursor: pointer;
+}
+
+/* Multiple Items: Rental Duration + Pickup Date side by side, Pickup Time
+   full width below -- all inside this same wrapper, which gets its bottom
+   half of a card that visually continues from .rbfw-me-fp-mi-controls
+   above it (matching borders, flush, no gap -- see that card's CSS).
+   Unlike Resort, the fields here keep the default boxed .rbfw-me-fp-dtfield
+   look (icon + value + chevron) -- that's already the right look, no
+   override needed. */
+.rbfw-me-fp-resort-dates-card.is-mi {
+    border: 1.5px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 16px;
+    background: #fff;
+    margin-bottom: 16px;
+}
+.rbfw-me-fp-resort-dates-card.is-mi .rbfw-me-fp-pickup-row {
+    flex-wrap: wrap;
+}
+.rbfw-me-fp-resort-dates-card.is-mi .rbfw-me-fp-pickup-row .rbfw-me-fp-field {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 130px;
+}
+.rbfw-me-fp-resort-dates-card.is-mi .rbfw-me-fp-pickup-row .rbfw-me-fp-md-start-time-field {
+    flex: 1 1 100%;
+}
+
+/* Multiple Items: top half of the same visually-merged card (see
+   .rbfw-me-fp-resort-dates-card.is-mi above) -- the dashed "section" look
+   used elsewhere in this sidebar reads as a plain card header instead, so
+   the divider it normally starts with is hidden here. */
+.rbfw-me-fp-mi-controls {
+    border: 1.5px solid #e2e8f0;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    padding: 16px 16px 4px;
+    background: #fff;
+    margin-bottom: 0;
+}
+.rbfw-me-fp-mi-controls .rbfw-me-fp-section-divider { display: none; }
+.rbfw-me-fp-mi-duration-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--me-text);
+    text-transform: none;
+    letter-spacing: normal;
+    margin: 0 0 10px;
+}
+/* Four separate, individually-bordered pill buttons with a real gap between
+   them -- same visual language as the other chip rows in this preview
+   (.rbfw-me-fp-chip), just bigger and equal-width. */
+.rbfw-me-fp-mi-duration-chips {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.rbfw-me-fp-mi-duration-chips .rbfw-me-fp-chip {
+    border: 1px solid var(--me-border);
+    background: #fff;
+    border-radius: 9px;
+    padding: 10px 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #64748b;
+    text-align: center;
+}
+.rbfw-me-fp-mi-duration-chips .rbfw-me-fp-chip:hover { border-color: #C7D7FB; }
+.rbfw-me-fp-mi-duration-chips .rbfw-me-fp-chip.active {
+    border-color: var(--me-primary);
+    background: var(--me-primary);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 1px 3px rgba(26,86,219,.3);
+}
+
+.rbfw-me-fp-stepper { display: flex; align-items: center; gap: 12px; }
+.rbfw-me-fp-stepper-pill {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--me-border);
+    border-radius: 999px;
+    overflow: hidden;
+    background: #fff;
+    flex-shrink: 0;
+}
+.rbfw-me-fp-stepper-pill button {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: #F8FAFC;
+    color: #334155;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: inherit;
+    line-height: 1;
+}
+.rbfw-me-fp-stepper-pill button:hover { background: #EEF1F5; }
+.rbfw-me-fp-stepper-pill span { padding: 0 12px; font-size: 12.5px; font-weight: 700; color: var(--me-text); white-space: nowrap; }
+
+.rbfw-me-fp-select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 10px;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--me-text);
+    font-family: inherit;
+    background: #fff;
+}
+
+.rbfw-me-fp-dtfield {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--me-primary-soft);
+    border: 1px solid #DCE4FB;
+    border-radius: 10px;
+    padding: 0 12px;
+    height: 44px;
+    box-sizing: border-box;
+}
+.rbfw-me-fp-dtfield svg { color: #5A7FD6; flex-shrink: 0; }
+/* This stylesheet has 80+ scattered ".rbfw-me-wrap input, select { background:
+   #fff !important }"-style rules (one for seemingly every card in the
+   editor); some explicitly list "input[type=\"date\"]", which ties a plain
+   two-class selector on specificity -- the [type="date"] attribute is added
+   here too so this rule always wins outright, regardless of this rule's
+   position in the file. */
+.rbfw-me-fp-dtfield.rbfw-me-fp-dtfield input[type="date"],
+.rbfw-me-fp-dtfield.rbfw-me-fp-dtfield select {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    font-family: inherit;
+    font-size: 13.5px;
+    color: #1E293B;
+    font-weight: 600;
+    width: 100%;
+    min-width: 0;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    line-height: normal !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+}
+.rbfw-me-fp-dtfield select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+.rbfw-me-fp-dtfield select::-ms-expand { display: none; }
+.rbfw-me-fp-dtfield-chev { color: #5A7FD6; flex-shrink: 0; margin-left: -4px; }
+/* Custom icon on the left, the browser's own calendar icon stays on the
+   right as a visible, clickable picker trigger -- matches the approved
+   design (icon · value · native calendar icon). */
+.rbfw-me-fp-dtfield input[type="date"] { cursor: pointer; }
+.rbfw-me-fp-dtfield input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
+
+/* ── Extra services / variations rows ───────────────────────── */
+.rbfw-me-fp-extras, .rbfw-me-fp-variations { margin-bottom: 4px; }
+.rbfw-me-fp-variation-group-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #334155;
+    margin: 10px 0 6px;
+}
+.rbfw-me-fp-variation-group-label:first-child { margin-top: 0; }
+.rbfw-me-fp-svcrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid #F1F5F9;
+    font-size: 12.5px;
+    color: #334155;
+}
+.rbfw-me-fp-svcrow:first-child { border-top: none; }
+.rbfw-me-fp-svcrow-name { flex: 1; min-width: 0; }
+.rbfw-me-fp-svcrow-price { color: var(--me-muted); font-size: 11.5px; display: block; }
+.rbfw-me-fp-stepper-pill--sm { flex-shrink: 0; }
+.rbfw-me-fp-stepper-pill--sm button { width: 22px; height: 22px; font-size: 13px; }
+.rbfw-me-fp-stepper-pill--sm span { padding: 0 9px; font-size: 12px; }
+
+.rbfw-me-fp-duration-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 14px;
+    background: var(--me-primary-soft);
+    color: #1A4FC4;
+    border-radius: 999px;
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+.rbfw-me-fp-duration-banner svg { flex-shrink: 0; }
+
+.rbfw-me-fp-warnbanner {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 9px 12px;
+    background: #FEF3E2;
+    color: #92400E;
+    border-radius: 8px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+
+.rbfw-me-fp-summary {
+    border: 1px solid var(--me-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 4px 0 14px;
+    background: #FAFBFC;
+}
+.rbfw-me-fp-summary-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: #94A3B8;
+    text-transform: uppercase;
+    margin: 0 0 10px;
+}
+.rbfw-me-fp-summary-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 12.5px;
+    color: #475569;
+    padding: 4px 0;
+}
+.rbfw-me-fp-summary-row span:first-child { color: var(--me-muted); flex-shrink: 0; }
+.rbfw-me-fp-summary-row span:last-child { color: var(--me-text); font-weight: 600; text-align: right; }
+.rbfw-me-fp-summary-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 1px solid #E4E7EC;
+    margin-top: 8px;
+    padding-top: 10px;
+}
+.rbfw-me-fp-summary-total span:first-child { font-size: 13px; color: var(--me-muted); }
+.rbfw-me-fp-total-amt { font-size: 18px; font-weight: 700; color: var(--me-primary); }
+
+/* Decorative only -- plain type="button" with no handler, doesn't submit
+   the editor's form or do anything on click. Shown/hidden together with
+   the Booking Summary box it belongs to (see $summary in the JS). A hover
+   tooltip makes that explicit so it reads as a preview, not a real "place
+   this order" control. */
+.rbfw-me-fp-book-btn-wrap {
+    position: relative;
+    margin-bottom: 14px;
+}
+.rbfw-me-fp-book-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 9px;
+    background: var(--me-primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: default;
+    transition: background .15s;
+}
+.rbfw-me-fp-book-btn-tip {
+    position: absolute;
+    bottom: calc(100% + 9px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #1f2937;
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: normal;
+    text-align: center;
+    max-width: 230px;
+    padding: 7px 11px;
+    border-radius: 7px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, .2);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity .15s, transform .15s;
+    z-index: 5;
+}
+.rbfw-me-fp-book-btn-tip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1f2937;
+}
+.rbfw-me-fp-book-btn-wrap:hover .rbfw-me-fp-book-btn-tip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+/* Multiple Day only: grayed out until the price breakdown has an amount
+   greater than $0 (toggled in recalc()), matching the real booking form's
+   own "nothing to book yet" state. */
+.rbfw-me-fp-book-btn.is-disabled {
+    background: #cbd5e1;
+    color: #fff;
+}
+/* Resort's "Check Availability" CTA — dark navy, per the approved mockup,
+   instead of the accent-blue "Book Now" the other types use. */
+.rbfw-me-fp-book-btn.is-resort-style {
+    background: #16213e;
+}
+.rbfw-me-fp-book-btn.is-resort-style.is-disabled {
+    background: #cbd5e1;
+}
+
+/* Resort step 1 -> 2: "Continue" past the dates card into Room Type. */
+.rbfw-me-fp-resort-continue-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 9px;
+    background: var(--me-primary);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    margin-bottom: 14px;
+    transition: background .15s;
+}
+.rbfw-me-fp-resort-continue-btn:hover { background: var(--me-primary-dk); }
+.rbfw-me-fp-resort-continue-btn.is-disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+}
+
+.rbfw-me-fp-note {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--me-muted);
+}
+
+/* ── Mini calendar (Single Day preview) ─────────────────────────── */
+.rbfw-me-fp-cal { border: 1px solid var(--me-border); border-radius: 10px; padding: 12px; box-sizing: border-box; }
+.rbfw-me-fp-cal-month { text-align: center; font-size: 12.5px; font-weight: 700; color: var(--me-text); margin-bottom: 10px; }
+.rbfw-me-fp-cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 6px; }
+.rbfw-me-fp-cal-dow span { text-align: center; font-size: 10px; font-weight: 700; color: #94A3B8; }
+.rbfw-me-fp-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: 4px; column-gap: 0; }
+.rbfw-me-fp-cal-day {
+    width: 100%;
+    height: 28px;
+    border: none;
+    background: none;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+.rbfw-me-fp-cal-day:hover { background: var(--me-border-subtle); }
+.rbfw-me-fp-cal-day.weekend { background: #FEF3E2; color: #B45309; }
+.rbfw-me-fp-cal-day.weekend:hover { background: #FCE8C8; }
+.rbfw-me-fp-cal-day--off { background: none; color: #CBD5E1; text-decoration: line-through; cursor: not-allowed; }
+.rbfw-me-fp-cal-day--blank { cursor: default; }
+.rbfw-me-fp-cal-day.sel { background: var(--me-primary); color: #fff; }
+.rbfw-me-fp-cal-legend { display: flex; gap: 14px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--me-border-subtle); }
+.rbfw-me-fp-cal-legend span { display: inline-flex; align-items: center; gap: 5px; font-size: 10.5px; color: var(--me-muted); }
+.rbfw-me-fp-cal-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+.rbfw-me-fp-cal-dot--weekend { background: #FEF3E2; border: 1px solid #F3D9A8; }
+.rbfw-me-fp-cal-dot--off { background: var(--me-border-subtle); border: 1px solid var(--me-border); }
+
+/* ── Chips (time slots) ─────────────────────────────────────────── */
+.rbfw-me-fp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.rbfw-me-fp-chip {
+    padding: 6px 11px;
+    border: 1px solid var(--me-border);
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #334155;
+    background: #fff;
+    cursor: pointer;
+    font-family: inherit;
+}
+.rbfw-me-fp-chip:hover { border-color: #C7D7FB; }
+.rbfw-me-fp-chip.active { border-color: var(--me-primary); background: var(--me-primary-soft); color: #1A4FC4; }
+
+/* ── Variation pills ─────────────────────────────────────────────── */
+.rbfw-me-fp-variation-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 12px;
+    border: 1px solid var(--me-border);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #334155;
+    background: #fff;
+    cursor: pointer;
+    font-family: inherit;
+}
+.rbfw-me-fp-variation-pill:hover { border-color: #C7D7FB; }
+.rbfw-me-fp-variation-pill.sel { border-color: var(--me-primary); background: var(--me-primary-soft); color: #1A4FC4; }
+.rbfw-me-fp-variation-pill span { color: var(--me-muted); font-weight: 600; }
+.rbfw-me-fp-variation-pill.sel span { color: #5A7FD6; }
+.rbfw-me-fp-variation-pill[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* ── Extra service checkbox rows ─────────────────────────────────── */
+.rbfw-me-fp-svc-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    font-size: 12.5px;
+    color: #334155;
+}
+.rbfw-me-fp-svc-check input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--me-primary); flex-shrink: 0; }
+.rbfw-me-fp-svc-check label { flex: 1; cursor: pointer; }
+.rbfw-me-fp-svc-check strong { font-weight: 700; color: var(--me-text); }
+
 /* ── Fields ─────────────────────────────────────────────────── */
 .rbfw-me-field {
     display: flex;
@@ -3418,15 +4203,15 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* ── Features repeater ──────────────────────────────────────── */
 .rbfw-me-features-body {
-    padding: 16px 20px 20px !important;
-    gap: 12px;
+    padding: 20px 20px 24px !important;
+    gap: 14px;
 }
 
 /* Table containing categories — keep as table for jQuery sortable */
 .rbfw-me-features-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 12px;
+    border-spacing: 0 14px;
 }
 .rbfw-me-features-table > tbody > tr > td:first-child {
     padding: 0 !important;
@@ -3435,12 +4220,16 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* Category card */
 .features_category_wrapper {
-    border: 1px solid #dde1ec;
-    border-radius: 8px;
+    border: 1px solid #e5e9f0;
+    border-radius: 14px;
     overflow: hidden;
     background: #fff;
-    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    box-shadow: 0 1px 2px rgba(15,23,42,.04);
     margin-bottom: 5px;
+    transition: border-color .15s, box-shadow .15s;
+}
+.features_category_wrapper:hover {
+    border-color: #d7deec;
 }
 
 /* Inner wrappers — transparent pass-through */
@@ -3456,104 +4245,106 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .features_category_wrapper .feature_category_title {
     display: flex !important;
     align-items: center;
-    background: #eef1fa;
-    border-bottom: 1px solid #dde1ec;
-    padding: 10px 16px;
-    gap: 14px;
+    background: #fafbfd;
+    border-bottom: 1px solid #eef1f6;
+    padding: 11px 14px;
+    gap: 10px;
     margin: 0 !important;
 }
-.features_category_wrapper .feature_category_title label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1d2327;
-    white-space: nowrap;
-    flex-shrink: 0;
-    margin: 0 !important;
-    padding: 0 !important;
+/* Caption text replaced by the chevron + input alone — the input's own
+   placeholder ("Feature Category Label") already explains the field */
+.features_category_wrapper .feature_category_title > label {
+    display: none !important;
 }
 .features_category_wrapper .feature_category_title input[type="text"] {
     flex: 1;
-    border: 1px solid #c3c4c7 !important;
-    border-radius: 6px !important;
-    padding: 7px 12px !important;
-    font-size: 13px;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 9px 12px !important;
+    font-size: 14px;
+    font-weight: 600;
     color: #1d2327;
     background: #fff;
     box-sizing: border-box;
     min-width: 0;
     transition: border-color .15s, box-shadow .15s;
 }
+.features_category_wrapper .feature_category_title input[type="text"]:hover {
+    border-color: #cbd5e1 !important;
+}
 .features_category_wrapper .feature_category_title input[type="text"]:focus {
-    border-color: #2271b1 !important;
-    box-shadow: 0 0 0 1px #2271b1;
+    border-color: var(--me-primary) !important;
+    box-shadow: 0 0 0 3px var(--me-primary-soft);
     outline: none;
 }
 
 /* Feature items list */
 .features_category_wrapper .feature_category_inner_item_wrap {
-    padding: 0 80px 0 0px !important;
+    padding: 6px 12px 12px !important;
 }
 
-/* Individual feature row */
+/* Individual feature row — rounded hover highlight instead of divider lines */
 .features_category_wrapper .feature_category_inner_item_wrap .item {
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
-    padding: 8px 0 !important;
+    gap: 10px !important;
+    padding: 7px 8px !important;
     border: none !important;
-    border-bottom: 1px solid #f0f0f1 !important;
+    border-radius: 9px !important;
     margin: 0 !important;
+    transition: background .15s;
 }
-.features_category_wrapper .feature_category_inner_item_wrap .item:last-child {
-    border-bottom: none !important;
+.features_category_wrapper .feature_category_inner_item_wrap .item:hover {
+    background: #f8fafc;
 }
 
-/* Icon picker button */
+/* Icon picker trigger — compact round ghost button, icon-only */
 .features_category_wrapper .item .rbfw_feature_icon_btn {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 5px !important;
-    padding: 5px 10px !important;
-    border: 1px solid #c3c4c7 !important;
-    border-radius: 6px !important;
-    background: #f6f7f7 !important;
-    color: #50575e !important;
-    font-size: 12px;
-    font-weight: 500;
+    justify-content: center !important;
+    gap: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    background: transparent !important;
+    color: #c2c9d6 !important;
+    font-size: 0;
     text-decoration: none !important;
-    white-space: nowrap;
     flex-shrink: 0;
-    min-width: 72px;
+    min-width: unset !important;
     box-shadow: none !important;
     text-shadow: none !important;
     transition: background .15s, color .15s;
 }
 .features_category_wrapper .item .rbfw_feature_icon_btn:hover {
-    background: #e9eaeb !important;
-    color: #1d2327 !important;
-    border-color: #b5b5b5 !important;
+    background: #f1f5f9 !important;
+    color: #64748b !important;
 }
 .features_category_wrapper .item .rbfw_feature_icon_btn i {
-    color: #2271b1;
-    font-size: 12px !important;
+    color: inherit;
+    font-size: 13px !important;
 }
 
-/* Icon preview (appears once an icon is chosen) */
+/* Icon preview (appears once an icon is chosen) — circular accent badge */
 .features_category_wrapper .item .rbfw_feature_icon_preview {
-    width: 26px !important;
-    height: 26px !important;
+    width: 28px !important;
+    height: 28px !important;
     flex-shrink: 0;
 }
 .features_category_wrapper .item .rbfw_feature_icon_preview:empty {
     display: none !important;
 }
 .features_category_wrapper .item .rbfw_feature_icon_preview i {
-    width: 26px !important;
-    height: 26px !important;
-    border: 1px solid #dde1ec !important;
-    border-radius: 4px !important;
-    font-size: 14px !important;
-    background: #f0f0f1 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    font-size: 13px !important;
+    background: var(--me-primary-soft) !important;
+    color: var(--me-primary) !important;
     display: flex !important;
     align-items: center;
     justify-content: center;
@@ -3561,16 +4352,16 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding: 0 !important;
 }
 
-/* Feature name input — 40px shorter, right side clear for action buttons */
+/* Feature name input — flexes to fill the row */
 .features_category_wrapper .item > input[type="text"],
 .rbfw-me-features-body .feature_category_inner_item_wrap [name*="[cat_features]"][name$="[title]"] {
     flex: 1 !important;
     width: auto !important;
-    max-width: calc(100% - 40px) !important;
-    border: 1px solid #c3c4c7 !important;
-    border-radius: 6px !important;
-    padding: 7px 12px !important;
-    font-size: 13px !important;
+    max-width: none !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 13.5px !important;
     color: #1d2327 !important;
     background: #fff !important;
     min-width: 0;
@@ -3578,75 +4369,84 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     box-shadow: none !important;
     transition: border-color .15s, box-shadow .15s;
 }
+.features_category_wrapper .item > input[type="text"]:hover {
+    border-color: #cbd5e1 !important;
+}
 .features_category_wrapper .item > input[type="text"]:focus {
-    border-color: #2271b1 !important;
-    box-shadow: 0 0 0 1px #2271b1 !important;
+    border-color: var(--me-primary) !important;
+    box-shadow: 0 0 0 3px var(--me-primary-soft) !important;
     outline: none;
 }
 
-/* Sort + remove action buttons per feature — fixed width, always clear */
+/* Sort + remove action buttons per feature — hover-reveal, like the rest
+   of this session's row redesigns (Items table, Rental Options, ...) */
 .features_category_wrapper .item > div {
     display: flex !important;
     align-items: center;
     gap: 2px;
     flex-shrink: 0;
-    width: 64px;
+    width: 60px;
     justify-content: flex-end;
     margin-left: 4px;
+    opacity: 0;
+    transition: opacity .15s;
+}
+.features_category_wrapper .item:hover > div {
+    opacity: 1;
 }
 .features_category_wrapper .item > div .button {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 30px !important;
-    height: 30px !important;
+    width: 28px !important;
+    height: 28px !important;
     min-height: unset !important;
     padding: 0 !important;
-    color: #8c8f94 !important;
+    color: #94a3b8 !important;
     background: none !important;
     border: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
-    border-radius: 4px !important;
+    border-radius: 8px !important;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 12px;
 }
 .features_category_wrapper .item > div .button:hover {
-    color: #1d2327 !important;
-    background: #f0f0f1 !important;
+    color: #475569 !important;
+    background: #f1f5f9 !important;
 }
 .features_category_wrapper .item > div .button.sort { cursor: grab !important; }
-.features_category_wrapper .item > div .button.remove:hover { color: #d63638 !important; }
+.features_category_wrapper .item > div .button.remove:hover { color: #dc2626 !important; background: #fef2f2 !important; }
 
-/* "Add New Feature" dashed full-width button */
+/* "Add New Feature" — compact dashed ghost pill, left aligned under the rows */
 .rbfw-me-features-body .add-new-feature {
-    display: flex !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 6px !important;
-    width: 100% !important;
-    padding: 10px 16px !important;
-    border: 1.5px dashed #c3cfe2 !important;
-    border-radius: 8px !important;
-    background: #fff !important;
-    color: #6b7280 !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
+    gap: 7px !important;
+    width: auto !important;
+    padding: 8px 14px !important;
+    border: 1.5px dashed rgba(26,86,219,.35) !important;
+    border-radius: 9px !important;
+    background: var(--me-primary-soft) !important;
+    color: var(--me-primary) !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
     cursor: pointer !important;
     text-shadow: none !important;
     box-shadow: none !important;
     transition: border-color .15s, color .15s, background .15s;
-    margin-top: 10px !important;
+    margin: 6px 0 2px 8px !important;
     box-sizing: border-box !important;
 }
 .rbfw-me-features-body .add-new-feature i {
-    color: #2271b1 !important;
-    font-size: 14px !important;
+    color: inherit !important;
+    font-size: 12px !important;
 }
 .rbfw-me-features-body .add-new-feature:hover {
-    border-color: #2271b1 !important;
-    color: #2271b1 !important;
-    background: #f0f6ff !important;
+    border-color: var(--me-primary) !important;
+    color: var(--me-primary-dk) !important;
+    background: #e3ecff !important;
 }
 
 /* ── Feature accordion ───────────────────────────────────────── */
@@ -3654,15 +4454,15 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 22px;
-    height: 22px;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
-    color: #6b7280;
+    color: #94a3b8;
     cursor: pointer;
-    transition: transform .2s ease;
-    border-radius: 4px;
+    transition: transform .2s ease, background .15s, color .15s;
+    border-radius: 7px;
 }
-.rbfw-feat-chevron:hover { background: #f0f0f1; color: #1d2327; }
+.rbfw-feat-chevron:hover { background: #f1f5f9; color: #475569; }
 .rbfw-feat-chevron i { font-size: 11px; line-height: 1; }
 
 .rbfw_feature_category_table tr.rbfw-feat-open .rbfw-feat-chevron {
@@ -3678,36 +4478,34 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding-bottom: 4px;
 }
 
-/* Category title row — flex: chevron | label | input | actions */
+/* Category title row — flex: chevron | input | actions (hover-reveal) */
 .rbfw-me-features-body .feature_category_title {
     display: flex !important;
     align-items: center;
     gap: 8px;
-}
-.rbfw-me-features-body .feature_category_title > label {
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-weight: 600;
-    font-size: 12px;
-    margin: 0 !important;
 }
 .rbfw-me-features-body .feature_category_title > input[type="text"] {
     flex: 1;
     min-width: 0;
 }
 
-/* Category-level sort / delete — now inside the title row */
+/* Category-level sort / delete — hover-reveal, inside the title row */
 .rbfw-me-features-actions {
     display: flex !important;
     align-items: center;
     gap: 2px;
     flex-shrink: 0;
     margin-left: auto;
-    margin-right: 40px;
+    margin-right: 0;
     width: auto !important;
     min-width: unset !important;
     padding: 0 !important;
     vertical-align: unset !important;
+    opacity: 0;
+    transition: opacity .15s;
+}
+.features_category_wrapper .feature_category_title:hover .rbfw-me-features-actions {
+    opacity: 1;
 }
 .rbfw-me-features-actions .button {
     display: inline-flex !important;
@@ -3717,24 +4515,46 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     height: 28px !important;
     min-height: unset !important;
     padding: 0 !important;
-    color: #8c8f94 !important;
+    color: #94a3b8 !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
     text-shadow: none !important;
-    border-radius: 4px !important;
+    border-radius: 8px !important;
     cursor: pointer;
     font-size: 13px;
     margin-bottom: 0 !important;
 }
 .rbfw-me-features-actions .button:hover {
-    color: #1d2327 !important;
-    background: #f0f0f1 !important;
+    color: #475569 !important;
+    background: #f1f5f9 !important;
 }
 .rbfw-me-features-actions .tr_sort_handler { cursor: grab !important; }
-.rbfw-me-features-actions .tr_remove:hover { color: #d63638 !important; }
+.rbfw-me-features-actions .tr_remove:hover { color: #dc2626 !important; background: #fef2f2 !important; }
 
-/* "Add Feature Category" — uses shared add-button styles at file end */
+/* "Add Feature Category" — dashed ghost CTA (overrides the shared solid
+   add-button style used by other sections; selector kept 3-classes deep
+   so it wins over that shared rule regardless of file order) */
+.rbfw-me-wrap .rbfw-me-features-body .add-feature-category {
+    background: var(--me-primary-soft) !important;
+    border: 2px dashed rgba(26,86,219,.35) !important;
+    color: var(--me-primary) !important;
+    box-shadow: none !important;
+    border-radius: var(--me-radius) !important;
+    padding: 15px 20px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    width: 100% !important;
+    margin: 4px 0 0 !important;
+}
+.rbfw-me-wrap .rbfw-me-features-body .add-feature-category:hover {
+    background: #e3ecff !important;
+    border-color: var(--me-primary) !important;
+    color: var(--me-primary-dk) !important;
+}
+.rbfw-me-wrap .rbfw-me-features-body .add-feature-category i {
+    color: inherit !important;
+}
 
 /* ── Classic pricing output inside modern editor card ────────── */
 .rbfw-me-pricing-classic-wrap {
@@ -3743,6 +4563,18 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     margin: 5px !important;
     overflow: hidden !important;
     padding: 0 !important;
+}
+
+/* When this classic-settings wrapper is used as a card's BODY under a real
+   .rbfw-me-card__head (Inventory, Fee Management), the base rule above gave
+   it its own independent border + 5px margin + all-corners radius, which
+   made it render as a second box floating below the header with a visible
+   gap, instead of one seamless card like the headless cards (Pricing,
+   Extra Service, ...) where this wrapper IS the whole card body. */
+.rbfw-me-card__head + .rbfw-me-card__body.rbfw-me-pricing-classic-wrap {
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 0 calc(var(--me-radius) - 5px) calc(var(--me-radius) - 5px) !important;
 }
 .rbfw-me-pricing-classic-wrap .mp_tab_item_title,
 .rbfw-me-pricing-classic-wrap .mp_tab_item_description {
@@ -3919,7 +4751,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     height: auto !important;
     min-height: 88px !important;
     padding: 14px 12px !important;
-    width: 140px !important;
+    width: 100px !important;
     text-align: center !important;
     cursor: pointer !important;
     position: relative !important;
@@ -3960,7 +4792,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* ── Rent type description strip ─────────────────────────────── */
 .rbfw-me-pricing-classic-wrap .rbfw-rent-type-desc {
-    background: #f0f5ff !important;
+    background: #fffbf6 !important;
     border: 1px solid #c3d4f8 !important;
     border-radius: 8px !important;
     color: #374151 !important;
@@ -4000,7 +4832,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     height: 0 !important;
     border-left: 7px solid transparent !important;
     border-right: 7px solid transparent !important;
-    border-bottom: 8px solid #f0f5ff !important;
+    border-bottom: 8px solid #fffbf6 !important;
     transition: left 0.22s ease !important;
 }
 
@@ -4158,13 +4990,18 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
    These override the generic `display:flex !important` rule above (higher
    specificity + driven by the pricing panel's data-item-type, which
    applyType() keeps in sync on live type changes).
-   - Return-date release: not for Single Day / Appointment.
+   - Return-date release: not for Single Day / Appointment. It's nested inside
+     .rbfw_stock_quantity_section now (see below), so for bike_car_sd the
+     outer section's own hide rule already covers it; only Appointment (which
+     keeps the rest of that section) needs an explicit rule here.
    - Multiple-item selection: only multi-day Bike/Car, Dress, Equipment, Others.
-   - Stock Quantity: not for Single Day — its stock comes from the per-type rows
-     in the pricing table, so only Item variation applies here. */
+   - Stock Quantity (.rbfw_stock_quantity_section): not for Single Day — when
+     per-row stock is in use its stock comes from the Stock/Day column on the
+     Pricing tab instead, and when shared-pool ("timely") stock is in use it's
+     the separate .rbfw_timely_stock_quantity_section below, shown/hidden by
+     its own PHP condition + syncTimelyUI(), not this rule. */
 .rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_quantity_section,
-.rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
-.rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_return_date_section,
+.rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .rbfw_stock_return_date_section,
 .rbfw-me-panel[data-item-type="bike_car_sd"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
 .rbfw-me-panel[data-item-type="appointment"]    .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
 .rbfw-me-panel[data-item-type="resort"]         .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_switch_md_type_item_qty,
@@ -4198,6 +5035,20 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
     outline: none !important;
 }
+/* Stock Quantity is meaningless once Item Variations is on (each value gets
+   its own quantity instead) -- disabled server/JS-side already; this makes
+   that state visually obvious too, instead of relying on the browser's
+   subtle default disabled-input look. */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity.is-stock-disabled {
+    position: relative !important;
+}
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap .item_stock_quantity.is-stock-disabled input {
+    background: #f1f5f9 !important;
+    color: transparent !important;
+    text-shadow: 0 0 6px rgba(29,35,39,.55) !important;
+    filter: blur(.4px) !important;
+    cursor: not-allowed !important;
+}
 /* Variation rows table spans full width below the toggles */
 .rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_variations_table_wrap.show {
     display: block !important;
@@ -4206,154 +5057,292 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     display: none !important;
 }
 
+/* ── Stock Quantity card — label+badge, input/return-date row, hint, banner.
+   Overrides the generic flex/space-between row rule above: this section now
+   stacks several pieces vertically instead of being a single toggle row. ── */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_stock_quantity_section {
+    display: block !important;
+}
+.rbfw-me-inventory-card .md-inv-stock-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 12px;
+}
+.rbfw-me-inventory-card .md-inv-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: #eef3ff;
+    color: #1a56db;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.rbfw-me-inventory-card .md-inv-stock-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.rbfw-me-inventory-card .md-inv-return-check {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+}
+.rbfw-me-inventory-card .md-inv-return-check input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 !important;
+    accent-color: #1a56db;
+    cursor: pointer;
+}
+.rbfw-me-inventory-card .md-inv-stock-hint {
+    max-width: 420px;
+    margin: 10px 0 0;
+    font-size: 12px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+.rbfw-me-inventory-card .md-inv-info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #eef3ff;
+    border-radius: 8px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #1d3a8f;
+}
+.rbfw-me-inventory-card .md-inv-info-banner .dashicons {
+    color: #1a56db;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
 /* ════════════════════════════════════════════════════════════════════════
    Variations builder (inside the inventory card) — modern, card-per-variation
    layout with styled inputs, value table and action buttons.
    ════════════════════════════════════════════════════════════════════════ */
+/* .form-table (shared with a legacy admin stylesheet) boxes this in a
+   border by default -- stripped here so the chips sit directly on the
+   card background, no extra container box around them. */
 .rbfw-me-inventory-card .rbfw_variations_table {
     width: 100% !important;
     margin: 0 0 14px !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
-/* Each variation = a bordered sub-card */
+/* There's only ever the one variation group now (no Field Label, no "+ Add
+   Variation"/remove-group — just this one group's chips under the "Item
+   Variations" title), so it carries no card/border/header styling at all. */
 .rbfw-me-inventory-card .rbfw_variations_table_row {
-    position: relative !important;
-    border: 1px solid #e2e6ee !important;
-    border-radius: 10px !important;
-    background: #fff !important;
-    padding: 16px !important;
-    margin: 0 0 14px !important;
-}
-/* Field Label header */
-.rbfw-me-inventory-card .rbfw_variations_table_row > header {
+    margin: 0 !important;
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
     display: block !important;
-    margin: 0 0 14px !important;
-    padding-right: 48px !important; /* room for the remove-variation button */
+    float: none !important;
 }
-.rbfw-me-inventory-card .rbfw_variations_table_row > header > label {
+.rbfw-me-inventory-card .variations-inner-table,
+.rbfw-me-inventory-card .rbfw_variations_table_body {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    width: 100% !important;
     display: block !important;
+    float: none !important;
+}
+/* ── Variation value "chips" — same pill language as the Time Slots
+   Configuration widget (white, teal-outline, wrapping row). ── */
+.rbfw_variations_value_table {
+    border: none !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-list {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    width: auto !important;
+    margin: 0 !important;
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 5px 7px 5px 14px !important;
+    background: #eaf6fb !important;
+    border: 1.5px solid #93c5e8 !important;
+    border-radius: 20px !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-name,
+.rbfw-me-inventory-card .rbfw-var-chip-qty {
+    border-radius: 0 !important;
+    transition: none !important;
+}
+input.rbfw_variation_value.rbfw-var-chip-name {
+    text-align: center;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-name {
+    width: 70px !important;
+    height: auto !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
     font-size: 13px !important;
     font-weight: 600 !important;
     color: #1d2327 !important;
-    margin: 0 0 6px !important;
-}
-.rbfw-me-inventory-card .rbfw_variations_table_row > header > div > input[type="text"] {
-    width: 100% !important;
-    height: 40px !important;
-    padding: 8px 12px !important;
-    border: 1px solid #d5d8df !important;
-    border-radius: 8px !important;
-    background: #fff !important;
-    font-size: 14px !important;
     box-shadow: none !important;
     margin: 0 !important;
 }
-/* Value table */
-.rbfw-me-inventory-card .rbfw_variations_value_table {
-    width: 100% !important;
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
-    margin: 0 !important;
-    background: transparent !important;
-}
-.rbfw-me-inventory-card .rbfw_variations_value_table thead th {
-    text-align: left !important;
+.rbfw-me-inventory-card .rbfw-var-chip-dash {
+    color: #93c5e8 !important;
     font-size: 12px !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-qty {
+    width: 42px !important;
+    height: auto !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 13px !important;
     font-weight: 600 !important;
-    color: #6b7280 !important;
-    padding: 6px 10px !important;
-    border: none !important;
-    background: transparent !important;
-}
-.rbfw-me-inventory-card .rbfw_variations_value_table tbody td {
-    padding: 6px 10px !important;
-    border: none !important;
-    vertical-align: middle !important;
-    background: transparent !important;
-}
-.rbfw-me-inventory-card .rbfw_variations_value_table td input[type="text"],
-.rbfw-me-inventory-card .rbfw_variations_value_table td input[type="number"] {
-    width: 100% !important;
-    height: 38px !important;
-    padding: 8px 12px !important;
-    border: 1px solid #d5d8df !important;
-    border-radius: 8px !important;
-    background: #fff !important;
-    font-size: 14px !important;
+    color: #2ea2cc !important;
+    text-align: center !important;
     box-shadow: none !important;
     margin: 0 !important;
 }
-.rbfw-me-inventory-card .rbfw_variations_value_table td input:focus,
+.rbfw-me-inventory-card .rbfw-var-chip-name:hover,
+.rbfw-me-inventory-card .rbfw-var-chip-qty:hover {
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-unit {
+    font-size: 11px !important;
+    color: #6b7790 !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-name:focus,
+.rbfw-me-inventory-card .rbfw-var-chip-qty:focus {
+    background: transparent !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip-name:focus,
+.rbfw-me-inventory-card .rbfw-var-chip-qty:focus,
 .rbfw-me-inventory-card .rbfw_variations_table_row > header input:focus {
-    border-color: #1a56db !important;
-    box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
     outline: none !important;
 }
-/* "Is Default" column — centre the checkbox */
-.rbfw-me-inventory-card .rbfw_variations_value_table th:nth-child(3),
-.rbfw-me-inventory-card .rbfw_variations_value_table td:nth-child(3) {
-    text-align: center !important;
-    width: 90px !important;
-}
-.rbfw-me-inventory-card .rbfw_variation_selected_value {
-    width: 18px !important;
-    height: 18px !important;
-    margin: 0 !important;
-    cursor: pointer !important;
-}
-.rbfw-me-inventory-card .rbfw_variations_value_table th:nth-child(4),
-.rbfw-me-inventory-card .rbfw_variations_value_table td:nth-child(4) {
-    width: 90px !important;
-}
-/* Action icon buttons (trash / move) */
-.rbfw-me-inventory-card .mp_event_remove_move {
-    display: inline-flex !important;
-    gap: 6px !important;
-    align-items: center !important;
-}
-.rbfw-me-inventory-card .mp_event_remove_move .button,
-.rbfw-me-inventory-card .remove-rbfw_variations_table_row {
+.rbfw-me-inventory-card .rbfw-var-chip-remove {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 34px !important;
-    height: 34px !important;
+    width: 20px !important;
+    height: 20px !important;
     min-height: 0 !important;
     padding: 0 !important;
-    border: 1px solid #e2e6ee !important;
-    border-radius: 8px !important;
-    background: #fff !important;
-    color: #6b7280 !important;
-    cursor: pointer !important;
-    transition: border-color .15s, color .15s, background .15s !important;
-}
-.rbfw-me-inventory-card .mp_event_remove_move .button:hover {
-    border-color: #1a56db !important;
-    color: #1a56db !important;
-    background: #f4f7fe !important;
-}
-.rbfw-me-inventory-card .remove-rbfw_variations_value_table_row:hover,
-.rbfw-me-inventory-card .remove-rbfw_variations_table_row:hover {
-    border-color: #dc2626 !important;
-    color: #dc2626 !important;
-    background: #fef2f2 !important;
-}
-/* Remove-whole-variation button — pin to the card's top-right corner */
-.rbfw-me-inventory-card .rbfw_variations_table_row > .mp_event_remove_move {
-    position: absolute !important;
-    top: 14px !important;
-    right: 14px !important;
-}
-/* Divider + add buttons spacing */
-.rbfw-me-inventory-card .variations-inner-table hr {
     border: none !important;
-    border-top: 1px solid #f0f0f1 !important;
-    margin: 12px 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: #6b7790 !important;
+    font-size: 14px !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    flex-shrink: 0 !important;
 }
-.rbfw-me-inventory-card .add-new-variation-value {
-    margin-top: 4px !important;
+.rbfw-me-inventory-card .rbfw-var-chip-remove:hover {
+    background: #fef2f2 !important;
+    color: #dc2626 !important;
 }
-.rbfw-me-inventory-card #add-new-variation {
-    margin-top: 4px !important;
+/* "Item Variations" section title (sits above the group cards) */
+.rbfw-me-inventory-card .md-inv-variations-title {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    margin: 0 0 12px !important;
+}
+/* "Add New Value" -- same pattern as the Time Slot picker's "Add New Time
+   Slot": a dashed divider, a small label, then Name + Qty fields and an
+   Add button that's disabled/gray until a name is typed. */
+.rbfw-me-inventory-card .rbfw-var-add-wrap {
+    border-top: 1px dashed #dde4ef !important;
+    margin: 10px 0 0 !important;
+    padding: 14px 0 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-label {
+    display: block !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    margin: 0 0 10px !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-form {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-name,
+.rbfw-me-inventory-card .rbfw-var-add-qty {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 38px !important;
+    padding: 0 10px !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-name:focus,
+.rbfw-me-inventory-card .rbfw-var-add-qty:focus {
+    border-color: #2ea2cc !important;
+    outline: none !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-name {
+    width: 160px !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-qty {
+    width: 140px !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-btn {
+    background: #bdc8d8 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #6b7790 !important;
+    cursor: not-allowed !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    height: 38px !important;
+    padding: 0 16px !important;
+    transition: background .15s, color .15s !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-btn:not([disabled]) {
+    background: #2271b1 !important;
+    color: #fff !important;
+    cursor: pointer !important;
+}
+.rbfw-me-inventory-card .rbfw-var-add-btn:not([disabled]):hover {
+    background: #135e96 !important;
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -4557,14 +5546,15 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* ── SD / pricing table sections ────────────────────────────── */
 
-/* Section card wrapper (overrides generic section padding/border rules) */
+/* No boxed card around the table — it sits flush on the panel like the
+   Day-wise/MD rate tables, not in its own bordered sub-box. */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper > section:not(.manage_inventory_as_timely) {
-    border: 1px solid #dde4ef !important;
-    border-bottom: 1px solid #dde4ef !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    padding: 0 !important;
-    margin: 0 0 16px 0 !important;
+    border: none !important;
+    border-bottom: 1px solid #f0f4fb !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    padding: 16px 20px !important;
+    margin: 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
@@ -4576,25 +5566,36 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* Table */
 .rbfw-me-pricing-classic-wrap table.rbfw_bike_car_sd_price_table {
+    border: none !important;
     border-collapse: collapse !important;
     margin: 0 !important;
     width: 100% !important;
 }
 
-/* Table head */
+/* Rounded bordered card around the whole table (head + rows), set off from
+   the "Rental Options" header above by margin instead of inner padding, so
+   the box sits flush around its contents like the other redesigned tables. */
+.rbfw-me-pricing-classic-wrap .rbfw-sd-table-scroll {
+    margin-top: 14px !important;
+    border: 1px solid #e5e9f0 !important;
+    border-radius: 14px !important;
+    overflow-y: hidden !important;
+}
+
+/* Table head — soft tinted band, matching the card-style tables elsewhere */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table thead tr {
-    background: #eef3ff !important;
+    background: #fafbfd !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table thead th {
-    border-bottom: 1px solid #dde4ef !important;
+    border-bottom: 1px solid #eef1f6 !important;
     border-left: none !important;
     border-right: none !important;
     border-top: none !important;
-    color: #6b7790 !important;
+    color: #94a3b8 !important;
     font-size: 11px !important;
     font-weight: 700 !important;
-    letter-spacing: .06em !important;
+    letter-spacing: .04em !important;
     padding: 10px 14px !important;
     text-transform: uppercase !important;
     white-space: nowrap !important;
@@ -4608,69 +5609,79 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 /* Remove zebra stripes — unified white rows */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table_row:nth-child(even),
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table_row:nth-child(odd) {
-    background: #fff !important;
+    background: transparent !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table tbody tr {
-    border-bottom: 1px solid #f0f4fb !important;
+    border-bottom: 1px solid #f4f6fa !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table tbody tr:last-child {
     border-bottom: none !important;
 }
 
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table tbody tr:hover {
+    background: #f8fafc !important;
+}
+
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table tbody td {
     border: none !important;
-    padding: 9px 14px !important;
+    padding: 10px 14px !important;
     vertical-align: middle !important;
 }
 
-/* Inputs and selects inside table */
+/* Inputs and selects inside table — plain white, roomier, rounded */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table input[type="text"],
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table input[type="number"] {
-    background: #f8fafd !important;
+    background: #fff !important;
     border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
     color: #111827 !important;
-    font-size: 13px !important;
-    height: 34px !important;
-    padding: 0 10px !important;
+    font-size: 13.5px !important;
+    height: 40px !important;
+    padding: 0 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
-    transition: border-color .15s, background .15s !important;
+    transition: border-color .15s, box-shadow .15s !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table select {
-    background: #f8fafd !important;
+    background: #fff !important;
     border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
     color: #111827 !important;
-    font-size: 13px !important;
-    height: 34px !important;
-    padding: 0 8px !important;
-    transition: border-color .15s, background .15s !important;
+    font-size: 13.5px !important;
+    height: 40px !important;
+    padding: 0 10px !important;
+    transition: border-color .15s, box-shadow .15s !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table input:focus,
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table select:focus {
     background: #fff !important;
-    border-color: #2271b1 !important;
-    box-shadow: 0 0 0 1px #2271b1 !important;
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px rgba(26,86,219,.12) !important;
     outline: none !important;
 }
 
 /* Action column buttons (trash + drag handle) */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table_action_column {
     white-space: nowrap !important;
-    width: 72px !important;
+    width: 76px !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table .mp_event_remove_move {
     display: flex !important;
     align-items: center !important;
-    gap: 4px !important;
+    gap: 6px !important;
+    opacity: 0 !important;
+    transition: opacity .15s !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table_row:hover .mp_event_remove_move {
+    opacity: 1 !important;
 }
 
 /* Override global red remove-row button */
@@ -4679,14 +5690,14 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 30px !important;
-    height: 30px !important;
+    width: 34px !important;
+    height: 34px !important;
     min-height: unset !important;
     padding: 0 !important;
-    background: #f6f7f7 !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
-    color: #6b7790 !important;
+    background: #fff !important;
+    border: 1px solid #f9a8bc !important;
+    border-radius: 8px !important;
+    color: #e11d48 !important;
     cursor: pointer !important;
     box-shadow: none !important;
     text-shadow: none !important;
@@ -4695,50 +5706,75 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table .remove-row.button:hover {
-    background: #fef2f2 !important;
-    border-color: #fca5a5 !important;
-    color: #d63638 !important;
+    background: #fff1f4 !important;
+    border-color: #e11d48 !important;
+    color: #e11d48 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table .mp_event_type_sortable_button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-height: unset !important;
+    padding: 0 !important;
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    color: #94a3b8 !important;
     cursor: grab !important;
+    box-shadow: none !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_price_table .mp_event_type_sortable_button:hover {
-    background: #f0f4fb !important;
-    border-color: #c3cfe0 !important;
-    color: #374151 !important;
+    background: #f8faff !important;
+    border-color: #c7d7fb !important;
+    color: #1a56db !important;
 }
 
-/* "Add New Type" button strip */
+/* "Add New Type" — light ghost pill, floating below the table (no footer bar) */
 .rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional {
-    border-top: 1px dashed #c3cfe0 !important;
-    padding: 14px 16px !important;
-    text-align: center !important;
-    background: #fff !important;
+    border-top: none !important;
+    padding: 14px 0 18px !important;
+    text-align: left !important;
+    background: transparent !important;
 }
 
-.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional .ppof-button {
+/* ID-qualified so this wins over the later, equal-class-count shared
+   "solid primary button" rule (.rbfw-me-wrap .sd-add-type-and-sessional
+   .ppof-button) further down the file — without the ID, the cascade tie
+   went to whichever rule is last in source order, which was the solid
+   button, silently reverting this to a filled blue rectangle. */
+.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional #add-bike-car-sd-type-row.ppof-button {
     display: inline-flex !important;
     align-items: center !important;
     gap: 6px !important;
-    background: #2271b1 !important;
-    border: none !important;
-    border-radius: 8px !important;
-    color: #fff !important;
+    background: #f8faff !important;
+    border: 1px dashed #c7d7fb !important;
+    border-radius: 999px !important;
+    color: #1a56db !important;
     cursor: pointer !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    height: 38px !important;
-    padding: 0 18px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    height: auto !important;
+    padding: 7px 14px !important;
     text-shadow: none !important;
     box-shadow: none !important;
-    transition: background .15s !important;
+    transition: background .15s, border-color .15s !important;
 }
 
-.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional .ppof-button:hover {
-    background: #135e96 !important;
-    color: #fff !important;
+.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional #add-bike-car-sd-type-row.ppof-button:hover {
+    background: #eef3ff !important;
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+}
+
+/* The shared .ppof-button icon rule (further down) paints icons white for
+   the solid-fill buttons elsewhere; this one is a light dashed ghost pill,
+   so its icon needs to stay the accent blue to be visible. */
+.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional #add-bike-car-sd-type-row.ppof-button i {
+    color: #1a56db !important;
 }
 
 /* ── Inline label + input field rows (appointment max qty etc.) */
@@ -5177,6 +6213,200 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     border-color: #e11d48 !important;
 }
 
+/* ── Particular-date-range slot picker (shared by Single Day, Multiple Day,
+   Multiple Items -- see initParticularSlotPicker() in rbfw-modern-editor.js) ── */
+.rbfw-me-pricing-classic-wrap .rbfw-slot-picker-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 8px;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-picker-label span {
+    font-weight: 500;
+    color: #94a3b8;
+    text-transform: none;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    row-gap: 8px;
+}
+.rbfw-me-pricing-classic-wrap .slotchip-pick {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px dashed #e2e8f0;
+    background: #fff;
+    color: #94a3b8;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .12s;
+}
+.rbfw-me-pricing-classic-wrap .slotchip-pick:hover {
+    border-color: #c7d7fb;
+    background: #f8faff;
+    color: #1a4fc4;
+}
+.rbfw-me-pricing-classic-wrap .slotchip-pick.active {
+    border: 1px solid #c7d7fb;
+    background: #eef3ff;
+    color: #1a4fc4;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-picker-empty {
+    font-size: 12px;
+    color: #94a3b8;
+    font-style: italic;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-custom-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-custom-time {
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    padding: 6px 9px;
+    font-size: 12.5px;
+    color: #111827;
+    font-family: inherit;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-custom-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border: 1px dashed #c7d7fb;
+    background: #f8faff;
+    color: #1a56db;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 6px 11px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background .15s, border-color .15s;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-slot-custom-add-btn:hover {
+    background: #eef3ff;
+    border-color: #1a56db;
+}
+
+/* ── Particular-date-range card (redesigned) — shared by Single Day,
+   Multiple Day, Multiple Items; overrides the old 4-column table-row
+   layout above with a 2-row card: picker top-right, dates bottom-left,
+   custom-add bottom-right, remove button spanning the right rail. ── */
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .rbfw_pdwt_row.rbfw-pdwt-card,
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .rbfw_pdwt_row.rbfw-pdwt-card,
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .rbfw_pdwt_row.rbfw-pdwt-card {
+    display: grid !important;
+    grid-template-columns: minmax(200px, 320px) minmax(280px, 1fr) auto !important;
+    grid-template-rows: auto auto !important;
+    column-gap: 24px !important;
+    row-gap: 16px !important;
+    align-items: start !important;
+    border: 1px solid #eef1f6 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    padding: 20px !important;
+    margin: 0 0 14px !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .rbfw_pdwt_row.rbfw-pdwt-card:last-child,
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .rbfw_pdwt_row.rbfw-pdwt-card:last-child,
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .rbfw_pdwt_row.rbfw-pdwt-card:last-child {
+    margin-bottom: 0 !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-picker-col {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-dates {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+    display: flex;
+    gap: 16px;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-date-field {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-date-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 6px;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-date-field input {
+    width: 100% !important;
+    padding-right: 30px !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-date-field::after {
+    content: "\f508";
+    font-family: dashicons;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 16px;
+    line-height: 1;
+    color: #94a3b8;
+    pointer-events: none;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-slot-custom-add {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-action {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .rbfw_pdwt_row.rbfw-pdwt-card .remove-row.rbfw-pdwt-remove-btn,
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .rbfw_pdwt_row.rbfw-pdwt-card .remove-row.rbfw-pdwt-remove-btn,
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .rbfw_pdwt_row.rbfw-pdwt-card .remove-row.rbfw-pdwt-remove-btn {
+    width: 42px !important;
+    height: 42px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #fff5f7 !important;
+    border: 1.5px solid #f9a8bc !important;
+    border-radius: 8px !important;
+    color: #e11d48 !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    font-size: 16px !important;
+    transition: background .15s, border-color .15s !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .rbfw_pdwt_row.rbfw-pdwt-card .remove-row.rbfw-pdwt-remove-btn:hover,
+.rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .rbfw_pdwt_row.rbfw-pdwt-card .remove-row.rbfw-pdwt-remove-btn:hover,
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .rbfw_pdwt_row.rbfw-pdwt-card .remove-row.rbfw-pdwt-remove-btn:hover {
+    background: #fff1f4 !important;
+    border-color: #e11d48 !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-pdwt-card .rbfw-pdwt-remove-btn .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
 /* Add Another button — teal */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper #add-particular-row.ppof-button {
     align-items: center !important;
@@ -5311,24 +6541,56 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     line-height: 1.3 !important;
 }
 
-/* ── Items table card ───────────────────────────────── */
+/* ── Items card — a real aligned column grid (Name / Source / Qty / rates /
+   Action), header row and body rows sharing the same column template so
+   prices line up for scanning down the list. Columns use fr/minmax(0,…)
+   with no pixel floor, so the whole row compresses to fit any container
+   width instead of ever forcing a horizontal scrollbar. ── */
 .rbfw-me-pricing-classic-wrap .rbfw-mi-items-card {
-    overflow-x: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-items-head {
+    display: grid !important;
+    background: #f8fafd !important;
+    border-bottom: 1px solid #eef1f6 !important;
+    padding: 10px 16px !important;
+    color: #94a3b8 !important;
+    font-size: 10.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: .05em !important;
+    text-transform: uppercase !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-item-rows {
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .item-row {
     align-items: center !important;
     display: grid !important;
-    gap: 12px !important;
-    grid-template-columns: minmax(160px, 1.4fr) 64px repeat(var(--rbfw-mi-rate-count, 4), minmax(100px, 1fr)) 36px !important;
-    min-width: 720px !important;
+    gap: 10px !important;
+    grid-template-columns: minmax(0, 1.3fr) repeat(var(--rbfw-mi-rate-count, 4), minmax(0, 1fr)) 34px !important;
+    min-width: 0 !important;
     padding: 12px 16px !important;
 }
 
-/* Shared inventory: extra "Inventory Source" column (see admin_style.css). */
+/* Shared inventory on: an extra "Inventory Source" column. */
 .rbfw-me-pricing-classic-wrap .rbfw-mi-items-card.rbfw-mi-has-source .item-row {
-    grid-template-columns: minmax(150px, 1.2fr) minmax(150px, 1.2fr) 92px repeat(var(--rbfw-mi-rate-count, 4), minmax(100px, 1fr)) 36px !important;
-    min-width: 900px !important;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, .6fr) repeat(var(--rbfw-mi-rate-count, 4), minmax(0, 1fr)) 34px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw-mi-item-rows .item-row {
+    border-bottom: 1px solid #f4f6fa !important;
+    transition: background .15s !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-mi-item-rows .item-row:last-child {
+    border-bottom: none !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-mi-item-rows .item-row:hover {
+    background: #f8fafc !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .rbfw-mi-source-input {
@@ -5337,35 +6599,21 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     width: 100% !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw-mi-items-head {
-    background: #f0f4fb !important;
-    border-bottom: 1px solid #dde4ef !important;
-    color: #6b7790 !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    letter-spacing: .06em !important;
-    text-transform: uppercase !important;
-}
-
-.rbfw-me-pricing-classic-wrap .rbfw-mi-item-rows .item-row {
-    border-bottom: 1px solid #f0f4fb !important;
-}
-
-.rbfw-me-pricing-classic-wrap .rbfw-mi-item-rows .item-row:last-child {
-    border-bottom: none !important;
-}
-
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .form-group {
     display: flex !important;
     flex-direction: column !important;
     gap: 4px !important;
     margin: 0 !important;
+    min-width: 0 !important;
 }
-
-/* Hide labels in body rows (header row provides column labels) */
+/* Column labels live in the header row; hide the per-row duplicates so each
+   field reads as "a cell under its column", not its own little form. */
 .rbfw-me-pricing-classic-wrap .rbfw-mi-items-head + .rbfw-mi-item-rows .form-group label,
 .rbfw-me-pricing-classic-wrap .rbfw-mi-row-action label {
     display: none !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-mi-row-action {
+    min-width: 0 !important;
 }
 
 /* All inputs / selects inside multiple items */
@@ -5416,7 +6664,12 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding: 0 !important;
     text-shadow: none !important;
     width: 32px !important;
-    transition: background .15s, color .15s !important;
+    opacity: 0 !important;
+    transition: background .15s, color .15s, opacity .15s !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_multiple_items .item-row:hover .btn {
+    opacity: 1 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .btn:hover {
@@ -5426,34 +6679,38 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* Card footer */
 .rbfw-me-pricing-classic-wrap .rbfw-mi-card-footer {
-    border-top: 1px dashed #c3cfe0 !important;
+    border-top: none !important;
     display: flex !important;
-    justify-content: center !important;
-    padding: 14px 16px !important;
-    text-align: center !important;
+    justify-content: flex-start !important;
+    padding: 14px 16px 16px !important;
+    text-align: left !important;
 }
 
-/* Add More Item button */
+/* Add More Item button — light ghost pill, matching the slot-picker's "+ Add" style */
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .ppof-button.add-more-btn {
     align-items: center !important;
-    background: var(--me-primary) !important;
-    border: none !important;
-    border-radius: var(--me-radius-sm) !important;
+    background: #f8faff !important;
+    border: 1px dashed #c7d7fb !important;
+    border-radius: 999px !important;
     box-shadow: none !important;
-    color: #fff !important;
+    color: #1a56db !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    gap: 8px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    gap: 6px !important;
     justify-content: center !important;
     line-height: 1.4 !important;
-    margin: 0 auto !important;
-    min-height: 42px !important;
-    padding: 10px 20px !important;
+    margin: 0 !important;
+    min-height: 0 !important;
+    padding: 7px 14px !important;
     text-shadow: none !important;
-    transition: background var(--me-transition) !important;
+    transition: background .15s, border-color .15s !important;
     width: fit-content !important;
+}
+.rbfw-me-pricing-classic-wrap .rbfw_multiple_items .ppof-button.add-more-btn:hover {
+    background: #eef3ff !important;
+    border-color: #1a56db !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_multiple_items .ppof-button.add-more-btn:hover {
@@ -6223,6 +7480,269 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     white-space: nowrap !important;
 }
 
+/* ── Redesigned Multiple Day "Pricing" table (Hourly/Daily/Weekly/Monthly combined) ── */
+.rbfw-me-pricing-classic-wrap .md-pricing-table-wrap {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+}
+.rbfw-me-pricing-classic-wrap .md-pricing-table-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+.rbfw-me-pricing-classic-wrap .md-pricing-table-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: #eef3ff;
+    color: #1a56db;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+.rbfw-me-pricing-classic-wrap .md-pricing-table-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1.3;
+}
+.rbfw-me-pricing-classic-wrap .md-pricing-table-subtitle {
+    font-size: 12px;
+    color: #6b7790;
+    margin-top: 2px;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table th {
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 0 10px 10px 0;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table td {
+    padding: 8px 10px 8px 0;
+    vertical-align: middle;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    background: #f4f6f9;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #374151;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-pill .dashicons {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    color: #9ca3af;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table .md-price-input-wrap {
+    display: flex;
+    align-items: stretch;
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    overflow: hidden;
+    width: fit-content;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table .md-price-input-wrap > span {
+    display: flex;
+    align-items: center;
+    background: #f0f4fb;
+    border-right: 1px solid #dde4ef;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0 10px;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table .md-price-input-wrap .price-input {
+    background: #fff;
+    border: none;
+    box-shadow: none;
+    color: #111827;
+    font-size: 13px;
+    height: 38px;
+    padding: 0 10px;
+    width: 110px;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-badge--auto {
+    background: #e7f7ed;
+    color: #1e8a4c;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-badge--conditional {
+    background: #fef3e2;
+    color: #b45309;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-active-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-active-text {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7790;
+}
+/* Toggle switch, restyled for this table (same look as .md-price-card .toggle) */
+.rbfw-me-pricing-classic-wrap .md-rate-table .toggle {
+    background-color: #c9d3e6;
+    border-radius: 14px;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 26px;
+    position: relative;
+    transition: background .2s;
+    width: 48px;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table .toggle.active { background-color: #2271b1; }
+.rbfw-me-pricing-classic-wrap .md-rate-table .toggle-knob {
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    height: 20px;
+    left: 3px;
+    position: absolute;
+    top: 3px;
+    transition: left .2s;
+    width: 20px;
+}
+.rbfw-me-pricing-classic-wrap .md-rate-table .toggle.active .toggle-knob { left: 25px; }
+
+/* ── Redesigned card header (title + subtitle, no uppercase bar) ── */
+.rbfw-me-pricing-classic-wrap .md-card-header-redesign {
+    padding: 18px 20px 4px;
+}
+.rbfw-me-pricing-classic-wrap .md-card-header-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+.rbfw-me-pricing-classic-wrap .md-card-header-subtitle {
+    font-size: 12px;
+    color: #6b7790;
+    margin-top: 2px;
+}
+.rbfw-me-pricing-classic-wrap .md-time-config-hint {
+    font-size: 11.5px;
+    color: #94a3b8;
+    padding: 0 20px 14px;
+    margin: 0;
+}
+
+/* ── Pricing Automation & Thresholds card ── */
+.rbfw-me-pricing-classic-wrap .md-thresholds-card { margin-bottom: 16px; }
+.rbfw-me-pricing-classic-wrap .md-threshold-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 20px;
+    border-top: 1px solid #f0f4fb;
+}
+.rbfw-me-pricing-classic-wrap .md-threshold-row:first-of-type { border-top: none; }
+.rbfw-me-pricing-classic-wrap .md-threshold-icon,
+.rbfw-me-pricing-classic-wrap .md-row-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #eef3ff;
+    color: #1a56db;
+    font-size: 15px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+.rbfw-me-pricing-classic-wrap .md-threshold-text { flex: 1; min-width: 0; }
+.rbfw-me-pricing-classic-wrap .md-threshold-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+}
+.rbfw-me-pricing-classic-wrap .md-threshold-desc {
+    font-size: 12px;
+    color: #6b7790;
+    margin-top: 2px;
+}
+.rbfw-me-pricing-classic-wrap .md-thresholds-card .md-threshold-input-wrap {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+.rbfw-me-pricing-classic-wrap .md-thresholds-card .md-threshold-input-wrap .price-input {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    box-shadow: none;
+    color: #111827;
+    font-size: 13px;
+    font-weight: 600;
+    height: 38px;
+    padding: 0 10px;
+    width: 70px;
+    text-align: center;
+}
+.rbfw-me-pricing-classic-wrap .md-threshold-unit {
+    font-size: 12.5px;
+    color: #94a3b8;
+    width: 44px;
+    flex-shrink: 0;
+}
+.rbfw-me-pricing-classic-wrap .md-autopivot-note {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    margin: 4px 0 18px;
+    padding: 11px 14px;
+    background: #eff6ff;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #1e40af;
+    line-height: 1.6;
+    box-sizing: border-box;
+}
+
+/* Multiple Day's "Auto-Pivot Logic" note sits inside the Thresholds card,
+   which isn't flush-edged like Single Day's wrapper, so it keeps its own
+   side margins instead of the flush 0 used for Single Day's note. */
+.rbfw-me-pricing-classic-wrap .md-thresholds-card .md-autopivot-note {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.rbfw-me-pricing-classic-wrap .md-autopivot-note .dashicons {
+    flex-shrink: 0;
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
 /* Half-day hour threshold — From [n] to [n] hours */
 .rbfw-me-pricing-classic-wrap .md-price-card .threshold-inputs {
     align-items: center !important;
@@ -6277,6 +7797,39 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     font-size: 12px !important;
     margin: 0 !important;
     padding: 0 !important;
+}
+
+/* Icon + title/subtitle in one row, instead of the plain stacked title bar */
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section > .section.md-ts-header {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+}
+
+/* "Rental Options" header above Single Day's rate table — plain left-
+   aligned label + muted subtitle, no icon. */
+.rbfw-me-pricing-classic-wrap .rbfw-sd-options-header {
+    margin: 0 0 14px;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-sd-options-header .label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 3px;
+}
+.rbfw-me-pricing-classic-wrap .rbfw-sd-options-header p {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+.rbfw-me-pricing-classic-wrap .md-ts-active-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 16px 20px 0;
 }
 
 /* Chips area */
@@ -6557,52 +8110,56 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     box-sizing: border-box !important;
 }
 
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration table.form-table {
-    border-collapse: collapse !important;
-    margin: 0 !important;
-    width: 100% !important;
+/* Day-wise card: one row per weekday, replacing the old <table> layout */
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-card {
+    background: #fff;
 }
-
-/* Table header */
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration thead tr {
-    background: #f0f4fb !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 20px;
+    border-top: 1px solid #f0f4fb;
+    flex-wrap: wrap;
 }
-
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration thead th {
-    border-bottom: 1px solid #dde4ef !important;
-    color: #6b7790 !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    letter-spacing: .06em !important;
-    padding: 10px 16px !important;
-    text-align: left !important;
-    text-transform: uppercase !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-row:first-child {
+    border-top: none;
 }
-
-/* Table body rows */
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody tr {
-    border-bottom: 1px solid #f0f4fb !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-day {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 130px;
+    flex-shrink: 0;
 }
-
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody tr:last-child {
-    border-bottom: none !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-day-badge {
+    font-size: 11px;
+    text-transform: uppercase;
 }
-
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody th {
-    color: #374151 !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    padding: 10px 16px !important;
-    text-align: left !important;
-    white-space: nowrap !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-day-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
 }
-
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration tbody td {
-    padding: 8px 16px !important;
-    vertical-align: middle !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
 }
-
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration input[type="number"] {
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-field {
+    min-width: 130px;
+    flex: 1;
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-field input[type="number"] {
     background: #f8fafd !important;
     border: 1px solid #dde4ef !important;
     border-radius: 6px !important;
@@ -6614,12 +8171,50 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding: 0 10px !important;
     width: 100% !important;
 }
-
-.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper section.day-wise-price-configuration input[type="checkbox"] {
-    accent-color: #2271b1 !important;
-    cursor: pointer !important;
-    height: 16px !important;
-    width: 16px !important;
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-daywise-enable {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+/* Native checkbox restyled as an on/off switch, matching .md-price-card .toggle */
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-day-switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 22px;
+    cursor: pointer;
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-day-switch input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-day-switch-slider {
+    position: absolute;
+    inset: 0;
+    background: #d6dce8;
+    border-radius: 999px;
+    transition: background .15s;
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-day-switch-slider::before {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    transition: left .15s;
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-day-switch input[type="checkbox"]:checked + .md-day-switch-slider {
+    background: #1a56db;
+}
+.rbfw-me-pricing-classic-wrap #rbfw-daywise-config-wrapper .md-day-switch input[type="checkbox"]:checked + .md-day-switch-slider::before {
+    left: 21px;
 }
 
 /* Hide duplicate bg-light header inside additional-service-item-price */
@@ -6694,9 +8289,9 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 /* Category card */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper {
     background: #fff !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 8px !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,.06) !important;
+    border: 1px solid #e5e9f0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 1px 2px rgba(15,23,42,.04) !important;
     overflow: hidden !important;
 }
 
@@ -6709,93 +8304,124 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     padding: 0 !important;
 }
 
-/* Category header — label + title input */
+/* Category header — icon-badge-free clean row; the input's own placeholder
+   ("Service Category Label") carries the caption now, same pattern as the
+   Item Features / Item Variations headers redesigned earlier. */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title.sss {
     align-items: center !important;
-    background: #f0f4fb !important;
+    background: #fafbfd !important;
     border: none !important;
-    border-bottom: 1px solid #dde4ef !important;
+    border-bottom: 1px solid #eef1f6 !important;
     border-radius: 0 !important;
     display: flex !important;
-    gap: 16px !important;
-    justify-content: space-between !important;
+    gap: 10px !important;
+    justify-content: flex-start !important;
     margin: 0 !important;
-    padding: 6px 20px !important;
+    padding: 13px 14px !important;
 }
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title label {
-    color: #6b7790 !important;
-    flex-shrink: 0 !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    letter-spacing: .06em !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    text-transform: uppercase !important;
-    white-space: nowrap !important;
+    display: none !important;
 }
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title input[type="text"] {
     background: #fff !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
-    color: #111827 !important;
-    font-size: 13px !important;
-    height: 36px !important;
-    min-width: 120px !important;
-    padding: 0 10px !important;
-    width: 40% !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    color: #1d2327 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    height: auto !important;
+    min-width: 0 !important;
+    padding: 9px 12px !important;
+    width: 100% !important;
+    flex: 1 !important;
+    box-sizing: border-box !important;
+}
+.rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title input[type="text"]:focus {
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px #eef3ff !important;
+    outline: none !important;
 }
 
-/* Each service item row */
+/* Each service item row — rounded hover highlight instead of a divider
+   line, matching the other row redesigns this session. */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .service_category_inner_item_wrap .item {
     align-items: center !important;
-    border-bottom: 1px solid #f0f4fb !important;
+    border-bottom: none !important;
+    border-radius: 9px !important;
     display: flex !important;
     flex-wrap: nowrap !important;
     gap: 8px !important;
-    margin: 0 !important;
-    padding: 10px 16px !important;
+    margin: 2px 8px !important;
+    padding: 9px 8px !important;
+    transition: background .15s !important;
 }
 
-.rbfw-me-pricing-classic-wrap .services_category_wrapper .service_category_inner_item_wrap .item:last-child {
-    border-bottom: none !important;
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .service_category_inner_item_wrap .item:hover {
+    background: #f8fafc !important;
 }
 
-/* Icon button */
+/* Icon button — compact round ghost button, icon-only (text hidden via
+   font-size:0, its <i> icon re-grown back to size). */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_btn.btn {
     align-items: center !important;
-    background: #f6f7f7 !important;
-    border: 1px solid #c3c4c7 !important;
-    border-radius: 6px !important;
-    color: #374151 !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #c2c9d6 !important;
     cursor: pointer !important;
     display: inline-flex !important;
     flex-shrink: 0 !important;
-    font-size: 12px !important;
-    gap: 4px !important;
-    height: 32px !important;
-    padding: 0 10px !important;
+    font-size: 0 !important;
+    gap: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    padding: 0 !important;
     text-decoration: none !important;
     white-space: nowrap !important;
 }
 
-.rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_btn.btn:hover {
-    background: #f0f0f1 !important;
-    border-color: #8c8f94 !important;
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_btn.btn i {
+    font-size: 13px !important;
+    color: inherit !important;
 }
 
-/* Icon preview — hide when empty */
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_btn.btn:hover {
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+}
+
+/* Icon preview — circular accent badge once an icon is chosen */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_preview:empty {
     display: none !important;
+}
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_preview {
+    width: 28px !important;
+    height: 28px !important;
+    flex-shrink: 0 !important;
+    padding: 0 !important;
+}
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .rbfw_service_icon_preview i {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #eef3ff !important;
+    color: #1a56db !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    margin: 0 !important;
 }
 
 /* Service name input — flex 1 */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item input[type="text"]:not(.medium) {
-    background: #f8fafd !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
-    color: #111827 !important;
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    color: #1d2327 !important;
     flex: 1 !important;
     font-size: 13px !important;
     height: 36px !important;
@@ -6805,18 +8431,23 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 /* Price & Stock inputs — fixed width */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item input[type="text"].medium {
-    background: #f8fafd !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
-    color: #111827 !important;
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    color: #1d2327 !important;
     flex-shrink: 0 !important;
     font-size: 13px !important;
     height: 36px !important;
     padding: 0 10px !important;
     width: 70px !important;
 }
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .item input[type="text"]:focus {
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 3px #eef3ff !important;
+    outline: none !important;
+}
 
-/* Radio pill labels */
+/* One Time / Day Wise pills */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item > label {
     cursor: pointer !important;
     flex-shrink: 0 !important;
@@ -6830,116 +8461,159 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item > label .sw-button {
     align-items: center !important;
-    background: #fff !important;
-    border: 1.5px solid #c3c4c7 !important;
-    border-radius: 20px !important;
-    color: #6b7790 !important;
+    background: #f1f5f9 !important;
+    border: none !important;
+    border-radius: 7px !important;
+    color: #64748b !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    height: 30px !important;
-    padding: 0 12px !important;
-    transition: border-color .15s, color .15s, background .15s !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    height: 28px !important;
+    padding: 0 10px !important;
+    transition: background .15s, color .15s !important;
     white-space: nowrap !important;
 }
 
-/* Selected radio pill — blue */
+/* Selected pill — solid blue */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item > label:has(input:checked) .sw-button {
-    background: #eef3ff !important;
+    background: #1a56db !important;
     border-color: #1a56db !important;
-    color: #1a56db !important;
+    color: #fff !important;
+    font-weight: 700 !important;
 }
 
-/* Sort + Remove buttons in item row */
+/* Sort + Remove buttons in item row — hover-reveal, borderless */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item > div {
     align-items: center !important;
     display: flex !important;
     flex-shrink: 0 !important;
-    gap: 4px !important;
+    gap: 2px !important;
+    opacity: 0 !important;
+    transition: opacity .15s !important;
+}
+
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .item:hover > div {
+    opacity: 1 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item > div .button {
     align-items: center !important;
-    background: #f6f7f7 !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    color: #6b7790 !important;
+    color: #94a3b8 !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    height: 30px !important;
+    height: 28px !important;
     justify-content: center !important;
     padding: 0 !important;
     text-shadow: none !important;
-    width: 30px !important;
+    width: 28px !important;
+}
+.rbfw-me-pricing-classic-wrap .services_category_wrapper .item > div .button:hover {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item > div .button.remove:hover {
     background: #fef2f2 !important;
-    border-color: #f5c2c7 !important;
-    color: #d63638 !important;
+    border-color: transparent !important;
+    color: #dc2626 !important;
 }
 
-/* "Add New Service" — dashed footer, centered */
+/* "Add New Service" — compact dashed ghost pill, left-aligned, same
+   language as the other "+ Add" buttons redesigned this session. */
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .ppof-button.add-new-service {
     align-items: center !important;
-    background: #fff !important;
-    border: none !important;
-    border-radius: 0 !important;
-    border-top: 1px dashed #c3cfe0 !important;
+    background: #eef3ff !important;
+    border: 1.5px dashed rgba(26,86,219,.35) !important;
+    border-radius: 9px !important;
     box-shadow: none !important;
-    color: #2271b1 !important;
+    color: #1a56db !important;
     cursor: pointer !important;
-    display: flex !important;
-    font-size: 13px !important;
+    display: inline-flex !important;
+    font-size: 12.5px !important;
     font-weight: 600 !important;
-    gap: 6px !important;
+    gap: 7px !important;
     justify-content: center !important;
-    margin: 0 !important;
-    padding: 12px 16px !important;
+    margin: 6px 0 20px 16px !important;
+    padding: 8px 14px !important;
     text-shadow: none !important;
-    width: 100% !important;
+    width: auto !important;
 }
 
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .ppof-button.add-new-service:hover {
-    background: #f0f5ff !important;
-    color: #135e96 !important;
+    background: #e3ecff !important;
+    border-color: #1a56db !important;
+    color: #1347b8 !important;
 }
 
-/* Category action buttons (column 2) */
+/* Category action buttons (column 2) — hover-reveal off the whole row,
+   borderless icon buttons instead of always-visible bordered squares. */
 .rbfw-me-pricing-classic-wrap .rbfw_service_category_table > tbody > tr > td:last-child .button {
     align-items: center !important;
-    background: #f6f7f7 !important;
-    border: 1px solid #dde4ef !important;
-    border-radius: 6px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    color: #6b7790 !important;
+    color: #94a3b8 !important;
     cursor: pointer !important;
     display: flex !important;
-    height: 32px !important;
+    height: 30px !important;
     justify-content: center !important;
-    margin-bottom: 6px !important;
+    margin-bottom: 4px !important;
     padding: 0 !important;
     text-shadow: none !important;
-    width: 32px !important;
+    width: 30px !important;
+    opacity: 0 !important;
+    transition: opacity .15s, background .15s, color .15s !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_service_category_table > tbody > tr:hover > td:last-child .button {
+    opacity: 1 !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_service_category_table > tbody > tr > td:last-child .button:hover {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_service_category_table > tbody > tr > td:last-child .tr_remove {
-    background: #fff !important;
-    border-color: #f9a8bc !important;
     color: #e11d48 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_service_category_table > tbody > tr > td:last-child .tr_remove:hover {
     background: #fff1f4 !important;
-    border-color: #e11d48 !important;
+    color: #e11d48 !important;
 }
 
-/* "Add Service Category" — margin only; shared add-button styles at file end */
+/* "Add Service Category" — dashed ghost CTA, overriding the shared solid
+   add-button style (3-plus-classes deep so it wins over that shared rule
+   regardless of file order, same pattern as "Add Feature Category" /
+   "Add New Type" elsewhere this session). */
 .rbfw-me-pricing-classic-wrap #field-wrapper-rbfw_service_category_price .ppof-button.add-service-category,
 .rbfw-me-pricing-classic-wrap .additional-service-item-price .ppof-button.add-service-category {
-    margin: 8px auto 0 !important;
+    background: #eef3ff !important;
+    border: 2px dashed rgba(26,86,219,.35) !important;
+    border-radius: var(--me-radius) !important;
+    color: #1a56db !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    margin: 8px auto 20px !important;
+    padding: 15px 20px !important;
+    width: 100% !important;
+}
+.rbfw-me-pricing-classic-wrap #field-wrapper-rbfw_service_category_price .ppof-button.add-service-category:hover,
+.rbfw-me-pricing-classic-wrap .additional-service-item-price .ppof-button.add-service-category:hover {
+    background: #e3ecff !important;
+    border-color: #1a56db !important;
+    color: #1347b8 !important;
+}
+.rbfw-me-pricing-classic-wrap #field-wrapper-rbfw_service_category_price .ppof-button.add-service-category i,
+.rbfw-me-pricing-classic-wrap .additional-service-item-price .ppof-button.add-service-category i {
+    color: inherit !important;
 }
 
 /* Hide the Fee Management card head (section.bg-light acts as header) */
@@ -7206,35 +8880,46 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     color: #b91c1c !important;
 }
 
-/* ── Add Extra Service footer ── */
+/* ── Add Extra Service footer — same dashed ghost pill, left-aligned, as
+   Single Day's "Add New Type" button. ── */
 .rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper > section:not(.bg-light) .mt-2 {
-    border-top: 1px dashed #c3cfe0 !important;
+    border-top: none !important;
     margin: 0 !important;
-    padding: 14px 16px !important;
-    text-align: center !important;
+    padding: 14px 0 18px !important;
+    text-align: left !important;
 }
 
-.rbfw-me-pricing-classic-wrap #add-row.ppof-button {
+/* ID-qualified AND scoped through the wrapper classes so this beats the
+   later, otherwise-equal-specificity shared "solid primary button" rule
+   (.rbfw-me-wrap #add-row.ppof-button) further down the file — see the
+   Single Day "Add New Type" button fix for the same cascade issue. */
+.rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper .mt-2 #add-row.ppof-button {
     align-items: center !important;
-    background: #2271b1 !important;
-    border: none !important;
-    border-radius: 8px !important;
+    background: #f8faff !important;
+    border: 1px dashed #c7d7fb !important;
+    border-radius: 999px !important;
     box-shadow: none !important;
-    color: #fff !important;
+    color: #1a56db !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
     gap: 6px !important;
-    height: 42px !important;
-    padding: 0 24px !important;
+    height: auto !important;
+    margin-left: 20px !important;
+    padding: 7px 14px !important;
     text-shadow: none !important;
-    transition: background .15s !important;
+    transition: background .15s, border-color .15s !important;
 }
 
-.rbfw-me-pricing-classic-wrap #add-row.ppof-button:hover {
-    background: #135e96 !important;
-    color: #fff !important;
+.rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper .mt-2 #add-row.ppof-button:hover {
+    background: #eef3ff !important;
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper .mt-2 #add-row.ppof-button i {
+    color: #1a56db !important;
 }
 
 /* ── Fee Management section ──────────────────────────────────── */
@@ -7608,10 +9293,11 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_table_row {
     background: #fff !important;
     border-bottom: 1px solid #f0f4fb !important;
+    transition: background .15s !important;
 }
 
-.rbfw-me-pricing-classic-wrap .rbfw_resort_price_table_row:nth-child(even) {
-    background: #f5f8ff !important;
+.rbfw-me-pricing-classic-wrap .rbfw_resort_price_table_row:hover {
+    background: #f8fafc !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_table tbody td {
@@ -7708,11 +9394,17 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     vertical-align: top !important;
 }
 
-/* Actions column */
+/* Actions column — hover-reveal, matching the other pricing tables */
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_table .mp_event_remove_move {
     align-items: center !important;
     display: flex !important;
     gap: 6px !important;
+    opacity: 0 !important;
+    transition: opacity .15s !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_resort_price_table_row:hover .mp_event_remove_move {
+    opacity: 1 !important;
 }
 
 /* Drag sort button */
@@ -7773,28 +9465,36 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper #add-resort-type-row.ppof-button {
     align-items: center !important;
-    background: var(--me-primary) !important;
-    border: none !important;
-    border-radius: var(--me-radius-sm) !important;
+    background: #f8faff !important;
+    border: 1px dashed #c7d7fb !important;
+    border-radius: 999px !important;
     box-shadow: none !important;
-    color: #fff !important;
+    color: #1a56db !important;
     cursor: pointer !important;
     display: inline-flex !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    gap: 8px !important;
-    height: 42px !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    gap: 6px !important;
+    height: auto !important;
     justify-content: center !important;
     margin: 0 auto !important;
-    padding: 10px 20px !important;
+    padding: 7px 14px !important;
     text-shadow: none !important;
-    transition: background var(--me-transition) !important;
+    transition: background .15s, border-color .15s !important;
     width: fit-content !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper #add-resort-type-row.ppof-button:hover {
-    background: var(--me-primary-dk) !important;
-    color: #fff !important;
+    background: #eef3ff !important;
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+}
+
+/* Keep the icon the accent blue on this light dashed ghost pill (the
+   shared .ppof-button icon rule further down paints icons white, which
+   was written for the solid-fill buttons elsewhere). */
+.rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper #add-resort-type-row.ppof-button i {
+    color: #1a56db !important;
 }
 
 /* Paragraph wrapper around the button — rules merged above */
@@ -8521,11 +10221,13 @@ textarea.rbfw-me-field-invalid {
     color: #fff !important;
 }
 
-/* Center add-button rows (wrappers that only host add actions) */
+/* Center add-button rows (wrappers that only host add actions) — Single
+   Day's "Add New Type" and Extra Service's "Add Extra Service" are both
+   excluded on purpose: they sit left-aligned just under their table, like
+   the artifact design and the other redesigned add-buttons in this card
+   (Resort, Multiple Items, Item Features). */
 .rbfw-me-addon-discount-card .rbfw-mi-card-footer,
-.rbfw-me-pricing-classic-wrap .rbfw_es_price_config_wrapper > section:not(.bg-light) .mt-2,
 .rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap,
-.rbfw-me-pricing-classic-wrap .sd-add-type-and-sessional,
 .rbfw-me-pricing-classic-wrap .rbfw-mi-card-footer {
     text-align: center !important;
 }
@@ -8543,10 +10245,15 @@ textarea.rbfw-me-field-invalid {
     padding: 16px 20px !important;
 }
 
-.rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title.sss,
 .rbfw-me-pricing-classic-wrap section.service_category_title.sss,
 .rbfw-me-card .service_category_title.sss {
     padding: 6px 20px !important;
+}
+/* Same equal-specificity selector as the redesigned rule above (earlier in
+   the file) -- kept here too so neither rule's source order can silently
+   win the padding tie; the value must stay in sync with that one. */
+.rbfw-me-pricing-classic-wrap .services_category_wrapper section.service_category_title.sss {
+    padding: 13px 14px !important;
 }
 
 /* Priority padding — particular date time slots toggle */
@@ -8568,8 +10275,14 @@ textarea.rbfw-me-field-invalid {
         padding: 24px 20px 32px;
     }
 
+    /* Below 1200px the sidebar stacks under the main column instead of
+       sitting beside it, so sticking it would float it over that stacked
+       content instead of pinning it alongside something — revert to static. */
     .rbfw-me-sidebar {
         width: 100%;
+        position: static;
+        max-height: none;
+        overflow-y: visible;
     }
 
     .rbfw-me-main {

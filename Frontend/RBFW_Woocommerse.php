@@ -1464,6 +1464,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
                         $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
                         $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                        $apply_on = ! empty( $fee['apply_on'] ) ? $fee['apply_on'] : 'all-days';
                         $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
                         if ( $price_type === 'percentage' ) {
                             $fee_total = ( $price / 100 ) * $sub_total_price;
@@ -1472,9 +1473,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                         } else {
                             $is_day_wise_fee = in_array( $frequency, array( 'per-day', 'day-wise', 'day_wise' ), true );
                             if ( $is_day_wise_fee ) {
-                                $fee_total = $price * $rbfw_item_quantity * $total_days;
+                                $fee_days = ( $apply_on === 'weekends' ) ? rbfw_count_weekend_days( $start_date, $end_date, $total_days ) : $total_days;
+                                $fee_total = $price * $rbfw_item_quantity * $fee_days;
                                 $rbfw_management_price += $fee_total;
-                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity . '*' . $total_days, 'price' => $fee_total, 'refundable' => $refundable );
+                                $day_desc = ( $apply_on === 'weekends' ) ? $fee_days . ' weekend day(s)' : $fee_days;
+                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity . '*' . $day_desc, 'price' => $fee_total, 'refundable' => $refundable );
                             } else {
                                 $fee_total = $price * $rbfw_item_quantity;
                                 $rbfw_management_price += $fee_total;
@@ -3017,11 +3020,15 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
                     $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
                     $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                    $apply_on = ! empty( $fee['apply_on'] ) ? $fee['apply_on'] : 'all-days';
 
                     if ($price_type === 'percentage') {
                         $management_price += ( $price / 100 ) * $subtotal_price;
+                    } elseif ( $frequency === 'one-time' ) {
+                        $management_price += $price;
                     } else {
-                        $management_price += ( $frequency === 'one-time' ) ? $price : $price * $total_days;
+                        $fee_days = ( $apply_on === 'weekends' ) ? rbfw_count_weekend_days( $checkin_date, $checkout_date, $total_days ) : $total_days;
+                        $management_price += $price * $fee_days;
                     }
 
                 }

@@ -345,6 +345,7 @@
 				$calculation_type = isset( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
 				$amount = isset( $fee['amount'] ) ? $fee['amount'] : '0';
 				$frequency = isset( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+				$apply_on = isset( $fee['apply_on'] ) ? $fee['apply_on'] : 'all-days';
 				$priority = isset( $fee['priority'] ) ? $fee['priority'] : 'optional'; // Added by Shahnur Alam - Priority field
 				$refundable = isset( $fee['refundable'] ) ? $fee['refundable'] : 'no';
 				$taxable = isset( $fee['taxable'] ) ? $fee['taxable'] : 'no';
@@ -355,7 +356,9 @@
 						<div class="wprently_fee-type">
 							<div class="wprently_fee-info">
 								<input type="text" class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][label]" value="<?php echo esc_attr( $label ); ?>" placeholder="<?php echo esc_attr__( 'Fee label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-								<input type="text" class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][description]" value="<?php echo esc_attr( $description ); ?>" placeholder="<?php echo esc_attr__( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+								<!-- Description input removed from the UI; carried forward as hidden
+								     so an existing fee's frontend description isn't wiped on save. -->
+								<input type="hidden" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][description]" value="<?php echo esc_attr( $description ); ?>">
 							</div>
 						</div>
 					</td>
@@ -371,10 +374,14 @@
 						</div>
 					</td>
 
-                    <td style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'others')?'table-cell':'none' ?>">
-                        <select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][frequency]">
+                    <td style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'others')?'table-cell':'none' ?>" class="fee-frequency-td">
+                        <select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][frequency]" onchange="rbfwToggleApplyOn(this)">
                             <option value="one-time" <?php selected( $frequency, 'one-time' ); ?>><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                             <option value="per-day" <?php selected( $frequency, 'per-day' ); ?>><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                        </select>
+                        <select class="wprently_fee-input" id="apply-on-<?php echo esc_attr( $index ); ?>" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][apply_on]" style="margin-top:4px;display:<?php echo ( $frequency === 'per-day' ) ? 'block' : 'none'; ?>">
+                            <option value="all-days" <?php selected( $apply_on, 'all-days' ); ?>><?php echo esc_html__( 'All Days', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="weekends" <?php selected( $apply_on, 'weekends' ); ?>><?php echo esc_html__( 'Weekends Only', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                         </select>
                     </td>
 
@@ -464,7 +471,7 @@
 								<div class="wprently_fee-type">
 									<div class="wprently_fee-info">
 										<input type="text" class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][label]" placeholder="<?php echo esc_attr__( 'Fee label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-										<input type="text" class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][description]" placeholder="<?php echo esc_attr__( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+										<input type="hidden" name="rbfw_fee_data[${rowCount}][description]" value="">
 									</div>
 								</div>
 							</td>
@@ -479,9 +486,13 @@
 								</div>
 							</td>
 							<td class="fee-frequency-td">
-								<select class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][frequency]">
+								<select class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][frequency]" onchange="rbfwToggleApplyOn(this)">
 									<option value="one-time" selected><?php echo esc_html__( 'One-time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 									<option value="per-day"><?php echo esc_html__( 'Per day', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+								</select>
+								<select class="wprently_fee-input" id="apply-on-${rowCount}" name="rbfw_fee_data[${rowCount}][apply_on]" style="margin-top:4px;display:none">
+									<option value="all-days" selected><?php echo esc_html__( 'All Days', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+									<option value="weekends"><?php echo esc_html__( 'Weekends Only', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 								</select>
 							</td>
 							<td>
@@ -546,6 +557,21 @@
 						const newRow = row.cloneNode(true);
 						row.parentNode.insertBefore(newRow, row.nextSibling);
 						rbfwReindexFeeRows();
+					}
+
+					/**
+					 * Show/hide the "Apply On" (All Days / Weekends Only) select based on
+					 * whether the fee's Frequency is Day Wise -- it only makes sense for
+					 * per-day fees, matching the Frequency column's own show/hide-by-item-type.
+					 * @param {HTMLElement} select The frequency <select> that changed.
+					 * @since 1.0.0
+					 */
+					function rbfwToggleApplyOn(select) {
+						const td = select.closest('td');
+						const applyOnSelect = td ? td.querySelector('select[name*="[apply_on]"]') : null;
+						if (applyOnSelect) {
+							applyOnSelect.style.display = (select.value === 'per-day') ? 'block' : 'none';
+						}
 					}
 
 					/**
@@ -710,6 +736,7 @@
 								'calculation_type' => isset( $fee['calculation_type'] ) ? sanitize_text_field( wp_unslash( $fee['calculation_type'] ) ) : 'fixed',
 								'amount'           => isset( $fee['amount'] ) ? floatval( $fee['amount'] ) : 0,
 								'frequency'        => isset( $fee['frequency'] ) ? sanitize_text_field( wp_unslash( $fee['frequency'] ) ) : 'one-time',
+								'apply_on'         => isset( $fee['apply_on'] ) ? sanitize_text_field( wp_unslash( $fee['apply_on'] ) ) : 'all-days',
 								'priority'         => isset( $fee['priority'] ) ? sanitize_text_field( wp_unslash( $fee['priority'] ) ) : 'optional', // Added by Shahnur Alam - Priority field saving
 								'refundable'       => isset( $fee['refundable'] ) ? sanitize_text_field( wp_unslash( $fee['refundable'] ) ) : 'no',
 								'color'            => isset( $fee['color'] ) ? sanitize_text_field( wp_unslash( $fee['color'] ) ) : 'security'

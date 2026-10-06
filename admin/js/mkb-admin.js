@@ -2162,11 +2162,13 @@ jQuery(document).ready(function () {
             jQuery(this).val('no');
             jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
             jQuery('.item_stock_quantity input').removeAttr("disabled");
+            jQuery('.item_stock_quantity').removeClass('is-stock-disabled');
         }
         if (status == 'no') {
             jQuery(this).val('yes');
             jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
             jQuery('.item_stock_quantity input').attr("disabled", true);
+            jQuery('.item_stock_quantity').addClass('is-stock-disabled');
         }
     });
     jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function () {
@@ -2191,40 +2193,59 @@ jQuery(document).ready(function () {
 
 
 
-    jQuery(document).on('click', '#add-new-variation', function (e) {
-        e.preventDefault();
-        if (jQuery('.rbfw_variations_table .rbfw_variations_table_row').length > 0) {
-            let rbfw_variations_table_last_row = jQuery('.rbfw_variations_table .rbfw_variations_table_row:last-child');
-            let rbfw_variations_table_last_data_key = parseInt(rbfw_variations_table_last_row.attr('data-key'));
-            let rbfw_variations_table_new_data_key = rbfw_variations_table_last_data_key + 1;
-            let rbfw_variations_table_row = '<div class=rbfw_variations_table_row data-key="' + rbfw_variations_table_new_data_key + '"><header><label for="">' + rbfw_admin_i18n('filed_label', 'Field Label') + '</label><div><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]"placeholder="' + rbfw_translation.filed_label + '"> <input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]"type=hidden value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></div></header><div class=variations-inner-table><table class="rbfw_variations_value_table form-table w-100"><thead><th>' + rbfw_translation.variation_name + '<th>' + rbfw_translation.stock_quantity + '<b class="required">*</b><th>' + rbfw_translation.is_default + '<th>' + rbfw_translation.actions + '<tbody class=rbfw_variations_value_table_tbody><tr class=rbfw_variations_value_table_row data-key=0><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]"placeholder="' + rbfw_translation.variation_name + '" class=rbfw_variation_value><td><input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]"placeholder="' + rbfw_translation.stock_quantity + '" type=number><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]"type=checkbox class=rbfw_variation_selected_value><td><div class=mp_event_remove_move><button class="button remove-rbfw_variations_value_table_row"type=button><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fa-arrows-alt fas"></i></div></div></table><button class="add-new-variation-value mt-2 ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></div><div class=mp_event_remove_move><button class=remove-rbfw_variations_table_row type=button><i class="fas fa-trash-can"></i></button></div></div>';
-            jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
-        } else {
-            let rbfw_variations_table_new_data_key = 0;
-            let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="' + rbfw_variations_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_label]" placeholder="' + rbfw_translation.filed_label + '"><input type="hidden" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][field_id]" value="rbfw_variation_id_' + rbfw_variations_table_new_data_key + '"></td><td><table class="rbfw_variations_value_table"><thead><th>' + rbfw_translation.stock_quantity + '</th><th>' + rbfw_translation.stock_quantity + '<b class="required">*</b></th><th> ' + rbfw_translation.is_default + '</th><th>' + rbfw_translation.actions + '</th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][value][0][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + rbfw_variations_table_new_data_key + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fas fa-circle-plus"></i>' + rbfw_translation.add_new_value + '</button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
-            jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
-        }
-        initVariationSortables();
+    /* One variation-value "chip" — name, qty and a hidden price carried forward
+       unedited — matching the server-rendered markup in
+       Inventory.php::variation_settings(). There's only ever the one variation
+       group now (no "+ Add Variation"), so this only ever appends into it.
+       name/qty are optional -- the Add New Value form (below) passes the
+       admin's typed values in pre-filled; any other caller gets a blank,
+       placeholder-only chip like before. */
+    function escVariationChipAttr(val) {
+        return jQuery('<div>').text(val == null ? '' : val).html();
+    }
+    function buildVariationValueChip(groupIndex, valueIndex, name, qty) {
+        var nameAttr = name ? ' value="' + escVariationChipAttr(name) + '"' : '';
+        var qtyAttr = qty !== undefined && qty !== null && qty !== '' ? ' value="' + escVariationChipAttr(qty) + '"' : '';
+        return '<div class="rbfw_variations_value_table_row rbfw-var-chip" data-key="' + valueIndex + '">'
+            + '<input type="text" name="rbfw_variations_data[' + groupIndex + '][value][' + valueIndex + '][name]"' + nameAttr + ' placeholder="' + (rbfw_translation.variation_example || 'e.g. Red') + '" class="rbfw_variation_value rbfw-var-chip-name">'
+            + '<span class="rbfw-var-chip-dash">—</span>'
+            + '<input type="number" name="rbfw_variations_data[' + groupIndex + '][value][' + valueIndex + '][quantity]"' + qtyAttr + ' placeholder="' + (rbfw_translation.quantity_example || 'e.g. 3') + '" class="rbfw-var-chip-qty">'
+            + '<span class="rbfw-var-chip-unit">' + (rbfw_translation.in_stock || 'in stock') + '</span>'
+            + '<input type="hidden" name="rbfw_variations_data[' + groupIndex + '][value][' + valueIndex + '][price]" value="">'
+            + '<button type="button" class="button remove-rbfw_variations_value_table_row rbfw-var-chip-remove">&times;</button>'
+            + '</div>';
+    }
+
+    /* "Add New Value" form (Time Slots-style: separate Name + Qty fields and
+       an Add button, instead of a ghost button that drops a blank editable
+       chip straight into the list). The button stays disabled until a name
+       is typed, mirroring the Time Slot picker's "+ Add Slot" button. */
+    jQuery(document).on('input', '.rbfw-var-add-name', function () {
+        var $form = jQuery(this).closest('.rbfw-var-add-form');
+        $form.find('.rbfw-var-add-btn').prop('disabled', jQuery(this).val().trim() === '');
     });
-    /* Add New Variation Value — delegated so buttons added later (modern editor / new
-       variations) fire too. Previously a direct .click() that never bound in the SPA. */
-    jQuery(document).on('click', '.add-new-variation-value', function (e) {
-            let this_btn = jQuery(this);
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            let c = parseInt(this_btn.attr('data-key'));
-            if (jQuery(this_btn).siblings('.rbfw_variations_value_table').find('.rbfw_variations_value_table_row').length > 0) {
-                let rbfw_variations_value_table_last_row = jQuery(this_btn).siblings('.rbfw_variations_value_table').find('.rbfw_variations_value_table_row:last-child');
-                let rbfw_variations_value_table_last_data_key = parseInt(rbfw_variations_value_table_last_row.attr('data-key'));
-                let rbfw_variations_value_table_new_data_key = rbfw_variations_value_table_last_data_key + 1;
-                let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
-                jQuery(this_btn).siblings('.rbfw_variations_value_table').append(rbfw_variations_value_table_row);
-            } else {
-                let rbfw_variations_value_table_new_data_key = 0;
-                let rbfw_variations_value_table_row = '<tr class="rbfw_variations_value_table_row" data-key="' + rbfw_variations_value_table_new_data_key + '"><td><input type="text" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][name]" placeholder="' + rbfw_translation.variation_name + '" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][quantity]" placeholder="' + rbfw_translation.stock_quantity + '"></td><td><input type="number" step="0.01" min="0" name="rbfw_variations_data[' + c + '][value][' + rbfw_variations_value_table_new_data_key + '][price]" placeholder="' + rbfw_admin_i18n('price', 'Price') + '"></td><td><input type="checkbox" name="rbfw_variations_data[' + c + '][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
-                jQuery(this_btn).siblings('.rbfw_variations_value_table').append(rbfw_variations_value_table_row);
-            }
-            initVariationSortables();
+    jQuery(document).on('click', '.rbfw-var-add-btn', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var $btn = jQuery(this);
+        if ($btn.prop('disabled')) { return; }
+        var $form = $btn.closest('.rbfw-var-add-form');
+        var $name = $form.find('.rbfw-var-add-name');
+        var name = $name.val().trim();
+        if (! name) { return; }
+        var qty = $form.find('.rbfw-var-add-qty').val();
+        var groupIndex = parseInt($btn.attr('data-key'));
+        var $list = $btn.closest('.variations-inner-table').find('.rbfw_variations_value_table');
+        var $existingRows = $list.find('.rbfw_variations_value_table_row');
+        var newValueIndex = 0;
+        if ($existingRows.length > 0) {
+            newValueIndex = parseInt($existingRows.last().attr('data-key')) + 1;
+        }
+        $list.append(buildVariationValueChip(groupIndex, newValueIndex, name, qty));
+        initVariationSortables();
+        $form.find('.rbfw-var-add-name, .rbfw-var-add-qty').val('');
+        $btn.prop('disabled', true);
+        $name.trigger('focus');
     });
     /* Variation Default Value (delegated). Note: It works for frontend select box */
     jQuery(document).on('change', '.rbfw_variation_selected_value', function () {
@@ -2232,7 +2253,7 @@ jQuery(document).ready(function () {
     });
     jQuery(document).on('keyup', '.rbfw_variation_value', function () {
         let this_val = jQuery(this).val();
-        jQuery(this).closest('td').siblings('td').find('.rbfw_variation_selected_value').val(this_val);
+        jQuery(this).closest('.rbfw_variations_value_table_row').find('.rbfw_variation_selected_value').val(this_val);
     });
     /* Variation remove buttons (delegated so newly-added rows work too). */
     jQuery(document).on('click', '.remove-rbfw_variations_table_row', function (e) {
@@ -2248,7 +2269,7 @@ jQuery(document).ready(function () {
         e.preventDefault();
         e.stopImmediatePropagation();
         if (confirm(rbfw_admin_i18n('confirm_remove_row', 'Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .'))) {
-            jQuery(this).closest('tr.rbfw_variations_value_table_row').remove();
+            jQuery(this).closest('.rbfw_variations_value_table_row').remove();
         } else {
             return false;
         }
