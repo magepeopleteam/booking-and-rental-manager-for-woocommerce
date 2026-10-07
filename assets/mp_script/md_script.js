@@ -1899,12 +1899,10 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             jQuery('#rbfw_item_quantity_md').html(quantity_options);
 
-
-            if (rbfw_enable_variations == 'yes' && jQuery('.rbfw-variation-qty-input').length) {
-                jQuery('.rbfw_quantity_md').hide();
-            } else {
-                jQuery('.rbfw_quantity_md').show();
-            }
+            // The standalone Quantity dropdown now stays visible even with variations
+            // present: it is the gate the variation steppers are capped against
+            // (see rbfwVariationGroupCap() in rbfw_script.js), not something they replace.
+            jQuery('.rbfw_quantity_md').show();
             jQuery('.multi-service-category-section').show();
             jQuery('.rbfw-variations-content-wrapper').show();
             jQuery('.rbfw_resourse_md').show();
@@ -1981,8 +1979,16 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                     totalVariationQty += parseInt(jQuery(this).val(), 10) || 0;
                 });
 
+                // A standalone Quantity selector (when present) now gates the
+                // steppers — see rbfwVariationGroupCap() in rbfw_script.js — so
+                // "ready to book" means every unit of it has been assigned a
+                // variant, not merely totalVariationQty > 0.
+                var $mdQty = jQuery('#rbfw_item_quantity_md');
+                var mdQtyCap = $mdQty.length ? (parseInt($mdQty.val(), 10) || 0) : null;
+                var variationsReady = (mdQtyCap !== null) ? (mdQtyCap > 0 && totalVariationQty === mdQtyCap) : (totalVariationQty > 0);
+
                 jQuery('.rbfw_nia_notice').remove();
-                if (totalVariationQty > 0) {
+                if (variationsReady) {
                     jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled', false).removeClass('rbfw_disabled_button');
                 } else {
                     jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled', true).addClass('rbfw_disabled_button');

@@ -1166,29 +1166,70 @@ jQuery(function ($) {
         return isNaN(n) ? Infinity : n;
     }
 
-    // Reflect value against fresh max: clamp down if availability dropped, then set
-    // the −/+ disabled states. Never triggers change/AJAX, so it is loop-safe.
-    function rbfwSyncStepper($stepper) {
-        var $input = $stepper.find('.rbfw-variation-qty-input');
-        if (!$input.length) return;
-        var max = rbfwStepperMax($input);
-        var val = parseInt($input.val(), 10) || 0;
-        if (val > max) { val = max < 0 ? 0 : max; $input.val(val); }
-        var soldOut = $input.prop('disabled');
-        $stepper.find('.rbfw-qty-minus').prop('disabled', soldOut || val <= 0);
-        $stepper.find('.rbfw-qty-plus').prop('disabled', soldOut || val >= max);
+    // null = this item has no standalone Quantity selector: steppers own the
+    // quantity, unchanged legacy behavior. A number = the selector exists (either
+    // an admin-enabled standalone Quantity dropdown, or the SD timely Quantity
+    // select, which always renders once a duration is chosen) — it is now the
+    // gate: the steppers may not collectively exceed it, and sit locked until
+    // it is picked and > 0.
+    function rbfwVariationGroupCap($form) {
+        var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
+        if (!$qty.length) return null;
+        var v = parseInt($qty.val(), 10);
+        return isNaN(v) ? 0 : v;
+    }
+
+    // Re-clamp every stepper in the form against both its own per-value stock max
+    // and (when a group cap applies) the remaining room under that cap, then set
+    // the −/+ disabled states and the steppers' locked visual state. Never
+    // triggers change/AJAX, so it is loop-safe.
+    function rbfwSyncFormSteppers($form) {
+        var $inputs = $form.find('.rbfw-variation-qty-input');
+        if (!$inputs.length) return;
+
+        var cap = rbfwVariationGroupCap($form);
+        var locked = cap !== null && cap <= 0;
+        $form.find('.rbfw-variation-steppers').toggleClass('rbfw-variation-steppers-locked', locked);
+
+        var used = 0;
+        $inputs.each(function () { used += parseInt($(this).val(), 10) || 0; });
+
+        $inputs.each(function () {
+            var $input = $(this);
+            var $stepper = $input.closest('.rbfw-variation-stepper');
+            var soldOut = $input.prop('disabled');
+            var ownVal = parseInt($input.val(), 10) || 0;
+            var ceiling = rbfwStepperMax($input);
+
+            if (cap !== null) {
+                var room = Math.max(0, cap - (used - ownVal));
+                if (room < ceiling) ceiling = room;
+                if (ownVal > ceiling) {
+                    used -= (ownVal - ceiling);
+                    ownVal = ceiling;
+                    $input.val(ownVal);
+                }
+            }
+
+            $stepper.find('.rbfw-qty-minus').prop('disabled', locked || soldOut || ownVal <= 0);
+            $stepper.find('.rbfw-qty-plus').prop('disabled', locked || soldOut || ownVal >= ceiling);
+        });
     }
 
     function rbfwSyncStepperScope($scope) {
-        $($scope || document).find('.rbfw-variation-stepper').each(function () {
-            rbfwSyncStepper($(this));
-        });
+        var $root = $($scope || document);
+        var $forms = $root.find('form');
+        if ($root.is('form')) $forms = $forms.add($root);
+        $forms.each(function () { rbfwSyncFormSteppers($(this)); });
     }
 
     function rbfwVariationRecalc($form) {
         if (!$form || !$form.length) $form = $(document);
         var $steppers = $form.find('.rbfw-variation-qty-input');
         if (!$steppers.length) return; // no variations on this form → inert
+
+        // Keep the steppers' locked/clamped state current before reading them.
+        rbfwSyncFormSteppers($form);
 
         var totalQty = 0, surcharge = 0;
         $steppers.each(function () {
@@ -1198,31 +1239,38 @@ jQuery(function ($) {
             surcharge += q * p;
         });
 
-        // Steppers own the Quantity: hide the standalone Quantity rows (their hidden
-        // duration-rate inputs stay in the DOM and readable).
-        $form.find('.timely_quqntity_table').hide();
-        $form.find('.rbfw_quantity_md').hide();
+        var cap = rbfwVariationGroupCap($form);
 
         // Single-day variations charge the base rental rate ONCE: a value's price is
         // added separately as a surcharge, so its quantity must NOT multiply the
         // duration rate. Keep the submitted base quantity at 1 for the timely
         // single-day form; multi-day still lets the steppers own the quantity.
         var isSdTimely = $form.find('.rbfw_quantiry_area_sd').length > 0;
-        var qtyToSet   = isSdTimely ? 1 : totalQty;
 
-        // Mirror the base quantity into whichever quantity field the form submits so
-        // the server sees it. Add the option when it is a <select>.
-        var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
-        if ($qty.length) {
-            if ($qty.is('select') && !$qty.find('option[value="' + qtyToSet + '"]').length) {
-                $qty.append($('<option>', { value: qtyToSet, text: qtyToSet }));
+        if (cap === null) {
+            // No standalone Quantity selector for this item: steppers still own the
+            // quantity, as before — mirror their sum into whichever quantity field
+            // the form submits so the server sees it (adding the option when it is
+            // a <select>).
+            var qtyToSet = isSdTimely ? 1 : totalQty;
+            var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
+            if ($qty.length) {
+                if ($qty.is('select') && !$qty.find('option[value="' + qtyToSet + '"]').length) {
+                    $qty.append($('<option>', { value: qtyToSet, text: qtyToSet }));
+                }
+                $qty.val(String(qtyToSet));
             }
-            $qty.val(String(qtyToSet));
         }
+        // else: a standalone Quantity selector exists and is now the gate — its
+        // own value is the quantity the customer chose, and the steppers only
+        // distribute it across variants (rbfwSyncFormSteppers already keeps their
+        // sum from exceeding it, so it is never overwritten here).
 
-        // Book button reflects whether anything is selected.
+        // Book button: with a cap, every unit must be assigned a variant before
+        // booking; without one, picking any variant at all is enough (legacy).
+        var ready = cap !== null ? (cap > 0 && totalQty === cap) : (totalQty > 0);
         var $btn = $form.find('button.rbfw_bikecarsd_book_now_btn, button.rbfw_book_now_btn');
-        if (totalQty > 0) $btn.prop('disabled', false).removeClass('rbfw_disabled_button');
+        if (ready) $btn.prop('disabled', false).removeClass('rbfw_disabled_button');
         else $btn.prop('disabled', true).addClass('rbfw_disabled_button');
 
         if (isSdTimely) {
@@ -1264,14 +1312,35 @@ jQuery(function ($) {
         var $input = $stepper.find('.rbfw-variation-qty-input');
         if (!$input.length || $input.prop('disabled')) return;
 
+        var $form = $input.closest('form');
+        if (!$form.length) $form = $(document);
+        var cap = rbfwVariationGroupCap($form);
+        if (cap !== null && cap <= 0) return; // locked: no quantity chosen yet
+
         var val = parseInt($input.val(), 10) || 0;
-        var max = rbfwStepperMax($input);
-        if ($btn.hasClass('rbfw-qty-plus')) { if (val < max) val++; }
+        var ceiling = rbfwStepperMax($input);
+        if (cap !== null) {
+            var used = 0;
+            $form.find('.rbfw-variation-qty-input').each(function () { used += parseInt($(this).val(), 10) || 0; });
+            var room = Math.max(0, cap - (used - val));
+            if (room < ceiling) ceiling = room;
+        }
+        if ($btn.hasClass('rbfw-qty-plus')) { if (val < ceiling) val++; }
         else { if (val > 0) val--; }
         $input.val(val);
 
-        rbfwSyncStepper($stepper);
-        rbfwVariationRecalc($input.closest('form'));
+        rbfwVariationRecalc($form);
+    });
+
+    // Standalone Quantity selector changed: re-gate/re-clamp the steppers against
+    // the new cap (variations may not collectively exceed the chosen quantity)
+    // and re-run the summary. A cap of 0 ("Choose number of quantity") re-locks
+    // them.
+    $(document).on('change', '#rbfw_item_quantity, #rbfw_item_quantity_md', function () {
+        var $form = $(this).closest('form');
+        if (!$form.length) $form = $(document);
+        if (!$form.find('.rbfw-variation-qty-input').length) return;
+        rbfwVariationRecalc($form);
     });
 
     // After any AJAX (notably the date-change re-render that returns fresh "N left"

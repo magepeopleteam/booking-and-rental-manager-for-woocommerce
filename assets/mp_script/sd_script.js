@@ -279,7 +279,15 @@ if (typeof rbfwStepMax !== 'function') {
             let service_type = jQuery(this).data('text');
             let service_price = jQuery(this).data('price');
 
-            var  quantity_options = '';
+            // An item with variations (Color/Size steppers) gets an unselected
+            // placeholder first: the steppers stay locked (see
+            // rbfwVariationGroupCap() in rbfw_script.js) until a real quantity is
+            // chosen here, which then caps how much can be distributed across them.
+            // An item without variations keeps the old default-to-1 behavior.
+            var hasVariations = jQuery('.rbfw-variation-qty-input').length > 0;
+            var  quantity_options = hasVariations
+                ? '<option value="">Choose number of quantity</option>'
+                : '';
             for (let i = 1; i <= available_quantity; i++) {
                 quantity_options += "<option value="+i+">"+i+"</option>";
             }

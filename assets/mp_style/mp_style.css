@@ -1668,6 +1668,19 @@
     .rbfw-variation-qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     .rbfw-variation-soldout { opacity: 0.6; }
     .rbfw-variation-soldout .rbfw-variation-label { text-decoration: line-through; }
+
+    /* Locked until a standalone Quantity selector (above) has a real value picked
+       — see rbfwVariationGroupCap() in rbfw_script.js. */
+    .rbfw-variation-steppers-locked { opacity: 0.55; pointer-events: none; }
+    .rbfw-variation-steppers-locked::before {
+        content: "Select a quantity above first";
+        display: block;
+        order: -1;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--color_theme);
+        margin-bottom: 2px;
+    }
 }
 
 /* Optional Add-ons — checkmark card list (single-day) */
