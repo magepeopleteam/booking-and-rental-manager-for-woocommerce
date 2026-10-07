@@ -33,7 +33,7 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
         minDate: 0,
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -89,7 +89,7 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
             // Checkout calendar: on top of the normal off-day disable, block
             // check-in→checkout ranges spanning an off day (rule 3) when the
             // item's off-day blocking toggle is enabled.
-            var base = rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            var base = rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
             if (Array.isArray(base) && !base[0]) {
                 return base;
             }

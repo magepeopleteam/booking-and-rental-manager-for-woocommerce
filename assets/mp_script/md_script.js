@@ -1715,7 +1715,7 @@ function rbfw_enhanced_pickup_beforeShowDay(date) {
     }
 
     // Otherwise, use normal inventory checking
-    return rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
+    return rbfw_off_day_dates(date, 'md', rbfw_today_booking_enable(), false);
 }
 
 /**
@@ -2239,7 +2239,7 @@ function rbfwMIAutoSelectNextAvailableDate() {
     if (jQuery('#rbfw_rent_type').val() !== 'multiple_items') return;
     if (jQuery('#hidden_pickup_date').val()) return; // already has a value
 
-    var today_enable = (typeof rbfw_js_variables !== 'undefined') ? rbfw_js_variables.rbfw_today_booking_enable : 'no';
+    var today_enable = rbfw_today_booking_enable();
     var buffer_time  = parseInt(jQuery('#rbfw_buffer_time').val()) || 0;
     var weekdays     = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
     var off_days            = [];
@@ -2251,7 +2251,7 @@ function rbfwMIAutoSelectNextAvailableDate() {
     try { global_offday_range = JSON.parse(jQuery('#rbfw_global_offday_range').val()) || []; } catch(e) {}
 
     // Determine the earliest bookable day
-    var candidate = new Date();
+    var candidate = rbfw_site_now();
     if (buffer_time) {
         candidate.setHours(candidate.getHours() + buffer_time);
     }

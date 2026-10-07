@@ -521,6 +521,159 @@ function rbfw_url_exclude_search_engine() {
 				&& 'yes' === $settings['rbfw_allow_duplicate_rental_cart_item'];
 		}
 	}
+	if ( ! function_exists( 'rbfw_sanitize_cutoff_time' ) ) {
+		/**
+		 * Settings sanitizer for "Same day booking cutoff time": a 24-hour HH:MM value
+		 * from 00:01 to 23:59, or '' (no cutoff). 00:00 would close today before it
+		 * starts — that is "Same day booking = No", so it is not accepted as a cutoff.
+		 *
+		 * @param mixed $value Submitted value.
+		 * @return string
+		 */
+		function rbfw_sanitize_cutoff_time( $value ) {
+			$value = trim( sanitize_text_field( (string) $value ) );
+			if ( ! preg_match( '/^([01]?\d|2[0-3]):([0-5]\d)$/', $value, $m ) || ( 0 === (int) $m[1] && 0 === (int) $m[2] ) ) {
+				return '';
+			}
+
+			return sprintf( '%02d:%02d', (int) $m[1], (int) $m[2] );
+		}
+	}
+	if ( ! function_exists( 'rbfw_same_day_cutoff_minutes' ) ) {
+		/**
+		 * Minutes after midnight (site timezone) after which same-day pickups close,
+		 * or -1 when there is no cutoff (same-day booking off, or no time set).
+		 *
+		 * Reads the stored settings array directly so it also works in WP-CLI and
+		 * background contexts where rbfw_get_option() intentionally skips.
+		 *
+		 * @return int
+		 */
+		function rbfw_same_day_cutoff_minutes() {
+			$settings = get_option( 'rbfw_basic_gen_settings', array() );
+			if ( ! is_array( $settings ) || empty( $settings['today_booking_enable'] ) || 'yes' !== $settings['today_booking_enable'] ) {
+				return -1;
+			}
+			$time = rbfw_sanitize_cutoff_time( isset( $settings['today_booking_cutoff_time'] ) ? $settings['today_booking_cutoff_time'] : '' );
+			if ( '' === $time ) {
+				return -1;
+			}
+			list( $h, $m ) = array_map( 'intval', explode( ':', $time ) );
+
+			return $h * 60 + $m;
+		}
+	}
+	if ( ! function_exists( 'rbfw_same_day_cutoff_js_vars' ) ) {
+		/**
+		 * Values the booking calendars need to apply the cutoff on the site clock
+		 * (not the visitor's), evaluated live so cached pages stay correct.
+		 *
+		 * @return array
+		 */
+		function rbfw_same_day_cutoff_js_vars() {
+			$timezone = wp_timezone();
+
+			return array(
+				'rbfw_today_cutoff_minutes' => rbfw_same_day_cutoff_minutes(),
+				'rbfw_timezone'             => $timezone->getName(),
+				'rbfw_timezone_offset'      => (int) ( $timezone->getOffset( new DateTime( 'now', $timezone ) ) / 60 ),
+			);
+		}
+	}
+	if ( ! function_exists( 'rbfw_request_pickup_date' ) ) {
+		/**
+		 * Pickup date from a booking-form submission. Multi-day and multi-item forms post
+		 * rbfw_pickup_start_date, resort posts rbfw_start_datetime, single-day posts
+		 * rbfw_bikecarsd_selected_date.
+		 *
+		 * @param array $request Unslashed request data.
+		 * @return string
+		 */
+		function rbfw_request_pickup_date( $request ) {
+			foreach ( array( 'rbfw_pickup_start_date', 'rbfw_start_datetime', 'rbfw_bikecarsd_selected_date' ) as $key ) {
+				if ( ! empty( $request[ $key ] ) && is_scalar( $request[ $key ] ) ) {
+					return sanitize_text_field( (string) $request[ $key ] );
+				}
+			}
+
+			return '';
+		}
+	}
+	if ( ! function_exists( 'rbfw_pickup_date_error' ) ) {
+		/**
+		 * Server-side twin of the booking calendars' day rules: the reason a pickup date
+		 * must be refused, or '' when it is allowed. All dates use the site timezone.
+		 *
+		 *  - a date before today is refused;
+		 *  - today is refused when "Same day booking" is off;
+		 *  - today is refused once the "Same day booking cutoff time" has passed.
+		 *
+		 * The calendars enforce these in the browser only, so a request that skips the JS
+		 * could otherwise book them. Items with a fixed rental period ("Enable start and
+		 * end date" = No) are skipped: their dates are set by the admin, have no calendar,
+		 * and the period legitimately keeps selling after its start date.
+		 *
+		 * @param string                 $pickup_date Posted or stored pickup date (Y-m-d…).
+		 * @param int                    $rbfw_id     Rental item id (0 = unknown).
+		 * @param DateTimeImmutable|null $now         Current time (for tests).
+		 * @return string
+		 */
+		function rbfw_pickup_date_error( $pickup_date, $rbfw_id = 0, $now = null ) {
+			$raw = trim( (string) $pickup_date );
+			if ( '' === $raw ) {
+				return '';
+			}
+			if ( $rbfw_id && 'no' === get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ) {
+				return '';
+			}
+
+			$timezone = wp_timezone();
+			$now      = $now instanceof DateTimeImmutable ? $now->setTimezone( $timezone ) : new DateTimeImmutable( 'now', $timezone );
+			$ymd      = substr( $raw, 0, 10 );
+			$pickup   = DateTimeImmutable::createFromFormat( '!Y-m-d', $ymd, $timezone );
+			if ( $pickup && $pickup->format( 'Y-m-d' ) !== $ymd ) {
+				return ''; // Overflowing date such as 2026-02-31: leave it to the other validators.
+			}
+			if ( ! $pickup ) {
+				try {
+					$pickup = new DateTimeImmutable( $raw, $timezone );
+				} catch ( Exception $e ) {
+					return ''; // Unparseable: the other booking validators handle bad dates.
+				}
+			}
+
+			$pickup_day = $pickup->format( 'Y-m-d' );
+			$today      = $now->format( 'Y-m-d' );
+			if ( $pickup_day > $today ) {
+				return '';
+			}
+			if ( $pickup_day < $today ) {
+				return __( 'The selected pickup date has already passed. Please choose another date.', 'booking-and-rental-manager-for-woocommerce' );
+			}
+
+			$tomorrow = wp_date( get_option( 'date_format' ), $now->modify( '+1 day' )->getTimestamp(), $timezone );
+			$settings = get_option( 'rbfw_basic_gen_settings', array() );
+			if ( ! is_array( $settings ) || empty( $settings['today_booking_enable'] ) || 'yes' !== $settings['today_booking_enable'] ) {
+				return sprintf(
+					/* translators: %s: earliest pickup date */
+					__( 'Same-day rentals are not available. The earliest available pickup date is %s.', 'booking-and-rental-manager-for-woocommerce' ),
+					$tomorrow
+				);
+			}
+
+			$cutoff = rbfw_same_day_cutoff_minutes();
+			if ( $cutoff < 0 || (int) $now->format( 'G' ) * 60 + (int) $now->format( 'i' ) < $cutoff ) {
+				return '';
+			}
+
+			return sprintf(
+				/* translators: 1: cutoff time, 2: earliest pickup date */
+				__( 'Same-day rentals can only be booked until %1$s. The earliest available pickup date is %2$s.', 'booking-and-rental-manager-for-woocommerce' ),
+				wp_date( get_option( 'time_format' ), $now->setTime( intdiv( $cutoff, 60 ), $cutoff % 60 )->getTimestamp(), $timezone ),
+				$tomorrow
+			);
+		}
+	}
 	// Deprecated function - use esc_html_e() instead
 	function rbfw_string( $option_name, $default_string ) {
 		echo esc_html( $default_string );
