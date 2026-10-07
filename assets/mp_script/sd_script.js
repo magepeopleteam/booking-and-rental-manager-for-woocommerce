@@ -45,7 +45,7 @@ if (typeof rbfwStepMax !== 'function') {
                 minDate: 0,
                 beforeShowDay: function(date)
                 {
-                    return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
                 },
                 onSelect: function (dateString, data) {
                     let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -822,7 +822,7 @@ function datepicker_inline(){
         selectOtherMonths: true,
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);

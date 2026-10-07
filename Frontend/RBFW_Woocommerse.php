@@ -15,6 +15,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_booking_nonce'), 4, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_pickup_date'), 14, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_buffer_lead_time'), 15, 3 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_delivery_fields'), 16, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_availability_add_to_cart'), 20, 3 );
@@ -30,6 +31,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             /*after place order*/
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validation_before_checkout') );
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validate_availability_before_checkout'), 20 );
+            add_action( 'woocommerce_check_cart_items', array($this ,  'rbfw_check_cart_pickup_dates') );
             add_action( 'woocommerce_checkout_create_order_line_item', array($this ,  'rbfw_add_order_item_data'), 90, 4 );
             /*
              * Build the rbfw_order mirror + inventory + attendee records.
@@ -279,6 +281,67 @@ if (!class_exists('RBFW_Woocommerce')) {
          * @param int  $quantity   Quantity (unused; rental qty travels in the booking POST).
          * @return bool
          */
+        /**
+         * Pickup-date gate at add-to-cart: past dates, today when same day booking is
+         * off, and today after the same day cutoff time (see rbfw_pickup_date_error()).
+         *
+         * The calendars grey these days out, but only in the browser; this re-checks the
+         * posted pickup date against WordPress' own clock.
+         *
+         * @param bool $passed
+         * @param int  $product_id
+         * @return bool
+         */
+        public function rbfw_validate_pickup_date( $passed, $product_id ) {
+            if ( ! $passed ) {
+                return $passed;
+            }
+
+            $linked_rbfw_id = absint( get_post_meta( $product_id, 'link_rbfw_id', true ) );
+            $rbfw_id        = $linked_rbfw_id ? $linked_rbfw_id : absint( $product_id );
+            if ( get_post_type( $rbfw_id ) !== 'rbfw_item' ) {
+                return $passed;
+            }
+
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- read-only look at the booking submit; nonce is enforced by rbfw_validate_booking_nonce.
+            $error = rbfw_pickup_date_error( rbfw_request_pickup_date( wp_unslash( $_POST ) ), $rbfw_id );
+            if ( '' !== $error ) {
+                wc_add_notice( esc_html( $error ), 'error' );
+                return false;
+            }
+
+            return $passed;
+        }
+
+        /**
+         * Re-check pickup dates on the cart and at checkout (classic and block), so a
+         * same-day rental added just before the cutoff cannot be paid for after it, and a
+         * rental left in the cart past its pickup date cannot be paid for at all.
+         */
+        public function rbfw_check_cart_pickup_dates() {
+            if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+                return;
+            }
+
+            foreach ( WC()->cart->get_cart() as $cart_item ) {
+                if ( empty( $cart_item['rbfw_id'] ) || empty( $cart_item['rbfw_start_date'] ) ) {
+                    continue;
+                }
+                $error = rbfw_pickup_date_error( $cart_item['rbfw_start_date'], (int) $cart_item['rbfw_id'] );
+                if ( '' !== $error ) {
+                    wc_add_notice(
+                        sprintf(
+                            /* translators: 1: rental item name, 2: cutoff message */
+                            esc_html__( '%1$s: %2$s Please remove it from your cart and choose another date.', 'booking-and-rental-manager-for-woocommerce' ),
+                            esc_html( get_the_title( (int) $cart_item['rbfw_id'] ) ),
+                            esc_html( $error )
+                        ),
+                        'error'
+                    );
+                }
+            }
+        }
+
         /**
          * Buffer Time Before (lead time) gate at add-to-cart.
          *

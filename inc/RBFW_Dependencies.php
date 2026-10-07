@@ -370,7 +370,7 @@ if (! class_exists('RBFW_Dependencies')) {
                         'currency' => get_woocommerce_currency_symbol(),
                         'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
                         'price_decimals' => wc_get_price_decimals()
-                    )
+                    ) + rbfw_same_day_cutoff_js_vars()
                 );
             }
 
@@ -585,7 +585,7 @@ if (! class_exists('RBFW_Dependencies')) {
                         'currency' => get_woocommerce_currency_symbol(),
                         'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
                         'price_decimals' => wc_get_price_decimals()
-					)
+					) + rbfw_same_day_cutoff_js_vars()
 				);
 
 

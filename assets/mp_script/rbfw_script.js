@@ -221,6 +221,49 @@ function rbfw_range_contains_off_day(pickup_iso, end_date) {
     return false;
 }
 
+/**
+ * "Same day booking" for the calendars, with the optional cutoff time applied:
+ * once the site clock passes the cutoff, today is treated as not bookable.
+ * Evaluated on every call (not at page load) so cached pages and pages left
+ * open across the cutoff stay correct. The server re-checks it on booking.
+ */
+function rbfw_today_booking_enable(){
+    if (typeof rbfw_js_variables === 'undefined') {
+        return 'no';
+    }
+    var enabled = rbfw_js_variables.rbfw_today_booking_enable;
+    var cutoff  = parseInt(rbfw_js_variables.rbfw_today_cutoff_minutes, 10);
+    if (enabled !== 'yes' || isNaN(cutoff) || cutoff < 0) {
+        return enabled;
+    }
+    var now = rbfw_site_now();
+    return now.getHours() * 60 + now.getMinutes() >= cutoff ? 'no' : 'yes';
+}
+
+/**
+ * The site's (WordPress) wall clock as a local Date, independent of the visitor's
+ * timezone, so the calendars' "today" matches the server's pickup-date checks.
+ * Uses the IANA zone when there is one (DST-correct), else the UTC offset from PHP.
+ */
+function rbfw_site_now(){
+    var vars = (typeof rbfw_js_variables !== 'undefined') ? rbfw_js_variables : {};
+    var tz   = vars.rbfw_timezone || '';
+    if (tz.indexOf('/') !== -1 && typeof Intl !== 'undefined') {
+        try {
+            var p = {};
+            new Intl.DateTimeFormat('en-GB', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+                .formatToParts(new Date())
+                .forEach(function (part) { p[part.type] = parseInt(part.value, 10); });
+            return new Date(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second);
+        } catch (e) {}
+    }
+    if (vars.rbfw_timezone_offset === undefined) {
+        return new Date();
+    }
+    var site = new Date(Date.now() + (parseInt(vars.rbfw_timezone_offset, 10) || 0) * 60000);
+    return new Date(site.getUTCFullYear(), site.getUTCMonth(), site.getUTCDate(), site.getUTCHours(), site.getUTCMinutes(), site.getUTCSeconds());
+}
+
 function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 
@@ -229,7 +272,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
-    var date_today = new Date();
+    var date_today = rbfw_site_now();
     var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val()) || 0;
 
     // Buffer (lead time) and "today booking enabled" are independent settings and

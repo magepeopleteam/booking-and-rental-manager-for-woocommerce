@@ -66,6 +66,10 @@ return array(
 		'what'  => 'Allows customers to book for today. Leave it off if you need notice to prepare items before collection.',
 		'where' => 'The date picker on every booking form.',
 	),
+	'today_booking_cutoff_time' => array(
+		'what'  => 'Stops same-day bookings after a set time of day between 00:01 and 23:59, for example 12:30. Before it customers can still book for today; after it the earliest pickup is tomorrow. Uses your WordPress timezone and is checked again when the booking is added to the basket, so it cannot be bypassed. Leave empty to allow same-day bookings all day.',
+		'where' => 'The date picker on every booking form, the basket and checkout.',
+	),
 	'inventory_managed_order_status' => array(
 		'what'  => 'Chooses which order statuses reserve stock. An item only becomes unavailable to other customers once its order reaches one of the statuses you tick here.',
 		'where' => 'Availability everywhere — search, calendar and booking forms.',

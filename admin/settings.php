@@ -168,6 +168,16 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             ),
 
             array(
+                'name'              => 'today_booking_cutoff_time',
+                'label'             => esc_html__( 'Same day booking cutoff time', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc'              => esc_html__( 'Optional. 24-hour time from 00:01 to 23:59 (HH:MM), e.g. 12:30. After this time (site timezone) today is no longer bookable and the earliest pickup is tomorrow. Leave empty to allow same day booking all day. Works only when same day booking is enabled; to never allow today, set same day booking to No.', 'booking-and-rental-manager-for-woocommerce' ),
+                'type'              => 'text',
+                'default'           => '',
+                'maxlength'         => 5,
+                'sanitize_callback' => 'rbfw_sanitize_cutoff_time',
+            ),
+
+            array(
                 'name'    => 'inventory_managed_order_status',
                 'label'   => __( 'Inventory Managed Order Status', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc'    => __( 'Please Select which order status Will be Managed Inventory', 'booking-and-rental-manager-for-woocommerce' ),

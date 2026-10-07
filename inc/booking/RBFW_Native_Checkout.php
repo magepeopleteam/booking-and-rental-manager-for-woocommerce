@@ -103,6 +103,12 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Invalid rental item.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 
+			// Pickup date (past / same day off / after the cutoff): the calendar enforces it in the browser only.
+			$pickup_error = rbfw_pickup_date_error( rbfw_request_pickup_date( wp_unslash( $_POST ) ), $item_id );
+			if ( '' !== $pickup_error ) {
+				wp_send_json_error( array( 'message' => esc_html( $pickup_error ) ) );
+			}
+
 			// 3. Customer (from the native checkout modal).
 			$name  = isset( $_POST['rbfw_billing_name'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_billing_name'] ) ) : '';
 			$email = isset( $_POST['rbfw_billing_email'] ) ? sanitize_email( wp_unslash( $_POST['rbfw_billing_email'] ) ) : '';
