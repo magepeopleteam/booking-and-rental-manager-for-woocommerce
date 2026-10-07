@@ -8439,7 +8439,6 @@ input.rbfw_variation_value.rbfw-var-chip-name {
     font-size: 13px !important;
     height: 36px !important;
     padding: 0 10px !important;
-    width: 70px !important;
 }
 .rbfw-me-pricing-classic-wrap .services_category_wrapper .item input[type="text"]:focus {
     border-color: #1a56db !important;
@@ -8945,15 +8944,41 @@ input.rbfw_variation_value.rbfw-var-chip-name {
     padding: 16px 20px 20px !important;
 }
 
-/* Override the inline red Add Fee button → blue */
-.rbfw-me-pricing-classic-wrap .wprently_fee-add-btn {
-    background: #2271b1 !important;
-    border-radius: 8px !important;
+/* "Add Fee" — same compact dashed ghost pill, left-aligned, as "Add Extra
+   Service" (see .services_category_wrapper .ppof-button.add-new-service).
+   Scoped through .wprently_fee-add-wrap for extra specificity so it wins
+   over the shared "primary add buttons" rule further down this file. */
+.rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap .wprently_fee-add-btn {
+    align-items: center !important;
+    background: #eef3ff !important;
+    border: 1.5px dashed rgba(26,86,219,.35) !important;
+    border-radius: 9px !important;
     box-shadow: none !important;
+    color: #1a56db !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    gap: 7px !important;
+    justify-content: center !important;
+    margin: 6px 0 10px 10px !important;
+    padding: 8px 14px !important;
+    text-shadow: none !important;
+    width: auto !important;
 }
 
-.rbfw-me-pricing-classic-wrap .wprently_fee-add-btn:hover {
-    background: #135e96 !important;
+.rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap .wprently_fee-add-btn span {
+    color: #1a56db !important;
+    font-size: 15px !important;
+}
+
+.rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap .wprently_fee-add-btn:hover {
+    background: #e3ecff !important;
+    border-color: #1a56db !important;
+    color: #1347b8 !important;
+}
+.rbfw-me-pricing-classic-wrap .wprently_fee-add-wrap .wprently_fee-add-btn:hover span {
+    color: #1347b8 !important;
 }
 
 /* Fee table inputs / selects — light border + 5px radius matching project style */
@@ -9457,10 +9482,10 @@ input.rbfw_variation_value.rbfw-var-chip-name {
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper .mt-2 {
     align-items: center !important;
     display: flex !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     margin: 14px 20px !important;
     padding: 0 !important;
-    text-align: center !important;
+    text-align: left !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_resort_price_config_wrapper #add-resort-type-row.ppof-button {
@@ -9477,7 +9502,7 @@ input.rbfw_variation_value.rbfw-var-chip-name {
     gap: 6px !important;
     height: auto !important;
     justify-content: center !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     padding: 7px 14px !important;
     text-shadow: none !important;
     transition: background .15s, border-color .15s !important;

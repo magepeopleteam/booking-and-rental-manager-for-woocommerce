@@ -231,7 +231,7 @@
 					.wprently_fee-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 					.wprently_fee-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; }
 
-					.wprently_fee-add-wrap { display: flex; justify-content: center; margin-top: 16px; }
+					.wprently_fee-add-wrap { display: flex; justify-content: flex-start; margin-top: 16px; }
 					.wprently_fee-add-btn { 
 						width: 200px; 
 						padding: 10px 20px; 
