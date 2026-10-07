@@ -531,6 +531,14 @@
         $(this).find('i').toggleClass('fa-plus fa-minus');
     });
 
+    //========= faq load more =============
+    $('.rbfw_faq_load_more').click(function (e) {
+        e.preventDefault();
+        var $btn = $(this);
+        $btn.closest('.faq').find('.rbfw_faq_item_more').slideDown(200);
+        $btn.remove();
+    });
+
     rbfw_alphabetic_order($('#rbfw_toggle-content-categor'));
     rbfw_alphabetic_order($('#rbfw_toggle_content_location'));
     rbfw_alphabetic_order($('#rbfw_toggle_content_types'));

@@ -1131,6 +1131,23 @@
             if ( ! validateMultipleItemsPricingRows(errors) ) {
                 return false;
             }
+        } else if ( rentType === 'bike_car_md' || rentType === 'dress' || rentType === 'equipment' || rentType === 'others' ) {
+            // Mirrors the server-side check in
+            // RBFW_Pricing::get_pricing_validation_errors() — an Hourly Price
+            // left "On" with the Time Picker "Off" is silently inert on the
+            // front end (the booking is always priced at the daily rate
+            // instead; see rbfw_md_price_for_hours_period() in
+            // inc/rbfw_functions.php), so catch it here before save.
+            var $hourlyToggle = $wrap.find('.hourly-price-toggle');
+            var $timePickerToggle = $wrap.find('.time-picker-toggle');
+            if ( $hourlyToggle.hasClass('active') && ! $timePickerToggle.hasClass('active') ) {
+                showPricingTableWarning(
+                    'Please enable "Enable Time Picker" to keep Hourly Price active, or turn Hourly Price off.',
+                    $wrap.find('.md-pricing-table-wrap').first(),
+                    '.time-picker-toggle'
+                );
+                return false;
+            }
         }
 
         if ( rentType === 'bike_car_sd' ) {

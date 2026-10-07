@@ -2355,6 +2355,21 @@
                     }
                 }
 
+                if ( in_array( $item_type, [ 'bike_car_md', 'equipment', 'dress', 'others' ], true ) ) {
+                    $hourly_on      = isset( $post_data['rbfw_enable_hourly_rate'] ) && $post_data['rbfw_enable_hourly_rate'] === 'yes';
+                    $time_picker_on = isset( $post_data['rbfw_enable_time_picker'] ) && $post_data['rbfw_enable_time_picker'] === 'yes';
+
+                    // The hourly rate is only ever applied when the time picker is on —
+                    // see rbfw_handle_hybrid_rate()/rbfw_md_price_for_hours_period() in
+                    // inc/rbfw_functions.php, which only ever consult the hourly rate
+                    // under that condition. An Hourly Price left "On" with the time
+                    // picker "Off" is silently inert (the booking is priced at the daily
+                    // rate regardless), which is confusing, so catch it at save time.
+                    if ( $hourly_on && ! $time_picker_on ) {
+                        $errors[] = __( 'Please enable "Enable Time Picker" to keep Hourly Price active, or turn Hourly Price off.', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+                }
+
                 return $errors;
             }
 

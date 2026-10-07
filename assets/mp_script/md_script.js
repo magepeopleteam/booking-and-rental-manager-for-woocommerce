@@ -1974,18 +1974,44 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                     window.rbfwSyncStepperButtons(document);
                 }
 
-                var totalVariationQty = 0;
-                jQuery('.rbfw-variation-qty-input').each(function() {
-                    totalVariationQty += parseInt(jQuery(this).val(), 10) || 0;
-                });
+                // An item can have MULTIPLE independent variation groups (e.g. a
+                // dress with separate "Color" and "Size" groups — each rendered as
+                // its own .rbfw-variation-group, inc/rbfw_inventory_functions.php).
+                // Each group re-describes the SAME N physical units, so their sums
+                // must be checked for agreement, never added together — 2 dresses
+                // is "Red x2" for Color AND, independently, "Small x2" for Size,
+                // never 4. Legacy single-group items (no .rbfw-variation-group
+                // wrapper) fall back to one pool, unchanged from before.
+                var rbfwMdGroupWraps = jQuery('.rbfw-variation-group');
+                var rbfwMdGroupSums = [];
+                if (rbfwMdGroupWraps.length) {
+                    rbfwMdGroupWraps.each(function () {
+                        var groupSum = 0;
+                        jQuery(this).find('.rbfw-variation-qty-input').each(function () {
+                            groupSum += parseInt(jQuery(this).val(), 10) || 0;
+                        });
+                        rbfwMdGroupSums.push(groupSum);
+                    });
+                } else {
+                    var legacySum = 0;
+                    jQuery('.rbfw-variation-qty-input').each(function () {
+                        legacySum += parseInt(jQuery(this).val(), 10) || 0;
+                    });
+                    rbfwMdGroupSums.push(legacySum);
+                }
+                var totalVariationQty = rbfwMdGroupSums.length ? rbfwMdGroupSums[0] : 0;
+                var rbfwMdGroupsAgree = rbfwMdGroupSums.every(function (s) { return s === totalVariationQty; });
 
                 // A standalone Quantity selector (when present) now gates the
                 // steppers — see rbfwVariationGroupCap() in rbfw_script.js — so
                 // "ready to book" means every unit of it has been assigned a
-                // variant, not merely totalVariationQty > 0.
+                // variant in EVERY independent group, not merely totalVariationQty
+                // > 0 summed across all of them.
                 var $mdQty = jQuery('#rbfw_item_quantity_md');
                 var mdQtyCap = $mdQty.length ? (parseInt($mdQty.val(), 10) || 0) : null;
-                var variationsReady = (mdQtyCap !== null) ? (mdQtyCap > 0 && totalVariationQty === mdQtyCap) : (totalVariationQty > 0);
+                var variationsReady = (mdQtyCap !== null)
+                    ? (mdQtyCap > 0 && rbfwMdGroupsAgree && totalVariationQty === mdQtyCap)
+                    : (totalVariationQty > 0 && rbfwMdGroupsAgree);
 
                 jQuery('.rbfw_nia_notice').remove();
                 if (variationsReady) {

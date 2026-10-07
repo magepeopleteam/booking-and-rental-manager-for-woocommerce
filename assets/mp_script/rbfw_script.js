@@ -344,6 +344,40 @@ function rbfwTimeToMinutes(t) {
     return h * 60 + m;
 }
 
+// Morning / Afternoon / Evening bucket for a 24-hour "hours" value.
+function rbfwTimeSlotBucket(hours) {
+    if (hours < 12) return 'Morning';
+    if (hours < 18) return 'Afternoon';
+    return 'Evening';
+}
+
+// Lazily creates (once per getAvailableTimes() render pass) the row to
+// append this time slot's <a> into, grouped under a Morning/Afternoon/
+// Evening heading. `groupEls` is a plain object the caller owns for that
+// one render pass — reset to {} each time the wrap is cleared, so a stale
+// group row from the previous date's slots is never reused.
+function rbfwGetTimeSlotGroup(wrap, groupEls, hours) {
+    var label = rbfwTimeSlotBucket(hours);
+    if (groupEls[label]) {
+        return groupEls[label];
+    }
+    var group = document.createElement('div');
+    group.className = 'rbfw_bikecarsd_time_group';
+
+    var heading = document.createElement('div');
+    heading.className = 'rbfw_bikecarsd_time_group_label';
+    heading.textContent = label;
+    group.appendChild(heading);
+
+    var row = document.createElement('div');
+    row.className = 'rbfw_bikecarsd_time_group_row';
+    group.appendChild(row);
+
+    wrap.appendChild(group);
+    groupEls[label] = row;
+    return row;
+}
+
 function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
     // Fall back to 0 when the buffer field is absent/empty: NaN here would make
@@ -390,6 +424,11 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
     const timeSelect = document.getElementById(pickup_time_particular);
 
+
+    // Reset for this render pass; rbfwGetTimeSlotGroup() fills it in as each
+    // slot below is appended, one entry per Morning/Afternoon/Evening group
+    // actually in use (calendar mode only — the <select> path never reads it).
+    var rbfwTimeGroupEls = {};
 
     if(is_calendar=='calendar'){
         timeSelect.innerHTML = '';
@@ -491,7 +530,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         span.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;;
 
                         a.appendChild(span);
-                        timeSelect.appendChild(a);
+                        rbfwGetTimeSlotGroup(timeSelect, rbfwTimeGroupEls, hours).appendChild(a);
 
                     }else{
                         const option = document.createElement("option");
@@ -588,7 +627,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         span.textContent = formatTime(date, rbfw_js_variables.timeFormat);
 
                         a.appendChild(span);
-                        timeSelect.appendChild(a);
+                        rbfwGetTimeSlotGroup(timeSelect, rbfwTimeGroupEls, hours).appendChild(a);
                     }else{
                         const option = document.createElement("option");
                         option.value = timeObj.time;
@@ -679,6 +718,18 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                 jQuery(this).attr('disabled', true);
             }
         });
+    }
+
+    // "Select Time" heading: built as the FIRST child of the wrap itself,
+    // only when there is actually something in it to pick from — rather than
+    // a static heading elsewhere toggled to match, which depended on this
+    // function's timing lining up with a separate element's visibility.
+    // timeSelect.innerHTML = '' above already cleared any previous one.
+    if (is_calendar === 'calendar' && timeSelect.children.length > 0) {
+        var rbfwTimeHeading = document.createElement('div');
+        rbfwTimeHeading.className = 'rbfw-single-right-heading';
+        rbfwTimeHeading.textContent = 'Select Time';
+        timeSelect.insertBefore(rbfwTimeHeading, timeSelect.firstChild);
     }
 
     // After rendering the time slots, ask the server which ones are fully sold out
@@ -1166,23 +1217,77 @@ jQuery(function ($) {
         return isNaN(n) ? Infinity : n;
     }
 
-    // null = this item has no standalone Quantity selector: steppers own the
-    // quantity, unchanged legacy behavior. A number = the selector exists (either
-    // an admin-enabled standalone Quantity dropdown, or the SD timely Quantity
-    // select, which always renders once a duration is chosen) — it is now the
-    // gate: the steppers may not collectively exceed it, and sit locked until
-    // it is picked and > 0.
+    // null = this item has no standalone Quantity control: steppers own the
+    // quantity, unchanged legacy behavior. A number = a Quantity control exists —
+    // either a standalone selector (an admin-enabled standalone Quantity dropdown,
+    // or the SD timely Quantity select, which always renders once a duration is
+    // chosen) or, for the SD rate-table step (single_day_info.php — one qty
+    // stepper per rental-length row, no single selector), the SUM of those rows —
+    // it is now the gate: the steppers may not collectively exceed it, and sit
+    // locked until it is picked and > 0.
     function rbfwVariationGroupCap($form) {
         var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
-        if (!$qty.length) return null;
-        var v = parseInt($qty.val(), 10);
-        return isNaN(v) ? 0 : v;
+        if ($qty.length) {
+            var v = parseInt($qty.val(), 10);
+            return isNaN(v) ? 0 : v;
+        }
+        var $rateRows = $form.find('.rbfw_bikecarsd_qty');
+        if ($rateRows.length) {
+            var sum = 0;
+            $rateRows.each(function () { sum += parseInt($(this).val(), 10) || 0; });
+            return sum;
+        }
+        return null;
+    }
+
+    // An item can have MULTIPLE independent variation dimensions (e.g. a dress
+    // with a "Color" group and a separate "Size" group, each rendered as its
+    // own .rbfw-variation-group — inc/rbfw_inventory_functions.php). Each group
+    // re-describes the SAME N physical units from a different angle (2 dresses
+    // might be "Red x2" for Color AND, independently, "Small x2" for Size) — the
+    // groups are never additive. Every sum/cap/ready computation below must
+    // therefore work PER GROUP, never across all of a form's steppers at once.
+    // Legacy single-group items (no .rbfw-variation-group wrapper at all) fall
+    // back to one group containing every stepper, unchanged from before.
+    function rbfwVariationGroups($form) {
+        var $groupWraps = $form.find('.rbfw-variation-group');
+        if (!$groupWraps.length) {
+            var $all = $form.find('.rbfw-variation-qty-input');
+            return $all.length ? [$all] : [];
+        }
+        var groups = [];
+        $groupWraps.each(function () {
+            var $g = $(this).find('.rbfw-variation-qty-input');
+            if ($g.length) groups.push($g);
+        });
+        return groups;
+    }
+
+    function rbfwVariationGroupSum($groupInputs) {
+        var sum = 0;
+        $groupInputs.each(function () { sum += parseInt($(this).val(), 10) || 0; });
+        return sum;
+    }
+
+    // With no standalone Quantity control (the normal setup for an item like a
+    // dress with Color/Size steppers instead of a single Quantity field), the
+    // FIRST variation group is the implicit "leader": its own sum IS the real
+    // item quantity, and every later group ("Size", and any further group)
+    // follows it — capped so it can never exceed the leader's current sum,
+    // never the reverse. Returns null when there's nothing to lead (a
+    // standalone cap already governs everything, or there's only one group).
+    function rbfwVariationLeaderSum($form, cap, groups) {
+        if (cap !== null || groups.length < 2) return null;
+        return rbfwVariationGroupSum(groups[0]);
     }
 
     // Re-clamp every stepper in the form against both its own per-value stock max
-    // and (when a group cap applies) the remaining room under that cap, then set
+    // and the remaining room under whichever cap applies to its group, then set
     // the −/+ disabled states and the steppers' locked visual state. Never
-    // triggers change/AJAX, so it is loop-safe.
+    // triggers change/AJAX, so it is loop-safe. The room calculation is scoped
+    // per variation group (see rbfwVariationGroups) — a unit assigned under
+    // "Color" never eats into the room left under "Size"; it instead BECOMES
+    // the room Size has to work with, via the leader/follower rule above.
     function rbfwSyncFormSteppers($form) {
         var $inputs = $form.find('.rbfw-variation-qty-input');
         if (!$inputs.length) return;
@@ -1191,28 +1296,36 @@ jQuery(function ($) {
         var locked = cap !== null && cap <= 0;
         $form.find('.rbfw-variation-steppers').toggleClass('rbfw-variation-steppers-locked', locked);
 
-        var used = 0;
-        $inputs.each(function () { used += parseInt($(this).val(), 10) || 0; });
+        var groups = rbfwVariationGroups($form);
+        var leaderSum = rbfwVariationLeaderSum($form, cap, groups);
 
-        $inputs.each(function () {
-            var $input = $(this);
-            var $stepper = $input.closest('.rbfw-variation-stepper');
-            var soldOut = $input.prop('disabled');
-            var ownVal = parseInt($input.val(), 10) || 0;
-            var ceiling = rbfwStepperMax($input);
+        groups.forEach(function ($groupInputs, groupIndex) {
+            // The leader group itself is never capped by its own sum — only a
+            // real standalone Quantity control, or a later group, is capped.
+            var groupCap = cap !== null ? cap : (groupIndex > 0 ? leaderSum : null);
 
-            if (cap !== null) {
-                var room = Math.max(0, cap - (used - ownVal));
-                if (room < ceiling) ceiling = room;
-                if (ownVal > ceiling) {
-                    used -= (ownVal - ceiling);
-                    ownVal = ceiling;
-                    $input.val(ownVal);
+            var used = rbfwVariationGroupSum($groupInputs);
+
+            $groupInputs.each(function () {
+                var $input = $(this);
+                var $stepper = $input.closest('.rbfw-variation-stepper');
+                var soldOut = $input.prop('disabled');
+                var ownVal = parseInt($input.val(), 10) || 0;
+                var ceiling = rbfwStepperMax($input);
+
+                if (groupCap !== null) {
+                    var room = Math.max(0, groupCap - (used - ownVal));
+                    if (room < ceiling) ceiling = room;
+                    if (ownVal > ceiling) {
+                        used -= (ownVal - ceiling);
+                        ownVal = ceiling;
+                        $input.val(ownVal);
+                    }
                 }
-            }
 
-            $stepper.find('.rbfw-qty-minus').prop('disabled', locked || soldOut || ownVal <= 0);
-            $stepper.find('.rbfw-qty-plus').prop('disabled', locked || soldOut || ownVal >= ceiling);
+                $stepper.find('.rbfw-qty-minus').prop('disabled', locked || soldOut || ownVal <= 0);
+                $stepper.find('.rbfw-qty-plus').prop('disabled', locked || soldOut || ownVal >= ceiling);
+            });
         });
     }
 
@@ -1231,13 +1344,32 @@ jQuery(function ($) {
         // Keep the steppers' locked/clamped state current before reading them.
         rbfwSyncFormSteppers($form);
 
-        var totalQty = 0, surcharge = 0;
+        // Surcharge sums price x qty across EVERY option in EVERY group: each
+        // group independently describes a per-unit add-on for the same N units,
+        // so their surcharges are additive (2 units that are each "Red" AND
+        // "Small" correctly cost 2xprice(Red) + 2xprice(Small)).
+        var surcharge = 0;
         $steppers.each(function () {
             var q = parseInt($(this).val(), 10) || 0;
             var p = parseFloat($(this).attr('data-price')) || 0;
-            totalQty += q;
             surcharge += q * p;
         });
+
+        // Quantity, unlike surcharge, must NOT sum across groups — every group
+        // re-describes the SAME N physical units from a different angle (a
+        // dress with independent "Color" and "Size" groups: 2 units is "Red x2"
+        // for Color AND, separately, "Small x2" for Size — never 4). The item's
+        // real quantity is each group's OWN sum, and every group must agree once
+        // fully assigned; `allGroupsAgree` below is what actually gates
+        // readiness, so a mid-edit mismatch never leaks through as a wrong
+        // submitted quantity.
+        var groupSums = rbfwVariationGroups($form).map(function ($groupInputs) {
+            var sum = 0;
+            $groupInputs.each(function () { sum += parseInt($(this).val(), 10) || 0; });
+            return sum;
+        });
+        var totalQty = groupSums.length ? groupSums[0] : 0;
+        var allGroupsAgree = groupSums.every(function (s) { return s === totalQty; });
 
         var cap = rbfwVariationGroupCap($form);
 
@@ -1251,9 +1383,14 @@ jQuery(function ($) {
             // No standalone Quantity selector for this item: steppers still own the
             // quantity, as before — mirror their sum into whichever quantity field
             // the form submits so the server sees it (adding the option when it is
-            // a <select>).
+            // a <select>). Matched by NAME as well as id: an item with no standalone
+            // Quantity dropdown renders a plain `<input type="hidden"
+            // name="rbfw_item_quantity">` with NO id at all
+            // (templates/forms/multi-day-registration.php) — an id-only selector
+            // silently misses it, leaving the submitted quantity stuck at its
+            // hardcoded "1" no matter what the steppers show.
             var qtyToSet = isSdTimely ? 1 : totalQty;
-            var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md').first();
+            var $qty = $form.find('#rbfw_item_quantity, #rbfw_item_quantity_md, input[name="rbfw_item_quantity"]').first();
             if ($qty.length) {
                 if ($qty.is('select') && !$qty.find('option[value="' + qtyToSet + '"]').length) {
                     $qty.append($('<option>', { value: qtyToSet, text: qtyToSet }));
@@ -1268,7 +1405,12 @@ jQuery(function ($) {
 
         // Book button: with a cap, every unit must be assigned a variant before
         // booking; without one, picking any variant at all is enough (legacy).
-        var ready = cap !== null ? (cap > 0 && totalQty === cap) : (totalQty > 0);
+        // Either way, every variation group must independently agree on the same
+        // total — e.g. a dress with 2 "Red" assigned under Color but only 1
+        // "Small" assigned under Size is not ready yet.
+        var ready = cap !== null
+            ? (cap > 0 && allGroupsAgree && totalQty === cap)
+            : (totalQty > 0 && allGroupsAgree);
         var $btn = $form.find('button.rbfw_bikecarsd_book_now_btn, button.rbfw_book_now_btn');
         if (ready) $btn.prop('disabled', false).removeClass('rbfw_disabled_button');
         else $btn.prop('disabled', true).addClass('rbfw_disabled_button');
@@ -1319,10 +1461,26 @@ jQuery(function ($) {
 
         var val = parseInt($input.val(), 10) || 0;
         var ceiling = rbfwStepperMax($input);
-        if (cap !== null) {
-            var used = 0;
-            $form.find('.rbfw-variation-qty-input').each(function () { used += parseInt($(this).val(), 10) || 0; });
-            var room = Math.max(0, cap - (used - val));
+
+        // Scope the "room left under the cap" check to this stepper's OWN
+        // variation group (Color, Size, …) — independent groups each have
+        // their own room, never a shared one (see rbfwVariationGroups).
+        // Legacy single-group items (no .rbfw-variation-group wrapper) fall
+        // back to the whole form. With no standalone Quantity control, a
+        // later group instead follows the FIRST group's current sum and can
+        // never exceed it (rbfwVariationLeaderSum) — Color leads, Size follows.
+        var $group = $input.closest('.rbfw-variation-group');
+        var $groupInputs = $group.length ? $group.find('.rbfw-variation-qty-input') : $form.find('.rbfw-variation-qty-input');
+        var groupCap = cap;
+        if (groupCap === null) {
+            var groups = rbfwVariationGroups($form);
+            var leaderSum = rbfwVariationLeaderSum($form, cap, groups);
+            var groupIndex = $group.length ? $form.find('.rbfw-variation-group').index($group) : -1;
+            if (leaderSum !== null && groupIndex > 0) groupCap = leaderSum;
+        }
+        if (groupCap !== null) {
+            var used = rbfwVariationGroupSum($groupInputs);
+            var room = Math.max(0, groupCap - (used - val));
             if (room < ceiling) ceiling = room;
         }
         if ($btn.hasClass('rbfw-qty-plus')) { if (val < ceiling) val++; }
@@ -1358,9 +1516,12 @@ jQuery(function ($) {
         });
     });
 
-    // Optional Add-ons check-list visual state: highlight the card when qty > 0.
+    // Row-card check-list visual state: highlight the card when qty > 0.
+    // Covers both the Optional Add-ons table and the rate/duration table —
+    // same class, same mechanism, so one redesigned .rbfw-es-selected rule
+    // (rbfw_style.css) styles both.
     function rbfwSyncExtraServiceRows(scope) {
-        $(scope || document).find('.rbfw_bikecarsd_es_price_table .rbfw_servicesd_qty').each(function () {
+        $(scope || document).find('.rbfw_bikecarsd_es_price_table .rbfw_servicesd_qty, .rbfw_bikecarsd_rt_price_table .rbfw_bikecarsd_qty').each(function () {
             var $row = $(this).closest('tr');
             if (parseInt($(this).val(), 10) > 0) {
                 $row.addClass('rbfw-es-selected');
@@ -1370,7 +1531,7 @@ jQuery(function ($) {
         });
     }
 
-    $(document).on('input change', '.rbfw_bikecarsd_es_price_table .rbfw_servicesd_qty', function () {
+    $(document).on('input change', '.rbfw_bikecarsd_es_price_table .rbfw_servicesd_qty, .rbfw_bikecarsd_rt_price_table .rbfw_bikecarsd_qty', function () {
         rbfwSyncExtraServiceRows(this);
     });
 

@@ -1041,20 +1041,66 @@ div.mp_left_section {
     border-radius:0 0 5px 5px;
 }
 
-.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
-    background-color: rgb(255, 255, 255);
+/* ── FAQ "Load More" (shared by every template — only 5 items show
+   until clicked) ── */
+.rbfw_faq_item_more {
+    display: none;
 }
 
-/* ── Muffin FAQ Redesign ── */
+.rbfw_faq_load_more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: fit-content;
+    margin: 18px auto 0;
+    padding: 11px 24px;
+    font-size: 13.5px;
+    font-weight: 700;
+    letter-spacing: .01em;
+    color: var(--rbfw_color_primary);
+    background: #fff;
+    border: 1.5px solid var(--rbfw_color_primary);
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(15,23,42,.04);
+    transition: background .15s, color .15s, box-shadow .15s, transform .15s;
+}
 
-.rbfw_muffin_template .faq .rbfw-sub-heading {
+.rbfw_faq_load_more::after {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-1px);
+}
+
+.rbfw_faq_load_more:hover {
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--rbfw_color_primary) 30%, transparent);
+    transform: translateY(-1px);
+}
+
+/* ── Muffin FAQ Redesign ──
+   Matches the DEFAULT TEMPLATE's FAQ section exactly (same selectors,
+   swapped from .mp_default_theme to .rbfw_muffin_template) — the
+   underlying markup from rbfw_get_faq_func() is identical between the
+   two templates, so this is a straight visual-parity port, not a new
+   design: neutral slate palette, bordered card that picks up the brand
+   color only when expanded, circular badge with the plus icon rotating
+   into an "x" instead of a chevron glyph-swap. */
+
+.rbfw_muffin_template .faq .rbfw-sub-heading,
+.rbfw_muffin_template .faq h3.rbfw-sub-heading {
     font-size: 22px;
     font-weight: 700;
-    color: #111;
+    color: #0f172a;
+    margin-bottom: 16px;
     border: none;
     background: none;
     padding: 0;
-    margin-bottom: 16px;
 }
 
 .rbfw_muffin_template #rbfw_faq_accordion {
@@ -1064,58 +1110,80 @@ div.mp_left_section {
 }
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_item {
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    background: #fff;
     box-shadow: none;
     margin: 0;
-    border-radius: 8px;
     overflow: hidden;
-    border: none;
+    transition: border-color 0.15s;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_item:has(.rbfw_faq_header.active) {
+    border-color: var(--rbfw_color_primary);
 }
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header {
-    background: #eef2ff;
+    background: transparent;
     font-size: 14px;
-    font-weight: 500;
-    padding: 14px 16px;
-    border-radius: 8px;
+    font-weight: 700;
+    color: #0f172a;
+    padding: 15px 18px;
     border: none;
+    border-radius: 0;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: background 0.15s;
 }
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header.active {
-    background: #eef2ff;
-    color: var(--rbfw_color_primary);
-    border-radius: 8px 8px 0 0;
+    background: color-mix(in srgb, var(--rbfw_color_primary) 8%, white);
+    color: #0f172a;
+    border-radius: 0;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header:not(.active):hover {
+    background: #f8fafc;
 }
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header i {
-    color: #888;
-    font-size: 13px;
-    transition: transform 0.25s ease;
     flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    color: #fff;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, background 0.15s;
 }
 
-/* Replace fa-plus / fa-minus with chevron icons — JS toggle preserved */
-.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header i.fa-plus::before {
-    content: "\f078";
-}
-
-.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header i.fa-minus::before {
-    content: "\f077";
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header.active i {
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    transform: rotate(45deg);
 }
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
     background: #fff;
+    padding: 0 16px 14px;
     border: none;
-    border-top: 1px solid #e0e7ff;
-    padding: 14px 16px 18px;
-    border-radius: 0 0 8px 8px;
+    border-top: 1px solid #E2E8F0;
+    border-radius: 0;
 }
 
-.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper p.rbfw_faq_desc {
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper p.rbfw_faq_desc,
+.rbfw_muffin_template #rbfw_faq_accordion p.rbfw_faq_desc {
     font-size: 14px;
-    color: #555;
-    line-height: 1.6;
+    color: #4b5563;
     margin: 0;
+    padding-top: 12px;
+    line-height: 1.6;
 }
 
 /* ── End Muffin FAQ Redesign ── */
@@ -2951,6 +3019,32 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Morning/Afternoon/Evening grouping (rbfw_script.js, rbfwGetTimeSlotGroup()):
+   one .rbfw_bikecarsd_time_group per bucket actually in use, each a label
+   plus a row that wraps its own slots — the wrap above used to flex-wrap
+   the <a> elements directly; now each group's row does that instead, so
+   every existing a.rbfw_bikecarsd_time rule below (sizing, colors, hover,
+   selected, disabled) still applies unchanged via descendant selectors. */
+.rbfw_bikecarsd_time_group_label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 8px;
+}
+
+.rbfw_bikecarsd_time_group_row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
     -webkit-flex-wrap: wrap;
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
@@ -3043,12 +3137,13 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     display: block;
     padding: 5px 10px;
     text-transform: none;
-    border: 1px solid #e3c0c0;
+    border: 1.5px solid #e2e8f0;
     color: #000;
     font-size: 14px;
+    font-weight: 600;
     background-color: #fff;
     height: 35px;
-    border-radius:5px;
+    border-radius: 10px;
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable span.rbfw_bikecarsd_time_span {
@@ -3310,6 +3405,31 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw-bikecarsd-calendar-footer i {
     color: var(--rbfw_color_primary);
 }
+
+.rbfw-bikecarsd-calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 11.5px;
+    color: #64748b;
+    margin: 10px 0;
+}
+.rbfw-bikecarsd-calendar-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.rbfw-bikecarsd-calendar-legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.rbfw-bikecarsd-calendar-legend-swatch.rbfw-is-selected { background: var(--rbfw_color_primary); }
+.rbfw-bikecarsd-calendar-legend-swatch.rbfw-is-offday { background: #fde2e2; border: 1px solid #f3b6b6; }
+.rbfw-bikecarsd-calendar-legend-swatch.rbfw-is-weekend { background: #eef2f7; border: 1px solid #e2e8f0; }
 
 .rbfw_muffin_template .rbfw-bikecarsd-calendar-footer i {
     color: var(--rbfw_color_primary);
@@ -3672,24 +3792,192 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 /* MPS Thank you page css*/
 
-.rbfw_thankyou_page_wrap{
-    padding-top: 30px;
-    padding-bottom: 30px;
-    width: 100% !important;
-    max-width: 90% !important;
-    margin: auto;
+.rbfw-order-received {
+    width: 100%;
+    max-width: 720px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-sizing: border-box;
 }
 
-.rbfw_thankyou_page_wrap table thead{
-    background: #ddd;
+.rbfw-order-received * {
+    box-sizing: border-box;
 }
 
-.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n + 1){
-    background-color: #00328014;
+.rbfw-or-banner {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
 }
 
-.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n){
-    background-color: #fff;
+.rbfw-or-banner-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #ecfdf3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rbfw-or-banner-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.rbfw-or-banner-chip {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.rbfw-or-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.rbfw-or-card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 14px;
+}
+
+.rbfw-or-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 20px;
+}
+
+.rbfw-or-grid-label {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 2px;
+}
+
+.rbfw-or-grid-value {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #0f172a;
+    word-break: break-word;
+}
+
+.rbfw-or-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 13.5px;
+    padding: 7px 0;
+}
+
+.rbfw-or-row-label {
+    color: #64748b;
+}
+
+.rbfw-or-row-value {
+    font-weight: 600;
+    color: #0f172a;
+    text-align: right;
+    word-break: break-word;
+}
+
+.rbfw-or-row-main {
+    padding: 0 0 14px;
+    margin-bottom: 8px;
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.rbfw-or-row-main .rbfw-or-row-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.rbfw-or-row-main .rbfw-or-row-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.rbfw-or-subsection {
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.rbfw-or-subsection-label {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 4px;
+}
+
+.rbfw-or-divider {
+    margin: 10px 0;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.rbfw-or-list-heading {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 10px;
+}
+
+.rbfw-or-summary .rbfw-or-row-discount .rbfw-or-row-value {
+    color: #16a34a;
+}
+
+.rbfw-or-row-total {
+    align-items: center;
+    background: #fff5f4;
+    border: 1.5px solid #ffd4cf;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 6px;
+}
+
+.rbfw-or-row-total .rbfw-or-row-label {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.rbfw-or-row-total .rbfw-or-row-value {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--rbfw_color_primary, #ff3726);
+}
+
+@media only screen and (max-width: 600px) {
+    .rbfw-or-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* End MPS Thank you page css*/
@@ -8525,6 +8813,15 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     line-height: 1.35;
 }
 
+/* "Select Time" heading specifically — built by rbfw_script.js as the first
+   child of #rbfw_bikecarsd_time_table_wrap itself (so it only ever exists
+   alongside actual time slots), not a direct child of .rbfw-bikecarsd-result
+   like the Duration heading, so this never reaches that one. Bumped past the
+   generic 500 above (Inter Medium reads as barely-bold) to a true 700. */
+.mp_right_section .single-day-booking .rbfw_bikecarsd_time_table_wrap > .rbfw-single-right-heading {
+    font-weight: 700;
+}
+
 .mp_right_section .single-day-booking .rbfw-select,
 .mp_right_section .single-day-booking .rbfw-input {
     min-height: 42px;
@@ -8655,98 +8952,179 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     display:none !important;
 }
 
-/* =============date picker format=========== */
-.single-rbfw_item #ui-datepicker-div{
-    border:1px solid #dfdedd;
-    box-shadow: 0 0 15px #ddd;
+/* ======================================================
+   #ui-datepicker-div — shared jQuery UI popup calendar.
+   This single element is reused by jQuery UI for every non-inline
+   datepicker on the site (multi-day/multi-item pickup & dropoff
+   dates, resort check-in/check-out, single-day "timely" mode start
+   date, the [rbfw_rent_search] widget, the [rbfw_booking_search]
+   widget) — scoped purely by #id so the same redesign applies
+   everywhere it can appear, regardless of page template or whether
+   a .mp_right_section/.single-rbfw_item ancestor happens to exist.
+   !important matches this file's existing cascade (those older
+   ancestor-scoped rules also use it, and an ID selector alone
+   already outranks any of them on specificity, !important aside).
+   Visually mirrors the redesigned #rbfw-bikecarsd-calendar: white
+   card, rounded-square day cells, weekend tint, ring-only "today".
+   ====================================================== */
+#ui-datepicker-div {
+    width: auto !important;
+    padding: 14px !important;
+    background: #fff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 1px 2px rgba(15,23,42,.04), 0 12px 32px rgba(15,23,42,.08) !important;
 }
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-header{
-    background-color: var(--rbfw_primary_opacity);
-    background-image: none;
-    border-color: var(--rbfw_color_primary);
-    border-radius: 18px 18px 0 0;
-}
-.single-rbfw_item  #ui-datepicker-div .ui-datepicker-next{
-    position: absolute;
-    top: 50%;
-    right: 4px;
-    width: 36px;
-    height: 36px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #333;
-    border-radius: 0;
-}
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-prev{
-    position: absolute;
-    top: 50%;
-    left: 4px;
-    width: 36px;
-    height: 36px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #333;
-    border-radius: 0;
-}
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before{
-    font-size: 15px;
-    content: "\f054";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
-}
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-header a.ui-datepicker-prev::before{
-    font-size: 15px;
-    content: "\f053";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-weight: 900;
-    font-family: 'Font Awesome 5 Free';
-  }
 
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-prev:hover,
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-next:hover{
-    background:var(--rbfw_color_primary);
-    color: #fff;
+#ui-datepicker-div .ui-datepicker-header {
+    background: #fff !important;
+    background-image: none !important;
+    border: none !important;
+    padding: 0 0 12px !important;
+    position: relative;
+}
+
+#ui-datepicker-div .ui-datepicker-title {
+    background: transparent !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    font-size: 14.5px !important;
+    font-weight: 800 !important;
     text-align: center;
-    border-radius: 100px;
-  }
-  .single-rbfw_item #ui-datepicker-div .ui-state-default{
-    color: var(--rbfw_color_primary);
-  }
-  .single-rbfw_item #ui-datepicker-div .ui-state-active{
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-  }
-  .single-rbfw_item #ui-datepicker-div a.ui-state-default:hover {
-    background-color: var(--rbfw_primary_opacity);
-  }
-.single-rbfw_item #ui-datepicker-div .ui-datepicker-title{
-    background-color: transparent;
-    color: var(--rbfw_color_primary);
+    margin: 0 !important;
 }
 
-.ui-datepicker table thead{
-    background-color:var(--rbfw_primary_opacity);
+#ui-datepicker-div .ui-datepicker-header .ui-icon {
+    display: none !important;
 }
-#ui-datepicker-div{
-    width: auto;
+
+#ui-datepicker-div .ui-datepicker-prev,
+#ui-datepicker-div .ui-datepicker-next {
+    position: absolute !important;
+    top: 0 !important;
+    width: 30px !important;
+    height: 30px !important;
+    background: #fff !important;
+    background-image: none !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 50% !important;
+    cursor: pointer;
+    color: #475569 !important;
 }
-#ui-datepicker-div .ui-datepicker-header{
-    padding: 16px 2px;
+#ui-datepicker-div .ui-datepicker-prev { left: 0 !important; }
+#ui-datepicker-div .ui-datepicker-next { right: 0 !important; }
+
+#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-prev::before,
+#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before {
+    content: "\f053";
+    font-family: 'Font Awesome 5 Free' !important;
+    font-weight: 900 !important;
+    font-size: 11px !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: inherit !important;
 }
-#ui-datepicker-div .ui-datepicker-next,#ui-datepicker-div .ui-datepicker-prev{
-    border: 1px solid var(--mage-primary);
+#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before {
+    content: "\f054";
 }
-#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before,#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-prev::before{
-    color: var(--mage-primary);
-    top:50%;
-    transform: translateY(-50%);
+
+#ui-datepicker-div .ui-datepicker-prev:hover,
+#ui-datepicker-div .ui-datepicker-next:hover {
+    background: var(--rbfw_color_primary, #ff3726) !important;
+    border-color: var(--rbfw_color_primary, #ff3726) !important;
+    color: #fff !important;
+}
+#ui-datepicker-div .ui-datepicker-prev.ui-state-disabled,
+#ui-datepicker-div .ui-datepicker-next.ui-state-disabled {
+    opacity: .4 !important;
+    cursor: not-allowed !important;
+    background: #fff !important;
+    color: #475569 !important;
+}
+
+/* Weekday header row */
+#ui-datepicker-div .ui-datepicker-calendar thead th {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #94a3b8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .02em !important;
+    padding: 4px 0 6px !important;
+    border: none !important;
+    background: none !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar thead th.ui-datepicker-week-end {
+    color: #ff3726 !important;
+}
+
+#ui-datepicker-div .ui-datepicker-calendar {
+    border-collapse: separate !important;
+    border-spacing: 3px !important;
+    margin: 0 !important;
+}
+#ui-datepicker-div .ui-datepicker-calendar td {
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+}
+
+/* Day cells: rounded-square, not circular */
+#ui-datepicker-div .ui-state-default,
+#ui-datepicker-div .ui-widget-content .ui-state-default {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    border: 1px solid transparent !important;
+    background: none !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #0f172a !important;
+    transition: background .15s, border-color .15s, color .15s;
+}
+
+/* Bookable (.av) cells: a visible border so they read as clickable */
+#ui-datepicker-div td.av a.ui-state-default {
+    border-color: #e2e8f0 !important;
+}
+
+/* Bookable weekend cells: light tint, on top of the border above */
+#ui-datepicker-div td.ui-datepicker-week-end:not(.ui-state-disabled) a.ui-state-default {
+    background: #fff7f6 !important;
+    border-color: #ffd9d4 !important;
+}
+
+/* Hover / keyboard-focus / selected */
+#ui-datepicker-div td.ui-state-hover a.ui-state-default,
+#ui-datepicker-div a.ui-state-default:hover,
+#ui-datepicker-div .ui-state-default.ui-state-active,
+#ui-datepicker-div .ui-state-highlight {
+    background: var(--rbfw_color_primary, #ff3726) !important;
+    border-color: var(--rbfw_color_primary, #ff3726) !important;
+    color: #fff !important;
+}
+
+/* Today: a ring only, never a solid fill */
+#ui-datepicker-div td.ui-datepicker-today a.ui-state-default,
+#ui-datepicker-div td.ui-datepicker-today span.ui-state-default {
+    background: transparent !important;
+    border-color: var(--rbfw_color_primary, #ff3726) !important;
+    color: #0f172a !important;
+}
+
+/* Disabled / past / unavailable (.notav): muted, no border, not clickable */
+#ui-datepicker-div .ui-state-disabled .ui-state-default,
+#ui-datepicker-div .ui-widget-content .ui-state-disabled .ui-state-default {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: #cbd5e1 !important;
+    cursor: not-allowed;
 }
 
 .single-rbfw_item .ui-datepicker-calendar .date-label{
@@ -10210,83 +10588,124 @@ i.fas.fa-minus {
     }
 }
 
-/* ---- Type / Price / Quantity tables ---- */
+/* ---- Type / Price / Quantity tables ----
+   Redesigned from a literal HTML table into a stack of row-cards: the
+   header is hidden (each row already carries its own labels via the
+   title/desc text), and table/tbody/tr/td are display:flex/block'd —
+   safe because nothing in sd_script.js traverses by tr/table, only by
+   sibling/.closest('label') (verified before this redesign). */
 .mp_right_section table.rbfw_bikecarsd_price_table {
+    display: block;
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 14px;
+    border-radius: 0;
+    overflow: visible;
+    margin-bottom: 0;
 }
 
-/* Shared header style for both tables */
-.mp_right_section table.rbfw_bikecarsd_price_table thead th {
-    background: #E8EEF8;
-    color: #1e293b;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 10px 12px;
-    text-align: left;
-    border-bottom: 1px solid #E2E8F0;
-    border-right: none;
+.mp_right_section table.rbfw_bikecarsd_price_table thead {
+    display: none;
 }
 
-/* Body rows */
-.mp_right_section table.rbfw_bikecarsd_price_table tbody td {
+.mp_right_section table.rbfw_bikecarsd_price_table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mp_right_section table.rbfw_bikecarsd_price_table tbody tr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
     padding: 11px 12px;
+    transition: border-color .15s, background .15s;
+}
+
+/* Row highlighted once a quantity is picked — .rbfw-es-selected is toggled
+   by rbfwSyncExtraServiceRows() in rbfw_script.js for BOTH this table and
+   the Optional Add-ons one below (same class, same mechanism). */
+.mp_right_section table.rbfw_bikecarsd_price_table tbody tr.rbfw-es-selected {
+    border-color: var(--rbfw_color_primary);
+    background: color-mix(in srgb, var(--rbfw_color_primary) 6%, white);
+}
+
+.mp_right_section table.rbfw_bikecarsd_price_table tbody td {
+    padding: 0;
     font-size: 13px;
     color: #374151;
-    border-bottom: 1px solid #f1f5f9;
+    border: 0;
     vertical-align: middle;
 }
-.mp_right_section table.rbfw_bikecarsd_price_table tbody tr:last-child td {
-    border-bottom: none;
+.mp_right_section table.rbfw_bikecarsd_price_table tbody td.w_50_pc {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.mp_right_section table.rbfw_bikecarsd_price_table tbody td.w_30_pc {
+    flex: 0 0 auto;
+    padding-right: 14px;
+}
+.mp_right_section table.rbfw_bikecarsd_price_table tbody td.w_20_pc {
+    flex: 0 0 auto;
 }
 
 /* Type title & description */
 .mp_right_section .rbfw_bikecarsd_type_title {
     display: block;
-    font-weight: 600;
-    color: #111827;
-    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 13.5px;
 }
 .mp_right_section .rbfw_bikecarsd_type_desc {
     display: block;
-    font-size: 11px;
-    color: #6b7280;
-    margin-top: 2px;
+    font-size: 11.5px;
+    color: #94a3b8;
+    margin-top: 1px;
 }
 
 /* Optional Add-ons label */
 .mp_right_section .rbfw_bikecarsd_es_price_table .rbfw-single-right-heading {
-    font-size: 13px;
-    font-weight: 600;
-    color: #374151;
-    margin: 14px 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 0 0 12px;
     display: block;
 }
 
-/* Quantity +/- controls */
+/* Quantity +/- controls — a single rounded pill instead of three separate
+   floating controls: minus/plus share borders with the number display so
+   it reads as one stepper. */
 .mp_right_section .rbfw_qty_input {
     display: flex;
-    align-items: center;
-    gap: 4px;
+    align-items: stretch;
+    gap: 0;
 }
 .mp_right_section .rbfw_qty_input a {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    color: #374151;
-    font-size: 10px;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    color: #475569;
+    font-size: 11px;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
     text-decoration: none;
+}
+.mp_right_section .rbfw_qty_input a.rbfw_qty_minus {
+    border-radius: 7px 0 0 7px;
+    border-right: none;
+}
+.mp_right_section .rbfw_qty_input a.rbfw_qty_plus {
+    border-radius: 0 7px 7px 0;
+    border-left: none;
 }
 .mp_right_section .rbfw_qty_input a:hover {
     background: var(--rbfw_color_primary);
@@ -10295,20 +10714,24 @@ i.fas.fa-minus {
 }
 .mp_right_section .rbfw_qty_input input[type="number"] {
     width: 32px;
-    height: 24px;
+    height: 26px;
     text-align: center;
-    font-size: 13px;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+    border-top: 1.5px solid #e2e8f0;
+    border-bottom: 1.5px solid #e2e8f0;
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
     padding: 0;
 }
 
-/* Price column — was plain inherited gray text; matched to the same
-   weight/color as the type title so all three columns read at the same
-   level instead of the price looking like secondary/muted content. */
+/* Price column — bold dark, same weight as the type title so all three
+   columns read at the same level instead of the price looking muted. */
 .mp_right_section table.rbfw_bikecarsd_price_table tbody td .woocommerce-Price-amount {
-    font-weight: 600;
-    color: #111827;
+    font-weight: 700;
+    color: #0f172a;
     font-size: 13px;
 }
 
@@ -10330,39 +10753,125 @@ i.fas.fa-minus {
 
 /* ---- Booking Summary / Costing box ---- */
 .mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing {
-    background: #EEF2FF;
-    border: none;
-    border-radius: 8px;
-    padding: 14px 16px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
     margin-top: 14px;
 }
 .mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul {
     margin: 0;
     padding: 0;
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
 }
 .mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;
+    padding: 0;
     font-size: 13px;
     border-bottom: none;
     margin-bottom: 0;
-    color: #6b7280;
+    color: #475569;
 }
-.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.duration-costing,
-.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.extra_service_cost,
-.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.resource-costing {
-    color: var(--rbfw_color_primary);
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li .price-figure,
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li .woocommerce-Price-amount {
+    font-weight: 600;
+    color: #0f172a;
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.subtotal {
+    padding-bottom: 9px;
+    border-bottom: 1px dashed #e2e8f0;
+    color: #334155;
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.subtotal .price-figure {
+    font-weight: 700;
 }
 .mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.total {
-    border-top: 1px solid #FFCBC5;
-    padding-top: 10px;
-    margin-top: 6px;
-    font-size: 14px;
+    border-top: none;
+    background: #fff5f4;
+    border: 1.5px solid #ffd4cf;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 4px;
+    font-size: 13.5px;
     font-weight: 700;
-    color: #111827;
+    color: #0f172a;
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.total .price-figure {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--rbfw_color_primary);
+}
+
+/* ---- Fee Management (SD) — row-card to match the duration/add-ons tables
+   above. Scoped to .rbfw-bikecarsd-result, NOT bare .mp_right_section:
+   .rbfw_resourse_md / .rbfw_bikecarmd_es_table are the same class names
+   Multi-Day, Resort and Multiple Items reuse for their own fee tables
+   (copy-pasted markup, not a shared include), so scoping any wider would
+   also restyle theirs. DOM order is switch/label/price; flex `order`
+   re-sequences it visually to label/price/switch without touching PHP. */
+.mp_right_section .rbfw-bikecarsd-result .rbfw_resourse_md .rbfw-single-right-heading {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 0 0 12px;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table {
+    display: block;
+    width: 100%;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tbody {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 11px 12px;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tr td {
+    border: none !important;
+    padding: 0;
+    text-align: left;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tr td.rbfw_bikecarmd_es_hidden_input_box {
+    order: 3;
+    flex: 0 0 auto;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tr td.resource-title-qty {
+    order: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #0f172a;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tr td.resource-title-qty .rbfw-refundable {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: #94a3b8;
+    margin-top: 1px;
+}
+.mp_right_section .rbfw-bikecarsd-result .rbfw_bikecarmd_es_table tr td.w_20 {
+    order: 2;
+    flex: 0 0 auto;
+    width: auto;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    text-align: right !important;
 }
 
 /* "You selected" date strip */
@@ -11585,6 +12094,81 @@ i.fas.fa-minus {
 .mp_right_section .ui-datepicker table td a.ui-state-default.ui-state-hover,
 .mp_right_section .ui-datepicker table td span.ui-state-default.ui-state-highlight {
     color: #fff !important;
+}
+
+/* ======================================================
+   #rbfw-bikecarsd-calendar — match the redesigned mockup
+   exactly: rounded-square cells (not circles), off-day cells
+   shown pink/red, weekend columns tinted gray-blue, today
+   marked with a ring only, solid accent fill reserved for the
+   actually selected/hovered day. Scoped to the ID (not just
+   .mp_right_section) so the OTHER jQuery UI popups in this
+   section (pickup/dropoff date inputs) keep their existing
+   circular/salmon look untouched.
+   ====================================================== */
+
+.mp_right_section #rbfw-bikecarsd-calendar .ui-state-default,
+.mp_right_section #rbfw-bikecarsd-calendar .ui-widget-content .ui-state-default {
+    border-radius: 10px !important;
+}
+
+/* Weekend day-of-week header letters (S S) in red. */
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table th.ui-datepicker-week-end {
+    color: #ef4444 !important;
+}
+
+/* Plain available days: no tint — the old blanket salmon .av fill is reset
+   to transparent here; only the weekend/off-day cells below get a fill.
+   The id is repeated (valid CSS, same element) to add a second ID to this
+   selector's specificity: the active theme's own CSS
+   (wp-content/themes/rentiva/assets/css/plugin-item-details.css) has
+   previously re-painted this exact cell green via an ID + 4-class
+   selector specifically engineered to outrank the plugin — a single ID
+   can never out-rank that, but two always will, regardless of how many
+   ancestor classes a theme stacks on top, so the plugin wins this
+   property for good without having to keep chasing the theme file. */
+.mp_right_section #rbfw-bikecarsd-calendar#rbfw-bikecarsd-calendar .ui-datepicker table td.av {
+    background: transparent !important;
+}
+
+/* Weekend tint — only on otherwise-bookable days; off/sold-out/past keep
+   their own look below. */
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table td.ui-datepicker-week-end:not(.ui-state-disabled) a.ui-state-default {
+    background: #eef2f7 !important;
+}
+
+/* Off day: the only DOM signal jQuery UI gives is a non-empty title (the
+   off-day label) on an otherwise-generic .ui-state-disabled.notav cell — a
+   plain past date gets the same classes with no title. Sold-out days keep
+   their own separate strike-through look (.rbfw-soldout-day), untouched. */
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table td.ui-state-disabled[title]:not(.rbfw-soldout-day) span.ui-state-default {
+    background: #fde2e2 !important;
+    color: #991b1b !important;
+    border-color: transparent !important;
+}
+
+/* Today: a ring, never a solid fill, whether or not it's bookable — wins
+   over both the off-day fill above and the generic highlight-fill rule
+   (ties on specificity are broken by file order; this is declared last). */
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table td.ui-datepicker-today a.ui-state-default,
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table td.ui-datepicker-today span.ui-state-default {
+    background: transparent !important;
+    border: 1.5px solid #94a3b8 !important;
+    color: #1e293b !important;
+}
+
+/* Nav buttons: white instead of gray, dimmed + inert at the start of the
+   bookable range. */
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker .ui-datepicker-prev,
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker .ui-datepicker-next {
+    background: #fff !important;
+}
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker .ui-datepicker-prev.ui-state-disabled,
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker .ui-datepicker-next.ui-state-disabled {
+    opacity: .4 !important;
+    cursor: not-allowed !important;
+    background: #fff !important;
+    border-color: #e5e7eb !important;
 }
 
 /* ======================================================

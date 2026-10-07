@@ -129,6 +129,20 @@
                     <div class="item rbfw-bikecarsd-step" data-step="1">
                         <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
                         </div>
+                        <div class="rbfw-bikecarsd-calendar-legend">
+                            <span class="rbfw-bikecarsd-calendar-legend-item">
+                                <span class="rbfw-bikecarsd-calendar-legend-swatch rbfw-is-selected"></span>
+                                <?php esc_html_e( 'Selected', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </span>
+                            <span class="rbfw-bikecarsd-calendar-legend-item">
+                                <span class="rbfw-bikecarsd-calendar-legend-swatch rbfw-is-offday"></span>
+                                <?php esc_html_e( 'Off day', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </span>
+                            <span class="rbfw-bikecarsd-calendar-legend-item">
+                                <span class="rbfw-bikecarsd-calendar-legend-swatch rbfw-is-weekend"></span>
+                                <?php esc_html_e( 'Weekend', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </span>
+                        </div>
                         <div class="rbfw-bikecarsd-calendar-footer">
                             <i class="fas fa-circle-info"></i>
                             <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>

@@ -3615,7 +3615,7 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 			}
 			?>
 			<div class="item rbfw-variation-group" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-field-label="<?php echo esc_attr( $field_label ); ?>">
-				<div class="rbfw-single-right-heading"><?php echo esc_html( $field_label ); ?></div>
+				<div class="rbfw-single-right-heading"><?php esc_html_e( 'Item Variation', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 				<div class="item-content rbfw-p-relative rbfw-variation-steppers">
 					<?php if ( ! empty( $field_values ) ) {
 						foreach ( $field_values as $data_arr_two ) {
