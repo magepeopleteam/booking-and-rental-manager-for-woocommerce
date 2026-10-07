@@ -699,12 +699,8 @@ jQuery(document).ready(function () {
 
 
 function rbfwFormatMultipleItemsSummaryDate(date) {
-    if (
-        typeof jQuery !== 'undefined' &&
-        jQuery.datepicker &&
-        typeof js_date_format !== 'undefined'
-    ) {
-        return jQuery.datepicker.formatDate(js_date_format, date);
+    if (typeof date.toLocaleDateString === 'function') {
+        return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
 
     const year = date.getFullYear();
@@ -786,7 +782,7 @@ function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
         const endDate = rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty);
         startTimeText = hasPickupTime ? rbfwFormatMultipleItemsSummaryTime(startDate) : '';
         endTimeText = hasPickupTime ? rbfwFormatMultipleItemsSummaryTime(endDate) : '';
-        startDateText = jQuery('#pickup_date').val() || rbfwFormatMultipleItemsSummaryDate(startDate);
+        startDateText = rbfwFormatMultipleItemsSummaryDate(startDate);
         endDateText = rbfwFormatMultipleItemsSummaryDate(endDate);
     } else if (pickupTimeValue && durationType && durationQty) {
         const pickupDateValue = jQuery('#hidden_pickup_date').val();
@@ -801,8 +797,8 @@ function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
         }
     }
 
-    jQuery('.rbfw-duration-start-label').text(hasPickupTime ? 'Start Date and Time' : 'Start Date');
-    jQuery('.rbfw-duration-end-label').text(hasPickupTime ? 'End Date and Time' : 'End Date');
+    jQuery('.rbfw-duration-start-label').text(hasPickupTime ? 'Start Time' : 'Start Date');
+    jQuery('.rbfw-duration-end-label').text(hasPickupTime ? 'End Time' : 'End Date');
     jQuery('.rbfw-duration-start-date').show();
     jQuery('.rbfw-duration-start-date .item-content').html(rbfwAppendMultipleItemsSummaryTime(startDateText, startTimeText));
     jQuery('.rbfw-duration-end-date').show();
@@ -2190,6 +2186,25 @@ function loadDisabledDates(post_id, year, month) {
 }
 
 /**
+ * #pickup_time (Multiple Items' own Pickup Time select) is normally
+ * populated by getAvailableTimes(), but that's only ever called from the
+ * .pickup_date datepicker's onSelect callback -- so whenever a pickup date
+ * is already set without the customer having clicked the calendar (a
+ * server-rendered default, or one carried over from search), the select
+ * stays on its placeholder with no time options at all. Called from
+ * rbfwMIAutoSelectNextAvailableDate() below, both for a date that was
+ * already set on load and for one this script just auto-picked.
+ */
+function rbfwMiPopulatePickupTimeForDate(iso) {
+    if (jQuery('#rbfw_enable_time_slot').val() !== 'yes' || !document.getElementById('pickup_time')) {
+        return;
+    }
+    var particularsData = jQuery('#rbfw_particulars_data').val();
+    var availableTime = jQuery('#rdfw_available_time').val();
+    getAvailableTimes(particularsData, iso, availableTime, 'pickup_time');
+}
+
+/**
  * Auto-select the next available pickup date for the multiple_items form.
  * Checks off-days, off-date-ranges, and sold-out dates (disabledDates).
  * Populates both the visible text input and the hidden Y-m-d input,
@@ -2197,7 +2212,25 @@ function loadDisabledDates(post_id, year, month) {
  */
 function rbfwMIAutoSelectNextAvailableDate() {
     if (jQuery('#rbfw_rent_type').val() !== 'multiple_items') return;
-    if (jQuery('#hidden_pickup_date').val()) return; // already has a value
+
+    var existingIso = jQuery('#hidden_pickup_date').val();
+    if (existingIso) {
+        // A default pickup date was already set some other way (a server-
+        // rendered default, or one carried over from search) before this
+        // function ever ran -- the hidden Y-m-d field has it, but nothing
+        // had filled in the visible, readonly text input to match, so the
+        // field looked empty even though a date really was selected.
+        if (!jQuery('#pickup_date').val()) {
+            var existingParts = existingIso.split('-');
+            var existingDate = new Date(parseInt(existingParts[0], 10), parseInt(existingParts[1], 10) - 1, parseInt(existingParts[2], 10));
+            var existingDisplay = (typeof js_date_format !== 'undefined' && jQuery.datepicker)
+                ? jQuery.datepicker.formatDate(js_date_format, existingDate)
+                : (existingParts[1] + '/' + existingParts[2] + '/' + existingParts[0]);
+            jQuery('#pickup_date').val(existingDisplay);
+        }
+        rbfwMiPopulatePickupTimeForDate(existingIso);
+        return; // the date itself is already set -- nothing else to pick
+    }
 
     var today_enable = (typeof rbfw_js_variables !== 'undefined') ? rbfw_js_variables.rbfw_today_booking_enable : 'no';
     var buffer_time  = parseInt(jQuery('#rbfw_buffer_time').val()) || 0;
@@ -2240,6 +2273,7 @@ function rbfwMIAutoSelectNextAvailableDate() {
 
             jQuery('#pickup_date').val(display);
             jQuery('#hidden_pickup_date').val(iso).trigger('change');
+            rbfwMiPopulatePickupTimeForDate(iso);
             break;
         }
         candidate.setDate(candidate.getDate() + 1);

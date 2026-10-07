@@ -2161,9 +2161,11 @@
             }
         });
 
-        // Add new date range row
-        $wrap.on('click', '.rbfw-me-offdate-add', function () {
-            var $list = $(this).closest('.rbfw-me-card__body').find('.rbfw-me-offdate-list');
+        // Builds one off-date row's markup -- shared by the "Add Another Range"
+        // button and the calendar's click-to-block handler below, so both stay
+        // in sync with the exact same field names collectFormData()/the save
+        // handlers already expect (off_days_start[]/off_days_end[]).
+        function buildOffdateRow(start, end) {
             var $row = $(
                 '<div class="rbfw-me-offdate-row">' +
                     '<div class="rbfw-me-field">' +
@@ -2179,7 +2181,15 @@
                     '</button>' +
                 '</div>'
             );
-            $list.append($row);
+            if (start) { $row.find('input[name="off_days_start[]"]').val(start); }
+            if (end) { $row.find('input[name="off_days_end[]"]').val(end); }
+            return $row;
+        }
+
+        // Add new date range row
+        $wrap.on('click', '.rbfw-me-offdate-add', function () {
+            var $list = $(this).closest('.rbfw-me-card__body').find('.rbfw-me-offdate-list');
+            $list.append(buildOffdateRow());
         });
 
         // Remove date range row
@@ -2190,7 +2200,198 @@
             } else {
                 $(this).closest('.rbfw-me-offdate-row').find('input[type="date"]').val('');
             }
+            $wrap.find('.rbfw-me-offday-cal').trigger('rbfwRenderCalendar');
         });
+
+        /*
+         * Availability Calendar: click any date to block/unblock it. Blocking
+         * adds an off_days_start[]/off_days_end[] row with start === end (a
+         * one-day "range"), reusing the exact same data the manual Start/End
+         * Date rows already save -- so existing customers' saved multi-day
+         * ranges keep working and keep displaying here (shaded, but only
+         * removable from the row list below -- a single calendar click can't
+         * safely edit an arbitrary multi-day range). Weekday pills (recurring
+         * off days) shade every matching weekday automatically.
+         */
+        var $cal = $wrap.find('.rbfw-me-offday-cal');
+        if ($cal.length) {
+            var MONTH_NAMES = [
+                rbfwModernEditor_i18n('January') || 'January', rbfwModernEditor_i18n('February') || 'February',
+                rbfwModernEditor_i18n('March') || 'March', rbfwModernEditor_i18n('April') || 'April',
+                rbfwModernEditor_i18n('May') || 'May', rbfwModernEditor_i18n('June') || 'June',
+                rbfwModernEditor_i18n('July') || 'July', rbfwModernEditor_i18n('August') || 'August',
+                rbfwModernEditor_i18n('September') || 'September', rbfwModernEditor_i18n('October') || 'October',
+                rbfwModernEditor_i18n('November') || 'November', rbfwModernEditor_i18n('December') || 'December'
+            ];
+            var DOW_SHORT = [
+                rbfwModernEditor_i18n('Mon') || 'Mon', rbfwModernEditor_i18n('Tue') || 'Tue',
+                rbfwModernEditor_i18n('Wed') || 'Wed', rbfwModernEditor_i18n('Thu') || 'Thu',
+                rbfwModernEditor_i18n('Fri') || 'Fri', rbfwModernEditor_i18n('Sat') || 'Sat',
+                rbfwModernEditor_i18n('Sun') || 'Sun'
+            ];
+            var WEEKDAY_BY_JSDAY = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+            var today = new Date();
+            var viewYear = today.getFullYear();
+            var viewMonth = today.getMonth();
+
+            function pad2(n) { return (n < 10 ? '0' : '') + n; }
+            function isoDate(y, m, d) { return y + '-' + pad2(m + 1) + '-' + pad2(d); }
+
+            function offWeekdaySlugs() {
+                var slugs = [];
+                $wrap.find('.rbfw-me-offday-checkbox:checked').each(function () {
+                    slugs.push($(this).data('day'));
+                });
+                return slugs;
+            }
+
+            function offDateRanges() {
+                var ranges = [];
+                $wrap.find('.rbfw-me-offdate-row').each(function () {
+                    var s = $(this).find('input[name="off_days_start[]"]').val();
+                    var e = $(this).find('input[name="off_days_end[]"]').val();
+                    if (s && e) { ranges.push({ start: s, end: e }); }
+                });
+                return ranges;
+            }
+
+            function renderCalendar() {
+                var weekdaySlugs = offWeekdaySlugs();
+                var ranges = offDateRanges();
+                var todayIso = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+
+                $cal.find('.rbfw-me-offday-cal__month').text(MONTH_NAMES[viewMonth] + ' ' + viewYear);
+
+                var $dow = $cal.find('.rbfw-me-offday-cal__dow').empty();
+                DOW_SHORT.forEach(function (d) {
+                    $dow.append($('<span>').text(d));
+                });
+
+                var $grid = $cal.find('.rbfw-me-offday-cal__grid').empty();
+                var first = new Date(viewYear, viewMonth, 1);
+                var startOffset = (first.getDay() + 6) % 7; // Monday-first, matches the weekday checkbox order
+                var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+                var i, d;
+
+                for (i = 0; i < startOffset; i++) {
+                    $grid.append('<span class="rbfw-me-offday-cal__cell rbfw-me-offday-cal__cell--blank"></span>');
+                }
+
+                for (d = 1; d <= daysInMonth; d++) {
+                    var iso = isoDate(viewYear, viewMonth, d);
+                    var jsDay = new Date(viewYear, viewMonth, d).getDay();
+                    var isWeeklyOff = weekdaySlugs.indexOf(WEEKDAY_BY_JSDAY[jsDay]) !== -1;
+
+                    var matchedRange = null, r;
+                    for (r = 0; r < ranges.length; r++) {
+                        if (iso >= ranges[r].start && iso <= ranges[r].end) { matchedRange = ranges[r]; break; }
+                    }
+                    var isSingleDayBlock = matchedRange && matchedRange.start === matchedRange.end;
+                    var isRangeBlock = matchedRange && !isSingleDayBlock;
+
+                    var $btn = $('<button type="button" class="rbfw-me-offday-cal__cell"></button>')
+                        .text(d)
+                        .attr('data-date', iso);
+                    if (isRangeBlock) {
+                        $btn.addClass('is-range').attr('title', rbfwModernEditor_i18n('Part of a date range -- click to remove the whole range') || 'Part of a date range -- click to remove the whole range');
+                    } else if (isSingleDayBlock) {
+                        $btn.addClass('is-blocked');
+                    } else if (isWeeklyOff) {
+                        $btn.addClass('is-weekly').attr('title', rbfwModernEditor_i18n('Repeats every week -- click to stop repeating this weekday') || 'Repeats every week -- click to stop repeating this weekday');
+                    }
+                    if (iso === todayIso) { $btn.addClass('is-today'); }
+
+                    $grid.append($btn);
+                }
+            }
+
+            $cal.on('click', '.rbfw-me-offday-cal__prev', function () {
+                viewMonth--;
+                if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+                renderCalendar();
+            });
+            $cal.on('click', '.rbfw-me-offday-cal__next', function () {
+                viewMonth++;
+                if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+                renderCalendar();
+            });
+
+            // Every non-blank cell is click-toggleable, whatever made it red --
+            // a click always means "unselect this" when it's already off:
+            //  - .is-weekly (recurring weekday)   -> untick that weekday's pill
+            //  - .is-range (multi-day range row)  -> remove the whole covering row
+            //  - .is-blocked (single-day block)   -> remove that one row
+            // and "block this date" when it's plain (adds a single-day row).
+            $cal.on('click', '.rbfw-me-offday-cal__cell:not(.rbfw-me-offday-cal__cell--blank)', function () {
+                var $btn = $(this);
+                var iso = $btn.data('date');
+                var $list = $wrap.find('.rbfw-me-offdate-list');
+
+                if ($btn.hasClass('is-weekly')) {
+                    var jsDay = new Date(iso + 'T00:00:00').getDay();
+                    var slug = WEEKDAY_BY_JSDAY[jsDay];
+                    $wrap.find('.rbfw-me-offday-checkbox[data-day="' + slug + '"]').prop('checked', false).trigger('change');
+                    renderCalendar();
+                    return;
+                }
+
+                if ($btn.hasClass('is-range')) {
+                    $list.find('.rbfw-me-offdate-row').each(function () {
+                        var s = $(this).find('input[name="off_days_start[]"]').val();
+                        var e = $(this).find('input[name="off_days_end[]"]').val();
+                        if (s && e && iso >= s && iso <= e) {
+                            if ($list.find('.rbfw-me-offdate-row').length > 1) {
+                                $(this).remove();
+                            } else {
+                                $(this).find('input[type="date"]').val('');
+                            }
+                            return false;
+                        }
+                    });
+                    renderCalendar();
+                    return;
+                }
+
+                var $existingRow = null;
+                $list.find('.rbfw-me-offdate-row').each(function () {
+                    var s = $(this).find('input[name="off_days_start[]"]').val();
+                    var e = $(this).find('input[name="off_days_end[]"]').val();
+                    if (s === iso && e === iso) { $existingRow = $(this); return false; }
+                });
+
+                if ($existingRow) {
+                    if ($list.find('.rbfw-me-offdate-row').length > 1) {
+                        $existingRow.remove();
+                    } else {
+                        $existingRow.find('input[type="date"]').val('');
+                    }
+                } else {
+                    var $empty = $list.find('.rbfw-me-offdate-row').filter(function () {
+                        return !$(this).find('input[name="off_days_start[]"]').val() && !$(this).find('input[name="off_days_end[]"]').val();
+                    }).first();
+
+                    if ($empty.length) {
+                        $empty.find('input[name="off_days_start[]"]').val(iso);
+                        $empty.find('input[name="off_days_end[]"]').val(iso);
+                    } else {
+                        $list.append(buildOffdateRow(iso, iso));
+                    }
+                }
+
+                renderCalendar();
+            });
+
+            // Re-render on anything that could change what's shaded: the weekday
+            // pills, manual edits to a date row, or this widget's own writes above.
+            $wrap.on('change', '.rbfw-me-offday-checkbox, .rbfw-me-offdate-row input', renderCalendar);
+            $wrap.on('click', '.rbfw-me-offdate-add, .rbfw-me-offdate-remove', function () {
+                setTimeout(renderCalendar, 0);
+            });
+            $cal.on('rbfwRenderCalendar', renderCalendar);
+
+            renderCalendar();
+        }
     }
 
     /* ── Pricing rent-type switching ────────────────────────── */
@@ -2255,6 +2456,13 @@
             // card-level inventory does not apply to it.
             var _invShow = (type !== 'resort' && type !== 'appointment' && type !== 'multiple_items');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
+
+            // Location Configuration (Advanced tab): pickup/drop-off + Location
+            // Inventory & Price don't apply to Resort or Appointment -- see the
+            // matching PHP gate in rbfw-modern-editor.php. Scoped to $wrap, not
+            // $pricing, since the card lives in the Advanced panel.
+            var _locShow = (type !== 'resort' && type !== 'appointment');
+            $wrap.find('.rbfw-me-location-card').toggleClass('rbfw-me-hidden', !_locShow);
 
             // Inventory sub-sections that only apply to specific rent types:
             //  - Return-date release: date-range rentals only (hide for Single Day & Appointment).
@@ -3184,6 +3392,23 @@
             return total;
         }
 
+        // Security Deposit -- mirrors rbfw_security_deposit() in
+        // inc/rbfw_functions.php exactly (percentage of subtotal, or a flat
+        // amount), added on top of the rental+extras subtotal before fees.
+        function computeSecurityDeposit($summaryRows, subtotal) {
+            if (! $wrap.find('input[name="rbfw_enable_security_deposit"]').is(':checked')) {
+                return 0;
+            }
+            var type = $wrap.find('select[name="rbfw_security_deposit_type"]').val() || 'percentage';
+            var setting = parseFloat($wrap.find('input[name="rbfw_security_deposit_amount"]').val()) || 0;
+            var label = $.trim($wrap.find('input[name="rbfw_security_deposit_label"]').val()) || 'Security Deposit';
+            var amt = (type === 'percentage') ? (setting * subtotal / 100) : setting;
+            if (amt > 0) {
+                summaryLine($summaryRows, label, money(amt));
+            }
+            return amt;
+        }
+
         /* ───────────── Extra services ───────────── */
 
         // Basic table (Single Day / Appointment / Multiple Items): a flat
@@ -3327,14 +3552,76 @@
             }), qtyMap, 0);
         }
 
+        // Pickup/Drop-off Location (Location Configuration, Advanced tab) --
+        // same rbfw_enable_pick_point/rbfw_enable_dropoff_point + checkbox
+        // groups Single Day/Multiple Day/Multiple Items' real booking forms
+        // read. Not shown for Resort (guests come to the resort, no pickup
+        // point) or Appointment (fixed business location) -- the admin's
+        // Location Configuration card is hidden for those two types too (see
+        // applyType()). The option value/text is the location's slug,
+        // matching exactly what rbfw_pickup_point's real <option> shows (the
+        // save path stores slugs, not display names).
+        function updateLocationFields(show, type) {
+            var $pickupField = $preview.find('.rbfw-me-fp-pickup-loc-field');
+            var $dropoffField = $preview.find('.rbfw-me-fp-dropoff-loc-field');
+
+            if (! show || type === 'resort' || type === 'appointment') {
+                $pickupField.hide();
+                $dropoffField.hide();
+                return;
+            }
+
+            var pickupEnabled = $wrap.find('input[name="rbfw_enable_pick_point"]').prop('checked');
+            var dropoffEnabled = $wrap.find('input[name="rbfw_enable_dropoff_point"]').prop('checked');
+
+            var pickupLocs = [];
+            $wrap.find('.rbfw-me-pickup-locations .rbfw-me-loc-checkbox:checked').each(function () {
+                pickupLocs.push($(this).data('loc'));
+            });
+            var dropoffLocs = [];
+            $wrap.find('.rbfw-me-dropoff-locations .rbfw-me-loc-checkbox:checked').each(function () {
+                dropoffLocs.push($(this).data('loc'));
+            });
+
+            function fillSelect($select, locs, placeholder) {
+                var current = $select.val();
+                $select.empty().append($('<option></option>').attr('value', '').text(placeholder));
+                locs.forEach(function (loc) {
+                    $select.append($('<option></option>').attr('value', loc).text(loc));
+                });
+                if (locs.indexOf(current) !== -1) { $select.val(current); }
+            }
+
+            var showPickup = pickupEnabled && pickupLocs.length > 0;
+            $pickupField.toggle(showPickup);
+            if (showPickup) {
+                fillSelect($pickupField.find('.rbfw-me-fp-pickup-loc'), pickupLocs, 'Choose pickup location');
+            }
+
+            var showDropoff = dropoffEnabled && dropoffLocs.length > 0;
+            $dropoffField.toggle(showDropoff);
+            if (showDropoff) {
+                fillSelect($dropoffField.find('.rbfw-me-fp-dropoff-loc'), dropoffLocs, 'Choose drop-off location');
+            }
+        }
+
         function updateVisibility() {
             var type = currentRentType();
             var isMd = MD_TYPES.indexOf(type) !== -1;
             var isSd = SD_TYPES.indexOf(type) !== -1;
             var isResort = RESORT_TYPES.indexOf(type) !== -1;
             var isMi = MI_TYPES.indexOf(type) !== -1;
-            var show = activePanelKey() === 'pricing' && (isMd || isSd || isResort || isMi);
+            // Off Days / Advanced don't edit pricing fields themselves, but the
+            // preview still reflects whatever was last configured on Pricing --
+            // keep it visible there too instead of only on the Pricing tab
+            // itself, so it stays in view while the admin works through the
+            // rest of the item. General still hides it (that's where Payment
+            // Method/Featured Image/Gallery/Status show instead).
+            var activePanel = activePanelKey();
+            var showsPreview = activePanel === 'pricing' || activePanel === 'offday' || activePanel === 'advanced';
+            var show = showsPreview && (isMd || isSd || isResort || isMi);
             $preview.toggle(show);
+            updateLocationFields(show, type);
             $preview.find('.rbfw-me-fp-pickup-row').toggle(isMd || isResort || isMi);
             $preview.find('.rbfw-me-fp-return-row').toggle(isMd || isResort);
             $sdControls.toggle(isSd);
@@ -3424,8 +3711,17 @@
             // Time Slot: display-only for Single Day/Appointment -- the real
             // calculation (rbfw_bikecarsd_price_calculation) doesn't price by
             // time of day, it only affects which slot the booking occupies.
+            // Not shown when "Enable duration-based rental items" is on: each
+            // Rental Option row carries its own explicit Start/End Time then
+            // (Pricing.php's own inline style hides the whole Enable Time
+            // Picker section in that combination), so there's no separate
+            // time-slot step to pick -- rbfw_enable_time_picker alone isn't
+            // enough to gate this since the classic admin JS that normally
+            // force-resets it to "no" when specific-duration is on doesn't
+            // always run first (e.g. on initial load of an older item).
             var $sdWrap = $wrap.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper');
-            var sdTimePickerOn = $sdWrap.find('[name="rbfw_enable_time_picker"]').val() === 'yes';
+            var specificDurationOn = $wrap.find('[name="enable_specific_duration"]').prop('checked');
+            var sdTimePickerOn = $sdWrap.find('[name="rbfw_enable_time_picker"]').val() === 'yes' && ! specificDurationOn;
             $sdTimeField.toggle(dateSelected && sdTimePickerOn);
             var selectedTime = null;
             if (dateSelected && sdTimePickerOn) {
@@ -3546,6 +3842,8 @@
                 });
                 total += extrasTotal(extraRows, extrasQty, 0);
             }
+
+            total += computeSecurityDeposit($summaryRows, total);
 
             var feesAmt = computeFees($summaryRows, total, 0, null);
             total += feesAmt;
@@ -3672,6 +3970,8 @@
             summaryLine($summaryRows, 'Duration', totalDays + ' night(s)');
             summaryLine($summaryRows, 'Quantity', String(qty));
             summaryLine($summaryRows, row.label + ' @ ' + money(rate) + '/night × ' + totalDays, money(rate * totalDays));
+
+            total += computeSecurityDeposit($summaryRows, total);
 
             var feesAmt = computeFees($summaryRows, total, totalDays, start);
             total += feesAmt;
@@ -3981,6 +4281,8 @@
             // there are no fees configured.
             summaryLine($summaryRows, 'Subtotal', money(total));
 
+            total += computeSecurityDeposit($summaryRows, total);
+
             var feesAmt = computeFees($summaryRows, total, totalDays, start);
             total += feesAmt;
 
@@ -4287,6 +4589,8 @@
                 total += extrasTotal(extraRows, extrasQty, 0);
             }
 
+            total += computeSecurityDeposit($summaryRows, total);
+
             var feesAmt = computeFees($summaryRows, total, 0, null);
             total += feesAmt;
 
@@ -4462,6 +4766,27 @@
         $wrap.on('change', 'input[name="rbfw_enable_category_service_price"]', function () {
             recalcCurrent();
         });
+
+        // Security Deposit -- its own master toggle (real checkbox, same
+        // caveat as above) plus the type/amount/label fields it reveals.
+        $wrap.on('input change', 'input[name="rbfw_enable_security_deposit"], select[name="rbfw_security_deposit_type"], input[name="rbfw_security_deposit_amount"], input[name="rbfw_security_deposit_label"]', function () {
+            recalcCurrent();
+        });
+
+        // Pickup/Drop-off Location -- the enable toggles and the per-location
+        // checkboxes all drive updateLocationFields() (called from inside
+        // updateVisibility()), not a recalc function, since this only ever
+        // shows/hides + repopulates the two selects, never changes a price.
+        $wrap.on('change', 'input[name="rbfw_enable_pick_point"], input[name="rbfw_enable_dropoff_point"], .rbfw-me-loc-checkbox', function () {
+            updateVisibility();
+        });
+
+        // "Enable duration-based rental items" (enable_specific_duration) --
+        // gates the Time Slot field's visibility in recalcSd() (see there for
+        // why); its own 'change' isn't otherwise watched here.
+        $wrap.on('change', '[name="enable_specific_duration"]', function () {
+            if (isPreviewingSd()) { recalcSd(); }
+        });
         var $esBody = $wrap.find('.rbfw_es_price_config_wrapper tbody.mp_event_type_sortable');
         if ($esBody.length && window.MutationObserver) {
             new MutationObserver(recalcCurrent).observe($esBody[0], { childList: true });
@@ -4546,6 +4871,16 @@
             new MutationObserver(updateFeaturedPreview).observe($thumbWrap, { childList: true, attributes: true });
         }
         updateFeaturedPreview();
+
+        // Switching tabs doesn't touch any pricing field, so nothing else here
+        // re-runs updateVisibility() -- but the preview now also needs to
+        // show/hide itself when moving to/from Off Days and Advanced (not
+        // just Pricing). initTabs() (a separate closure) applies the
+        // .is-active swap synchronously on this same click; deferring one
+        // tick guarantees activePanelKey() reads the new panel.
+        $wrap.on('click', '.rbfw-me-tab', function () {
+            setTimeout(updateVisibility, 0);
+        });
 
         updateVisibility();
     });

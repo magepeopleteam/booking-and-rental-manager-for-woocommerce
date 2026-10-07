@@ -435,10 +435,14 @@
 			<div class="rbfw-me-panel" data-panel="advanced">
 
 				<?php
-				// Location Configuration (pick-up / drop-off) is available for every
-				// rent type ( multi-location feature ).
+				// Location Configuration (pick-up / drop-off + Location Inventory &
+				// Price) doesn't apply to Resort (guests come to the resort, there's
+				// no pickup point) or Appointment (a fixed business location) -- hide
+				// the whole card for those two types. applyType() in
+				// rbfw-modern-editor.js mirrors this for a live type switch.
+				$rbfw_me_loc_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd';
 				if ( class_exists( 'RBFW_Location' ) ) :
-					$rbfw_me_loc_hidden = false;
+					$rbfw_me_loc_hidden = in_array( $rbfw_me_loc_type, [ 'resort', 'appointment' ], true );
 				?>
 				<div class="rbfw-me-card rbfw-me-location-card<?php echo $rbfw_me_loc_hidden ? ' rbfw-me-hidden' : ''; ?>">
 					<div class="rbfw-me-card__head">
@@ -721,6 +725,19 @@
 							<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>
 							<?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</span>
+					</div>
+
+					<!-- Pickup / Drop-off Location (Location Configuration, Advanced tab) --
+					     shown for every rent type once enabled with at least one location,
+					     mirroring the real booking form's own select. Sits before any
+					     date/time selection, same position as on the real booking forms. -->
+					<div class="rbfw-me-fp-field rbfw-me-fp-pickup-loc-field" style="display:none">
+						<label class="rbfw-me-fp-label"><?php esc_html_e( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<select class="rbfw-me-fp-select rbfw-me-fp-pickup-loc"></select>
+					</div>
+					<div class="rbfw-me-fp-field rbfw-me-fp-dropoff-loc-field" style="display:none">
+						<label class="rbfw-me-fp-label"><?php esc_html_e( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<select class="rbfw-me-fp-select rbfw-me-fp-dropoff-loc"></select>
 					</div>
 
 					<!-- Calendar: Single Day only -- a plain display/booking-detail date, it
@@ -1006,92 +1023,6 @@
 				</div>
 			</div>
 
-			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-help-card">
-				<div class="rbfw-me-help-card__header">
-					<span class="dashicons dashicons-book-alt rbfw-me-help-card__icon"></span>
-					<h3><?php esc_html_e( 'Resources & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-				</div>
-				<div class="rbfw-me-card__body">
-
-					<div class="rbfw-me-help-divider">
-						<span><?php esc_html_e( 'Getting Started', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					</div>
-
-					<button type="button" class="rbfw-me-help-link rbfw-me-help-link--button" id="rbfw-me-tour-restart">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-lightbulb"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Take a Tour', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'A quick walkthrough of this editor', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</button>
-
-					<div class="rbfw-me-help-divider">
-						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					</div>
-
-					<?php
-						/**
-						 * Pro Version row. Rendered by RBFW_Pro_Features_Notice so the
-						 * feature list has ONE home: it prints the same "Buy Pro Version"
-						 * row that used to be hard-coded here, plus the Pro feature list
-						 * it expands into, and prints nothing at all once Pro is active.
-						 */
-						do_action( 'rbfw_modern_editor_pro_links', $post_id );
-					?>
-
-					<!-- Min and Max Booking Limit -->
-					<a href="https://mage-people.com/product/min-and-max-booking-day-for-booking-and-rental-plugin/" target="_blank" rel="noopener" class="rbfw-me-help-link">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-controls-repeat"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Min & Max Booking Limit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Control booking duration limits', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
-
-					<!-- Seasonal Pricing -->
-					<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/" target="_blank" rel="noopener" class="rbfw-me-help-link">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-calendar-alt"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Seasonal Pricing Management', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Set prices by season or date range', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
-
-					<!-- Multi-Day Discount -->
-					<a href="https://mage-people.com/product/multi-day-price-saver-addon-for-wprently/" target="_blank" rel="noopener" class="rbfw-me-help-link">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-tag"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Multi-Day Discount Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Reward longer bookings with discounts', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
-
-					<!-- Backend Order -->
-					<a href="https://mage-people.com/product/backend-order-addon-wprently/" target="_blank" rel="noopener" class="rbfw-me-help-link">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-clipboard"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Backend Order', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Create orders directly from admin', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
-
-					<!-- Pricing Discount Over x Days -->
-					<a href="https://mage-people.com/product/pricing-discount-over-x-day-addon-for-rental-and-booking-plugin/" target="_blank" rel="noopener" class="rbfw-me-help-link">
-						<span class="rbfw-me-help-link__icon dashicons dashicons-chart-line"></span>
-						<div class="rbfw-me-help-link__text">
-							<strong><?php esc_html_e( 'Pricing Discount Over x Days', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-							<span><?php esc_html_e( 'Apply tiered discounts by duration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
-					</a>
-
-				</div>
-			</div>
 		</aside>
 	</div><!-- /.rbfw-me-body -->
 

@@ -281,9 +281,37 @@
 			<div class="rbfw-me-card">
 				<div class="rbfw-me-card__head">
 					<h2><?php esc_html_e( 'Off Date Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-					<p><?php esc_html_e( 'Define specific date ranges that are unavailable for booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					<p><?php esc_html_e( 'Click a date on the calendar to block it, or add a multi-day range below.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 				</div>
 				<div class="rbfw-me-card__body">
+
+					<!-- Availability Calendar -- click-to-block a single date; the grid
+					     itself is rendered entirely client-side (see initOffDays() in
+					     rbfw-modern-editor.js), reading/writing the exact same
+					     off_days_start[]/off_days_end[] rows below so existing saved
+					     ranges keep working unchanged. -->
+					<div class="rbfw-me-offday-cal">
+						<div class="rbfw-me-offday-cal__card">
+							<div class="rbfw-me-offday-cal__nav">
+								<button type="button" class="rbfw-me-offday-cal__prev" aria-label="<?php esc_attr_e( 'Previous month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-arrow-left-alt2"></span>
+								</button>
+								<div class="rbfw-me-offday-cal__month"></div>
+								<button type="button" class="rbfw-me-offday-cal__next" aria-label="<?php esc_attr_e( 'Next month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-arrow-right-alt2"></span>
+								</button>
+							</div>
+							<div class="rbfw-me-offday-cal__dow"></div>
+							<div class="rbfw-me-offday-cal__grid"></div>
+						</div>
+						<div class="rbfw-me-offday-cal__legend">
+							<span><i class="rbfw-me-offday-cal__dot rbfw-me-offday-cal__dot--weekly"></i><?php esc_html_e( 'Weekly off day', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span><i class="rbfw-me-offday-cal__dot rbfw-me-offday-cal__dot--blocked"></i><?php esc_html_e( 'Blocked date', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span><i class="rbfw-me-offday-cal__dot rbfw-me-offday-cal__dot--range"></i><?php esc_html_e( 'Part of a range below', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+					</div>
+
+					<div class="rbfw-me-offdate-list-label"><?php esc_html_e( 'Blocked dates & ranges', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 					<div class="rbfw-me-offdate-list">
 						<?php if ( ! empty( $rbfw_offday_range ) ) : ?>
 							<?php foreach ( $rbfw_offday_range as $single ) : ?>

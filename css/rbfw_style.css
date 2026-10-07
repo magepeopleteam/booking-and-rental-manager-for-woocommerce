@@ -970,8 +970,8 @@ div.mp_left_section {
 .rbfw-tab-container {
     padding-bottom: 20px;
     border-radius: 4px;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .rbfw-tab-container section {
@@ -1342,8 +1342,8 @@ div.mp_left_section {
     position: relative;
     width: 100%;
     max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 10px;
+    padding-right: 10px;
     margin-left: 0;
     margin-right: 0;
 }
@@ -8952,7 +8952,11 @@ i.fas.fa-minus {
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
     margin: 0;
+    padding: 22px 24px;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .item + .item {
@@ -9012,12 +9016,14 @@ i.fas.fa-minus {
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-single-right-heading {
-    color: #111827;
-    font-size: 15px;
+    color: #94a3b8;
+    font-size: 11px;
     font-weight: 700;
+    letter-spacing: 0.04em;
     line-height: 1.35;
-    margin: 0 0 8px;
+    margin: 0 0 9px;
     padding: 0;
+    text-transform: uppercase;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-p-relative {
@@ -9031,51 +9037,55 @@ i.fas.fa-minus {
     pointer-events: none;
 }
 
+/* Separate, individually-outlined buttons with real gaps between them,
+   instead of one shared gray track -- same selector language used
+   elsewhere for this kind of single-pick row. */
 .rbfw_multi_items_right .rbfw-mi-duration-tabs {
-    background: #eef1f7;
-    border-radius: 8px;
+    background: transparent;
+    border-radius: 0;
     display: flex;
-    gap: 0;
-    padding: 4px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
 }
 
 .rbfw_multi_items_right .rbfw-mi-duration-tab {
-    background: transparent;
-    border: none;
-    border-radius: 6px;
-    color: #6b7280;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    color: #475569;
     cursor: pointer;
     flex: 1;
     font-size: 13px;
     font-weight: 600;
-    margin-right: 5px;
+    margin-right: 0;
     min-height: 40px;
     padding: 0 8px;
-    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+    transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 
 .rbfw_multi_items_right .rbfw-mi-duration-tab.active,
 .rbfw_multi_items_right .rbfw-mi-duration-tab:hover {
-    background: #0058b8;
-    border: none;
-    box-shadow: 0 1px 4px rgba(0, 88, 184, 0.22);
-    color: #fff;
+    background: rgba(255, 55, 38, .08);
+    border-color: var(--rbfw_color_primary);
+    box-shadow: none;
+    color: var(--rbfw_color_primary);
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime select,
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime select.rbfw-select,
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime input[type=text].rbfw-input {
-    background: #fff;
-    border: 1px solid #d8dee8;
-    border-radius: 5px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
     box-shadow: none;
-    color: #111827;
+    color: #0f172a;
     font-size: 14px;
-    font-weight: 500;
-    height: 48px;
-    line-height: 48px;
+    font-weight: 600;
+    height: auto;
+    line-height: normal;
     margin: 0;
-    padding: 0 38px 0 42px;
+    padding: 11px 32px 11px 38px;
     transition: border-color .18s ease, box-shadow .18s ease;
     width: 100%;
 }
@@ -9090,67 +9100,69 @@ i.fas.fa-minus {
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime .calendar,
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime .time .clock {
     align-items: center;
-    color: #6b7280;
+    color: #94a3b8;
     display: flex;
-    font-size: 18px;
-    height: 48px;
+    font-size: 15px;
+    height: auto;
     justify-content: center;
-    left: 12px;
+    left: 13px;
     padding: 0;
     pointer-events: none;
     position: absolute;
-    top: 0;
-    transform: none;
-    width: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
     z-index: 1;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .date .rbfw-p-relative,
 .rbfw_multi_items_right .rbfw_select_rental_period .time:not(.rbfw-duration-qty-field) .rbfw-p-relative {
-    background: #fff;
-    border-radius: 3px;
-    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .date input[type=text].rbfw-input,
 .rbfw_multi_items_right .rbfw_select_rental_period .time:not(.rbfw-duration-qty-field) select.rbfw-select {
-    border-color: #d7e0ec;
-    color: #111827;
-    font-size: 15px;
-    font-weight: 500;
-    min-height: 48px;
+    border-color: #e2e8f0;
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: auto;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .date .calendar,
 .rbfw_multi_items_right .rbfw_select_rental_period .time:not(.rbfw-duration-qty-field) .clock {
-    color: #0058b8;
-    font-size: 17px;
-    left: 14px;
+    color: #94a3b8;
+    font-size: 15px;
+    left: 13px;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .date .input-picker-icon {
-    color: #64748b;
-    right: 14px;
+    color: #94a3b8;
+    right: 13px;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .time:not(.rbfw-duration-qty-field) .input-picker-icon::before {
-    color: #64748b;
+    color: #94a3b8;
     content: "\f078";
     font-family: "Font Awesome 6 Free";
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 900;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .input-picker-icon {
     align-items: center;
-    color: #111827;
+    color: #94a3b8;
     display: flex;
-    height: 48px;
+    font-size: 11px;
+    height: auto;
     justify-content: center;
     pointer-events: none;
     position: absolute;
-    right: 12px;
-    top: 0;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 16px;
 }
 
@@ -9240,11 +9252,35 @@ i.fas.fa-minus {
     width: 1px;
 }
 
+/* second separator (between Start and End) becomes a flow arrow instead of a line */
+.rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-sep.rbfw-duration-end-date {
+    align-self: center;
+    background: none;
+    width: 20px;
+    height: 16px;
+    padding-top: 0;
+    position: relative;
+}
+
+.rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-sep.rbfw-duration-end-date::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    border-top: 2px solid #cbd5e1;
+    border-right: 2px solid #cbd5e1;
+    transform: translate(-65%, -50%) rotate(45deg);
+}
+
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-label {
+    align-items: center;
     color: #7b8ea8;
-    display: block;
+    display: flex;
     font-size: 10px;
     font-weight: 700;
+    gap: 5px;
     letter-spacing: 0.06em;
     line-height: 1.25;
     margin: 0;
@@ -9254,6 +9290,28 @@ i.fas.fa-minus {
     overflow-wrap: break-word;
     text-transform: uppercase;
     white-space: normal;
+}
+
+.rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-label::before {
+    background-repeat: no-repeat;
+    background-size: 12px 12px;
+    content: "";
+    display: inline-block;
+    flex-shrink: 0;
+    height: 12px;
+    width: 12px;
+}
+
+.rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-col:not(.rbfw-duration-date) .rbfw-duration-summary-label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff3726' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpolyline points='12 7 12 12 15.5 14'/%3E%3C/svg%3E");
+}
+
+.rbfw_multi_items_right .rbfw-duration .rbfw-duration-start-label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2316a34a' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4.5' width='18' height='16' rx='2.5'/%3E%3Cline x1='3' y1='9.5' x2='21' y2='9.5'/%3E%3Cline x1='8' y1='2.5' x2='8' y2='6.5'/%3E%3Cline x1='16' y1='2.5' x2='16' y2='6.5'/%3E%3C/svg%3E");
+}
+
+.rbfw_multi_items_right .rbfw-duration .rbfw-duration-end-label::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4.5' width='18' height='16' rx='2.5'/%3E%3Cline x1='3' y1='9.5' x2='21' y2='9.5'/%3E%3Cline x1='8' y1='2.5' x2='8' y2='6.5'/%3E%3Cline x1='16' y1='2.5' x2='16' y2='6.5'/%3E%3C/svg%3E");
 }
 
 .rbfw_multi_items_right .rbfw-duration .rbfw-duration-summary-value {
@@ -9298,20 +9356,24 @@ i.fas.fa-minus {
     background: transparent;
     border: 0;
     margin: 0;
-    padding: 20px;
+    padding: 10px;
 }
 
 .rbfw_multi_items_right .rbfw-costing {
-    background: transparent;
-    border: 0;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px 20px;
 }
 
 .rbfw_multi_items_right .rbfw-costing .rbfw-single-right-heading {
-    color: #111827;
-    font-size: 15px;
+    color: #0f172a;
+    font-size: 12px;
     font-weight: 700;
-    margin: 0 0 12px;
+    letter-spacing: .03em;
+    margin: 0 0 14px;
     padding: 0;
+    text-transform: uppercase;
 }
 
 .rbfw_multi_items_right .rbfw-costing ul {
@@ -9320,26 +9382,45 @@ i.fas.fa-minus {
 }
 
 .rbfw_multi_items_right .rbfw-costing ul li {
-    color: #4b5563;
+    align-items: center;
+    color: #64748b;
     display: flex;
-    font-size: 14px;
+    font-size: 13.5px;
+    font-weight: 500;
     justify-content: space-between;
     margin: 0 0 10px;
 }
 
-.rbfw_multi_items_right .rbfw-costing ul li.total {
-    align-items: baseline;
-    border-top: 1px solid #eef2f7;
-    color: #747678;
-    font-size: 18px;
+.rbfw_multi_items_right .rbfw-costing ul li span,
+.rbfw_multi_items_right .rbfw-costing ul li .price-figure {
+    color: #334155;
     font-weight: 700;
-    margin-top: 0px;
-    padding-top: 0px;
+}
+
+/* A dashed break right before the Total card groups the line items above
+   it into one "what you're paying for" block, separate from the headline
+   number below. */
+.rbfw_multi_items_right .rbfw-costing ul li.subtotal {
+    border-bottom: 1px dashed #dde3ec;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+}
+
+.rbfw_multi_items_right .rbfw-costing ul li.total {
+    align-items: center;
+    background: #fff;
+    border: 1.5px solid #c7d7fb;
+    border-radius: 9px;
+    color: #0f172a;
+    font-size: 14.5px;
+    font-weight: 700;
+    margin-top: 4px;
+    padding: 13px 16px;
 }
 
 .rbfw_multi_items_right .rbfw-costing ul li.total .price-figure {
     color: #0058b8;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 800;
 }
 
@@ -9808,42 +9889,58 @@ i.fas.fa-minus {
 .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_item {
     border: 1px solid #E2E8F0;
     border-radius: 10px;
-    background: #EEF2FF;
+    background: #fff;
     overflow: hidden;
+    transition: border-color 0.15s;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_item:has(.rbfw_faq_header.active) {
+    border-color: var(--rbfw_color_primary);
 }
 
 .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header {
     background: transparent;
     font-size: 14px;
-    font-weight: 500;
-    color: #1e293b;
-    padding: 14px 16px;
+    font-weight: 700;
+    color: #0f172a;
+    padding: 15px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 14px;
     margin-bottom: 0;
     cursor: pointer;
-    transition: color 0.15s;
+    transition: background 0.15s;
 }
 
 .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header.active {
-    background: transparent;
-    color: var(--rbfw_color_primary);
+    background: color-mix(in srgb, var(--rbfw_color_primary) 8%, white);
+    color: #0f172a;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header:not(.active):hover {
+    background: #f8fafc;
 }
 
 .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header i {
-    color: #94a3b8;
-    font-size: 13px;
     flex-shrink: 0;
-    margin-left: 10px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    color: #fff;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0;
+    transition: transform 0.15s, background 0.15s;
 }
 
 .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header.active i {
-    color: var(--rbfw_color_primary);
-}
-
-.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header:hover {
-    color: var(--rbfw_color_primary);
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    transform: rotate(45deg);
 }
 
 .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_content_wrapper {
@@ -9865,8 +9962,22 @@ i.fas.fa-minus {
    Scoped to .mp_default_theme — no impact on Muffin/Donut
    ==================================================== */
 
+.mp_default_theme .rbfw-features {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.mp_default_theme .rbfw-feature-group {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 10px 0;
+}
+
 .mp_default_theme .rbfw-features h3.rbfw-sub-heading {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 700;
     color: #0f172a;
     margin-bottom: 14px;
@@ -10050,8 +10161,8 @@ i.fas.fa-minus {
 
 .mp_default_theme ul.rbfw-feature-lists {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 18px;
     padding: 0;
     flex-direction: unset;
 }
@@ -10059,41 +10170,38 @@ i.fas.fa-minus {
 .mp_default_theme ul.rbfw-feature-lists li {
     width: 100%;
     display: flex;
-    align-items: center;
-    background: #EEF2FF;
-    border: 1px solid #E8EEF8;
-    border-radius: 10px;
-    padding: 11px 14px;
+    align-items: flex-start;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
     margin-bottom: 0;
-    font-size: 14px;
-    color: #1e293b;
-    transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.mp_default_theme ul.rbfw-feature-lists li:hover {
-    border-color: var(--rbfw_color_primary);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    font-size: 13.5px;
+    color: #334155;
 }
 
 .mp_default_theme ul.rbfw-feature-lists li span {
     display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    color: #1e293b;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 13.5px;
+    color: #334155;
+    line-height: 1.5;
 }
 
 .mp_default_theme ul.rbfw-feature-lists li i {
-    color: var(--rbfw_color_primary);
-    font-size: 16px;
     flex-shrink: 0;
     margin-right: 0;
-}
-
-@media (max-width: 768px) {
-    .mp_default_theme ul.rbfw-feature-lists {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    margin-top: 1px;
+    width: 17px;
+    height: 17px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ecfdf3;
+    color: #16a34a;
+    font-size: 10px;
 }
 
 @media (max-width: 480px) {
@@ -11063,21 +11171,20 @@ i.fas.fa-minus {
 }
 .rbfw_default_hero_overlay {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 52%;
+    inset: 0;
+    width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.70) 55%, transparent 100%);
+    background: linear-gradient(0deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 42%, rgba(0,0,0,0) 72%);
     display: flex;
-    align-items: flex-start;
-    padding: 52px 42px 36px;
+    align-items: flex-end;
+    padding: 40px 48px 44px;
     z-index: 5;
     pointer-events: none;
 }
 .rbfw_default_hero_content {
     pointer-events: all;
     color: #fff;
-    max-width: 380px;
+    max-width: 720px;
     display: flex;
     flex-direction: column;
 }
@@ -11099,11 +11206,11 @@ i.fas.fa-minus {
 .rbfw_default_hero_badge i { font-size: 10px; }
 .rbfw_default_hero_title {
     color: #fff;
-    font-size: 30px;
+    font-size: 36px;
     font-weight: 800;
-    line-height: 1.2;
+    line-height: 1.15;
     margin: 0 0 10px;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.25);
 }
 .rbfw_default_hero_desc {
     color: rgba(255,255,255,0.78);
@@ -11137,35 +11244,34 @@ i.fas.fa-minus {
 .rbfw_default_hero_book_btn {
     display: inline-flex;
     align-items: center;
-    gap: 9px;
-    background: #e03248;
-    color: #fff !important;
+    gap: 8px;
+    background: #fff;
+    color: #0f172a !important;
     font-size: 15px;
-    font-weight: 600;
-    padding: 12px 26px;
-    border-radius: 30px;
+    font-weight: 700;
+    padding: 13px 24px;
+    border-radius: 9px;
     text-decoration: none !important;
     border: none;
     cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,.2);
     transition: background 0.2s, transform 0.15s;
     opacity: 1 !important;
     width: fit-content;
 }
 .rbfw_default_hero_book_btn:hover {
-    background: #b82038;
+    background: #f1f5f9;
     transform: translateY(-1px);
     opacity: 1 !important;
 }
 @media only screen and (max-width: 1100px) {
-    .rbfw_default_hero_overlay { width: 65%; padding: 36px 28px 28px; }
-    .rbfw_default_hero_title  { font-size: 24px; }
+    .rbfw_default_hero_overlay { padding: 36px 28px 28px; }
+    .rbfw_default_hero_title  { font-size: 28px; }
     .rbfw_default_hero_price_amount { font-size: 24px; }
 }
 @media only screen and (max-width: 768px) {
     .rbfw_default_hero_overlay {
-        width: 100%;
-        background: linear-gradient(to top, rgba(10,10,10,0.90) 0%, rgba(10,10,10,0.55) 65%, transparent 100%);
-        align-items: flex-end;
+        background: linear-gradient(0deg, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.55) 65%, transparent 100%);
         padding: 20px 18px;
     }
     .rbfw_default_hero_title  { font-size: 20px; }
