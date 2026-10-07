@@ -740,7 +740,7 @@
 
 					<!-- Time Slot chips: Single Day / Appointment only -->
 					<div class="rbfw-me-fp-field rbfw-me-fp-sd-time-field" style="display:none">
-						<label class="rbfw-me-fp-label"><?php esc_html_e( 'Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<label class="rbfw-me-fp-label"><?php esc_html_e( 'Pickup Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<div class="rbfw-me-fp-chips rbfw-me-fp-sd-time-chips"></div>
 					</div>
 
@@ -887,7 +887,7 @@
 					     duration + pickup date are set (see recalcMi()). -->
 					<div class="rbfw-me-fp-mi-items" style="display:none">
 						<div class="rbfw-me-fp-section-divider"></div>
-						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Items', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<p class="rbfw-me-fp-section-label"><?php esc_html_e( 'Rental Item', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 						<div class="rbfw-me-fp-mi-item-rows"></div>
 					</div>
 

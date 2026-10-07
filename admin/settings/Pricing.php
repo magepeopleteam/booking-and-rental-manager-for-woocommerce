@@ -184,9 +184,13 @@
                     <section class="manage_inventory_as_timely <?php echo esc_attr( $rbfw_item_type === 'appointment' ? 'rbfw_hide hide' : '' ); ?>"<?php echo $rbfw_item_type === 'appointment' ? ' style="display:none !important;"' : ''; ?>>
                         <div>
                             <label>
-								<?php esc_html_e( 'Manage a single-item inventory on an hourly basis.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								<?php esc_html_e( 'Share one stock count across all rental options, based on booking time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <p><?php esc_html_e( 'Enabling this allows you to manage a shared inventory for rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                            <p>
+                                <?php esc_html_e( 'Off: each rental option below has its own separate stock (e.g. "1 Hour Rental" and "Full Day Rental" are tracked independently, even if booked for the same day).', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                <br>
+                                <?php esc_html_e( 'On: all rental options draw from one shared stock count. Two bookings that overlap in time count against the same units — so with 5 units total, only 5 can be booked for any given hour, no matter which option customers choose.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr( $manage_inventory_as_timely ); ?>" <?php checked( $manage_inventory_as_timely, 'on' ); ?> <?php disabled( $rbfw_item_type === 'appointment', true ); ?>>
@@ -203,8 +207,12 @@
                              no save-path changes were needed. -->
                         <section class="rbfw_item_quantiry_duration">
                             <div>
-                                <label><?php esc_html_e( 'Enable duration-based rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <p><?php esc_html_e( 'Enable this option to set a specific time duration.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                                <label><?php esc_html_e( 'Use a fixed start/end time instead of a length of time.', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                <p>
+                                    <?php esc_html_e( 'Off: Customers choose any start time. The rental lasts for the selected duration (e.g., 2 hours).', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    <br>
+                                    <?php esc_html_e( 'On: You set fixed rental time slots, same item you can offer such as Morning: 9 AM–12 PM, Afternoon: 2 PM–6 PM, or Full Day: 9 AM–6 PM. Inventory is managed based on these time slots.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                </p>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr( $enable_specific_duration ); ?>" <?php echo esc_attr( ( $enable_specific_duration == 'on' ) ? 'checked' : '' ); ?>>
@@ -2110,7 +2118,7 @@
                     // which would otherwise make this requirement impossible to satisfy.
                     $time_picker_on = isset( $post_data['rbfw_enable_time_picker'] ) && $post_data['rbfw_enable_time_picker'] === 'yes';
                     if ( $timely && ! $specific && ! $time_picker_on ) {
-                        $errors[] = __( 'Please enable "Enable Time Picker" — it is required when "Manage a single-item inventory on an hourly basis" is enabled.', 'booking-and-rental-manager-for-woocommerce' );
+                        $errors[] = __( 'Please enable "Enable Time Picker" — it is required when "Share one stock count across all rental options, based on booking time" is enabled.', 'booking-and-rental-manager-for-woocommerce' );
                     }
 
                     if ( empty( $rows ) ) {

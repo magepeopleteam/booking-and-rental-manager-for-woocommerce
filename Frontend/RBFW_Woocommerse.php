@@ -643,15 +643,44 @@ if (!class_exists('RBFW_Woocommerce')) {
             $weekly_to_monthly = (float) get_post_meta( $rbfw_id, 'rbfw_mi_weekly_to_monthly_pivot', true );
             $hourly_to_day     = (float) get_post_meta( $rbfw_id, 'rbfw_mi_hourly_to_half_day_pivot', true );
 
+            /*
+             * Cascades through every threshold the duration actually crosses --
+             * mirrors rbfwGetMultipleItemsPivotBilling() in md_script.js (the
+             * customer-facing frontend) and miPivotBilling() in the modern
+             * editor's admin preview exactly. This used to stop after a single
+             * pivot step (e.g. hourly -> daily only), so a duration long enough
+             * to cross two or more thresholds at once (e.g. 200 hours crossing
+             * both the hourly->daily and daily->weekly thresholds) billed at
+             * the wrong tier -- not what the frontend had just quoted the
+             * customer.
+             */
             if ( 'weekly' === $duration_type && $weekly_to_monthly > 0 && $duration_qty >= $weekly_to_monthly ) {
                 $billing['price_type'] = 'monthly';
                 $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 4 ) );
             } elseif ( 'daily' === $duration_type && $daily_to_weekly > 0 && $duration_qty >= $daily_to_weekly ) {
-                $billing['price_type'] = 'weekly';
-                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 7 ) );
+                $weekly_units = max( 1, (int) ceil( $duration_qty / 7 ) );
+                if ( $weekly_to_monthly > 0 && $weekly_units >= $weekly_to_monthly ) {
+                    $billing['price_type'] = 'monthly';
+                    $billing['multiplier'] = max( 1, (int) ceil( $weekly_units / 4 ) );
+                } else {
+                    $billing['price_type'] = 'weekly';
+                    $billing['multiplier'] = $weekly_units;
+                }
             } elseif ( 'hourly' === $duration_type && $hourly_to_day > 0 && $duration_qty >= $hourly_to_day ) {
-                $billing['price_type'] = 'daily';
-                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 24 ) );
+                $daily_units = max( 1, (int) ceil( $duration_qty / 24 ) );
+                if ( $daily_to_weekly > 0 && $daily_units >= $daily_to_weekly ) {
+                    $weekly_units = max( 1, (int) ceil( $daily_units / 7 ) );
+                    if ( $weekly_to_monthly > 0 && $weekly_units >= $weekly_to_monthly ) {
+                        $billing['price_type'] = 'monthly';
+                        $billing['multiplier'] = max( 1, (int) ceil( $weekly_units / 4 ) );
+                    } else {
+                        $billing['price_type'] = 'weekly';
+                        $billing['multiplier'] = $weekly_units;
+                    }
+                } else {
+                    $billing['price_type'] = 'daily';
+                    $billing['multiplier'] = $daily_units;
+                }
             }
 
             return $billing;

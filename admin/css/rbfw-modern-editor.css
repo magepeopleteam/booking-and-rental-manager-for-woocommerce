@@ -966,13 +966,24 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     display: flex;
     flex-direction: column;
     gap: var(--me-space-lg);
-    position: sticky;
-    top: calc(32px + var(--me-header-h) + var(--me-tabs-actual-h) + 20px);
-    max-height: calc(100vh - (32px + var(--me-header-h) + var(--me-tabs-actual-h) + 20px) - 24px);
-    /* The sidebar itself no longer scrolls as one block -- that would also
-       drag the Frontend Preview card's own head out of view. Instead only
-       that card's body scrolls internally; see the rules below. */
-    overflow-y: hidden;
+}
+
+/* Sticky sidebar only while the Pricing tab is active -- that's the only
+   panel with a Frontend Preview card worth keeping in view while scrolling
+   a long form. General/Off Days/Advanced keep the sidebar in normal flow.
+   Scoped to the same >1200px width the layout is a side-by-side row at all
+   (below that .rbfw-me-body stacks into a single column, see the 1200px
+   breakpoint further down) so this never fights that stacked layout. */
+@media screen and (min-width: 1201px) {
+    .rbfw-me-body:has(.rbfw-me-panel.is-active[data-panel="pricing"]) .rbfw-me-sidebar {
+        position: sticky;
+        top: calc(32px + var(--me-header-h) + var(--me-tabs-actual-h) + 20px);
+        max-height: calc(100vh - (32px + var(--me-header-h) + var(--me-tabs-actual-h) + 20px) - 24px);
+        /* The sidebar itself no longer scrolls as one block -- that would
+           also drag the Frontend Preview card's own head out of view.
+           Instead only that card's body scrolls internally; see below. */
+        overflow-y: hidden;
+    }
 }
 
 /* Frontend Preview: head ("Frontend Preview" title + subtitle) stays put,
@@ -2733,6 +2744,28 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     text-transform: uppercase;
     margin: 4px 0 10px;
 }
+
+/* "Options" (Item Variations) — same strong, dark field-label look as
+   "Pickup Date" etc. (.rbfw-me-fp-label) instead of the faint uppercase
+   section-divider treatment the other section labels use. */
+.rbfw-me-fp-variations .rbfw-me-fp-section-label {
+    color: #334155;
+    font-size: 11.5px;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+/* "Rental Option" — same dark color as "Time Slot" (.rbfw-me-fp-label). */
+.rbfw-me-fp-sd-controls .rbfw-me-fp-section-label {
+    color: #334155;
+}
+
+/* "Extra Services" — same strong, dark color as "Options". */
+.rbfw-me-fp-extras .rbfw-me-fp-section-label {
+    color: #334155;
+    letter-spacing: normal;
+    text-transform: none;
+}
 /* Leads each distinct section (Rental Option, Price Breakdown, Options,
    Extra Services) so the preview reads as a sequence of separate steps
    rather than one continuous list of fields. Lives as the first child of
@@ -2892,7 +2925,7 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     border-radius: 0 0 12px 12px;
     padding: 16px;
     background: #fff;
-    margin-bottom: 16px;
+    margin-bottom: 0px;
 }
 .rbfw-me-fp-resort-dates-card.is-mi .rbfw-me-fp-pickup-row {
     flex-wrap: wrap;
@@ -3054,22 +3087,35 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     margin: 10px 0 6px;
 }
 .rbfw-me-fp-variation-group-label:first-child { margin-top: 0; }
+/* Items (Multiple Items): same bordered-card row language as Rental Option
+   and Extra Services, instead of a plain divider-separated list. */
+.rbfw-me-fp-mi-item-rows { display: flex; flex-direction: column; gap: 8px; }
 .rbfw-me-fp-svcrow {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    padding: 8px 0;
-    border-top: 1px solid #F1F5F9;
+    padding: 9px 12px;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
+    background: #fff;
     font-size: 12.5px;
     color: #334155;
+    transition: border-color .15s;
 }
-.rbfw-me-fp-svcrow:first-child { border-top: none; }
-.rbfw-me-fp-svcrow-name { flex: 1; min-width: 0; }
-.rbfw-me-fp-svcrow-price { color: var(--me-muted); font-size: 11.5px; display: block; }
+.rbfw-me-fp-svcrow:hover { border-color: #C7D7FB; }
+.rbfw-me-fp-svcrow-name { flex: 1; min-width: 0; font-weight: 600; color: var(--me-text); }
+.rbfw-me-fp-svcrow-price { color: var(--me-muted); font-size: 11.5px; font-weight: 500; display: block; margin-top: 1px; }
 .rbfw-me-fp-stepper-pill--sm { flex-shrink: 0; }
 .rbfw-me-fp-stepper-pill--sm button { width: 22px; height: 22px; font-size: 13px; }
 .rbfw-me-fp-stepper-pill--sm span { padding: 0 9px; font-size: 12px; }
+
+/* "Items" title — same strong, dark color as "Options"/"Extra Services". */
+.rbfw-me-fp-mi-items .rbfw-me-fp-section-label {
+    color: #334155;
+    letter-spacing: normal;
+    text-transform: none;
+}
 
 .rbfw-me-fp-duration-banner {
     display: inline-flex;
@@ -3310,16 +3356,29 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-fp-variation-pill[disabled] { opacity: .45; cursor: not-allowed; }
 
 /* ── Extra service checkbox rows ─────────────────────────────────── */
+/* Same bordered-card row language as .rbfw-me-fp-optrow (Rental Option),
+   so Extra Services reads as part of the same system instead of a plain
+   list of native checkboxes with no visual weight. */
+.rbfw-me-fp-extras-rows { display: flex; flex-direction: column; gap: 8px; }
 .rbfw-me-fp-svc-check {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 7px 0;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
     font-size: 12.5px;
     color: #334155;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
 }
-.rbfw-me-fp-svc-check input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--me-primary); flex-shrink: 0; }
-.rbfw-me-fp-svc-check label { flex: 1; cursor: pointer; }
+.rbfw-me-fp-svc-check:hover { border-color: #C7D7FB; }
+.rbfw-me-fp-svc-check:has(input:checked) { border-color: var(--me-primary); background: var(--me-primary-soft); }
+.rbfw-me-fp-svc-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--me-primary); flex-shrink: 0; cursor: pointer; }
+.rbfw-me-fp-svc-check label { flex: 1; cursor: pointer; font-weight: 500; }
 .rbfw-me-fp-svc-check strong { font-weight: 700; color: var(--me-text); }
 
 /* ── Fields ─────────────────────────────────────────────────── */
@@ -5931,41 +5990,49 @@ input.rbfw_variation_value.rbfw-var-chip-name {
     padding: 0 !important;
 }
 
-/* Time chip — pill, teal */
+/* Time chip — neutral pill with a circular remove button, matching the
+   Frontend Preview's chip language elsewhere in this editor. */
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .time-slot,
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .time-slot.enabled {
     align-items: center !important;
     background: #fff !important;
-    border: 1.5px solid #93c5e8 !important;
-    border-radius: 20px !important;
-    color: #2ea2cc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 999px !important;
+    color: #1d2327 !important;
     cursor: default !important;
     display: inline-flex !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    gap: 5px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    gap: 7px !important;
     margin: 0 !important;
-    padding: 4px 10px !important;
+    padding: 5px 6px 5px 12px !important;
     white-space: nowrap !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .time-slot-time {
-    color: #2ea2cc !important;
-    font-weight: 500 !important;
+    color: #1d2327 !important;
+    font-weight: 600 !important;
     margin: 0 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .time-slot-remove {
-    background: none !important;
-    color: #6b7790 !important;
+    align-items: center !important;
+    background: #f1f5f9 !important;
+    border-radius: 50% !important;
+    color: #94a3b8 !important;
     cursor: pointer !important;
-    font-size: 14px !important;
+    display: flex !important;
+    font-size: 12px !important;
     font-weight: normal !important;
+    height: 18px !important;
+    justify-content: center !important;
     line-height: 1 !important;
-    transition: color .15s !important;
+    transition: background .15s, color .15s !important;
+    width: 18px !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .time-slot-remove:hover {
+    background: #fef2f2 !important;
     color: #dc2626 !important;
 }
 
@@ -6014,28 +6081,30 @@ input.rbfw_variation_value.rbfw-var-chip-name {
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .add-slot-btn {
-    background: #bdc8d8 !important;
-    border: none !important;
-    border-radius: 6px !important;
+    background: #f8fafc !important;
+    border: 1.5px dashed #cbd5e1 !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    color: #6b7790 !important;
+    color: #94a3b8 !important;
     cursor: not-allowed !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
     height: 38px !important;
     padding: 0 16px !important;
-    transition: background .15s, color .15s !important;
+    transition: background .15s, color .15s, border-color .15s !important;
     white-space: nowrap !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .add-slot-btn:not([disabled]) {
-    background: #2271b1 !important;
-    color: #fff !important;
+    background: #eef3ff !important;
+    border-color: rgba(26,86,219,.35) !important;
+    color: #1a56db !important;
     cursor: pointer !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_bike_car_sd_wrapper .add-slot-btn:not([disabled]):hover {
-    background: #135e96 !important;
+    background: #e3ecff !important;
+    border-color: #1a56db !important;
 }
 
 /* ── mpStyle — Particular date time slots ── */
@@ -6934,36 +7003,43 @@ input.rbfw_variation_value.rbfw-var-chip-name {
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .time-slot.enabled {
     align-items: center !important;
     background: #fff !important;
-    border: 1.5px solid #93c5e8 !important;
-    border-radius: 20px !important;
-    color: #2ea2cc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 999px !important;
+    color: #1d2327 !important;
     cursor: default !important;
     display: inline-flex !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    gap: 5px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    gap: 7px !important;
     margin: 0 !important;
-    padding: 4px 10px !important;
+    padding: 5px 6px 5px 12px !important;
     white-space: nowrap !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .time-slot-time {
-    color: #2ea2cc !important;
-    font-weight: 500 !important;
+    color: #1d2327 !important;
+    font-weight: 600 !important;
     margin: 0 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .time-slot-remove {
-    background: none !important;
-    color: #6b7790 !important;
+    align-items: center !important;
+    background: #f1f5f9 !important;
+    border-radius: 50% !important;
+    color: #94a3b8 !important;
     cursor: pointer !important;
-    font-size: 14px !important;
+    display: flex !important;
+    font-size: 12px !important;
     font-weight: normal !important;
+    height: 18px !important;
+    justify-content: center !important;
     line-height: 1 !important;
-    transition: color .15s !important;
+    transition: background .15s, color .15s !important;
+    width: 18px !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .time-slot-remove:hover {
+    background: #fef2f2 !important;
     color: #dc2626 !important;
 }
 
@@ -7013,28 +7089,30 @@ input.rbfw_variation_value.rbfw-var-chip-name {
 
 /* Disabled = greyed out; active = blue */
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .add-slot-btn {
-    background: #bdc8d8 !important;
-    border: none !important;
-    border-radius: 6px !important;
+    background: #f8fafc !important;
+    border: 1.5px dashed #cbd5e1 !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    color: #6b7790 !important;
+    color: #94a3b8 !important;
     cursor: not-allowed !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
     height: 38px !important;
     padding: 0 16px !important;
-    transition: background .15s, color .15s !important;
+    transition: background .15s, color .15s, border-color .15s !important;
     white-space: nowrap !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .add-slot-btn:not([disabled]) {
-    background: #2271b1 !important;
-    color: #fff !important;
+    background: #eef3ff !important;
+    border-color: rgba(26,86,219,.35) !important;
+    color: #1a56db !important;
     cursor: pointer !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw-mi-time-settings-wrap .add-slot-btn:not([disabled]):hover {
-    background: #135e96 !important;
+    background: #e3ecff !important;
+    border-color: #1a56db !important;
 }
 
 /* ── mpStyle — Particular date time slots ── */
@@ -7851,33 +7929,40 @@ input.rbfw_variation_value.rbfw-var-chip-name {
 .rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .time-slot.enabled {
     align-items: center !important;
     background: #fff !important;
-    border: 1.5px solid #93c5e8 !important;
-    border-radius: 20px !important;
-    color: #2ea2cc !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 999px !important;
+    color: #1d2327 !important;
     display: inline-flex !important;
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    gap: 5px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    gap: 7px !important;
     margin: 0 !important;
-    padding: 4px 10px !important;
+    padding: 5px 6px 5px 12px !important;
     white-space: nowrap !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .time-slot-time {
-    color: #2ea2cc !important;
+    color: #1d2327 !important;
     margin: 0 !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .time-slot-remove {
-    background: none !important;
-    color: #6b7790 !important;
+    align-items: center !important;
+    background: #f1f5f9 !important;
+    border-radius: 50% !important;
+    color: #94a3b8 !important;
     cursor: pointer !important;
-    font-size: 14px !important;
+    display: flex !important;
+    font-size: 12px !important;
+    height: 18px !important;
+    justify-content: center !important;
     line-height: 1 !important;
-    transition: color .15s !important;
+    transition: background .15s, color .15s !important;
+    width: 18px !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .time-slot-remove:hover {
+    background: #fef2f2 !important;
     color: #dc2626 !important;
 }
 
@@ -7924,23 +8009,30 @@ input.rbfw_variation_value.rbfw-var-chip-name {
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .add-slot-btn {
-    background: #bdc8d8 !important;
-    border: none !important;
-    border-radius: 6px !important;
+    background: #f8fafc !important;
+    border: 1.5px dashed #cbd5e1 !important;
+    border-radius: 8px !important;
     box-shadow: none !important;
-    color: #6b7790 !important;
+    color: #94a3b8 !important;
     cursor: not-allowed !important;
-    font-size: 12px !important;
-    font-weight: 600 !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
     height: 38px !important;
     padding: 0 16px !important;
+    transition: background .15s, color .15s, border-color .15s !important;
     white-space: nowrap !important;
 }
 
 .rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .add-slot-btn:not([disabled]) {
-    background: #2271b1 !important;
-    color: #fff !important;
+    background: #eef3ff !important;
+    border-color: rgba(26,86,219,.35) !important;
+    color: #1a56db !important;
     cursor: pointer !important;
+}
+
+.rbfw-me-pricing-classic-wrap .rbfw_general_price_config_wrapper .time-slots-section .add-slot-btn:not([disabled]):hover {
+    background: #e3ecff !important;
+    border-color: #1a56db !important;
 }
 
 /* mpStyle / particular date section inside this time-slots-section */
@@ -10301,13 +10393,10 @@ textarea.rbfw-me-field-invalid {
     }
 
     /* Below 1200px the sidebar stacks under the main column instead of
-       sitting beside it, so sticking it would float it over that stacked
-       content instead of pinning it alongside something — revert to static. */
+       sitting beside it; the sticky rule above is itself scoped to
+       min-width:1201px so it never applies here regardless. */
     .rbfw-me-sidebar {
         width: 100%;
-        position: static;
-        max-height: none;
-        overflow-y: visible;
     }
 
     .rbfw-me-main {

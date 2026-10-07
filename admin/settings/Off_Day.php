@@ -160,6 +160,9 @@
                             <p>
                                 <?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </p>
+                            <p class="description">
+                                <?php esc_html_e( 'Only affects Multiple Day and Resort items — has no effect on Single Day, Appointment, or Multiple Items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </p>
                         </div>
                         <div class="item_stock_quantity">
                             <input type="number" name="rbfw_buffer_time_after" id="rbfw_buffer_time_after" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
@@ -204,6 +207,10 @@
 						<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					</div>
 				</div>
+				<p class="rbfw-me-offday-rules-note">
+					<span class="dashicons dashicons-info-outline"></span>
+					<?php esc_html_e( 'Buffer Time Before applies to every rent type. Buffer Time After (turnaround time) currently only affects Multiple Day and Resort items — it has no effect on Single Day, Appointment, or Multiple Items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</p>
 				<?php
 			}
 
