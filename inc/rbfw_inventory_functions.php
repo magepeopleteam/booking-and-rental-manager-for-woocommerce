@@ -4120,6 +4120,14 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			}
 			$cart_used = 0;
 
+			/* Same Buffer Time After rule as the committed-order count above: a line
+			   blocks the unit until its end + buffer, in either direction. */
+			$buffer_after = (int) get_post_meta( $rbfw_id, 'rbfw_buffer_time_after', true );
+			$req_end_buffered = clone $req_end;
+			if ( $buffer_after > 0 ) {
+				$req_end_buffered->modify( '+' . $buffer_after . ' hours' );
+			}
+
 			foreach ( $sibling_lines as $line ) {
 				if ( ! is_array( $line ) ) {
 					continue;
@@ -4137,7 +4145,10 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 				} catch ( Exception $e ) {
 					continue;
 				}
-				if ( $line_start < $req_end && $req_start < $line_end ) {
+				if ( $buffer_after > 0 ) {
+					$line_end->modify( '+' . $buffer_after . ' hours' );
+				}
+				if ( $line_start < $req_end_buffered && $req_start < $line_end ) {
 					$cart_used += isset( $line['rbfw_item_quantity'] ) ? max( 1, (int) $line['rbfw_item_quantity'] ) : 1;
 				}
 			}

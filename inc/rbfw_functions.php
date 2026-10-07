@@ -1868,6 +1868,18 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         'processing' => 'processing',
         'completed'  => 'completed',
     ];
+
+    /* Buffer Time After: the unit stays unavailable for this many hours after every
+       booking ends (cleaning / turnaround). Applied to both sides of the overlap
+       test: an existing booking blocks until its end + buffer, and the requested
+       booking needs its own end + buffer free, so it can't end right before the
+       next customer's pickup either. */
+    $buffer_after         = (int) get_post_meta( $post_id, 'rbfw_buffer_time_after', true );
+    $request_end_buffered = clone $end_date_time;
+    if ( $buffer_after > 0 ) {
+        $request_end_buffered->modify( '+' . $buffer_after . ' hours' );
+    }
+
     if ( ! empty( $rbfw_inventory ) ) {
         foreach ( $rbfw_inventory as $key => $inventory ) {
             $rbfw_item_quantity = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
@@ -1915,9 +1927,14 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 
 
 
+                if ( $buffer_after > 0 ) {
+                    $date_inventory_end->modify( '+' . $buffer_after . ' hours' );
+                }
+
                 // Treat reservations as half-open intervals [start, end). An item
-                // returned at 10:00 is available to a new customer at 10:00.
-                if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
+                // returned at 10:00 is available to a new customer at 10:00
+                // (or at 10:00 + Buffer Time After, when one is set).
+                if ( $date_inventory_start < $request_end_buffered && $start_date_time < $date_inventory_end ) {
                     $total_booked += $rbfw_item_quantity;
                 }
             }
