@@ -471,6 +471,40 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 			}
 			echo '</div>';
 
+			if ( ! empty( $wc['integrations'] ) ) {
+				echo '<h3 class="rbfw-doc-h3">' . esc_html__( 'Compatible third-party options', self::TD ) . '</h3>';
+				echo '<div class="rbfw-doc-cards">';
+				foreach ( (array) $wc['integrations'] as $integration ) {
+					$requirements = (array) ( isset( $integration['requirements'] ) ? $integration['requirements'] : array() );
+					$test_steps   = (array) ( isset( $integration['test_steps'] ) ? $integration['test_steps'] : array() );
+					$logo         = ! empty( $integration['logo'] ) ? RBFW_PLUGIN_URL . '/' . ltrim( $integration['logo'], '/' ) : '';
+					$search_text  = $integration['name'] . ' ' . $integration['version'] . ' ' . $integration['description'] . ' ' . $integration['limitation'] . ' ' . implode( ' ', $requirements ) . ' ' . implode( ' ', $test_steps );
+					echo '<div' . $this->entry_attrs( $search_text, 'rbfw-doc-card rbfw-doc-integration' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<div class="rbfw-doc-card-head">';
+					if ( $logo ) {
+						echo '<img class="rbfw-doc-integration-logo" src="' . esc_url( $logo ) . '" alt="">';
+					}
+					echo $this->t( $integration['name'] ) . '<span class="rbfw-doc-version">' . $this->t( $integration['version'] ) . '</span></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<p>' . $this->t( $integration['description'] ) . '</p>';
+					echo '<ul class="rbfw-doc-integration-reqs">';
+					foreach ( $requirements as $requirement ) {
+						echo '<li>' . $this->t( $requirement ) . '</li>';
+					}
+					echo '</ul>';
+					echo '<p><strong>' . esc_html__( 'Compatibility boundary:', self::TD ) . '</strong> ' . $this->t( $integration['limitation'] ) . '</p>';
+					echo '<p><strong>' . esc_html__( 'Recommended test:', self::TD ) . '</strong></p><ol class="rbfw-doc-integration-reqs">';
+					foreach ( $test_steps as $test_step ) {
+						echo '<li>' . $this->t( $test_step ) . '</li>';
+					}
+					echo '</ol>';
+					echo '<div class="rbfw-doc-integration-links">';
+					echo '<a class="rbfw-doc-openlink" href="' . esc_url( $integration['docs_url'] ) . '" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-external"></span>' . esc_html__( 'SecureHold documentation', self::TD ) . '</a>';
+					echo '<a class="rbfw-doc-openlink" href="' . esc_url( $integration['support_url'] ) . '" target="_blank" rel="noopener noreferrer"><span class="dashicons dashicons-sos"></span>' . esc_html__( 'SecureHold support', self::TD ) . '</a>';
+					echo '</div></div>';
+				}
+				echo '</div>';
+			}
+
 			echo '<h3 class="rbfw-doc-h3">' . esc_html__( 'Email notifications', self::TD ) . '</h3>';
 			echo '<div class="rbfw-doc-tablewrap"><table class="rbfw-doc-table"><thead><tr><th>' . esc_html__( 'Email', self::TD ) . '</th><th>' . esc_html__( 'Trigger', self::TD ) . '</th><th>' . esc_html__( 'Details', self::TD ) . '</th><th>' . esc_html__( 'Plan', self::TD ) . '</th></tr></thead><tbody>';
 			foreach ( (array) ( isset( $wc['emails'] ) ? $wc['emails'] : array() ) as $em ) {

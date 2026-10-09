@@ -1,3 +1,10 @@
+function rbfwResortDepositQuantity() {
+    if (jQuery('#rbfw_security_deposit_per_quantity').val() !== 'yes') return 1;
+    var rooms = 0;
+    jQuery('.rbfw_room_qty').each(function () { rooms += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+    return rooms;
+}
+
 /* Stock cap reader, shared with md_script.js (which loads first). Defined here
    defensively so this file still reads a cap correctly on its own: an absent or
    blank max means the row does not track stock (no cap), while a literal max="0"
@@ -26,7 +33,7 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
         minDate: 0,
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -82,7 +89,7 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
             // Checkout calendar: on top of the normal off-day disable, block
             // check-in→checkout ranges spanning an off day (rule 3) when the
             // item's off-day blocking toggle is enabled.
-            var base = rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            var base = rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
             if (Array.isArray(base) && !base[0]) {
                 return base;
             }
@@ -280,7 +287,7 @@ function calculateTotalDurationPrice() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
         }
     }
 
@@ -354,7 +361,7 @@ function calculateTotalResortExtraService() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
         }
     }
 
@@ -431,7 +438,7 @@ function calculateTotalManagementPriceResort() {
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
         }
     }
 

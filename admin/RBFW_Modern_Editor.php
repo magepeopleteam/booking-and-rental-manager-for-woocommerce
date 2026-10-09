@@ -887,6 +887,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$rbfw_enable_variations = ( isset( $_POST['rbfw_enable_variations'] ) && $_POST['rbfw_enable_variations'] === 'yes' ) ? 'yes' : 'no';
 			update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 
+			$rbfw_variation_multiply_base = ( isset( $_POST['rbfw_variation_multiply_base'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_variation_multiply_base'] ) ) ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_variation_multiply_base', $rbfw_variation_multiply_base );
+
 			$rbfw_variations_data = [];
 			if ( isset( $_POST['rbfw_variations_data'] ) && is_array( $_POST['rbfw_variations_data'] ) ) {
 				$rbfw_variations_data = rbfw_clean_variations_data( RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) ) );
@@ -927,6 +930,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			update_post_meta( $post_id, 'rbfw_security_deposit_type', $deposit_type );
 			$deposit_amount = isset( $_POST['rbfw_security_deposit_amount'] ) ? absint( $_POST['rbfw_security_deposit_amount'] ) : 0;
 			update_post_meta( $post_id, 'rbfw_security_deposit_amount', $deposit_amount );
+			$deposit_per_quantity = ( isset( $_POST['rbfw_security_deposit_per_quantity'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_per_quantity'] ) ) ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_security_deposit_per_quantity', $deposit_per_quantity );
 
 			/* Front-end Display Settings enable toggle */
 			$frontend_display_enable = ( isset( $_POST['rbfw_enable_frontend_display'] ) && $_POST['rbfw_enable_frontend_display'] === 'yes' ) ? 'yes' : 'no';
@@ -962,12 +967,34 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				update_post_meta( $post_id, 'rbfw_releted_rbfw', $related );
 			}
 
-			/* Tax */
-			if ( isset( $_POST['_tax_status'] ) ) {
-				update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
+			/* Tax.
+			   With the Tax Settings card switched off the item carries no tax choice at all:
+			   the collapsed section still posts its selects, so the stored values are dropped
+			   rather than kept as invisible leftovers. The item then follows WooCommerce's own
+			   default (taxable) — to charge no tax, switch the card on and pick Tax Status =
+			   None. */
+			if ( 'yes' === $tax_settings_enable ) {
+				if ( isset( $_POST['_tax_status'] ) ) {
+					update_post_meta( $post_id, '_tax_status', sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) );
+				}
+				if ( isset( $_POST['_tax_class'] ) ) {
+					update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+				}
+			} else {
+				delete_post_meta( $post_id, '_tax_status' );
+				delete_post_meta( $post_id, '_tax_class' );
 			}
-			if ( isset( $_POST['_tax_class'] ) ) {
-				update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
+			/* WooCommerce taxes the hidden linked product, and this save's save_post sync ran
+			   (inside wp_update_post above) before the tax meta was written — mirror the
+			   resolved value now so the product never lags one save behind the item. */
+			$tax_product_id = (int) get_post_meta( $post_id, 'link_wc_product', true );
+			if ( $tax_product_id && 'product' === get_post_type( $tax_product_id ) ) {
+				$tax = rbfw_resolve_item_tax( $post_id );
+				update_post_meta( $tax_product_id, '_tax_status', $tax['status'] );
+				update_post_meta( $tax_product_id, '_tax_class', $tax['class'] );
+				if ( function_exists( 'wc_delete_product_transients' ) ) {
+					wc_delete_product_transients( $tax_product_id );
+				}
 			}
 
 			/* Off Day Settings */
@@ -1214,7 +1241,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_item_quantity', 'rbfw_enable_md_type_item_qty', 'rbfw_enable_extra_service_qty',
 				'rbfw_item_stock_quantity', 'stock_manage_on_return_date', 'rbfw_enable_variations',
 				'rbfw_enable_security_deposit', 'rbfw_security_deposit_type',
-				'rbfw_security_deposit_amount', 'rbfw_security_deposit_label',
+				'rbfw_security_deposit_amount', 'rbfw_security_deposit_label', 'rbfw_security_deposit_per_quantity',
 				'rbfw_enable_faq_content', 'rbfw_enable_term_content', 'rbfw_item_terms_conditions',
 				'rbfw_enable_pick_point',
 				'rbfw_enable_additional_gallary',

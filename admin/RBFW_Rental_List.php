@@ -29,6 +29,22 @@ if (!class_exists('RBFW_Rental_List')) {
             add_filter('parent_file', [$this, 'highlight_menu']);
             add_filter('submenu_file', [$this, 'highlight_submenu']);
             add_filter('admin_title', [$this, 'admin_title'], 10, 2);
+            add_action('load-admin_page_' . self::PAGE_SLUG, [$this, 'set_page_title']);
+        }
+
+        /**
+         * Give the parent-less page a title before admin-header.php reads it.
+         *
+         * WordPress cannot look up a title for a page registered without a parent,
+         * so admin-header.php passed null to strip_tags() (PHP 8.1+ deprecation).
+         * admin_title() still decides the final browser title.
+         */
+        public function set_page_title()
+        {
+            global $title;
+            if (empty($title)) {
+                $title = self::cpt_label() . ' ' . esc_html__('List', 'booking-and-rental-manager-for-woocommerce');
+            }
         }
 
         /**

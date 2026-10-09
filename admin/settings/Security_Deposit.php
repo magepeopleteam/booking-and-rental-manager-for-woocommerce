@@ -46,6 +46,7 @@
                 $rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
                 $rbfw_security_deposit_type   = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
                 $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : 0;
+                $per_quantity = 'yes' === get_post_meta( $post_id, 'rbfw_security_deposit_per_quantity', true );
                 ?>
                 <div class="rbfw_security_deposit_table <?php echo esc_attr( ( $rbfw_enable_security_deposit == 'yes' ) ? 'show' : 'hide' ); ?>">
                     <section>
@@ -75,6 +76,7 @@
                                             <option value="fixed_amount" <?php selected( $rbfw_security_deposit_type, 'fixed_amount' ); ?>><?php esc_html_e( 'Fixed Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                                         </select>
                                         <input type="number" name="rbfw_security_deposit_amount" value="<?php echo esc_attr( $rbfw_security_deposit_amount ); ?>" placeholder="<?php esc_attr_e('Enter Amount', 'booking-and-rental-manager-for-woocommerce'); ?>"/>
+                                        <label><input type="checkbox" name="rbfw_security_deposit_per_quantity" value="yes" <?php checked( $per_quantity ); ?> /> <?php esc_html_e( 'Multiply fixed deposit by booked quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -102,6 +104,7 @@
 				$type   = get_post_meta( $post_id, 'rbfw_security_deposit_type',   true ) ?: 'percentage';
 				$amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ?: 0;
 				$label  = get_post_meta( $post_id, 'rbfw_security_deposit_label',  true ) ?: 'Security Deposit';
+				$per_quantity = 'yes' === get_post_meta( $post_id, 'rbfw_security_deposit_per_quantity', true );
 				?>
 				<div class="rbfw-me-field">
 					<label class="rbfw-me-field__label"><?php esc_html_e( 'Security Deposit Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
@@ -119,6 +122,9 @@
 						<label class="rbfw-me-field__label"><?php esc_html_e( 'Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<input class="rbfw-me-input" type="number" min="0" name="rbfw_security_deposit_amount" value="<?php echo esc_attr( $amount ); ?>" placeholder="0" />
 					</div>
+				</div>
+				<div class="rbfw-me-field">
+					<label class="rbfw-me-field__label"><input type="checkbox" name="rbfw_security_deposit_per_quantity" value="yes" <?php checked( $per_quantity ); ?> /> <?php esc_html_e( 'Multiply fixed deposit by booked quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 				</div>
 				<?php
 			}
@@ -148,10 +154,12 @@
 					$rbfw_security_deposit_type   = isset( $_POST['rbfw_security_deposit_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_type'] ) ) : 'percentage';
 					$rbfw_security_deposit_amount = isset( $_POST['rbfw_security_deposit_amount'] ) ? intval( wp_unslash( $_POST['rbfw_security_deposit_amount'] ) ) : 0;
 					$rbfw_security_deposit_label  = isset( $_POST['rbfw_security_deposit_label'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_label'] ) ) : 'Security Deposit';
+					$per_quantity = isset( $_POST['rbfw_security_deposit_per_quantity'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_per_quantity'] ) ) ? 'yes' : 'no';
 					update_post_meta( $post_id, 'rbfw_enable_security_deposit', $rbfw_enable_security_deposit );
 					update_post_meta( $post_id, 'rbfw_security_deposit_label', $rbfw_security_deposit_label );
 					update_post_meta( $post_id, 'rbfw_security_deposit_type', $rbfw_security_deposit_type );
 					update_post_meta( $post_id, 'rbfw_security_deposit_amount', $rbfw_security_deposit_amount );
+					update_post_meta( $post_id, 'rbfw_security_deposit_per_quantity', $per_quantity );
 				}
 			}
 		}

@@ -130,14 +130,21 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 			if ( ! self::has_valid_selection( $item_type, $cart_data ) ) {
 				return new WP_Error( 'rbfw_invalid_booking_selection', esc_html__( 'Please choose valid rental dates and quantities before booking.', 'booking-and-rental-manager-for-woocommerce' ) );
 			}
+			$start_datetime = isset( $cart_data['rbfw_start_datetime'] ) ? $cart_data['rbfw_start_datetime'] : '';
+			$end_datetime   = isset( $cart_data['rbfw_end_datetime'] ) ? $cart_data['rbfw_end_datetime'] : '';
+			if ( function_exists( 'rbfw_global_off_dates_overlap' )
+				&& $start_datetime
+				&& rbfw_global_off_dates_overlap( $start_datetime, $end_datetime ) ) {
+				return new WP_Error( 'rbfw_global_off_date', esc_html__( 'The selected dates include a global off date. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ) );
+			}
 
 			$subtotal = max( 0, (float) $cart_data['rbfw_tp'] );
 
-			// The historical cart builder includes deposits in the resort total, while the
-			// other item types carry an additional deposit as metadata. Match the public total
-			// without double-charging Pro's "included in price" deposit policy.
+			// The cart builder carries an additional deposit as metadata for every item type
+			// (WooCommerce charges it as a separate cart fee). Match the public total without
+			// double-charging Pro's "included in price" deposit policy.
 			$deposit_mode = isset( $cart_data['rbfw_security_deposit_price_mode'] ) ? sanitize_key( $cart_data['rbfw_security_deposit_price_mode'] ) : 'additional';
-			if ( 'resort' !== $item_type && 'included' !== $deposit_mode && ! empty( $cart_data['security_deposit_amount'] ) ) {
+			if ( 'included' !== $deposit_mode && ! empty( $cart_data['security_deposit_amount'] ) ) {
 				$subtotal += max( 0, (float) $cart_data['security_deposit_amount'] );
 			}
 

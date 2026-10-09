@@ -286,6 +286,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+					<input type="hidden" id="rbfw_global_offday_range" value='<?php echo esc_attr( rbfw_global_off_dates() ); ?>'>
                     <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
 
 
@@ -722,6 +723,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
                 <input type="hidden" name="rbfw_security_deposit_amount" id="rbfw_security_deposit_amount"  value="<?php echo esc_attr($rbfw_security_deposit_amount); ?>">
+                <input type="hidden" id="rbfw_security_deposit_per_quantity" value="<?php echo esc_attr( get_post_meta( $rbfw_id, 'rbfw_security_deposit_per_quantity', true ) ); ?>">
                 <input type="hidden" id="rbfw_mi_hourly_to_half_day_pivot" value="<?php echo esc_attr($rbfw_mi_hourly_to_half_day_pivot); ?>">
                 <input type="hidden" id="rbfw_mi_half_day_to_daily_pivot" value="<?php echo esc_attr($rbfw_mi_half_day_to_daily_pivot); ?>">
                 <input type="hidden" id="rbfw_mi_daily_to_weekly_pivot" value="<?php echo esc_attr($rbfw_mi_daily_to_weekly_pivot); ?>">
@@ -792,6 +794,5 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
         </form>
     </div>
 </div>
-
 
 

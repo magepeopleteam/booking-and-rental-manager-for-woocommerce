@@ -3062,6 +3062,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
     text-decoration: none;
 }
 
+/* Past or inside the buffer window: not bookable, so it must look unavailable. */
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable {
     width: 31.33%;
     text-align: center;
@@ -3071,6 +3072,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
     opacity: 1;
     font-size: 14px;
     text-decoration: none;
+    cursor: not-allowed;
 }
 
 
@@ -3146,16 +3148,19 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     border-radius: 10px;
 }
 
+/* Same greyed, struck-through look as a sold-out slot. */
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable span.rbfw_bikecarsd_time_span {
     display: block;
     padding: 5px 10px;
     text-transform: none;
-    border: 1px solid #e1e1e1;
-    color: #000;
-    font-size: 1rem;
-    background-color: #fff;
-    height:40px;
-    border-radius:5px;
+    border: 1px solid #ddd;
+    color: #999;
+    font-size: 14px;
+    background-color: #f0f0f0;
+    height: 35px;
+    border-radius: 5px;
+    text-decoration: line-through;
+    cursor: not-allowed;
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled span.rbfw_bikecarsd_time_span {
@@ -9205,7 +9210,7 @@ i.fas.fa-minus {
 #rbfw_add_meta_box .mds_for_mds input[type=number]{
     width: 100%;
 }
-.item-content.rbfw-costing .rbfw_pricing_applied, .rbfw_room_price_summary .rbfw_pricing_applied{
+.item-content.rbfw-costing .rbfw_pricing_applied, .item-content.rbfw-costing .rbfw-costing-note, .rbfw_room_price_summary .rbfw_pricing_applied{
     font-size: 10px;
     color: var(--rbfw_color_primary);
 }
@@ -15151,4 +15156,65 @@ button.rbfw_resort_book_now_btn.rbfw_disabled_button,
     }
     .rbfw_rent_list_style_list .rbfw_rent_list_lists_info,
     .rbfw_rent_list_style_list .rbfw_inner_details { padding: 14px 16px; }
+}
+
+/* Variation value prices (Inventory tab): the flat "Any duration" surcharge
+   plus one input per duration the item prices by. Kept compact so the value
+   row stays readable when an item offers several rent types. */
+.rbfw_variation_prices {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 190px;
+}
+
+.rbfw_variation_price_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+}
+
+.rbfw_variation_price_row span {
+    font-size: 12px;
+    line-height: 1.3;
+    color: #50575e;
+    white-space: nowrap;
+}
+
+.rbfw_variation_price_row input[type="number"] {
+    width: 96px;
+    max-width: 96px;
+    flex: 0 0 96px;
+}
+
+/* SecureHold WP: security deposit held on the card instead of charged */
+.rbfw-securehold-deposit-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    background: #f0f6ff;
+    border: 1px solid #cfe0fb;
+    border-radius: 6px;
+    color: #1e3a66;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.rbfw-securehold-deposit-note .fa-lock {
+    margin-top: 2px;
+    color: #3157b7;
+}
+
+.rbfw-securehold-deposit-note .woocommerce-Price-amount {
+    font-weight: 600;
+}
+
+.rbfw-deposit-notices .rbfw-securehold-deposit-note,
+.rbfw-securehold-deposit-note.rbfw-deposit-notice-held,
+.rbfw-securehold-deposit-note.rbfw-deposit-notice-charged {
+    margin: 12px 0 0;
 }

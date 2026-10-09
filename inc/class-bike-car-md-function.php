@@ -107,6 +107,24 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $item_quantity = isset($_POST['item_quantity']) ? absint($_POST['item_quantity']) : 0;
+
+            /* "Bill base price per variation unit": the variation steppers replace the
+               Quantity row, so the units rented are the sum of the chosen variation
+               quantities. Same rule the add-to-cart builder applies, so the live total
+               and the cart cannot disagree. */
+            $variation_units_billed = 0;
+            if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) && function_exists( 'rbfw_variations_multiply_base' ) && rbfw_variations_multiply_base( $post_id ) ) {
+                $variation_units_billed = rbfw_variation_units( $post_id, wp_unslash( $_POST['rbfw_variation_qty'] ) );
+                if ( $variation_units_billed > 0 ) {
+                    $item_quantity = $variation_units_billed;
+                }
+            }
+
+            // Price text for the summary notes: wc_price() markup flattened to "$6.00".
+            $note_price = static function ( $amount ) {
+                return html_entity_decode( wp_strip_all_tags( wc_price( $amount ) ), ENT_QUOTES, 'UTF-8' );
+            };
+
             // Note: the multiplier must apply to the whole ternary result. The old
             // code (`isset(...) ? floatval(...) : '' * $qty`) fataled on PHP 8
             // ("int * string") whenever rbfw_service_price was not posted.
@@ -115,9 +133,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'no';
 
-            // Per-value variation surcharge for the live multi-day total.
+            /* Per-value variation surcharge for the live multi-day total. Priced
+               against the booked duration units (months/weeks/days/hours) so a
+               value charging per day bills per day; values with no per-duration
+               price keep their single flat surcharge. Same call the add-to-cart
+               path makes, so the preview and the cart cannot disagree. */
             $rbfw_variation_surcharge = 0.0;
-            if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) && function_exists( 'rbfw_get_variation_price_for_value' ) ) {
+            $variation_notes          = array();
+            if ( isset( $_POST['rbfw_variation_qty'] ) && is_array( $_POST['rbfw_variation_qty'] ) && function_exists( 'rbfw_get_variation_md_surcharge' ) ) {
                 foreach ( wp_unslash( $_POST['rbfw_variation_qty'] ) as $field_id => $values ) {
                     if ( ! is_array( $values ) ) {
                         continue;
@@ -128,8 +151,17 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         if ( '' === $value_name || $qty <= 0 ) {
                             continue;
                         }
-                        $unit_price                = rbfw_get_variation_price_for_value( $post_id, $value_name );
+                        $unit_price                = rbfw_get_variation_md_surcharge( $post_id, $value_name, $pickup_datetime, $dropoff_datetime, $rbfw_enable_time_slot );
                         $rbfw_variation_surcharge += $unit_price * $qty;
+                        if ( $unit_price > 0 ) {
+                            $variation_notes[] = sprintf(
+                                /* translators: 1: variation value name, 2: quantity chosen, 3: price of one unit for the booked duration. */
+                                __( '%1$s: %2$d × %3$s', 'booking-and-rental-manager-for-woocommerce' ),
+                                $value_name,
+                                $qty,
+                                $note_price( $unit_price )
+                            );
+                        }
                     }
                 }
             }
@@ -151,10 +183,21 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $duration_price        = $duration_price_per_unit * $effective_quantity;
             $duration_price_display = $duration_price;
 
+            // Shown beside "Duration Cost" only when the price really was multiplied by the variation units.
+            $duration_note = '';
+            if ( $variation_units_billed > 1 ) {
+                $duration_note = sprintf(
+                    /* translators: 1: number of units rented, 2: base price of one unit for the booked duration. */
+                    _n( '(%1$d unit × %2$s each)', '(%1$d units × %2$s each)', $variation_units_billed, 'booking-and-rental-manager-for-woocommerce' ),
+                    $variation_units_billed,
+                    $note_price( $duration_price_per_unit )
+                );
+            }
+
             $total_days = $duration_price_info['total_days'];
             $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):0;
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_management_price + (float)$rbfw_service_price + (float)$rbfw_variation_surcharge;
-            $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
+            $security_deposit = rbfw_security_deposit($post_id,$sub_total_price,$item_quantity);
 
             $pricing_applied = isset( $duration_price_info['pricing_applied'] ) ? $duration_price_info['pricing_applied'] : 'No';
 
@@ -234,6 +277,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'variation_price' => $rbfw_variation_surcharge,
                 'variation_price_html' => wc_price($rbfw_variation_surcharge),
+                'variation_note' => $variation_notes ? '(' . implode( '; ', $variation_notes ) . ')' : '',
+                'duration_note' => $duration_note,
                 'sub_total_price_html' => wc_price($sub_total_price),
                 'discount' => $discount_amount,
                 'discount_type' => $discount_type,
@@ -303,7 +348,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $max_available_qty = rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
 
-            $security_deposit = rbfw_security_deposit($post_id,$rbfw_multi_item_price);
+            $deposit_quantity = isset( $_POST['deposit_quantity'] ) ? absint( wp_unslash( $_POST['deposit_quantity'] ) ) : 0;
+            $security_deposit = rbfw_security_deposit($post_id,$rbfw_multi_item_price,$deposit_quantity);
 
             echo wp_json_encode( array(
                 'duration_price' => '',

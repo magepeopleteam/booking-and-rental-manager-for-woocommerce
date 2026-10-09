@@ -320,12 +320,22 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                                                 $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
                                                 $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
                                                 $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
+                                                // Weekly / monthly seasonal rates: listed only when that duration rate is on and the season sets one.
+                                                $sp_price_w = ( $rbfw_enable_weekly_rate == 'yes' && isset( $sp['rbfw_sp_price_w'] ) && is_numeric( $sp['rbfw_sp_price_w'] ) && (float) $sp['rbfw_sp_price_w'] > 0 ) ? $sp['rbfw_sp_price_w'] : '';
+                                                $sp_price_m = ( $rbfw_enable_monthly_rate == 'yes' && isset( $sp['rbfw_sp_price_m'] ) && is_numeric( $sp['rbfw_sp_price_m'] ) && (float) $sp['rbfw_sp_price_m'] > 0 ) ? $sp['rbfw_sp_price_m'] : '';
+                                                $sp_cols    = 1 + ( $rbfw_enable_time_picker == 'yes' ? 1 : 0 ) + ( '' !== $sp_price_w ? 1 : 0 ) + ( '' !== $sp_price_m ? 1 : 0 );
                                             ?>
-                                                <tr><td <?php echo ( $rbfw_enable_time_picker == 'yes' ) ? 'colspan="2"' : ''; ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $start_date ) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $end_date ) ); ?></strong></td></tr>
+                                                <tr><td <?php echo ( $sp_cols > 1 ) ? 'colspan="' . esc_attr( $sp_cols ) . '"' : ''; ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $start_date ) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format( $end_date ) ); ?></strong></td></tr>
                                                 <tr>
                                                     <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_d ), rbfw_allowed_html() ); ?></td>
                                                     <?php if ( $rbfw_enable_time_picker == 'yes' ) : ?>
                                                     <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_h ), rbfw_allowed_html() ); ?></td>
+                                                    <?php endif; ?>
+                                                    <?php if ( '' !== $sp_price_w ) : ?>
+                                                    <td><strong><?php esc_html_e( 'Weekly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_w ), rbfw_allowed_html() ); ?></td>
+                                                    <?php endif; ?>
+                                                    <?php if ( '' !== $sp_price_m ) : ?>
+                                                    <td><strong><?php esc_html_e( 'Monthly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo wp_kses( wc_price( $sp_price_m ), rbfw_allowed_html() ); ?></td>
                                                     <?php endif; ?>
                                                 </tr>
                                             <?php endforeach; ?>
@@ -463,6 +473,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+					<input type="hidden" id="rbfw_global_offday_range" value='<?php echo esc_attr( rbfw_global_off_dates() ); ?>'>
                     <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
 
                     <?php if($rbfw_enable_start_end_date == 'yes'){ ?>
@@ -764,6 +775,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                                     <span class="rbfw_pricing_applied mds">
                                         (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
                                     </span>
+                                    <span class="rbfw-costing-note rbfw-duration-note"></span>
                                 </span>
                                 <span class="price-figure" data-price="">
                                 </span>
@@ -776,7 +788,10 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                             </li>
 
                             <li class="variation-costing rbfw-cond" style="display:none;">
-                                <?php esc_html_e('Variations','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span>
+                                    <?php esc_html_e('Variations','booking-and-rental-manager-for-woocommerce'); ?>
+                                    <span class="rbfw-costing-note rbfw-variation-note"></span>
+                                </span>
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
@@ -882,6 +897,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
                 <input type="hidden" name="rbfw_security_deposit_amount" id="rbfw_security_deposit_amount"  value="<?php echo esc_attr($rbfw_security_deposit_amount); ?>">
+                <input type="hidden" id="rbfw_security_deposit_per_quantity" value="<?php echo esc_attr( get_post_meta( $rbfw_id, 'rbfw_security_deposit_per_quantity', true ) ); ?>">
 
                 <input type="hidden" name="rbfw_discount_number" id="rbfw_discount_number"  value="">
                 <input type="hidden" name="rbfw_discount_type" id="rbfw_discount_type"  value="">
@@ -891,6 +907,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
+                <input type="hidden" id="rbfw_variation_multiply_base" value="<?php echo esc_attr( rbfw_variations_multiply_base( $rbfw_id ) ? 'yes' : 'no' ); ?>">
                 <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_attr($input_stock_quantity); ?>">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
                 <input type="hidden" name="total_days" id="rbfw_total_days" value="0">
@@ -956,5 +973,4 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
         </form>
     </div>
 </div>
-
 

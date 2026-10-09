@@ -18,6 +18,8 @@ require_once RBFW_PLUGIN_DIR . '/admin/admin.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Modern_Editor.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_WC_Payment_Manager.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Payment_Settings.php';
+require_once RBFW_PLUGIN_DIR . '/inc/RBFW_SecureHold_Compat.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Integrations_Settings.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Admin_Payment_Notice.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Pro_Features_Notice.php';
 require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Category_Manager.php';
@@ -183,5 +185,4 @@ function rbfw_payment_systems_free(){
 
     return $ps;
 }
-
 

@@ -136,6 +136,12 @@
 }
 .rbfw-doc-card-head { font-weight: 700; font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .rbfw-doc-card p { margin: 6px 0 0; color: #4b5563; font-size: 13px; line-height: 1.5; }
+.rbfw-doc-version { background: #eef2ff; border-radius: 999px; color: #3730a3; font-size: 11px; font-weight: 700; padding: 3px 8px; }
+.rbfw-doc-integration { grid-column: 1 / -1; }
+.rbfw-doc-integration-logo { border-radius: 6px; height: 30px; object-fit: contain; width: 30px; }
+.rbfw-doc-integration-reqs { color: #4b5563; font-size: 13px; line-height: 1.5; margin: 10px 0 0 18px; }
+.rbfw-doc-integration-reqs li { margin-bottom: 4px; }
+.rbfw-doc-integration-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 12px; }
 
 /* ---------- Tables ---------- */
 .rbfw-doc-tablewrap { overflow-x: auto; border: 1px solid var(--rbfw-doc-line); border-radius: 12px; background: var(--rbfw-doc-card); }

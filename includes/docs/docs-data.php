@@ -61,7 +61,7 @@ return array(
 		'steps' => array(
 			array(
 				'title' => 'Run the Quick Setup',
-				'url'   => $rbfw_item_base . '&page=rbfw_quick_setup',
+				'url'   => 'admin.php?page=rbfw_onboarding',
 				'body'  => 'Open Rent Item → Quick Setup. It creates the required pages (search, cart, checkout, thank-you) and lets you pick WooCommerce or Standalone mode. This is the fastest way to a working store.',
 			),
 			array(
@@ -116,7 +116,7 @@ return array(
 			array( 'title' => 'Add New',          'slug' => 'post-new.php?post_type=rbfw_item',            'cap' => 'edit_posts',    'plan' => 'free', 'desc' => 'Create an item in the modern step-by-step editor.' ),
 			array( 'title' => 'Categories',       'slug' => 'edit-tags.php?taxonomy=rbfw_item_caregory&post_type=rbfw_item', 'cap' => 'manage_categories', 'plan' => 'free', 'desc' => 'Rental Types / categories (drives the search "type" filter).' ),
 			array( 'title' => 'Locations',        'slug' => 'edit-tags.php?taxonomy=rbfw_item_location&post_type=rbfw_item',  'cap' => 'manage_categories', 'plan' => 'free', 'desc' => 'Pickup / drop-off locations.' ),
-			array( 'title' => 'Quick Setup',      'slug' => $rbfw_item_base . '&page=rbfw_quick_setup',    'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Guided first-run wizard (creates pages, picks mode).' ),
+			array( 'title' => 'Quick Setup',      'slug' => 'admin.php?page=rbfw_onboarding',    'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Guided first-run wizard (creates pages, picks mode).' ),
 			array( 'title' => 'Time Slots',       'slug' => $rbfw_item_base . '&page=rbfw_time_slots',     'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Reusable time-slot presets for hourly/appointment items.' ),
 			array( 'title' => 'Inventory',        'slug' => $rbfw_item_base . '&page=rbfw_inventory',      'cap' => 'manage_options', 'plan' => 'free', 'desc' => 'Stock/availability grid by item, location and date.' ),
 			array( 'title' => 'Coupons',          'slug' => 'edit.php?post_type=rbfw_coupon',              'cap' => 'edit_posts',    'plan' => 'free', 'desc' => 'Discount/coupon engine (works in WooCommerce and Standalone).' ),
@@ -343,6 +343,32 @@ return array(
 				'title' => 'Standalone gateways',
 				'plan'  => 'pro',
 				'body'  => 'Stripe and PayPal gateways for the Standalone checkout are provided by Pro (inc/gateways). The Standalone currency format is set in Settings → Checkout Page.',
+			),
+		),
+		'integrations' => array(
+			array(
+				'name'        => 'SecureHold WP',
+				'version'     => '3.4.11 or later',
+				'logo'        => 'assets/images/securehold-icon.png',
+				'description' => 'A compatible third-party option for merchants who want to use a separate Stripe authorization hold instead of charging and later refunding a fixed WpRently security deposit.',
+				'requirements' => array(
+					'WooCommerce checkout mode and the official WooCommerce Stripe Gateway.',
+					'A linked WooCommerce rental product with a fixed WpRently security deposit.',
+					'SecureHold\'s own Stripe API keys, in the same test/live mode as the Stripe gateway.',
+					'The MagePeople compatibility option enabled in SecureHold.',
+					'SecureHold\'s Default Hold Amount set to 0, so it only holds fixed WpRently deposits.',
+					'A Stripe authorization duration that suits the merchant\'s rental period.',
+				),
+				'limitation'  => 'Percentage-based and other unsupported WpRently deposits continue through the normal WpRently checkout flow. SecureHold controls the compatible fixed deposit hold and prevents that amount from also being added to the WooCommerce payable total. Until every requirement is met, and always in the Standalone checkout, WpRently keeps charging the deposit as part of the booking total.',
+				'test_steps'  => array(
+					'Enable Stripe test mode in both SecureHold and the official WooCommerce Stripe Gateway.',
+					'Link one WooCommerce rental product with a €100 rental price and a fixed €500 WpRently security deposit.',
+					'Place a booking through the normal WooCommerce checkout and confirm the customer pays €100.',
+					'Confirm SecureHold creates a separate €500 Stripe authorization and the deposit is not added to the WooCommerce payable total.',
+					'Confirm a percentage-based or otherwise unsupported deposit continues through the normal WpRently checkout flow, with no SecureHold hold added.',
+				),
+				'docs_url'    => 'https://secureholdwp.com/docs/',
+				'support_url' => 'https://secureholdwp.com/support/',
 			),
 		),
 		'emails' => array(

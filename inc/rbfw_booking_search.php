@@ -91,6 +91,11 @@ function rbfw_booking_search_item_type_label( $rbfw_id, $item_type ) {
  * @return bool true when the range is blocked by off day/date rules.
  */
 function rbfw_booking_search_range_blocked( $rbfw_id, $start_ts, $end_ts ) {
+	if ( function_exists( 'rbfw_global_off_dates_overlap' )
+		&& rbfw_global_off_dates_overlap( gmdate( 'Y-m-d', $start_ts ), gmdate( 'Y-m-d', $end_ts ) ) ) {
+		return true;
+	}
+
 	$off_days_raw = get_post_meta( $rbfw_id, 'rbfw_off_days', true );
 	$off_days     = array();
 	if ( is_array( $off_days_raw ) ) {

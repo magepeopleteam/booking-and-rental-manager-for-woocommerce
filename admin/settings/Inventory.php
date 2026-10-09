@@ -43,6 +43,61 @@
 				<?php
 			}
 
+			/**
+			 * Render the Price cell for one variation value.
+			 *
+			 * A variation surcharge is always EXTRA on top of the item's own
+			 * duration price. Items that price per duration (Single Day rent
+			 * types, or the multi-day rate types that are switched on) get one
+			 * optional input per duration, so a value can cost e.g. 1000 per
+			 * full day. Only enabled durations are offered. Existing non-zero
+			 * flat prices remain editable as a legacy fallback, so opening and
+			 * saving an older item cannot silently change its booking charges.
+			 *
+			 * @param int   $post_id     rbfw_item id.
+			 * @param int   $row_index   Variation (field) index.
+			 * @param int   $value_index Value index inside that variation.
+			 * @param array $value       Stored value row ( name/quantity/price/prices ).
+			 * @return void
+			 */
+			public function variation_price_cell( $post_id, $row_index, $value_index, $value = array() ) {
+				$options = function_exists( 'rbfw_get_variation_price_options' ) ? rbfw_get_variation_price_options( $post_id ) : array();
+				$stored  = ( is_array( $value ) && ! empty( $value['prices'] ) && is_array( $value['prices'] ) ) ? $value['prices'] : array();
+				$flat    = ( is_array( $value ) && isset( $value['price'] ) ) ? $value['price'] : '';
+				$base    = 'rbfw_variations_data[' . (int) $row_index . '][value][' . (int) $value_index . ']';
+				?>
+                <div class="rbfw_variation_prices">
+                    <?php if ( empty( $options ) || (float) $flat > 0 ) : ?>
+                    <label class="rbfw_variation_price_row">
+                        <span><?php echo empty( $options ) ? esc_html__( 'Price', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'Legacy flat price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <input type="number" step="0.01" min="0" name="<?php echo esc_attr( $base ); ?>[price]" value="<?php echo esc_attr( $flat ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                    </label>
+                    <?php else : ?>
+                        <input type="hidden" name="<?php echo esc_attr( $base ); ?>[price]" value="<?php echo esc_attr( $flat ); ?>">
+                    <?php endif; ?>
+					<?php foreach ( $options as $duration_key => $duration_label ) : ?>
+                        <label class="rbfw_variation_price_row">
+                            <span><?php echo esc_html( $duration_label ); ?></span>
+                            <input type="number" step="0.01" min="0" name="<?php echo esc_attr( $base ); ?>[prices][<?php echo esc_attr( $duration_key ); ?>]" value="<?php echo esc_attr( isset( $stored[ $duration_key ] ) ? $stored[ $duration_key ] : '' ); ?>" placeholder="0.00">
+                        </label>
+					<?php endforeach; ?>
+					<?php
+						/* A price saved for a duration this item no longer offers (rent
+						   type renamed, rate type switched off) has no input above, so
+						   carry it through the save instead of silently dropping it. */
+						foreach ( $stored as $duration_key => $duration_price ) {
+							if ( isset( $options[ $duration_key ] ) ) {
+								continue;
+							}
+							?>
+                            <input type="hidden" name="<?php echo esc_attr( $base ); ?>[prices][<?php echo esc_attr( $duration_key ); ?>]" value="<?php echo esc_attr( $duration_price ); ?>">
+							<?php
+						}
+					?>
+                </div>
+				<?php
+			}
+
 			public function variation_settings( $post_id ) {
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 				$rbfw_variations_data   = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
@@ -78,7 +133,7 @@
                                                         <span class="rbfw-var-chip-dash">—</span>
                                                         <input type="number" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][quantity]" value="<?php echo esc_attr( $value['quantity'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 3', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw-var-chip-qty">
                                                         <span class="rbfw-var-chip-unit"><?php esc_html_e( 'in stock', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                                        <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][price]" value="<?php echo esc_attr( isset( $value['price'] ) ? $value['price'] : '' ); ?>">
+                                                        <?php $this->variation_price_cell( $post_id, $i, $c, $value ); ?>
                                                         <button type="button" class="button remove-rbfw_variations_value_table_row rbfw-var-chip-remove" title="<?php esc_attr_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
                                                     </div>
 													<?php
@@ -94,6 +149,10 @@
                                                     <button type="button" class="rbfw-var-add-btn" data-key="<?php echo esc_attr( $i ); ?>" disabled><?php esc_html_e( '+ Add Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="mp_event_remove_move">
+                                            <button class="remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button>
+                                            <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                         </div>
                                     </div>
 									<?php
@@ -118,7 +177,7 @@
                                                     <span class="rbfw-var-chip-dash">—</span>
                                                     <input type="number" name="rbfw_variations_data[0][value][<?php echo esc_attr( $rbfw_default_c ); ?>][quantity]" value="3" placeholder="<?php esc_attr_e( 'e.g. 3', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw-var-chip-qty">
                                                     <span class="rbfw-var-chip-unit"><?php esc_html_e( 'in stock', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                                    <input type="hidden" name="rbfw_variations_data[0][value][<?php echo esc_attr( $rbfw_default_c ); ?>][price]" value="">
+                                                    <?php $this->variation_price_cell( $post_id, 0, $rbfw_default_c ); ?>
                                                     <button type="button" class="button remove-rbfw_variations_value_table_row rbfw-var-chip-remove" title="<?php esc_attr_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
                                                 </div>
 											<?php endforeach; ?>
@@ -131,6 +190,10 @@
                                                 <button type="button" class="rbfw-var-add-btn" data-key="0" disabled><?php esc_html_e( '+ Add Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="mp_event_remove_move">
+                                        <button class="remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button>
+                                        <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                     </div>
                                 </div>
 							<?php } ?>
@@ -253,6 +316,27 @@
 				<?php
 			}
 
+			public function variation_multiply_base_toggle( $post_id ) {
+				$multiply_base = 'yes' === get_post_meta( $post_id, 'rbfw_variation_multiply_base', true );
+
+				// Multi-day only: the single-day form already bills the base price per variation unit.
+				// Shares the Multiple Item Choosing row's class so the editor's type switch hides both together.
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$show_multi     = in_array( $rbfw_item_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true );
+				?>
+                <section class="rbfw_switch_md_type_item_qty rbfw_variation_multiply_base"<?php echo $show_multi ? '' : ' style="display:none"'; ?>>
+                    <div>
+                        <label><?php esc_html_e( 'Charge base price per variation unit', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <p><?php esc_html_e( 'Off: the base price is charged once and each variation is only an add-on. On: the base price is multiplied by the total variation quantity chosen (1 Small + 2 Medium = 3 units), and extra services, fees and the security deposit follow the same unit count. Works when Item variation is enabled and the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="rbfw_variation_multiply_base" value="yes" <?php checked( $multiply_base ); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+				<?php
+			}
+
 			/**
 			 * Render the Inventory section for the modern editor.
 			 *
@@ -273,6 +357,7 @@
 				$renderer->stock_settings( $post_id );
 				$renderer->quantity_box_toggle( $post_id );
 				$renderer->variation_table_switch_on_off( $post_id );
+				$renderer->variation_multiply_base_toggle( $post_id );
 				$renderer->variation_settings( $post_id );
 			}
 
@@ -287,6 +372,7 @@
 					<?php $this->stock_settings( $post_id ); ?>
 					<?php $this->quantity_box_toggle( $post_id ); ?>
 					<?php $this->variation_table_switch_on_off( $post_id ); ?>
+					<?php $this->variation_multiply_base_toggle( $post_id ); ?>
 					<?php $this->variation_settings( $post_id ); ?>
                 </div>
 				<?php
@@ -313,6 +399,7 @@
 
 					update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
+					update_post_meta( $post_id, 'rbfw_variation_multiply_base', ( isset( $_POST['rbfw_variation_multiply_base'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_variation_multiply_base'] ) ) ) ? 'yes' : 'no' );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 					update_post_meta( $post_id, 'stock_manage_on_return_date', $stock_manage_on_return_date );
 					update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );

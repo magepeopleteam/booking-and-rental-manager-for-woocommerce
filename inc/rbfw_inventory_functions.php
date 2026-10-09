@@ -16,7 +16,8 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
         // Order API, not postmeta: under HPOS the order is not in postmeta at all, so the
         // old _order_tax read returned nothing and no booking ever recorded its tax.
         $order_tax = rbfw_wc_order_tax_total($wc_order_id);
-        $total_cost = get_post_meta($wc_order_id, '_order_total', true);
+        $wc_order = function_exists('wc_get_order') ? wc_get_order($wc_order_id) : false;
+        $total_cost = $wc_order ? $wc_order->get_total() : get_post_meta($wc_order_id, '_order_total', true);
         $rbfw_link_order_id = get_post_meta($wc_order_id, '_rbfw_link_order_id', true);
         $rbfw_pin = get_post_meta($rbfw_link_order_id, 'rbfw_pin', true);
 
@@ -640,6 +641,69 @@ function total_multi_items_quantity($service,$date,$inventory,$inventory_based_o
 }
 
 
+/**
+ * Get the best available quantity among a Multiple Items rental's sub-items.
+ *
+ * Multiple Items rentals do not use the parent `rbfw_item_stock_quantity` value.
+ * Each configured row has its own private quantity or draws from a linked rental
+ * item's shared inventory. The month calendar therefore remains bookable while
+ * at least one selectable row has stock.
+ *
+ * @param int    $post_id                   Rental item ID.
+ * @param string $date                      Calendar date in d-m-Y format.
+ * @param array  $multiple_items_info       Configured Multiple Items rows.
+ * @param array  $rbfw_inventory            Stored rental inventory.
+ * @param string $inventory_based_on_return Inventory return setting.
+ * @return int Positive when the date is bookable, otherwise zero.
+ */
+function rbfw_multi_items_day_available_qty( $post_id, $date, $multiple_items_info, $rbfw_inventory, $inventory_based_on_return ) {
+    if ( empty( $multiple_items_info ) || ! is_array( $multiple_items_info ) ) {
+        // Incomplete configuration must not make the whole calendar unusable.
+        return 1;
+    }
+
+    $calendar_date = DateTime::createFromFormat( '!d-m-Y', $date );
+    $date_ymd      = $calendar_date ? $calendar_date->format( 'Y-m-d' ) : '';
+    $best_stock    = 0;
+    $has_valid_row = false;
+
+    foreach ( $multiple_items_info as $row ) {
+        if ( ! is_array( $row ) || empty( $row['item_name'] ) ) {
+            continue;
+        }
+
+        $has_valid_row = true;
+        $remaining     = null;
+
+        if ( $date_ymd && function_exists( 'rbfw_mi_row_available_qty' ) ) {
+            $remaining = rbfw_mi_row_available_qty(
+                $post_id,
+                $row,
+                $date_ymd . ' 00:00',
+                $date_ymd . ' 23:59'
+            );
+        }
+
+        if ( null === $remaining ) {
+            $booked    = total_multi_items_quantity( $row['item_name'], $date, $rbfw_inventory, $inventory_based_on_return );
+            $remaining = rbfw_service_remaining_stock(
+                isset( $row['available_qty'] ) ? $row['available_qty'] : '',
+                $booked
+            );
+        }
+
+        // A blank quantity means this row does not track stock and stays bookable.
+        if ( null === $remaining ) {
+            return 1;
+        }
+
+        $best_stock = max( $best_stock, (int) $remaining );
+    }
+
+    return $has_valid_row ? max( 0, $best_stock ) : 1;
+}
+
+
 
 
 
@@ -677,6 +741,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     ];
     $rbfw_variations_data_raw = get_post_meta( $post_id, 'rbfw_variations_data', true );
     $rbfw_variations_data     = $rbfw_variations_data_raw ? $rbfw_variations_data_raw : [];
+    $multiple_items_info      = ( 'multiple_items' === $rent_type ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
     // Pre-compute base stock (same value for every day in the month)
     $base_total_stock = 0;
@@ -707,6 +772,18 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         $total_stock = $base_total_stock;
         $date = str_pad($i, 2, '0', STR_PAD_LEFT).'-'.str_pad($month, 2, '0', STR_PAD_LEFT).'-'.$year;
         $date_range[] = $date;
+
+
+        if ( 'multiple_items' === $rent_type ) {
+            $day_wise_inventory[ $date ] = rbfw_multi_items_day_available_qty(
+                $post_id,
+                $date,
+                $multiple_items_info,
+                is_array( $rbfw_inventory ) ? $rbfw_inventory : [],
+                $inventory_based_on_return
+            );
+            continue;
+        }
 
 
 
@@ -3197,33 +3274,326 @@ function rbfw_get_variation_stock_for_value( $post_id, $value ) {
 }
 
 /**
- * Look up the configured per-unit surcharge price for a variation value.
+ * A single representative per-unit surcharge for a variation value.
  *
- * Mirrors rbfw_get_variation_stock_for_value(). Variations are free by default;
- * the price is an optional surcharge added on top of the duration price
- * (line = qty x (duration_price + variation_price)). Returns 0.0 when the value
- * has no price configured or cannot be found.
+ * Variations are free by default; the price is an optional surcharge added on
+ * top of the duration price (line = qty x (duration_price + variation_price)).
+ *
+ * Booking flows price a value against the duration actually booked — see
+ * rbfw_calc_variation_surcharge() (Single Day) and
+ * rbfw_get_variation_md_surcharge() (multi-day). This one stays for callers
+ * that have no booked duration to price against (e.g. the Pro booking editor
+ * listing what a value costs): it returns the flat "Any duration" price when
+ * set, otherwise the value's daily rate, otherwise its first configured
+ * duration price — so a value priced only per duration never reads as free.
  *
  * @param int    $post_id rbfw_item id.
  * @param string $value   Variation value name.
  * @return float Surcharge amount ( >= 0 ).
  */
 function rbfw_get_variation_price_for_value( $post_id, $value ) {
-	$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
-	if ( empty( $data ) || ! is_array( $data ) ) {
+	$config = rbfw_get_variation_value_prices( $post_id, $value );
+
+	if ( $config['flat'] > 0 ) {
+		return $config['flat'];
+	}
+	if ( empty( $config['prices'] ) ) {
 		return 0.0;
 	}
+	if ( isset( $config['prices']['daily'] ) && $config['prices']['daily'] > 0 ) {
+		return (float) $config['prices']['daily'];
+	}
+	foreach ( $config['prices'] as $duration_price ) {
+		if ( $duration_price > 0 ) {
+			return (float) $duration_price;
+		}
+	}
+
+	return 0.0;
+}
+
+/**
+ * The duration options a variation value can be priced against, for one item.
+ *
+ * Variations are only offered for Single Day / Appointment (which price per
+ * configured rent type) and for the multi-day family (which price per enabled
+ * rate type), so the returned key => label map mirrors whichever pricing UI
+ * that item actually uses. An empty array means "no duration options" — the
+ * value then keeps its single flat surcharge.
+ *
+ * Keys are what rbfw_calc_variation_surcharge() looks up:
+ *  - Single Day / Appointment: the rent_type string itself ("Full Day"), which
+ *    is also the key the booking form posts quantities under.
+ *  - Multi-day family: hourly | half_day | daily | weekly | monthly.
+ *
+ * @param int $post_id rbfw_item id.
+ * @return array<string,string> key => translated label, in display order.
+ */
+function rbfw_get_variation_price_options( $post_id ) {
+	$item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+	$item_type = $item_type ? $item_type : 'bike_car_sd';
+	$options   = array();
+
+	if ( in_array( $item_type, array( 'bike_car_sd', 'appointment' ), true ) ) {
+		$rows = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+		if ( ! empty( $rows ) && is_array( $rows ) ) {
+			foreach ( $rows as $row ) {
+				$rent_type = ( is_array( $row ) && isset( $row['rent_type'] ) ) ? trim( (string) $row['rent_type'] ) : '';
+				if ( '' !== $rent_type && ! isset( $options[ $rent_type ] ) ) {
+					$options[ $rent_type ] = $rent_type;
+				}
+			}
+		}
+
+		return $options;
+	}
+
+	if ( in_array( $item_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true ) ) {
+		// Same order the pricing tab lists them in, and the same enable flags
+		// (daily is the one that defaults to on when never saved).
+		$rate_types = array(
+			'hourly'   => array( 'rbfw_enable_hourly_rate', 'no', __( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ) ),
+			'half_day' => array( 'rbfw_enable_half_day_rate', 'no', __( 'Half Day', 'booking-and-rental-manager-for-woocommerce' ) ),
+			'daily'    => array( 'rbfw_enable_daily_rate', 'yes', __( 'Daily', 'booking-and-rental-manager-for-woocommerce' ) ),
+			'weekly'   => array( 'rbfw_enable_weekly_rate', 'no', __( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ) ),
+			'monthly'  => array( 'rbfw_enable_monthly_rate', 'no', __( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ) ),
+		);
+		foreach ( $rate_types as $key => $conf ) {
+			list( $meta_key, $default, $label ) = $conf;
+			$enabled = get_post_meta( $post_id, $meta_key, true );
+			$enabled = ( '' === $enabled || null === $enabled ) ? $default : $enabled;
+			if ( 'yes' === $enabled ) {
+				$options[ $key ] = $label;
+			}
+		}
+	}
+
+	return $options;
+}
+
+/**
+ * The configured surcharges for one variation value.
+ *
+ * @param int    $post_id rbfw_item id.
+ * @param string $value   Variation value name.
+ * @return array{flat:float,prices:array<string,float>} `flat` is the legacy
+ *         single Price field (charged once per unit); `prices` holds the
+ *         per-duration surcharges keyed as rbfw_get_variation_price_options().
+ */
+function rbfw_get_variation_value_prices( $post_id, $value ) {
+	$empty = array(
+		'flat'   => 0.0,
+		'prices' => array(),
+	);
+
+	$data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( empty( $data ) || ! is_array( $data ) ) {
+		return $empty;
+	}
+
 	foreach ( $data as $row ) {
 		if ( empty( $row['value'] ) || ! is_array( $row['value'] ) ) {
 			continue;
 		}
 		foreach ( $row['value'] as $single ) {
-			if ( isset( $single['name'] ) && (string) $single['name'] === (string) $value ) {
-				return ( isset( $single['price'] ) && '' !== $single['price'] ) ? max( 0, (float) $single['price'] ) : 0.0;
+			if ( ! isset( $single['name'] ) || (string) $single['name'] !== (string) $value ) {
+				continue;
+			}
+
+			$prices = array();
+			if ( ! empty( $single['prices'] ) && is_array( $single['prices'] ) ) {
+				foreach ( $single['prices'] as $key => $price ) {
+					if ( '' === $price || null === $price ) {
+						continue;
+					}
+					$prices[ (string) $key ] = max( 0, (float) $price );
+				}
+			}
+
+			return array(
+				'flat'   => ( isset( $single['price'] ) && '' !== $single['price'] ) ? max( 0, (float) $single['price'] ) : 0.0,
+				'prices' => $prices,
+			);
+		}
+	}
+
+	return $empty;
+}
+
+/**
+ * Per-unit surcharge for one variation value against a billed duration.
+ *
+ * Variation prices are always an EXTRA on top of the item's own duration
+ * price. A value priced per duration is billed per unit of that duration
+ * (2 full days x 1000 = 2000); a value with no per-duration price at all falls
+ * back to the legacy flat Price, charged once per unit exactly as before — so
+ * sites that only ever set the single Price field keep their current totals.
+ *
+ * @param int                 $post_id rbfw_item id.
+ * @param string              $value   Variation value name.
+ * @param array<string,float> $units   Billed units keyed as rbfw_get_variation_price_options()
+ *                                     (e.g. ['daily'=>3,'hourly'=>2] or ['Full Day'=>2]).
+ * @return float Surcharge for ONE unit of this value ( >= 0 ).
+ */
+function rbfw_calc_variation_surcharge( $post_id, $value, $units = array() ) {
+	$config = rbfw_get_variation_value_prices( $post_id, $value );
+
+	if ( empty( $config['prices'] ) ) {
+		return $config['flat'];
+	}
+
+	$total = 0.0;
+	foreach ( $config['prices'] as $key => $price ) {
+		$count = isset( $units[ $key ] ) ? (float) $units[ $key ] : 0.0;
+		if ( $count > 0 && $price > 0 ) {
+			$total += $price * $count;
+		}
+	}
+
+	return max( 0, $total );
+}
+
+/**
+ * Surcharge for ONE unit of a variation value on a multi-day booking.
+ *
+ * Prices the variation THROUGH the item's own duration engine
+ * (rbfw_md_duration_price_calculation()) with the value's rates swapped in, so
+ * the extra follows exactly the same rules as the base price — month/week/day
+ * split, hourly vs half-day part days, hourly/day thresholds, count-extra-day,
+ * day-wise weekday rates. Mirroring that arithmetic by hand drifted (a same-day
+ * 4-hour booking bills hourly, but a hand-rolled split also added a full day).
+ *
+ * Rate-modifier add-ons (seasonal, tiered, multi-day saver) are neutralised for
+ * this pass: they discount the ITEM's own rate, and re-applying them to the
+ * surcharge would silently re-price the extra too.
+ *
+ * Values with no per-duration price keep the legacy flat surcharge.
+ *
+ * @param int    $post_id           rbfw_item id.
+ * @param string $value             Variation value name.
+ * @param string $pickup_datetime   Y-m-d H:i.
+ * @param string $dropoff_datetime  Y-m-d H:i.
+ * @param string $enable_time_slot  'yes' when the item books by time slot.
+ * @return float Surcharge for one unit ( >= 0 ).
+ */
+function rbfw_get_variation_md_surcharge( $post_id, $value, $pickup_datetime, $dropoff_datetime, $enable_time_slot = 'no' ) {
+	$config = rbfw_get_variation_value_prices( $post_id, $value );
+
+	if ( empty( $config['prices'] ) ) {
+		return $config['flat'];
+	}
+	if ( empty( $pickup_datetime ) || empty( $dropoff_datetime ) || ! function_exists( 'rbfw_md_duration_price_calculation' ) ) {
+		return 0.0;
+	}
+
+	$rates     = $config['prices'];
+	$daily     = isset( $rates['daily'] ) ? (float) $rates['daily'] : 0;
+	$hourly    = isset( $rates['hourly'] ) ? (float) $rates['hourly'] : 0;
+	$half_day  = isset( $rates['half_day'] ) ? (float) $rates['half_day'] : 0;
+	$overrides = array(
+		'rbfw_daily_rate'    => $daily,
+		'rbfw_hourly_rate'   => $hourly,
+		'rbfw_half_day_rate' => $half_day,
+		'rbfw_weekly_rate'   => isset( $rates['weekly'] ) ? (float) $rates['weekly'] : 0,
+		'rbfw_monthly_rate'  => isset( $rates['monthly'] ) ? (float) $rates['monthly'] : 0,
+		// Add-on rate modifiers price the item, not the extra.
+		'rbfw_seasonal_prices' => '',
+		'rbfw_tiered_pricing'  => '',
+		'rbfw_md_data_mds'     => array(),
+	);
+	// Day-wise pricing reads a rate per weekday; the variation has one rate, so
+	// every weekday gets it (and the enable flags stay the item's, keeping the
+	// engine on the same branch).
+	foreach ( array( 'sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri' ) as $day_slug ) {
+		$overrides[ 'rbfw_' . $day_slug . '_daily_rate' ]    = $daily;
+		$overrides[ 'rbfw_' . $day_slug . '_hourly_rate' ]   = $hourly;
+		$overrides[ 'rbfw_' . $day_slug . '_half_day_rate' ] = $half_day;
+	}
+
+	$filter = static function ( $check, $object_id, $meta_key, $single ) use ( $post_id, $overrides ) {
+		if ( (int) $object_id !== (int) $post_id || ! array_key_exists( $meta_key, $overrides ) ) {
+			return $check;
+		}
+		$value = $overrides[ $meta_key ];
+
+		return $single ? $value : array( $value );
+	};
+
+	// The engine records which add-on last priced an item; this pass must not
+	// leave its own mark behind for the real price line to read.
+	$pricing_applied = get_transient( 'pricing_applied' );
+
+	add_filter( 'get_post_metadata', $filter, 10, 4 );
+	$result = rbfw_md_duration_price_calculation(
+		$post_id,
+		$pickup_datetime,
+		$dropoff_datetime,
+		gmdate( 'Y-m-d', strtotime( $pickup_datetime ) ),
+		gmdate( 'Y-m-d', strtotime( $dropoff_datetime ) ),
+		gmdate( 'H:i', strtotime( $pickup_datetime ) ),
+		gmdate( 'H:i', strtotime( $dropoff_datetime ) ),
+		$enable_time_slot
+	);
+	remove_filter( 'get_post_metadata', $filter, 10 );
+
+	if ( false === $pricing_applied ) {
+		delete_transient( 'pricing_applied' );
+	} else {
+		set_transient( 'pricing_applied', $pricing_applied, 3600 );
+	}
+
+	return isset( $result['duration_price'] ) ? max( 0, (float) $result['duration_price'] ) : 0.0;
+}
+
+/**
+ * Whether a multi-day item bills its base price once per booked variation unit.
+ *
+ * Off (the default, and what every existing item does): the base duration price
+ * is charged once and each variation value is only a per-unit surcharge on top.
+ * On: the variation steppers ARE the quantity selector (the form hides the
+ * standalone Quantity row while they show), so the base price — and everything
+ * that scales with the item quantity — is multiplied by the total number of
+ * variation units chosen, the way the single-day form already bills them.
+ *
+ * @param int $post_id rbfw_item id.
+ * @return bool
+ */
+function rbfw_variations_multiply_base( $post_id ) {
+	return 'yes' === get_post_meta( $post_id, 'rbfw_enable_variations', true )
+		&& 'yes' === get_post_meta( $post_id, 'rbfw_variation_multiply_base', true );
+}
+
+/**
+ * Total units chosen across an item's variation values.
+ *
+ * Only values that exist in the item's own variation set are counted, so a
+ * posted key that is not configured cannot inflate the unit count.
+ *
+ * @param int   $post_id rbfw_item id.
+ * @param mixed $posted  Posted rbfw_variation_qty[ field_id ][ value_name ] => qty.
+ * @return int
+ */
+function rbfw_variation_units( $post_id, $posted ) {
+	$variation_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( ! is_array( $posted ) || ! is_array( $variation_data ) ) {
+		return 0;
+	}
+
+	$units = 0;
+	foreach ( $variation_data as $field ) {
+		if ( ! is_array( $field ) || empty( $field['field_id'] ) || empty( $field['value'] ) || ! is_array( $field['value'] ) ) {
+			continue;
+		}
+		$qty_map = ( isset( $posted[ $field['field_id'] ] ) && is_array( $posted[ $field['field_id'] ] ) ) ? $posted[ $field['field_id'] ] : array();
+		foreach ( $field['value'] as $value ) {
+			$name = isset( $value['name'] ) ? $value['name'] : '';
+			if ( '' !== $name && isset( $qty_map[ $name ] ) ) {
+				$units += max( 0, (int) $qty_map[ $name ] );
 			}
 		}
 	}
-	return 0.0;
+
+	return $units;
 }
 
 /**
@@ -3629,9 +3999,16 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 								: null;
 							$is_unlimited = ( null === $remaining );
 							$is_sold_out  = ( ! $is_unlimited && (int) $remaining <= 0 );
-							$price        = function_exists( 'rbfw_get_variation_price_for_value' )
-								? rbfw_get_variation_price_for_value( $post_id, $variant_name )
-								: 0.0;
+							/* Flat surcharge plus any per-duration surcharges, so the
+							   stepper can price itself live against the rent types the
+							   customer picks (sd_script.js). */
+							$price_config     = function_exists( 'rbfw_get_variation_value_prices' )
+								? rbfw_get_variation_value_prices( $post_id, $variant_name )
+								: array( 'flat' => 0.0, 'prices' => array() );
+							$price            = (float) $price_config['flat'];
+							$duration_prices  = is_array( $price_config['prices'] ) ? $price_config['prices'] : array();
+							$duration_labels  = function_exists( 'rbfw_get_variation_price_options' ) ? rbfw_get_variation_price_options( $post_id ) : array();
+							$duration_json    = wp_json_encode( (object) $duration_prices );
 
 							// Clamp any preserved quantity to what is actually still available.
 							$cur_qty = isset( $qty_map[ $variant_name ] ) ? (int) $qty_map[ $variant_name ] : 0;
@@ -3644,10 +4021,19 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 								$cur_qty = (int) $remaining;
 							}
 							?>
-							<div class="rbfw-variation-row<?php echo $is_sold_out ? ' rbfw-variation-soldout' : ''; ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" data-price="<?php echo esc_attr( $price ); ?>" data-remaining="<?php echo esc_attr( $is_unlimited ? '' : (int) $remaining ); ?>">
+							<div class="rbfw-variation-row<?php echo $is_sold_out ? ' rbfw-variation-soldout' : ''; ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" data-price="<?php echo esc_attr( $price ); ?>" data-prices="<?php echo esc_attr( $duration_json ); ?>" data-remaining="<?php echo esc_attr( $is_unlimited ? '' : (int) $remaining ); ?>">
 								<span class="rbfw-variation-label"><?php echo esc_html( $variant_name ); ?></span>
 								<span class="rbfw-variation-meta">
-									<?php if ( $price > 0 ) { ?>
+									<?php if ( ! empty( $duration_prices ) ) { ?>
+										<?php foreach ( $duration_prices as $duration_key => $duration_price ) {
+											if ( $duration_price <= 0 ) {
+												continue;
+											}
+											$duration_label = isset( $duration_labels[ $duration_key ] ) ? $duration_labels[ $duration_key ] : $duration_key;
+											?>
+											<span class="rbfw-variation-price">+<?php echo wp_kses_post( wc_price( $duration_price ) ); ?> / <?php echo esc_html( $duration_label ); ?></span>
+										<?php } ?>
+									<?php } elseif ( $price > 0 ) { ?>
 										<span class="rbfw-variation-price">+<?php echo wp_kses_post( wc_price( $price ) ); ?></span>
 									<?php } ?>
 									<?php if ( $is_sold_out ) { ?>
@@ -3659,7 +4045,7 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 								</span>
 								<span class="rbfw-variation-stepper">
 									<button type="button" class="rbfw-qty-minus" tabindex="-1" aria-label="<?php esc_attr_e( 'Decrease', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php disabled( $is_sold_out ); ?>>&minus;</button>
-									<input type="number" class="rbfw-variation-qty-input" name="rbfw_variation_qty[<?php echo esc_attr( $field_id ); ?>][<?php echo esc_attr( $variant_name ); ?>]" value="<?php echo esc_attr( $cur_qty ); ?>" min="0"<?php echo $is_unlimited ? '' : ' max="' . esc_attr( (int) $remaining ) . '"'; ?> data-price="<?php echo esc_attr( $price ); ?>" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" <?php disabled( $is_sold_out ); ?> readonly>
+									<input type="number" class="rbfw-variation-qty-input" name="rbfw_variation_qty[<?php echo esc_attr( $field_id ); ?>][<?php echo esc_attr( $variant_name ); ?>]" value="<?php echo esc_attr( $cur_qty ); ?>" min="0"<?php echo $is_unlimited ? '' : ' max="' . esc_attr( (int) $remaining ) . '"'; ?> data-price="<?php echo esc_attr( $price ); ?>" data-prices="<?php echo esc_attr( $duration_json ); ?>" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-value="<?php echo esc_attr( $variant_name ); ?>" <?php disabled( $is_sold_out ); ?> readonly>
 									<button type="button" class="rbfw-qty-plus" tabindex="-1" aria-label="<?php esc_attr_e( 'Increase', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php disabled( $is_sold_out ); ?>>+</button>
 								</span>
 							</div>
@@ -3704,6 +4090,17 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	}
 
 	$item_name = get_the_title( $rbfw_id );
+	if ( function_exists( 'rbfw_global_off_dates_overlap' ) && rbfw_global_off_dates_overlap( $start_dt, $end_dt ) ) {
+		$checks[] = array(
+			'ok'        => false,
+			'requested' => 1,
+			'available' => 0,
+			'label'     => $item_name,
+			'message'   => __( 'The selected dates include a global off date. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+
+		return $checks;
+	}
 
 	/* ---- Single-day timely inventory: validate the exact requested window. ---- */
 	if ( 'bike_car_sd' === $rent_type && 'on' === get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true ) ) {
@@ -3723,6 +4120,14 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			}
 			$cart_used = 0;
 
+			/* Same Buffer Time After rule as the committed-order count above: a line
+			   blocks the unit until its end + buffer, in either direction. */
+			$buffer_after = (int) get_post_meta( $rbfw_id, 'rbfw_buffer_time_after', true );
+			$req_end_buffered = clone $req_end;
+			if ( $buffer_after > 0 ) {
+				$req_end_buffered->modify( '+' . $buffer_after . ' hours' );
+			}
+
 			foreach ( $sibling_lines as $line ) {
 				if ( ! is_array( $line ) ) {
 					continue;
@@ -3740,7 +4145,10 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 				} catch ( Exception $e ) {
 					continue;
 				}
-				if ( $line_start < $req_end && $req_start < $line_end ) {
+				if ( $buffer_after > 0 ) {
+					$line_end->modify( '+' . $buffer_after . ' hours' );
+				}
+				if ( $line_start < $req_end_buffered && $req_start < $line_end ) {
 					$cart_used += isset( $line['rbfw_item_quantity'] ) ? max( 1, (int) $line['rbfw_item_quantity'] ) : 1;
 				}
 			}

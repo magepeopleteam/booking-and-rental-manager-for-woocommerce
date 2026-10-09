@@ -1,3 +1,20 @@
+function rbfwSdDepositQuantity() {
+    if (jQuery('#rbfw_security_deposit_per_quantity').val() !== 'yes') return 1;
+    var $rentTypes = jQuery('.rbfw_bikecarsd_qty');
+    if ($rentTypes.length) {
+        var rentedUnits = 0;
+        $rentTypes.each(function () { rentedUnits += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+        return rentedUnits;
+    }
+    var $variations = jQuery('.rbfw-variation-qty-input');
+    if ($variations.length) {
+        var units = 0;
+        $variations.each(function () { units += Math.max(0, parseInt(jQuery(this).val(), 10) || 0); });
+        return units;
+    }
+    return Math.max(0, parseInt(jQuery('#rbfw_item_quantity').val(), 10) || 0);
+}
+
 /* Stock cap reader, shared with md_script.js (which loads first). Defined here
    defensively so this file still reads a cap correctly on its own: an absent or
    blank max means the row does not track stock (no cap), while a literal max="0"
@@ -28,7 +45,7 @@ if (typeof rbfwStepMax !== 'function') {
                 minDate: 0,
                 beforeShowDay: function(date)
                 {
-                    return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
                 },
                 onSelect: function (dateString, data) {
                     let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -667,6 +684,58 @@ function calculateTotal() {
 }
 
 
+/**
+ * Rent-type quantities currently chosen, keyed by rent type -- the same keys a
+ * variation value's per-duration prices are saved under, so the two line up.
+ *
+ * @return {Object} { "Full Day": 2, "Hourly": 3 }
+ */
+function rbfw_get_selected_duration_units() {
+    var units = {};
+    jQuery('.rbfw_bikecarsd_qty').each(function () {
+        var type = jQuery(this).attr('data-type');
+        var qty = parseInt(jQuery(this).val(), 10) || 0;
+        if (!type || qty <= 0) {
+            return;
+        }
+        units[type] = (units[type] || 0) + qty;
+    });
+    return units;
+}
+
+/**
+ * Surcharge for ONE unit of a variation value, mirroring PHP's
+ * rbfw_calc_variation_surcharge(): a value priced per duration bills per booked
+ * rent type (2 full days x 1000 = 2000); a value with no per-duration price
+ * falls back to its single flat price. Display only -- the server recomputes
+ * this authoritatively at add-to-cart.
+ *
+ * @param {jQuery} $input Variation quantity input carrying data-price/data-prices.
+ * @param {Object} units  Output of rbfw_get_selected_duration_units().
+ * @return {number}
+ */
+function rbfw_variation_unit_price($input, units) {
+    var prices = {};
+    try {
+        prices = JSON.parse($input.attr('data-prices') || '{}') || {};
+    } catch (e) {
+        prices = {};
+    }
+    var keys = Object.keys(prices);
+    if (!keys.length) {
+        return parseFloat($input.attr('data-price')) || 0;
+    }
+    var total = 0;
+    for (var i = 0; i < keys.length; i++) {
+        var count = parseFloat(units[keys[i]]) || 0;
+        var price = parseFloat(prices[keys[i]]) || 0;
+        if (count > 0 && price > 0) {
+            total += count * price;
+        }
+    }
+    return total;
+}
+
 function rbfw_price_calculation_sd(){
     // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
     let rbfw_service_price = parseFloat(jQuery('#rbfw_service_price').val()) || 0;
@@ -676,11 +745,14 @@ function rbfw_price_calculation_sd(){
     // recalc so it survives any handler that rewrites #rbfw_service_price (which
     // now holds the duration cost ONLY). Rendered as its own summary line, never
     // folded into Duration Cost. Server re-computes this authoritatively at add-to-cart.
+    var rbfw_duration_units = rbfw_get_selected_duration_units();
     var rbfw_variation_surcharge = 0;
     jQuery('.rbfw-variation-qty-input').each(function () {
         var q = parseInt(jQuery(this).val(), 10) || 0;
-        var p = parseFloat(jQuery(this).attr('data-price')) || 0;
-        rbfw_variation_surcharge += q * p;
+        if (q <= 0) {
+            return;
+        }
+        rbfw_variation_surcharge += q * rbfw_variation_unit_price(jQuery(this), rbfw_duration_units);
     });
 
     var sub_total_price = rbfw_service_price + rbfw_es_service_price + rbfw_variation_surcharge;
@@ -731,7 +803,7 @@ function rbfw_price_calculation_sd(){
         if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
         }else{
-            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwSdDepositQuantity();
         }
     }
 
@@ -760,6 +832,8 @@ function rbfw_price_calculation_sd(){
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
+    }else{
+        jQuery('.security_deposit').hide();
     }
 
 
@@ -776,7 +850,7 @@ function datepicker_inline(){
         selectOtherMonths: true,
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -852,8 +926,8 @@ function rbfwApplyPickupSoldOut(type) {
         }
         var base = opt.getAttribute('data-rbfw-base-label');
 
-        // Never override the past-time disabling done in getAvailableTimes().
-        var pastDisabled = (opt.title === 'Past time' || opt.title === 'Past Time');
+        // Never override the past/buffer-time disabling done in getAvailableTimes().
+        var pastDisabled = opt.hasAttribute('data-rbfw-time-blocked') || opt.title === 'Past time' || opt.title === 'Past Time';
         if (soldOut) {
             opt.disabled = true;
             opt.classList.add('rbfw-pickup-sold-out');
@@ -1018,5 +1092,3 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
         }
     });
 }
-
-

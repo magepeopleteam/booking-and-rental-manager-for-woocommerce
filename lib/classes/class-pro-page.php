@@ -122,8 +122,8 @@ if (!class_exists('RBFWProPage')) {
 					<p><?php esc_html_e( 'Everything the free plugin gives you to build the booking flow, plus the back office to actually run the business: payments, receipts, custom forms, reporting and calendar sync.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 					<div class="rbfw_gopro_hero_actions">
 						<a href="<?php echo esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_primary" target="_blank" rel="noopener"><?php esc_html_e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-						<a href="<?php echo esc_url( 'https://booking.mage-people.com/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_ghost_light" target="_blank" rel="noopener"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-						<a href="<?php echo esc_url( 'https://docs.mage-people.com/rent-and-booking-manager/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_ghost_light" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+						<a href="<?php echo esc_url( 'https://www.wprently.com/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_ghost_light" target="_blank" rel="noopener"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+						<a href="<?php echo esc_url( 'https://docs.mage-people.com/docs/wprently/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_ghost_light" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 					</div>
 				</div>
 

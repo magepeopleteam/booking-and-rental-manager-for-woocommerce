@@ -3,7 +3,7 @@
 	 * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment
 	 * Plugin URI: https://mage-people.com
 	 * Description: A complete booking & rental solution for WordPress.
-	 * Version: 2.7.7
+	 * Version: 2.8.0
 	 * Author: MagePeople Team
 	 * Author URI: https://www.mage-people.com/
 	 * Text Domain: booking-and-rental-manager-for-woocommerce
@@ -15,6 +15,21 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
 	}
+
+	require_once __DIR__ . '/vendor/appneck/wordpress-sdk/appneck-wordpress-sdk/appneck-sdk.php';
+	appneck_sdk_load_latest();
+
+	$GLOBALS['my_plugin_sdk'] = \Appneck\Sdk\Sdk::bootstrap(
+		'pk_BkKzs8oaNFMMbwT6LF0lkQFcuGU6ndaB',  // your API key
+		'sk_Qm4yEAlSpZ2AMpR9RkfRKnh1GCxm6OJEb3Y0OGEsT3fVkVOk', // your product secret
+		'https://appneck.com',                  // the Appneck server URL
+		__FILE__                                // so the SDK can hook activation/deactivation
+	);
+
+
+
+
+
 	if ( ! class_exists( 'RBFW_Rent_Manager' ) ) {
 		/**
 		 * Class RBFW_Rent_Manager
@@ -79,12 +94,12 @@
 				if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
 					if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
 						$rbfw_links = array(
-							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/plugins/wprently/overview" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
+							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/docs/wprently/" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
 							'support' => '<a href="' . esc_url( "https://mage-people.com/my-account" ) . '" target="_blank">' . __( 'Support', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
 						);
 					} else {
 						$rbfw_links = array(
-							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/plugins/wprently/overview" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
+							'docs'    => '<a href="' . esc_url( "https://docs.mage-people.com/docs/wprently/" ) . '" target="_blank">' . __( 'Docs', 'booking-and-rental-manager-for-woocommerce' ) . '</a>',
 							'support' => '<a href="' . esc_url( "https://mage-people.com/my-account" ) . '" target="_blank">' . __( 'Support', 'booking-and-rental-manager-for-woocommerce' ) . '</a>'
 						);
 					}

@@ -265,16 +265,22 @@ function rbfw_apply_fees_to_price( $price, $cart_item, $cart_item_key ) {
 
 /**
  * Save fee information to order meta
- * @param int $order_id
- * @param array $cart_item
+ *
+ * Runs on woocommerce_checkout_create_order_line_item, which both the classic
+ * and the block (Store API) checkout fire. The deprecated
+ * woocommerce_add_order_item_meta hook passes only 3 arguments, so the old
+ * 4-argument callback fatally errored whenever the order was saved.
+ *
+ * @param WC_Order_Item_Product $item
  * @param string $cart_item_key
- * @param int $item_id
+ * @param array $cart_item
+ * @param WC_Order $order
  * @since 1.0.0
  */
-function rbfw_save_fees_to_order( $order_id, $cart_item, $cart_item_key, $item_id ) {
+function rbfw_save_fees_to_order( $item, $cart_item_key, $cart_item, $order ) {
 	if ( isset( $cart_item['rbfw_fees'] ) ) {
-		wc_add_order_item_meta( $item_id, '_rbfw_fees', $cart_item['rbfw_fees'] );
-		wc_add_order_item_meta( $item_id, '_rbfw_total_fees', $cart_item['rbfw_total_fees'] );
+		$item->add_meta_data( '_rbfw_fees', $cart_item['rbfw_fees'], true );
+		$item->add_meta_data( '_rbfw_total_fees', $cart_item['rbfw_total_fees'] ?? 0, true );
 	}
 }
 
@@ -287,5 +293,5 @@ if ( class_exists( 'WooCommerce' ) ) {
 	add_filter( 'woocommerce_cart_item_price', 'rbfw_apply_fees_to_price', 10, 3 );
 	
 	// Save fee information to order
-	add_action( 'woocommerce_add_order_item_meta', 'rbfw_save_fees_to_order', 10, 4 );
+	add_action( 'woocommerce_checkout_create_order_line_item', 'rbfw_save_fees_to_order', 10, 4 );
 }

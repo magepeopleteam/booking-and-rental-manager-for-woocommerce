@@ -16,22 +16,7 @@
 	$post_featured_img     = ! empty( $post_featured_img_url ) ? $post_featured_img_url : $gallery_image;
 	$post_link         = get_the_permalink();
 	$book_now_label    = __( 'Book Now', 'booking-and-rental-manager-for-woocommerce' );
-	$rbfw_offday_range = get_post_meta( get_the_id(), 'rbfw_offday_range', true ) ? get_post_meta( get_the_id(), 'rbfw_offday_range', true ) : 'no';
-	$continue = false;
-	if ( $rbfw_offday_range !== 'no' && ! empty( $pickup_date ) ) {
-		foreach ( $rbfw_offday_range as $date_rang ) {
-			$start_date = $date_rang['from_date'];
-			$end_date   = $date_rang['to_date'];
-			$check_date = $pickup_date;
-			$startDateTime = DateTime::createFromFormat( 'd-m-Y', $start_date );
-			$endDateTime   = DateTime::createFromFormat( 'd-m-Y', $end_date );
-			$checkDateTime = DateTime::createFromFormat( 'd-m-Y', $check_date );
-			if ( $checkDateTime >= $startDateTime && $checkDateTime <= $endDateTime ) {
-				//error_log(print_r(['$continue' => $continue], true));
-				$continue = true;
-			}
-		}
-	}
+	$continue = ! empty( $pickup_date ) && function_exists( 'rbfw_is_off_day' ) && rbfw_is_off_day( $post_id, $pickup_date );
 	if ( ! $continue ) {
 
 
@@ -43,8 +28,9 @@
         $pricing_display_for_listing = rbfw_get_option( 'pricing_display_for_listing', 'rbfw_basic_gen_settings' );
 
         $price = 0;
+        $price_label = $prices_start_at;
 
-        if ($rbfw_rent_type == 'bike_car_md') {
+        if ( in_array( $rbfw_rent_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true ) ) {
 
             $hourly_rate_label = __('Hourly rate', 'booking-and-rental-manager-for-woocommerce');
             $daily_rate_label = __('Daily rate', 'booking-and-rental-manager-for-woocommerce');
@@ -278,7 +264,13 @@
 
             $result = findMinimumPrice($multiple_items_info,$pricing_display_for_listing);
             $price = $result['price'];
-            $price_label = ($result['price_type']=='hourly_price')?'Hourly':(($result['price_type']=='daily_price')?'Daily':(($result['price_type']=='weekly_price')?'Weekly':'Monthly'));
+            $rate_labels = array(
+                'hourly_price'  => __( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ),
+                'daily_price'   => __( 'Daily', 'booking-and-rental-manager-for-woocommerce' ),
+                'weekly_price'  => __( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ),
+                'monthly_price' => __( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ),
+            );
+            $price_label = isset( $rate_labels[ $result['price_type'] ] ) ? $rate_labels[ $result['price_type'] ] : $prices_start_at;
 
         }
 

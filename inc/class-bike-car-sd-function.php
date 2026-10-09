@@ -243,7 +243,7 @@
 					if ( $subtotal_price > 0 ):
 						$total_price = (float) $subtotal_price;
 					endif;
-					$security_deposit = rbfw_security_deposit( $product_id, $total_price );
+					$security_deposit = rbfw_security_deposit( $product_id, $total_price, array_sum( array_map( 'absint', $rbfw_type_info ) ) );
 					$total_price      = $total_price + $security_deposit['security_deposit_amount'];
 					$main_array[0]['rbfw_variation_surcharge'] = $total_variation_price;
 					/* Start Tax Calculations */
@@ -527,7 +527,9 @@
                         : esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' )
                     )  . '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
 
-				$security_deposit = rbfw_security_deposit( $post_id, $subtotal_price );
+				$deposit_rows = isset( $sd_input_data_sabitized['bikecarsd_price_arr'] ) && is_array( $sd_input_data_sabitized['bikecarsd_price_arr'] ) ? $sd_input_data_sabitized['bikecarsd_price_arr'] : array();
+				$deposit_quantity = array_sum( array_map( static function ( $row ) { return is_array( $row ) && isset( $row['data_qty'] ) ? absint( $row['data_qty'] ) : 0; }, $deposit_rows ) );
+				$security_deposit = rbfw_security_deposit( $post_id, $subtotal_price, $deposit_quantity );
 				if ( $security_deposit['security_deposit_desc'] ) {
 					$content .= '<li class="subtotal">' . ( ! empty( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) . '<span class="price-figure" data-price="' . $security_deposit['security_deposit_amount'] . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
 				}

@@ -1817,17 +1817,12 @@
         }
     });
     // Day long price
-    $(document).on('click', 'input[name=rbfw_enable_resort_daylong_price]', function (e) {
-        if ( ! rbfwIsLegacyEditorTarget(this) ) return;
-        var status = jQuery(this).val();
-        if (status === 'yes') {
-            jQuery(this).val('no');
-            jQuery('.resort_day_long_price').hide();
-        }
-        if (status === 'no') {
-            jQuery(this).val('yes');
-            jQuery('.resort_day_long_price').show();
-        }
+    // Shared by both editors. Derive the saved value from the checked state;
+    // the modern editor deliberately skips the legacy value-inverting handlers.
+    $(document).on('change', 'input[name=rbfw_enable_resort_daylong_price]', function () {
+        $(this).val(this.checked ? 'yes' : 'no');
+        $(this).closest('.rbfw_resort_price_config_wrapper')
+            .find('.resort_day_long_price').toggle(this.checked);
     });
     // ================toggle switch===================
 
@@ -2238,13 +2233,55 @@ jQuery(document).ready(function () {
 
 
 
-    /* One variation-value "chip" — name, qty and a hidden price carried forward
-       unedited — matching the server-rendered markup in
-       Inventory.php::variation_settings(). There's only ever the one variation
-       group now (no "+ Add Variation"), so this only ever appends into it.
-       name/qty are optional -- the Add New Value form (below) passes the
-       admin's typed values in pre-filled; any other caller gets a blank,
-       placeholder-only chip like before. */
+    /**
+     * Price cell markup for one variation value row.
+     *
+     * Mirrors RBFW_Inventory::variation_price_cell() so a row added here saves
+     * exactly like a server-rendered one: one input per enabled duration, or a
+     * flat Price when the item has no duration options. The
+     * option list is localised in RBFW_Dependencies as rbfw_translation
+     * .variation_price_options; with none, only the flat Price input renders,
+     * which is what every pre-existing item shows.
+     *
+     * @param {number|string} rowKey   Variation (field) index.
+     * @param {number|string} valueKey Value index inside that variation.
+     * @return {string} HTML for the price-cell markup.
+     */
+    function rbfw_variation_price_cell_html(rowKey, valueKey) {
+        var base = 'rbfw_variations_data[' + rowKey + '][value][' + valueKey + ']';
+        var options = (window.rbfw_translation && Array.isArray(window.rbfw_translation.variation_price_options))
+            ? window.rbfw_translation.variation_price_options
+            : [];
+        // Rent types are admin-entered free text and land in name="" / text nodes.
+        var esc = function (str) {
+            return String(str === null || typeof str === 'undefined' ? '' : str)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        };
+        var priceLabel = rbfw_admin_i18n('price', 'Price');
+        var html = '<div class="rbfw_variation_prices">';
+        if (!options.length) {
+            html += '<label class="rbfw_variation_price_row"><span>' + esc(priceLabel)
+                + '</span><input type="number" step="0.01" min="0" name="' + esc(base) + '[price]" placeholder="' + esc(priceLabel) + '"></label>';
+        } else {
+            html += '<input type="hidden" name="' + esc(base) + '[price]" value="">';
+        }
+        for (var i = 0; i < options.length; i++) {
+            html += '<label class="rbfw_variation_price_row"><span>' + esc(options[i].label) + '</span>'
+                + '<input type="number" step="0.01" min="0" name="' + esc(base) + '[prices][' + esc(options[i].key) + ']" placeholder="0.00"></label>';
+        }
+        return html + '</div>';
+    }
+    window.rbfw_variation_price_cell_html = rbfw_variation_price_cell_html;
+
+    /* One variation-value "chip" — name, qty and a price cell (one input per
+       enabled duration, via rbfw_variation_price_cell_html() above, matching
+       RBFW_Inventory::variation_price_cell()) — matching the server-rendered
+       markup in Inventory.php::variation_settings(). There's only ever the
+       one variation group now (no "+ Add Variation"), so this only ever
+       appends into it. name/qty are optional -- the Add New Value form
+       (below) passes the admin's typed values in pre-filled; any other
+       caller gets a blank, placeholder-only chip like before. */
     function escVariationChipAttr(val) {
         return jQuery('<div>').text(val == null ? '' : val).html();
     }
@@ -2256,7 +2293,7 @@ jQuery(document).ready(function () {
             + '<span class="rbfw-var-chip-dash">—</span>'
             + '<input type="number" name="rbfw_variations_data[' + groupIndex + '][value][' + valueIndex + '][quantity]"' + qtyAttr + ' placeholder="' + (rbfw_translation.quantity_example || 'e.g. 3') + '" class="rbfw-var-chip-qty">'
             + '<span class="rbfw-var-chip-unit">' + (rbfw_translation.in_stock || 'in stock') + '</span>'
-            + '<input type="hidden" name="rbfw_variations_data[' + groupIndex + '][value][' + valueIndex + '][price]" value="">'
+            + rbfw_variation_price_cell_html(groupIndex, valueIndex)
             + '<button type="button" class="button remove-rbfw_variations_value_table_row rbfw-var-chip-remove">&times;</button>'
             + '</div>';
     }
