@@ -153,6 +153,8 @@ final class DeactivationSurvey {
 				'close'   => 'Close',
 				'sending' => 'Sending…',
 				'loading' => 'Loading…',
+				'disclosure' => 'Submitting sends your answers with your name and email.',
+				'anonymous'  => 'Send anonymously',
 			),
 		);
 
@@ -168,6 +170,11 @@ final class DeactivationSurvey {
 		echo '<div class="appneck-sdk-survey__body">';
 		echo '<form class="appneck-sdk-survey__form" novalidate><div data-appneck-fields></div></form>';
 		echo '<p class="appneck-sdk-survey__note">&#128274; Your answer is only used to improve ' . esc_html( $this->product_name ) . ' &mdash; it is never shared or sold.</p>';
+		// Journal §70 D4: the survey works without usage-data consent, so it
+		// says plainly what it sends, and lets the person leave their name
+		// and email out.
+		echo '<p class="appneck-sdk-survey__disclosure">' . esc_html( $config['strings']['disclosure'] ) . '</p>';
+		echo '<label class="appneck-sdk-survey__anonymous"><input type="checkbox" data-appneck-anonymous /> ' . esc_html( $config['strings']['anonymous'] ) . '</label>';
 		echo '</div>';
 		// A sibling of __body, not inside it: __body is the part that
 		// scrolls when the question list is long, and this must stay
@@ -219,6 +226,9 @@ final class DeactivationSurvey {
 .appneck-sdk-survey__dialog h2{margin:0 40px 8px 0;font-size:20px;font-weight:700;line-height:1.3;color:#fff}
 .appneck-sdk-survey__intro{margin:0 40px 0 0;color:rgba(255,255,255,.88);font-size:14px;line-height:1.5}
 .appneck-sdk-survey__body{flex:1 1 auto;min-height:0;overflow-y:auto;padding:24px 32px 20px}
+.appneck-sdk-survey__disclosure{margin:12px 0 0;color:#50575e;font-size:12.5px;line-height:1.45}
+.appneck-sdk-survey__anonymous{display:inline-flex;align-items:center;gap:6px;margin-top:6px;color:#1d2327;font-size:13px;cursor:pointer}
+.appneck-sdk-survey__anonymous input{margin:0!important}
 .appneck-sdk-survey__note{display:flex;align-items:center;gap:6px;margin:2px 0 0;padding:10px 12px;background:#f5f3ff;border-radius:8px;color:#5b21b6;font-size:12.5px;line-height:1.4}
 .appneck-sdk-survey__close{position:absolute;top:16px;right:16px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.18);border:0;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;color:#fff;transition:background .15s ease}
 .appneck-sdk-survey__close:hover{background:rgba(255,255,255,.3)}
@@ -267,6 +277,7 @@ if (!root || !cfg.plugin) { return; }
 var fields = root.querySelector("[data-appneck-fields]");
 var submitButton = root.querySelector("[data-appneck-submit]");
 var skipButton = root.querySelector("[data-appneck-skip]");
+var anonymousBox = root.querySelector("[data-appneck-anonymous]");
 var target = null;
 var questions = [];
 var lastFocus = null;
@@ -306,7 +317,8 @@ function post(op, payload, done) {
 	var body = "action=" + encodeURIComponent(cfg.action) +
 		"&nonce=" + encodeURIComponent(cfg.nonce) +
 		"&op=" + encodeURIComponent(op) +
-		"&answers=" + encodeURIComponent(JSON.stringify(payload || {}));
+		"&answers=" + encodeURIComponent(JSON.stringify(payload || {})) +
+		"&anonymous=" + (anonymousBox && anonymousBox.checked ? "1" : "0");
 	xhr.send(body);
 }
 
@@ -346,9 +358,13 @@ function renderQuestions() {
 				var choice = choices[cc];
 				var choiceText = (choice && typeof choice === "object") ? choice.text : choice;
 				var needsText = !!(choice && typeof choice === "object" && choice.requires_text);
+				// The org panel admin sets this per choice, falling back to a
+				// generic prompt when left unset — never a required field,
+				// so an empty placeholder is a normal state, not a bug.
+				var followupPlaceholder = (choice && typeof choice === "object" && choice.placeholder) ? choice.placeholder : "Optional - tell us more";
 				body += \'<label><input type="radio" name="\' + name + \'" value="\' + esc(choiceText) + \'" data-appneck-choice-index="\' + cc + \'" data-appneck-needs-text="\' + (needsText ? "1" : "0") + \'"> \' + esc(choiceText) + "</label>";
 				if (needsText) {
-					body += \'<div class="appneck-sdk-survey__followup" data-appneck-followup-index="\' + cc + \'" hidden><textarea maxlength="\' + cfg.maxLength + \'" placeholder="Optional - tell us more"></textarea></div>\';
+					body += \'<div class="appneck-sdk-survey__followup" data-appneck-followup-index="\' + cc + \'" hidden><textarea maxlength="\' + cfg.maxLength + \'" placeholder="\' + esc(followupPlaceholder) + \'"></textarea></div>\';
 				}
 			}
 			body += "</fieldset>";
@@ -556,7 +572,11 @@ submitButton.addEventListener("click", function () {
 			return $this->fail_with( array( 'errors' => $errors ) );
 		}
 
-		$response = $this->survey->submit( $values, $questions );
+		// Journal §70 D4: "Send anonymously" leaves the name and email out
+		// of the request entirely — not blanked server-side, never sent.
+		$anonymous = isset( $_POST['anonymous'] ) && '1' === (string) $_POST['anonymous'];
+
+		$response = $this->survey->submit( $values, $questions, $anonymous ? null : $this->current_respondent() );
 
 		// Deliberately reports success even when the submission failed.
 		// The modal's only remaining job is to let the deactivation
@@ -659,6 +679,32 @@ submitButton.addEventListener("click", function () {
 		}
 
 		return (bool) current_user_can( 'activate_plugins' );
+	}
+
+	/**
+	 * The logged-in user answering the survey — the person the plugin's
+	 * team would follow up with. Always a real account here: handle_ajax()
+	 * has already required `activate_plugins`, so there is no anonymous
+	 * visitor this could describe. Null outside WordPress or if the user
+	 * somehow cannot be resolved; the answers are still sent without it.
+	 *
+	 * @return array{name: string, email: string}|null
+	 */
+	private function current_respondent() {
+		if ( ! function_exists( 'wp_get_current_user' ) ) {
+			return null;
+		}
+
+		$user = wp_get_current_user();
+
+		if ( ! is_object( $user ) || empty( $user->ID ) ) {
+			return null;
+		}
+
+		return array(
+			'name'  => isset( $user->display_name ) ? (string) $user->display_name : '',
+			'email' => isset( $user->user_email ) ? (string) $user->user_email : '',
+		);
 	}
 
 	private function can_render() {

@@ -37,7 +37,19 @@ final class Sdk {
 	 * because a version bump applied to only one of them would make the
 	 * registry rank this copy wrongly against its siblings.
 	 */
-	const VERSION = '0.1.0';
+	// Bumped for Task S (docs/architecture/14-email-marketing-module.md §6):
+	// the marketing opt-in is the first change to this package since 0.1.0
+	// that a caller genuinely needs to detect — a host plugin gating a
+	// "get product update emails" toggle on the SDK actually having
+	// MarketingConsent needs a real version to check against, unlike the
+	// bug fixes (§28, §30-32) that left this constant alone on purpose.
+	// 0.4.0 — journal §70: the free/pro consent model. Required for
+	// WordPress.org compliance: a free plugin no longer contacts Appneck at
+	// all until its owner opts in.
+	const VERSION = '0.4.0';
+
+	/** Prefix of the autoloaded option recording a premium build (journal §70 D5). */
+	const EDITION_OPTION_PREFIX = 'appneck_sdk_edition_';
 
 	/**
 	 * @param string      $api_key          Product API key (pk_...).
@@ -81,7 +93,14 @@ final class Sdk {
 	 *                                          'closed'), `license_cache_ttl`
 	 *                                          (seconds, default 86400) and
 	 *                                          `license_domain` (overrides
-	 *                                          home_url()). Unknown keys are
+	 *                                          home_url()). Journal §70:
+	 *                                          `is_premium` (bool, default
+	 *                                          false — a pro build MUST pass
+	 *                                          true; a free build shows the
+	 *                                          opt-in and contacts nothing
+	 *                                          until it is accepted) and
+	 *                                          `icon_url` (the product icon
+	 *                                          in the opt-in). Unknown keys are
 	 *                                          ignored, so a plugin built
 	 *                                          against a newer SDK's options
 	 *                                          still boots on an older copy
@@ -138,16 +157,32 @@ final class Sdk {
 		// package already uses for LicenseClient below.
 		$fastClient = new Client( $client->config(), $client->credentials(), new WpHttpTransport( 3 ), $logger );
 
+		// Journal §70 D1: one gate, shared by every Client built here, so no
+		// request of any kind leaves a free site before its owner accepts.
+		$is_premium = ! empty( $options['is_premium'] );
+		$gate       = new ContactGate( $is_premium );
+		$client->set_gate( $gate );
+		$fastClient->set_gate( $gate );
+		self::remember_edition( $client->config()->storage_identity(), $is_premium );
+
 		// Telemetry reads the site's plugin/theme inventory off this same
 		// instance for the heartbeat — see Telemetry::environment_payload.
-		$telemetry = new Telemetry( $client, $queue, $logger, null, $environment );
-		$consent   = new Consent( $client, $telemetry, $logger );
-		$lifecycle = new Lifecycle( $client, $plugin_file, $environment, $telemetry, $realtimeConfig );
+		$telemetry         = new Telemetry( $client, $queue, $logger, null, $environment );
+		$consent           = new Consent( $client, $telemetry, $logger );
+		$marketing_consent = new MarketingConsent( $client );
+		$lifecycle         = new Lifecycle( $client, $plugin_file, $environment, $telemetry, $realtimeConfig );
 
 		// Mutual: Telemetry asks Consent whether the owner refused, Consent
 		// acts on Telemetry the moment they answer. Wired here rather than
 		// in either constructor so both stay independently constructible.
 		$telemetry->set_consent( $consent );
+		$gate->set_consent( $consent );
+
+		// Lets Consent::sync() fold a pending marketing decision into the
+		// same /sdk/v1/consent request as whatever telemetry decision
+		// triggered it — see Consent::set_marketing_consent()'s own
+		// comment for why this is a setter rather than a constructor arg.
+		$consent->set_marketing_consent( $marketing_consent );
 
 		// Every response Telemetry already receives carries config_version
 		// for free (13-realtime-config-delivery.md §4) — wired the same
@@ -155,11 +190,14 @@ final class Sdk {
 		// without this costing an extra request.
 		$telemetry->set_realtime_config( $realtimeConfig );
 
-		$plugin_name = $environment->plugin_name();
-		$notice      = new ConsentNotice(
-			$consent,
-			null !== $plugin_name ? array( 'product_name' => $plugin_name ) : array()
-		);
+		$plugin_name    = $environment->plugin_name();
+		$notice_options = null !== $plugin_name ? array( 'product_name' => $plugin_name ) : array();
+
+		if ( isset( $options['icon_url'] ) && is_string( $options['icon_url'] ) && '' !== $options['icon_url'] ) {
+			$notice_options['icon_url'] = $options['icon_url'];
+		}
+
+		$notice = new ConsentNotice( $consent, $notice_options, $marketing_consent, $gate );
 
 		// S4.5: the deactivation survey. Uses the FAST client — Part 7's
 		// 3-second timeout — and the shared circuit breaker, so a click on
@@ -167,6 +205,7 @@ final class Sdk {
 		// falls back to whatever was last cached instead
 		// (Survey::questions(), 13-realtime-config-delivery.md Part 7).
 		$survey             = new Survey( $fastClient, $logger, $realtimeConfig );
+		$survey->set_plugin_version( $environment->plugin_version() );
 		$deactivationSurvey = new DeactivationSurvey(
 			$survey,
 			$deactivationKey,
@@ -233,7 +272,8 @@ final class Sdk {
 			// developer who never passes one still gets the plugin's own
 			// name rather than the generic "This plugin" both LicenseForm
 			// and LicenseNotice fall back to when nothing at all is known.
-			$plugin_name
+			$plugin_name,
+			$marketing_consent
 		);
 	}
 
@@ -292,7 +332,18 @@ final class Sdk {
 			);
 		}
 
-		$client    = self::client( $api_key, $product_secret, $base_url, $credentials, $transport, $logger, $storage_identity );
+		$client = self::client( $api_key, $product_secret, $base_url, $credentials, $transport, $logger, $storage_identity );
+
+		// Journal §70 D1: uninstall obeys the same gate. uninstall.php gets
+		// no bootstrap options, so the edition comes from what bootstrap()
+		// last recorded, and the consent from the decision about to be
+		// forgotten below — a free site that never accepted reports nothing.
+		$gate = new ContactGate(
+			self::remembered_premium( $client->config()->storage_identity() ),
+			new Consent( $client, null, $logger )
+		);
+		$client->set_gate( $gate );
+
 		$lifecycle = new Lifecycle( $client );
 
 		$response = $lifecycle->on_uninstall();
@@ -304,6 +355,10 @@ final class Sdk {
 		// auditable is lost. Cleared after on_uninstall(), which needs the
 		// credentials that call is signed with.
 		( new Consent( $client, null, $logger ) )->forget();
+
+		// Same reasoning as Consent::forget() above, for the second,
+		// independent decision this package now asks for.
+		( new MarketingConsent( $client ) )->forget();
 
 		// The cached survey questions are the plugin's data too, and a
 		// stale copy would otherwise outlive the plugin that fetched it.
@@ -320,6 +375,10 @@ final class Sdk {
 		// bookkeeping, not the server's; nothing to reconcile, only to
 		// remove.
 		( new RealtimeConfig( substr( hash( 'sha256', $client->config()->storage_identity() ), 0, 32 ) ) )->forget();
+
+		if ( function_exists( 'delete_option' ) ) {
+			delete_option( self::edition_option( $client->config()->storage_identity() ) );
+		}
 
 		// The license is the one piece of uninstall cleanup with a
 		// SERVER-side consequence: the activation slot this domain holds
@@ -380,6 +439,33 @@ final class Sdk {
 	 */
 	private static function legacy_storage_identities( $api_key, $plugin_file ) {
 		return array( $api_key, (string) $plugin_file );
+	}
+
+	/**
+	 * Records a premium build so uninstall.php, which receives no bootstrap
+	 * options, still knows it. Written only on a change; autoloaded because
+	 * it is read on the boot that writes it anyway.
+	 */
+	private static function remember_edition( $storage_identity, $is_premium ) {
+		if ( ! function_exists( 'get_option' ) || ! function_exists( 'update_option' ) ) {
+			return;
+		}
+
+		$name   = self::edition_option( $storage_identity );
+		$wanted = $is_premium ? 'premium' : 'free';
+
+		if ( get_option( $name, 'free' ) !== $wanted ) {
+			update_option( $name, $wanted, true );
+		}
+	}
+
+	private static function remembered_premium( $storage_identity ) {
+		return function_exists( 'get_option' )
+			&& 'premium' === get_option( self::edition_option( $storage_identity ), 'free' );
+	}
+
+	private static function edition_option( $storage_identity ) {
+		return self::EDITION_OPTION_PREFIX . substr( hash( 'sha256', (string) $storage_identity ), 0, 32 );
 	}
 
 	/**

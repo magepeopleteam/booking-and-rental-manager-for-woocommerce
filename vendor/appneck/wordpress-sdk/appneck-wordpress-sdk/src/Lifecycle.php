@@ -26,6 +26,18 @@ use Appneck\Sdk\Queue\TableEventQueue;
  * the same code path, so the path that matters is the one exercised
  * every time rather than a rarely-hit fallback.
  *
+ * ## Nothing until consent, for a free plugin (journal §70)
+ *
+ * Activation still marks the site as needing registration and creates the
+ * local queue table — both local only. The registration request itself
+ * waits behind the ContactGate: ensure_registered() returns early, without
+ * counting an attempt, until the owner accepts (or forever, if they never
+ * do). The first admin page load after "Allow & Continue" registers.
+ * Status reports (deactivated/removed) are gated the same way: a site
+ * Appneck was never allowed to know about has nothing to report. A free
+ * build registers without `site_admins` (§70 D3); every build reports its
+ * `edition`.
+ *
  * ## Retry: escalating single events, capped
  *
  * A failed attempt schedules the next one on a widening backoff (1m, 5m,
@@ -57,6 +69,9 @@ final class Lifecycle {
 	const CRON_HOOK = 'appneck_sdk_register';
 
 	const MAX_ATTEMPTS = 12;
+
+	/** How long one request may hold the update-sync lock (journal §51.1). */
+	const SYNC_LOCK_SECONDS = 60;
 
 	/** Backoff in seconds; the last value repeats until MAX_ATTEMPTS. */
 	const BACKOFF = array( 60, 300, 900, 3600, 21600, 86400 );
@@ -125,6 +140,88 @@ final class Lifecycle {
 		// Fallback for sites where WP-Cron cannot run. Cheap: it exits on
 		// an option read when there is nothing to do.
 		add_action( 'admin_init', array( $this, 'maybe_retry_on_admin_init' ) );
+
+		// Journal §51.1: updates never run the activation hook, so this is
+		// how an update reaches the server at all.
+		$this->sync_versions();
+	}
+
+	// -----------------------------------------------------------------
+	// Updates (journal §51.1)
+	// -----------------------------------------------------------------
+
+	/**
+	 * Notices that the code running now is not the code that last ran —
+	 * a plugin update of any kind (dashboard, auto-update, WP-CLI, FTP,
+	 * Composer), an SDK update carried in by another plugin's bundle, or
+	 * the first boot of an SDK that arrived in an update of a plugin that
+	 * was already active — and prepares a re-registration, exactly as
+	 * activation does.
+	 *
+	 * `upgrader_process_complete` was rejected: it runs inside the OLD
+	 * code mid-update and never fires for FTP or Composer deploys.
+	 *
+	 * NO network I/O, same rule as on_activate(). Cheap when nothing
+	 * changed: one autoloaded option read and the plugin header read
+	 * Environment already does for plugin_name().
+	 *
+	 * @return bool True when a change was found and handled.
+	 */
+	public function sync_versions() {
+		if ( ! function_exists( 'get_option' ) || ! function_exists( 'wp_schedule_single_event' ) ) {
+			return false;
+		}
+
+		$running = $this->running_versions();
+
+		if ( $running === $this->get_option( 'seen_versions', null ) ) {
+			return false;
+		}
+
+		// A busy site sees the change on many requests at once. Without a
+		// lock each would run dbDelta and rewrite WordPress's shared `cron`
+		// option concurrently — the classic race that can drop OTHER
+		// plugins' cron events. Best-effort (read-then-write, no atomic
+		// primitive in the options API), which narrows the stampede to a
+		// few requests; the work itself is idempotent either way. A lock
+		// older than a minute belongs to a request that died, so it is
+		// taken over rather than blocking the update forever.
+		$locked_at = (int) $this->get_option( 'sync_lock', 0 );
+
+		if ( $locked_at > 0 && ( time() - $locked_at ) < self::SYNC_LOCK_SECONDS ) {
+			return false;
+		}
+
+		$this->update_option( 'sync_lock', time() );
+
+		$this->prepare_registration();
+
+		// Journal §70 D6: an upgrade on a free site whose owner has not
+		// accepted drops whatever an older SDK buffered while it was still
+		// treating `pending` as "keep collecting". The queue is the site's
+		// own table; nothing is sent.
+		if ( null !== $this->telemetry && ! $this->client->may_send() ) {
+			$this->telemetry->queue()->purge();
+		}
+
+		// Stored LAST: if anything above dies mid-request, the next load
+		// after the lock expires sees the mismatch again and retries.
+		// Autoloaded, unlike every other option here: this one is read on
+		// every request.
+		if ( function_exists( 'update_option' ) ) {
+			update_option( $this->option_name( 'seen_versions' ), $running, true );
+		}
+
+		$this->delete_option( 'sync_lock' );
+
+		return true;
+	}
+
+	/** @return string "<plugin version>|<sdk version>" */
+	private function running_versions() {
+		$plugin_version = $this->environment->plugin_version();
+
+		return ( null === $plugin_version ? '' : $plugin_version ) . '|' . Sdk::VERSION;
 	}
 
 	// -----------------------------------------------------------------
@@ -143,6 +240,14 @@ final class Lifecycle {
 		// guaranteed timeout, and precisely the kind of thing that gets
 		// an SDK blamed for taking a network down. Each site registers
 		// itself lazily instead; see ensure_registered().
+		$this->prepare_registration();
+	}
+
+	/**
+	 * Everything activation does, shared with sync_versions() so an update
+	 * and an activation can never drift apart. No network I/O.
+	 */
+	private function prepare_registration() {
 		$this->mark_pending();
 
 		// Forces the next attempt to call the server even though
@@ -163,7 +268,9 @@ final class Lifecycle {
 		TableEventQueue::install();
 
 		if ( null !== $this->telemetry ) {
-			$this->telemetry->schedule();
+			// Not schedule(): an owner who refused consent keeps no flush
+			// timer, even across a reactivation or an update.
+			$this->telemetry->ensure_scheduled();
 		}
 	}
 
@@ -182,6 +289,12 @@ final class Lifecycle {
 	 * @return Response|null Null when nothing needed doing.
 	 */
 	public function ensure_registered() {
+		// Journal §70 D1. Not an attempt: nothing was tried, and the retry
+		// budget must still be whole when the owner says yes.
+		if ( ! $this->client->may_send() ) {
+			return null;
+		}
+
 		$already_registered = $this->client->credentials()->has_credentials();
 		$force              = (bool) $this->get_option( 'force', 0 );
 
@@ -204,7 +317,7 @@ final class Lifecycle {
 		$this->record_attempt( $attempts + 1 );
 
 		$installation_id = $this->installation_id();
-		$payload         = $this->environment->collect();
+		$payload         = $this->registration_payload();
 
 		// journal 9.2b: present only when on_uninstall() stored one on
 		// THIS site's last removal. Harmless to send when there is
@@ -374,6 +487,10 @@ final class Lifecycle {
 		$this->delete_option( 'attempts' );
 		$this->delete_option( 'last_attempt' );
 		$this->delete_option( 'installation_id' );
+		// A reinstall must look like a change, and nothing may outlive the
+		// plugin.
+		$this->delete_option( 'seen_versions' );
+		$this->delete_option( 'sync_lock' );
 
 		return $response;
 	}
@@ -396,11 +513,38 @@ final class Lifecycle {
 		}
 	}
 
+	/**
+	 * What registration sends (journal §70 D3/D5). A free build no longer
+	 * sends `site_admins` — the only personal data a free plugin shares is
+	 * the clicking admin's own name and email, on the marketing-consent
+	 * path. Every build says which edition it is. A Lifecycle built by hand
+	 * with an ungated Client sends exactly what it did before 0.4.0.
+	 *
+	 * @return array<string, mixed>
+	 */
+	private function registration_payload() {
+		$payload = $this->environment->collect();
+		$gate    = $this->client->gate();
+
+		if ( null === $gate ) {
+			return $payload;
+		}
+
+		if ( ! $gate->is_premium() ) {
+			unset( $payload['site_admins'] );
+		}
+
+		$payload['edition'] = $gate->edition();
+
+		return $payload;
+	}
+
 	private function report_status( $status ) {
 		// Never registered, or registration never completed: there is no
 		// installation on the server to update and nothing to sign with.
-		// Not an error — silence is the correct behaviour.
-		if ( ! $this->client->credentials()->has_credentials() ) {
+		// Not an error — silence is the correct behaviour. Same for a closed
+		// gate (journal §70 D1): no consent, nothing to report.
+		if ( ! $this->client->credentials()->has_credentials() || ! $this->client->may_send() ) {
 			return null;
 		}
 
