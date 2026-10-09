@@ -2867,14 +2867,37 @@
         $md.on('click', '.time-picker-toggle', function () {
             timePickerEnabled = !timePickerEnabled;
             $(this).toggleClass('active', timePickerEnabled);
-            // Time Picker off → force Half-Day (the only remaining dependent
-            // toggle) off & disabled. Hourly Price and the Day Threshold are
+            // Time Picker off → force Half-Day and Hourly Price (both
+            // dependent toggles) off & disabled. The Day Threshold stays
             // independent of the time picker in the redesigned layout.
             if (!timePickerEnabled) {
                 halfDayPriceEnabled = false;
                 $md.find('.half-day-price-toggle').removeClass('active');
                 $md.find('#rbfw_enable_half_day_rate').val('no');
                 $md.find('#half-day-price-input').prop('disabled', true);
+
+                // Hourly Price's own click handler already refuses to turn
+                // it ON without Time Picker (see .hourly-price-toggle
+                // below) -- without this, turning Time Picker OFF while
+                // Hourly Price is already on would leave it silently inert
+                // again, recreating the exact state that guard exists to
+                // prevent. Force it off too and say why, instead of leaving
+                // the admin to discover it only at save time.
+                if (hourlyPriceEnabled) {
+                    hourlyPriceEnabled = false;
+                    $md.find('.hourly-price-toggle').removeClass('active');
+                    $md.find('#hourly-price-input').prop('disabled', true);
+                    $md.find('#rbfw_enable_hourly_rate').val('no');
+                    $md.find('.hour-threshold-item').addClass('rbfw-md-hidden');
+                    // Clear any stale banner first -- see the matching note
+                    // on .hourly-price-toggle's own handler below.
+                    $wrap.find('.rbfw-me-table-warning').remove();
+                    showPricingTableWarning(
+                        (rbfwModernEditor_i18n('Hourly Price was turned off because it requires "Enable Time Picker".') || 'Hourly Price was turned off because it requires "Enable Time Picker".'),
+                        $wrap.find('.md-pricing-table-wrap').first(),
+                        null
+                    );
+                }
             }
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
             // Sub-rows also depend on time picker being active
@@ -2894,7 +2917,43 @@
         });
 
         $md.on('click', '.hourly-price-toggle', function () {
-            hourlyPriceEnabled = !hourlyPriceEnabled;
+            var turningOn = ! hourlyPriceEnabled;
+            // Hourly Price is inert without Time Picker on (the booking is
+            // always priced at the daily rate instead --
+            // rbfw_md_price_for_hours_period() in inc/rbfw_functions.php --
+            // same condition validateBeforeSave() already blocks Publish on).
+            // Catch it right here instead of letting the admin turn it on
+            // and only finding out at save time.
+            if (turningOn && ! timePickerEnabled) {
+                // showPricingTableWarning() skips inserting if a banner is
+                // already sitting at this anchor (e.g. the "Hourly Price was
+                // turned off..." notice from the Time Picker toggle's own
+                // handler) -- without clearing it first, this message (and
+                // its "Enable Time Picker" button) would silently never
+                // appear, leaving the admin with a stale notice and no way
+                // to act on it.
+                $wrap.find('.rbfw-me-table-warning').remove();
+                showPricingTableWarning(
+                    (rbfwModernEditor_i18n('Hourly Price needs "Enable Time Picker" turned on first.') || 'Hourly Price needs "Enable Time Picker" turned on first.') +
+                    ' <button type="button" class="rbfw-me-enable-tp-btn rbfw-me-inline-link-btn">' +
+                    (rbfwModernEditor_i18n('Enable Time Picker') || 'Enable Time Picker') + '</button>',
+                    $wrap.find('.md-pricing-table-wrap').first(),
+                    null
+                );
+                $wrap.off('click.rbfwEnableTp').on('click.rbfwEnableTp', '.rbfw-me-enable-tp-btn', function () {
+                    $wrap.find('.rbfw-me-table-warning').remove();
+                    // Each toggle's own click handler already does everything
+                    // needed (state, visuals, hidden input + change event) --
+                    // trigger both rather than duplicating that logic here.
+                    // Time Picker first so Hourly Price's own re-check above
+                    // passes the second time.
+                    $md.find('.time-picker-toggle').trigger('click');
+                    $md.find('.hourly-price-toggle').trigger('click');
+                });
+                return;
+            }
+            $wrap.find('.rbfw-me-table-warning').remove();
+            hourlyPriceEnabled = turningOn;
             $(this).toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
             $md.find('#rbfw_enable_hourly_rate').val(hourlyPriceEnabled ? 'yes' : 'no');

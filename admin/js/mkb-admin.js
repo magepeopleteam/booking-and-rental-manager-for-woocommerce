@@ -1267,6 +1267,16 @@
         }
 
         function toggleHourlyPrice() {
+            // Multiple Day has its own scoped handler in the Modern Editor
+            // (rbfw-modern-editor.js, $md.on('click', '.hourly-price-toggle'))
+            // which also guards against enabling Hourly Price while Enable
+            // Time Picker is off. This classic handler is unscoped, has no
+            // such guard, and fires on the same click -- without this skip
+            // it silently re-enables Hourly Price right after the Modern
+            // Editor's handler just blocked it and warned the admin.
+            if (jQuery(this).closest('.rbfw-me-wrap').length) {
+                return;
+            }
             hourlyPriceEnabled = !hourlyPriceEnabled;
             hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
             hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
@@ -1277,6 +1287,12 @@
         }
 
         function toggleHalfDayPrice() {
+            // Same classic-vs-Modern-Editor conflict as toggleHourlyPrice()
+            // above -- Multiple Day's own scoped handler already refuses to
+            // enable Half-Day Price without Time Picker on.
+            if (jQuery(this).closest('.rbfw-me-wrap').length) {
+                return;
+            }
             halfDayPriceEnabled = !halfDayPriceEnabled;
             halfDayPriceToggle.toggleClass('active', halfDayPriceEnabled);
             halfDayPriceInput.prop('disabled', !halfDayPriceEnabled);
