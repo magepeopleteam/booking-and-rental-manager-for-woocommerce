@@ -212,6 +212,11 @@ if (! class_exists('RBFW_Dependencies')) {
                 'filed_label' => __('Field Label', 'booking-and-rental-manager-for-woocommerce'),
                 'actions' => __('Action', 'booking-and-rental-manager-for-woocommerce'),
                 'add_new_value' => __('Add New Value', 'booking-and-rental-manager-for-woocommerce'),
+                'in_stock' => __('in stock', 'booking-and-rental-manager-for-woocommerce'),
+                'set_as_default' => __('Set as default', 'booking-and-rental-manager-for-woocommerce'),
+                'currency_symbol' => function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '$',
+                'variation_example' => __('e.g. Red', 'booking-and-rental-manager-for-woocommerce'),
+                'quantity_example' => __('e.g. 3', 'booking-and-rental-manager-for-woocommerce'),
                 // Previously hard-coded inside admin/js/mkb-admin.js (now translatable).
                 'room_type' => __('Room type', 'booking-and-rental-manager-for-woocommerce'),
                 'day_long_rate' => __('Day-long Rate', 'booking-and-rental-manager-for-woocommerce'),

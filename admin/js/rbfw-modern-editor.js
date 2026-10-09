@@ -30,6 +30,7 @@
         initEditorMediaBtn();
         initPricingTypeSwitch();
         initParticularSwitch();
+        initParticularSlotPicker();
         initMdPricing();
         initRelatedPicker();
         initFaq();
@@ -326,7 +327,25 @@
         $wrap.on('click', '[name="manage_inventory_as_timely"]', function (e) {
             e.stopPropagation();
             $(this).val(this.checked ? 'on' : 'off');
-            syncTimelyUI($(this).closest('.rbfw-me-panel'));
+            var $panel = $(this).closest('.rbfw-me-panel');
+            syncTimelyUI($panel);
+
+            // Time-slot bookings need Enable Time Picker on to actually collect
+            // a time -- Pricing.php's save-time validation already requires this
+            // combination (unless "Enable duration-based rental items" is on,
+            // which supplies its own fixed Start/End Time instead and doesn't
+            // need the picker). Auto-enable it here instead of only telling the
+            // admin about the missing toggle after a failed save.
+            var isSpecificDurationOn = $panel.find('[name="enable_specific_duration"]').is(':checked');
+            if (this.checked && ! isSpecificDurationOn) {
+                var $sdWrap = $panel.find('.rbfw_bike_car_sd_wrapper');
+                var $tpToggle = $sdWrap.find('.time-picker-toggle');
+                if ($tpToggle.length && ! $tpToggle.hasClass('active')) {
+                    $tpToggle.addClass('active');
+                    $sdWrap.find('.rbfw_enable_time_picker').val('yes');
+                    $sdWrap.find('.time-slots-section').show();
+                }
+            }
         });
 
         $wrap.on('click', '[name="enable_specific_duration"]', function (e) {
@@ -384,6 +403,30 @@
         if ( _meType === 'bike_car_sd' || _meType === 'appointment' ) {
             if (isTimely && isSpecific)  { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide(); }
             else                          { $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').show(); }
+        }
+
+        // "Rent Item Stock Quantity" lives in the Inventory card, a separate
+        // panel from this toggle (see RBFW_Inventory::stock_settings()) — mirror
+        // the toggle's live state there too instead of waiting on a save+reload.
+        // Single Day only (matches $show_timely_stock in Inventory.php): this
+        // toggle checkbox only has real meaning for bike_car_sd, but its
+        // saved value persists even after switching an item to another type
+        // (e.g. Multiple Day), so without the type check here an item saved
+        // with manage_inventory_as_timely=on would show this section
+        // *alongside* Multiple Day's own always-visible Stock Quantity field
+        // -- two stock-qty fields at once.
+        var $timelySection      = $wrap.find('.rbfw-me-inventory-card .rbfw_timely_stock_quantity_section');
+        var $timelyStockInput   = $timelySection.find('#rbfw_item_stock_quantity_timely');
+        var showTimelyStock     = isTimely && _meType === 'bike_car_sd';
+        // Variations draw stock from their own per-size table, so the single
+        // shared number here is moot (and disabled, see mkb-admin.js) whenever
+        // they're on — never require it in that state.
+        var timelyStockRequired = showTimelyStock && ! $timelyStockInput.prop('disabled');
+        $timelySection.toggle(showTimelyStock);
+        $timelyStockInput.prop('required', timelyStockRequired);
+        $timelySection.find('.rbfw-me-required-mark').toggle(timelyStockRequired);
+        if ( ! timelyStockRequired ) {
+            clearFieldError($timelyStockInput);
         }
     }
 
@@ -1100,6 +1143,23 @@
             if ( ! validateMultipleItemsPricingRows(errors) ) {
                 return false;
             }
+        } else if ( rentType === 'bike_car_md' || rentType === 'dress' || rentType === 'equipment' || rentType === 'others' ) {
+            // Mirrors the server-side check in
+            // RBFW_Pricing::get_pricing_validation_errors() — an Hourly Price
+            // left "On" with the Time Picker "Off" is silently inert on the
+            // front end (the booking is always priced at the daily rate
+            // instead; see rbfw_md_price_for_hours_period() in
+            // inc/rbfw_functions.php), so catch it here before save.
+            var $hourlyToggle = $wrap.find('.hourly-price-toggle');
+            var $timePickerToggle = $wrap.find('.time-picker-toggle');
+            if ( $hourlyToggle.hasClass('active') && ! $timePickerToggle.hasClass('active') ) {
+                showPricingTableWarning(
+                    'Please enable "Enable Time Picker" to keep Hourly Price active, or turn Hourly Price off.',
+                    $wrap.find('.md-pricing-table-wrap').first(),
+                    '.time-picker-toggle'
+                );
+                return false;
+            }
         }
 
         if ( rentType === 'bike_car_sd' ) {
@@ -1182,8 +1242,9 @@
                 }
 
                 if ( empty ) {
-                    var label = $f.attr('placeholder')
+                    var label = $f.attr('data-label')
                               || $f.closest('.rbfw-me-field').find('.rbfw-me-field__label').text()
+                              || $f.attr('placeholder')
                               || $f.attr('name')
                               || 'This field';
                     errors.push({ $field: $f, msg: label + ' is required.' });
@@ -2130,9 +2191,11 @@
             }
         });
 
-        // Add new date range row
-        $wrap.on('click', '.rbfw-me-offdate-add', function () {
-            var $list = $(this).closest('.rbfw-me-card__body').find('.rbfw-me-offdate-list');
+        // Builds one off-date row's markup -- shared by the "Add Another Range"
+        // button and the calendar's click-to-block handler below, so both stay
+        // in sync with the exact same field names collectFormData()/the save
+        // handlers already expect (off_days_start[]/off_days_end[]).
+        function buildOffdateRow(start, end) {
             var $row = $(
                 '<div class="rbfw-me-offdate-row">' +
                     '<div class="rbfw-me-field">' +
@@ -2148,7 +2211,15 @@
                     '</button>' +
                 '</div>'
             );
-            $list.append($row);
+            if (start) { $row.find('input[name="off_days_start[]"]').val(start); }
+            if (end) { $row.find('input[name="off_days_end[]"]').val(end); }
+            return $row;
+        }
+
+        // Add new date range row
+        $wrap.on('click', '.rbfw-me-offdate-add', function () {
+            var $list = $(this).closest('.rbfw-me-card__body').find('.rbfw-me-offdate-list');
+            $list.append(buildOffdateRow());
         });
 
         // Remove date range row
@@ -2159,7 +2230,198 @@
             } else {
                 $(this).closest('.rbfw-me-offdate-row').find('input[type="date"]').val('');
             }
+            $wrap.find('.rbfw-me-offday-cal').trigger('rbfwRenderCalendar');
         });
+
+        /*
+         * Availability Calendar: click any date to block/unblock it. Blocking
+         * adds an off_days_start[]/off_days_end[] row with start === end (a
+         * one-day "range"), reusing the exact same data the manual Start/End
+         * Date rows already save -- so existing customers' saved multi-day
+         * ranges keep working and keep displaying here (shaded, but only
+         * removable from the row list below -- a single calendar click can't
+         * safely edit an arbitrary multi-day range). Weekday pills (recurring
+         * off days) shade every matching weekday automatically.
+         */
+        var $cal = $wrap.find('.rbfw-me-offday-cal');
+        if ($cal.length) {
+            var MONTH_NAMES = [
+                rbfwModernEditor_i18n('January') || 'January', rbfwModernEditor_i18n('February') || 'February',
+                rbfwModernEditor_i18n('March') || 'March', rbfwModernEditor_i18n('April') || 'April',
+                rbfwModernEditor_i18n('May') || 'May', rbfwModernEditor_i18n('June') || 'June',
+                rbfwModernEditor_i18n('July') || 'July', rbfwModernEditor_i18n('August') || 'August',
+                rbfwModernEditor_i18n('September') || 'September', rbfwModernEditor_i18n('October') || 'October',
+                rbfwModernEditor_i18n('November') || 'November', rbfwModernEditor_i18n('December') || 'December'
+            ];
+            var DOW_SHORT = [
+                rbfwModernEditor_i18n('Mon') || 'Mon', rbfwModernEditor_i18n('Tue') || 'Tue',
+                rbfwModernEditor_i18n('Wed') || 'Wed', rbfwModernEditor_i18n('Thu') || 'Thu',
+                rbfwModernEditor_i18n('Fri') || 'Fri', rbfwModernEditor_i18n('Sat') || 'Sat',
+                rbfwModernEditor_i18n('Sun') || 'Sun'
+            ];
+            var WEEKDAY_BY_JSDAY = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+
+            var today = new Date();
+            var viewYear = today.getFullYear();
+            var viewMonth = today.getMonth();
+
+            function pad2(n) { return (n < 10 ? '0' : '') + n; }
+            function isoDate(y, m, d) { return y + '-' + pad2(m + 1) + '-' + pad2(d); }
+
+            function offWeekdaySlugs() {
+                var slugs = [];
+                $wrap.find('.rbfw-me-offday-checkbox:checked').each(function () {
+                    slugs.push($(this).data('day'));
+                });
+                return slugs;
+            }
+
+            function offDateRanges() {
+                var ranges = [];
+                $wrap.find('.rbfw-me-offdate-row').each(function () {
+                    var s = $(this).find('input[name="off_days_start[]"]').val();
+                    var e = $(this).find('input[name="off_days_end[]"]').val();
+                    if (s && e) { ranges.push({ start: s, end: e }); }
+                });
+                return ranges;
+            }
+
+            function renderCalendar() {
+                var weekdaySlugs = offWeekdaySlugs();
+                var ranges = offDateRanges();
+                var todayIso = isoDate(today.getFullYear(), today.getMonth(), today.getDate());
+
+                $cal.find('.rbfw-me-offday-cal__month').text(MONTH_NAMES[viewMonth] + ' ' + viewYear);
+
+                var $dow = $cal.find('.rbfw-me-offday-cal__dow').empty();
+                DOW_SHORT.forEach(function (d) {
+                    $dow.append($('<span>').text(d));
+                });
+
+                var $grid = $cal.find('.rbfw-me-offday-cal__grid').empty();
+                var first = new Date(viewYear, viewMonth, 1);
+                var startOffset = (first.getDay() + 6) % 7; // Monday-first, matches the weekday checkbox order
+                var daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+                var i, d;
+
+                for (i = 0; i < startOffset; i++) {
+                    $grid.append('<span class="rbfw-me-offday-cal__cell rbfw-me-offday-cal__cell--blank"></span>');
+                }
+
+                for (d = 1; d <= daysInMonth; d++) {
+                    var iso = isoDate(viewYear, viewMonth, d);
+                    var jsDay = new Date(viewYear, viewMonth, d).getDay();
+                    var isWeeklyOff = weekdaySlugs.indexOf(WEEKDAY_BY_JSDAY[jsDay]) !== -1;
+
+                    var matchedRange = null, r;
+                    for (r = 0; r < ranges.length; r++) {
+                        if (iso >= ranges[r].start && iso <= ranges[r].end) { matchedRange = ranges[r]; break; }
+                    }
+                    var isSingleDayBlock = matchedRange && matchedRange.start === matchedRange.end;
+                    var isRangeBlock = matchedRange && !isSingleDayBlock;
+
+                    var $btn = $('<button type="button" class="rbfw-me-offday-cal__cell"></button>')
+                        .text(d)
+                        .attr('data-date', iso);
+                    if (isRangeBlock) {
+                        $btn.addClass('is-range').attr('title', rbfwModernEditor_i18n('Part of a date range -- click to remove the whole range') || 'Part of a date range -- click to remove the whole range');
+                    } else if (isSingleDayBlock) {
+                        $btn.addClass('is-blocked');
+                    } else if (isWeeklyOff) {
+                        $btn.addClass('is-weekly').attr('title', rbfwModernEditor_i18n('Repeats every week -- click to stop repeating this weekday') || 'Repeats every week -- click to stop repeating this weekday');
+                    }
+                    if (iso === todayIso) { $btn.addClass('is-today'); }
+
+                    $grid.append($btn);
+                }
+            }
+
+            $cal.on('click', '.rbfw-me-offday-cal__prev', function () {
+                viewMonth--;
+                if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+                renderCalendar();
+            });
+            $cal.on('click', '.rbfw-me-offday-cal__next', function () {
+                viewMonth++;
+                if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+                renderCalendar();
+            });
+
+            // Every non-blank cell is click-toggleable, whatever made it red --
+            // a click always means "unselect this" when it's already off:
+            //  - .is-weekly (recurring weekday)   -> untick that weekday's pill
+            //  - .is-range (multi-day range row)  -> remove the whole covering row
+            //  - .is-blocked (single-day block)   -> remove that one row
+            // and "block this date" when it's plain (adds a single-day row).
+            $cal.on('click', '.rbfw-me-offday-cal__cell:not(.rbfw-me-offday-cal__cell--blank)', function () {
+                var $btn = $(this);
+                var iso = $btn.data('date');
+                var $list = $wrap.find('.rbfw-me-offdate-list');
+
+                if ($btn.hasClass('is-weekly')) {
+                    var jsDay = new Date(iso + 'T00:00:00').getDay();
+                    var slug = WEEKDAY_BY_JSDAY[jsDay];
+                    $wrap.find('.rbfw-me-offday-checkbox[data-day="' + slug + '"]').prop('checked', false).trigger('change');
+                    renderCalendar();
+                    return;
+                }
+
+                if ($btn.hasClass('is-range')) {
+                    $list.find('.rbfw-me-offdate-row').each(function () {
+                        var s = $(this).find('input[name="off_days_start[]"]').val();
+                        var e = $(this).find('input[name="off_days_end[]"]').val();
+                        if (s && e && iso >= s && iso <= e) {
+                            if ($list.find('.rbfw-me-offdate-row').length > 1) {
+                                $(this).remove();
+                            } else {
+                                $(this).find('input[type="date"]').val('');
+                            }
+                            return false;
+                        }
+                    });
+                    renderCalendar();
+                    return;
+                }
+
+                var $existingRow = null;
+                $list.find('.rbfw-me-offdate-row').each(function () {
+                    var s = $(this).find('input[name="off_days_start[]"]').val();
+                    var e = $(this).find('input[name="off_days_end[]"]').val();
+                    if (s === iso && e === iso) { $existingRow = $(this); return false; }
+                });
+
+                if ($existingRow) {
+                    if ($list.find('.rbfw-me-offdate-row').length > 1) {
+                        $existingRow.remove();
+                    } else {
+                        $existingRow.find('input[type="date"]').val('');
+                    }
+                } else {
+                    var $empty = $list.find('.rbfw-me-offdate-row').filter(function () {
+                        return !$(this).find('input[name="off_days_start[]"]').val() && !$(this).find('input[name="off_days_end[]"]').val();
+                    }).first();
+
+                    if ($empty.length) {
+                        $empty.find('input[name="off_days_start[]"]').val(iso);
+                        $empty.find('input[name="off_days_end[]"]').val(iso);
+                    } else {
+                        $list.append(buildOffdateRow(iso, iso));
+                    }
+                }
+
+                renderCalendar();
+            });
+
+            // Re-render on anything that could change what's shaded: the weekday
+            // pills, manual edits to a date row, or this widget's own writes above.
+            $wrap.on('change', '.rbfw-me-offday-checkbox, .rbfw-me-offdate-row input', renderCalendar);
+            $wrap.on('click', '.rbfw-me-offdate-add, .rbfw-me-offdate-remove', function () {
+                setTimeout(renderCalendar, 0);
+            });
+            $cal.on('rbfwRenderCalendar', renderCalendar);
+
+            renderCalendar();
+        }
     }
 
     /* ── Pricing rent-type switching ────────────────────────── */
@@ -2186,7 +2448,6 @@
                     window.rbfwSetTimelyInventorySection($pricing, true);
                 }
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
@@ -2208,7 +2469,6 @@
             } else if (type === 'multiple_items') {
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                syncTimelyUI($pricing);
 
             } else {
                 // bike_car_md and legacy aliases
@@ -2217,6 +2477,12 @@
                 $pricing.find('.mds_price_md').show();
             }
 
+            // Only bike_car_sd ever needs the timely stock field required; every
+            // other type (including a type switch away from it) must clear a
+            // stale "required" or the generic required-field scan below would
+            // block Publish on a field the admin can no longer even see.
+            syncTimelyUI($pricing);
+
             // Inventory card (stock + variations): mirror the classic editor, which
             // hides inventory for resort / appointment. Single Day (bike_car_sd) now
             // supports item variations, so its inventory card stays visible.
@@ -2224,6 +2490,13 @@
             // card-level inventory does not apply to it.
             var _invShow = (type !== 'resort' && type !== 'appointment' && type !== 'multiple_items');
             $pricing.find('.rbfw-me-inventory-card').toggleClass('rbfw-me-hidden', !_invShow);
+
+            // Location Configuration (Advanced tab): pickup/drop-off + Location
+            // Inventory & Price don't apply to Resort or Appointment -- see the
+            // matching PHP gate in rbfw-modern-editor.php. Scoped to $wrap, not
+            // $pricing, since the card lives in the Advanced panel.
+            var _locShow = (type !== 'resort' && type !== 'appointment');
+            $wrap.find('.rbfw-me-location-card').toggleClass('rbfw-me-hidden', !_locShow);
 
             // Inventory sub-sections that only apply to specific rent types:
             //  - Return-date release: date-range rentals only (hide for Single Day & Appointment).
@@ -2307,6 +2580,157 @@
         });
     }
 
+    /**
+     * Particular-date-range time slot picker: tap any globally-configured
+     * slot to add/remove it from that specific date range, replacing the
+     * previous "type a time + Add Slot" flow for these rows (which saved
+     * every added slot under row index 0 regardless of which row's button
+     * was actually clicked -- a pre-existing bug in both this file and
+     * mkb-admin.js, not something introduced here).
+     *
+     * Shared by Single Day, Multiple Day and Multiple Items (all three call
+     * RBFW_Pricing::multiple_time_slot_with_particular() with the same
+     * markup), so this is intentionally NOT scoped to any one rent type's
+     * wrapper -- it scopes itself per `.time-slots-section` instead, since
+     * each rent type's section has its own self-contained global slot list
+     * and its own particular-date rows.
+     */
+    function initParticularSlotPicker() {
+        function $sectionOf($el) {
+            return $el.closest('.time-slots-section');
+        }
+        function globalSlotTimes($section) {
+            var times = [];
+            $section.find('#time-slots-container .time-slot').each(function () {
+                var $slot = $(this);
+                if ($slot.find('input[name*="[status]"]').val() !== 'enabled') { return; }
+                var t = $.trim($slot.find('.time-slot-time').text());
+                if (t && times.indexOf(t) === -1) { times.push(t); }
+            });
+            return times;
+        }
+        function syncRow($pickerWrap) {
+            var $hidden = $pickerWrap.siblings('.rbfw-particular-hidden-slots').empty();
+            var baseName = $pickerWrap.data('base-name');
+            var particularId = $pickerWrap.data('particular-id');
+            if (baseName === undefined || particularId === undefined || particularId === '') { return; }
+            var j = 0;
+            $pickerWrap.find('.slotchip-pick.active').each(function () {
+                var t = $(this).text();
+                $hidden.append(
+                    '<input type="hidden" class="rbfw-particular-slot-time" name="' + baseName + '[' + particularId + '][available_time][' + j + '][id]" value="' + j + '">' +
+                    '<input type="hidden" name="' + baseName + '[' + particularId + '][available_time][' + j + '][time]" value="' + t + '">' +
+                    '<input type="hidden" name="' + baseName + '[' + particularId + '][available_time][' + j + '][status]" value="enabled">'
+                );
+                j++;
+            });
+            $pickerWrap.find('.rbfw-slot-picker-empty').toggle(j === 0);
+        }
+        function buildPicker($pickerWrap) {
+            var $section = $sectionOf($pickerWrap);
+            var $hidden = $pickerWrap.siblings('.rbfw-particular-hidden-slots');
+            var selected = {};
+            $hidden.find('input[name*="[time]"]').each(function () {
+                selected[$.trim($(this).val())] = true;
+            });
+            var $picker = $pickerWrap.find('.rbfw-slot-picker').empty();
+            globalSlotTimes($section).forEach(function (t) {
+                var $chip = $('<button type="button" class="slotchip-pick"></button>').text(t);
+                if (selected[t]) { $chip.addClass('active'); }
+                $picker.append($chip);
+            });
+            syncRow($pickerWrap);
+        }
+        function refreshSection($section) {
+            $section.find('.rbfw_pdwt_insert > .rbfw_pdwt_row .rbfw-slot-picker-wrap').each(function () {
+                buildPicker($(this));
+            });
+        }
+
+        // Initial build for every server-rendered particular row, on every
+        // rent type's section present on this screen.
+        $wrap.find('.time-slots-section').each(function () {
+            refreshSection($(this));
+        });
+
+        // Toggle a slot chip in/out of this row's selection.
+        $wrap.on('click', '.slotchip-pick', function () {
+            $(this).toggleClass('active');
+            syncRow($(this).closest('.rbfw-slot-picker-wrap'));
+        });
+
+        // Keep every row's picker in sync with the global slot list within
+        // its own section (covers slots added via the existing global
+        // .add-slot-btn, and removed via .time-slot-remove/.time-slot-indicator).
+        $wrap.find('.time-slots-section').each(function () {
+            var $section = $(this);
+            var $globalSlots = $section.find('#time-slots-container')[0];
+            if ($globalSlots && window.MutationObserver) {
+                new MutationObserver(function () { refreshSection($section); }).observe($globalSlots, { childList: true });
+            }
+        });
+        $wrap.on('click', '.time-slot-indicator', function () {
+            var $section = $sectionOf($(this));
+            setTimeout(function () { refreshSection($section); }, 0);
+        });
+
+        // Custom "+ Add new slot" within a particular row: adds the time to
+        // this section's own global list too (so it becomes a normal,
+        // reusable slot for every row in this section), then marks it
+        // active for the row it was added from.
+        $wrap.on('click', '.rbfw-slot-custom-add-btn', function (e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var $pickerWrap = $btn.closest('.rbfw_pdwt_row, .mp_hidden_item').find('.rbfw-slot-picker-wrap');
+            var $section = $sectionOf($btn);
+            var rawTime = $btn.closest('.rbfw-slot-custom-add').find('.rbfw-slot-custom-time').val();
+            if (! rawTime) { return; }
+
+            var parts = rawTime.split(':');
+            var h = parseInt(parts[0], 10);
+            var period = h >= 12 ? 'PM' : 'AM';
+            var h12 = h % 12 || 12;
+            var time = h12 + ':' + parts[1] + ' ' + period;
+
+            var $globalSlots = $section.find('#time-slots-container');
+            var exists = $globalSlots.find('.time-slot-time').filter(function () { return $(this).text() === time; }).length > 0;
+            if (! exists) {
+                var index = $globalSlots.children('.time-slot').length;
+                $globalSlots.append(
+                    '<div class="time-slot enabled" data-id="' + index + '">' +
+                    '<span class="time-slot-time">' + time + '</span>' +
+                    '<input type="hidden" name="rdfw_available_time[' + index + '][id]" value="' + index + '">' +
+                    '<input type="hidden" name="rdfw_available_time[' + index + '][time]" value="' + time + '">' +
+                    '<input type="hidden" name="rdfw_available_time[' + index + '][status]" value="enabled">' +
+                    '<div class="time-slot-remove" title="Remove time slot">×</div>' +
+                    '</div>'
+                );
+            }
+            refreshSection($section);
+            $pickerWrap.find('.rbfw-slot-picker .slotchip-pick').filter(function () { return $(this).text() === time; }).addClass('active');
+            syncRow($pickerWrap);
+            $btn.closest('.rbfw-slot-custom-add').find('.rbfw-slot-custom-time').val('');
+        });
+
+        // Newly-cloned particular rows (via #add-particular-row, cloned in
+        // mkb-admin.js from .mp_hidden_item): give the new row's picker the
+        // correct particular_id and populate it. Deferred so this runs after
+        // the clone has actually been appended to the DOM.
+        $wrap.on('click', '#add-particular-row', function () {
+            var $btn = $(this);
+            setTimeout(function () {
+                var $insert = $btn.closest('.available-particular').find('.rbfw_pdwt_insert');
+                var $rows = $insert.children('.rbfw_pdwt_row');
+                var $last = $rows.last();
+                var $pickerWrap = $last.find('.rbfw-slot-picker-wrap');
+                if (! $pickerWrap.length || $pickerWrap.attr('data-particular-id') !== undefined) { return; }
+                var newId = $rows.length - 1;
+                $pickerWrap.attr('data-particular-id', newId).data('particular-id', newId);
+                buildPicker($pickerWrap);
+            }, 0);
+        });
+    }
+
     /* ── Multiple Day Pricing Interactivity ─────────────────── */
     function initMdPricing() {
         var $pricing = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
@@ -2364,14 +2788,14 @@
             $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
 
-            // Half-day / hourly / hour-threshold all require the time picker. When it is
-            // off, force those dependent toggles off so the saved data stays consistent
-            // (otherwise a previously-enabled hourly/half-day stays "yes" while hidden).
+            // Half-day price requires the time picker; when it's off, force it off too so
+            // the saved data stays consistent (otherwise a previously-enabled half-day
+            // stays "yes" while hidden). Hourly Price now lives in the always-visible
+            // Pricing table and the Day Threshold has no toggle at all in the redesigned
+            // Thresholds card -- both are independent of the time picker.
             if (!timePickerEnabled) {
-                hourlyPriceEnabled   = false;
                 halfDayPriceEnabled  = false;
-                hourThresholdEnabled = false;
-                $md.find('#rbfw_enable_hourly_rate, #rbfw_enable_half_day_rate, #rbfw_enable_hourly_threshold').val('no');
+                $md.find('#rbfw_enable_half_day_rate').val('no');
             }
 
             // Hourly price
@@ -2443,30 +2867,93 @@
         $md.on('click', '.time-picker-toggle', function () {
             timePickerEnabled = !timePickerEnabled;
             $(this).toggleClass('active', timePickerEnabled);
-            // Time Picker off → force every dependent toggle off & disabled.
+            // Time Picker off → force Half-Day and Hourly Price (both
+            // dependent toggles) off & disabled. The Day Threshold stays
+            // independent of the time picker in the redesigned layout.
             if (!timePickerEnabled) {
-                hourlyPriceEnabled   = false;
-                halfDayPriceEnabled  = false;
-                hourThresholdEnabled = false;
-                $md.find('.hourly-price-toggle, .half-day-price-toggle, .hour-threshold-toggle').removeClass('active');
-                $md.find('#rbfw_enable_hourly_rate, #rbfw_enable_half_day_rate, #rbfw_enable_hourly_threshold').val('no');
-                $md.find('#hourly-price-input, #half-day-price-input, #hour-threshold-input').prop('disabled', true);
+                halfDayPriceEnabled = false;
+                $md.find('.half-day-price-toggle').removeClass('active');
+                $md.find('#rbfw_enable_half_day_rate').val('no');
+                $md.find('#half-day-price-input').prop('disabled', true);
+
+                // Hourly Price's own click handler already refuses to turn
+                // it ON without Time Picker (see .hourly-price-toggle
+                // below) -- without this, turning Time Picker OFF while
+                // Hourly Price is already on would leave it silently inert
+                // again, recreating the exact state that guard exists to
+                // prevent. Force it off too and say why, instead of leaving
+                // the admin to discover it only at save time.
+                if (hourlyPriceEnabled) {
+                    hourlyPriceEnabled = false;
+                    $md.find('.hourly-price-toggle').removeClass('active');
+                    $md.find('#hourly-price-input').prop('disabled', true);
+                    $md.find('#rbfw_enable_hourly_rate').val('no');
+                    $md.find('.hour-threshold-item').addClass('rbfw-md-hidden');
+                    // Clear any stale banner first -- see the matching note
+                    // on .hourly-price-toggle's own handler below.
+                    $wrap.find('.rbfw-me-table-warning').remove();
+                    showPricingTableWarning(
+                        (rbfwModernEditor_i18n('Hourly Price was turned off because it requires "Enable Time Picker".') || 'Hourly Price was turned off because it requires "Enable Time Picker".'),
+                        $wrap.find('.md-pricing-table-wrap').first(),
+                        null
+                    );
+                }
             }
-            $md.find('.hourly-price-item').toggleClass('rbfw-md-hidden', !timePickerEnabled);
             $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
             // Sub-rows also depend on time picker being active
             $md.find('.half-day-price-item').toggleClass('rbfw-md-hidden', !(timePickerEnabled && halfDayPriceEnabled));
-            $md.find('.hour-threshold-item').toggleClass('rbfw-md-hidden', !(timePickerEnabled && hourlyPriceEnabled));
             $md.find('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
             $md.find('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
-            $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
+            // .trigger('change') -- the Frontend Preview sidebar (a separate,
+            // self-contained IIFE further down this file) listens for a real
+            // 'change' event on #rbfw_enable_time_picker to know when to
+            // recalculate and show its own Pickup/Return Time fields. Setting
+            // .val() alone doesn't fire one, so without this the preview's
+            // time fields stayed hidden until something else (e.g. re-picking
+            // the date) happened to trigger a recalc.
+            $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no').trigger('change');
             $md.find('.rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
             updateDaywiseVisibility();
         });
 
         $md.on('click', '.hourly-price-toggle', function () {
-            if (!timePickerEnabled) { return; } // requires Time Picker
-            hourlyPriceEnabled = !hourlyPriceEnabled;
+            var turningOn = ! hourlyPriceEnabled;
+            // Hourly Price is inert without Time Picker on (the booking is
+            // always priced at the daily rate instead --
+            // rbfw_md_price_for_hours_period() in inc/rbfw_functions.php --
+            // same condition validateBeforeSave() already blocks Publish on).
+            // Catch it right here instead of letting the admin turn it on
+            // and only finding out at save time.
+            if (turningOn && ! timePickerEnabled) {
+                // showPricingTableWarning() skips inserting if a banner is
+                // already sitting at this anchor (e.g. the "Hourly Price was
+                // turned off..." notice from the Time Picker toggle's own
+                // handler) -- without clearing it first, this message (and
+                // its "Enable Time Picker" button) would silently never
+                // appear, leaving the admin with a stale notice and no way
+                // to act on it.
+                $wrap.find('.rbfw-me-table-warning').remove();
+                showPricingTableWarning(
+                    (rbfwModernEditor_i18n('Hourly Price needs "Enable Time Picker" turned on first.') || 'Hourly Price needs "Enable Time Picker" turned on first.') +
+                    ' <button type="button" class="rbfw-me-enable-tp-btn rbfw-me-inline-link-btn">' +
+                    (rbfwModernEditor_i18n('Enable Time Picker') || 'Enable Time Picker') + '</button>',
+                    $wrap.find('.md-pricing-table-wrap').first(),
+                    null
+                );
+                $wrap.off('click.rbfwEnableTp').on('click.rbfwEnableTp', '.rbfw-me-enable-tp-btn', function () {
+                    $wrap.find('.rbfw-me-table-warning').remove();
+                    // Each toggle's own click handler already does everything
+                    // needed (state, visuals, hidden input + change event) --
+                    // trigger both rather than duplicating that logic here.
+                    // Time Picker first so Hourly Price's own re-check above
+                    // passes the second time.
+                    $md.find('.time-picker-toggle').trigger('click');
+                    $md.find('.hourly-price-toggle').trigger('click');
+                });
+                return;
+            }
+            $wrap.find('.rbfw-me-table-warning').remove();
+            hourlyPriceEnabled = turningOn;
             $(this).toggleClass('active', hourlyPriceEnabled);
             $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
             $md.find('#rbfw_enable_hourly_rate').val(hourlyPriceEnabled ? 'yes' : 'no');
@@ -2648,5 +3135,1981 @@
     function rbfwModernEditor_i18n(key) {
         return cfg.i18n && cfg.i18n[key] ? cfg.i18n[key] : null;
     }
+
+}(jQuery));
+
+/**
+ * Frontend Preview sidebar card (Pricing step).
+ *
+ * Visual language ported 1:1 from the approved design prototype's live
+ * preview panel ("lp-*" classes), renamed "rbfw-me-fp-*" -- same colors,
+ * type scale and spacing, rebuilt as plain markup/CSS/jQuery here.
+ *
+ * Functionally mirrors the real PHP calculation for each rent type so an
+ * admin can sanity-check pricing before saving:
+ *  - Single Day/Appointment: rbfw_bikecarsd_price_calculation() (inc/class-bike-car-sd-function.php) -- option price * qty.
+ *  - Multiple Day/Equipment/Dress/Others: rbfw_md_duration_price_calculation() (inc/rbfw_functions.php) -- Monthly→Weekly→Daily tiers + Time Picker half-day/hourly leftover.
+ *  - Resort: rbfw_resort_price_calculation()'s default branch (Frontend/RBFW_Woocommerse.php) -- rate * qty * total_days.
+ * Day-wise overrides, seasonal pricing, fees, extra services/variations and
+ * the tiered-pricing/multi-day-saver add-ons are intentionally not
+ * replicated -- see the note printed in the card itself. A separate,
+ * self-contained IIFE so a mistake here can't break the rest of the
+ * editor's save/validate logic above.
+ */
+(function ($) {
+    'use strict';
+
+    $(function () {
+        var $wrap = $('.rbfw-me-wrap');
+        var $preview = $wrap.find('.rbfw-me-frontend-preview');
+        var $pricingPanel = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
+        if (! $wrap.length || ! $preview.length || ! $pricingPanel.length) {
+            return;
+        }
+
+        var MD_TYPES = ['bike_car_md', 'equipment', 'dress', 'others'];
+        var SD_TYPES = ['bike_car_sd', 'appointment'];
+        var RESORT_TYPES = ['resort'];
+        var MI_TYPES = ['multiple_items'];
+        var currency = $preview.data('currency') || '$';
+        var countExtraDay = $preview.data('count-extra-day') !== 'off';
+        var $sdControls = $preview.find('.rbfw-me-fp-sd-controls');
+        var $resortControls = $preview.find('.rbfw-me-fp-resort-controls');
+        var $durationBanner = $preview.find('.rbfw-me-fp-duration-banner');
+        var $warnSlot = $preview.find('.rbfw-me-fp-warn-slot');
+        var $summary = $preview.find('.rbfw-me-fp-summary');
+
+        $sdControls.data('qty', 1);
+        $resortControls.data('qty', 1);
+
+        function num(sel) {
+            var v = parseFloat($pricingPanel.find(sel).val());
+            return isNaN(v) ? 0 : v;
+        }
+        function isYes(sel) {
+            return $pricingPanel.find(sel).first().val() === 'yes';
+        }
+        function money(n) {
+            return currency + (Math.round((n + 1e-9) * 100) / 100).toFixed(2);
+        }
+        function pad2(n) {
+            return (n < 10 ? '0' : '') + n;
+        }
+        function toIso(d) {
+            return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+        }
+        function currentRentType() {
+            return $wrap.find('#rbfw_item_type').val() || $pricingPanel.data('item-type') || 'bike_car_sd';
+        }
+        function activePanelKey() {
+            return $wrap.find('.rbfw-me-panel.is-active').data('panel');
+        }
+
+        function summaryLine($rows, label, value) {
+            $rows.append(
+                $('<div class="rbfw-me-fp-summary-row"></div>')
+                    .append($('<span></span>').text(label))
+                    .append($('<span></span>').text(value))
+            );
+        }
+        function showWarning(text) {
+            $warnSlot.empty().append(
+                $('<div class="rbfw-me-fp-warnbanner"></div>')
+                    .append('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>')
+                    .append($('<span></span>').text(text))
+            );
+        }
+        function clearWarning() {
+            $warnSlot.empty();
+        }
+        function renderOptrows($container, rows, selectedIdx, onSelect) {
+            $container.empty();
+            rows.forEach(function (row, i) {
+                var $btn = $('<button type="button" class="rbfw-me-fp-optrow"></button>');
+                if (i === selectedIdx) { $btn.addClass('sel'); }
+                $btn.append($('<span></span>').text(row.label + (row.sub ? ' — ' + row.sub : '')));
+                $btn.append($('<strong></strong>').text(money(row.price)));
+                $btn.on('click', function () { onSelect(i); });
+                $container.append($btn);
+            });
+        }
+
+        // Default preview window: today → +3 days, long enough to show a
+        // weekly tier if one is configured, without the admin having to set
+        // dates themselves first. Both ends skip past any configured Off Day
+        // -- otherwise an item with today (or this week) blocked off would
+        // open the preview already showing the Off Day warning instead of a
+        // price, which looks like the card itself is broken.
+        function nextAvailableDate(from, offWeekdaySet, ranges) {
+            var d = new Date(from.getTime());
+            for (var guard = 0; guard < 366 && isDateOff(d, offWeekdaySet, ranges); guard++) {
+                d.setDate(d.getDate() + 1);
+            }
+            return d;
+        }
+        function ensureDefaultDates() {
+            var $s = $preview.find('.rbfw-me-fp-start');
+            var $e = $preview.find('.rbfw-me-fp-end');
+            if (! $s.val()) {
+                var offWeekdaySet = offWeekdays();
+                var ranges = offDateRanges();
+                var start = nextAvailableDate(new Date(), offWeekdaySet, ranges);
+                var end = new Date(start.getTime());
+                end.setDate(end.getDate() + 3);
+                end = nextAvailableDate(end, offWeekdaySet, ranges);
+                $s.val(toIso(start));
+                $e.val(toIso(end));
+            }
+        }
+
+        var $extras = $preview.find('.rbfw-me-fp-extras');
+        var $variations = $preview.find('.rbfw-me-fp-variations');
+        var $sdTimeField = $preview.find('.rbfw-me-fp-sd-time-field');
+        var $mdTimeFields = $preview.find('.rbfw-me-fp-md-start-time-field, .rbfw-me-fp-md-end-time-field');
+        $preview.data('extrasQty', {});
+        $preview.data('variationsQty', {});
+
+        /* ───────────── Time slots ─────────────
+           Reads the GLOBAL slot list only (rdfw_available_time[_sd]) -- the
+           optional per-date-range "Particular date time slots" override
+           (rbfw_particulars[...][available_time]) is not reflected here. */
+        function timeSlotValues(namePrefix) {
+            var values = [];
+            $wrap.find('input[name^="' + namePrefix + '["][name$="[time]"]').each(function () {
+                var $timeInput = $(this);
+                var m = $timeInput.attr('name').match(/\[(\d+)\]\[time\]$/);
+                if (! m) { return; }
+                var $status = $wrap.find('input[name="' + namePrefix + '[' + m[1] + '][status]"]');
+                if (($status.length ? $status.val() : '') !== 'enabled') { return; }
+                var time = $.trim($timeInput.val());
+                if (time) { values.push(time); }
+            });
+            return values;
+        }
+        function parseTimeToMinutes(t) {
+            if (! t) { return null; }
+            var m = $.trim(t).match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i);
+            if (! m) { return null; }
+            var h = parseInt(m[1], 10);
+            var min = parseInt(m[2], 10);
+            var ap = m[3] ? m[3].toUpperCase() : null;
+            if (ap === 'PM' && h !== 12) { h += 12; }
+            if (ap === 'AM' && h === 12) { h = 0; }
+            return (h * 60) + min;
+        }
+        // No value is pre-selected -- the customer must tap a chip, which is
+        // what reveals the next step in the progressive booking flow.
+        function renderTimeChips($container, values, selectedVal, onSelect) {
+            $container.empty();
+            if (! values.length) {
+                $container.append($('<span class="rbfw-me-fp-svcrow-price"></span>').text('No time slots configured'));
+                return null;
+            }
+            var active = (selectedVal && values.indexOf(selectedVal) !== -1) ? selectedVal : null;
+            values.forEach(function (v) {
+                var $chip = $('<button type="button" class="rbfw-me-fp-chip"></button>').text(v);
+                if (v === active) { $chip.addClass('active'); }
+                $chip.on('click', function () { onSelect(v); });
+                $container.append($chip);
+            });
+            return active;
+        }
+
+        // Multiple Day's Pickup/Return Time render as a dropdown styled to
+        // match the date fields (see the approved design), not chips.
+        function populateTimeSelect($select, values) {
+            var prev = $select.val();
+            $select.empty();
+            if (! values.length) {
+                $select.append($('<option></option>').val('').text('No time slots configured'));
+                $select.prop('disabled', true);
+                return null;
+            }
+            $select.prop('disabled', false);
+            values.forEach(function (v) {
+                $select.append($('<option></option>').val(v).text(v));
+            });
+            var active = (prev && values.indexOf(prev) !== -1) ? prev : values[0];
+            $select.val(active);
+            return active;
+        }
+
+        /* ───────────── Mini calendar (Single Day / Appointment) ───────────── */
+
+        var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        // Resort's per-field "×" clear buttons -- bound once via delegation
+        // since the buttons always exist in the DOM (just hidden outside
+        // Resort). Clearing re-triggers whichever recalc the active type uses.
+        // Pickup clears both fields (ensureDefaultDates() re-seeds them from
+        // today the moment pickup is empty, so a pickup-only clear would
+        // otherwise just silently snap back); return can be cleared alone,
+        // which already has a supported "pick a valid date" warning state.
+        $preview.on('click', '.rbfw-me-fp-start-clear', function () {
+            $preview.find('.rbfw-me-fp-start, .rbfw-me-fp-end').val('');
+            updateVisibility();
+        });
+        $preview.on('click', '.rbfw-me-fp-end-clear', function () {
+            $preview.find('.rbfw-me-fp-end').val('');
+            updateVisibility();
+        });
+
+        // Resort: Continue past the dates card into the Room Type section
+        // (see resortRoomsRevealed, read/reset in updateVisibility() and
+        // recalcResort()). Disabled (no-op) until the dates are valid.
+        $preview.on('click', '.rbfw-me-fp-resort-continue-btn', function () {
+            if ($(this).hasClass('is-disabled')) { return; }
+            $preview.data('resortRoomsRevealed', true);
+            updateVisibility();
+        });
+
+        // Some browsers (Safari) only open a native <input type="date">'s
+        // picker when the small built-in calendar icon itself is clicked,
+        // not the rest of the field. Opening it explicitly on every click
+        // makes the whole box clickable everywhere, same as Chrome's default
+        // behavior -- calling showPicker() again after a click that already
+        // opened it natively is a harmless no-op.
+        $preview.on('click', '.rbfw-me-fp-resort-dates-card input[type="date"]', function () {
+            if (typeof this.showPicker === 'function') {
+                try { this.showPicker(); } catch (err) { /* ignore -- e.g. not a user gesture */ }
+            }
+        });
+
+        var $calField = $preview.find('.rbfw-me-fp-calendar-field');
+        var $calMonth = $preview.find('.rbfw-me-fp-cal-month');
+        var $calGrid = $preview.find('.rbfw-me-fp-cal-grid');
+
+        // Off weekdays: Off Day Settings card (Off Days tab) stores a
+        // comma-separated list of lowercase weekday names.
+        function offWeekdays() {
+            var val = $wrap.find('.rbfw-me-offday-hidden, input[name="rbfw_off_days"]').first().val() || '';
+            var map = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
+            return val.split(',')
+                .map(function (s) { return map[$.trim(s).toLowerCase()]; })
+                .filter(function (n) { return n !== undefined; });
+        }
+        // Off date ranges: Off Date Settings card, repeatable start/end rows.
+        function offDateRanges() {
+            var ranges = [];
+            $wrap.find('.rbfw-me-offdate-row').each(function () {
+                var s = $(this).find('input[name="off_days_start[]"]').val();
+                var e = $(this).find('input[name="off_days_end[]"]').val();
+                if (s && e) { ranges.push({ start: s, end: e }); }
+            });
+            return ranges;
+        }
+        function isDateOff(d, offWeekdaySet, ranges) {
+            if (offWeekdaySet.indexOf(d.getDay()) !== -1) { return true; }
+            var iso = toIso(d);
+            return ranges.some(function (r) { return iso >= r.start && iso <= r.end; });
+        }
+
+        function renderCalendar(onSelect) {
+            var today = new Date();
+            var year = today.getFullYear();
+            var month = today.getMonth(); // current month only -- matches the approved design, no navigation
+            $calMonth.text(MONTH_NAMES[month] + ' ' + year);
+
+            // No default selection -- the customer must explicitly pick a
+            // date, which is what reveals the next step (Time Slot/Rental
+            // Option/...), mirroring the real frontend booking flow.
+            var selectedIso = $calField.data('selected') || null;
+
+            var firstDow = new Date(year, month, 1).getDay();
+            var daysInMonth = new Date(year, month + 1, 0).getDate();
+            var offWeekdaySet = offWeekdays();
+            var ranges = offDateRanges();
+
+            $calGrid.empty();
+            for (var i = 0; i < firstDow; i++) {
+                $calGrid.append('<span class="rbfw-me-fp-cal-day rbfw-me-fp-cal-day--blank"></span>');
+            }
+            for (var day = 1; day <= daysInMonth; day++) {
+                var d = new Date(year, month, day);
+                var iso = toIso(d);
+                var isWeekend = (d.getDay() === 0 || d.getDay() === 6);
+                if (isDateOff(d, offWeekdaySet, ranges)) {
+                    $calGrid.append(
+                        $('<span class="rbfw-me-fp-cal-day rbfw-me-fp-cal-day--off" title="Unavailable"></span>').text(day)
+                    );
+                    continue;
+                }
+                var $btn = $('<button type="button" class="rbfw-me-fp-cal-day"></button>').text(day);
+                if (isWeekend) { $btn.addClass('weekend'); }
+                if (iso === selectedIso) { $btn.addClass('sel'); }
+                $btn.on('click', (function (dayIso) {
+                    return function () {
+                        $calField.data('selected', dayIso);
+                        onSelect(dayIso);
+                    };
+                }(iso)));
+                $calGrid.append($btn);
+            }
+            return selectedIso;
+        }
+
+        /* ───────────── Multiple Day: Pickup/Return calendar popover ─────────────
+         * A native <input type="date"> can't grey out individual dates in any
+         * browser, so Off Days never showed on Multiple Day's Pickup/Return
+         * fields the way they do on Single Day's calendar above. This reuses
+         * the same grid (.rbfw-me-fp-cal) in a popover instead. The native
+         * input stays the value source recalc() reads -- picking a day here
+         * just sets its value and fires 'change', same as the native picker
+         * would have. CSS makes the input pointer-events:none while Multiple
+         * Day is active (.rbfw-me-fp-resort-dates-card.is-md) so clicks land
+         * on the wrapping field and open this instead; Resort/Multiple Items
+         * are untouched and keep the native picker.
+         */
+        var $mdCalPopovers = $preview.find('.rbfw-me-fp-md-cal-popover');
+
+        function closeMdCalPopovers() {
+            $mdCalPopovers.hide();
+        }
+
+        function renderMdCalendarInto($popover, monthDate, selectedIso, minIso, offWeekdaySet, ranges, onSelect) {
+            var year = monthDate.getFullYear();
+            var month = monthDate.getMonth();
+            $popover.find('.rbfw-me-fp-cal-month').text(MONTH_NAMES[month] + ' ' + year);
+
+            var firstDow = new Date(year, month, 1).getDay();
+            var daysInMonth = new Date(year, month + 1, 0).getDate();
+            var $grid = $popover.find('.rbfw-me-fp-cal-grid').empty();
+
+            for (var i = 0; i < firstDow; i++) {
+                $grid.append('<span class="rbfw-me-fp-cal-day rbfw-me-fp-cal-day--blank"></span>');
+            }
+            for (var day = 1; day <= daysInMonth; day++) {
+                var d = new Date(year, month, day);
+                var iso = toIso(d);
+                var isWeekend = (d.getDay() === 0 || d.getDay() === 6);
+                var blocked = isDateOff(d, offWeekdaySet, ranges) || (minIso && iso < minIso);
+                if (blocked) {
+                    $grid.append(
+                        $('<span class="rbfw-me-fp-cal-day rbfw-me-fp-cal-day--off" title="Unavailable"></span>').text(day)
+                    );
+                    continue;
+                }
+                var $btn = $('<button type="button" class="rbfw-me-fp-cal-day"></button>').text(day);
+                if (isWeekend) { $btn.addClass('weekend'); }
+                if (iso === selectedIso) { $btn.addClass('sel'); }
+                $btn.on('click', (function (dayIso) {
+                    return function () { onSelect(dayIso); };
+                }(iso)));
+                $grid.append($btn);
+            }
+        }
+
+        function openMdCalPopover(which) {
+            var $input = $preview.find(which === 'start' ? '.rbfw-me-fp-start' : '.rbfw-me-fp-end');
+            var $popover = $preview.find('.rbfw-me-fp-md-cal-popover--' + which);
+            if (! $popover.length) { return; }
+
+            var alreadyOpen = $popover.is(':visible');
+            closeMdCalPopovers();
+            if (alreadyOpen) { return; } // clicking the open field again just closes it
+
+            var startVal = $preview.find('.rbfw-me-fp-start').val();
+            var selectedIso = $input.val() || '';
+            var minIso = (which === 'end' && startVal) ? startVal : null;
+            // Whichever month is most useful: this field's own selection,
+            // else (for Return) the Pickup month so a nearby date is
+            // immediately visible, else today's month.
+            var basisIso = selectedIso || (which === 'end' ? startVal : '') || toIso(new Date());
+            var monthDate = new Date(basisIso + 'T00:00:00');
+            if (isNaN(monthDate.getTime())) { monthDate = new Date(); }
+
+            renderMdCalendarInto($popover, monthDate, selectedIso, minIso, offWeekdays(), offDateRanges(), function (iso) {
+                $input.val(iso).trigger('change');
+                closeMdCalPopovers();
+            });
+            $popover.show();
+        }
+
+        $preview.on('click', '.rbfw-me-fp-resort-dates-card.is-md .rbfw-me-fp-dtfield', function (e) {
+            var $dtfield = $(this);
+            if ($dtfield.find('.rbfw-me-fp-start').length) { openMdCalPopover('start'); }
+            else if ($dtfield.find('.rbfw-me-fp-end').length) { openMdCalPopover('end'); }
+            else { return; }
+            e.stopPropagation();
+        });
+        $(document).on('click', function (e) {
+            if (! $(e.target).closest('.rbfw-me-fp-md-cal-popover, .rbfw-me-fp-dtfield').length) {
+                closeMdCalPopovers();
+            }
+        });
+
+        /* ───────────── Fee Configuration Settings ───────────── */
+        // Mirrors the real calculation added to Frontend/RBFW_Woocommerse.php:
+        // Fixed/Percentage of subtotal, Per booking/Per day (days = date-range
+        // day count), All days/Weekends only. Every configured fee is shown as
+        // applied -- the preview has no customer-facing "optional fee" opt-in
+        // checkbox, so Required vs Optional isn't distinguished here.
+        function feeRows() {
+            var rows = [];
+            $wrap.find('#wprently_fee_body tr').each(function () {
+                var $row = $(this);
+                var label = $.trim($row.find('input[name*="[label]"]').val());
+                if (! label) { return; }
+                var amount = parseFloat($row.find('input[name*="[amount]"]').val());
+                rows.push({
+                    label: label,
+                    calcType: $row.find('select[name*="[calculation_type]"]').val() || 'fixed',
+                    amount: isNaN(amount) ? 0 : amount,
+                    frequency: $row.find('select[name*="[frequency]"]').val() || 'one-time',
+                    applyOn: $row.find('select[name*="[apply_on]"]').val() || 'all-days'
+                });
+            });
+            return rows;
+        }
+        function countWeekendDays(startDate, totalDays) {
+            if (! startDate || totalDays <= 0) { return 0; }
+            var count = 0;
+            for (var i = 0; i < totalDays; i++) {
+                var d = new Date(startDate.getTime());
+                d.setDate(d.getDate() + i);
+                if (d.getDay() === 0 || d.getDay() === 6) { count++; }
+            }
+            return count;
+        }
+        function computeFees($summaryRows, subtotal, totalDays, startDate) {
+            if (! $wrap.find('input[name="rbfw_enable_fee_management"]').is(':checked')) {
+                return 0;
+            }
+            var total = 0;
+            feeRows().forEach(function (fee) {
+                var amt;
+                if (fee.calcType === 'percentage') {
+                    amt = (fee.amount / 100) * subtotal;
+                } else {
+                    var days = 1;
+                    if (fee.frequency === 'per-day' && totalDays > 0) {
+                        days = (fee.applyOn === 'weekends') ? countWeekendDays(startDate, totalDays) : totalDays;
+                    }
+                    amt = fee.amount * days;
+                }
+                if (amt > 0) {
+                    summaryLine($summaryRows, fee.label, money(amt));
+                    total += amt;
+                }
+            });
+            return total;
+        }
+
+        // Security Deposit -- mirrors rbfw_security_deposit() in
+        // inc/rbfw_functions.php exactly (percentage of subtotal, or a flat
+        // amount), added on top of the rental+extras subtotal before fees.
+        function computeSecurityDeposit($summaryRows, subtotal) {
+            if (! $wrap.find('input[name="rbfw_enable_security_deposit"]').is(':checked')) {
+                return 0;
+            }
+            var type = $wrap.find('select[name="rbfw_security_deposit_type"]').val() || 'percentage';
+            var setting = parseFloat($wrap.find('input[name="rbfw_security_deposit_amount"]').val()) || 0;
+            var label = $.trim($wrap.find('input[name="rbfw_security_deposit_label"]').val()) || 'Security Deposit';
+            var amt = (type === 'percentage') ? (setting * subtotal / 100) : setting;
+            if (amt > 0) {
+                summaryLine($summaryRows, label, money(amt));
+            }
+            return amt;
+        }
+
+        /* ───────────── Extra services ───────────── */
+
+        // Basic table (Single Day / Appointment / Multiple Items): a flat
+        // list, price * qty, never multiplied by day count.
+        function basicExtraServiceRows() {
+            var rows = [];
+            $wrap.find('.rbfw_es_price_config_wrapper tbody.mp_event_type_sortable tr').not('.empty-row').each(function () {
+                var $row = $(this);
+                var name = $.trim($row.find('input[name="service_name[]"]').val());
+                var price = parseFloat($row.find('input[name="service_price[]"]').val());
+                if (! name || isNaN(price)) { return; }
+                rows.push({ key: name, label: name, price: price, dayWise: false });
+            });
+            return rows;
+        }
+
+        // Category-wise table (Multiple Day family / Multiple Items):
+        // each service can be marked One Time or Day Wise (price * qty * days).
+        function categoryExtraServiceRows() {
+            var rows = [];
+            // Real checkout only reads this data when "Enable Additional
+            // service" is on (multi-day-registration.php / multi-items-
+            // registration.php both check $enable_service_price === 'on')
+            // -- a real <input type="checkbox">, so .prop('checked') is
+            // required (its .val() is a static "on"/"off" attribute that
+            // doesn't reflect whether it's actually ticked).
+            if (! $wrap.find('input[name="rbfw_enable_category_service_price"]').prop('checked')) {
+                return rows;
+            }
+            $wrap.find('.rbfw_service_category_table tbody.sortable_tr tr[data-cat]').each(function () {
+                var $cat = $(this);
+                var catTitle = $.trim($cat.find('input[name*="[cat_title]"]').first().val());
+                $cat.find('.service_category_inner_item_wrap .item').each(function () {
+                    var $item = $(this);
+                    var title = $.trim($item.find('input[name*="[title]"]').val());
+                    var price = parseFloat($item.find('input[name*="[price]"]').val());
+                    if (! title || isNaN(price)) { return; }
+                    var dayWise = $item.find('input[type="radio"][name*="[service_price_type]"]:checked').val() === 'day_wise';
+                    rows.push({ key: catTitle + '::' + title, label: (catTitle ? catTitle + ' — ' : '') + title, price: price, dayWise: dayWise });
+                });
+            });
+            return rows;
+        }
+
+        // Extra Services render as checkboxes (included or not) -- the real
+        // frontend form supports a quantity per service, but the approved
+        // design shows a simple included/not-included checkbox, so qtyMap
+        // here only ever holds 0 or 1 per key.
+        function renderExtraChecks($container, items, qtyMap, onToggle, priceFormatter) {
+            $container.empty();
+            items.forEach(function (item) {
+                var checked = (qtyMap[item.key] || 0) > 0;
+                var id = 'rbfw-me-fp-extra-' + Math.random().toString(36).slice(2, 9);
+                var $cb = $('<input type="checkbox">').attr('id', id).prop('checked', checked);
+                $cb.on('change', function () { onToggle(item.key, this.checked ? 1 : 0); });
+                var $label = $('<label></label>').attr('for', id).text(item.label);
+                var $row = $('<div class="rbfw-me-fp-svc-check"></div>')
+                    .append($cb)
+                    .append($label)
+                    .append($('<strong></strong>').text(priceFormatter(item)));
+                $container.append($row);
+            });
+        }
+
+        function extrasTotal(rows, qtyMap, totalDays) {
+            var total = 0;
+            rows.forEach(function (row) {
+                var qty = qtyMap[row.key] || 0;
+                if (qty <= 0) { return; }
+                total += row.price * qty * ((row.dayWise && totalDays > 0) ? totalDays : 1);
+            });
+            return total;
+        }
+
+        /* ───────────── Variations ───────────── */
+
+        function variationGroups() {
+            var groups = [];
+            // Respect the "Item variation" toggle -- its chip values stay in
+            // the DOM (just visually hidden) when switched off, so without
+            // this check the preview kept showing Options regardless of the
+            // toggle's actual state.
+            var enableVariations = $wrap.find('input[name="rbfw_enable_variations"]').val();
+            if (enableVariations !== 'yes') { return groups; }
+            // Item Variations no longer shows a "Field Label" box (just the
+            // chip list under a fixed "Item Variations" title), so a blank
+            // label here means "untitled group", not "skip it".
+            $wrap.find('.rbfw_variations_table_body .rbfw_variations_table_row').each(function () {
+                var $field = $(this);
+                var fieldLabel = $.trim($field.find('input[name*="[field_label]"]').val()) || 'Options';
+                var values = [];
+                $field.find('.rbfw_variations_value_table_tbody .rbfw_variations_value_table_row').each(function () {
+                    var $vrow = $(this);
+                    var name = $.trim($vrow.find('input.rbfw_variation_value').val());
+                    var price = parseFloat($vrow.find('input[name*="[price]"]').val());
+                    if (! name) { return; }
+                    values.push({ key: fieldLabel + '::' + name, label: name, price: isNaN(price) ? 0 : price });
+                });
+                if (values.length) { groups.push({ label: fieldLabel, values: values }); }
+            });
+            return groups;
+        }
+
+        function flattenVariationValues(groups) {
+            var values = [];
+            groups.forEach(function (g) { values = values.concat(g.values); });
+            return values;
+        }
+
+        // Variations render as single-select pills per field (e.g. one Size,
+        // one Color) -- tap again to deselect. The real data model allows a
+        // quantity per selected value; this preview keeps it to one unit per
+        // selected value per group, matching the approved design. There's only
+        // ever one group now (no Field Label input left to name it), and
+        // variationGroups() defaults its label to "Options" -- the same text
+        // as the section title right above, so rendering it here just
+        // duplicated that heading. Skipped entirely rather than picking a
+        // different default that would just as easily collide.
+        function renderVariationGroups($container, groups, selectedMap, onSelect) {
+            $container.empty();
+            groups.forEach(function (group) {
+                var $row = $('<div class="rbfw-me-fp-chips"></div>');
+                group.values.forEach(function (v) {
+                    var isSel = (selectedMap[v.key] || 0) > 0;
+                    var $pill = $('<button type="button" class="rbfw-me-fp-variation-pill"></button>');
+                    if (isSel) { $pill.addClass('sel'); }
+                    // Price is no longer an editable field on a variation chip (always
+                    // 0 for any new value), so showing "+$0.00" next to every pill was
+                    // just noise -- plain name only, matching the approved design.
+                    $pill.append($('<span></span>').text(v.label));
+                    $pill.on('click', function () { onSelect(group, v.key); });
+                    $row.append($pill);
+                });
+                $container.append($row);
+            });
+        }
+
+        function variationsTotal(groups, qtyMap) {
+            return extrasTotal(flattenVariationValues(groups).map(function (v) {
+                return { key: v.key, price: v.price, dayWise: false };
+            }), qtyMap, 0);
+        }
+
+        // Pickup/Drop-off Location (Location Configuration, Advanced tab) --
+        // same rbfw_enable_pick_point/rbfw_enable_dropoff_point + checkbox
+        // groups Single Day/Multiple Day/Multiple Items' real booking forms
+        // read. Not shown for Resort (guests come to the resort, no pickup
+        // point) or Appointment (fixed business location) -- the admin's
+        // Location Configuration card is hidden for those two types too (see
+        // applyType()). The option value/text is the location's slug,
+        // matching exactly what rbfw_pickup_point's real <option> shows (the
+        // save path stores slugs, not display names).
+        function updateLocationFields(show, type) {
+            var $pickupField = $preview.find('.rbfw-me-fp-pickup-loc-field');
+            var $dropoffField = $preview.find('.rbfw-me-fp-dropoff-loc-field');
+
+            if (! show || type === 'resort' || type === 'appointment') {
+                $pickupField.hide();
+                $dropoffField.hide();
+                return;
+            }
+
+            var pickupEnabled = $wrap.find('input[name="rbfw_enable_pick_point"]').prop('checked');
+            var dropoffEnabled = $wrap.find('input[name="rbfw_enable_dropoff_point"]').prop('checked');
+
+            var pickupLocs = [];
+            $wrap.find('.rbfw-me-pickup-locations .rbfw-me-loc-checkbox:checked').each(function () {
+                pickupLocs.push($(this).data('loc'));
+            });
+            var dropoffLocs = [];
+            $wrap.find('.rbfw-me-dropoff-locations .rbfw-me-loc-checkbox:checked').each(function () {
+                dropoffLocs.push($(this).data('loc'));
+            });
+
+            function fillSelect($select, locs, placeholder) {
+                var current = $select.val();
+                $select.empty().append($('<option></option>').attr('value', '').text(placeholder));
+                locs.forEach(function (loc) {
+                    $select.append($('<option></option>').attr('value', loc).text(loc));
+                });
+                if (locs.indexOf(current) !== -1) { $select.val(current); }
+            }
+
+            var showPickup = pickupEnabled && pickupLocs.length > 0;
+            $pickupField.toggle(showPickup);
+            if (showPickup) {
+                fillSelect($pickupField.find('.rbfw-me-fp-pickup-loc'), pickupLocs, 'Choose pickup location');
+            }
+
+            var showDropoff = dropoffEnabled && dropoffLocs.length > 0;
+            $dropoffField.toggle(showDropoff);
+            if (showDropoff) {
+                fillSelect($dropoffField.find('.rbfw-me-fp-dropoff-loc'), dropoffLocs, 'Choose drop-off location');
+            }
+        }
+
+        function updateVisibility() {
+            var type = currentRentType();
+            var isMd = MD_TYPES.indexOf(type) !== -1;
+            var isSd = SD_TYPES.indexOf(type) !== -1;
+            var isResort = RESORT_TYPES.indexOf(type) !== -1;
+            var isMi = MI_TYPES.indexOf(type) !== -1;
+            // Off Days / Advanced don't edit pricing fields themselves, but the
+            // preview still reflects whatever was last configured on Pricing --
+            // keep it visible there too instead of only on the Pricing tab
+            // itself, so it stays in view while the admin works through the
+            // rest of the item. General still hides it (that's where Payment
+            // Method/Featured Image/Gallery/Status show instead).
+            var activePanel = activePanelKey();
+            var showsPreview = activePanel === 'pricing' || activePanel === 'offday' || activePanel === 'advanced';
+            var show = showsPreview && (isMd || isSd || isResort || isMi);
+            $preview.toggle(show);
+            updateLocationFields(show, type);
+            $preview.find('.rbfw-me-fp-pickup-row').toggle(isMd || isResort || isMi);
+            $preview.find('.rbfw-me-fp-return-row').toggle(isMd || isResort);
+            $sdControls.toggle(isSd);
+            // Resort's Room Type section stays hidden behind the Continue
+            // button (see resortRoomsRevealed / recalcResort()) until the
+            // dates are confirmed; leaving Resort resets that step so coming
+            // back to it later always starts at the dates card again.
+            if (! isResort) { $preview.data('resortRoomsRevealed', false); }
+            $resortControls.toggle(isResort && !! $preview.data('resortRoomsRevealed'));
+            $preview.find('.rbfw-me-fp-mi-controls').toggle(isMi);
+            if (! isMi) { $preview.find('.rbfw-me-fp-mi-items').hide(); }
+            $calField.toggle(isSd);
+            if (! isSd) { $sdTimeField.hide(); }
+            // Resort's labels are short ("Pickup"/"Return") since they sit as
+            // small uppercase captions in the compact two-column dates card.
+            $preview.find('.rbfw-me-fp-start-label').text(isResort ? 'Pickup' : 'Pickup Date');
+            $preview.find('.rbfw-me-fp-end-label').text(isResort ? 'Return' : 'Return Date');
+            // Every type except Multiple Items: "Instant Booking Summary" card
+            // head + trust badges, in place of the feature image/name lead-in.
+            // Multiple Items and Multiple Day both get the same header too,
+            // just reached via their own branch below since their "Starting
+            // from" unit is dynamic (whichever duration type is actually
+            // cheapest, set in recalcMi() / mdFromPrice()).
+            var isSummaryHead = isMd || isSd || isResort || isMi;
+            var isBoxedPrice = isMd || isResort || isMi;
+            $preview.find('.rbfw-me-fp-feature').toggle(! isSummaryHead);
+            $preview.find('.rbfw-me-fp-md-summary-head').toggle(isSummaryHead);
+            $preview.find('.rbfw-me-fp-trustrow').toggle(isSummaryHead);
+            $preview.find('.rbfw-me-fp-pricerow').toggleClass('rbfw-me-fp-pricerow--boxed', isBoxedPrice);
+            if (! isMi && ! isMd) { $preview.find('.rbfw-me-fp-pricerow-unit').text(isResort ? '/ Night' : '/ Day'); }
+            $preview.find('.rbfw-me-fp-summary-title').toggle(! isMd);
+            $preview.find('.rbfw-me-fp-summary-total span:first-child').text(isMd ? 'Price' : 'Total');
+            // Resort's "Check-In & Check-Out Date" card / Multiple Items' Rental
+            // Duration + Pickup Date + Pickup Time card; Multiple Day keeps the
+            // plain stacked rows the wrapper also holds.
+            $preview.find('.rbfw-me-fp-resort-dates-card').toggle(isMd || isResort || isMi)
+                .toggleClass('is-resort', isResort)
+                .toggleClass('is-mi', isMi)
+                .toggleClass('is-md', isMd);
+            if (! isMd) { closeMdCalPopovers(); }
+            $preview.find('.rbfw-me-fp-mi-duration-field').toggle(isMi);
+            var resortRevealed = !! $preview.data('resortRoomsRevealed');
+            // Only one CTA on screen at a time: Continue in step 1, Check
+            // Availability once the Room Type section is revealed in step 2
+            // (the book button was previously always rendered regardless of
+            // this step, so both showed together -- that's the "duplicate
+            // button" bug).
+            $preview.find('.rbfw-me-fp-resort-continue-btn').toggle(isResort && ! resortRevealed);
+            $preview.find('.rbfw-me-fp-book-btn').toggle(! (isResort && ! resortRevealed));
+            $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-resort-style', isResort);
+            $preview.find('.rbfw-me-fp-book-btn').text(isResort ? 'Check Availability' : 'Book Now');
+            $wrap.find('.rbfw-me-sidebar').toggleClass('is-previewing-pricing', show);
+            if (! show) { return; }
+            if (isSd) { recalcSd(); } else if (isResort) { recalcResort(); } else if (isMi) { recalcMi(); } else { recalc(); }
+        }
+
+        /* ───────────── Single Day / Appointment ───────────── */
+
+        function sdRows() {
+            var rows = [];
+            $wrap.find('.rbfw_bike_car_sd_price_table_body .rbfw_bike_car_sd_price_table_row').each(function () {
+                var $row = $(this);
+                var label = $.trim($row.find('.rbfw_type_title').val());
+                var price = parseFloat($row.find('input[name*="[price]"]').val());
+                var duration = $.trim($row.find('input[name*="[duration]"]').val());
+                var dType = $row.find('select[name*="[d_type]"]').val();
+                if (! label || isNaN(price)) { return; }
+                rows.push({ label: label, price: price, sub: duration ? (duration + ' ' + (dType || '')) : '' });
+            });
+            return rows;
+        }
+
+        function recalcSd() {
+            var type = currentRentType();
+            var rows = sdRows();
+            var $totalAmt = $preview.find('.rbfw-me-fp-total-amt');
+            var $from = $preview.find('.rbfw-me-fp-from-amt');
+            $from.text(rows.length ? money(Math.min.apply(null, rows.map(function (r) { return r.price; }))) : '—');
+
+            // Progressive reveal, mirroring the real frontend booking flow:
+            // Calendar is shown first; picking a date reveals Time Slot (if
+            // this item has one); picking a time (or having none to pick)
+            // reveals Rental Option; picking an option reveals Quantity,
+            // Options & Add-ons and the Booking Summary. Nothing is
+            // pre-selected by default -- each step requires an explicit tap.
+            var selectedDateIso = renderCalendar(function () { recalcSd(); });
+            var dateSelected = !!selectedDateIso;
+
+            // Time Slot: display-only for Single Day/Appointment -- the real
+            // calculation (rbfw_bikecarsd_price_calculation) doesn't price by
+            // time of day, it only affects which slot the booking occupies.
+            // Not shown when "Enable duration-based rental items" is on: each
+            // Rental Option row carries its own explicit Start/End Time then
+            // (Pricing.php's own inline style hides the whole Enable Time
+            // Picker section in that combination), so there's no separate
+            // time-slot step to pick -- rbfw_enable_time_picker alone isn't
+            // enough to gate this since the classic admin JS that normally
+            // force-resets it to "no" when specific-duration is on doesn't
+            // always run first (e.g. on initial load of an older item).
+            var $sdWrap = $wrap.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper');
+            var specificDurationOn = $wrap.find('[name="enable_specific_duration"]').prop('checked');
+            var sdTimePickerOn = $sdWrap.find('[name="rbfw_enable_time_picker"]').val() === 'yes' && ! specificDurationOn;
+            $sdTimeField.toggle(dateSelected && sdTimePickerOn);
+            var selectedTime = null;
+            if (dateSelected && sdTimePickerOn) {
+                var slotValues = timeSlotValues('rdfw_available_time_sd');
+                var prevTime = $sdTimeField.data('selected');
+                selectedTime = renderTimeChips($preview.find('.rbfw-me-fp-sd-time-chips'), slotValues, prevTime, function (v) {
+                    $sdTimeField.data('selected', v);
+                    recalcSd();
+                });
+                $sdTimeField.data('selected', selectedTime);
+            }
+            var timeReady = ! sdTimePickerOn || !! selectedTime;
+
+            // Info banner: shows whatever has been picked so far.
+            if (dateSelected) {
+                var selDObj = new Date(selectedDateIso + 'T00:00:00');
+                var selDateLabel = MONTH_NAMES[selDObj.getMonth()].slice(0, 3) + ' ' + selDObj.getDate() + ', ' + selDObj.getFullYear();
+                $durationBanner.show().find('.rbfw-me-fp-duration-text').text(
+                    selDateLabel + (sdTimePickerOn && selectedTime ? ' at ' + selectedTime : '')
+                );
+            } else {
+                $durationBanner.hide();
+            }
+
+            var readyForOptions = dateSelected && timeReady;
+            $sdControls.toggle(readyForOptions);
+
+            if (! readyForOptions) {
+                clearWarning();
+                showWarning(! dateSelected ? 'Select a date above to continue.' : 'Select a time slot above to continue.');
+                $summary.hide();
+                $extras.hide();
+                $variations.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+
+            if (! rows.length) {
+                clearWarning();
+                showWarning('Add a rental option in the table below to preview its price.');
+                renderOptrows($preview.find('.rbfw-me-fp-sd-optrows'), rows, -1, function () {});
+                $preview.find('.rbfw-me-fp-sd-qty-field').hide();
+                $summary.hide();
+                $extras.hide();
+                $variations.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+
+            var selLabel = $sdControls.data('selectedLabel');
+            var idx = selLabel ? rows.findIndex(function (r) { return r.label === selLabel; }) : -1;
+            renderOptrows($preview.find('.rbfw-me-fp-sd-optrows'), rows, idx, function (i) {
+                $sdControls.data('selectedLabel', rows[i].label);
+                recalcSd();
+            });
+
+            var optionSelected = idx !== -1;
+            $preview.find('.rbfw-me-fp-sd-qty-field').toggle(optionSelected);
+            $summary.toggle(optionSelected);
+
+            if (! optionSelected) {
+                clearWarning();
+                showWarning('Select a rental option above to see pricing.');
+                $extras.hide();
+                $variations.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+            clearWarning();
+
+            var qty = Math.max(1, parseInt($sdControls.data('qty'), 10) || 1);
+            $preview.find('.rbfw-me-fp-sd-qty-val').text(qty);
+
+            var $summaryRows = $preview.find('.rbfw-me-fp-summary-rows').empty();
+            var row = rows[idx];
+            summaryLine($summaryRows, row.label + ' × ' + qty, money(row.price * qty));
+            if (selectedDateIso) {
+                var dObj = new Date(selectedDateIso + 'T00:00:00');
+                summaryLine($summaryRows, 'Date', MONTH_NAMES[dObj.getMonth()].slice(0, 3) + ' ' + dObj.getDate() + ', ' + dObj.getFullYear());
+            }
+            if (sdTimePickerOn && selectedTime) {
+                summaryLine($summaryRows, 'Time', selectedTime);
+            }
+            summaryLine($summaryRows, 'Quantity', String(qty));
+            var total = row.price * qty;
+
+            var extraRows = basicExtraServiceRows();
+            var groups = (type === 'bike_car_sd') ? variationGroups() : [];
+
+            // Variations: only plain Single Day (not Appointment) exposes this card.
+            $variations.toggle(groups.length > 0);
+            if (groups.length) {
+                var variationsQty = $preview.data('variationsQty');
+                renderVariationGroups($variations.find('.rbfw-me-fp-variations-groups'), groups, variationsQty, function (group, key) {
+                    var wasSelected = (variationsQty[key] || 0) > 0;
+                    group.values.forEach(function (v) { variationsQty[v.key] = 0; });
+                    variationsQty[key] = wasSelected ? 0 : 1;
+                    recalcSd();
+                });
+                groups.forEach(function (group) {
+                    var selectedVal = group.values.filter(function (v) { return (variationsQty[v.key] || 0) > 0; })[0];
+                    if (selectedVal) { summaryLine($summaryRows, group.label, selectedVal.label); }
+                });
+                var variationsAmt = variationsTotal(groups, variationsQty);
+                total += variationsAmt;
+            }
+
+            // Extra Services: basic table, shown for Single Day/Appointment.
+            $extras.toggle(extraRows.length > 0);
+            if (extraRows.length) {
+                var extrasQty = $preview.data('extrasQty');
+                renderExtraChecks($extras.find('.rbfw-me-fp-extras-rows'), extraRows, extrasQty, function (key, newQty) {
+                    extrasQty[key] = newQty;
+                    recalcSd();
+                }, function (item) { return money(item.price); });
+                extraRows.forEach(function (item) {
+                    if ((extrasQty[item.key] || 0) > 0) { summaryLine($summaryRows, item.label, money(item.price)); }
+                });
+                total += extrasTotal(extraRows, extrasQty, 0);
+            }
+
+            total += computeSecurityDeposit($summaryRows, total);
+
+            var feesAmt = computeFees($summaryRows, total, 0, null);
+            total += feesAmt;
+
+            $totalAmt.text(money(total));
+        }
+
+        /* ───────────── Resort ───────────── */
+
+        function resortRows() {
+            var rows = [];
+            $wrap.find('.rbfw_resort_price_table_body .rbfw_resort_price_table_row').each(function () {
+                var $row = $(this);
+                var label = $.trim($row.find('.rbfw_room_title').val());
+                var daynight = parseFloat($row.find('input[name*="[rbfw_room_daynight_rate]"]').val());
+                var daylong = parseFloat($row.find('input[name*="[rbfw_room_daylong_rate]"]').val());
+                if (! label) { return; }
+                rows.push({
+                    label: label,
+                    daynight: isNaN(daynight) ? 0 : daynight,
+                    daylong: isNaN(daylong) ? 0 : daylong
+                });
+            });
+            return rows;
+        }
+
+        function recalcResort() {
+            ensureDefaultDates();
+            // Resort has no Time Picker, extra-service or variation card in
+            // the modern editor, so this preview mode never shows them.
+            $sdTimeField.hide();
+            $mdTimeFields.hide();
+            $calField.hide();
+            $extras.hide();
+            $variations.hide();
+
+            var $totalAmt = $preview.find('.rbfw-me-fp-total-amt');
+            var $from = $preview.find('.rbfw-me-fp-from-amt');
+            var $continueBtn = $preview.find('.rbfw-me-fp-resort-continue-btn');
+            var $bookBtn = $preview.find('.rbfw-me-fp-book-btn');
+            var revealed = !! $preview.data('resortRoomsRevealed');
+            // Only one CTA at a time, regardless of entry point (this function
+            // can run directly from the optrow-select / Continue click
+            // handlers, not just through updateVisibility()).
+            $continueBtn.toggle(! revealed);
+            $bookBtn.toggle(revealed);
+
+            // Dates are read and validated first -- the Continue step only
+            // needs a valid Check-In/Check-Out pair, not a room selection yet.
+            var startVal = $preview.find('.rbfw-me-fp-start').val();
+            var endVal = $preview.find('.rbfw-me-fp-end').val();
+            var start = startVal ? new Date(startVal + 'T00:00:00') : null;
+            var end = endVal ? new Date(endVal + 'T00:00:00') : null;
+            var datesValid = !! (start && end && end >= start);
+            $continueBtn.toggleClass('is-disabled', ! datesValid);
+
+            // Rooms + "Starting from" price are independent of the Continue
+            // step -- the price box above the dates card stays live in step 1.
+            var rows = resortRows();
+            var daylongOn = $wrap.find('input[name="rbfw_enable_resort_daylong_price"]').is(':checked');
+            $preview.find('.rbfw-me-fp-resort-package').toggle(daylongOn);
+            var pkg = daylongOn ? ($preview.find('.rbfw-me-fp-resort-pkg').val() || 'daynight') : 'daynight';
+            var rateOf = function (r) { return pkg === 'daylong' ? r.daylong : r.daynight; };
+            $from.text(rows.length ? money(Math.min.apply(null, rows.map(rateOf))) : '—');
+
+            if (! datesValid) {
+                showWarning('Pick a valid check-in/check-out date.');
+                $resortControls.hide();
+                $summary.hide();
+                $durationBanner.hide();
+                $totalAmt.text(money(0));
+                $preview.find('.rbfw-me-fp-book-btn').addClass('is-disabled');
+                return;
+            }
+
+            if (! revealed) {
+                // Step 1: dates only -- the Room Type section, summary and
+                // Book button stay hidden until Continue is clicked.
+                clearWarning();
+                $resortControls.hide();
+                $summary.hide();
+                $durationBanner.hide();
+                return;
+            }
+
+            var selLabel = $resortControls.data('selectedLabel');
+            var idx = selLabel ? rows.findIndex(function (r) { return r.label === selLabel; }) : -1;
+            if (idx === -1) { idx = rows.length ? 0 : -1; }
+
+            renderOptrows($preview.find('.rbfw-me-fp-resort-optrows'), rows.map(function (r) {
+                return { label: r.label, price: (pkg === 'daylong') ? r.daylong : r.daynight };
+            }), idx, function (i) {
+                $resortControls.data('selectedLabel', rows[i].label);
+                recalcResort();
+            });
+
+            if (! rows.length) {
+                showWarning('Add a room type in the table below to preview its price.');
+                $summary.hide();
+                $totalAmt.text(money(0));
+                $preview.find('.rbfw-me-fp-book-btn').addClass('is-disabled');
+                return;
+            }
+            clearWarning();
+            // Resort has no separate price-calc box either -- its one rate
+            // line goes straight into the Booking Summary rows.
+            $summary.show();
+
+            var totalDays = Math.round((end - start) / 86400000);
+            if (countExtraDay) { totalDays += 1; }
+            totalDays = Math.max(0, totalDays);
+
+            var qty = Math.max(1, parseInt($resortControls.data('qty'), 10) || 1);
+            $preview.find('.rbfw-me-fp-resort-qty-val').text(qty);
+
+            var $summaryRows = $preview.find('.rbfw-me-fp-summary-rows').empty();
+            var row = rows[idx];
+            var rate = rateOf(row);
+            var total = rate * qty * totalDays;
+
+            $durationBanner.show().find('.rbfw-me-fp-duration-text').text(totalDays + ' night(s)');
+            summaryLine($summaryRows, 'Room', row.label);
+            summaryLine($summaryRows, 'Package', pkg === 'daylong' ? 'Day Long' : 'Day & Night');
+            summaryLine($summaryRows, 'Duration', totalDays + ' night(s)');
+            summaryLine($summaryRows, 'Quantity', String(qty));
+            summaryLine($summaryRows, row.label + ' @ ' + money(rate) + '/night × ' + totalDays, money(rate * totalDays));
+
+            total += computeSecurityDeposit($summaryRows, total);
+
+            var feesAmt = computeFees($summaryRows, total, totalDays, start);
+            total += feesAmt;
+            $totalAmt.text(money(total));
+            $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', total <= 0);
+        }
+
+        /* ───────────── Multiple Day / Equipment / Dress / Others ───────────── */
+
+        // addLine(label, amount) -- lets the caller decide where each tier
+        // line is rendered (Booking Summary rows, not a separate price-calc
+        // box).
+        var DAY_SLUGS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+        // Per-weekday "Day-wise Pricing" override for a given date, falling
+        // back to the flat daily rate when that weekday has no override --
+        // mirrors rbfw_get_day_rate()'s PHP logic (checks only that one
+        // weekday's own enable flag + rate field, both saved per weekday
+        // regardless of the day-wise section's own show/hide toggle, since
+        // that's exactly what the real checkout price reads).
+        function dayRateFor(date, fallbackRate) {
+            var slug = DAY_SLUGS[date.getDay()];
+            // rbfw_enable_{day}_day is a real <input type="checkbox">, not
+            // the hidden-input-plus-styled-toggle pattern isYes() is built
+            // for -- .val() on a checkbox always returns its static "yes"
+            // value attribute regardless of checked state, so isYes() here
+            // would treat every day as enabled even when unticked. Checking
+            // .prop('checked') is required, matching PHP's own read of the
+            // saved checkbox state (unticked = field omitted/empty = 'no').
+            if (! $pricingPanel.find('[name="rbfw_enable_' + slug + '_day"]').prop('checked')) { return fallbackRate; }
+            var raw = $pricingPanel.find('[name="rbfw_' + slug + '_daily_rate"]').val();
+            if (raw === '' || raw === undefined || raw === null) { return fallbackRate; }
+            var custom = parseFloat(raw);
+            return isNaN(custom) ? fallbackRate : custom;
+        }
+
+        function computeWholeDayBreakdown(addLine, wholeDays, fromDate) {
+            var remaining = wholeDays;
+            var offset = 0;
+            var total = 0;
+
+            var monthlyOn = isYes('#rbfw_enable_monthly_rate');
+            var monthThreshold = isYes('#rbfw_enable_day_threshold_for_monthly') ? num('#day-threshold-input-for-monthly') : 30;
+            var monthlyRate = num('#monthly-price-input');
+
+            var weeklyOn = isYes('#rbfw_enable_weekly_rate');
+            var weekThreshold = isYes('#rbfw_enable_day_threshold_for_weekly') ? num('#day-threshold-input-for-weekly') : 7;
+            var weeklyRate = num('#weekly-price-input');
+
+            var dailyOn = isYes('#rbfw_enable_daily_rate');
+            var dailyRate = num('#daily-price-input');
+            var missingDaily = false;
+
+            if (monthlyOn && monthlyRate > 0 && monthThreshold > 0 && remaining >= monthThreshold) {
+                var months = Math.floor(remaining / monthThreshold);
+                addLine(months + ' month(s) × ' + money(monthlyRate), months * monthlyRate);
+                total += months * monthlyRate;
+                remaining -= months * monthThreshold;
+                offset += months * monthThreshold;
+            }
+            if (weeklyOn && weeklyRate > 0 && weekThreshold > 0 && remaining >= weekThreshold) {
+                var weeks = Math.floor(remaining / weekThreshold);
+                addLine(weeks + ' week(s) × ' + money(weeklyRate), weeks * weeklyRate);
+                total += weeks * weeklyRate;
+                remaining -= weeks * weekThreshold;
+                offset += weeks * weekThreshold;
+            }
+            if (remaining > 0) {
+                if (dailyOn) {
+                    // Sum the remaining days one at a time so a Day-wise
+                    // Pricing override on any specific weekday is actually
+                    // reflected here, instead of always multiplying by the
+                    // flat daily rate -- mirrors rbfw_daywise_days_sum().
+                    if (fromDate) {
+                        var dayAmt = 0;
+                        var hasOverride = false;
+                        for (var j = 0; j < remaining; j++) {
+                            var d = new Date(fromDate.getTime() + (offset + j) * 86400000);
+                            var rate = dayRateFor(d, dailyRate);
+                            if (rate !== dailyRate) { hasOverride = true; }
+                            dayAmt += rate;
+                        }
+                        addLine(
+                            hasOverride ? (remaining + ' day(s) (day-wise pricing applied)') : (remaining + ' day(s) × ' + money(dailyRate)),
+                            dayAmt
+                        );
+                        total += dayAmt;
+                    } else {
+                        addLine(remaining + ' day(s) × ' + money(dailyRate), remaining * dailyRate);
+                        total += remaining * dailyRate;
+                    }
+                } else {
+                    missingDaily = true;
+                }
+            }
+            return { total: total, missingDaily: missingDaily, remaining: remaining };
+        }
+
+        function computeLeftoverHours(addLine, leftoverHours, wholeDaysBilled) {
+            leftoverHours = Math.max(0, Math.round(leftoverHours * 100) / 100);
+            if (leftoverHours <= 0) {
+                return 0;
+            }
+
+            var dailyOn = isYes('#rbfw_enable_daily_rate');
+            var dailyRate = num('#daily-price-input');
+            var hourThresholdOn = isYes('#rbfw_enable_hourly_threshold');
+            var hourThreshold = num('#hour-threshold-input');
+
+            if (hourThresholdOn && hourThreshold > 0 && leftoverHours >= hourThreshold && dailyOn) {
+                addLine('Final ' + leftoverHours + 'h rounds up to a full day', dailyRate);
+                return dailyRate;
+            }
+
+            var halfDayOn = isYes('#rbfw_enable_half_day_rate') && num('#half-day-price-input') > 0;
+            var halfStart = parseFloat($pricingPanel.find('[name="half_day_hour_threshold_start"]').val());
+            var halfEnd = parseFloat($pricingPanel.find('[name="half_day_hour_threshold_end"]').val());
+            if (halfDayOn && halfStart > 0 && halfEnd >= halfStart && leftoverHours >= halfStart && leftoverHours <= halfEnd) {
+                var halfRate = num('#half-day-price-input');
+                addLine('Half-day (' + leftoverHours + 'h)', halfRate);
+                return halfRate;
+            }
+
+            var hourlyOn = isYes('#rbfw_enable_hourly_rate') && num('#hourly-price-input') > 0;
+            if (hourlyOn) {
+                var hourlyRate = num('#hourly-price-input');
+                var hAmt = leftoverHours * hourlyRate;
+                addLine(leftoverHours + 'h × ' + money(hourlyRate) + '/hr', hAmt);
+                return hAmt;
+            }
+
+            if (wholeDaysBilled > 0 || dailyOn) {
+                showWarning('No rate covers the final ' + leftoverHours + 'h of this booking.');
+            }
+            return 0;
+        }
+
+        // Returns {price, unit} for whichever enabled rate (Hour/Day/Week/
+        // Month/Half Day) is cheapest, so "Starting from" can show its real
+        // unit instead of always assuming Day.
+        function mdFromPrice() {
+            var candidates = [];
+            if (isYes('#rbfw_enable_daily_rate') && num('#daily-price-input') > 0) { candidates.push({ price: num('#daily-price-input'), unit: 'Day' }); }
+            if (isYes('#rbfw_enable_weekly_rate') && num('#weekly-price-input') > 0) { candidates.push({ price: num('#weekly-price-input'), unit: 'Week' }); }
+            if (isYes('#rbfw_enable_monthly_rate') && num('#monthly-price-input') > 0) { candidates.push({ price: num('#monthly-price-input'), unit: 'Month' }); }
+            if (isYes('#rbfw_enable_hourly_rate') && num('#hourly-price-input') > 0) { candidates.push({ price: num('#hourly-price-input'), unit: 'Hour' }); }
+            if (isYes('#rbfw_enable_half_day_rate') && num('#half-day-price-input') > 0) { candidates.push({ price: num('#half-day-price-input'), unit: 'Half Day' }); }
+            if (! candidates.length) { return null; }
+            return candidates.reduce(function (min, c) { return c.price < min.price ? c : min; });
+        }
+
+        // "3 days 14h 30m" / "3 days" / "14h 30m" -- shows the real day and
+        // hour breakdown instead of a vague "(incl. partial day)" note, and
+        // omits whichever part is zero (e.g. a same-day booking has no
+        // "0 days" prefix).
+        function formatDaysHours(days, hours) {
+            var parts = [];
+            if (days > 0) { parts.push(days + ' day' + (days === 1 ? '' : 's')); }
+            var h = Math.floor(hours + 1e-9);
+            var m = Math.round((hours - h) * 60);
+            if (m === 60) { h += 1; m = 0; }
+            if (h > 0 && m > 0) { parts.push(h + 'h ' + m + 'm'); }
+            else if (h > 0) { parts.push(h + 'h'); }
+            else if (m > 0) { parts.push(m + 'm'); }
+            return parts.length ? parts.join(' ') : '0 days';
+        }
+
+        function recalc() {
+            ensureDefaultDates();
+            clearWarning();
+            // Multiple Day has no separate price-calc box -- its tier
+            // breakdown (e.g. "3 day(s) × $100.00") is written straight into
+            // the Booking Summary rows below instead.
+            $summary.show();
+            $preview.find('.rbfw-me-fp-sd-optrows, .rbfw-me-fp-resort-optrows').empty();
+
+            var $totalAmt = $preview.find('.rbfw-me-fp-total-amt');
+            var $from = $preview.find('.rbfw-me-fp-from-amt');
+            var fromInfo = mdFromPrice();
+            $from.text(fromInfo === null ? '—' : money(fromInfo.price));
+            $preview.find('.rbfw-me-fp-pricerow-unit').text(fromInfo ? '/ ' + fromInfo.unit : '');
+
+            var startVal = $preview.find('.rbfw-me-fp-start').val();
+            var endVal = $preview.find('.rbfw-me-fp-end').val();
+            var start = startVal ? new Date(startVal + 'T00:00:00') : null;
+            var end = endVal ? new Date(endVal + 'T00:00:00') : null;
+
+            // Single Day-only elements: must be explicitly hidden here too,
+            // not just left over from whatever recalcSd() last set, since
+            // switching rent types doesn't otherwise touch them.
+            $calField.hide();
+            $sdTimeField.hide();
+
+            // Unlike Single Day's calendar grid, Pickup/Return here are native
+            // <input type="date"> fields -- no browser lets JS grey out
+            // individual dates in that widget, so an Off Day can't be made
+            // unselectable the way it is for Single Day/Resort. The closest
+            // equivalent: warn and block pricing exactly as an invalid range
+            // does below, instead of silently pricing a booking the real
+            // frontend's datepicker would never have allowed to be picked.
+            var bailOut = function (msg) {
+                showWarning(msg);
+                $durationBanner.hide();
+                $mdTimeFields.hide();
+                $extras.hide();
+                $variations.hide();
+                $preview.find('.rbfw-me-fp-summary-rows').empty();
+                $totalAmt.text(money(0));
+                $preview.find('.rbfw-me-fp-book-btn').addClass('is-disabled');
+            };
+
+            if (! start || ! end || end < start) {
+                bailOut('Pick a valid pickup/return date.');
+                return;
+            }
+
+            var offWeekdaySet = offWeekdays();
+            var offRanges = offDateRanges();
+            if (isDateOff(start, offWeekdaySet, offRanges)) {
+                bailOut('Pickup date falls on a configured Off Day -- choose another date.');
+                return;
+            }
+            if (isDateOff(end, offWeekdaySet, offRanges)) {
+                bailOut('Return date falls on a configured Off Day -- choose another date.');
+                return;
+            }
+
+            var totalDays = Math.round((end - start) / 86400000) + 1;
+            var timePickerOn = isYes('#rbfw_enable_time_picker');
+
+            $mdTimeFields.toggle(timePickerOn);
+            var pickupTime = null, returnTime = null, stMin = null, etMin = null;
+            if (timePickerOn) {
+                var slotValues = timeSlotValues('rdfw_available_time');
+                pickupTime = populateTimeSelect($preview.find('.rbfw-me-fp-md-start-time'), slotValues);
+                returnTime = populateTimeSelect($preview.find('.rbfw-me-fp-md-end-time'), slotValues);
+                stMin = parseTimeToMinutes(pickupTime);
+                etMin = parseTimeToMinutes(returnTime);
+            }
+
+            // Whole days + a leftover-hours remainder for the last day --
+            // mirrors rbfw_md_duration_price_calculation()'s PHP
+            // date_diff(pickup_datetime, dropoff_datetime): the real elapsed
+            // time between the two full datetimes (date AND time), not just
+            // the calendar day count. Using only the raw return time here
+            // (ignoring how late pickup was) overstated the leftover on any
+            // booking that didn't start at midnight -- e.g. pickup 08:00 /
+            // return 18:00 three days later is "3 days 10h" elapsed, not
+            // "3 days 18h".
+            var wholeDays = totalDays;
+            var leftoverHours = 0;
+            if (timePickerOn) {
+                if (totalDays === 1) {
+                    wholeDays = 0;
+                    leftoverHours = (stMin !== null && etMin !== null) ? Math.max(0, (etMin - stMin) / 60) : 24;
+                } else {
+                    var pickupMin = (stMin !== null) ? stMin : 0;
+                    var dropoffMin = (etMin !== null) ? etMin : 0;
+                    var totalMinutes = Math.round((end - start) / 60000) + (dropoffMin - pickupMin);
+                    wholeDays = Math.max(0, Math.floor(totalMinutes / 1440));
+                    leftoverHours = Math.max(0, (totalMinutes - wholeDays * 1440) / 60);
+                }
+            }
+
+            var durationLabel = timePickerOn ? formatDaysHours(wholeDays, leftoverHours) : (totalDays + ' day' + (totalDays === 1 ? '' : 's'));
+            $durationBanner.show().find('.rbfw-me-fp-duration-text').text(durationLabel);
+
+            var $summaryRows = $preview.find('.rbfw-me-fp-summary-rows').empty();
+            summaryLine($summaryRows, 'Duration', durationLabel);
+
+            var tierAddLine = function (label, amount) { summaryLine($summaryRows, label, money(amount)); };
+            var breakdown = computeWholeDayBreakdown(tierAddLine, wholeDays, start);
+            var total = breakdown.total;
+
+            if (timePickerOn) {
+                total += computeLeftoverHours(tierAddLine, leftoverHours, wholeDays);
+            } else if (breakdown.missingDaily) {
+                showWarning('No Daily Price enabled for the remaining ' + breakdown.remaining + ' day(s) of this booking.');
+            }
+
+            if (timePickerOn && pickupTime) { summaryLine($summaryRows, 'Pickup Time', pickupTime); }
+            if (timePickerOn && returnTime) { summaryLine($summaryRows, 'Return Time', returnTime); }
+
+            var extraRows = categoryExtraServiceRows();
+            var groups = variationGroups();
+
+            // Variations (same card as Single Day, also shown for the MD family).
+            $variations.toggle(groups.length > 0);
+            if (groups.length) {
+                var variationsQty = $preview.data('variationsQty');
+                renderVariationGroups($variations.find('.rbfw-me-fp-variations-groups'), groups, variationsQty, function (group, key) {
+                    var wasSelected = (variationsQty[key] || 0) > 0;
+                    group.values.forEach(function (v) { variationsQty[v.key] = 0; });
+                    variationsQty[key] = wasSelected ? 0 : 1;
+                    recalc();
+                });
+                groups.forEach(function (group) {
+                    var selectedVal = group.values.filter(function (v) { return (variationsQty[v.key] || 0) > 0; })[0];
+                    if (selectedVal) { summaryLine($summaryRows, group.label, selectedVal.label); }
+                });
+                total += variationsTotal(groups, variationsQty);
+            }
+
+            // Extra Services: category-wise table (Multiple Day/Equipment/Dress/Others).
+            $extras.toggle(extraRows.length > 0);
+            if (extraRows.length) {
+                var extrasQty = $preview.data('extrasQty');
+                renderExtraChecks($extras.find('.rbfw-me-fp-extras-rows'), extraRows, extrasQty, function (key, newQty) {
+                    extrasQty[key] = newQty;
+                    recalc();
+                }, function (item) { return item.dayWise ? money(item.price) + '/day' : money(item.price); });
+                extraRows.forEach(function (item) {
+                    if ((extrasQty[item.key] || 0) <= 0) { return; }
+                    // Day-wise services charge per day, not once -- showing just
+                    // the flat per-day rate here (with the multiplied total
+                    // happening silently elsewhere) read like a flat fee and
+                    // confused admins. Spell out the multiplication, same as
+                    // Resort's "$rate/night × N" room line.
+                    if (item.dayWise && totalDays > 0) {
+                        summaryLine($summaryRows, item.label + ' (' + money(item.price) + '/day × ' + totalDays + ')', money(item.price * totalDays));
+                    } else {
+                        summaryLine($summaryRows, item.label, money(item.price));
+                    }
+                });
+                total += extrasTotal(extraRows, extrasQty, totalDays);
+            }
+
+            // "Subtotal" line = everything above, before fees -- so the Price
+            // box below always reads as Subtotal + fees = Price, even when
+            // there are no fees configured.
+            summaryLine($summaryRows, 'Subtotal', money(total));
+
+            total += computeSecurityDeposit($summaryRows, total);
+
+            var feesAmt = computeFees($summaryRows, total, totalDays, start);
+            total += feesAmt;
+
+            $totalAmt.text(money(total));
+            $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', total <= 0);
+        }
+
+        /* ───────────── Multiple Items ─────────────
+           A package of linked item rows, each with its own Hourly/Daily/
+           Weekly/Monthly price; the customer picks ONE duration type + qty
+           for the whole booking (not per item), then how many of each item. */
+
+        var MI_DURATION_LABELS = { hourly: 'Hourly', daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly' };
+        var MI_DURATION_UNIT = { hourly: ['Hour', 'Hours'], daily: ['Day', 'Days'], weekly: ['Week', 'Weeks'], monthly: ['Month', 'Months'] };
+        var MI_DURATION_MAX = { hourly: 23, daily: 30, weekly: 4, monthly: 30 };
+
+        var $miControls = $preview.find('.rbfw-me-fp-mi-controls');
+        var $miItems = $preview.find('.rbfw-me-fp-mi-items');
+        $miControls.data('qty', 1);
+        $preview.data('miItemQty', {});
+
+        function miEnabledDurationTypes() {
+            var types = [];
+            if ($wrap.find('#enableHourly').is(':checked')) { types.push('hourly'); }
+            if ($wrap.find('#enableDaily').is(':checked')) { types.push('daily'); }
+            if ($wrap.find('#enableWeekly').is(':checked')) { types.push('weekly'); }
+            if ($wrap.find('#enableMonthly').is(':checked')) { types.push('monthly'); }
+            return types;
+        }
+
+        function miRows() {
+            var rows = [];
+            $wrap.find('#itemRows .item-row').each(function () {
+                var $row = $(this);
+                var name = $.trim($row.find('.item-name-input').val());
+                if (! name) { return; }
+                rows.push({
+                    name: name,
+                    hourly: parseFloat($row.find('.hourly-price-input').val()) || 0,
+                    daily: parseFloat($row.find('.daily-price-input').val()) || 0,
+                    weekly: parseFloat($row.find('.weekly-price-input').val()) || 0,
+                    monthly: parseFloat($row.find('.monthly-price-input').val()) || 0
+                });
+            });
+            return rows;
+        }
+
+        // Returns {price, type} for the cheapest entry-point price across
+        // every item/enabled duration type -- type is used to label the
+        // "Starting from" price box's unit (e.g. "/ Hour"), independent of
+        // whatever duration type the admin currently has selected below.
+        function miFromPrice(rows, types) {
+            var min = null, minType = null;
+            rows.forEach(function (row) {
+                types.forEach(function (t) {
+                    var p = row[t];
+                    if (p > 0 && (min === null || p < min)) { min = p; minType = t; }
+                });
+            });
+            return { price: min, type: minType };
+        }
+
+        // Mirrors rbfwGetMultipleItemsPivotBilling() in md_script.js: once a
+        // duration crosses the configured pivot threshold, billing auto-
+        // upgrades to the next tier up (e.g. 30 hours -> billed as whole
+        // days), falling back to the original tier when an item has no
+        // price set at the upgraded one.
+        function miPivotBilling(durationType, durationQty) {
+            var hourlyToDay = parseFloat($wrap.find('#rbfw_mi_hourly_to_half_day_pivot').val()) || 0;
+            var dailyToWeekly = parseFloat($wrap.find('#rbfw_mi_daily_to_weekly_pivot').val()) || 0;
+            var weeklyToMonthly = parseFloat($wrap.find('#rbfw_mi_weekly_to_monthly_pivot').val()) || 0;
+
+            var billing = { priceType: durationType, units: durationQty, multiplier: durationQty };
+
+            if (durationType === 'weekly' && weeklyToMonthly > 0 && durationQty >= weeklyToMonthly) {
+                billing.priceType = 'monthly';
+                billing.units = Math.max(1, Math.ceil(durationQty / 4));
+                billing.multiplier = billing.units;
+            } else if (durationType === 'daily' && dailyToWeekly > 0 && durationQty >= dailyToWeekly) {
+                var weeklyUnits = Math.max(1, Math.ceil(durationQty / 7));
+                if (weeklyToMonthly > 0 && weeklyUnits >= weeklyToMonthly) {
+                    billing.priceType = 'monthly';
+                    billing.units = Math.max(1, Math.ceil(weeklyUnits / 4));
+                } else {
+                    billing.priceType = 'weekly';
+                    billing.units = weeklyUnits;
+                }
+                billing.multiplier = billing.units;
+            } else if (durationType === 'hourly') {
+                if (hourlyToDay > 0 && durationQty >= hourlyToDay) {
+                    var dailyUnits = Math.max(1, Math.ceil(durationQty / 24));
+                    if (dailyToWeekly > 0 && dailyUnits >= dailyToWeekly) {
+                        var hourlyWeeklyUnits = Math.max(1, Math.ceil(dailyUnits / 7));
+                        if (weeklyToMonthly > 0 && hourlyWeeklyUnits >= weeklyToMonthly) {
+                            billing.priceType = 'monthly';
+                            billing.units = Math.max(1, Math.ceil(hourlyWeeklyUnits / 4));
+                        } else {
+                            billing.priceType = 'weekly';
+                            billing.units = hourlyWeeklyUnits;
+                        }
+                    } else {
+                        billing.priceType = 'daily';
+                        billing.units = dailyUnits;
+                    }
+                    billing.multiplier = billing.units;
+                }
+            }
+            return billing;
+        }
+
+        function recalcMi() {
+            clearWarning();
+            $calField.hide();
+            $sdTimeField.hide();
+
+            var rows = miRows();
+            var types = miEnabledDurationTypes();
+            var $totalAmt = $preview.find('.rbfw-me-fp-total-amt');
+            var $from = $preview.find('.rbfw-me-fp-from-amt');
+            var fromInfo = miFromPrice(rows, types);
+            $from.text(fromInfo.price === null ? '—' : money(fromInfo.price));
+            $preview.find('.rbfw-me-fp-pricerow-unit').text(fromInfo.type ? '/ ' + MI_DURATION_UNIT[fromInfo.type][0] : '');
+
+            // Duration Type: no default -- with every tier optional and none
+            // inherently "first", the admin taps one just like the real
+            // booking form's tabs.
+            var selectedType = $miControls.data('durationType');
+            if (selectedType && types.indexOf(selectedType) === -1) { selectedType = null; }
+            var $durationChips = $preview.find('.rbfw-me-fp-mi-duration-chips');
+            if (types.length) {
+                var typeChips = types.map(function (t) { return MI_DURATION_LABELS[t]; });
+                var activeLabel = renderTimeChips(
+                    $durationChips,
+                    typeChips,
+                    selectedType ? MI_DURATION_LABELS[selectedType] : null,
+                    function (label) {
+                        $miControls.data('durationType', types.filter(function (t) { return MI_DURATION_LABELS[t] === label; })[0]);
+                        recalcMi();
+                    }
+                );
+                if (activeLabel) {
+                    selectedType = types.filter(function (t) { return MI_DURATION_LABELS[t] === activeLabel; })[0];
+                }
+            } else {
+                $durationChips.empty();
+                selectedType = null;
+            }
+
+            $preview.find('.rbfw-me-fp-mi-duration-field').toggle(!!selectedType);
+            $miItems.hide();
+            $durationBanner.hide();
+            $preview.find('.rbfw-me-fp-md-start-time-field').hide();
+            $preview.find('.rbfw-me-fp-md-end-time-field').hide();
+
+            if (! rows.length) {
+                showWarning('Add at least one item in the table below to preview its price.');
+                $summary.hide();
+                $extras.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+            if (! types.length) {
+                showWarning('Enable at least one price type above (Hourly/Daily/Weekly/Monthly) to preview pricing.');
+                $summary.hide();
+                $extras.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+            if (! selectedType) {
+                showWarning('Select a duration type above to continue.');
+                $summary.hide();
+                $extras.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+
+            var maxQty = MI_DURATION_MAX[selectedType] || 30;
+            var qty = Math.max(1, Math.min(maxQty, parseInt($miControls.data('qty'), 10) || 1));
+            $miControls.data('qty', qty);
+            // "Rental Duration" dropdown -- options formatted "1 Day", "2 Days",
+            // etc. per the approved design, in place of the old +/- stepper.
+            var unit = MI_DURATION_UNIT[selectedType];
+            var $qtySelect = $preview.find('.rbfw-me-fp-mi-qty-select');
+            $qtySelect.empty();
+            for (var n = 1; n <= maxQty; n++) {
+                $qtySelect.append($('<option></option>').val(n).text(n + ' ' + (n === 1 ? unit[0] : unit[1])));
+            }
+            $qtySelect.val(qty);
+
+            ensureDefaultDates();
+            var startVal = $preview.find('.rbfw-me-fp-start').val();
+            var start = startVal ? new Date(startVal + 'T00:00:00') : null;
+
+            var miTimePickerOn = $wrap.find('.rbfw-mi-time-settings-wrap .rbfw_enable_time_picker').val() === 'yes';
+            var pickupTime = null;
+            if (miTimePickerOn) {
+                var slotValues = timeSlotValues('rdfw_available_time_mi');
+                pickupTime = populateTimeSelect($preview.find('.rbfw-me-fp-md-start-time'), slotValues);
+                $preview.find('.rbfw-me-fp-md-start-time-field').show();
+            }
+
+            if (! start) {
+                showWarning('Pick a pickup date above to continue.');
+                $summary.hide();
+                $extras.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+
+            // End date, mirroring rbfwGetMultipleItemsSummaryEndDate().
+            var end = new Date(start);
+            if (selectedType === 'weekly') { end.setDate(end.getDate() + (qty * 7)); }
+            else if (selectedType === 'monthly') { end.setDate(end.getDate() + (qty * 30)); }
+            else if (selectedType === 'daily') { end.setDate(end.getDate() + qty); }
+            // Hourly bookings stay within the same day for this date-only preview.
+
+            var durationLabel = qty + ' ' + (qty === 1 ? unit[0] : unit[1]);
+            var startLabel = MONTH_NAMES[start.getMonth()].slice(0, 3) + ' ' + start.getDate() + ', ' + start.getFullYear();
+            var endLabel = MONTH_NAMES[end.getMonth()].slice(0, 3) + ' ' + end.getDate() + ', ' + end.getFullYear();
+            $durationBanner.show().find('.rbfw-me-fp-duration-text').text(
+                durationLabel + (selectedType === 'hourly' ? ' · ' + startLabel : ' · ' + startLabel + ' – ' + endLabel)
+            );
+
+            $miItems.show();
+            var $itemRows = $miItems.find('.rbfw-me-fp-mi-item-rows').empty();
+            var miQtyMap = $preview.data('miItemQty');
+            var pivotBilling = miPivotBilling(selectedType, qty);
+            var $summaryRows = $preview.find('.rbfw-me-fp-summary-rows').empty();
+            summaryLine($summaryRows, 'Duration', durationLabel);
+            summaryLine($summaryRows, 'Start Date', startLabel);
+            if (selectedType !== 'hourly') { summaryLine($summaryRows, 'End Date', endLabel); }
+            if (pickupTime) { summaryLine($summaryRows, 'Pickup Time', pickupTime); }
+
+            var itemTotal = 0;
+            var anySelected = false;
+            rows.forEach(function (row, idx) {
+                var key = row.name + '::' + idx;
+                var perUnit = row[pivotBilling.priceType] || 0;
+                var multiplier = pivotBilling.multiplier;
+                // The upgraded tier may not have a price configured for this
+                // item -- fall back to its original tier/qty rather than
+                // silently pricing it at 0 (mirrors calculateTotalMultipleItems()).
+                if (! perUnit && pivotBilling.priceType !== selectedType) {
+                    perUnit = row[selectedType] || 0;
+                    multiplier = qty;
+                }
+                var itemQty = miQtyMap[key] || 0;
+                if (itemQty > 0) { anySelected = true; }
+
+                var $row = $('<div class="rbfw-me-fp-svcrow"></div>');
+                var $nameCol = $('<div class="rbfw-me-fp-svcrow-name"></div>').text(row.name);
+                $nameCol.append($('<span class="rbfw-me-fp-svcrow-price"></span>').text(money(perUnit) + ' / ' + MI_DURATION_LABELS[pivotBilling.priceType]));
+                $row.append($nameCol);
+                var $stepperPill = $('<div class="rbfw-me-fp-stepper-pill rbfw-me-fp-stepper-pill--sm"></div>');
+                var $minus = $('<button type="button" class="rbfw-me-fp-step-minus">&minus;</button>');
+                var $val = $('<span></span>').text(itemQty);
+                var $plus = $('<button type="button" class="rbfw-me-fp-step-plus">+</button>');
+                $minus.on('click', function () {
+                    miQtyMap[key] = Math.max(0, (miQtyMap[key] || 0) - 1);
+                    recalcMi();
+                });
+                $plus.on('click', function () {
+                    miQtyMap[key] = (miQtyMap[key] || 0) + 1;
+                    recalcMi();
+                });
+                $stepperPill.append($minus).append($val).append($plus);
+                $row.append($stepperPill);
+                $itemRows.append($row);
+
+                if (itemQty > 0) {
+                    var lineTotal = perUnit * itemQty * multiplier;
+                    summaryLine($summaryRows, row.name + ' × ' + itemQty, money(lineTotal));
+                    itemTotal += lineTotal;
+                }
+            });
+
+            if (! anySelected) {
+                showWarning('Select at least one item\'s quantity above to continue.');
+                $summary.hide();
+                $extras.hide();
+                $totalAmt.text(money(0));
+                return;
+            }
+
+            var total = itemTotal;
+
+            // Extra Services: Multiple Items' real frontend form reads the
+            // category-wise rbfw_service_category_price data (same as
+            // Multiple Day), not the simple table -- templates/forms/
+            // multi-items-registration.php:561-582 confirms this. The basic
+            // table's rbfw_extra_service_data is saved here but never read
+            // by the actual booking form, so using it here showed nothing.
+            var extraRows = categoryExtraServiceRows();
+            $extras.toggle(extraRows.length > 0);
+            if (extraRows.length) {
+                var extrasQty = $preview.data('extrasQty');
+                renderExtraChecks($extras.find('.rbfw-me-fp-extras-rows'), extraRows, extrasQty, function (k, newQty) {
+                    extrasQty[k] = newQty;
+                    recalcMi();
+                }, function (item) { return money(item.price); });
+                extraRows.forEach(function (item) {
+                    if ((extrasQty[item.key] || 0) > 0) { summaryLine($summaryRows, item.label, money(item.price)); }
+                });
+                total += extrasTotal(extraRows, extrasQty, 0);
+            }
+
+            total += computeSecurityDeposit($summaryRows, total);
+
+            var feesAmt = computeFees($summaryRows, total, 0, null);
+            total += feesAmt;
+
+            $summary.show();
+            $totalAmt.text(money(total));
+        }
+
+        /* ───────────── Visibility + event wiring ───────────── */
+
+        // Day-wise Pricing's 7 per-weekday enable checkboxes + rate fields --
+        // without these the preview never re-renders when one is ticked,
+        // unticked, or edited, so dayRateFor()'s result would only show up
+        // after some unrelated field happened to trigger a recalc.
+        var DAY_WISE_SELECTORS = DAY_SLUGS.map(function (d) {
+            return '[name="rbfw_enable_' + d + '_day"], [name="rbfw_' + d + '_daily_rate"]';
+        }).join(', ');
+
+        var WATCHED_SELECTORS = [
+            '#monthly-price-input', '#rbfw_enable_monthly_rate',
+            '#day-threshold-input-for-monthly', '#rbfw_enable_day_threshold_for_monthly',
+            '#weekly-price-input', '#rbfw_enable_weekly_rate',
+            '#day-threshold-input-for-weekly', '#rbfw_enable_day_threshold_for_weekly',
+            '#daily-price-input', '#rbfw_enable_daily_rate',
+            '#rbfw_enable_time_picker',
+            '#half-day-price-input', '#rbfw_enable_half_day_rate',
+            '[name="half_day_hour_threshold_start"]', '[name="half_day_hour_threshold_end"]',
+            '#hourly-price-input', '#rbfw_enable_hourly_rate',
+            '#hour-threshold-input', '#rbfw_enable_hourly_threshold',
+            DAY_WISE_SELECTORS
+        ].join(', ');
+
+        function isPreviewingMd() {
+            return $preview.is(':visible') && MD_TYPES.indexOf(currentRentType()) !== -1;
+        }
+        function isPreviewingSd() {
+            return $preview.is(':visible') && SD_TYPES.indexOf(currentRentType()) !== -1;
+        }
+        function isPreviewingResort() {
+            return $preview.is(':visible') && RESORT_TYPES.indexOf(currentRentType()) !== -1;
+        }
+        function isPreviewingMi() {
+            return $preview.is(':visible') && MI_TYPES.indexOf(currentRentType()) !== -1;
+        }
+
+        $wrap.on('change input', WATCHED_SELECTORS, function () {
+            if (isPreviewingMd()) { recalc(); }
+        });
+        $wrap.on('change', '.rbfw-me-fp-start, .rbfw-me-fp-end', function () {
+            if (isPreviewingMd()) { recalc(); }
+            if (isPreviewingResort()) { recalcResort(); }
+            if (isPreviewingMi()) { recalcMi(); }
+        });
+        $wrap.on('change', '.rbfw-me-fp-md-start-time, .rbfw-me-fp-md-end-time', function () {
+            if (isPreviewingMd()) { recalc(); }
+            if (isPreviewingMi()) { recalcMi(); }
+        });
+        $wrap.on('change', '#rbfw_item_type', function () {
+            setTimeout(updateVisibility, 0);
+        });
+        // The Rent Type cards (Single Day/Multiple Day/Resort/...) set
+        // #rbfw_item_type's value directly via .val() when clicked (see
+        // initRentTypeSelector()'s click handler on '.rbfw-rent-type'
+        // earlier in this file) without firing a native 'change' event, so
+        // a plain change listener on the hidden input never sees a card
+        // click -- listen on the click itself instead, after applyType()'s
+        // own show/hide work has run.
+        $wrap.on('click', '.rbfw-rent-type', function () {
+            setTimeout(updateVisibility, 0);
+        });
+        $wrap.on('click', '.rbfw-me-tab, .rbfw-me-step-next, .rbfw-me-step-prev', function () {
+            setTimeout(updateVisibility, 0);
+        });
+        // The rate toggles are clickable <div>s that flip a sibling hidden
+        // input's value via their own handlers elsewhere in this file; those
+        // may not fire a native 'change' event, so also recalc shortly after
+        // any click inside the pricing panel's rate cards.
+        $pricingPanel.on('click', '.toggle', function () {
+            setTimeout(function () {
+                if (isPreviewingMd()) { recalc(); }
+                if (isPreviewingMi()) { recalcMi(); }
+            }, 50);
+        });
+
+        // Single Day / Appointment: recalc on qty stepper +/-, on any edit
+        // inside the price table (label/price/duration), and -- via a
+        // MutationObserver, since rows are added/removed/reordered by other
+        // code in this file -- whenever a row is inserted or removed. Option
+        // selection itself is wired per-click inside renderOptrows().
+        $wrap.on('click', '.rbfw-me-fp-sd-stepper .rbfw-me-fp-step-minus, .rbfw-me-fp-sd-stepper .rbfw-me-fp-step-plus', function () {
+            var qty = Math.max(1, (parseInt($sdControls.data('qty'), 10) || 1) + parseInt($(this).data('step'), 10));
+            $sdControls.data('qty', qty);
+            if (isPreviewingSd()) { recalcSd(); }
+        });
+        $wrap.on('input change', '.rbfw_bike_car_sd_price_table_body input, .rbfw_bike_car_sd_price_table_body select', function () {
+            if (isPreviewingSd()) { recalcSd(); }
+        });
+        var $sdTbody = $wrap.find('.rbfw_bike_car_sd_price_table_body');
+        if ($sdTbody.length && window.MutationObserver) {
+            new MutationObserver(function () {
+                if (isPreviewingSd()) { recalcSd(); }
+            }).observe($sdTbody[0], { childList: true });
+        }
+
+        // Resort: recalc on qty stepper +/-, package change, on any edit
+        // inside the room price table, on the Day-long pricing toggle, and
+        // whenever a room row is added/removed.
+        $wrap.on('click', '.rbfw-me-fp-resort-stepper .rbfw-me-fp-step-minus, .rbfw-me-fp-resort-stepper .rbfw-me-fp-step-plus', function () {
+            var qty = Math.max(1, (parseInt($resortControls.data('qty'), 10) || 1) + parseInt($(this).data('step'), 10));
+            $resortControls.data('qty', qty);
+            if (isPreviewingResort()) { recalcResort(); }
+        });
+        $wrap.on('change', '.rbfw-me-fp-resort-pkg', function () {
+            if (isPreviewingResort()) { recalcResort(); }
+        });
+        $wrap.on('input change', '.rbfw_resort_price_table_body input', function () {
+            if (isPreviewingResort()) { recalcResort(); }
+        });
+        $wrap.on('change', 'input[name="rbfw_enable_resort_daylong_price"]', function () {
+            if (isPreviewingResort()) { recalcResort(); }
+        });
+        var $resortTbody = $wrap.find('.rbfw_resort_price_table_body');
+        if ($resortTbody.length && window.MutationObserver) {
+            new MutationObserver(function () {
+                if (isPreviewingResort()) { recalcResort(); }
+            }).observe($resortTbody[0], { childList: true });
+        }
+
+        // Multiple Items: recalc on the Rental Duration dropdown, on enabling/
+        // disabling a price type, on any pivot threshold edit, and on any
+        // item-row edit (name/qty-cap/price) including rows added/removed
+        // by addItemRow()/removeItemRow() (global functions elsewhere in
+        // this file) via a MutationObserver on #itemRows.
+        $wrap.on('change', '.rbfw-me-fp-mi-qty-select', function () {
+            $miControls.data('qty', parseInt($(this).val(), 10) || 1);
+            if (isPreviewingMi()) { recalcMi(); }
+        });
+        $wrap.on('change', '#enableHourly, #enableDaily, #enableWeekly, #enableMonthly', function () {
+            if (isPreviewingMi()) { recalcMi(); }
+        });
+        $wrap.on('input change', '#rbfw_mi_hourly_to_half_day_pivot, #rbfw_mi_daily_to_weekly_pivot, #rbfw_mi_weekly_to_monthly_pivot', function () {
+            if (isPreviewingMi()) { recalcMi(); }
+        });
+        $wrap.on('input change', '#itemRows .item-name-input, #itemRows .hourly-price-input, #itemRows .daily-price-input, #itemRows .weekly-price-input, #itemRows .monthly-price-input', function () {
+            if (isPreviewingMi()) { recalcMi(); }
+        });
+        var $itemRowsBody = $wrap.find('#itemRows')[0];
+        if ($itemRowsBody && window.MutationObserver) {
+            new MutationObserver(function () {
+                if (isPreviewingMi()) { recalcMi(); }
+            }).observe($itemRowsBody, { childList: true });
+        }
+
+        function recalcCurrent() {
+            if (isPreviewingSd()) { recalcSd(); }
+            else if (isPreviewingResort()) { recalcResort(); }
+            else if (isPreviewingMi()) { recalcMi(); }
+            else if (isPreviewingMd()) { recalc(); }
+        }
+
+        // The global Time Slots Configuration chips (admin side) that the
+        // preview's own Pickup/Return Time chips are populated from.
+        $wrap.on('click', '.time-slot', function () {
+            setTimeout(recalcCurrent, 0);
+        });
+
+        // Extra Services: basic table (Single Day/Appointment) and the
+        // category-wise table (Multiple Day family + Multiple Items), plus
+        // add/remove and the category-wise table's own master enable toggle
+        // (outside the table itself, so not covered by the input below).
+        $wrap.on('input change', '.rbfw_es_price_config_wrapper input, .rbfw_service_category_table input', function () {
+            recalcCurrent();
+        });
+        $wrap.on('change', 'input[name="rbfw_enable_category_service_price"]', function () {
+            recalcCurrent();
+        });
+
+        // Security Deposit -- its own master toggle (real checkbox, same
+        // caveat as above) plus the type/amount/label fields it reveals.
+        $wrap.on('input change', 'input[name="rbfw_enable_security_deposit"], select[name="rbfw_security_deposit_type"], input[name="rbfw_security_deposit_amount"], input[name="rbfw_security_deposit_label"]', function () {
+            recalcCurrent();
+        });
+
+        // Pickup/Drop-off Location -- the enable toggles and the per-location
+        // checkboxes all drive updateLocationFields() (called from inside
+        // updateVisibility()), not a recalc function, since this only ever
+        // shows/hides + repopulates the two selects, never changes a price.
+        $wrap.on('change', 'input[name="rbfw_enable_pick_point"], input[name="rbfw_enable_dropoff_point"], .rbfw-me-loc-checkbox', function () {
+            updateVisibility();
+        });
+
+        // "Enable duration-based rental items" (enable_specific_duration) --
+        // gates the Time Slot field's visibility in recalcSd() (see there for
+        // why); its own 'change' isn't otherwise watched here.
+        $wrap.on('change', '[name="enable_specific_duration"]', function () {
+            if (isPreviewingSd()) { recalcSd(); }
+        });
+        var $esBody = $wrap.find('.rbfw_es_price_config_wrapper tbody.mp_event_type_sortable');
+        if ($esBody.length && window.MutationObserver) {
+            new MutationObserver(recalcCurrent).observe($esBody[0], { childList: true });
+        }
+        var $catBody = $wrap.find('.rbfw_service_category_table tbody.sortable_tr');
+        if ($catBody.length && window.MutationObserver) {
+            new MutationObserver(recalcCurrent).observe($catBody[0], { childList: true, subtree: true });
+        }
+
+        // Variations: field/value rows, including add/remove of either, plus
+        // the "Item variation" master toggle itself (mkb-admin.js updates its
+        // value to 'yes'/'no' on click before this change handler runs).
+        $wrap.on('input change', '.rbfw_variations_table_body input', function () {
+            recalcCurrent();
+        });
+        $wrap.on('change', 'input[name="rbfw_enable_variations"]', function () {
+            recalcCurrent();
+        });
+        var $variationsBody = $wrap.find('.rbfw_variations_table_body');
+        if ($variationsBody.length && window.MutationObserver) {
+            new MutationObserver(recalcCurrent).observe($variationsBody[0], { childList: true, subtree: true });
+        }
+
+        // Fee Configuration Settings: master toggle, any field edit, and row
+        // add/remove (rbfwAddFeeRow()/rbfwDuplicateFeeRow() insert <tr>s into
+        // #wprently_fee_body).
+        $wrap.on('change', 'input[name="rbfw_enable_fee_management"]', recalcCurrent);
+        $wrap.on('input change', '#wprently_fee_body input, #wprently_fee_body select', recalcCurrent);
+        var $feeBody = $wrap.find('#wprently_fee_body')[0];
+        if ($feeBody && window.MutationObserver) {
+            new MutationObserver(recalcCurrent).observe($feeBody, { childList: true });
+        }
+
+        // Off Day Settings (weekday checkboxes) and Off Date Settings (date
+        // ranges) feed the Single Day calendar's weekend/unavailable marking.
+        // Deferred: the checkbox's own handler (elsewhere in this file)
+        // writes the comma-separated value into .rbfw-me-offday-hidden on
+        // this same 'change' event, and may run after this listener.
+        $wrap.on('change', '.rbfw-me-offday-checkbox, .rbfw-me-offdate-row input', function () {
+            setTimeout(function () { if (isPreviewingSd()) { recalcSd(); } }, 0);
+        });
+        var $offdateList = $wrap.find('.rbfw-me-offdate-list')[0];
+        if ($offdateList && window.MutationObserver) {
+            new MutationObserver(function () {
+                if (isPreviewingSd()) { recalcSd(); }
+            }).observe($offdateList, { childList: true });
+        }
+
+        /* ───────────── Featured image + item name ─────────────
+           Independent of pricing recalc — mirrors the Featured Image card
+           and Title field live, so the preview shows what a customer sees
+           before they even reach the booking fields below. */
+        var $featureImg = $preview.find('.rbfw-me-fp-feature-img');
+        var $featureName = $preview.find('.rbfw-me-fp-feature-name');
+
+        function updateFeaturedPreview() {
+            var $thumb = $wrap.find('.rbfw-me-thumb-preview');
+            var $thumbImg = $thumb.find('img').first();
+            if ($thumb.hasClass('has-image') && $thumbImg.length) {
+                var src = $thumbImg.attr('src');
+                var $existing = $featureImg.find('img');
+                if (! $existing.length || $existing.attr('src') !== src) {
+                    $featureImg.find('img').remove();
+                    $featureImg.append($('<img>').attr('src', src).attr('alt', ''));
+                }
+                $featureImg.addClass('has-image');
+            } else {
+                $featureImg.removeClass('has-image').find('img').remove();
+            }
+
+            var title = $.trim($wrap.find('#rbfw_me_post_title').val());
+            $featureName.text(title || 'Untitled rental item');
+        }
+
+        $wrap.on('input change', '#rbfw_me_post_title', updateFeaturedPreview);
+        // The Featured Image card replaces .rbfw-me-thumb-preview's innerHTML
+        // asynchronously once an image is actually picked in the media frame
+        // (see initThumbnail() above) or removed via its own button -- a
+        // MutationObserver catches both regardless of that timing.
+        var $thumbWrap = $wrap.find('.rbfw-me-thumb-preview')[0];
+        if ($thumbWrap && window.MutationObserver) {
+            new MutationObserver(updateFeaturedPreview).observe($thumbWrap, { childList: true, attributes: true });
+        }
+        updateFeaturedPreview();
+
+        // Switching tabs doesn't touch any pricing field, so nothing else here
+        // re-runs updateVisibility() -- but the preview now also needs to
+        // show/hide itself when moving to/from Off Days and Advanced (not
+        // just Pricing). initTabs() (a separate closure) applies the
+        // .is-active swap synchronously on this same click; deferring one
+        // tick guarantees activePanelKey() reads the new panel.
+        $wrap.on('click', '.rbfw-me-tab', function () {
+            setTimeout(updateVisibility, 0);
+        });
+
+        updateVisibility();
+    });
 
 }(jQuery));

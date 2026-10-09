@@ -106,79 +106,49 @@
 
                 ?>
                 <section class="rbfw_variations_table_wrap <?php echo esc_attr( ( $rbfw_enable_variations == 'yes' ) ? 'show' : 'hide' ); ?>">
+                    <label class="md-inv-variations-title"><?php esc_html_e( 'Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                     <div class="form-table rbfw_variations_table">
-                        <tbody class="rbfw_variations_table_body ui-sortable">
+                        <div class="rbfw_variations_table_body ui-sortable">
 						<?php
 							if ( ! empty( $rbfw_variations_data ) ) {
 								$i = 0;
 								foreach ( $rbfw_variations_data as $key => $value ) {
 									$selected_value = ! empty( $value['selected_value'] ) ? $value['selected_value'] : '';
 									?>
-                                    <div class="rbfw_variations_table_row" data-key="<?php echo esc_attr( $i ); ?>">
-                                        <header>
-                                            <label for=""><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                            <div>
-                                                <input type="text" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][field_label]" value="<?php echo esc_attr( $value['field_label'] ); ?>" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                                <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][field_id]" value="rbfw_variation_id_<?php echo esc_attr( $i ); ?>">
-                                            </div>
-                                        </header>
+                                    <div class="rbfw_variations_table_row rbfw-var-group" data-key="<?php echo esc_attr( $i ); ?>">
+                                        <!-- Field Label / "remove group" are gone (there's only ever this one group
+                                             now, no "+ Add Variation" left to replace it with); these hidden fields
+                                             just carry the existing values forward unchanged on save. -->
+                                        <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][field_label]" value="<?php echo esc_attr( $value['field_label'] ); ?>">
+                                        <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][field_id]" value="rbfw_variation_id_<?php echo esc_attr( $i ); ?>">
+                                        <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][selected_value]" value="<?php echo esc_attr( $selected_value ); ?>">
                                         <div class=variations-inner-table>
-                                            <table class="rbfw_variations_value_table form-table w-100">
-                                                <thead>
-                                                <th>
-                                                    <?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                                </th>
-                                                <th>
-                                                    <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?><b class="required">*</b>
-                                                </th>
-                                                <th>
-                                                    <?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                                </th>
-                                                <th>
-													<?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                                </th>
-                                                <th>
-                                                    <?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                                </th>
-                                                </thead>
-                                                <tbody class="rbfw_variations_value_table_tbody">
-												<?php
-													$c = 0;
-													foreach ( $rbfw_variations_data[ $i ]['value'] as $key => $value ):
-														?>
-                                                        <tr class="rbfw_variations_value_table_row" data-key="<?php echo esc_attr( $c ); ?>">
-                                                            <td>
-                                                                <input type="text" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][name]" value="<?php echo esc_attr( $value['name'] ); ?>" placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value">
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][quantity]" value="<?php echo esc_attr( $value['quantity'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                                            </td>
-                                                            <td>
-																<?php $this->variation_price_cell( $post_id, $i, $c, $value ); ?>
-                                                            </td>
-                                                            <td>
-                                                                <input type="checkbox" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][selected_value]" value="<?php echo esc_attr( $value['name'] ); ?>" class="rbfw_variation_selected_value" <?php if ( $value['name'] == $selected_value ) {
-																	echo 'checked';
-																} ?>>
-                                                            </td>
-                                                            <td>
-                                                                <div class="mp_event_remove_move">
-                                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button>
-                                                                    <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-														<?php
-														$c ++;
-													endforeach;
-												?>
-                                                </tbody>
-                                            </table>
-                                            <hr>
-                                            <button class="add-new-variation-value ppof-button" data-key="<?php echo esc_attr( $i ); ?>">
-                                                <i class="fas fa-circle-plus"></i>
-                                                <?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                            </button>
+                                            <div class="rbfw_variations_value_table rbfw_variations_value_table_tbody rbfw-var-chip-list">
+											<?php
+												$c = 0;
+												foreach ( $rbfw_variations_data[ $i ]['value'] as $key => $value ):
+													?>
+                                                    <div class="rbfw_variations_value_table_row rbfw-var-chip" data-key="<?php echo esc_attr( $c ); ?>">
+                                                        <input type="text" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][name]" value="<?php echo esc_attr( $value['name'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. Red', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value rbfw-var-chip-name">
+                                                        <span class="rbfw-var-chip-dash">—</span>
+                                                        <input type="number" name="rbfw_variations_data[<?php echo esc_attr( $i ); ?>][value][<?php echo esc_attr( $c ); ?>][quantity]" value="<?php echo esc_attr( $value['quantity'] ); ?>" placeholder="<?php esc_attr_e( 'e.g. 3', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw-var-chip-qty">
+                                                        <span class="rbfw-var-chip-unit"><?php esc_html_e( 'in stock', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                        <?php $this->variation_price_cell( $post_id, $i, $c, $value ); ?>
+                                                        <button type="button" class="button remove-rbfw_variations_value_table_row rbfw-var-chip-remove" title="<?php esc_attr_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
+                                                    </div>
+													<?php
+													$c ++;
+												endforeach;
+											?>
+                                            </div>
+                                            <div class="rbfw-var-add-wrap">
+                                                <div class="rbfw-var-add-label"><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                                <div class="rbfw-var-add-form">
+                                                    <input type="text" class="rbfw-var-add-name" placeholder="<?php esc_attr_e( 'Value name', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                    <input type="number" min="0" class="rbfw-var-add-qty" placeholder="<?php esc_attr_e( 'Qty in stock', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                    <button type="button" class="rbfw-var-add-btn" data-key="<?php echo esc_attr( $i ); ?>" disabled><?php esc_html_e( '+ Add Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="mp_event_remove_move">
                                             <button class="remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button>
@@ -190,63 +160,36 @@
 								}
 							} else {
 								?>
-                                <div class="rbfw_variations_table_row" data-key="0">
-                                    <header>
-                                        <label for=""><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                        <div>
-                                            <input type="text" name="rbfw_variations_data[0][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                            <input type="hidden" name="rbfw_variations_data[0][field_id]" value="rbfw_variation_id_0">
-                                        </div>
-                                    </header>
+                                <div class="rbfw_variations_table_row rbfw-var-group" data-key="0">
+                                    <input type="hidden" name="rbfw_variations_data[0][field_id]" value="rbfw_variation_id_0">
+                                    <input type="hidden" name="rbfw_variations_data[0][selected_value]" value="">
                                     <div class="variations-inner-table">
-                                        <table class="rbfw_variations_value_table form-table w-100">
-                                            <thead>
-                                            <th>
-                                                <?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                            </th>
-                                            <th>
-                                                <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                                <b class="required">
-                                                    <?php esc_html_e( '*', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                                </b>
-                                            </th>
-                                            <th>
-                                                <?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                            </th>
-                                            <th>
-												<?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                            </th>
-                                            <th>
-                                                <?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                            </th>
-                                            </thead>
-                                            <tbody class="rbfw_variations_value_table_tbody">
-                                            <tr class="rbfw_variations_value_table_row" data-key="0">
-                                                <td>
-                                                    <input type="text" name="rbfw_variations_data[0][value][0][name]" placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value">
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="rbfw_variations_data[0][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                                </td>
-                                                <td>
-													<?php $this->variation_price_cell( $post_id, 0, 0 ); ?>
-                                                </td>
-                                                <td>
-                                                    <input type="checkbox" name="rbfw_variations_data[0][selected_value]" class="rbfw_variation_selected_value">
-                                                </td>
-                                                <td>
-                                                    <div class="mp_event_remove_move">
-                                                        <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fas fa-trash-can"></i></button>
-                                                        <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                        <button class="add-new-variation-value ppof-button mt-2" data-key="0">
-                                            <i class="fas fa-circle-plus"></i>
-                                            <?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                        </button>
+                                        <div class="rbfw_variations_value_table rbfw_variations_value_table_tbody rbfw-var-chip-list">
+											<?php
+											// Brand-new items start with a few ready-made example values (editable/
+											// removable like any other chip) instead of one blank row, so there's
+											// something to see and tweak rather than an empty "+ Add New Value" loop.
+											$rbfw_default_variation_examples = array( 'Red', 'Green', 'Blue' );
+											foreach ( $rbfw_default_variation_examples as $rbfw_default_c => $rbfw_default_name ) :
+												?>
+                                                <div class="rbfw_variations_value_table_row rbfw-var-chip" data-key="<?php echo esc_attr( $rbfw_default_c ); ?>">
+                                                    <input type="text" name="rbfw_variations_data[0][value][<?php echo esc_attr( $rbfw_default_c ); ?>][name]" value="<?php echo esc_attr( $rbfw_default_name ); ?>" placeholder="<?php esc_attr_e( 'e.g. Red', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value rbfw-var-chip-name">
+                                                    <span class="rbfw-var-chip-dash">—</span>
+                                                    <input type="number" name="rbfw_variations_data[0][value][<?php echo esc_attr( $rbfw_default_c ); ?>][quantity]" value="3" placeholder="<?php esc_attr_e( 'e.g. 3', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw-var-chip-qty">
+                                                    <span class="rbfw-var-chip-unit"><?php esc_html_e( 'in stock', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                    <?php $this->variation_price_cell( $post_id, 0, $rbfw_default_c ); ?>
+                                                    <button type="button" class="button remove-rbfw_variations_value_table_row rbfw-var-chip-remove" title="<?php esc_attr_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?>">&times;</button>
+                                                </div>
+											<?php endforeach; ?>
+                                        </div>
+                                        <div class="rbfw-var-add-wrap">
+                                            <div class="rbfw-var-add-label"><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                            <div class="rbfw-var-add-form">
+                                                <input type="text" class="rbfw-var-add-name" placeholder="<?php esc_attr_e( 'Value name', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                <input type="number" min="0" class="rbfw-var-add-qty" placeholder="<?php esc_attr_e( 'Qty in stock', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                <button type="button" class="rbfw-var-add-btn" data-key="0" disabled><?php esc_html_e( '+ Add Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="mp_event_remove_move">
                                         <button class="remove-rbfw_variations_table_row" type="button"><i class="fas fa-trash-can"></i></button>
@@ -254,79 +197,106 @@
                                     </div>
                                 </div>
 							<?php } ?>
-                        </tbody>
+                        </div>
                     </div>
-                    <button id="add-new-variation" class="ppof-button"><i class="fas fa-circle-plus"></i><?php esc_html_e( 'Add New Variation', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                 </section>
 				<?php
 			}
 
 			public function stock_settings( $post_id ) {
-				$rbfw_item_stock_quantity = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
-				$rbfw_enable_variations   = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+				$rbfw_item_stock_quantity    = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
+				$rbfw_enable_variations      = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+				$stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
+
+				// Return-date inventory release only applies to date-range (multi-day) rentals.
+				// Hide it for Single Day and Appointment, which have no scheduled return date.
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$hide_return    = in_array( $rbfw_item_type, array( 'bike_car_sd', 'appointment' ), true );
+
+				// Single Day's own stock field, moved here from the Pricing tab. Only
+				// relevant when "Manage a single-item inventory on an hourly basis" is
+				// on (one shared pool across all rate rows); when it's off, stock is
+				// per rate row instead (the "Stock/Day" column on the Pricing tab), and
+				// Appointment always forces this toggle off, so this never applies there.
+				$manage_inventory_as_timely  = get_post_meta( $post_id, 'manage_inventory_as_timely', true ) ? get_post_meta( $post_id, 'manage_inventory_as_timely', true ) : 'off';
+				$rbfw_item_stock_quantity_timely = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) : '';
+				$show_timely_stock           = ( $rbfw_item_type === 'bike_car_sd' && $manage_inventory_as_timely === 'on' );
+
+				// How many units today's confirmed bookings are holding against this stock number —
+				// same blocking-status + overlap rule the availability engine itself uses
+				// (rbfw_count_overlapping_booked_qty), just evaluated for "right now".
+				$booked_now = 0;
+				if ( function_exists( 'rbfw_count_overlapping_booked_qty' ) ) {
+					$today      = current_time( 'Y-m-d' );
+					$booked_now = (int) rbfw_count_overlapping_booked_qty( $post_id, $today . ' 00:00:00', $today . ' 23:59:59' );
+				}
 				?>
                 <section class="rbfw_stock_quantity_section">
+                    <label class="md-inv-stock-label">
+						<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        <span class="md-inv-badge"><?php esc_html_e( 'Per day', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    </label>
+                    <div class="md-inv-stock-row">
+                        <div class="item_stock_quantity<?php echo esc_attr( $rbfw_enable_variations === 'yes' ? ' is-stock-disabled' : '' ); ?>">
+                            <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_item_stock_quantity ); ?>" placeholder="<?php esc_attr_e( 'e.g. 10', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_variations == 'yes' ) ? 'disabled' : ''; ?>>
+                        </div>
+                        <label class="md-inv-return-check rbfw_stock_return_date_section"<?php echo $hide_return ? ' style="display:none"' : ''; ?>>
+                            <input type="checkbox" name="stock_manage_on_return_date" value="<?php echo esc_attr( $stock_manage_on_return_date ); ?>" <?php echo esc_attr( ( $stock_manage_on_return_date == 'yes' ) ? 'checked' : '' ); ?>>
+							<?php esc_html_e( 'Track return-date availability', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </label>
+                    </div>
+                    <p class="md-inv-stock-hint"><?php esc_html_e( "Total units available for whole-day bookings. Turning on Single day's Time Picker switches this to per-time-slot stock automatically.", 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					<?php if ( $booked_now > 0 ) : ?>
+                    <div class="md-inv-info-banner">
+                        <span class="dashicons dashicons-info-outline"></span>
+                        <span>
+							<?php
+							printf(
+								esc_html(
+									_n(
+										'%d booking is currently using this stock.',
+										'%d bookings are currently using this stock.',
+										$booked_now,
+										'booking-and-rental-manager-for-woocommerce'
+									)
+								),
+								(int) $booked_now
+							);
+							?>
+							<?php esc_html_e( 'Lowering the number only limits new bookings — it never cancels or shrinks reservations customers already confirmed.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </span>
+                    </div>
+					<?php endif; ?>
+                </section>
+                <section class="rbfw_timely_stock_quantity_section"<?php echo $show_timely_stock ? '' : ' style="display:none"'; ?>>
                     <div>
                         <label>
-							<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            <span class="rbfw-me-required-mark" title="<?php esc_attr_e( 'Required', 'booking-and-rental-manager-for-woocommerce' ); ?>"<?php echo ( $show_timely_stock && 'yes' !== $rbfw_enable_variations ) ? '' : ' style="display:none"'; ?>>*</span>
                         </label>
-                        <p><?php esc_html_e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        <p><?php esc_html_e( 'Add stock quantity that you want allow to rent, add total stock', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
-                    <div class="item_stock_quantity">
-                        <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_item_stock_quantity ); ?>" <?php echo esc_html( $rbfw_enable_variations == 'yes' ) ? 'disabled' : ''; ?>>
+                    <div class="item_stock_quantity<?php echo esc_attr( $rbfw_enable_variations === 'yes' ? ' is-stock-disabled' : '' ); ?>">
+                        <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity_timely" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ); ?>" placeholder="<?php esc_attr_e( 'Ex: 10', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label="<?php esc_attr_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_variations === 'yes' ) ? 'disabled' : ''; ?> <?php echo ( $show_timely_stock && 'yes' !== $rbfw_enable_variations ) ? 'required' : ''; ?>>
                     </div>
                 </section>
 				<?php
 			}
 
-            public function stock_manage_return_date( $post_id ) {
-
-                $total_booked = 0;
-
-                $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
-
-                // Return-date inventory release only applies to date-range (multi-day) rentals.
-                // Hide it for Single Day and Appointment, which have no scheduled return date.
-                $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
-                $hide_return    = in_array( $rbfw_item_type, array( 'bike_car_sd', 'appointment' ), true );
-
-                ?>
-                    <section class="rbfw_stock_return_date_section"<?php echo $hide_return ? ' style="display:none"' : ''; ?>>
-                        <div>
-                            <label for="">Inventory Management by Return Date</label>
-                            <p>(Items become available for booking again on the scheduled return date.)</p>
-                        </div>
-                        <label class="switch">
-                            <input type="checkbox" name="stock_manage_on_return_date" value="<?php echo esc_attr( $stock_manage_on_return_date ); ?>" <?php echo esc_attr( ( $stock_manage_on_return_date == 'yes' ) ? 'checked' : '' ); ?>>
-                            <span class="slider round"></span>
-                        </label>
-                       <!-- <select class="formControl max_300" name="stock_manage_on_return_date">
-                            <option <?php /*echo ($stock_manage_on_return_date=='Yes')?'selected':'' */?> value="Yes">Yes</option>
-                            <option <?php /*echo ($stock_manage_on_return_date=='No')?'selected':'' */?> value="No">No</option>
-                        </select>-->
-                    </section>
-                <?php
-
-            }
-
+			/**
+			 * Multiple Item Choosing no longer has a visible toggle (removed per
+			 * request), but existing items may already have it set to 'yes' and
+			 * the frontend templates (multi-day/multi-items registration) still
+			 * read it. settings_save()/the modern editor's AJAX save both default
+			 * an absent POST field to 'no' and unconditionally update_post_meta()
+			 * — without this hidden input, the very next save of ANY field on an
+			 * item that currently has it enabled would silently flip it off.
+			 * This just carries the existing value through untouched.
+			 */
 			public function quantity_box_toggle( $post_id ) {
 				$rbfw_enable_md_type_item_qty = get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
-
-				// Multiple-item selection only works for multi-day Bike/Car, Dress, Equipment & Others.
-				// Hide it for every other type (Single Day, Appointment, Resort, Multiple Items).
-				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
-				$show_multi     = in_array( $rbfw_item_type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true );
 				?>
-                <section class="rbfw_switch_md_type_item_qty"<?php echo $show_multi ? '' : ' style="display:none"'; ?>>
-                    <div>
-                        <label><?php esc_html_e( 'Enable Multiple Item Choosing Option', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <p><?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" name="rbfw_enable_md_type_item_qty" value="<?php echo esc_attr( $rbfw_enable_md_type_item_qty ); ?>" <?php echo esc_attr( ( $rbfw_enable_md_type_item_qty == 'yes' ) ? 'checked' : '' ); ?>>
-                        <span class="slider round"></span>
-                    </label>
-                </section>
+                <input type="hidden" name="rbfw_enable_md_type_item_qty" value="<?php echo esc_attr( $rbfw_enable_md_type_item_qty ); ?>">
 				<?php
 			}
 
@@ -385,7 +355,6 @@
 			public static function render_for_modern_editor( int $post_id ): void {
 				$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
 				$renderer->stock_settings( $post_id );
-				$renderer->stock_manage_return_date( $post_id );
 				$renderer->quantity_box_toggle( $post_id );
 				$renderer->variation_table_switch_on_off( $post_id );
 				$renderer->variation_multiply_base_toggle( $post_id );
@@ -401,7 +370,6 @@
 					<?php $this->section_header(); ?>
 					<?php $this->panel_header( 'Inventory Settings', 'Inventory Settings' ); ?>
 					<?php $this->stock_settings( $post_id ); ?>
-					<?php $this->stock_manage_return_date( $post_id ); ?>
 					<?php $this->quantity_box_toggle( $post_id ); ?>
 					<?php $this->variation_table_switch_on_off( $post_id ); ?>
 					<?php $this->variation_multiply_base_toggle( $post_id ); ?>

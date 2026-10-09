@@ -729,12 +729,8 @@ jQuery(document).ready(function () {
 
 
 function rbfwFormatMultipleItemsSummaryDate(date) {
-    if (
-        typeof jQuery !== 'undefined' &&
-        jQuery.datepicker &&
-        typeof js_date_format !== 'undefined'
-    ) {
-        return jQuery.datepicker.formatDate(js_date_format, date);
+    if (typeof date.toLocaleDateString === 'function') {
+        return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     }
 
     const year = date.getFullYear();
@@ -816,7 +812,7 @@ function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
         const endDate = rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty);
         startTimeText = hasPickupTime ? rbfwFormatMultipleItemsSummaryTime(startDate) : '';
         endTimeText = hasPickupTime ? rbfwFormatMultipleItemsSummaryTime(endDate) : '';
-        startDateText = jQuery('#pickup_date').val() || rbfwFormatMultipleItemsSummaryDate(startDate);
+        startDateText = rbfwFormatMultipleItemsSummaryDate(startDate);
         endDateText = rbfwFormatMultipleItemsSummaryDate(endDate);
     } else if (pickupTimeValue && durationType && durationQty) {
         const pickupDateValue = jQuery('#hidden_pickup_date').val();
@@ -831,8 +827,8 @@ function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
         }
     }
 
-    jQuery('.rbfw-duration-start-label').text(hasPickupTime ? 'Start Date and Time' : 'Start Date');
-    jQuery('.rbfw-duration-end-label').text(hasPickupTime ? 'End Date and Time' : 'End Date');
+    jQuery('.rbfw-duration-start-label').text(hasPickupTime ? 'Start Time' : 'Start Date');
+    jQuery('.rbfw-duration-end-label').text(hasPickupTime ? 'End Time' : 'End Date');
     jQuery('.rbfw-duration-start-date').show();
     jQuery('.rbfw-duration-start-date .item-content').html(rbfwAppendMultipleItemsSummaryTime(startDateText, startTimeText));
     jQuery('.rbfw-duration-end-date').show();
@@ -1943,12 +1939,10 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             jQuery('#rbfw_item_quantity_md').html(quantity_options);
 
-
-            if (rbfw_enable_variations == 'yes' && jQuery('.rbfw-variation-qty-input').length) {
-                jQuery('.rbfw_quantity_md').hide();
-            } else {
-                jQuery('.rbfw_quantity_md').show();
-            }
+            // The standalone Quantity dropdown now stays visible even with variations
+            // present: it is the gate the variation steppers are capped against
+            // (see rbfwVariationGroupCap() in rbfw_script.js), not something they replace.
+            jQuery('.rbfw_quantity_md').show();
             jQuery('.multi-service-category-section').show();
             jQuery('.rbfw-variations-content-wrapper').show();
             jQuery('.rbfw_resourse_md').show();
@@ -2020,13 +2014,47 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                     window.rbfwSyncStepperButtons(document);
                 }
 
-                var totalVariationQty = 0;
-                jQuery('.rbfw-variation-qty-input').each(function() {
-                    totalVariationQty += parseInt(jQuery(this).val(), 10) || 0;
-                });
+                // An item can have MULTIPLE independent variation groups (e.g. a
+                // dress with separate "Color" and "Size" groups — each rendered as
+                // its own .rbfw-variation-group, inc/rbfw_inventory_functions.php).
+                // Each group re-describes the SAME N physical units, so their sums
+                // must be checked for agreement, never added together — 2 dresses
+                // is "Red x2" for Color AND, independently, "Small x2" for Size,
+                // never 4. Legacy single-group items (no .rbfw-variation-group
+                // wrapper) fall back to one pool, unchanged from before.
+                var rbfwMdGroupWraps = jQuery('.rbfw-variation-group');
+                var rbfwMdGroupSums = [];
+                if (rbfwMdGroupWraps.length) {
+                    rbfwMdGroupWraps.each(function () {
+                        var groupSum = 0;
+                        jQuery(this).find('.rbfw-variation-qty-input').each(function () {
+                            groupSum += parseInt(jQuery(this).val(), 10) || 0;
+                        });
+                        rbfwMdGroupSums.push(groupSum);
+                    });
+                } else {
+                    var legacySum = 0;
+                    jQuery('.rbfw-variation-qty-input').each(function () {
+                        legacySum += parseInt(jQuery(this).val(), 10) || 0;
+                    });
+                    rbfwMdGroupSums.push(legacySum);
+                }
+                var totalVariationQty = rbfwMdGroupSums.length ? rbfwMdGroupSums[0] : 0;
+                var rbfwMdGroupsAgree = rbfwMdGroupSums.every(function (s) { return s === totalVariationQty; });
+
+                // A standalone Quantity selector (when present) now gates the
+                // steppers — see rbfwVariationGroupCap() in rbfw_script.js — so
+                // "ready to book" means every unit of it has been assigned a
+                // variant in EVERY independent group, not merely totalVariationQty
+                // > 0 summed across all of them.
+                var $mdQty = jQuery('#rbfw_item_quantity_md');
+                var mdQtyCap = $mdQty.length ? (parseInt($mdQty.val(), 10) || 0) : null;
+                var variationsReady = (mdQtyCap !== null)
+                    ? (mdQtyCap > 0 && rbfwMdGroupsAgree && totalVariationQty === mdQtyCap)
+                    : (totalVariationQty > 0 && rbfwMdGroupsAgree);
 
                 jQuery('.rbfw_nia_notice').remove();
-                if (totalVariationQty > 0) {
+                if (variationsReady) {
                     jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled', false).removeClass('rbfw_disabled_button');
                 } else {
                     jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled', true).addClass('rbfw_disabled_button');
@@ -2230,6 +2258,25 @@ function loadDisabledDates(post_id, year, month) {
 }
 
 /**
+ * #pickup_time (Multiple Items' own Pickup Time select) is normally
+ * populated by getAvailableTimes(), but that's only ever called from the
+ * .pickup_date datepicker's onSelect callback -- so whenever a pickup date
+ * is already set without the customer having clicked the calendar (a
+ * server-rendered default, or one carried over from search), the select
+ * stays on its placeholder with no time options at all. Called from
+ * rbfwMIAutoSelectNextAvailableDate() below, both for a date that was
+ * already set on load and for one this script just auto-picked.
+ */
+function rbfwMiPopulatePickupTimeForDate(iso) {
+    if (jQuery('#rbfw_enable_time_slot').val() !== 'yes' || !document.getElementById('pickup_time')) {
+        return;
+    }
+    var particularsData = jQuery('#rbfw_particulars_data').val();
+    var availableTime = jQuery('#rdfw_available_time').val();
+    getAvailableTimes(particularsData, iso, availableTime, 'pickup_time');
+}
+
+/**
  * Auto-select the next available pickup date for the multiple_items form.
  * Checks off-days, off-date-ranges, and sold-out dates (disabledDates).
  * Populates both the visible text input and the hidden Y-m-d input,
@@ -2237,7 +2284,25 @@ function loadDisabledDates(post_id, year, month) {
  */
 function rbfwMIAutoSelectNextAvailableDate() {
     if (jQuery('#rbfw_rent_type').val() !== 'multiple_items') return;
-    if (jQuery('#hidden_pickup_date').val()) return; // already has a value
+
+    var existingIso = jQuery('#hidden_pickup_date').val();
+    if (existingIso) {
+        // A default pickup date was already set some other way (a server-
+        // rendered default, or one carried over from search) before this
+        // function ever ran -- the hidden Y-m-d field has it, but nothing
+        // had filled in the visible, readonly text input to match, so the
+        // field looked empty even though a date really was selected.
+        if (!jQuery('#pickup_date').val()) {
+            var existingParts = existingIso.split('-');
+            var existingDate = new Date(parseInt(existingParts[0], 10), parseInt(existingParts[1], 10) - 1, parseInt(existingParts[2], 10));
+            var existingDisplay = (typeof js_date_format !== 'undefined' && jQuery.datepicker)
+                ? jQuery.datepicker.formatDate(js_date_format, existingDate)
+                : (existingParts[1] + '/' + existingParts[2] + '/' + existingParts[0]);
+            jQuery('#pickup_date').val(existingDisplay);
+        }
+        rbfwMiPopulatePickupTimeForDate(existingIso);
+        return; // the date itself is already set -- nothing else to pick
+    }
 
     var today_enable = rbfw_today_booking_enable();
     var buffer_time  = parseInt(jQuery('#rbfw_buffer_time').val()) || 0;
@@ -2283,6 +2348,7 @@ function rbfwMIAutoSelectNextAvailableDate() {
 
             jQuery('#pickup_date').val(display);
             jQuery('#hidden_pickup_date').val(iso).trigger('change');
+            rbfwMiPopulatePickupTimeForDate(iso);
             break;
         }
         candidate.setDate(candidate.getDate() + 1);

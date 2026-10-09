@@ -17,6 +17,11 @@
 	$checkin_location = get_post_meta($rbfw_id, 'rbfw_checkin_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_checkin_data', true)) : [];
 	$dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? rbfw_safe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
 
+	/* Pickup/Drop-off Location Configuration doesn't apply to Resort (guests
+	   come to the resort, there's no pickup point) -- intentionally not
+	   rendered here; the admin's Location Configuration card is hidden for
+	   this type too (see admin/views/rbfw-modern-editor.php). */
+
 	$extra_service_list = get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) ? get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) : [];
 	$rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
 	$rbfw_enable_resort_daylong_price  = get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) : 'no';

@@ -170,8 +170,9 @@
 }
 .rbfw-fee-management-section .rbfw_bikecarmd_es_table tr {
     display: flex;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
     padding: 11px 14px;
     margin-bottom: 10px;
     background: #fff;
@@ -193,7 +194,13 @@
     background: color-mix(in srgb, var(--rbfw-fee-accent) 6%, #fff);
 }
 
-/* Reset the table cells and lay them out in the row */
+/* Reset the table cells and lay them out in the row. width: auto overrides
+   the legacy global .w_20 { width: 20% } class -- the toggle and price <td>s
+   both carry that class from the older fixed-column table layout, which
+   forced the price cell into a 20%-wide box regardless of this section's
+   flex sizing. Combined with white-space: nowrap on the price below, text
+   that didn't fit in that 20% just overflowed straight out of the card
+   instead of wrapping. */
 .rbfw-fee-management-section .rbfw_bikecarmd_es_table td {
     display: block;
     flex: 0 0 auto;

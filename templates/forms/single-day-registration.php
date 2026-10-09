@@ -48,7 +48,10 @@
         <!--    Right Side-->
 		<div class="rbfw-single-right-container rbfw_bikecarsd_pricing_table_wrap">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
-                <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
+                <?php /* Pickup/Drop-off Location doesn't apply to Appointment items
+                        (a fixed business location) -- this template is shared with
+                        Single Day, so exclude that type explicitly here. */ ?>
+                <?php if ($rbfw_rent_type !== 'appointment' && $location_switch == 'yes' && !empty($pickup_location)) : ?>
                     <div class="item">
                         <div class="rbfw-single-right-heading"><?php esc_html_e('Pickup Location','booking-and-rental-manager-for-woocommerce'); ?></div>
                         <div class="item-content rbfw-location">
@@ -62,7 +65,7 @@
                     </div>
                 <?php endif; ?>
 
-                <?php if ($location_switch == 'yes' && !empty($dropoff_location)) : ?>
+                <?php if ($rbfw_rent_type !== 'appointment' && $location_switch == 'yes' && !empty($dropoff_location)) : ?>
                     <div class="item">
                         <div class="rbfw-single-right-heading">
                             <?php esc_html_e('Drop-off Location','booking-and-rental-manager-for-woocommerce'); ?>
@@ -126,13 +129,27 @@
                     <div class="item rbfw-bikecarsd-step" data-step="1">
                         <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
                         </div>
+                        <div class="rbfw-bikecarsd-calendar-legend">
+                            <span class="rbfw-bikecarsd-calendar-legend-item">
+                                <span class="rbfw-bikecarsd-calendar-legend-swatch rbfw-is-selected"></span>
+                                <?php esc_html_e( 'Selected', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </span>
+                            <span class="rbfw-bikecarsd-calendar-legend-item">
+                                <span class="rbfw-bikecarsd-calendar-legend-swatch rbfw-is-offday"></span>
+                                <?php esc_html_e( 'Off day', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </span>
+                            <span class="rbfw-bikecarsd-calendar-legend-item">
+                                <span class="rbfw-bikecarsd-calendar-legend-swatch rbfw-is-weekend"></span>
+                                <?php esc_html_e( 'Weekend', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </span>
+                        </div>
                         <div class="rbfw-bikecarsd-calendar-footer">
                             <i class="fas fa-circle-info"></i>
                             <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
                         </div>
                     </div>
 
-                    <?php include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; ?>
+                    <?php if ($rbfw_rent_type !== 'appointment') { include RBFW_TEMPLATE_PATH . 'forms/location-cards.php'; } ?>
 
                     <div class="rbfw-bikecarsd-result-wrap">
                         <div class="rbfw-bikecarsd-result-loader"></div>

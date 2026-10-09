@@ -89,27 +89,29 @@
 							foreach ( $rbfw_feature_category as $value ) {
 								$cat_title = $value['cat_title'];
 								$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-								if($cat_title):
 								?>
+								<?php if($cat_title): ?>
 								<h3 class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></h3>
 								<?php endif; ?>
-								<ul class="rbfw-feature-lists">
-									<?php
-									if(!empty($cat_features)){
-										
-										foreach ($cat_features as $features){
-											$icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-											$title = $features['title'];
-											if($title){ ?>
-												<li>
-													<span><i class="<?php echo esc_attr($icon); ?>"></i><?php echo esc_html($title); ?></span>
-												</li>
-												<?php
+								<div class="rbfw-feature-group">
+									<ul class="rbfw-feature-lists">
+										<?php
+										if(!empty($cat_features)){
+
+											foreach ($cat_features as $features){
+												$icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+												$title = $features['title'];
+												if($title){ ?>
+													<li>
+														<span><i class="<?php echo esc_attr($icon); ?>"></i><?php echo esc_html($title); ?></span>
+													</li>
+													<?php
+												}
 											}
 										}
-									}
-									?>
-								</ul>
+										?>
+									</ul>
+								</div>
 								<?php
 							}
 						}

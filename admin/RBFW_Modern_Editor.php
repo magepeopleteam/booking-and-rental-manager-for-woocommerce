@@ -682,6 +682,18 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_enable_pick_point',
 			];
 
+			// An Hourly Price left "On" with the Time Picker "Off" is silently inert
+			// on the front end — see get_pricing_validation_errors() above, which
+			// already raised this in $pricing_errors. The rest of the save still
+			// proceeds (per the comment above $pricing_errors), but this one field
+			// is excluded so the save can never PERSIST that specific invalid
+			// combination; any other value already stored is left untouched.
+			$hourly_blocked = isset( $_POST['rbfw_enable_hourly_rate'] ) && $_POST['rbfw_enable_hourly_rate'] === 'yes'
+				&& ! ( isset( $_POST['rbfw_enable_time_picker'] ) && $_POST['rbfw_enable_time_picker'] === 'yes' );
+			if ( $hourly_blocked ) {
+				$meta_keys = array_diff( $meta_keys, [ 'rbfw_enable_hourly_rate' ] );
+			}
+
 			foreach ( $meta_keys as $key ) {
 				if ( isset( $_POST[ $key ] ) ) {
 					update_post_meta( $post_id, $key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
@@ -724,6 +736,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 						'calculation_type' => sanitize_text_field( wp_unslash( $fee['calculation_type'] ?? 'fixed' ) ),
 						'amount'           => floatval( $fee['amount'] ?? 0 ),
 						'frequency'        => sanitize_text_field( wp_unslash( $fee['frequency']        ?? 'one-time' ) ),
+						'apply_on'         => sanitize_text_field( wp_unslash( $fee['apply_on']         ?? 'all-days' ) ),
 						'priority'         => sanitize_text_field( wp_unslash( $fee['priority']         ?? 'optional' ) ),
 						'refundable'       => sanitize_text_field( wp_unslash( $fee['refundable']       ?? 'no' ) ),
 						'color'            => sanitize_text_field( wp_unslash( $fee['color']            ?? 'security' ) ),

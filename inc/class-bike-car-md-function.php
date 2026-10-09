@@ -369,8 +369,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $durationType_display, // Already carries the count, e.g. "3 days".
-                'start_date' => rbfw_date_format($formatted_start_date),
-                'end_date' => rbfw_date_format($end_date),
+                'start_date' => date_i18n( 'M j', strtotime( $formatted_start_date ) ),
+                'end_date' => date_i18n( 'M j', strtotime( $end_date ) ),
                 'ticket_item_quantity' => '',
                 'pricing_applied' => '',
             ));

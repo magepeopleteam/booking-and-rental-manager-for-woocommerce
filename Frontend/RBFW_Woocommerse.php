@@ -733,15 +733,44 @@ if (!class_exists('RBFW_Woocommerce')) {
             $weekly_to_monthly = (float) get_post_meta( $rbfw_id, 'rbfw_mi_weekly_to_monthly_pivot', true );
             $hourly_to_day     = (float) get_post_meta( $rbfw_id, 'rbfw_mi_hourly_to_half_day_pivot', true );
 
+            /*
+             * Cascades through every threshold the duration actually crosses --
+             * mirrors rbfwGetMultipleItemsPivotBilling() in md_script.js (the
+             * customer-facing frontend) and miPivotBilling() in the modern
+             * editor's admin preview exactly. This used to stop after a single
+             * pivot step (e.g. hourly -> daily only), so a duration long enough
+             * to cross two or more thresholds at once (e.g. 200 hours crossing
+             * both the hourly->daily and daily->weekly thresholds) billed at
+             * the wrong tier -- not what the frontend had just quoted the
+             * customer.
+             */
             if ( 'weekly' === $duration_type && $weekly_to_monthly > 0 && $duration_qty >= $weekly_to_monthly ) {
                 $billing['price_type'] = 'monthly';
                 $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 4 ) );
             } elseif ( 'daily' === $duration_type && $daily_to_weekly > 0 && $duration_qty >= $daily_to_weekly ) {
-                $billing['price_type'] = 'weekly';
-                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 7 ) );
+                $weekly_units = max( 1, (int) ceil( $duration_qty / 7 ) );
+                if ( $weekly_to_monthly > 0 && $weekly_units >= $weekly_to_monthly ) {
+                    $billing['price_type'] = 'monthly';
+                    $billing['multiplier'] = max( 1, (int) ceil( $weekly_units / 4 ) );
+                } else {
+                    $billing['price_type'] = 'weekly';
+                    $billing['multiplier'] = $weekly_units;
+                }
             } elseif ( 'hourly' === $duration_type && $hourly_to_day > 0 && $duration_qty >= $hourly_to_day ) {
-                $billing['price_type'] = 'daily';
-                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 24 ) );
+                $daily_units = max( 1, (int) ceil( $duration_qty / 24 ) );
+                if ( $daily_to_weekly > 0 && $daily_units >= $daily_to_weekly ) {
+                    $weekly_units = max( 1, (int) ceil( $daily_units / 7 ) );
+                    if ( $weekly_to_monthly > 0 && $weekly_units >= $weekly_to_monthly ) {
+                        $billing['price_type'] = 'monthly';
+                        $billing['multiplier'] = max( 1, (int) ceil( $weekly_units / 4 ) );
+                    } else {
+                        $billing['price_type'] = 'weekly';
+                        $billing['multiplier'] = $weekly_units;
+                    }
+                } else {
+                    $billing['price_type'] = 'daily';
+                    $billing['multiplier'] = $daily_units;
+                }
             }
 
             return $billing;
@@ -1613,6 +1642,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
                         $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
                         $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                        $apply_on = ! empty( $fee['apply_on'] ) ? $fee['apply_on'] : 'all-days';
                         $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
                         if ( $price_type === 'percentage' ) {
                             $fee_total = ( $price / 100 ) * $sub_total_price;
@@ -1621,9 +1651,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                         } else {
                             $is_day_wise_fee = in_array( $frequency, array( 'per-day', 'day-wise', 'day_wise' ), true );
                             if ( $is_day_wise_fee ) {
-                                $fee_total = $price * $rbfw_item_quantity * $total_days;
+                                $fee_days = ( $apply_on === 'weekends' ) ? rbfw_count_weekend_days( $start_date, $end_date, $total_days ) : $total_days;
+                                $fee_total = $price * $rbfw_item_quantity * $fee_days;
                                 $rbfw_management_price += $fee_total;
-                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity . '*' . $total_days, 'price' => $fee_total, 'refundable' => $refundable );
+                                $day_desc = ( $apply_on === 'weekends' ) ? $fee_days . ' weekend day(s)' : $fee_days;
+                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity . '*' . $day_desc, 'price' => $fee_total, 'refundable' => $refundable );
                             } else {
                                 $fee_total = $price * $rbfw_item_quantity;
                                 $rbfw_management_price += $fee_total;
@@ -3188,11 +3220,15 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
                     $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
                     $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                    $apply_on = ! empty( $fee['apply_on'] ) ? $fee['apply_on'] : 'all-days';
 
                     if ($price_type === 'percentage') {
                         $management_price += ( $price / 100 ) * $subtotal_price;
+                    } elseif ( $frequency === 'one-time' ) {
+                        $management_price += $price;
                     } else {
-                        $management_price += ( $frequency === 'one-time' ) ? $price : $price * $total_days;
+                        $fee_days = ( $apply_on === 'weekends' ) ? rbfw_count_weekend_days( $checkin_date, $checkout_date, $total_days ) : $total_days;
+                        $management_price += $price * $fee_days;
                     }
 
                 }

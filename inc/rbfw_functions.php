@@ -835,11 +835,17 @@ function rbfw_url_exclude_search_engine() {
 		}
 		$rbfw_faq_arr = get_post_meta( $post_id, 'mep_event_faq', true );
 		if ( ! empty( $rbfw_faq_arr ) ) {
-
+			$rbfw_faq_visible_count = 5;
+			$rbfw_faq_total         = count( $rbfw_faq_arr );
 			?>
             <div id="rbfw_faq_accordion">
-				<?php foreach ( $rbfw_faq_arr as $faq ) { ?>
-                    <div class="rbfw_faq_item">
+				<?php foreach ( $rbfw_faq_arr as $rbfw_faq_index => $faq ) {
+					$rbfw_faq_item_class = 'rbfw_faq_item';
+					if ( $rbfw_faq_index >= $rbfw_faq_visible_count ) {
+						$rbfw_faq_item_class .= ' rbfw_faq_item_more';
+					}
+					?>
+                    <div class="<?php echo esc_attr( $rbfw_faq_item_class ); ?>">
 						<?php if ( ! empty( $faq['rbfw_faq_title'] ) ): ?>
                             <h3 class="rbfw_faq_header"><?php echo esc_html( $faq['rbfw_faq_title'] ); ?> <i class="fas fa-plus"></i></h3>
 						<?php endif; ?>
@@ -866,6 +872,9 @@ function rbfw_url_exclude_search_engine() {
                     </div>
 				<?php } ?>
             </div>
+			<?php if ( $rbfw_faq_total > $rbfw_faq_visible_count ): ?>
+            <button type="button" class="rbfw_faq_load_more"><?php esc_html_e( 'Load More', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+			<?php endif; ?>
             <script>
                 jQuery(document).ready(function ($) {
                     
@@ -4182,7 +4191,15 @@ function rbfw_md_is_half_day_hours( $post_id, $hours ) {
 function rbfw_md_price_for_hours_period( $post_id, $hours, $day, $date, $daily_rate, $hourly_rate, $seasonal_prices = '', $enable_daily = 'yes' ) {
     $hours = (float) $hours;
     if ( $hours <= 0 ) {
-        return 0;
+        // A same-day booking where pickup and return share the exact same time
+        // (e.g. picking the same date/time twice) has a literal 0-hour span —
+        // that is not "no charge": for an item with a daily rate enabled, bill
+        // it at the flat daily rate instead of silently zeroing the booking
+        // out. Only a pure hourly-rate item (no daily rate at all) has nothing
+        // left to fall back to, so it keeps returning 0 for a 0-hour span.
+        return $enable_daily === 'yes'
+            ? (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily )
+            : 0;
     }
 
     if ( rbfw_md_is_half_day_hours( $post_id, $hours ) ) {
@@ -4320,6 +4337,49 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
     }
 
     return $price;
+}
+
+/**
+ * Count how many of the billed rental days fall on a Saturday or Sunday, for
+ * a per-day fee whose "Apply On" is set to Weekends Only.
+ *
+ * $total_days (when passed) is preferred over re-deriving the day count from
+ * $start_date/$end_date, because it already matches whatever day the caller
+ * actually billed (e.g. resort's "count extra day" adjustment) -- counting
+ * weekends against a different day span than what was billed would silently
+ * disagree with the rest of the invoice.
+ *
+ * @param string $start_date  'Y-m-d' (or 'Y-m-d H:i[:s]') rental start date.
+ * @param string $end_date    Unused unless $total_days is not provided.
+ * @param int    $total_days  Number of billed days starting at $start_date.
+ * @return int Number of weekend days within that span.
+ */
+function rbfw_count_weekend_days( $start_date, $end_date = '', $total_days = 0 ) {
+    $start_date = substr( (string) $start_date, 0, 10 );
+    if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $start_date ) ) {
+        return 0;
+    }
+
+    $days = (int) $total_days;
+    if ( $days <= 0 ) {
+        $end_date = substr( (string) $end_date, 0, 10 );
+        if ( ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $end_date ) ) {
+            return 0;
+        }
+        $days = (int) round( ( strtotime( $end_date ) - strtotime( $start_date ) ) / DAY_IN_SECONDS ) + 1;
+    }
+    $days = max( 0, $days );
+
+    $weekend_count = 0;
+    $cursor        = strtotime( $start_date );
+    for ( $i = 0; $i < $days; $i++ ) {
+        $weekday = (int) gmdate( 'N', $cursor + ( $i * DAY_IN_SECONDS ) ); // ISO-8601: 6=Sat, 7=Sun
+        if ( $weekday >= 6 ) {
+            $weekend_count++;
+        }
+    }
+
+    return $weekend_count;
 }
 
 function rbfw_get_time_diff_in_hours($start, $end) {
@@ -5782,9 +5842,6 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 				continue;
 			}
 			$label = isset( $row['field_label'] ) ? trim( (string) $row['field_label'] ) : '';
-			if ( '' === $label ) {
-				continue; // No label -> unusable, skip it.
-			}
 			// Keep only value entries that actually carry a name; normalise quantity + price.
 			$values = array();
 			if ( ! empty( $row['value'] ) && is_array( $row['value'] ) ) {
@@ -5826,8 +5883,21 @@ if ( ! function_exists( 'rbfw_clean_variations_data' ) ) {
 					$values[] = $clean_val;
 				}
 			}
-			$row['value'] = $values;
-			$clean[]      = $row;
+			if ( '' === $label ) {
+				// The admin UI no longer shows a required "Field Label" box per group
+				// (it's just an "Item Variations" chip list now), so a blank label no
+				// longer means "untouched row" — it means "admin didn't bother naming
+				// the group". Only an ALSO-empty group (no real chips either) is the
+				// genuinely blank "add new" row this function was written to drop;
+				// a group with real chips gets an auto label instead of losing its data.
+				if ( empty( $values ) ) {
+					continue;
+				}
+				$label = __( 'Item Variation', 'booking-and-rental-manager-for-woocommerce' );
+			}
+			$row['field_label'] = $label;
+			$row['value']       = $values;
+			$clean[]            = $row;
 		}
 		return $clean;
 	}

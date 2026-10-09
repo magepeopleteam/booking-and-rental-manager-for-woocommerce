@@ -148,7 +148,7 @@
                             </p>
                         </div>
                         <div class="item_stock_quantity">
-                            <input type="number" name="rbfw_buffer_time" id="rbfw_buffer_time" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
+                            <input type="number" name="rbfw_buffer_time" id="rbfw_buffer_time" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </section>
 
@@ -160,9 +160,12 @@
                             <p>
                                 <?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </p>
+                            <p class="description">
+                                <?php esc_html_e( 'Only affects Multiple Day and Resort items — has no effect on Single Day, Appointment, or Multiple Items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </p>
                         </div>
                         <div class="item_stock_quantity">
-                            <input type="number" name="rbfw_buffer_time_after" id="rbfw_buffer_time_after" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
+                            <input type="number" name="rbfw_buffer_time_after" id="rbfw_buffer_time_after" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </section>
 
@@ -197,13 +200,17 @@
 				<div class="rbfw-me-row rbfw-me-row--2 rbfw-me-offday-buffer">
 					<div class="rbfw-me-field">
 						<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time Before (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<input type="number" name="rbfw_buffer_time" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>">
+						<input type="number" name="rbfw_buffer_time" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					</div>
 					<div class="rbfw-me-field">
 						<label class="rbfw-me-label"><?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
+						<input type="number" name="rbfw_buffer_time_after" class="rbfw-me-input" min="0" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					</div>
 				</div>
+				<p class="rbfw-me-offday-rules-note">
+					<span class="dashicons dashicons-info-outline"></span>
+					<?php esc_html_e( 'Buffer Time Before applies to every rent type. Buffer Time After (turnaround time) currently only affects Multiple Day and Resort items — it has no effect on Single Day, Appointment, or Multiple Items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</p>
 				<?php
 			}
 
@@ -274,9 +281,37 @@
 			<div class="rbfw-me-card">
 				<div class="rbfw-me-card__head">
 					<h2><?php esc_html_e( 'Off Date Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-					<p><?php esc_html_e( 'Define specific date ranges that are unavailable for booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					<p><?php esc_html_e( 'Click a date on the calendar to block it, or add a multi-day range below.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 				</div>
 				<div class="rbfw-me-card__body">
+
+					<!-- Availability Calendar -- click-to-block a single date; the grid
+					     itself is rendered entirely client-side (see initOffDays() in
+					     rbfw-modern-editor.js), reading/writing the exact same
+					     off_days_start[]/off_days_end[] rows below so existing saved
+					     ranges keep working unchanged. -->
+					<div class="rbfw-me-offday-cal">
+						<div class="rbfw-me-offday-cal__card">
+							<div class="rbfw-me-offday-cal__nav">
+								<button type="button" class="rbfw-me-offday-cal__prev" aria-label="<?php esc_attr_e( 'Previous month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-arrow-left-alt2"></span>
+								</button>
+								<div class="rbfw-me-offday-cal__month"></div>
+								<button type="button" class="rbfw-me-offday-cal__next" aria-label="<?php esc_attr_e( 'Next month', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+									<span class="dashicons dashicons-arrow-right-alt2"></span>
+								</button>
+							</div>
+							<div class="rbfw-me-offday-cal__dow"></div>
+							<div class="rbfw-me-offday-cal__grid"></div>
+						</div>
+						<div class="rbfw-me-offday-cal__legend">
+							<span><i class="rbfw-me-offday-cal__dot rbfw-me-offday-cal__dot--weekly"></i><?php esc_html_e( 'Weekly off day', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span><i class="rbfw-me-offday-cal__dot rbfw-me-offday-cal__dot--blocked"></i><?php esc_html_e( 'Blocked date', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span><i class="rbfw-me-offday-cal__dot rbfw-me-offday-cal__dot--range"></i><?php esc_html_e( 'Part of a range below', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+					</div>
+
+					<div class="rbfw-me-offdate-list-label"><?php esc_html_e( 'Blocked dates & ranges', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 					<div class="rbfw-me-offdate-list">
 						<?php if ( ! empty( $rbfw_offday_range ) ) : ?>
 							<?php foreach ( $rbfw_offday_range as $single ) : ?>

@@ -296,7 +296,15 @@ if (typeof rbfwStepMax !== 'function') {
             let service_type = jQuery(this).data('text');
             let service_price = jQuery(this).data('price');
 
-            var  quantity_options = '';
+            // An item with variations (Color/Size steppers) gets an unselected
+            // placeholder first: the steppers stay locked (see
+            // rbfwVariationGroupCap() in rbfw_script.js) until a real quantity is
+            // chosen here, which then caps how much can be distributed across them.
+            // An item without variations keeps the old default-to-1 behavior.
+            var hasVariations = jQuery('.rbfw-variation-qty-input').length > 0;
+            var  quantity_options = hasVariations
+                ? '<option value="">Choose number of quantity</option>'
+                : '';
             for (let i = 1; i <= available_quantity; i++) {
                 quantity_options += "<option value="+i+">"+i+"</option>";
             }
@@ -359,6 +367,16 @@ if (typeof rbfwStepMax !== 'function') {
 
             jQuery("#rbfw_service_price").val(total.toFixed(2));
             rbfw_price_calculation_sd();
+
+            // The toggle-switch row sets its hidden qty input's value directly
+            // (above), without an input/change event the generic rbfw_script.js
+            // listener could catch — so when variations are present, correct the
+            // Book Now state it just set with the cap-aware rule (every unit must
+            // be assigned a variant before booking).
+            if (jQuery('.rbfw-variation-qty-input').length && typeof window.rbfwVariationRecalc === 'function') {
+                var $rtForm = jQuery('.rbfw_bikecarsd_qty').first().closest('form');
+                window.rbfwVariationRecalc($rtForm.length ? $rtForm : jQuery(document));
+            }
         }
 
 
@@ -653,6 +671,16 @@ function calculateTotal() {
     // Display total somewhere (create #total_price element if needed)
     jQuery("#rbfw_service_price").val(total.toFixed(2));
     rbfw_price_calculation_sd();
+
+    // This runs on every row-quantity keystroke/+/-, same delegated "input" event
+    // rbfw_script.js listens on for this selector — but that listener was
+    // registered first (rbfw_script loads before sd_script), so it fires and
+    // sets the correct cap-aware Book Now state BEFORE the plain hasQty check
+    // above runs and overwrites it again. Re-apply the cap-aware rule last.
+    if (jQuery('.rbfw-variation-qty-input').length && typeof window.rbfwVariationRecalc === 'function') {
+        var $rtForm = jQuery('.rbfw_bikecarsd_qty').first().closest('form');
+        window.rbfwVariationRecalc($rtForm.length ? $rtForm : jQuery(document));
+    }
 }
 
 
