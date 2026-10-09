@@ -1134,6 +1134,19 @@
 
 
         jQuery('.time-picker-toggle').on('click', function() {
+            // The Modern Editor has its own scoped handler per rent type
+            // (rbfw-modern-editor.js). This classic handler is unscoped and
+            // shared across ALL THREE .time-picker-toggle elements at once
+            // (Single Day / Multiple Day / Multiple Items), so without this
+            // guard it fires right alongside the correct handler on every
+            // click and overwrites whichever type was just toggled with its
+            // own separately-tracked (and often stale) on/off state --
+            // the hidden rbfw_enable_time_picker value could end up stuck on
+            // "no" even though the toggle visually showed "on". Same fix as
+            // the .daywise-price-toggle guard below.
+            if (jQuery(this).closest('.rbfw-me-wrap').length) {
+                return;
+            }
             timePickerEnabled = !timePickerEnabled;
             timePickerToggle.toggleClass('active', timePickerEnabled);
             hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
@@ -2158,17 +2171,28 @@ jQuery(document).ready(function () {
 
     jQuery('input[name=rbfw_enable_variations]').click(function () {
         var status = jQuery(this).val();
+        var $timelyInput = jQuery('#rbfw_item_stock_quantity_timely');
+        var $timelySection = $timelyInput.closest('.rbfw_timely_stock_quantity_section');
         if (status == 'yes') {
             jQuery(this).val('no');
             jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
             jQuery('.item_stock_quantity input').removeAttr("disabled");
             jQuery('.item_stock_quantity').removeClass('is-stock-disabled');
+            // Variations off again -- the timely stock field is back in play, so
+            // require it whenever its section is the one currently shown.
+            var timelyApplies = $timelySection.is(':visible');
+            $timelyInput.prop('required', timelyApplies);
+            $timelySection.find('.rbfw-me-required-mark').toggle(timelyApplies);
         }
         if (status == 'no') {
             jQuery(this).val('yes');
             jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
             jQuery('.item_stock_quantity input').attr("disabled", true);
             jQuery('.item_stock_quantity').addClass('is-stock-disabled');
+            // Variations carry their own per-size stock now -- this shared number
+            // is disabled and must not block saving as "required".
+            $timelyInput.prop('required', false);
+            $timelySection.find('.rbfw-me-required-mark').hide();
         }
     });
     jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function () {

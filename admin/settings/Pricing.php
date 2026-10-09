@@ -2121,6 +2121,17 @@
                         $errors[] = __( 'Please enable "Enable Time Picker" — it is required when "Share one stock count across all rental options, based on booking time" is enabled.', 'booking-and-rental-manager-for-woocommerce' );
                     }
 
+                    // The shared stock pool (Inventory tab) replaces each row's own Stock/Day
+                    // when timely sharing is on — mirrors the client-side `required` on
+                    // #rbfw_item_stock_quantity_timely (RBFW_Inventory::stock_settings()).
+                    // Appointment always forces this toggle off, so it never reaches here.
+                    if ( $timely && 'bike_car_sd' === $item_type ) {
+                        $timely_qty = trim( (string) ( $post_data['rbfw_item_stock_quantity_timely'] ?? '' ) );
+                        if ( '' === $timely_qty ) {
+                            $errors[] = __( 'Rent Item Stock Quantity is required when "Share one stock count across all rental options, based on booking time" is enabled.', 'booking-and-rental-manager-for-woocommerce' );
+                        }
+                    }
+
                     if ( empty( $rows ) ) {
                         $errors[] = __( 'At least one rental option row is required.', 'booking-and-rental-manager-for-woocommerce' );
                         return $errors;

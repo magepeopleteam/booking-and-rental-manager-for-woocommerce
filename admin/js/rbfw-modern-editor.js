@@ -415,7 +415,19 @@
         // with manage_inventory_as_timely=on would show this section
         // *alongside* Multiple Day's own always-visible Stock Quantity field
         // -- two stock-qty fields at once.
-        $wrap.find('.rbfw-me-inventory-card .rbfw_timely_stock_quantity_section').toggle(isTimely && _meType === 'bike_car_sd');
+        var $timelySection      = $wrap.find('.rbfw-me-inventory-card .rbfw_timely_stock_quantity_section');
+        var $timelyStockInput   = $timelySection.find('#rbfw_item_stock_quantity_timely');
+        var showTimelyStock     = isTimely && _meType === 'bike_car_sd';
+        // Variations draw stock from their own per-size table, so the single
+        // shared number here is moot (and disabled, see mkb-admin.js) whenever
+        // they're on — never require it in that state.
+        var timelyStockRequired = showTimelyStock && ! $timelyStockInput.prop('disabled');
+        $timelySection.toggle(showTimelyStock);
+        $timelyStockInput.prop('required', timelyStockRequired);
+        $timelySection.find('.rbfw-me-required-mark').toggle(timelyStockRequired);
+        if ( ! timelyStockRequired ) {
+            clearFieldError($timelyStockInput);
+        }
     }
 
     /* ── Update service category enable toggle label ────────────── */
@@ -1230,8 +1242,9 @@
                 }
 
                 if ( empty ) {
-                    var label = $f.attr('placeholder')
+                    var label = $f.attr('data-label')
                               || $f.closest('.rbfw-me-field').find('.rbfw-me-field__label').text()
+                              || $f.attr('placeholder')
                               || $f.attr('name')
                               || 'This field';
                     errors.push({ $field: $f, msg: label + ' is required.' });
@@ -2435,7 +2448,6 @@
                     window.rbfwSetTimelyInventorySection($pricing, true);
                 }
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                syncTimelyUI($pricing);
 
             } else if (type === 'appointment') {
                 $pricing.find('.rbfw_bike_car_sd_wrapper').show();
@@ -2457,7 +2469,6 @@
             } else if (type === 'multiple_items') {
                 $pricing.find('.rbfw_multiple_items').show();
                 $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
-                syncTimelyUI($pricing);
 
             } else {
                 // bike_car_md and legacy aliases
@@ -2465,6 +2476,12 @@
                 $pricing.find('.rbfw_discount_price_config_wrapper').show();
                 $pricing.find('.mds_price_md').show();
             }
+
+            // Only bike_car_sd ever needs the timely stock field required; every
+            // other type (including a type switch away from it) must clear a
+            // stale "required" or the generic required-field scan below would
+            // block Publish on a field the admin can no longer even see.
+            syncTimelyUI($pricing);
 
             // Inventory card (stock + variations): mirror the classic editor, which
             // hides inventory for resort / appointment. Single Day (bike_car_sd) now
@@ -4181,8 +4198,15 @@
             $calField.hide();
             $sdTimeField.hide();
 
-            if (! start || ! end || end < start) {
-                showWarning('Pick a valid pickup/return date.');
+            // Unlike Single Day's calendar grid, Pickup/Return here are native
+            // <input type="date"> fields -- no browser lets JS grey out
+            // individual dates in that widget, so an Off Day can't be made
+            // unselectable the way it is for Single Day/Resort. The closest
+            // equivalent: warn and block pricing exactly as an invalid range
+            // does below, instead of silently pricing a booking the real
+            // frontend's datepicker would never have allowed to be picked.
+            var bailOut = function (msg) {
+                showWarning(msg);
                 $durationBanner.hide();
                 $mdTimeFields.hide();
                 $extras.hide();
@@ -4190,6 +4214,21 @@
                 $preview.find('.rbfw-me-fp-summary-rows').empty();
                 $totalAmt.text(money(0));
                 $preview.find('.rbfw-me-fp-book-btn').addClass('is-disabled');
+            };
+
+            if (! start || ! end || end < start) {
+                bailOut('Pick a valid pickup/return date.');
+                return;
+            }
+
+            var offWeekdaySet = offWeekdays();
+            var offRanges = offDateRanges();
+            if (isDateOff(start, offWeekdaySet, offRanges)) {
+                bailOut('Pickup date falls on a configured Off Day -- choose another date.');
+                return;
+            }
+            if (isDateOff(end, offWeekdaySet, offRanges)) {
+                bailOut('Return date falls on a configured Off Day -- choose another date.');
                 return;
             }
 

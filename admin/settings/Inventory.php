@@ -207,11 +207,14 @@
                 </section>
                 <section class="rbfw_timely_stock_quantity_section"<?php echo $show_timely_stock ? '' : ' style="display:none"'; ?>>
                     <div>
-                        <label><?php esc_html_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <label>
+							<?php esc_html_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            <span class="rbfw-me-required-mark" title="<?php esc_attr_e( 'Required', 'booking-and-rental-manager-for-woocommerce' ); ?>"<?php echo ( $show_timely_stock && 'yes' !== $rbfw_enable_variations ) ? '' : ' style="display:none"'; ?>>*</span>
+                        </label>
                         <p><?php esc_html_e( 'Add stock quantity that you want allow to rent, add total stock', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <div class="item_stock_quantity<?php echo esc_attr( $rbfw_enable_variations === 'yes' ? ' is-stock-disabled' : '' ); ?>">
-                        <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity_timely" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ); ?>" placeholder="<?php esc_attr_e( 'Ex: 10', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_variations === 'yes' ) ? 'disabled' : ''; ?>>
+                        <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity_timely" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ); ?>" placeholder="<?php esc_attr_e( 'Ex: 10', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label="<?php esc_attr_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_variations === 'yes' ) ? 'disabled' : ''; ?> <?php echo ( $show_timely_stock && 'yes' !== $rbfw_enable_variations ) ? 'required' : ''; ?>>
                     </div>
                 </section>
 				<?php

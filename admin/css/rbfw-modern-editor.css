@@ -10197,6 +10197,22 @@ textarea.rbfw-me-field-invalid {
     border-radius: 10px;
 }
 
+.rbfw-me-required-mark {
+    color: #d63638;
+    font-weight: 700;
+    margin-left: 2px;
+}
+
+/* A [required] field left empty is marked red immediately -- not only after a
+ * failed save attempt (.rbfw-me-field-invalid, added by showFieldError()) --
+ * so the admin can see at a glance which fields still need a value. Native
+ * :invalid already tracks this live as they type, so no JS is needed to
+ * keep it in sync. */
+.rbfw-me-wrap input[required]:invalid {
+    border-color: #d63638 !important;
+    box-shadow: 0 0 0 1px #d63638 !important;
+}
+
 /* ── Utility ────────────────────────────────────────────────── */
 .rbfw-me-hidden { display: none !important; }
 
