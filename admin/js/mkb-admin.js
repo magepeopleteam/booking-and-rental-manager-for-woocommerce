@@ -1134,17 +1134,22 @@
 
 
         jQuery('.time-picker-toggle').on('click', function() {
-            // The Modern Editor has its own scoped handler per rent type
-            // (rbfw-modern-editor.js). This classic handler is unscoped and
-            // shared across ALL THREE .time-picker-toggle elements at once
-            // (Single Day / Multiple Day / Multiple Items), so without this
-            // guard it fires right alongside the correct handler on every
-            // click and overwrites whichever type was just toggled with its
-            // own separately-tracked (and often stale) on/off state --
-            // the hidden rbfw_enable_time_picker value could end up stuck on
-            // "no" even though the toggle visually showed "on". Same fix as
-            // the .daywise-price-toggle guard below.
-            if (jQuery(this).closest('.rbfw-me-wrap').length) {
+            // Multiple Day has its own scoped handler in the Modern Editor
+            // (rbfw-modern-editor.js, $md.on('click', '.time-picker-toggle')).
+            // This classic handler is unscoped and shared across ALL THREE
+            // .time-picker-toggle elements at once (Single Day / Multiple Day
+            // / Multiple Items), so without this guard it fires right
+            // alongside the correct MD handler on every click and overwrites
+            // it with its own separately-tracked (and often stale) on/off
+            // state -- the hidden rbfw_enable_time_picker value could end up
+            // stuck on "no" even though the toggle visually showed "on".
+            // Single Day and Multiple Items have no dedicated Modern Editor
+            // handler of their own, so this one must keep running for them --
+            // scope the skip to Multiple Day's own wrapper specifically
+            // rather than the whole editor (a blanket .rbfw-me-wrap guard,
+            // like the .daywise-price-toggle one below uses, would silently
+            // break Single Day/Multiple Items' toggle instead).
+            if (jQuery(this).closest('.rbfw_general_price_config_wrapper').length) {
                 return;
             }
             timePickerEnabled = !timePickerEnabled;

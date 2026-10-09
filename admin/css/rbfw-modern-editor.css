@@ -3498,6 +3498,31 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-fp-cal-dot--weekend { background: #FEF3E2; border: 1px solid #F3D9A8; }
 .rbfw-me-fp-cal-dot--off { background: var(--me-border-subtle); border: 1px solid var(--me-border); }
 
+/* ── Multiple Day: off-day-aware calendar popover on Pickup/Return ──
+   See rbfw-modern-editor.php (.rbfw-me-fp-md-cal-popover) and
+   initMdCalendarPopovers() in rbfw-modern-editor.js. The native
+   <input type="date"> stays the value source recalc() reads, so it's
+   only made non-interactive here (clicks go to the wrapping field,
+   which opens this popover instead) -- Resort/Multiple Items are
+   untouched and keep using the native picker directly. */
+.rbfw-me-fp-resort-dates-card.is-md .rbfw-me-fp-field { position: relative; }
+.rbfw-me-fp-resort-dates-card.is-md .rbfw-me-fp-start,
+.rbfw-me-fp-resort-dates-card.is-md .rbfw-me-fp-end {
+    pointer-events: none;
+}
+.rbfw-me-fp-md-cal-popover {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 30;
+    width: 260px;
+    max-width: calc(100vw - 32px);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+}
+.rbfw-me-fp-md-cal-popover .rbfw-me-fp-cal { border: none; padding: 10px; }
+
 /* ── Chips (time slots) ─────────────────────────────────────────── */
 .rbfw-me-fp-chips { display: flex; gap: 6px; flex-wrap: wrap; }
 .rbfw-me-fp-chip {

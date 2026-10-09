@@ -826,6 +826,28 @@
 								<span class="rbfw-me-fp-dtfield-display"></span>
 								<input type="date" class="rbfw-me-fp-start">
 							</div>
+							<!-- Multiple Day only: custom off-day-aware calendar popover,
+							     same grid/legend markup and CSS as the Single Day calendar
+							     above (.rbfw-me-fp-cal), reused here so Pickup/Return can
+							     grey out configured Off Days the way a native date input
+							     never can. Opened/closed and rendered in JS
+							     (initMdCalendarPopovers() in rbfw-modern-editor.js); the
+							     underlying input.rbfw-me-fp-start value is still what
+							     recalc() reads, so picking a day here just sets that value
+							     and fires 'change' same as typing into the native picker
+							     would -- Resort/Multiple Items keep using the native picker
+							     untouched. -->
+							<div class="rbfw-me-fp-md-cal-popover rbfw-me-fp-md-cal-popover--start" style="display:none">
+								<div class="rbfw-me-fp-cal">
+									<div class="rbfw-me-fp-cal-month"></div>
+									<div class="rbfw-me-fp-cal-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+									<div class="rbfw-me-fp-cal-grid"></div>
+									<div class="rbfw-me-fp-cal-legend">
+										<span><i class="rbfw-me-fp-cal-dot rbfw-me-fp-cal-dot--weekend"></i><?php esc_html_e( 'Weekend', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+										<span><i class="rbfw-me-fp-cal-dot rbfw-me-fp-cal-dot--off"></i><?php esc_html_e( 'Unavailable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="rbfw-me-fp-field rbfw-me-fp-md-start-time-field" style="display:none">
 							<label class="rbfw-me-fp-label"><?php esc_html_e( 'Pickup Time', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
@@ -846,6 +868,20 @@
 								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
 								<span class="rbfw-me-fp-dtfield-display"></span>
 								<input type="date" class="rbfw-me-fp-end">
+							</div>
+							<!-- Multiple Day only: see the matching popover on Pickup Date
+							     above for how this is wired up. Dates before the selected
+							     Pickup Date are also disabled here, on top of Off Days. -->
+							<div class="rbfw-me-fp-md-cal-popover rbfw-me-fp-md-cal-popover--end" style="display:none">
+								<div class="rbfw-me-fp-cal">
+									<div class="rbfw-me-fp-cal-month"></div>
+									<div class="rbfw-me-fp-cal-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+									<div class="rbfw-me-fp-cal-grid"></div>
+									<div class="rbfw-me-fp-cal-legend">
+										<span><i class="rbfw-me-fp-cal-dot rbfw-me-fp-cal-dot--weekend"></i><?php esc_html_e( 'Weekend', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+										<span><i class="rbfw-me-fp-cal-dot rbfw-me-fp-cal-dot--off"></i><?php esc_html_e( 'Unavailable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="rbfw-me-fp-field rbfw-me-fp-md-end-time-field" style="display:none">

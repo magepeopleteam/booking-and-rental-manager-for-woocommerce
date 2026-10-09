@@ -2881,7 +2881,14 @@
             $md.find('.half-day-price-item').toggleClass('rbfw-md-hidden', !(timePickerEnabled && halfDayPriceEnabled));
             $md.find('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
             $md.find('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
-            $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
+            // .trigger('change') -- the Frontend Preview sidebar (a separate,
+            // self-contained IIFE further down this file) listens for a real
+            // 'change' event on #rbfw_enable_time_picker to know when to
+            // recalculate and show its own Pickup/Return Time fields. Setting
+            // .val() alone doesn't fire one, so without this the preview's
+            // time fields stayed hidden until something else (e.g. re-picking
+            // the date) happened to trigger a recalc.
+            $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no').trigger('change');
             $md.find('.rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
             updateDaywiseVisibility();
         });
@@ -3170,15 +3177,28 @@
 
         // Default preview window: today → +3 days, long enough to show a
         // weekly tier if one is configured, without the admin having to set
-        // dates themselves first.
+        // dates themselves first. Both ends skip past any configured Off Day
+        // -- otherwise an item with today (or this week) blocked off would
+        // open the preview already showing the Off Day warning instead of a
+        // price, which looks like the card itself is broken.
+        function nextAvailableDate(from, offWeekdaySet, ranges) {
+            var d = new Date(from.getTime());
+            for (var guard = 0; guard < 366 && isDateOff(d, offWeekdaySet, ranges); guard++) {
+                d.setDate(d.getDate() + 1);
+            }
+            return d;
+        }
         function ensureDefaultDates() {
             var $s = $preview.find('.rbfw-me-fp-start');
             var $e = $preview.find('.rbfw-me-fp-end');
             if (! $s.val()) {
-                var today = new Date();
-                var end = new Date();
+                var offWeekdaySet = offWeekdays();
+                var ranges = offDateRanges();
+                var start = nextAvailableDate(new Date(), offWeekdaySet, ranges);
+                var end = new Date(start.getTime());
                 end.setDate(end.getDate() + 3);
-                $s.val(toIso(today));
+                end = nextAvailableDate(end, offWeekdaySet, ranges);
+                $s.val(toIso(start));
                 $e.val(toIso(end));
             }
         }
@@ -3368,6 +3388,96 @@
             }
             return selectedIso;
         }
+
+        /* ───────────── Multiple Day: Pickup/Return calendar popover ─────────────
+         * A native <input type="date"> can't grey out individual dates in any
+         * browser, so Off Days never showed on Multiple Day's Pickup/Return
+         * fields the way they do on Single Day's calendar above. This reuses
+         * the same grid (.rbfw-me-fp-cal) in a popover instead. The native
+         * input stays the value source recalc() reads -- picking a day here
+         * just sets its value and fires 'change', same as the native picker
+         * would have. CSS makes the input pointer-events:none while Multiple
+         * Day is active (.rbfw-me-fp-resort-dates-card.is-md) so clicks land
+         * on the wrapping field and open this instead; Resort/Multiple Items
+         * are untouched and keep the native picker.
+         */
+        var $mdCalPopovers = $preview.find('.rbfw-me-fp-md-cal-popover');
+
+        function closeMdCalPopovers() {
+            $mdCalPopovers.hide();
+        }
+
+        function renderMdCalendarInto($popover, monthDate, selectedIso, minIso, offWeekdaySet, ranges, onSelect) {
+            var year = monthDate.getFullYear();
+            var month = monthDate.getMonth();
+            $popover.find('.rbfw-me-fp-cal-month').text(MONTH_NAMES[month] + ' ' + year);
+
+            var firstDow = new Date(year, month, 1).getDay();
+            var daysInMonth = new Date(year, month + 1, 0).getDate();
+            var $grid = $popover.find('.rbfw-me-fp-cal-grid').empty();
+
+            for (var i = 0; i < firstDow; i++) {
+                $grid.append('<span class="rbfw-me-fp-cal-day rbfw-me-fp-cal-day--blank"></span>');
+            }
+            for (var day = 1; day <= daysInMonth; day++) {
+                var d = new Date(year, month, day);
+                var iso = toIso(d);
+                var isWeekend = (d.getDay() === 0 || d.getDay() === 6);
+                var blocked = isDateOff(d, offWeekdaySet, ranges) || (minIso && iso < minIso);
+                if (blocked) {
+                    $grid.append(
+                        $('<span class="rbfw-me-fp-cal-day rbfw-me-fp-cal-day--off" title="Unavailable"></span>').text(day)
+                    );
+                    continue;
+                }
+                var $btn = $('<button type="button" class="rbfw-me-fp-cal-day"></button>').text(day);
+                if (isWeekend) { $btn.addClass('weekend'); }
+                if (iso === selectedIso) { $btn.addClass('sel'); }
+                $btn.on('click', (function (dayIso) {
+                    return function () { onSelect(dayIso); };
+                }(iso)));
+                $grid.append($btn);
+            }
+        }
+
+        function openMdCalPopover(which) {
+            var $input = $preview.find(which === 'start' ? '.rbfw-me-fp-start' : '.rbfw-me-fp-end');
+            var $popover = $preview.find('.rbfw-me-fp-md-cal-popover--' + which);
+            if (! $popover.length) { return; }
+
+            var alreadyOpen = $popover.is(':visible');
+            closeMdCalPopovers();
+            if (alreadyOpen) { return; } // clicking the open field again just closes it
+
+            var startVal = $preview.find('.rbfw-me-fp-start').val();
+            var selectedIso = $input.val() || '';
+            var minIso = (which === 'end' && startVal) ? startVal : null;
+            // Whichever month is most useful: this field's own selection,
+            // else (for Return) the Pickup month so a nearby date is
+            // immediately visible, else today's month.
+            var basisIso = selectedIso || (which === 'end' ? startVal : '') || toIso(new Date());
+            var monthDate = new Date(basisIso + 'T00:00:00');
+            if (isNaN(monthDate.getTime())) { monthDate = new Date(); }
+
+            renderMdCalendarInto($popover, monthDate, selectedIso, minIso, offWeekdays(), offDateRanges(), function (iso) {
+                $input.val(iso).trigger('change');
+                closeMdCalPopovers();
+            });
+            $popover.show();
+        }
+
+        $preview.on('click', '.rbfw-me-fp-resort-dates-card.is-md .rbfw-me-fp-dtfield', function (e) {
+            var $dtfield = $(this);
+            if ($dtfield.find('.rbfw-me-fp-start').length) { openMdCalPopover('start'); }
+            else if ($dtfield.find('.rbfw-me-fp-end').length) { openMdCalPopover('end'); }
+            else { return; }
+            e.stopPropagation();
+        });
+        $(document).on('click', function (e) {
+            if (! $(e.target).closest('.rbfw-me-fp-md-cal-popover, .rbfw-me-fp-dtfield').length) {
+                closeMdCalPopovers();
+            }
+        });
 
         /* ───────────── Fee Configuration Settings ───────────── */
         // Mirrors the real calculation added to Frontend/RBFW_Woocommerse.php:
@@ -3693,7 +3803,9 @@
             // plain stacked rows the wrapper also holds.
             $preview.find('.rbfw-me-fp-resort-dates-card').toggle(isMd || isResort || isMi)
                 .toggleClass('is-resort', isResort)
-                .toggleClass('is-mi', isMi);
+                .toggleClass('is-mi', isMi)
+                .toggleClass('is-md', isMd);
+            if (! isMd) { closeMdCalPopovers(); }
             $preview.find('.rbfw-me-fp-mi-duration-field').toggle(isMi);
             var resortRevealed = !! $preview.data('resortRoomsRevealed');
             // Only one CTA on screen at a time: Continue in step 1, Check
