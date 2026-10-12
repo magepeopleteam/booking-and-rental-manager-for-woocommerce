@@ -9,6 +9,15 @@ activation/validation with a local cache.
 
 Requires PHP 7.2+. No runtime dependencies.
 
+> **SDK 0.4.0 is required for WordPress.org compliance.** Older versions
+> registered a free plugin with Appneck a few seconds after activation,
+> before the site owner had answered the consent prompt. WordPress.org
+> plugin guideline 7 forbids that. From 0.4.0 a **free** plugin contacts
+> Appneck not at all until the owner clicks **Allow & Continue**. Update
+> the bundled SDK and ship a plugin release; updating Appneck's server
+> does not change plugins already in the field. See
+> [Free and pro plugins](#free-and-pro-plugins).
+
 *(If you're working inside the Appneck monorepo rather than consuming this as
 a distributed package: this was built in stages, tracked in
 `docs/sdk-roadmap.md` §S4. This guide doesn't follow that phase order; it
@@ -16,11 +25,12 @@ follows the order you'll actually touch these pieces in as a plugin author.)*
 
 ## Contents
 
+- [Free and pro plugins](#free-and-pro-plugins) — `is_premium`, the opt-in, what is shared (read this first)
 - [Quickstart](#quickstart) — under 10 minutes, from nothing to a real event on your dashboard
 - [Installing it in a plugin](#installing-it-in-a-plugin) — bundled vs. Composer, in full
 - [Version safety](#version-safety-why-the-loader-exists)
 - [It will not take down the host site](#it-will-not-take-down-the-host-site) — error handling
-- [Lifecycle](#lifecycle) — activation, deactivation, uninstall.php
+- [Lifecycle](#lifecycle) — activation, deactivation, updates, uninstall.php
 - [Telemetry](#telemetry) — `track()`, custom events, the heartbeat
 - [Consent](#consent) — what's automatic, what you configure, what not to do
 - [Deactivation survey](#deactivation-survey) — configured in the Org Panel, not code
@@ -32,6 +42,81 @@ follows the order you'll actually touch these pieces in as a plugin author.)*
 - [Troubleshooting](#troubleshooting)
 - [Known limitations](#known-limitations)
 - [Tests](#tests)
+
+---
+
+## Free and pro plugins
+
+**Free is the default.** A plugin that passes nothing is treated as free:
+
+| | Free plugin (default) | Pro plugin (`'is_premium' => true`) |
+|---|---|---|
+| Consent prompt | shown until answered | never shown |
+| Before the owner answers | **nothing** is sent, queued or collected: no registration, no telemetry, no announcements, no config, no status pings | n/a |
+| After **Allow & Continue** | registration, telemetry, announcements, plus update emails to the admin who clicked | always on |
+| After **Skip** | nothing, ever (until they change it in Settings) | n/a |
+| Admin names/emails at registration | not sent | sent (`site_admins`) |
+| Uninstall survey | works either way, see [Deactivation survey](#deactivation-survey) | works |
+
+A pro build **must** say so, or it behaves like a free one: it asks for
+consent and stays silent until it gets it.
+
+```php
+$GLOBALS['acme_sdk'] = \Appneck\Sdk\Sdk::bootstrap(
+	'pk_your_product_key',
+	'sk_your_product_secret',
+	'https://appneck.com',
+	__FILE__,
+	null, null, null, null,
+	array(
+		'is_premium' => true,                                  // pro build only
+		'icon_url'   => plugins_url( 'assets/icon-128.png', __FILE__ ), // shown in the free opt-in
+	)
+);
+```
+
+`$sdk->may_contact_appneck()` tells you whether the SDK may contact Appneck
+right now, and `$sdk->is_premium()` which build this is. Every SDK request
+already obeys the first: it is enforced in the HTTP client itself, so no
+feature can bypass it. The Org Panel warns when a product's Free/Pro
+setting disagrees with what its installations report, for example a pro
+build that forgot `is_premium`.
+
+**Pro authors: put it in your terms.** A pro plugin sends usage data and the
+names and emails of the site's administrators without asking. WordPress.org
+rules don't cover a plugin you sell yourself, but data-protection law
+(GDPR and similar) still does. Your terms of service or privacy policy must
+say that this data is sent to you, and why.
+
+### The opt-in a free plugin shows
+
+A card in the admin notices area: the product icon, **"Never miss an
+important update"**, a short explanation, and
+two buttons, **Allow & Continue →** and **Skip**.
+
+- **Allow & Continue** turns on usage data *and* update emails (security and
+  feature updates, educational content, occasional offers). The emails go to
+  the admin who clicked, using their own account's email and name. Both
+  decisions go to Appneck in one request, on the next admin page load,
+  once the site has registered.
+- **Skip** refuses both and sends nothing.
+
+**What is shared** — exactly what the code sends; a test compares this list
+with the real request payloads (`ConsentNotice::SHARED_FIELDS`). The card's
+"What's shared?" toggle is hidden for now (commented out in
+`ConsentNotice::render()`), so state this list in your readme and privacy
+policy:
+
+- Your name and email (for update emails only)
+- Site URL
+- WordPress, PHP, WooCommerce and plugin versions
+- Installed plugins and active theme
+- Locale, timezone and country
+- Server software and whether the site is a multisite
+- Which features of the plugin you use, and errors it hits (your `track()` / `track_error()` events)
+
+The site owner can split the two decisions later in your settings page,
+which has two independent switches. See [Consent](#consent).
 
 ---
 
@@ -85,6 +170,8 @@ $GLOBALS['acme_sdk'] = \Appneck\Sdk\Sdk::bootstrap(
 	'sk_your_product_secret',
 	'https://appneck.com',
 	__FILE__          // your plugin's main file
+	// A PRO build adds: , null, null, null, null, array( 'is_premium' => true )
+	// — see "Free and pro plugins" above.
 );
 ```
 
@@ -143,17 +230,19 @@ require_once __DIR__ . '/vendor/appneck-sdk/appneck-sdk.php';
 Skipping this isn't a silent gap — see [Lifecycle](#lifecycle) for exactly why
 `register_uninstall_hook` doesn't work as a substitute.
 
-### 4. Activate the plugin, and confirm registration happened
+### 4. Activate the plugin, allow it, and confirm registration happened
 
-Activation itself makes **no** network call — it schedules the real
-registration for the next page load (see [Lifecycle](#lifecycle) for why). So:
+Activation itself makes **no** network call. A **free** plugin also makes
+none afterwards until the site owner opts in. So:
 
-1. Load any `wp-admin` page once (this is what fires WP-Cron in the normal
-   case), or force it immediately with WP-CLI:
+1. On your test site, click **Allow & Continue** on the opt-in card. (A pro
+   build skips this step.)
+2. Load any `wp-admin` page once. Registration and the consent decision go
+   out then. Or force registration with WP-CLI:
    ```bash
    wp cron event run appneck_sdk_register
    ```
-2. Check your Appneck Org Panel → your product → Installations. Your site
+3. Check your Appneck Org Panel → your product → Installations. Your site
    should appear there, status `active`, within seconds.
 
 If it doesn't show up, pass a `Logger` (see
@@ -173,14 +262,12 @@ $GLOBALS['acme_sdk']->track( 'plugin_activated', array( 'version' => '1.0.0' ) )
 $GLOBALS['acme_sdk']->flush();
 ```
 
-**One real thing to know before you go looking for it on the dashboard:** a
-brand-new installation starts with consent `pending`. Until the site owner
-answers the automatic "Allow usage data?" prompt (or you answer it yourself,
-while testing), the server correctly **refuses telemetry with a 403** — this
-is the fail-closed consent gate working as designed, not a bug in your
-integration. Click **Allow usage data** on your own test site, then `flush()`
-again, and the event will arrive. See [Consent](#consent) for the full
-behaviour.
+**One real thing to know before you go looking for it on the dashboard:** on a
+free plugin, `track()` returns `false` and records nothing until the site
+owner clicks **Allow & Continue**. That is the consent gate working as
+designed, not a bug in your integration. Allow it on your own test site,
+then `track()` and `flush()` again, and the event will arrive. See
+[Consent](#consent) for the full behaviour.
 
 That's the whole loop: install → bootstrap → activate → registers itself →
 `track()` → shows up. Everything past this point is what each piece does in
@@ -380,6 +467,26 @@ reactivates that record instead of creating a duplicate, and correctly
 declines to re-issue its secret, which the SDK expects and keeps the
 stored one.
 
+### Updates (journal §51)
+
+WordPress never runs the activation hook on an update — dashboard,
+auto-update, WP-CLI, FTP or Composer alike — so the SDK does not rely on it.
+On every load it compares the plugin version and SDK version it last saw
+running (one autoloaded option) with what is running now. On a change it
+does exactly what activation does, still with **no** network call on the page
+load: it schedules a registration refresh, upgrades the events table, and puts
+the flush timer back. The server then records the new version and fires its
+version-changed event. A plugin that gains the SDK in an update registers the
+same way, on its first load.
+
+`upgrader_process_complete` is deliberately not used: it runs inside the *old*
+code while the update is still in progress, and never fires for FTP or
+Composer deploys.
+
+If the flush timer ever goes missing (a cron-cleanup plugin, a migration, a
+restored database), `init` puts it back — unless the site owner refused
+consent, the one case it is meant to be absent.
+
 ### Multisite: lazily, once per site
 
 Each site in a network registers **itself**, the first time the cron or
@@ -471,6 +578,13 @@ sent in the same batch — not a private code path. That way the retry and
 partial-success behaviour is exercised constantly by the most common
 event there is, rather than being a rarely-tested branch.
 
+Every flush also carries a small top-level `versions` object — plugin, PHP,
+WordPress and WooCommerce versions — read **at send time**, never from a
+queued heartbeat, so a backlog written before an update cannot report the old
+version afterwards. This keeps WordPress and PHP upgrades current between
+plugin updates. The server orders these by its own receipt time and ignores a
+malformed object rather than rejecting the batch.
+
 ### What happens to each response
 
 | Response | Queue | Sending |
@@ -498,6 +612,9 @@ is treated the same as "no change" — never an error.
 
 ## Consent
 
+*This section is about free plugins. A pro build (`'is_premium' => true`)
+has no prompt and no consent state to manage.*
+
 Nothing extra to wire: `Sdk::bootstrap()` registers the prompt, the
 `admin-post.php` handler and the retry hooks. Two things are worth doing
 by hand.
@@ -520,42 +637,55 @@ $sdk->consent_notice()
 
 ### The prompt
 
-An admin notice, shown until it is answered, with **Allow usage data** /
-**No thanks**. Not a settings page of our own: an embedded library must
-not add a top-level menu to somebody else's plugin, and two plugins
-bundling this SDK would each add one. It is also **not dismissible** — a
-dismiss button is a third answer meaning neither yes nor no, and the state
-it leaves behind is the one where buffering continues, so it would read as
-a way to make the question go away while collection quietly carried on.
+The opt-in card described in [Free and pro plugins](#the-opt-in-a-free-plugin-shows),
+shown in the admin notices area until it is answered. Not a settings page of
+our own: an embedded library must not add a top-level menu to somebody
+else's plugin, and two plugins bundling this SDK would each add one. It is
+also **not dismissible**: a dismiss button is a third answer meaning neither
+yes nor no.
 
 Both buttons are form submits to `admin-post.php`, nonce-checked, gated on
 `manage_options`, on a per-product action name (a shared action would mean
-one plugin's Accept click answering for every other SDK copy on the site).
+one plugin's Allow click answering for every other SDK copy on the site).
+The product icon comes from the `icon_url` bootstrap option, or
+`$sdk->consent_notice()->set_icon_url( … )`; without one a neutral icon is
+shown.
+
+### The settings section: two independent switches
+
+`render_settings_section()` prints **Share usage data** and **Receive update
+emails**, each its own one-click form. Each switch records its own consent
+event on Appneck, so the bundled opt-in from the prompt can be undone one
+half at a time.
+
+- **Receive update emails** can only be turned **on** while usage data is
+  on. An email opt-in needs a registered site, and registering is itself the
+  contact the owner has turned off. Turning it **off** always works.
+- Turning usage data **off** stops everything except the uninstall survey.
+  If Appneck had recorded the acceptance, one request tells it about the
+  withdrawal; nothing else is sent after that.
 
 ### The three states, and what `track()` does in each
 
 | State | `track()` | Local queue | Sending |
 |---|---|---|---|
-| `pending` (never asked) | buffers | kept | attempted; server refuses with 403, events survive |
+| `pending` (not answered yet) | **no-op** | **purged** | nothing sent, nothing collected |
 | `accepted` | buffers | kept | normal |
 | `rejected` | **no-op** | **purged** | nothing sent, nothing collected |
 
-The server is the enforcement (`/sdk/v1/telemetry` fails closed on
-anything but `accepted`, journal §5.4). The client-side behaviour above is
-about behaving decently on the site owner's own machine.
+Since 0.4.0, `pending` behaves exactly like `rejected` (journal §70).
+Earlier versions kept buffering while pending and relied on the server's
+403; WordPress.org guideline 7 does not allow even the first request. On
+upgrade, anything an older version buffered while pending is purged. The
+server's consent check (`/sdk/v1/telemetry` fails closed on anything but
+`accepted` or a premium edition) is still there, as a backstop.
 
 **Why a reject stops collecting rather than parking events:** continuing to
 write rows into their database that can never be sent is still behaving
 like a tracker on a system that said no — "we collect but don't transmit"
-is not a defence anyone accepts, and the local buffer's only justification
-was imminent transmission. Purging rather than parking also matters: a
-retained backlog would mean a later change of mind shipping events
+is not a defence anyone accepts. Purging rather than parking also matters:
+a retained backlog would mean a later change of mind shipping events
 collected during exactly the window they had refused.
-
-**Why `pending` is not treated the same way:** never-asked and said-no are
-different facts. While the question is open the prompt is on screen, a
-grant may be seconds away, and the backlog is exactly what should go out
-when it comes — which is the behaviour the telemetry phase already proved.
 
 ### If the API is unreachable when they click
 
@@ -604,6 +734,29 @@ because `track()` reads it on page loads where the credentials are never
 touched. `Sdk::uninstall()` deletes it; the server keeps the permanent
 `consent_events` history regardless.
 
+### Asking again, on purpose
+
+To re-show the consent prompt to a site owner who already answered —
+accepted or rejected — call:
+
+```php
+$sdk->consent()->reset();
+```
+
+This clears the local decision only, so `needs_decision()` is true again
+and the (un-dismissible) notice reappears on the next admin page load, as
+if consent had never been asked. It is not wired to anything in the SDK
+itself — no button, no schedule — the host plugin decides when and how to
+offer it (a settings-page action, a WP-CLI command, whatever fits).
+
+It does **not** contact the server: `installations.consent_status` and
+the permanent `consent_events` history are left exactly as they were,
+same as `forget()`. The next real answer re-syncs and appends a fresh
+consent event, which is the durable record that matters — clearing the
+local prompt is not itself a decision. On a free plugin a reset status
+reads back as `pending`, which since 0.4.0 stops collection and sending
+until the owner answers again — the same as a site that has never answered.
+
 ### What this consent is *not*
 
 `is_accepted()` answers exactly one question: **may Appneck collect
@@ -627,6 +780,27 @@ reasons this matters, not just style:
   purposes, build that as its own flag — it is a few lines of
   `wp_options`, not a reason to overload this one.
 
+### Update emails (marketing opt-in)
+
+Since 0.4.0 the email opt-in is part of **Allow & Continue**, not a separate
+checkbox. The email and name recorded are those of the **admin who clicked**
+(their own WordPress account), not the site's `admin_email`. The exact title
+and body they saw are stored with the consent. **Skip** records a decline
+and sends nothing. Read it with:
+
+```php
+$sdk->marketing_consent()->is_opted_in();
+$sdk->marketing_consent()->email();    // only ever set when opted in
+$sdk->marketing_consent()->name();     // the clicking admin's display name
+$sdk->marketing_consent()->wording();  // the exact text they agreed to
+```
+
+The site owner changes it later with the **Receive update emails** switch.
+A privacy-policy re-confirmation re-asks the usage-data question only and
+never touches the email decision.
+
+Pro plugins have no email opt-in path yet; that is a known gap.
+
 ---
 
 ## Deactivation survey
@@ -644,6 +818,21 @@ When someone clicks **Deactivate** on the plugins screen, the click is
 intercepted and a modal asks your configured questions — radio, checkbox,
 rating, dropdown and free text, rendered from whatever the organization set
 up. Then the plugin deactivates.
+
+**It works without usage-data consent.** The survey is the one thing a free
+plugin may send when its owner has not opted in (or skipped), because it is
+only ever started by their own click. Without a consented installation the
+SDK uses product-key endpoints (`/sdk/v1/product/survey-questions` and
+`/sdk/v1/product/surveys`): the request carries the product key and nothing
+about the site, and no installation is ever created. The response appears
+in the Org Panel unlinked to any site, with the plugin version. With a
+consented installation the response is linked to that site as before.
+
+Each submission also carries the logged-in WordPress user who answered —
+display name and email — so your team can follow up from the Org Panel's
+Responses tab. The modal says so ("Submitting sends your answers with your
+name and email.") and offers a **Send anonymously** checkbox, which leaves
+both out of the request.
 
 If the SDK could not read your plugin's name from its file header, set it so
 the prompt can say who is asking:
@@ -672,9 +861,10 @@ be worse than asking again.
 ### One attempt, no retry
 
 Unlike telemetry there is no queue and no retry. The moment has passed —
-the plugin is being deactivated as the request goes out — and the server
-records one response per installation anyway, so a resurrected submission
-days later would be a duplicate at best.
+the plugin is being deactivated as the request goes out, and a resurrected
+submission days later would be counted as a new, stale response. (The server
+keeps every survey an installation sends, treating only an identical
+resubmission within a few minutes as a duplicate.)
 
 **A failed submission is never shown to the site owner**, and that is
 forced rather than chosen: the only place to show it would be the admin
@@ -685,7 +875,7 @@ nowhere else.
 
 ### Questions are fetched live, not cached
 
-Fetched from `GET /sdk/v1/survey-questions` **at the moment the modal opens**
+Fetched from `GET /sdk/v1/survey-questions` (or its product-key twin) **at the moment the modal opens**
 — never from a stale cache. The modal itself never waits on this: it appears
 instantly, then shows a brief loading state while the fetch runs, with a
 3-second timeout. If the fetch fails, times out, or the SDK's internal
@@ -769,13 +959,12 @@ foreach ( $sdk->announcements()->visible() as $announcement ) {
 }
 ```
 
-### Not consent-gated
+### Consent-gated on free plugins (since 0.4.0)
 
-Announcements are authenticated but **not** gated on the site owner's
-telemetry consent, and the SDK deliberately does not add a gate the server
-doesn't have. Consent governs data collected *from* a site; this is content
-sent *to* it, and someone who declined telemetry has not asked to stop being
-told about a security release.
+A free plugin fetches no announcements until its owner opts in: fetching
+is a call to Appneck like any other, and WordPress.org guideline 7 forbids
+those without opt-in (journal §70, superseding §9.3b). Pro plugins always
+fetch.
 
 ### Two refresh paths now, not one
 
@@ -1284,15 +1473,15 @@ logging on:
 Then check `wp-content/debug.log` (or wherever `error_log()` goes on that
 host). Once logging is on, work through these in order:
 
-1. **Is the installation registered?** `$sdk->is_registered()` — if false,
-   registration hasn't completed yet (see the Quickstart's step 4: it needs
-   a page load or `wp cron event run appneck_sdk_register` after
-   activation, since activation itself makes no network call).
-2. **Is consent `accepted`?** `$sdk->consent()->status()` — a fresh install
-   starts `pending`, and the server fails telemetry closed (403) until the
-   site owner answers the prompt. This is by far the most common reason a
-   brand-new integration "isn't sending anything": nothing is wrong, nobody
-   has clicked **Allow usage data** yet.
+1. **May it contact Appneck at all?** `$sdk->may_contact_appneck()` — on a
+   free plugin this is false until the site owner clicks **Allow &
+   Continue**, and until then the SDK sends nothing, not even registration.
+   This is by far the most common reason a brand-new integration "isn't
+   sending anything": nothing is wrong, nobody has opted in yet. (A pro
+   build that forgot `'is_premium' => true` lands here too.)
+2. **Is the installation registered?** `$sdk->is_registered()` — if false
+   after opting in, registration hasn't completed yet (see the Quickstart's
+   step 4: it needs a page load or `wp cron event run appneck_sdk_register`).
 3. **Is the log showing an actual error?** A 401 means the signature or API
    key is wrong — double check you're using the *installation* secret path
    correctly (see [Signing](#signing); the client never falls back to the
@@ -1377,6 +1566,24 @@ real, current edges, not hedging:
   development and testing happens on current PHP — if you're deploying to a
   genuinely old PHP 7.2 host, treat that combination as less exercised than
   the rest.
+- **The marketing opt-in (0.2.0+) has no path to change the decision later
+  outside a fresh first-ever telemetry decision.** See
+  ["Marketing opt-in"](#marketing-opt-in) above for why
+  `render_settings_section()` doesn't offer it — its one button already
+  toggles telemetry consent, and bolting an unrelated checkbox onto that
+  form would let changing your marketing answer accidentally flip your
+  telemetry answer too. A site that already answered telemetry consent
+  before upgrading to 0.2.0 has genuinely no way to opt in until a
+  dedicated, independent settings control exists for this — tracked, not
+  forgotten.
+- **The marketing opt-in has no coverage against a real backend.**
+  `tests/integration/ConsentCheckTest.php` proves telemetry consent
+  end-to-end against a live Appneck API; the equivalent pass for the
+  marketing fields on `/sdk/v1/consent` has not been run — the unit and
+  Feature-test coverage (this package's `ConsentTest`/`ConsentNoticeTest`/
+  `MarketingConsentTest`, and the API's own
+  `MarketingConsentEndpointTest`) is real, but a live end-to-end click is
+  still owed before this ships to a real customer's plugin.
 
 None of these block using the SDK — they're the honest state of what's
 solid versus what has an open edge, so you can decide what matters for your
