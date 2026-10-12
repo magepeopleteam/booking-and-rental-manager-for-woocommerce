@@ -4191,15 +4191,12 @@ function rbfw_md_is_half_day_hours( $post_id, $hours ) {
 function rbfw_md_price_for_hours_period( $post_id, $hours, $day, $date, $daily_rate, $hourly_rate, $seasonal_prices = '', $enable_daily = 'yes' ) {
     $hours = (float) $hours;
     if ( $hours <= 0 ) {
-        // A same-day booking where pickup and return share the exact same time
-        // (e.g. picking the same date/time twice) has a literal 0-hour span —
-        // that is not "no charge": for an item with a daily rate enabled, bill
-        // it at the flat daily rate instead of silently zeroing the booking
-        // out. Only a pure hourly-rate item (no daily rate at all) has nothing
-        // left to fall back to, so it keeps returning 0 for a 0-hour span.
-        return $enable_daily === 'yes'
-            ? (float) rbfw_get_day_rate( $post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily )
-            : 0;
+        // No leftover hours: nothing to add. The weekly/monthly paths call this
+        // for the hours left after whole weeks/days, which is 0 for every
+        // date-only booking, so billing a day here charged one day too many.
+        // A same-day booking with a 0-hour span is billed the daily rate by
+        // its caller, rbfw_handle_hybrid_rate().
+        return 0;
     }
 
     if ( rbfw_md_is_half_day_hours( $post_id, $hours ) ) {
