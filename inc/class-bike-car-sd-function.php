@@ -646,7 +646,18 @@
                     }
 
                     $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time );
-                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
+
+                    /* A fixed-time option (e.g. Morning 7:00 am - 12:00 pm) cannot be booked
+                       for today once its start time has passed in the site timezone, or while
+                       it is inside the Buffer Time Before lead time. */
+                    $unavailable = '';
+                    if ( 'on' === $enable_specific_duration && 'on' === get_post_meta( $post_id, 'enable_specific_duration', true ) ) {
+                        $unavailable = rbfw_pickup_time_unavailable( $post_id, $start_date, $start_time );
+                        if ( '' !== $unavailable ) {
+                            $rbfw_timely_available_quantity = 0;
+                        }
+                    }
+                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity,'unavailable'=>$unavailable);
 				}
 
                 $sd_extra_service_info = [];

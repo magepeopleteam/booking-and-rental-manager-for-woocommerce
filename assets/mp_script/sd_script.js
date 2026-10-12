@@ -1020,7 +1020,15 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                     $el.attr('data-available_quantity', service_info[type].stock);
 
                     if(service_info[type].stock <= 0){
-                        $el.find('.rent-type').html(type + '<span class="solded">'+ rbfw_translation.sold_out +'</span>');
+                        // A fixed-time option whose start has passed today (site timezone)
+                        // or falls inside the lead time is not sold out, just unavailable.
+                        var unavailable_label = rbfw_translation.sold_out;
+                        if (service_info[type].unavailable === 'past') {
+                            unavailable_label = rbfw_translation.past_time || 'Past Time';
+                        } else if (service_info[type].unavailable === 'lead_time') {
+                            unavailable_label = rbfw_translation.not_available || 'Not available';
+                        }
+                        $el.find('.rent-type').text(type).append(jQuery('<span class="solded"></span>').text(unavailable_label));
 
                         $el.addClass('rbfw-sold-out');
 
