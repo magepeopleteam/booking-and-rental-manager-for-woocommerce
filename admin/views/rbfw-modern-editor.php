@@ -406,7 +406,7 @@
 				<div class="rbfw-me-card rbfw-me-buffer-card">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Buffer Time', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-						<p><?php esc_html_e( 'Reserve extra hours before and after each booking for cleaning, preparation or turnaround.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						<p><?php esc_html_e( 'Set the minimum notice before a pickup and the turnaround time kept free after each booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 					</div>
 					<div class="rbfw-me-card__body">
 						<?php RBFW_Off_Day::render_buffer_for_modern_editor( $post_id ); ?>

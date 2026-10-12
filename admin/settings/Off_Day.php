@@ -146,6 +146,9 @@
                             <p>
                                 <?php esc_html_e( 'Buffer Time Before (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </p>
+                            <p class="description">
+                                <?php esc_html_e( 'Minimum notice: customers cannot book a pickup that starts within this many hours from now. Applies to every rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </p>
                         </div>
                         <div class="item_stock_quantity">
                             <input type="number" name="rbfw_buffer_time" id="rbfw_buffer_time" value="<?php echo esc_attr( $rbfw_buffer_time ); ?>" placeholder="<?php esc_attr_e( 'e.g. 1', 'booking-and-rental-manager-for-woocommerce' ); ?>">
@@ -161,7 +164,7 @@
                                 <?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </p>
                             <p class="description">
-                                <?php esc_html_e( 'Only affects Multiple Day and Resort items — has no effect on Single Day, Appointment, or Multiple Items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Turnaround time: the item stays unavailable for this many hours after each booking ends. Works for Multiple Day, Dress, Equipment and Others items, and for Single Day items with "Share one stock count across all rental options, based on booking time" turned on. For Resort, any value keeps the room unavailable for the whole check-out day. No effect on Appointment, Multiple Items or other Single Day items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </p>
                         </div>
                         <div class="item_stock_quantity">
@@ -209,7 +212,7 @@
 				</div>
 				<p class="rbfw-me-offday-rules-note">
 					<span class="dashicons dashicons-info-outline"></span>
-					<?php esc_html_e( 'Buffer Time Before applies to every rent type. Buffer Time After (turnaround time) currently only affects Multiple Day and Resort items — it has no effect on Single Day, Appointment, or Multiple Items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					<?php esc_html_e( 'Buffer Time Before is the minimum notice before a pickup and applies to every rent type. Buffer Time After (turnaround time) keeps the item unavailable after each booking ends. It works for Multiple Day, Dress, Equipment and Others items, and for Single Day items with "Share one stock count across all rental options, based on booking time" turned on. For Resort, any value keeps the room unavailable for the whole check-out day. It has no effect on Appointment, Multiple Items or other Single Day items.', 'booking-and-rental-manager-for-woocommerce' ); ?>
 				</p>
 				<?php
 			}

@@ -506,7 +506,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 					'step_title_inventory'          => __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_inventory'           => __( 'Manage stock quantity, return-date availability and item variations.', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_buffer'             => __( 'Buffer time', 'booking-and-rental-manager-for-woocommerce' ),
-					'step_text_buffer'              => __( 'Reserve extra hours before and after each booking for cleaning or turnaround.', 'booking-and-rental-manager-for-woocommerce' ),
+					'step_text_buffer'              => __( 'Set the minimum notice before a pickup and the turnaround time kept free after each booking.', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_title_fees'               => __( 'Fee management', 'booking-and-rental-manager-for-woocommerce' ),
 					'step_text_fees'                => __( 'Add extra fees with their own calculation type and frequency.', 'booking-and-rental-manager-for-woocommerce' ),
 
