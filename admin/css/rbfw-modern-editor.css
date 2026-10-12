@@ -2990,6 +2990,41 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-fp-optrow:hover { border-color: #C7D7FB; }
 .rbfw-me-fp-optrow.sel { border-color: var(--me-primary); background: var(--me-primary-soft); color: var(--me-text); }
 .rbfw-me-fp-optrow strong { font-weight: 700; }
+/* Unavailable option (Past Time / Not available): striped, dimmed row with a
+   status sticker on its top-right edge -- mirrors the frontend .rbfw-opt-sticker. */
+.rbfw-me-fp-optrow { position: relative; }
+.rbfw-me-fp-optrow.is-unavailable,
+.rbfw-me-fp-optrow.is-unavailable:hover {
+    margin-top: 10px;
+    padding-top: 15px;
+    border: 1px dashed #d1d5db;
+    background: repeating-linear-gradient(-45deg, #f9fafb 0, #f9fafb 10px, #f3f4f6 10px, #f3f4f6 20px);
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+.rbfw-me-fp-optrow.is-unavailable strong { color: #9ca3af; text-decoration: line-through; }
+.rbfw-me-fp-sticker {
+    position: absolute;
+    top: -11px;
+    right: 10px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 9.5px;
+    font-weight: 700;
+    line-height: 14px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #fff;
+    background: linear-gradient(135deg, #94a3b8, #475569);
+    box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(71, 85, 105, .30);
+    transform: rotate(-2deg);
+    pointer-events: none;
+}
+.rbfw-me-fp-sticker--lead {
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(217, 119, 6, .30);
+}
 
 .rbfw-me-fp-row { display: flex; gap: 10px; margin-bottom: 14px; }
 .rbfw-me-fp-row .rbfw-me-fp-field { margin-bottom: 0; flex: 1; }
