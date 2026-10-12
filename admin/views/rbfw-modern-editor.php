@@ -677,7 +677,7 @@
 				$rbfw_gen_settings       = get_option( 'rbfw_basic_gen_settings' );
 				$rbfw_count_extra_day_fp = ( is_array( $rbfw_gen_settings ) && isset( $rbfw_gen_settings['rbfw_count_extra_day_enable'] ) ) ? $rbfw_gen_settings['rbfw_count_extra_day_enable'] : 'on';
 			?>
-			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-frontend-preview" style="display:none" data-currency="<?php echo esc_attr( get_woocommerce_currency_symbol() ); ?>" data-count-extra-day="<?php echo esc_attr( $rbfw_count_extra_day_fp ); ?>">
+			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-frontend-preview" style="display:none" data-currency="<?php echo esc_attr( get_woocommerce_currency_symbol() ); ?>" data-count-extra-day="<?php echo esc_attr( $rbfw_count_extra_day_fp ); ?>" data-site-timezone="<?php echo esc_attr( wp_timezone_string() ); ?>" data-site-offset="<?php echo esc_attr( (int) round( wp_timezone()->getOffset( new DateTime( 'now' ) ) / 60 ) ); ?>" data-label-past="<?php esc_attr_e( 'Past Time', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label-lead="<?php esc_attr_e( 'Not available', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Frontend Preview', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 					<p><?php esc_html_e( 'What a customer would see and pay right now.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>

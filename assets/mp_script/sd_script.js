@@ -1019,22 +1019,27 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                     $el.attr('data-price', service_info[type].price);
                     $el.attr('data-available_quantity', service_info[type].stock);
 
+                    $el.find('.rbfw-opt-sticker').remove();
+                    $el.removeClass('rbfw-opt--soldout rbfw-opt--past rbfw-opt--lead').removeAttr('aria-disabled');
+
                     if(service_info[type].stock <= 0){
                         // A fixed-time option whose start has passed today (site timezone)
                         // or falls inside the lead time is not sold out, just unavailable.
-                        var unavailable_label = rbfw_translation.sold_out;
+                        var sticker = { state: 'soldout', icon: 'fa-ban', label: rbfw_translation.sold_out || 'Sold Out' };
                         if (service_info[type].unavailable === 'past') {
-                            unavailable_label = rbfw_translation.past_time || 'Past Time';
+                            sticker = { state: 'past', icon: 'fa-clock-rotate-left', label: rbfw_translation.past_time || 'Past Time' };
                         } else if (service_info[type].unavailable === 'lead_time') {
-                            unavailable_label = rbfw_translation.not_available || 'Not available';
+                            sticker = { state: 'lead', icon: 'fa-hourglass-half', label: rbfw_translation.not_available || 'Not available' };
                         }
-                        $el.find('.rent-type').text(type).append(jQuery('<span class="solded"></span>').text(unavailable_label));
+                        $el.find('.rent-type').text(type);
+                        $el.append(
+                            jQuery('<span class="rbfw-opt-sticker"></span>')
+                                .addClass('rbfw-opt-sticker--' + sticker.state)
+                                .append(jQuery('<i class="fas" aria-hidden="true"></i>').addClass(sticker.icon))
+                                .append(jQuery('<span></span>').text(sticker.label))
+                        );
 
-                        $el.addClass('rbfw-sold-out');
-
-
-
-
+                        $el.addClass('rbfw-sold-out rbfw-opt--' + sticker.state).attr('aria-disabled', 'true');
                     }else{
                         $el.find('.rent-type').text(type);
 

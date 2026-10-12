@@ -3198,6 +3198,24 @@
         function toIso(d) {
             return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
         }
+        // WordPress wall clock (Settings -> General timezone) as a local Date, the
+        // same clock the frontend uses to close fixed-time options (rbfw_site_now()).
+        function siteNow() {
+            var tz = String($preview.data('site-timezone') || '');
+            if (tz.indexOf('/') !== -1 && typeof Intl !== 'undefined') {
+                try {
+                    var p = {};
+                    new Intl.DateTimeFormat('en-GB', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+                        .formatToParts(new Date())
+                        .forEach(function (part) { p[part.type] = parseInt(part.value, 10); });
+                    return new Date(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second);
+                } catch (e) {}
+            }
+            var offset = parseInt($preview.data('site-offset'), 10);
+            if (isNaN(offset)) { return new Date(); }
+            var site = new Date(Date.now() + offset * 60000);
+            return new Date(site.getUTCFullYear(), site.getUTCMonth(), site.getUTCDate(), site.getUTCHours(), site.getUTCMinutes(), site.getUTCSeconds());
+        }
         function currentRentType() {
             return $wrap.find('#rbfw_item_type').val() || $pricingPanel.data('item-type') || 'bike_car_sd';
         }
@@ -3229,7 +3247,17 @@
                 if (i === selectedIdx) { $btn.addClass('sel'); }
                 $btn.append($('<span></span>').text(row.label + (row.sub ? ' — ' + row.sub : '')));
                 $btn.append($('<strong></strong>').text(money(row.price)));
-                $btn.on('click', function () { onSelect(i); });
+                if (row.unavailable) {
+                    // Same sticker as the frontend option card (css/rbfw_style.css).
+                    $btn.addClass('is-unavailable is-' + row.unavailable.state).prop('disabled', true)
+                        .append(
+                            $('<span class="rbfw-me-fp-sticker"></span>')
+                                .addClass('rbfw-me-fp-sticker--' + row.unavailable.state)
+                                .text(row.unavailable.label)
+                        );
+                } else {
+                    $btn.on('click', function () { onSelect(i); });
+                }
                 $container.append($btn);
             });
         }
@@ -3891,8 +3919,10 @@
                 var price = parseFloat($row.find('input[name*="[price]"]').val());
                 var duration = $.trim($row.find('input[name*="[duration]"]').val());
                 var dType = $row.find('select[name*="[d_type]"]').val();
+                var startTime = $.trim($row.find('select[name*="[start_time]"]').val() || '');
+                var endTime = $.trim($row.find('select[name*="[end_time]"]').val() || '');
                 if (! label || isNaN(price)) { return; }
-                rows.push({ label: label, price: price, sub: duration ? (duration + ' ' + (dType || '')) : '' });
+                rows.push({ label: label, price: price, sub: duration ? (duration + ' ' + (dType || '')) : '', start: startTime, end: endTime });
             });
             return rows;
         }
@@ -3976,8 +4006,30 @@
                 return;
             }
 
+            // Duration-based options have a fixed start time: for today they close
+            // once it has passed, or while it is inside Buffer Time Before --
+            // the same rule as rbfw_pickup_time_unavailable() on the frontend.
+            if (specificDurationOn) {
+                var now = siteNow();
+                var leadHours = parseInt($wrap.find('[name="rbfw_buffer_time"]').first().val(), 10) || 0;
+                var leadUntil = new Date(now.getTime() + leadHours * 3600000);
+                rows.forEach(function (r) {
+                    if (r.start) {
+                        r.sub = r.start + (r.end ? ' - ' + r.end : '');
+                    }
+                    var m = /^(\d{1,2}):(\d{2})/.exec(r.start || '');
+                    if (! m || selectedDateIso !== toIso(now)) { return; }
+                    var startAt = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(m[1], 10), parseInt(m[2], 10), 0);
+                    if (startAt <= now) {
+                        r.unavailable = { state: 'past', label: $preview.data('label-past') || 'Past Time' };
+                    } else if (startAt < leadUntil) {
+                        r.unavailable = { state: 'lead', label: $preview.data('label-lead') || 'Not available' };
+                    }
+                });
+            }
+
             var selLabel = $sdControls.data('selectedLabel');
-            var idx = selLabel ? rows.findIndex(function (r) { return r.label === selLabel; }) : -1;
+            var idx = selLabel ? rows.findIndex(function (r) { return r.label === selLabel && ! r.unavailable; }) : -1;
             renderOptrows($preview.find('.rbfw-me-fp-sd-optrows'), rows, idx, function (i) {
                 $sdControls.data('selectedLabel', rows[i].label);
                 recalcSd();

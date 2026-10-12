@@ -8782,6 +8782,54 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     border: 1px solid #ccc;
 }
 
+/* Unavailable rental option (Sold Out / Past Time / Not available): a striped,
+   dimmed card with a status sticker pinned across its top-right edge. */
+.rbfw_service_type .radio-button.rbfw-sold-out,
+.rbfw_service_type .radio-button.rbfw-sold-out:hover,
+.rbfw_service_type .radio-button.selected.rbfw-sold-out{
+    position: relative;
+    margin-top: 10px;
+    border: 1px dashed #d1d5db;
+    background: repeating-linear-gradient(-45deg, #f9fafb 0, #f9fafb 10px, #f3f4f6 10px, #f3f4f6 20px);
+    box-shadow: none;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out .rbfw_time{
+    color: #9ca3af;
+}
+.rbfw_service_type .rbfw-opt-sticker{
+    position: absolute;
+    top: -11px;
+    right: 12px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px 3px 8px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 15px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: #fff;
+    background: linear-gradient(135deg, #f87171, #dc2626);
+    box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(220, 38, 38, .30);
+    transform: rotate(-2deg);
+    pointer-events: none;
+}
+.rbfw_service_type .rbfw-opt-sticker i{
+    font-size: 10px;
+}
+.rbfw_service_type .rbfw-opt-sticker--past{
+    background: linear-gradient(135deg, #94a3b8, #475569);
+    box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(71, 85, 105, .30);
+}
+.rbfw_service_type .rbfw-opt-sticker--lead{
+    background: linear-gradient(135deg, #fbbf24, #d97706);
+    box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(217, 119, 6, .30);
+}
+
 /* Selected state for the radio button */
 .rbfw_service_type .radio-button.selected {
     border:1px solid var(--rbfw_color_primary);
@@ -8907,6 +8955,31 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 .mp_right_section .single-day-booking .rbfw_service_type .radio-button.selected {
     border-color: var(--rbfw_color_primary);
     background: #fff7f5;
+}
+
+/* Unavailable option in the default template: keep the striped, dimmed look
+   (see .rbfw-opt-sticker above) over this template's own card colors. */
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out,
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out:hover,
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.selected.rbfw-sold-out {
+    border: 1px dashed #d1d5db;
+    background: repeating-linear-gradient(-45deg, #f9fafb 0, #f9fafb 10px, #f3f4f6 10px, #f3f4f6 20px);
+    cursor: not-allowed;
+}
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out label {
+    cursor: not-allowed;
+}
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out::before {
+    border-color: #d1d5db;
+    background: #e5e7eb;
+}
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out .rent-type,
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out .rbfw_time,
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out .price {
+    color: #9ca3af;
+}
+.mp_right_section .single-day-booking .rbfw_service_type .radio-button.rbfw-sold-out .price {
+    text-decoration: line-through;
 }
 
 .mp_right_section .single-day-booking .rbfw-bikecarsd-calendar-header {
