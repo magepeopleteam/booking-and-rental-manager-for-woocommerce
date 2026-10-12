@@ -674,6 +674,52 @@ function rbfw_url_exclude_search_engine() {
 			);
 		}
 	}
+	if ( ! function_exists( 'rbfw_pickup_time_unavailable' ) ) {
+		/**
+		 * Why a pickup at a given date and time can no longer be booked, using the
+		 * WordPress timezone: 'past' when it has already started, 'lead_time' when it
+		 * starts inside the item's Buffer Time Before window, or '' when it is bookable.
+		 *
+		 * The same rule the pickup-time dropdown applies in the browser, for callers that
+		 * know the exact start time (Single Day fixed-time rental options, add-to-cart).
+		 * Items with a fixed rental period ("Enable start and end date" = No) are skipped,
+		 * as in rbfw_pickup_date_error().
+		 *
+		 * @param int                    $rbfw_id     Rental item id.
+		 * @param string                 $pickup_date Pickup date (Y-m-d).
+		 * @param string                 $pickup_time Pickup time (H:i, h:i a, ...).
+		 * @param DateTimeImmutable|null $now         Current time (for tests).
+		 * @return string '' | 'past' | 'lead_time'
+		 */
+		function rbfw_pickup_time_unavailable( $rbfw_id, $pickup_date, $pickup_time, $now = null ) {
+			$pickup_date = trim( (string) $pickup_date );
+			$pickup_time = trim( (string) $pickup_time );
+			if ( '' === $pickup_date || '' === $pickup_time ) {
+				return '';
+			}
+			if ( $rbfw_id && 'no' === get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ) {
+				return '';
+			}
+
+			$timezone = wp_timezone();
+			$now      = $now instanceof DateTimeImmutable ? $now->setTimezone( $timezone ) : new DateTimeImmutable( 'now', $timezone );
+			try {
+				$pickup = new DateTimeImmutable( substr( $pickup_date, 0, 10 ) . ' ' . $pickup_time, $timezone );
+			} catch ( Exception $e ) {
+				return ''; // Unparseable: the other booking validators handle bad input.
+			}
+
+			if ( $pickup <= $now ) {
+				return 'past';
+			}
+			$buffer_hours = $rbfw_id ? absint( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
+			if ( $buffer_hours && $pickup < $now->modify( '+' . $buffer_hours . ' hours' ) ) {
+				return 'lead_time';
+			}
+
+			return '';
+		}
+	}
 	// Deprecated function - use esc_html_e() instead
 	function rbfw_string( $option_name, $default_string ) {
 		echo esc_html( $default_string );

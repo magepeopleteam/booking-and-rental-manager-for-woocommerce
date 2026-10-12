@@ -375,9 +375,12 @@ if (!class_exists('RBFW_Woocommerce')) {
                 return $passed;
             }
 
+            /* With no lead time configured the earliest pickup is "now": a pickup time
+               that has already passed today is still refused. Fixed-period items keep
+               selling after their admin-set start, as in rbfw_pickup_date_error(). */
             $buffer_hours = absint( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) );
-            if ( $buffer_hours < 1 ) {
-                return $passed; // no lead time configured -> nothing to enforce
+            if ( $buffer_hours < 1 && 'no' === get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ) {
+                return $passed;
             }
 
             // Parse the submitted booking exactly the way the cart build does.
@@ -396,6 +399,12 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             if ( '' === trim( (string) $start_raw ) ) {
                 return $passed; // nothing to compare -> fail open
+            }
+
+            // Without a lead time only a real pickup time can have passed: date-only
+            // bookings carry an empty or midnight placeholder (see rbfw_booking_has_time()).
+            if ( $buffer_hours < 1 && ! rbfw_booking_has_time( $start_time ) ) {
+                return $passed;
             }
 
             // rbfw_start_datetime is a plain date for some rent types, with the time
@@ -421,6 +430,25 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             if ( $pickup >= $earliest ) {
                 return $passed;
+            }
+
+            if ( $buffer_hours < 1 ) {
+                wc_add_notice(
+                    sprintf(
+                        /* translators: 1: item name, 2: selected pickup date and time */
+                        __( '%1$s: the selected pickup time (%2$s) has already passed. Please choose a later time or another date.', 'booking-and-rental-manager-for-woocommerce' ),
+                        esc_html( get_the_title( $rbfw_id ) ),
+                        esc_html( wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $pickup->getTimestamp() ) )
+                    ),
+                    'error'
+                );
+
+                if ( wp_doing_ajax() ) {
+                    wc_print_notices();
+                    wp_die();
+                }
+
+                return false;
             }
 
             wc_add_notice(
