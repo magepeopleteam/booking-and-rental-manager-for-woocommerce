@@ -2477,6 +2477,13 @@
                 $pricing.find('.mds_price_md').show();
             }
 
+            // Min/Max Day addon row: mirror the classic editor's per-type rule.
+            // Its PHP renders it display:none for a saved Single Day item, so
+            // without this a switch to Multiple Day kept it hidden until reload.
+            $pricing.find('.rbfw_min_max_booking_day_row').toggle(
+                type !== 'bike_car_sd' && type !== 'appointment' && type !== 'multiple_items'
+            );
+
             // Only bike_car_sd ever needs the timely stock field required; every
             // other type (including a type switch away from it) must clear a
             // stale "required" or the generic required-field scan below would
@@ -2865,7 +2872,9 @@
         // ── Time Configuration ──────────────────────────────────
 
         $md.on('click', '.time-picker-toggle', function () {
-            timePickerEnabled = !timePickerEnabled;
+            // Read the state from the toggle itself: the Time Picker toggles are kept
+            // in step across rent types, so a locally tracked flag can be stale.
+            timePickerEnabled = !jQuery(this).hasClass('active');
             $(this).toggleClass('active', timePickerEnabled);
             // Time Picker off → force Half-Day and Hourly Price (both
             // dependent toggles) off & disabled. The Day Threshold stays
@@ -2912,7 +2921,14 @@
             // time fields stayed hidden until something else (e.g. re-picking
             // the date) happened to trigger a recalc.
             $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no').trigger('change');
-            $md.find('.rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
+            // Single Day and Multiple Items render their own hidden
+            // rbfw_enable_time_picker input after this one, and
+            // collectFormData() keeps the LAST value per name -- updating only
+            // Multiple Day's copy saved the Single Day "no" instead. All three
+            // store the same meta, so keep them (and their toggles) in step,
+            // as the classic handler does.
+            $wrap.find('.rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
+            $wrap.find('.time-picker-toggle').toggleClass('active', timePickerEnabled);
             updateDaywiseVisibility();
         });
 
