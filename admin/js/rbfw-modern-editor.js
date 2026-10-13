@@ -2477,6 +2477,13 @@
                 $pricing.find('.mds_price_md').show();
             }
 
+            // Min/Max Day addon row: mirror the classic editor's per-type rule.
+            // Its PHP renders it display:none for a saved Single Day item, so
+            // without this a switch to Multiple Day kept it hidden until reload.
+            $pricing.find('.rbfw_min_max_booking_day_row').toggle(
+                type !== 'bike_car_sd' && type !== 'appointment' && type !== 'multiple_items'
+            );
+
             // Only bike_car_sd ever needs the timely stock field required; every
             // other type (including a type switch away from it) must clear a
             // stale "required" or the generic required-field scan below would
