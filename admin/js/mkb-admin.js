@@ -1155,7 +1155,9 @@
             if (jQuery(this).closest('.rbfw-me-wrap .rbfw_general_price_config_wrapper').length) {
                 return;
             }
-            timePickerEnabled = !timePickerEnabled;
+            // Read the state from the toggle itself: the Time Picker toggles are kept
+            // in step across rent types, so a locally tracked flag can be stale.
+            timePickerEnabled = !jQuery(this).hasClass('active');
             timePickerToggle.toggleClass('active', timePickerEnabled);
             hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
             timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
