@@ -639,6 +639,17 @@ CSS for Single Page Template
     font-weight: 600;
     color: #6b7280;
 }
+/* Single Day seasonal list: the date-range header row spans both columns,
+   so it must not pick up the right-aligned price-cell rule above. */
+.price-item-container .rbfw_day_wise_price tr.rbfw-pi-range td{
+    text-align: left;
+    font-weight: 400;
+    color: #6b7280;
+    white-space: normal;
+}
+.price-item-container .rbfw_day_wise_price tr.rbfw-pi-range td strong{
+    color: #111827;
+}
 /* the weekday grid keeps every price cell uniform (override the 2-col rule) */
 .price-item-container .rbfw-pi-daywise td:last-child{
     text-align: center;

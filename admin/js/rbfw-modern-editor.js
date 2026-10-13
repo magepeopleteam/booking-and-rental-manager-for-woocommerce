@@ -3194,6 +3194,8 @@
         var $durationBanner = $preview.find('.rbfw-me-fp-duration-banner');
         var $warnSlot = $preview.find('.rbfw-me-fp-warn-slot');
         var $summary = $preview.find('.rbfw-me-fp-summary');
+        var pricingInfoOn = String($preview.data('pricing-info')) === 'yes';
+        var $pricingInfo = $preview.find('.rbfw-me-fp-pinfo');
 
         $sdControls.data('qty', 1);
         $resortControls.data('qty', 1);
@@ -3872,6 +3874,7 @@
             $preview.find('.rbfw-me-fp-pickup-row').toggle(isMd || isResort || isMi);
             $preview.find('.rbfw-me-fp-return-row').toggle(isMd || isResort);
             $sdControls.toggle(isSd);
+            if (! isSd) { $pricingInfo.hide(); }
             // Resort's Room Type section stays hidden behind the Continue
             // button (see resortRoomsRevealed / recalcResort()) until the
             // dates are confirmed; leaving Resort resets that step so coming
@@ -3943,8 +3946,117 @@
             return rows;
         }
 
+        /* ───────────── Pricing Info (Single Day / Appointment) ─────────────
+           Mirrors the frontend form's "Pricing Info" link + Pricing Details
+           modal (templates/forms/sd-pricing-info.php) from this screen's own,
+           not-yet-saved fields. Only when the global "Pricing Info Display"
+           setting is on (data-pricing-info on the preview card; flag and
+           element are set up with the other preview handles above). */
+
+        // Seasonal Pricing addon (Single Day): a season replaces an option's
+        // price on dates inside it, matched by option name, only when a price
+        // is set -- the same rows the frontend modal lists.
+        function sdSeasonRows() {
+            var seasons = [];
+            $wrap.find('.sessional_price_single_day .rbfw-sp-item-row').each(function () {
+                var $block = $(this);
+                if ($block.closest('.mp_hidden_content').length) { return; }
+                var start = $.trim($block.find('[name*="[start_date]"]').first().val());
+                var end = $.trim($block.find('[name*="[end_date]"]').first().val());
+                if (! start || ! end) { return; }
+                var rows = [];
+                $block.find('tr.rbfw_bike_car_sd_price_table_row').each(function () {
+                    var label = $.trim($(this).find('[name*="rbfw_bike_car_sd_data_sp"][name*="[type]"]').first().val());
+                    var price = parseFloat($(this).find('[name*="rbfw_bike_car_sd_data_sp"][name*="[price]"]').first().val());
+                    if (label && price > 0) { rows.push({ label: label, value: money(price) }); }
+                });
+                if (rows.length) { seasons.push({ start: start, end: end, rows: rows }); }
+            });
+            return seasons;
+        }
+
+        // "2026-12-20" -> "December 20, 2026" in the admin's locale, close to
+        // the frontend modal's rbfw_date_format(); other input is shown as-is.
+        function pricingInfoDate(value) {
+            var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+            if (! m || typeof Intl === 'undefined') { return value; }
+            try {
+                return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString(document.documentElement.lang || undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+            } catch (e) {
+                return value;
+            }
+        }
+
+        function appendPricingInfoSection($body, title, rows) {
+            if (! rows.length) { return; }
+            var $table = $('<table class="rbfw-me-fp-pinfo-table"></table>');
+            rows.forEach(function (row) {
+                var $tr = $('<tr></tr>');
+                if (row.range) {
+                    $tr.append($('<td colspan="2" class="rbfw-me-fp-pinfo-range"></td>').text(row.range));
+                } else {
+                    var $label = $('<td></td>').append($('<strong></strong>').text(row.label));
+                    if (row.hint) {
+                        $label.append(' ').append($('<span class="rbfw-me-fp-pinfo-hint"></span>').text('(' + row.hint + ')'));
+                    }
+                    $tr.append($label).append($('<td class="rbfw-me-fp-pinfo-price"></td>').text(row.value));
+                }
+                $table.append($tr);
+            });
+            $body.append($('<div class="rbfw-me-fp-pinfo-label"></div>').text(title)).append($table);
+        }
+
+        function renderSdPricingInfo() {
+            var show = pricingInfoOn && SD_TYPES.indexOf(currentRentType()) !== -1;
+            $pricingInfo.toggle(show);
+            if (! show) { return; }
+
+            var l = function (key) { return $pricingInfo.data('l-' + key) || ''; };
+            var $body = $pricingInfo.find('.rbfw-me-fp-pinfo-body').empty();
+            var specificDurationOn = $wrap.find('[name="enable_specific_duration"]').prop('checked');
+
+            appendPricingInfoSection($body, l('options'), sdRows().map(function (r) {
+                var hint = (specificDurationOn && r.start && r.end) ? (r.start + ' - ' + r.end) : $.trim(r.sub);
+                return { label: r.label, hint: hint, value: money(r.price) };
+            }));
+
+            var seasonalRows = [];
+            sdSeasonRows().forEach(function (season) {
+                seasonalRows.push({ range: l('from') + ' ' + pricingInfoDate(season.start) + ' ' + l('to') + ' ' + pricingInfoDate(season.end) });
+                seasonalRows = seasonalRows.concat(season.rows);
+            });
+            appendPricingInfoSection($body, l('seasonal'), seasonalRows);
+
+            appendPricingInfoSection($body, l('extras'), basicExtraServiceRows().map(function (r) {
+                return { label: r.label, value: money(r.price) };
+            }));
+
+            // Same condition as the frontend modal: deposit on and amount > 0.
+            if ($wrap.find('input[name="rbfw_enable_security_deposit"]').is(':checked')) {
+                var depositType = $wrap.find('select[name="rbfw_security_deposit_type"]').val() || 'percentage';
+                var depositAmount = parseFloat($wrap.find('input[name="rbfw_security_deposit_amount"]').val()) || 0;
+                if (depositAmount > 0) {
+                    appendPricingInfoSection($body, l('deposit'), [{
+                        label: l('refundable'),
+                        value: depositType === 'percentage' ? depositAmount + '%' : money(depositAmount)
+                    }]);
+                }
+            }
+
+            if (! $body.children().length) {
+                $body.append($('<p class="rbfw-me-fp-pinfo-empty"></p>').text(l('empty')));
+            }
+        }
+
+        $preview.on('click', '.rbfw-me-fp-pinfo-toggle', function () {
+            var open = $(this).attr('aria-expanded') !== 'true';
+            $(this).attr('aria-expanded', open ? 'true' : 'false');
+            $pricingInfo.toggleClass('is-open', open).find('.rbfw-me-fp-pinfo-panel').prop('hidden', ! open);
+        });
+
         function recalcSd() {
             var type = currentRentType();
+            renderSdPricingInfo();
             var rows = sdRows();
             var $totalAmt = $preview.find('.rbfw-me-fp-total-amt');
             var $from = $preview.find('.rbfw-me-fp-from-amt');
@@ -4981,6 +5093,13 @@
         });
         $wrap.on('input change', '.rbfw_bike_car_sd_price_table_body input, .rbfw_bike_car_sd_price_table_body select', function () {
             if (isPreviewingSd()) { recalcSd(); }
+        });
+        // Seasonal Pricing addon (Single Day) only feeds the Pricing Info panel.
+        $wrap.on('input change', '.sessional_price_single_day input', function () {
+            if (isPreviewingSd()) { renderSdPricingInfo(); }
+        });
+        $wrap.on('click', '.sessional_price_single_day button, .sessional_price_single_day .button', function () {
+            setTimeout(function () { if (isPreviewingSd()) { renderSdPricingInfo(); } }, 0);
         });
         var $sdTbody = $wrap.find('.rbfw_bike_car_sd_price_table_body');
         if ($sdTbody.length && window.MutationObserver) {

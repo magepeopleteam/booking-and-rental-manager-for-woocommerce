@@ -677,7 +677,7 @@
 				$rbfw_gen_settings       = get_option( 'rbfw_basic_gen_settings' );
 				$rbfw_count_extra_day_fp = ( is_array( $rbfw_gen_settings ) && isset( $rbfw_gen_settings['rbfw_count_extra_day_enable'] ) ) ? $rbfw_gen_settings['rbfw_count_extra_day_enable'] : 'on';
 			?>
-			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-frontend-preview" style="display:none" data-currency="<?php echo esc_attr( get_woocommerce_currency_symbol() ); ?>" data-count-extra-day="<?php echo esc_attr( $rbfw_count_extra_day_fp ); ?>" data-site-timezone="<?php echo esc_attr( wp_timezone_string() ); ?>" data-site-offset="<?php echo esc_attr( (int) round( wp_timezone()->getOffset( new DateTime( 'now' ) ) / 60 ) ); ?>" data-label-past="<?php esc_attr_e( 'Past Time', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label-lead="<?php esc_attr_e( 'Not available', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-frontend-preview" style="display:none" data-currency="<?php echo esc_attr( get_woocommerce_currency_symbol() ); ?>" data-count-extra-day="<?php echo esc_attr( $rbfw_count_extra_day_fp ); ?>" data-site-timezone="<?php echo esc_attr( wp_timezone_string() ); ?>" data-site-offset="<?php echo esc_attr( (int) round( wp_timezone()->getOffset( new DateTime( 'now' ) ) / 60 ) ); ?>" data-label-past="<?php esc_attr_e( 'Past Time', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label-lead="<?php esc_attr_e( 'Not available', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-pricing-info="<?php echo esc_attr( rbfw_get_option( 'rbfw_pricing_info_display', 'rbfw_basic_gen_settings' ) ); ?>">
 				<div class="rbfw-me-card__head">
 					<h3><?php esc_html_e( 'Frontend Preview', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 					<p><?php esc_html_e( 'What a customer would see and pay right now.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -713,6 +713,31 @@
 						<span class="rbfw-me-fp-pricerow-plain"><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 						<strong class="rbfw-me-fp-from-amt">&nbsp;</strong>
 						<span class="rbfw-me-fp-pricerow-unit">/ <?php esc_html_e( 'Day', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<!-- Pricing Info: Single Day / Appointment only. Mirrors the frontend
+					     form's "Pricing Info" link and its Pricing Details modal
+					     (templates/forms/sd-pricing-info.php), built by
+					     renderSdPricingInfo() from this screen's own rate fields. Shown
+					     only when the global "Pricing Info Display" setting is on. -->
+					<div class="rbfw-me-fp-pinfo" style="display:none"
+						data-l-options="<?php esc_attr_e( 'Rental Options', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-seasonal="<?php esc_attr_e( 'Seasonal Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-extras="<?php esc_attr_e( 'Extra Services', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-deposit="<?php esc_attr_e( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-refundable="<?php esc_attr_e( 'Refundable Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-from="<?php esc_attr_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-to="<?php esc_attr_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>"
+						data-l-empty="<?php esc_attr_e( 'No prices configured yet.', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+						<button type="button" class="rbfw-me-fp-pinfo-toggle" aria-expanded="false">
+							<span class="dashicons dashicons-info-outline" aria-hidden="true"></span>
+							<span class="rbfw-me-fp-pinfo-title"><?php esc_html_e( 'Pricing Info', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							<span class="rbfw-me-fp-pinfo-view"><?php esc_html_e( 'Click to view', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</button>
+						<div class="rbfw-me-fp-pinfo-panel" hidden>
+							<div class="rbfw-me-fp-pinfo-heading"><?php esc_html_e( 'Pricing Details', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+							<div class="rbfw-me-fp-pinfo-body"></div>
+						</div>
 					</div>
 
 					<!-- Multiple Day only: trust badges under the price box. -->

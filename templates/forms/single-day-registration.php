@@ -48,6 +48,7 @@
         <!--    Right Side-->
 		<div class="rbfw-single-right-container rbfw_bikecarsd_pricing_table_wrap">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
+                <?php include RBFW_TEMPLATE_PATH . 'forms/sd-pricing-info.php'; ?>
                 <?php /* Pickup/Drop-off Location doesn't apply to Appointment items
                         (a fixed business location) -- this template is shared with
                         Single Day, so exclude that type explicitly here. */ ?>

@@ -2775,6 +2775,69 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 .rbfw-me-fp-pricerow { font-size: 13px; color: var(--me-muted); margin-bottom: 4px; }
 .rbfw-me-fp-pricerow strong { color: var(--me-text); font-size: 15px; }
 
+/* Pricing Info (Single Day / Appointment) -- the preview's twin of the
+   frontend form's "Pricing Info" link + Pricing Details modal. Expands
+   inline here since the sidebar is too narrow for an overlay. */
+.rbfw-me-fp-pinfo {
+    border: 1px solid var(--me-border);
+    border-radius: 10px;
+    background: #FAFBFC;
+    margin: 10px 0 14px;
+    overflow: hidden;
+    /* The preview body is a height-capped flex column; without this the
+       overflow:hidden box is allowed to shrink to 0 and swallow clicks. */
+    flex-shrink: 0;
+}
+.rbfw-me-fp-pinfo-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    background: transparent;
+    color: var(--me-text);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+.rbfw-me-fp-pinfo-toggle .dashicons { font-size: 16px; width: 16px; height: 16px; color: #1a56db; }
+.rbfw-me-fp-pinfo-view { margin-left: auto; color: #1a56db; font-size: 11.5px; font-weight: 600; }
+.rbfw-me-fp-pinfo-view::after {
+    content: "";
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin-left: 6px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    position: relative;
+    top: -2px;
+    transition: transform .2s ease, top .2s ease;
+}
+.rbfw-me-fp-pinfo.is-open .rbfw-me-fp-pinfo-view::after { transform: rotate(-135deg); top: 1px; }
+.rbfw-me-fp-pinfo-toggle:focus-visible { outline: 2px solid #1a56db; outline-offset: -2px; }
+.rbfw-me-fp-pinfo-panel { padding: 2px 12px 12px; border-top: 1px solid var(--me-border); background: #fff; }
+.rbfw-me-fp-pinfo-heading { font-size: 13px; font-weight: 700; color: var(--me-text); margin: 10px 0 2px; }
+.rbfw-me-fp-pinfo-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .05em;
+    color: #94A3B8;
+    text-transform: uppercase;
+    margin: 12px 0 6px;
+}
+.rbfw-me-fp-pinfo-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.rbfw-me-fp-pinfo-table td { padding: 5px 0; border-bottom: 1px solid #F1F5F9; color: #475569; vertical-align: top; }
+.rbfw-me-fp-pinfo-table tr:last-child td { border-bottom: 0; }
+.rbfw-me-fp-pinfo-table strong { color: var(--me-text); font-weight: 600; }
+.rbfw-me-fp-pinfo-price { text-align: right; white-space: nowrap; padding-left: 12px !important; color: var(--me-text) !important; font-weight: 600; }
+.rbfw-me-fp-pinfo-hint { color: var(--me-muted); font-size: 11.5px; }
+.rbfw-me-fp-pinfo-range { color: var(--me-muted) !important; font-size: 11.5px; padding-top: 8px !important; }
+.rbfw-me-fp-pinfo-empty { margin: 10px 0 0; color: var(--me-muted); font-size: 12px; }
+
 /* Multiple Day only: badges + "Instant Booking Summary" heading, shown in
    place of the other types' plain feature-name-led layout. */
 .rbfw-me-fp-md-summary-head { margin-bottom: 12px; }
