@@ -853,7 +853,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                 $rbfw_minimum_booking_day = 0;
                 $rbfw_maximum_booking_day = 0;
                 $rbfw_datewise_minmax     = array();
-                if(rbfw_check_min_max_booking_day_active()){
+                if(rbfw_check_min_max_booking_day_active($post_id)){
                     $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
                     if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
                         $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';

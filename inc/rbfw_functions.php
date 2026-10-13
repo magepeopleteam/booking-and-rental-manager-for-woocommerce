@@ -2187,13 +2187,23 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 	}
 	/****************************************************
 	 * Check Min-Max Booking Day Plugin Active
+	 *
+	 * With a rental item ID, also asks whether day limits are switched on for
+	 * that item: the addon answers through `rbfw_min_max_booking_day_enabled`
+	 * (its per-item On/Off switch). Without an ID it is the plain "addon
+	 * active" check it always was.
+	 *
+	 * @param int $post_id Optional rental item ID.
+	 * @return bool
 	 ****************************************************/
-	function rbfw_check_min_max_booking_day_active() {
-		if ( is_plugin_active( 'booking-and-rental-manager-min-max-booking-day/rent-min-max-booking-day.php' ) ) {
-			return true;
-		} else {
+	function rbfw_check_min_max_booking_day_active( $post_id = 0 ) {
+		if ( ! is_plugin_active( 'booking-and-rental-manager-min-max-booking-day/rent-min-max-booking-day.php' ) ) {
 			return false;
 		}
+
+		$post_id = absint( $post_id );
+
+		return $post_id ? (bool) apply_filters( 'rbfw_min_max_booking_day_enabled', true, $post_id ) : true;
 	}
 	/****************************************************
 	 * Date-wise Min/Max booking-day ranges for an item
@@ -2216,7 +2226,7 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 		$post_id = absint( $post_id );
 		$ranges  = array();
 
-		if ( ! $post_id || ! rbfw_check_min_max_booking_day_active() ) {
+		if ( ! $post_id || ! rbfw_check_min_max_booking_day_active( $post_id ) ) {
 			return $ranges;
 		}
 
@@ -2303,6 +2313,9 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 	 ****************************************************/
 	function rbfw_get_effective_minmax_days( $post_id, $start_date ) {
 		$post_id = absint( $post_id );
+		if ( ! rbfw_check_min_max_booking_day_active( $post_id ) ) {
+			return array( 'min' => 0, 'max' => 0 );
+		}
 		$eff     = array(
 			'min' => (int) get_post_meta( $post_id, 'rbfw_minimum_booking_day', true ),
 			'max' => (int) get_post_meta( $post_id, 'rbfw_maximum_booking_day', true ),
