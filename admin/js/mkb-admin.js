@@ -1149,7 +1149,10 @@
             // rather than the whole editor (a blanket .rbfw-me-wrap guard,
             // like the .daywise-price-toggle one below uses, would silently
             // break Single Day/Multiple Items' toggle instead).
-            if (jQuery(this).closest('.rbfw_general_price_config_wrapper').length) {
+            // The skip must also be limited to the Modern Editor: the classic
+            // editor never loads rbfw-modern-editor.js, so skipping Multiple
+            // Day there left its Time Picker toggle with no handler at all.
+            if (jQuery(this).closest('.rbfw-me-wrap .rbfw_general_price_config_wrapper').length) {
                 return;
             }
             timePickerEnabled = !timePickerEnabled;
