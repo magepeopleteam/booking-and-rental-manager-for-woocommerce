@@ -1900,8 +1900,10 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             if(response.discount){
                 jQuery('.discount').show();
                 jQuery('.discount span').html(response.discount_html);
+                jQuery('.discount .rbfw-discount-note').text(response.discount_note || '');
                 jQuery('.discount').show();
             }else{
+                jQuery('.discount .rbfw-discount-note').text('');
                 jQuery('.discount').hide();
             }
 

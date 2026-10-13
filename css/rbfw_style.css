@@ -9303,6 +9303,10 @@ i.fas.fa-minus {
 .rbfw_bikecarsd_price_summary .duration-costing .rbfw_pricing_applied{
     margin: 0 auto 0 4px;
 }
+/* Multiple Day Discount row: same treatment for the "which tier" note. */
+.item-content.rbfw-costing .discount .rbfw-discount-note{
+    margin: 0 auto 0 4px;
+}
 .rbfw-particular-date{
     width: 15%;
     padding-right: 5px;

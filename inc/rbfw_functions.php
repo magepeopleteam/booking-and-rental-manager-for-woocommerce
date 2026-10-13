@@ -2332,6 +2332,50 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 		return $eff;
 	}
 	/****************************************************
+	 * Booking-summary note for a Discount Over X Days discount
+	 *
+	 * Says which tier applied and what it is worth, e.g. "(50% off for over 3
+	 * days)" or "($10.00 off per item for over 3 days)", from the array
+	 * rbfw_get_discount_array() returns. Plain text for jQuery .text(). The
+	 * tier ("discount_over_days") comes from newer addon versions; without it
+	 * the note still states the rate.
+	 *
+	 * @param array $discount_arr  Result of rbfw_get_discount_array().
+	 * @param int   $item_quantity Units booked (a fixed discount is per unit).
+	 * @return string '' when no discount applied.
+	 ****************************************************/
+	function rbfw_discount_summary_note( $discount_arr, $item_quantity = 1 ) {
+		if ( empty( $discount_arr['discount_amount'] ) || empty( $discount_arr['discount_number'] ) ) {
+			return '';
+		}
+
+		$number = (float) $discount_arr['discount_number'];
+		$type   = isset( $discount_arr['discount_type'] ) ? $discount_arr['discount_type'] : '';
+		if ( 'percentage' === $type ) {
+			$value = ( (string) $number ) . '%';
+		} else {
+			$value = html_entity_decode( wp_strip_all_tags( wc_price( $number ) ), ENT_QUOTES, get_bloginfo( 'charset' ) );
+		}
+		$per_item = ( 'percentage' !== $type && (int) $item_quantity > 1 );
+		$days     = isset( $discount_arr['discount_over_days'] ) && '' !== (string) $discount_arr['discount_over_days']
+			? absint( $discount_arr['discount_over_days'] ) : null;
+
+		if ( null === $days ) {
+			/* translators: %s: discount rate, e.g. "50%" or "$10.00". */
+			$note = $per_item ? sprintf( __( '%s off per item', 'booking-and-rental-manager-for-woocommerce' ), $value )
+				: sprintf( __( '%s off', 'booking-and-rental-manager-for-woocommerce' ), $value );
+		} elseif ( $per_item ) {
+			/* translators: 1: discount rate, e.g. "$10.00"; 2: number of days. */
+			$note = sprintf( __( '%1$s off per item for over %2$s days', 'booking-and-rental-manager-for-woocommerce' ), $value, $days );
+		} else {
+			/* translators: 1: discount rate, e.g. "50%"; 2: number of days. */
+			$note = sprintf( __( '%1$s off for over %2$s days', 'booking-and-rental-manager-for-woocommerce' ), $value, $days );
+		}
+
+		return '(' . $note . ')';
+	}
+
+	/****************************************************
 	 * Check Discount Over Days Plugin Active
 	 ****************************************************/
 	function rbfw_check_discount_over_days_plugin_active() {
