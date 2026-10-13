@@ -765,6 +765,18 @@ function rbfw_price_calculation_sd(){
 
     jQuery('.duration-costing span').text(wc_price_rbfw(rbfw_service_price));
 
+    // Seasonal Pricing addon: flag the Duration Cost line when a chosen option is
+    // priced by a season, as the Multiple Day summary does. Options carry
+    // data-seasonal="1" for the selected date -- the timely option cards (set
+    // from rbfw_service_type_timely_stock) and the slot table's qty inputs.
+    var rbfwSeasonalApplied = jQuery('.single-type-timely.selected[data-seasonal="1"]').length > 0;
+    jQuery('.rbfw_bikecarsd_qty[data-seasonal="1"]').each(function () {
+        if ((parseInt(jQuery(this).val(), 10) || 0) > 0) {
+            rbfwSeasonalApplied = true;
+        }
+    });
+    jQuery('.rbfw_bikecarsd_price_summary .rbfw_pricing_applied.sessional').toggle(rbfwSeasonalApplied);
+
     // Resource Cost line — value AND visibility, in one place.
     //
     // Every add-on control funnels through this function, but only some of the callers used
@@ -1017,6 +1029,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                 if (service_info[type]) {
                     // Update attributes
                     $el.attr('data-price', service_info[type].price);
+                    $el.attr('data-seasonal', service_info[type].seasonal ? '1' : '0');
                     $el.attr('data-available_quantity', service_info[type].stock);
 
                     $el.find('.rbfw-opt-sticker').remove();

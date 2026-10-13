@@ -9298,6 +9298,11 @@ i.fas.fa-minus {
     font-size: 10px;
     color: var(--rbfw_color_primary);
 }
+/* Single Day: the note is its own flex item in the Duration Cost row; keep it
+   beside the label (as on Multiple Day) and leave the price right-aligned. */
+.rbfw_bikecarsd_price_summary .duration-costing .rbfw_pricing_applied{
+    margin: 0 auto 0 4px;
+}
 .rbfw-particular-date{
     width: 15%;
     padding-right: 5px;
