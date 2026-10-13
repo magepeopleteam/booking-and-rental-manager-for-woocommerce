@@ -442,6 +442,8 @@
                                     <ul class="rbfw-ul">
                                         <li class="duration-costing rbfw-cond">
                                             <?php esc_html_e('Duration Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                            <?php /* A <small>, not a <span>: rbfw_price_calculation_sd() rewrites every span in this row. */ ?>
+                                            <small class="rbfw_pricing_applied sessional" style="display:none">(<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)</small>
                                             <span>
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>

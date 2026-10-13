@@ -610,6 +610,7 @@
 				$rbfw_bike_car_sd_data    = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
                 $sd_service_info = [];
                 foreach ( $rbfw_bike_car_sd_data as $value ) {
+                    $sp_price = '';
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_bike_car_sd_data_sp', true );
                         if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
@@ -657,7 +658,7 @@
                             $rbfw_timely_available_quantity = 0;
                         }
                     }
-                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity,'unavailable'=>$unavailable);
+                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity,'unavailable'=>$unavailable,'seasonal'=>(bool) $sp_price);
 				}
 
                 $sd_extra_service_info = [];

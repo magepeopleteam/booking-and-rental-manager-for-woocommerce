@@ -200,6 +200,7 @@ if(isset($_POST['post_id'])){
                                 if ( ! empty( $rbfw_variations_all_soldout ) ) { $max_available_qty = 0; }
                                 if( isset($value['qty']) && $value['qty'] > 0 ){
 
+                                    $sp_price = '';
                                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                                         $rbfw_sp_prices = get_post_meta( $id, 'rbfw_bike_car_sd_data_sp', true );
                                         if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
@@ -207,6 +208,8 @@ if(isset($_POST['post_id'])){
                                         }
                                     }
                                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+                                    // Lets the booking summary flag "Sessional pricing applied" (sd_script.js).
+                                    $rbfw_is_seasonal = $sp_price ? '1' : '0';
 
 
                                     ?>
@@ -233,13 +236,13 @@ if(isset($_POST['post_id'])){
                                                     <?php if($max_available_qty){ ?>
                                                         <?php if($rbfw_enable_extra_service_qty=='yes'){ ?>
                                                             <a class="rbfw_qty_minus rbfw_bikecarsd_qty_minus"><i class="fas fa-minus"></i></a>
-                                                            <input type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
+                                                            <input type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-seasonal="<?php echo esc_attr( $rbfw_is_seasonal ); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             <a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fas fa-plus"></i></a>
                                                         <?php }else{ ?>
                                                             <label class="switch">
                                                                 <input type="checkbox" class="rbfw_bikecarsd_checkbox" data-quantity_fixed="checkbox">
                                                                 <span class="slider round"></span>
-                                                                <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
+                                                                <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-seasonal="<?php echo esc_attr( $rbfw_is_seasonal ); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             </label>
                                                         <?php } ?>
                                                     <?php }else{ ?>
@@ -465,6 +468,7 @@ if(isset($_POST['post_id'])){
                     <ul class="rbfw-ul">
                         <li class="duration-costing rbfw-cond">
                             <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
+                            <small class="rbfw_pricing_applied sessional" style="display:none">(<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)</small>
                             <span class="price-figure">
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </span>
