@@ -5349,8 +5349,20 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
     margin: 0 !important;
 }
 /* Toggle / stock rows: title + helper on the left, control on the right */
-.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section:not(.rbfw_variations_table_wrap) {
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section:not(.rbfw_variations_table_wrap):not(.rbfw_timely_stock_quantity_section) {
     display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+}
+/* "Rent Item Stock Quantity" (Single Day shared-pool stock): same row layout,
+   but `display` is deliberately NOT !important. Its visibility is owned by
+   the inline display that RBFW_Inventory::stock_settings() renders and
+   syncTimelyUI() keeps in sync; a forced display:flex here overrode that
+   display:none and showed the field next to Multiple Day's own Stock
+   Quantity. */
+.rbfw-me-inventory-card .rbfw-me-pricing-classic-wrap > section.rbfw_timely_stock_quantity_section {
+    display: flex;
     align-items: center !important;
     justify-content: space-between !important;
     gap: 20px !important;
