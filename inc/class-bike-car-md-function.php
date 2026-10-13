@@ -204,6 +204,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $discount_amount = 0;
             $discount_number = 0;
             $discount_type = '';
+            $discount_note = '';
 
             if(isset($duration_price_info['duration'])){
                 $duration =  $duration_price_info['duration'];
@@ -262,6 +263,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
                     $discount_number = isset($discount_arr['discount_number'])?$discount_arr['discount_number']:0;
                     $discount_type = isset($discount_arr['discount_type'])?$discount_arr['discount_type']:0;
+                    $discount_note = rbfw_discount_summary_note( (array) $discount_arr, $item_quantity );
                 }
             }
 
@@ -284,6 +286,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'discount_type' => $discount_type,
                 'discount_number' => $discount_number,
                 'discount_html' => wc_price((float)$discount_amount),
+                'discount_note' => $discount_note,
                 'security_deposit_desc' => $security_deposit['security_deposit_desc'],
                 'security_deposit_amount' => $security_deposit['security_deposit_amount'],
                 'total_price' => (float)$sub_total_price + (float)$security_deposit['security_deposit_amount'] - (float)$discount_amount,

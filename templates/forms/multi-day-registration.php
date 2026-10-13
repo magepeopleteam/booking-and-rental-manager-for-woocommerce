@@ -832,6 +832,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
 
                             <li class="discount" style="display:none;">
                                 <?php esc_html_e('Discount','booking-and-rental-manager-for-woocommerce'); ?>
+                                <?php /* Which tier applied, e.g. "(50% off for over 3 days)". A <small>, not a
+                                         <span>: md_script.js writes the amount into every span in this row. */ ?>
+                                <small class="rbfw-costing-note rbfw-discount-note"></small>
                                 <span></span>
                             </li>
 
