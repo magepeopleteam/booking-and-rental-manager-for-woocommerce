@@ -1805,8 +1805,16 @@
 
 					<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
 					<?php do_action( 'rbfw_after_general_price_table_tier_pricing', $post_id ); ?>
-					<?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
                 </div>
+
+				<?php
+				/* Min & Max Booking Day panels. Outside the Multiple Day wrapper above: that
+				   wrapper is hidden for every other rent type, which hid the resort day limits
+				   and the single-day hour limits with it. Each panel shows/hides itself per rent
+				   type (mkb-admin.js, rbfw-modern-editor.js, the addon's admin.js). Same spot on
+				   the page for Multiple Day items: it was the wrapper's last child. */
+				do_action( 'rbfw_after_rent_item_type_table_row' );
+				?>
 
 				<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
 

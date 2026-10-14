@@ -964,6 +964,9 @@
 							update_post_meta( $post_id, 'rbfw_order_tax', $order_tax );
 						}
 
+						// Inclusive prices already hold the tax; this used to leave $total_price
+						// unset there, saving an empty booking total.
+						$total_price = $rbfw_ticket_total_price;
 						if ( $is_tax_inclusive != 'yes' ) {
 							$total_price = $rbfw_ticket_total_price + $order_tax;
 						}

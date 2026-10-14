@@ -446,16 +446,16 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
                                                         <?php echo esc_html($item['item_name']); ?>
                                                         <div style="font-size: 12px" class="item-price">
                                                             <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                                                <span class="rbfw_hourly_price" style="display: none"><?php echo wc_price($item['hourly_price']) ?> / <?php esc_html_e('Hour','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                                <span class="rbfw_hourly_price" style="display: none"><span class="rbfw-mi-rate" data-mi-key="<?php echo esc_attr($key); ?>" data-type="hourly"><?php echo wc_price($item['hourly_price']) ?></span> / <?php esc_html_e('Hour','booking-and-rental-manager-for-woocommerce'); ?></span>
                                                             <?php } ?>
                                                             <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                                                <span class="rbfw_daily_price" style="display: none"><?php echo wc_price($item['daily_price']) ?> / <?php esc_html_e('Day','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                                <span class="rbfw_daily_price" style="display: none"><span class="rbfw-mi-rate" data-mi-key="<?php echo esc_attr($key); ?>" data-type="daily"><?php echo wc_price($item['daily_price']) ?></span> / <?php esc_html_e('Day','booking-and-rental-manager-for-woocommerce'); ?></span>
                                                             <?php } ?>
                                                             <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                                                <span class="rbfw_weekly_price" style="display: none"><?php echo wc_price($item['weekly_price']) ?> / <?php esc_html_e('Week','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                                <span class="rbfw_weekly_price" style="display: none"><span class="rbfw-mi-rate" data-mi-key="<?php echo esc_attr($key); ?>" data-type="weekly"><?php echo wc_price($item['weekly_price']) ?></span> / <?php esc_html_e('Week','booking-and-rental-manager-for-woocommerce'); ?></span>
                                                             <?php } ?>
                                                             <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                                                <span class="rbfw_monthly_price" style="display: none"><?php echo wc_price($item['monthly_price']) ?> / <?php esc_html_e('Month','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                                <span class="rbfw_monthly_price" style="display: none"><span class="rbfw-mi-rate" data-mi-key="<?php echo esc_attr($key); ?>" data-type="monthly"><?php echo wc_price($item['monthly_price']) ?></span> / <?php esc_html_e('Month','booking-and-rental-manager-for-woocommerce'); ?></span>
                                                             <?php } ?>
                                                         </div>
                                                     </div>
@@ -693,7 +693,12 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                                 <li class="discount" style="display:none;">
                                     <?php esc_html_e('Discount','booking-and-rental-manager-for-woocommerce'); ?>
+                                    <?php /* Which tier applied; a <small> because the amount is written into every span in this row. */ ?>
+                                    <small class="rbfw-costing-note rbfw-discount-note"></small>
                                     <span></span>
+                                    <?php /* Tier resolved by the price AJAX; md_script.js reapplies it on local repaints. */ ?>
+                                    <input type="hidden" id="rbfw_discount_type" value="">
+                                    <input type="hidden" id="rbfw_discount_number" value="">
                                 </li>
 
                                 <li class="security_deposit" style="display:none;">

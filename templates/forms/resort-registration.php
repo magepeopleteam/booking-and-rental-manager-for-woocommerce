@@ -29,11 +29,14 @@
 
     $rbfw_minimum_booking_day = 0;
     $rbfw_maximum_booking_day = 0;
+    $rbfw_datewise_minmax     = array();
     if(rbfw_check_min_max_booking_day_active($post_id)){
         $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
         if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
             $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
         }
+        // Date-wise / seasonal limits for the chosen check-in date, as on Multiple Day.
+        $rbfw_datewise_minmax = rbfw_get_datewise_minmax_ranges($post_id);
     }
     $rbfw_enable_security_deposit = get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) ? get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) : 'no';
     $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
@@ -261,6 +264,7 @@
                 <input type="hidden" id="rbfw_block_offday_booking" value="<?php echo esc_attr(rbfw_block_offday_range_booking($post_id)); ?>">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
+                <input type="hidden" id="rbfw_datewise_minmax" value="<?php echo esc_attr( wp_json_encode( $rbfw_datewise_minmax ) ); ?>">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">

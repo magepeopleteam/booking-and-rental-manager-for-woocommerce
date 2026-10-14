@@ -1148,15 +1148,29 @@ function rbfw_multi_items_ajax_price_calculation(){
 
             jQuery('[name="total_days"]').val(response.total_days);
 
-            //alert(response.rbfw_management_price_html);
+            /* Seasonal Pricing: the per-item rates for this pick-up date. When they
+               differ from what the form priced with, re-price and ask again so the
+               summary matches what the cart will charge. */
+            if (rbfwApplyMultipleItemsRates(response.mi_prices)) {
+                calculateTotalMultipleItems();
+                return;
+            }
 
+            // Discount tier for this duration, reused by the local repaints.
+            jQuery('#rbfw_discount_type').val(response.discount_type || '');
+            jQuery('#rbfw_discount_number').val(response.discount_number || 0);
+            jQuery('.discount .rbfw-discount-note').text(response.discount_note || '');
+            rbfwMdRenderDiscount(parseFloat(response.discount) || 0);
+
+            let rental_subtotal = (parseFloat(jQuery('#rbfw_duration_price').val()) || 0) + (parseFloat(jQuery('#rbfw_service_category_price').val()) || 0);
             let rbfw_management_price = 0;
             jQuery('.rbfw-management-price:checked').each(function() {
                 let price_type = jQuery(this).data('price_type');
                 let price = parseFloat(jQuery(this).data('price')) || 0;
                 if(price_type == 'percentage'){
-                    let sub_total_price = response.duration_price_number + response.service_cost;
-                    rbfw_management_price += ( price/100 ) * sub_total_price;
+                    // response.duration_price_number is always '' here, which made
+                    // every percentage fee come out as zero.
+                    rbfw_management_price += ( price/100 ) * rental_subtotal;
                 }else{
                     rbfw_management_price += price;
                 }
@@ -1294,7 +1308,9 @@ function calculateAdditional() {
             rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
         }
     }
-    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Multiple Items add-ons: discount per booking (quantity 1), as in the cart.
+    var discount_price = rbfwMdDiscount(sub_total_price, 1);
+    var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
@@ -1305,6 +1321,7 @@ function calculateAdditional() {
 
     jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
     rbfwMdRenderTotal(total_price);
+    rbfwMdRenderDiscount(discount_price);
 
 }
 
@@ -1379,30 +1396,48 @@ function calculateTotalExtraService() {
     }
 
 
-    var total_price = sub_total_price + rbfw_management_price +  parseFloat(rbfw_security_deposit_actual_amount);
+    var discount_price = rbfwMdDiscount(sub_total_price, quantity);
+
+    var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
-    var rbfw_discount_type = jQuery('#rbfw_discount_type').val();
-    var rbfw_discount_number = jQuery('#rbfw_discount_number').val();
-
-    if(rbfw_discount_type == 'percentage'){
-        var discount_price = total_price*rbfw_discount_number/100;
-    }else{
-        var discount_price =  rbfw_discount_number;
-    }
-
-
-
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
-    rbfwMdRenderTotal(total_price - discount_price);
+    rbfwMdRenderTotal(total_price);
+    rbfwMdRenderDiscount(discount_price);
+}
 
-    if(parseFloat(discount_price) > 0){ 
-         jQuery('.discount span').text(wc_price_rbfw(discount_price));
+/**
+ * Discount Over X Days for the multi-day summary when it is repainted locally
+ * (extra service / fee changes) between price AJAX calls.
+ *
+ * The tier was resolved by the last price AJAX (#rbfw_discount_type /
+ * #rbfw_discount_number, both reset when no tier applies). Same rule as the cart
+ * and rbfw_get_discount_array(): off the rental subtotal only — not fees, deposit
+ * or tax — a fixed amount per unit, never more than the subtotal.
+ *
+ * @param {number} sub_total_price Rental subtotal (duration + services).
+ * @param {number} quantity        Units booked.
+ * @return {number}
+ */
+function rbfwMdDiscount(sub_total_price, quantity) {
+    var type = jQuery('#rbfw_discount_type').val();
+    var number = parseFloat(jQuery('#rbfw_discount_number').val()) || 0;
+    if (!type || number <= 0 || sub_total_price <= 0) {
+        return 0;
     }
+    var amount = (type === 'percentage') ? sub_total_price * number / 100 : number * Math.max(1, parseInt(quantity, 10) || 1);
+    return Math.min(Math.max(0, amount), sub_total_price);
+}
 
-
+function rbfwMdRenderDiscount(discount_price) {
+    if (discount_price > 0) {
+        jQuery('.discount span').text(wc_price_rbfw(discount_price));
+        jQuery('.discount').show();
+    } else {
+        jQuery('.discount').hide();
+    }
 }
 
 function calculateTotalManagementPrice() {
@@ -1433,7 +1468,10 @@ function calculateTotalManagementPrice() {
         }
     }
 
-    let total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // The discount the last price AJAX showed must survive a fee toggle.
+    let discount_price = rbfwMdDiscount(sub_total_price, quantity);
+
+    let total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
 
@@ -1442,6 +1480,7 @@ function calculateTotalManagementPrice() {
     jQuery('.security_deposit span').html(wc_price_rbfw(rbfw_security_deposit_actual_amount));
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
     rbfwMdRenderTotal(total_price);
+    rbfwMdRenderDiscount(discount_price);
 
 }
 
@@ -1601,6 +1640,40 @@ function rbfwGetMultipleItemsPivotBilling(durationType, durationQty) {
     return billing;
 }
 
+/**
+ * Write the per-item rates returned by the Multiple Items price AJAX (Seasonal
+ * Pricing for the chosen pick-up date) onto the quantity inputs and the visible
+ * "$x / Day" labels.
+ *
+ * @param {Object} mi_prices { miKey: { hourly, daily, weekly, monthly } }
+ * @return {boolean} True when a rate the form prices with changed.
+ */
+function rbfwApplyMultipleItemsRates(mi_prices) {
+    if (!mi_prices || typeof mi_prices !== 'object') {
+        return false;
+    }
+    var changed = false;
+    jQuery('.rbfw_muiti_items_qty').each(function () {
+        var $input = jQuery(this);
+        var rates = mi_prices[$input.attr('data-mi-key')];
+        if (!rates) {
+            return;
+        }
+        ['hourly', 'daily', 'weekly', 'monthly'].forEach(function (type) {
+            if (rates[type] === undefined) {
+                return;
+            }
+            var rate = parseFloat(rates[type]) || 0;
+            if (Math.abs((parseFloat($input.data('price-' + type)) || 0) - rate) > 0.0001) {
+                $input.data('price-' + type, rate).attr('data-price-' + type, rate);
+                changed = true;
+            }
+            jQuery('.rbfw-mi-rate[data-mi-key="' + $input.attr('data-mi-key') + '"][data-type="' + type + '"]').text(wc_price_rbfw(rate));
+        });
+    });
+    return changed;
+}
+
 function calculateTotalMultipleItems(only_calculation=false) {
 
     var durationType = jQuery('#durationType').val();
@@ -1658,7 +1731,9 @@ function calculateTotalMultipleItems(only_calculation=false) {
                 rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwMdDepositQuantity();
             }
         }
-        var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+        // Multiple Items: a fixed discount is per booking (quantity 1), as in the cart.
+        var discount_price = rbfwMdDiscount(sub_total_price, 1);
+        var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
 
@@ -1669,6 +1744,7 @@ function calculateTotalMultipleItems(only_calculation=false) {
 
         jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
         rbfwMdRenderTotal(total_price);
+        rbfwMdRenderDiscount(discount_price);
 
 
     }else{

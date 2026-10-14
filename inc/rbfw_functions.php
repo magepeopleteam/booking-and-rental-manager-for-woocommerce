@@ -2389,6 +2389,76 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 	}
 
 	/****************************************************
+	 * Discount Over X Days for one booking, or [].
+	 *
+	 * The base is the rental itself (duration + services) — never fees, the
+	 * refundable deposit or tax — so the booking summary and the cart agree.
+	 *
+	 * @param int   $post_id       Rental item.
+	 * @param int   $days          Days the booking is billed for.
+	 * @param float $rental_total  Rental subtotal the discount comes off.
+	 * @param int   $item_quantity Units a fixed discount is multiplied by.
+	 * @return array rbfw_get_discount_array() result; [] when none applies.
+	 ****************************************************/
+	function rbfw_booking_discount( $post_id, $days, $rental_total, $item_quantity = 1 ) {
+		if ( ! function_exists( 'rbfw_get_discount_array' ) || (float) $rental_total <= 0 || (int) $days <= 0 ) {
+			return array();
+		}
+		$discount = rbfw_get_discount_array( $post_id, (int) $days, (float) $rental_total, max( 1, (int) $item_quantity ) );
+		if ( ! is_array( $discount ) || empty( $discount['discount_amount'] ) ) {
+			return array();
+		}
+		// Older addon builds could discount past zero.
+		$discount['discount_amount'] = min( (float) $discount['discount_amount'], (float) $rental_total );
+		$discount['total_amount']    = (float) $rental_total - $discount['discount_amount'];
+		return $discount;
+	}
+
+	/****************************************************
+	 * Seasonal Pricing addon: per-item rates of a Multiple Items rental for the
+	 * season the pick-up date falls in.
+	 *
+	 * @param int    $post_id Multiple Items rental.
+	 * @param string $date    Pick-up date (any strtotime() format).
+	 * @return array item_name => [ 'hourly_price' => float, ... ] holding only the
+	 *               rates the season actually sets; [] outside every season.
+	 ****************************************************/
+	function rbfw_mi_seasonal_prices( $post_id, $date ) {
+		if ( ! function_exists( 'is_plugin_active' ) || ! is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+			return array();
+		}
+		$seasons = get_post_meta( $post_id, 'rbfw_multiple_items_sp', true );
+		$date_ts = $date ? strtotime( (string) $date ) : false;
+		if ( empty( $seasons ) || ! is_array( $seasons ) || false === $date_ts ) {
+			return array();
+		}
+		$ymd = gmdate( 'Y-m-d', $date_ts );
+		foreach ( $seasons as $season ) {
+			if ( empty( $season['start_date'] ) || empty( $season['end_date'] ) || empty( $season['item_prices'] ) || ! is_array( $season['item_prices'] ) ) {
+				continue;
+			}
+			$start = strtotime( $season['start_date'] );
+			$end   = strtotime( $season['end_date'] );
+			if ( false === $start || false === $end || $ymd < gmdate( 'Y-m-d', $start ) || $ymd > gmdate( 'Y-m-d', $end ) ) {
+				continue;
+			}
+			$prices = array();
+			foreach ( $season['item_prices'] as $row ) {
+				if ( empty( $row['item_name'] ) ) {
+					continue;
+				}
+				foreach ( array( 'hourly_price', 'daily_price', 'weekly_price', 'monthly_price' ) as $key ) {
+					if ( isset( $row[ $key ] ) && '' !== trim( (string) $row[ $key ] ) && is_numeric( $row[ $key ] ) ) {
+						$prices[ (string) $row['item_name'] ][ $key ] = (float) $row[ $key ];
+					}
+				}
+			}
+			return $prices; // First matching season wins, as for the other rent types.
+		}
+		return array();
+	}
+
+	/****************************************************
 	 * Check Discount Over Days Plugin Active
 	 ****************************************************/
 	function rbfw_check_discount_over_days_plugin_active() {

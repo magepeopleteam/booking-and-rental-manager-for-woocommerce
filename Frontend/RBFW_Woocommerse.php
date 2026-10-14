@@ -811,13 +811,17 @@ if (!class_exists('RBFW_Woocommerce')) {
          * @param array  $submitted_items Posted rows (quantities only are trusted).
          * @param string $duration_type   hourly|daily|weekly|monthly.
          * @param int    $duration_qty    Number of those units.
+         * @param string $pickup_date     Pick-up date; picks the Seasonal Pricing season.
          * @return array{items:array,total:float}
          */
-        private function rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_items, $duration_type, $duration_qty ) {
+        private function rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_items, $duration_type, $duration_qty, $pickup_date = '' ) {
             $stored_items = get_post_meta( $rbfw_id, 'multiple_items_info', true );
             $stored_items = is_array( $stored_items ) ? $stored_items : array();
             $billing      = $this->rbfw_get_multi_items_billing( $rbfw_id, $duration_type, $duration_qty );
             $price_key    = $billing['price_type'] . '_price';
+            // Season rates (by pick-up date) replace an item's own rate where set —
+            // the same figures the booking form priced with.
+            $season_prices = rbfw_mi_seasonal_prices( $rbfw_id, $pickup_date );
             $items        = array();
             $total        = 0;
 
@@ -846,6 +850,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $source_id = function_exists( 'rbfw_mi_row_source_id' ) ? rbfw_mi_row_source_id( $stored_item ) : 0;
 
                 $unit_price = isset( $stored_item[ $price_key ] ) ? (float) $stored_item[ $price_key ] : 0;
+                $item_name  = isset( $stored_item['item_name'] ) ? (string) $stored_item['item_name'] : '';
+                if ( isset( $season_prices[ $item_name ][ $price_key ] ) ) {
+                    $unit_price = $season_prices[ $item_name ][ $price_key ];
+                }
                 $total     += $unit_price * $quantity * $billing['multiplier'];
                 $items[]    = array(
                     'item_name'  => isset( $stored_item['item_name'] ) ? sanitize_text_field( $stored_item['item_name'] ) : '',
@@ -1043,25 +1051,31 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_resort              = new RBFW_Resort_Function();
                 $rbfw_checkin_datetime    = isset( $sd_input_data_sabitized['rbfw_start_datetime'] ) ? wp_strip_all_tags( $sd_input_data_sabitized['rbfw_start_datetime'] ) : '';
                 $rbfw_checkout_datetime   = isset( $sd_input_data_sabitized['rbfw_end_datetime'] ) ? wp_strip_all_tags( $sd_input_data_sabitized['rbfw_end_datetime'] ) : '';
-                $rbfw_room_price_category = isset( $sd_input_data_sabitized['rbfw_room_price_category'] ) ? $sd_input_data_sabitized['rbfw_room_price_category'] : '';
-                $rbfw_room_info_all = isset( $sd_input_data_sabitized['rbfw_room_info'] ) ? $sd_input_data_sabitized['rbfw_room_info'] : [];
+                /* Day-long or day-night follows from the dates, exactly as the booking
+                   form decides it (resort_info.php) — never from the posted field, which
+                   could otherwise ask for the cheaper day-long rate on a multi-night stay. */
+                $rbfw_resort_nights       = ( $rbfw_checkin_datetime && $rbfw_checkout_datetime && date_create( $rbfw_checkin_datetime ) && date_create( $rbfw_checkout_datetime ) )
+                    ? (int) date_diff( date_create( $rbfw_checkin_datetime ), date_create( $rbfw_checkout_datetime ) )->format( '%a' ) : 0;
+                $rbfw_room_price_category = $rbfw_resort_nights > 0 ? 'daynight' : 'daylong';
+                $rbfw_room_info_all = isset( $sd_input_data_sabitized['rbfw_room_info'] ) && is_array( $sd_input_data_sabitized['rbfw_room_info'] ) ? $sd_input_data_sabitized['rbfw_room_info'] : [];
                 $rbfw_room_info = array();
                 $rbfw_room_price = array();
-                $i              = 0;
 
-                foreach ( $rbfw_room_info_all as $key => $value ) {
-                    if( isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_qty']) && isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_price']) && isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_type']) ) {
-                        $room_type = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_type'];
-                        $room_qty = $this->rbfw_posted_quantity( $sd_input_data_sabitized['rbfw_room_info'][$i]['room_qty'] );
+                // Read each posted row on its own: a sold-out room posts no qty/price,
+                // and the old running index stopped at that row, silently dropping every
+                // room type listed after it.
+                foreach ( $rbfw_room_info_all as $room_row ) {
+                    if ( is_array( $room_row ) && isset( $room_row['room_qty'], $room_row['room_price'], $room_row['room_type'] ) ) {
+                        $room_type = $room_row['room_type'];
+                        $room_qty = $this->rbfw_posted_quantity( $room_row['room_qty'] );
                         if ( is_wp_error( $room_qty ) ) {
                             return $room_qty;
                         }
-                        $room_price = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_price'];
+                        $room_price = $room_row['room_price'];
                         if ($room_qty > 0) {
                             $rbfw_room_info[$room_type] = $room_qty;
                             $rbfw_room_price[$room_type] = $room_price;
                         }
-                        $i++;
                     }
                 }
 
@@ -1073,32 +1087,19 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $sub_total_price = $rbfw_room_duration_price + $rbfw_room_service_price + $rbfw_management_price;
 
-                $origin     = $rbfw_checkin_datetime ? date_create( $rbfw_checkin_datetime ) : false;
-                $target     = $rbfw_checkout_datetime ? date_create( $rbfw_checkout_datetime ) : false;
-                $interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
-                $total_days = $interval ? $interval->format( '%a' ) : 0;
+                $total_days = rbfw_resort_billable_days( $rbfw_checkin_datetime, $rbfw_checkout_datetime );
 
-                // Check if extra day should be counted
-                $count_extra_day = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-                if ($count_extra_day === 'on') {
-                    $total_days++;
-                }
-
-
-
-
-                if ( function_exists( 'rbfw_get_discount_array' ) ) {
-                    $discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price, $rbfw_item_quantity );
-                } else {
-                    $discount_arr = [];
-                }
+                /* Discount Over X Days comes off the rooms + extra services only (not the
+                   fees) and a fixed amount is per booking — what the booking summary showed
+                   the customer (rbfw_resort_discount() / resort_script.js). */
+                $discount_arr     = rbfw_resort_discount( $rbfw_id, $total_days, (float) $rbfw_room_duration_price + (float) $rbfw_room_service_price );
                 $discounted_total = $sub_total_price;
                 $discount_type   = '';
                 $discount_amount = 0;
                 if ( ! empty( $discount_arr ) ) {
-                    $discounted_total = $discount_arr['total_amount'];
                     $discount_type    = $discount_arr['discount_type'];
-                    $discount_amount  = $discount_arr['discount_amount'];
+                    $discount_amount  = (float) $discount_arr['discount_amount'];
+                    $discounted_total = $sub_total_price - $discount_amount;
                 }
                 $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info  );
 
@@ -1407,7 +1408,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $total_days = $interval->days ? absint( $interval->days ) : 1;
 
                 $submitted_multiple_items = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
-                $prepared_multiple_items  = $this->rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_multiple_items, $durationType, $durationQty );
+                $prepared_multiple_items  = $this->rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_multiple_items, $durationType, $durationQty, $start_date );
                 $multiple_items_info      = $prepared_multiple_items['items'];
                 $rbfw_multi_item_price    = $prepared_multiple_items['total'];
 
@@ -1431,10 +1432,26 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
 
+                /* Discount Over X Days (advertised on this form by rbfw_discount_ad) was never
+                   applied to Multiple Items. Off the items + add-ons, a fixed amount per
+                   booking — what the booking summary shows. */
+                $discount_arr = rbfw_booking_discount( $rbfw_id, $total_days, $sub_total_price, 1 );
+                if ( ! empty( $discount_arr ) ) {
+                    $discount_type   = $discount_arr['discount_type'];
+                    $discount_amount = (float) $discount_arr['discount_amount'];
+                }
+
                 $deposit_quantity = array_sum( array_map( static function ( $item ) { return isset( $item['item_qty'] ) ? absint( $item['item_qty'] ) : 0; }, $multiple_items_info ) );
                 $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price, $deposit_quantity );
                 $total_price                                      = $sub_total_price + $rbfw_management_price - $discount_amount;
                 $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $multiple_items_info , $rbfw_category_wise_info,$total_days,$durationQty, $rbfw_regf_info, $security_deposit,$rbfw_management_info,$rbfw_management_price,$rbfw_multi_item_price);
+                // The ticket feeds the order, thank-you page and PDF Discount rows.
+                if ( $discount_amount && is_array( $rbfw_ticket_info ) ) {
+                    foreach ( $rbfw_ticket_info as $ticket_key => $ticket_row ) {
+                        $rbfw_ticket_info[ $ticket_key ]['discount_type']   = $discount_type;
+                        $rbfw_ticket_info[ $ticket_key ]['discount_amount'] = $discount_amount;
+                    }
+                }
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']             = $rbfw_dropoff_point;
                 $cart_item_data['rbfw_duration_md']               = $rbfw_duration_md;
@@ -3155,81 +3172,29 @@ if (!class_exists('RBFW_Woocommerce')) {
             if (empty($product_id) || empty($checkin_date) || empty($checkout_date) || empty($rbfw_room_info)) {
                 return false;
             }
-            // Calculate total days
-            $origin     = date_create($checkin_date);
-            $target     = date_create($checkout_date);
-            $interval   = date_diff($origin, $target);
-            $total_days = (int) $interval->format('%a');
-
-            // Check if extra day should be counted
-            $count_extra_day = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-            if ($count_extra_day === 'on') {
-                $total_days++;
-            }
+            // Same day count and per-room stay price the booking form shows
+            // (rbfw_resort_billable_days() / rbfw_resort_room_stay_price()).
+            $total_days = rbfw_resort_billable_days( $checkin_date, $checkout_date );
 
             // Initialize variables
-            $room_price = 0;
             $total_room_price = 0;
             $service_price = 0;
             $management_price = 0;
-
-            // Get room pricing based on category
-            $room_data = get_post_meta($product_id, 'rbfw_resort_room_data', true) ?: array();
-            if ($rbfw_room_price_category === 'daynight') {
-                $room_types = array_column($room_data, 'rbfw_room_daynight_rate', 'room_type');
-            } elseif ($rbfw_room_price_category === 'daylong') {
-                $room_types = array_column($room_data, 'rbfw_room_daylong_rate', 'room_type');
-            } else {
-                $room_types = array();
-            }
 
             // Get extra service pricing
             $service_data = get_post_meta($product_id, 'rbfw_extra_service_data', true) ?: array();
             $rbfw_fee_data = rbfw_get_enabled_fee_data( $product_id );
             $extra_services = !empty($service_data) ? array_column($service_data, 'service_price', 'service_name') : array();
 
-            // Loop through selected rooms
+            // Loop through selected rooms. Each room type is priced on its own: the
+            // old loop carried one room's running total into the next, so booking two
+            // room types under seasonal or tiered pricing billed the first one twice.
             foreach ($rbfw_room_info as $room_type => $quantity) {
-                if (!array_key_exists($room_type, $room_types)) continue;
-
-                // Plugin-specific pricing logic
-                $mds_enabled = is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php');
-                $sp_enabled  = is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php');
-                $tp_enabled  = is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php');
-
-                $mds_data = get_post_meta($product_id, 'rbfw_resort_data_mds', true) ?: array();
-                $sp_data  = get_post_meta($product_id, 'rbfw_resort_data_sp', true) ?: array();
-                $tp_data  = get_post_meta($product_id, 'rbfw_resort_data_tp', true) ?: array();
-
-                if ($mds_enabled && !empty($mds_data)) {
-                    $sp_price = check_seasonal_price_resort_mds($total_days, $mds_data, $room_type, $rbfw_room_price_category);
-                    $unit_price = ($sp_price !== '0') ? (float)$sp_price : (float)$room_types[$room_type];
-                    $room_price += $unit_price;
-                    $total_room_price += $unit_price * $total_days * $quantity;
-
-                }elseif ($tp_enabled && !empty($tp_data)) {
-
-                    for($d = 0; $d < $total_days; $d++) {
-                        $tp_price = check_price_resort_tp($d, $tp_data, $room_type, $rbfw_room_price_category , $room_types[$room_type]);
-                        $room_price += (float)$tp_price;
-                    }
-                    $total_room_price += $room_price * $quantity;
-
-
-                } elseif ($sp_enabled && !empty($sp_data)) {
-                    $book_dates = getAllDates($checkin_date, $checkout_date);
-                    for ($d = 0; $d < $total_days; $d++) {
-                        $sp_price = check_seasonal_price_resort($book_dates[$d], $sp_data, $room_type, $rbfw_room_price_category);
-                        $unit_price = ($sp_price !== 'not_found') ? (float)$sp_price : (float)$room_types[$room_type];
-                        $room_price += $unit_price;
-                    }
-                    $total_room_price += $room_price * $quantity;
-
-                } else {
-                    $unit_price = (float)$room_types[$room_type];
-                    $room_price += $unit_price * $quantity;
-                    $total_room_price += $unit_price * $quantity * $total_days;
+                $stay = rbfw_resort_room_stay_price( $product_id, $room_type, $rbfw_room_price_category, $checkin_date, $checkout_date );
+                if ( null === $stay ) {
+                    continue;
                 }
+                $total_room_price += $stay['total'] * (float) $quantity;
             }
 
             // Loop through selected services
