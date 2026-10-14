@@ -22,10 +22,8 @@ if ($total_days ) {
 
 if(isset($post_id) && isset($active_tab)){
 
-    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-    if ($rbfw_count_extra_day_enable == 'on' || $total_days==0) {
-        $total_days = $total_days + 1;
-    }
+    // Same day count the cart bills (rbfw_resort_billable_days()).
+    $total_days = rbfw_resort_billable_days( $start_date, $end_date );
     $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
@@ -69,6 +67,10 @@ if(isset($post_id) && isset($active_tab)){
 
             <?php
             $i = 0;
+            // Which pricing addon priced this stay, for the "Duration Cost" note.
+            // Worked out here, per request: the old site-wide "pricing_applied"
+            // transient leaked one visitor's season into everyone's summary.
+            $rbfw_pricing_applied = '';
 
             // Per-night / per-day unit labels so the room price clearly relates
             // to the selected day-night stay length (e.g. "$400 / night" and the
@@ -139,94 +141,40 @@ if(isset($post_id) && isset($active_tab)){
                             </div>
                         <?php endif; ?>
                     </td>
-                    <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) || is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) || is_plugin_active( 'tiered-pricing-addon-wprently/tiered-pricing-addon.php' ) ) {  ?>
-
-                        <?php
-                        $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
-                        $rbfw_resort_data_tp = get_post_meta($post_id, 'rbfw_resort_data_tp', true) ? get_post_meta($post_id, 'rbfw_resort_data_tp', true) : [];
-
-
-                        if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) && !empty($rbfw_resort_data_mds)){  ?>
-                            <td>
-                                <?php
-                                $room_price = 0;
-                                if (($sp_price = check_seasonal_price_resort_mds($total_days, $rbfw_resort_data_mds, $value['room_type'], $active_tab)) != 0) {
-                                    $room_price = (float)$sp_price;
-                                }else{
-                                    $room_price = (float)$price ;
-                                }
-                                ?>
-                                <?php echo wp_kses(wc_price($room_price * $total_days) , rbfw_allowed_html()); ?>
-                            </td>
-
-                        <?php }elseif(is_plugin_active( 'tiered-pricing-addon-wprently/tiered-pricing-addon.php' ) && !empty($rbfw_resort_data_tp)){ ?>
-
-                            <td>
-                                <?php
-                                $total_room_price =0;
-                                for($d = 0; $d < $total_days; $d++) {
-                                    $tp_price = check_price_resort_tp($d, $rbfw_resort_data_tp, $value['room_type'], $active_tab , $price);
-                                    $total_room_price += (float)$tp_price;
-                                }
-                                $price = $total_room_price/$total_days;
-                                ?>
-                                <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()).'(avg)'; ?>
-                            </td>
-
-
-                        <?php }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) && !empty($rbfw_resort_data_sp)){ ?>
-
-                            <td>
-                                <?php
-                                $book_dates = getAllDates( $start_date, $end_date );
-                                $total_room_price =0;
-                                for($d = 0; $d < $total_days; $d++) {
-                                    if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $value['room_type'], $active_tab)) != 'not_found') {
-                                        $total_room_price += (float)$sp_price;
-                                    } else {
-                                        $total_room_price += (float)$price;
-                                    }
-                                }
-                                $room_price = $total_room_price/$total_days;
-                                ?>
-                                <p><?php esc_html_e('Avg price','booking-and-rental-manager-for-woocommerce'); ?>: <?php echo wp_kses(wc_price($total_room_price/$total_days) , rbfw_allowed_html()); ?></p>
-                                <a class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($start_date) ?>" data-checkout_date="<?php echo esc_attr($end_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>" data-active_tab="<?php echo esc_attr($active_tab) ?>" href="#">
-                                    <?php esc_html_e('See Details','booking-and-rental-manager-for-woocommerce'); ?>
+                    <?php
+                    /* One price path for every room, shared with the cart
+                       (rbfw_resort_room_stay_price()): the pricing addons — Seasonal
+                       Pricing, Multi Day Price Saver, Tiered Pricing — decide the
+                       per-day rates, and the badge shows the real stay total. */
+                    $rbfw_stay = rbfw_resort_room_stay_price( $post_id, $value['room_type'], $active_tab, $start_date, $end_date );
+                    $rbfw_stay_total = $rbfw_stay ? (float) $rbfw_stay['total'] : (float) $price * (int) $total_days;
+                    $rbfw_stay_rate  = $rbfw_stay ? (float) $rbfw_stay['per_day'] : (float) $price;
+                    $rbfw_stay_varies = $rbfw_stay && $rbfw_stay['varies'];
+                    if ( $rbfw_stay && '' !== $rbfw_stay['applied'] && '' === $rbfw_pricing_applied ) {
+                        $rbfw_pricing_applied = $rbfw_stay['applied'];
+                    }
+                    $price = $rbfw_stay_rate;
+                    ?>
+                    <td>
+                        <div class="rbfw-room-price">
+                            <span class="rbfw-room-price__rate"><?php echo wp_kses( wc_price( $rbfw_stay_rate ), rbfw_allowed_html() ); ?><span class="rbfw-room-price__unit">/<?php echo esc_html( $rbfw_room_unit ); ?><?php if ( $rbfw_stay_varies ) { echo ' ' . esc_html__( '(avg)', 'booking-and-rental-manager-for-woocommerce' ); } ?></span></span>
+                            <?php if ( (int) $total_days > 0 ) : ?>
+                                <span class="rbfw-room-price__stay"><?php echo wp_kses( wc_price( $rbfw_stay_total ), rbfw_allowed_html() ); ?> · <?php echo esc_html( $total_days . ' ' . $rbfw_room_unit_plural ); ?></span>
+                            <?php endif; ?>
+                            <?php if ( $rbfw_stay && 'sessional' === $rbfw_stay['applied'] ) : ?>
+                                <a class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr( $start_date ); ?>" data-checkout_date="<?php echo esc_attr( $end_date ); ?>" data-total_days="<?php echo esc_attr( $total_days ); ?>" data-price="<?php echo esc_attr( $rbfw_stay['base_rate'] ); ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr( $value['room_type'] ); ?>" data-active_tab="<?php echo esc_attr( $active_tab ); ?>" href="#">
+                                    <?php esc_html_e( 'See Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </a>
-                            </td>
-
-                        <?php }else{ ?>
-                            <td>
-                                <div class="rbfw-room-price">
-                                    <span class="rbfw-room-price__rate"><?php echo wp_kses( wc_price( $price ), rbfw_allowed_html() ); ?><span class="rbfw-room-price__unit">/<?php echo esc_html( $rbfw_room_unit ); ?></span></span>
-                                    <?php if ( (int) $total_days > 0 ) : ?>
-                                        <span class="rbfw-room-price__stay"><?php echo wp_kses( wc_price( (float) $price * (int) $total_days ), rbfw_allowed_html() ); ?> · <?php echo esc_html( $total_days . ' ' . $rbfw_room_unit_plural ); ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
-                            </td>
-                        <?php } ?>
-
-
-                    <?php }else{ ?>
-                        <td>
-                            <div class="rbfw-room-price">
-                                <span class="rbfw-room-price__rate"><?php echo wp_kses( wc_price( $price ), rbfw_allowed_html() ); ?><span class="rbfw-room-price__unit">/<?php echo esc_html( $rbfw_room_unit ); ?></span></span>
-                                <?php if ( (int) $total_days > 0 ) : ?>
-                                    <span class="rbfw-room-price__stay"><?php echo wp_kses( wc_price( (float) $price * (int) $total_days ), rbfw_allowed_html() ); ?> · <?php echo esc_html( $total_days . ' ' . $rbfw_room_unit_plural ); ?></span>
-                                <?php endif; ?>
-                            </div>
-                            <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
-                        </td>
-                    <?php } ?>
-                    <?php $price = isset($room_price)?$room_price:$price ?>
+                            <?php endif; ?>
+                        </div>
+                    </td>
                     <td>
                         <?php if($max_available_qty){ ?>
                             <div class="rbfw_service_price_wrap">
                                 <input type="hidden" value="<?php echo esc_attr($price); ?>" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]"/>
                                 <div class="rbfw_qty_input">
                                     <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fas fa-minus"></i></a>
-                                    <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-active_tab="<?php echo esc_attr($active_tab); ?>" data-cat="room"/>
+                                    <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-stay_total="<?php echo esc_attr( $rbfw_stay_total ); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-active_tab="<?php echo esc_attr($active_tab); ?>" data-cat="room"/>
                                     <a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fas fa-plus"></i></a>
                                 </div>
                             </div>
@@ -420,6 +368,16 @@ if(isset($post_id) && isset($active_tab)){
 
 
 
+<?php
+/* Discount Over X Days: the tier depends only on the stay length, which is fixed
+   for this table, so resolve it here and let resort_script.js apply it to the
+   rooms + services the customer picks — the same base and rule the cart uses
+   (rbfw_resort_discount()). */
+$rbfw_resort_discount_tier = rbfw_resort_discount( $post_id, $total_days, 100 );
+$rbfw_resort_discount_note = $rbfw_resort_discount_tier ? rbfw_discount_summary_note( $rbfw_resort_discount_tier, 1 ) : '';
+?>
+<input type="hidden" id="rbfw_resort_discount_type" value="<?php echo esc_attr( $rbfw_resort_discount_tier ? $rbfw_resort_discount_tier['discount_type'] : '' ); ?>"/>
+<input type="hidden" id="rbfw_resort_discount_number" value="<?php echo esc_attr( $rbfw_resort_discount_tier ? (float) $rbfw_resort_discount_tier['discount_number'] : 0 ); ?>"/>
 <div class="item rbfw_room_price_summary">
     <div class="item-content rbfw-costing">
         <ul class="rbfw-ul">
@@ -427,9 +385,9 @@ if(isset($post_id) && isset($active_tab)){
                 <span>
                     <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                     <span class="rbfw_pricing_applied">
-                        <?php if(get_transient("pricing_applied")=='sessional'){ ?>
+                        <?php if($rbfw_pricing_applied=='sessional'){ ?>
                             (<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
-                        <?php }elseif (get_transient("pricing_applied")=='mds'){ ?>
+                        <?php }elseif ($rbfw_pricing_applied=='mds'){ ?>
                             (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
                         <?php } ?>
                     </span>
@@ -457,6 +415,14 @@ if(isset($post_id) && isset($active_tab)){
                     <?php echo wp_kses_post(wc_price(0)); ?>
                 </span>
             </li>
+
+            <?php if ( $rbfw_resort_discount_tier ) { ?>
+                <li class="discount" style="display:none;">
+                    <?php esc_html_e( 'Discount', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    <small class="rbfw-costing-note rbfw-discount-note"><?php echo esc_html( $rbfw_resort_discount_note ); ?></small>
+                    <span class="price-figure"></span>
+                </li>
+            <?php } ?>
 
             <?php // Tax the item is configured for, shown as WooCommerce will charge it. ?>
             <?php rbfw_tax_summary_row( $post_id ); ?>

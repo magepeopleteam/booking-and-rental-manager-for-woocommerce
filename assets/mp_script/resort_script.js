@@ -39,11 +39,16 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
             jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
 
-            let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
-            let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
-
-
-
+            /* Min & Max Booking Day addon: global limits, overridden by the first
+               date-wise / seasonal range holding the check-in date — the rule the
+               multi-day calendar and the add-to-cart check use (rbfwEffectiveMinMax). */
+            let rbfw_eff = (typeof rbfwEffectiveMinMax === 'function')
+                ? rbfwEffectiveMinMax(date_ymd_drop, jQuery('#rbfw_minimum_booking_day').val(), jQuery('#rbfw_maximum_booking_day').val())
+                : { min: parseInt(jQuery('#rbfw_minimum_booking_day').val(), 10) || 0, max: parseInt(jQuery('#rbfw_maximum_booking_day').val(), 10) || 0 };
+            let rbfw_minimum_booking_day = rbfw_eff.min;
+            let rbfw_maximum_booking_day = rbfw_eff.max;
+            // Without a day-long package the stay needs at least one night.
+            let rbfw_min_nights = (jQuery('#rbfw_enable_resort_daylong_price').val() == 'no') ? 1 : 0;
 
             let selected_date_array = date_ymd_drop.split('-');
             let gYear = selected_date_array[0];
@@ -51,17 +56,19 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
             let gDay = selected_date_array[2];
 
             let minDate = new Date(gYear,  gMonth - 1, gDay );
-            minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
-
-
+            minDate.setDate(minDate.getDate() + Math.max(rbfw_minimum_booking_day, rbfw_min_nights));
 
             jQuery("#checkout_date").datepicker("option", "minDate", minDate);
 
-
-            if(rbfw_minimum_booking_day){
-                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
+            // The maximum stands on its own (0 = no cap). It used to apply only when a
+            // minimum was also set, counted from the day BEFORE check-in, so "min 2,
+            // no max" left no selectable return date at all.
+            if(rbfw_maximum_booking_day){
+                let maxDate = new Date(gYear,  gMonth - 1, gDay );
                 maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
                 jQuery("#checkout_date").datepicker("option", "maxDate", maxDate );
+            } else {
+                jQuery("#checkout_date").datepicker("option", "maxDate", null );
             }
         },
     });
@@ -230,11 +237,14 @@ jQuery(document).on('click','.rbfw_service_qty_minus',function(e) {
 function calculateTotalDurationPrice() {
     let room_duration_price = 0;
     let hasQty = false;
+    let resort_total_days = parseFloat(jQuery('#resort_total_days').val()) || 0;
     jQuery('.rbfw_room_qty').each(function() {
         let qty = parseInt(jQuery(this).val()) || 0;
         let price = parseFloat(jQuery(this).data('price')) || 0;
-        let resort_total_days = jQuery('#resort_total_days').val();
-        room_duration_price += qty * resort_total_days * price;
+        // Exact stay total of one room (seasonal / multi-day rates included), so the
+        // figure is not rebuilt from a rounded per-night average.
+        let stay_total = parseFloat(jQuery(this).data('stay_total'));
+        room_duration_price += qty * (isNaN(stay_total) ? resort_total_days * price : stay_total);
         if (qty > 0) {
             hasQty = true; // mark that we found one
         }
@@ -248,61 +258,10 @@ function calculateTotalDurationPrice() {
         jQuery('button.rbfw_resort_book_now_btn').attr('disabled',true);
     }
 
-
-    // You can update this in a DOM element, console, or wherever you want
     jQuery('#rbfw_room_duration_price').val(room_duration_price.toFixed(2));
-
-    var sub_total_price = room_duration_price + parseFloat(jQuery('#rbfw_extra_service_price').val());
-
-
-    let rbfw_management_price = 0;
-    jQuery('.rbfw-management-price-resort:checked').each(function() {  
-        let price_type = jQuery(this).data('price_type');
-        let price = parseFloat(jQuery(this).data('price')) || 0;
-        let resort_total_days = parseFloat(jQuery('#resort_total_days').val()) || 0;
-        if(price_type == 'percentage'){
-            rbfw_management_price += ( price/100 ) * sub_total_price;
-        }else{
-            let frequency = jQuery(this).data('frequency');
-            if(frequency == 'one-time' ){
-                rbfw_management_price += price;
-            }else{
-                rbfw_management_price += price * resort_total_days
-            }
-        }
-    });
-
-    jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
-    jQuery('.management-costing span').text(wc_price_rbfw(rbfw_management_price));
-
-
-
     jQuery('.duration-costing .price-figure').text(wc_price_rbfw(room_duration_price));
 
-
-
-    let rbfw_security_deposit_actual_amount = 0;
-    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
-        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
-        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
-            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
-        }else{
-            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
-        }
-    }
-
-    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
-    // Tax line (shared helper; refundable deposit excluded from the taxable base).
-    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
-    if(rbfw_security_deposit_actual_amount){
-        jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
-    }
-
-
-    jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
-
+    rbfwResortRenderSummary();
 }
 
 
@@ -332,13 +291,45 @@ function calculateTotalResortExtraService() {
         $rbfw_resort_resource.hide();
     }
 
-    let sub_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + resort_extra_service;
+    rbfwResortRenderSummary();
+}
+
+
+/**
+ * Discount Over X Days on the resort summary.
+ *
+ * The tier for this stay length is resolved server-side into
+ * #rbfw_resort_discount_type / #rbfw_resort_discount_number. Like the cart
+ * (rbfw_resort_discount()), it comes off rooms + extra services only — never off
+ * fees or the refundable deposit — and a fixed amount is per booking.
+ *
+ * @param {number} rental_subtotal Rooms + extra services.
+ * @return {number}
+ */
+function rbfwResortDiscount(rental_subtotal) {
+    var type = jQuery('#rbfw_resort_discount_type').val();
+    var number = parseFloat(jQuery('#rbfw_resort_discount_number').val()) || 0;
+    if (!type || number <= 0 || rental_subtotal <= 0) {
+        return 0;
+    }
+    var amount = (type === 'percentage') ? rental_subtotal * number / 100 : number;
+    return Math.min(Math.max(0, amount), rental_subtotal);
+}
+
+
+/**
+ * Repaint the resort summary from the room and service figures already worked
+ * out: fees, discount, security deposit, tax and total. One implementation for
+ * every control that changes the price, so they cannot drift apart.
+ */
+function rbfwResortRenderSummary() {
+    let sub_total_price = (parseFloat(jQuery('#rbfw_room_duration_price').val()) || 0) + (parseFloat(jQuery('#rbfw_extra_service_price').val()) || 0);
+    let resort_total_days = parseFloat(jQuery('#resort_total_days').val()) || 0;
 
     let rbfw_management_price = 0;
     jQuery('.rbfw-management-price-resort:checked').each(function() {
         let price_type = jQuery(this).data('price_type');
         let price = parseFloat(jQuery(this).data('price')) || 0;
-        let resort_total_days = parseFloat(jQuery('#resort_total_days').val()) || 0;
         if(price_type == 'percentage'){
             rbfw_management_price += ( price/100 ) * sub_total_price;
         }else{
@@ -354,6 +345,14 @@ function calculateTotalResortExtraService() {
     jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
     jQuery('.management-costing span').text(wc_price_rbfw(rbfw_management_price));
 
+    let discount_price = rbfwResortDiscount(sub_total_price);
+    let $discount_row = jQuery('.rbfw_room_price_summary li.discount');
+    if (discount_price > 0) {
+        $discount_row.find('.price-figure').text(wc_price_rbfw(discount_price));
+        $discount_row.show();
+    } else {
+        $discount_row.hide();
+    }
 
     let rbfw_security_deposit_actual_amount = 0;
     if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
@@ -365,7 +364,7 @@ function calculateTotalResortExtraService() {
         }
     }
 
-    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
@@ -381,9 +380,10 @@ function calculateTotalResortExtraService() {
 
 jQuery(document).on('change', '.rbfw-management-price-resort', function() {
 
+    // A required fee cannot be unticked. (This used to call e.preventDefault() on an
+    // undefined `e` and throw, so the summary never refreshed.)
     if (jQuery(this).hasClass('rbfw-fee-required')) {
         jQuery(this).prop('checked', true);
-        e.preventDefault(); // prevent change
     }
 
     var $checkbox = jQuery(this);
@@ -402,55 +402,5 @@ jQuery(document).on('change', '.rbfw-management-price-resort', function() {
 
 
 function calculateTotalManagementPriceResort() {
-
-
-    let sub_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + parseFloat(jQuery('#rbfw_extra_service_price').val());;
-
-    let rbfw_management_price = 0;
-    jQuery('.rbfw-management-price-resort:checked').each(function() {
-        let price_type = jQuery(this).data('price_type');
-        let price = parseFloat(jQuery(this).data('price')) || 0;
-
-        let resort_total_days = parseFloat(jQuery('#resort_total_days').val()) || 0;
-
-        if(price_type == 'percentage'){
-            rbfw_management_price += ( price/100 ) * sub_total_price;
-        }else{
-            let frequency = jQuery(this).data('frequency');
-            if(frequency == 'one-time' ){
-                rbfw_management_price += price;
-            }else{
-                rbfw_management_price += price * resort_total_days
-            }
-        }
-    });
-
-
-    jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
-    jQuery('.management-costing span').text(wc_price_rbfw(rbfw_management_price));
-
-
-
-
-    let rbfw_security_deposit_actual_amount = 0;
-    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
-        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
-        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
-            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
-        }else{
-            rbfw_security_deposit_actual_amount = (parseFloat(rbfw_security_deposit_amount) || 0) * rbfwResortDepositQuantity();
-        }
-    }
-
-    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
-    // Tax line (shared helper; refundable deposit excluded from the taxable base).
-    total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
-    if(rbfw_security_deposit_actual_amount){
-        jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
-    }
-
-
-    jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
+    rbfwResortRenderSummary();
 }

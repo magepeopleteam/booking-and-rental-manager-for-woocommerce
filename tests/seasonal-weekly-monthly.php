@@ -134,7 +134,13 @@ try {
 
     /* ── Admin: row markup + save through the addon's own hooks ───── */
     $admin_item = $make_item( array() );
+    // A real editor save: an editor user, and the form's rbfw_item_type (the addon
+    // ignores saves without it, e.g. Quick Edit, so they cannot wipe the seasons).
+    $prev_user = get_current_user_id();
+    $editor    = get_users( array( 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ) );
+    wp_set_current_user( $editor ? (int) $editor[0] : 1 );
     $_POST = array(
+        'rbfw_item_type'          => 'bike_car_md',
         'rbfw_sp_start_date'      => array( '2030-03-01', '2030-06-01', '' ),
         'rbfw_sp_end_date'        => array( '2030-03-31', '2030-06-30', '' ),
         'rbfw_sp_ticket_price_d'  => array( '80', '90', '' ),
@@ -144,6 +150,10 @@ try {
     do_action( 'rbfw_modern_editor_save', $admin_item );
     $_POST = array();
     $saved = get_post_meta( $admin_item, 'rbfw_seasonal_prices', true );
+    // Quick Edit / status changes post no rbfw_item_type and must leave the seasons alone.
+    do_action( 'rbfw_modern_editor_save', $admin_item );
+    $assert( $saved === get_post_meta( $admin_item, 'rbfw_seasonal_prices', true ), 'a save without the editor form (Quick Edit) keeps the seasons' );
+    wp_set_current_user( $prev_user );
     $assert( is_array( $saved ) && 2 === count( $saved ), 'save keeps the two complete season rows and drops the blank one' );
     $assert( '500' === (string) $saved[0]['rbfw_sp_price_w'] && '1800' === (string) $saved[0]['rbfw_sp_price_m'], 'weekly and monthly seasonal rates are persisted' );
     $assert( '' === $saved[1]['rbfw_sp_price_w'] && '' === $saved[1]['rbfw_sp_price_m'], 'blank weekly/monthly stay blank (fall back to the regular rate)' );
