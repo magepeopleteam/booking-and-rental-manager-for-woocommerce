@@ -268,6 +268,93 @@ function rbfw_service_remaining_stock( $raw, $booked ) {
 	return (int) $raw - (int) $booked;
 }
 
+/**
+ * The periods a rental item's own inventory is out, under the rules the availability
+ * engine applies: only inventory-holding order statuses (plus picked, and returned when
+ * stock is held until return), deposit-only orders skipped when stock is reduced on the
+ * full payment, "buffer time after" added to the end, and — without a buffer — the
+ * return date released when the item does not hold stock on its return date.
+ *
+ * One source for rbfw_get_multiple_date_available_qty() and the Multiple Day time
+ * pickers, so a time the picker offers is one the price check will accept.
+ *
+ * @param int        $post_id   Rental item.
+ * @param array|null $inventory rbfw_inventory meta, when the caller already has it.
+ * @return array[] { start: DateTime, end: DateTime, qty: int, type_info: array }
+ */
+function rbfw_get_inventory_booked_windows( $post_id, $inventory = null ) {
+    $inventory = is_array( $inventory ) ? $inventory : get_post_meta( $post_id, 'rbfw_inventory', true );
+    if ( ! is_array( $inventory ) || empty( $inventory ) ) {
+        return array();
+    }
+
+    $inventory_based_on_return       = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+    $stock_manage_on_return_date_raw = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
+    $stock_manage_on_return_date     = $stock_manage_on_return_date_raw ? $stock_manage_on_return_date_raw : 'no';
+    $rbfw_buffer_time_after_raw      = get_post_meta( $post_id, 'rbfw_buffer_time_after', true );
+    $rbfw_buffer_time_after          = $rbfw_buffer_time_after_raw ? $rbfw_buffer_time_after_raw : 0;
+    $mepp_reduce_stock_multi         = get_option( 'mepp_reduce_stock', 'full' );
+    $inventory_managed_order_status  = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+    $inventory_managed_order_status  = is_array( $inventory_managed_order_status ) ? $inventory_managed_order_status : [
+        'processing' => 'processing',
+        'completed'  => 'completed',
+    ];
+
+    $windows = array();
+    foreach ( $inventory as $wc_order_id => $entry ) {
+        if ( ! is_array( $entry ) || empty( $entry['rbfw_start_date_ymd'] ) || empty( $entry['rbfw_end_date_ymd'] ) ) {
+            continue;
+        }
+
+        $order = wc_get_order( $wc_order_id );
+        if ( ! $order || $order->get_status() == 'trash' || $order->get_status() == 'cancelled' ) {
+            continue;
+        }
+
+        $status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
+        if ( $status == 'partially-paid' && $mepp_reduce_stock_multi == 'deposit' ) {
+            continue;
+        }
+        if ( ! ( in_array( $status, $inventory_managed_order_status ) || $status == 'picked' || ( $inventory_based_on_return == 'yes' && $status == 'returned' ) ) ) {
+            continue;
+        }
+
+        $inventory_start_date = $entry['rbfw_start_date_ymd'];
+        $inventory_end_date   = $entry['rbfw_end_date_ymd'];
+        $inventory_start_time = isset( $entry['rbfw_start_time_24'] ) ? $entry['rbfw_start_time_24'] : '';
+        $inventory_end_time   = isset( $entry['rbfw_end_time_24'] ) ? $entry['rbfw_end_time_24'] : '';
+
+        try {
+            if ( $rbfw_buffer_time_after ) {
+                $datetime = new DateTime( "$inventory_end_date $inventory_end_time" );
+                $datetime->modify( '+' . $rbfw_buffer_time_after . ' hours' );
+                $inventory_end_date = $datetime->format( 'Y-m-d' );
+                $inventory_end_time = $datetime->format( 'H:i' );
+            } elseif ( $stock_manage_on_return_date == 'no' ) {
+                $date = new DateTime( $inventory_end_date );
+                $date->modify( '-1 day' );
+                $adjusted_end_date = $date->format( 'Y-m-d' );
+                /* Freeing the return date must never push the end before the
+                   start: on a same-day booking (start === end) that produces an
+                   inverted range which overlaps nothing, so the unit reads as
+                   free on the very day it is rented out. Clamp to the start. */
+                $inventory_end_date = ( $adjusted_end_date < $inventory_start_date ) ? $inventory_start_date : $adjusted_end_date;
+            }
+
+            $windows[] = array(
+                'start'     => new DateTime( $inventory_start_date . ' ' . $inventory_start_time ),
+                'end'       => new DateTime( $inventory_end_date . ' ' . $inventory_end_time ),
+                'qty'       => ! empty( $entry['rbfw_item_quantity'] ) ? (int) $entry['rbfw_item_quantity'] : 0,
+                'type_info' => ! empty( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) ? $entry['rbfw_type_info'] : array(),
+            );
+        } catch ( Exception $e ) {
+            continue; // Unparseable dates block nothing, as before.
+        }
+    }
+
+    return $windows;
+}
+
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null,$rbfw_enable_time_slot='off'){
 
 
@@ -316,94 +403,25 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     }
 
     $inventory_based_on_return       = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
-    $stock_manage_on_return_date_raw = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
-    $stock_manage_on_return_date     = $stock_manage_on_return_date_raw ? $stock_manage_on_return_date_raw : 'no';
-    $rbfw_buffer_time_after_raw      = get_post_meta( $post_id, 'rbfw_buffer_time_after', true );
-    $rbfw_buffer_time_after          = $rbfw_buffer_time_after_raw ? $rbfw_buffer_time_after_raw : 0;
-    $mepp_reduce_stock_multi         = get_option( 'mepp_reduce_stock', 'full' );
-    $inventory_managed_order_status  = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
-    $inventory_managed_order_status  = is_array( $inventory_managed_order_status ) ? $inventory_managed_order_status : [
-        'processing' => 'processing',
-        'completed'  => 'completed',
-    ];
 
-
-
-
-
-    if(is_array($rbfw_inventory)){
-        foreach ($rbfw_inventory as $wc_order_id => $inventory) {
-
-            $order = wc_get_order($wc_order_id);
-
-            if($order && !($order->get_status() == 'trash' || $order->get_status() == 'cancelled')){
-
-                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
-
-                $partial_stock = true;
-                if($inventory['rbfw_order_status'] == 'partially-paid' && $mepp_reduce_stock_multi=='deposit'){
-                    $partial_stock = false;
-                }
-
-                $checkValues = $inventory['rbfw_order_status'];
-
-
-                if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
-
-                    $inventory_start_date = $inventory['rbfw_start_date_ymd'];
-                    $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                    $inventory_start_time = $inventory['rbfw_start_time_24'];
-                    $inventory_end_time = $inventory['rbfw_end_time_24'];
-
-                    if ($rbfw_buffer_time_after) {
-                        $datetime = new DateTime("$inventory_end_date $inventory_end_time");
-                        $datetime->modify('+' . $rbfw_buffer_time_after . ' hours');
-                        $inventory_end_date = $datetime->format('Y-m-d');
-                        $inventory_end_time = $datetime->format('H:i');
-                    } else {
-                        if ($stock_manage_on_return_date == 'no') {
-                            $date = new DateTime($inventory_end_date);
-                            $date->modify('-1 day');
-                            $adjusted_end_date = $date->format('Y-m-d');
-                            /* Freeing the return date must never push the end before the
-                               start: on a same-day booking (start === end) that produces an
-                               inverted range which overlaps nothing, so the unit reads as
-                               free on the very day it is rented out. Clamp to the start. */
-                            $inventory_end_date = ($adjusted_end_date < $inventory_start_date) ? $inventory_start_date : $adjusted_end_date;
-                        }
-                    }
-
-
-
-
-
-
-
-
-
-                    $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
-                    $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
-
-                    if ($rent_type == 'resort') {
-                        $start_date_time = new DateTime( $start_date );
-                        $end_date_time = new DateTime( $end_date );
-
-                        if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
-                            $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
-                            foreach ($rbfw_type_info as $type_name => $type_qty) {
-                                if ($type_name == $type) {
-                                    $total_booked += $type_qty;
-                                }
-                            }
-                        }
-                    }else{
-                        $start_date_time = new DateTime( $pickup_datetime );
-                        $end_date_time = new DateTime( $dropoff_datetime );
-                        if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
-                            $total_booked += $rbfw_item_quantity;
-                        }
+    // Same windows the Multiple Day time pickers grey out (rbfw_get_inventory_booked_windows()).
+    if ( $rent_type == 'resort' ) {
+        $start_date_time = new DateTime( $start_date );
+        $end_date_time   = new DateTime( $end_date );
+    } else {
+        $start_date_time = new DateTime( (string) $pickup_datetime );
+        $end_date_time   = new DateTime( (string) $dropoff_datetime );
+    }
+    foreach ( rbfw_get_inventory_booked_windows( $post_id, $rbfw_inventory ) as $window ) {
+        if ( $window['start'] <= $end_date_time && $start_date_time <= $window['end'] ) {
+            if ( $rent_type == 'resort' ) {
+                foreach ( $window['type_info'] as $type_name => $type_qty ) {
+                    if ( $type_name == $type ) {
+                        $total_booked += $type_qty;
                     }
                 }
+            } else {
+                $total_booked += $window['qty'];
             }
         }
     }

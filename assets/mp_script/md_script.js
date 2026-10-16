@@ -273,6 +273,11 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
                 let rbfw_particulars_data = jQuery('#rbfw_particulars_data').val();
                 let rdfw_available_time = jQuery('#rdfw_available_time').val();
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'pickup_time');
+                // Grey out the times a booking already holds (re-fetched per date, so it is current).
+                rbfwMdLoadBookedWindows(function () {
+                    rbfwMdApplyBookedTimes('pickup');
+                    rbfwMdRefreshReturnCalendar();
+                });
             }
 
             // Trigger calendar refresh to apply enhanced inventory checking
@@ -328,6 +333,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
                 let rbfw_particulars_data = jQuery('#rbfw_particulars_data').val();
                 let rdfw_available_time = jQuery('#rdfw_available_time').val();
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'dropoff_time');
+                rbfwMdApplyBookedTimes('dropoff');
                // particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
 
@@ -1806,10 +1812,25 @@ function rbfw_enhanced_dropoff_beforeShowDay(date, pickup_iso) {
         return base;
     }
 
-    if (rbfw_offday_blocking_enabled()) {
-        if (pickup_iso === undefined) {
-            pickup_iso = jQuery('input[name="rbfw_pickup_start_date"]').val();
+    if (pickup_iso === undefined) {
+        pickup_iso = jQuery('input[name="rbfw_pickup_start_date"]').val();
+    }
+
+    // Time-slot items: a stay from the pick-up to the start of this day already
+    // overlaps a period with no unit left, so no return time on it can be booked.
+    if (rbfwMdBooked.loaded && pickup_iso) {
+        var ret_iso = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
+        if (ret_iso > pickup_iso) {
+            // Without a pick-up time yet, assume the latest one: only block what is blocked anyway.
+            var from = rbfwMdMinuteKey(pickup_iso, jQuery('#pickup_time').val() || '23:59');
+            var to = rbfwMdMinuteKey(ret_iso, '00:00');
+            if (from !== null && to !== null && rbfwMdRangeSoldOut(from, to)) {
+                return [false, 'rbfw-disabled-date', rbfwMdSoldOutLabel()];
+            }
         }
+    }
+
+    if (rbfw_offday_blocking_enabled()) {
         if (pickup_iso && rbfw_range_contains_off_day(pickup_iso, date)) {
             var offLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.off_label) ? rbfw_translation.off_label : 'Off';
             return [false, 'notav', offLabel];
@@ -1820,6 +1841,166 @@ function rbfw_enhanced_dropoff_beforeShowDay(date, pickup_iso) {
 }
 
 
+
+/* ── Booked times on the Multiple Day time pickers ─────────────────────────────
+ * The pick-up and return time lists come from the schedule only, so a time inside a
+ * booking that holds the last unit was still offered and the customer learned it from
+ * "No Items Available" after picking both dates and times. The item's booked periods
+ * (rbfw_md_booked_windows, built by the same rules as the availability check) let the
+ * pickers grey those times out up front. Same overlap rule as the server: a period
+ * touching the requested range at its first or last minute counts.
+ */
+var rbfwMdBooked = { loaded: false, stock: 0, windows: [] };
+
+function rbfwMdSoldOutLabel() {
+    return (typeof rbfw_translation !== 'undefined' && rbfw_translation.sold_out) ? rbfw_translation.sold_out : 'Sold Out';
+}
+
+// Minutes since the epoch for a local date + time, compared in UTC so the
+// visitor's own timezone cannot shift it. Time may be "14:30" or "2:30 PM".
+function rbfwMdMinuteKey(ymd, time) {
+    var d = String(ymd || '').split('-');
+    var t = (typeof rbfwParseTimeParts === 'function') ? rbfwParseTimeParts(time || '00:00') : null;
+    if (d.length !== 3 || !t) {
+        return null;
+    }
+    var ms = Date.UTC(parseInt(d[0], 10), parseInt(d[1], 10) - 1, parseInt(d[2], 10), t.hours, t.minutes);
+    return isNaN(ms) ? null : ms / 60000;
+}
+
+// True when the units booked over [from, to] (minute keys) leave none to rent.
+function rbfwMdRangeSoldOut(from, to) {
+    if (!rbfwMdBooked.loaded || rbfwMdBooked.stock <= 0) {
+        return false;
+    }
+    var booked = 0;
+    rbfwMdBooked.windows.forEach(function (w) {
+        if (w.start <= to && from <= w.end) {
+            booked += w.qty;
+        }
+    });
+    return booked >= rbfwMdBooked.stock;
+}
+
+function rbfwMdLoadBookedWindows(done) {
+    var postId = jQuery('#rbfw_post_id').val();
+    if (jQuery('#rbfw_enable_time_slot').val() !== 'yes' || !postId || typeof rbfw_ajax_front === 'undefined') {
+        return;
+    }
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        data: {
+            action: 'rbfw_md_booked_windows',
+            post_id: postId,
+            nonce: rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
+        }
+    }).done(function (response) {
+        if (!response || !response.success || !response.data) {
+            return;
+        }
+        rbfwMdBooked.stock = parseInt(response.data.stock, 10) || 0;
+        rbfwMdBooked.windows = (response.data.windows || []).map(function (w) {
+            var s = String(w.start).split(' '), e = String(w.end).split(' ');
+            return { start: rbfwMdMinuteKey(s[0], s[1]), end: rbfwMdMinuteKey(e[0], e[1]), qty: parseInt(w.qty, 10) || 0 };
+        }).filter(function (w) {
+            return w.start !== null && w.end !== null && w.qty > 0;
+        });
+        rbfwMdBooked.loaded = true;
+        if (typeof done === 'function') {
+            done();
+        }
+    });
+}
+
+/**
+ * Disable the times in #pickup_time / #dropoff_time that the availability check would
+ * refuse, labelled "Sold Out". Re-runnable: it first undoes its own previous marks, and
+ * never touches times getAvailableTimes() disabled as past / inside the buffer.
+ *
+ * @param {string} which 'pickup' or 'dropoff'.
+ */
+function rbfwMdApplyBookedTimes(which) {
+    var select = document.getElementById(which === 'dropoff' ? 'dropoff_time' : 'pickup_time');
+    if (!select || select.tagName !== 'SELECT' || !rbfwMdBooked.loaded) {
+        return;
+    }
+    var pickupYmd = jQuery('input[name="rbfw_pickup_start_date"]').val();
+    var ymd = (which === 'dropoff') ? jQuery('input[name="rbfw_pickup_end_date"]').val() : pickupYmd;
+    var from = null;
+    if (which === 'dropoff') {
+        // No pick-up time yet: assume the latest, so only certain conflicts are shown.
+        from = rbfwMdMinuteKey(pickupYmd, jQuery('#pickup_time').val() || '23:59');
+        if (from === null) {
+            return;
+        }
+    }
+    var label = rbfwMdSoldOutLabel();
+    var clearSelection = false;
+
+    Array.prototype.forEach.call(select.options, function (opt) {
+        if (!opt.value) {
+            return;
+        }
+        if (opt.getAttribute('data-rbfw-booked') === '1') {
+            opt.textContent = opt.getAttribute('data-rbfw-label');
+            opt.removeAttribute('data-rbfw-booked');
+            opt.removeAttribute('data-rbfw-label');
+            opt.disabled = false;
+            opt.title = '';
+        }
+        if (opt.getAttribute('data-rbfw-time-blocked') === '1') {
+            return; // past / buffer time: getAvailableTimes() owns it
+        }
+        var at = rbfwMdMinuteKey(ymd, opt.value);
+        if (at === null) {
+            return;
+        }
+        var soldOut;
+        if (which === 'dropoff') {
+            if (at <= from) {
+                return; // return before pick-up is refused elsewhere
+            }
+            soldOut = rbfwMdRangeSoldOut(from, at);
+        } else {
+            soldOut = rbfwMdRangeSoldOut(at, at);
+        }
+        if (soldOut) {
+            opt.setAttribute('data-rbfw-booked', '1');
+            opt.setAttribute('data-rbfw-label', opt.textContent);
+            opt.textContent = opt.textContent + ' (' + label + ')';
+            opt.disabled = true;
+            opt.title = label;
+            if (opt.selected) {
+                clearSelection = true;
+            }
+        }
+    });
+
+    if (clearSelection) {
+        jQuery(select).val('').trigger('change');
+    }
+}
+
+// Only repaint the return calendar while it is the one open: jQuery UI shares one popup
+// between pickers, and a closed one re-runs beforeShowDay when it next opens anyway.
+function rbfwMdRefreshReturnCalendar() {
+    var dp = jQuery.datepicker;
+    if (!dp || !dp._datepickerShowing || !dp._lastInput || !jQuery(dp._lastInput).hasClass('dropoff_date')) {
+        return;
+    }
+    jQuery(dp._lastInput).datepicker('refresh');
+}
+
+// A different pick-up time moves where a return can still fit.
+jQuery('body').on('change', '#pickup_time', function () {
+    if (!rbfwMdBooked.loaded) {
+        return;
+    }
+    rbfwMdApplyBookedTimes('dropoff');
+    rbfwMdRefreshReturnCalendar();
+});
 
 function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 

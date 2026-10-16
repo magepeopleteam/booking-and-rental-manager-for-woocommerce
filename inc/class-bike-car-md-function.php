@@ -26,6 +26,54 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             add_action('wp_ajax_rbfw_day_wise_sold_out_check', array($this, 'rbfw_day_wise_sold_out_check'));
             add_action('wp_ajax_nopriv_rbfw_day_wise_sold_out_check', array($this,'rbfw_day_wise_sold_out_check'));
+
+            add_action('wp_ajax_rbfw_md_booked_windows', array($this, 'rbfw_md_booked_windows'));
+            add_action('wp_ajax_nopriv_rbfw_md_booked_windows', array($this,'rbfw_md_booked_windows'));
+        }
+
+        /**
+         * Stock and booked periods of a Multiple Day item, for the pick-up / return time
+         * pickers (md_script.js rbfwMdApplyBookedTimes()).
+         *
+         * The time lists used to come from the schedule alone, so a time inside a booking
+         * that took the last unit was still offered, and the customer only found out from
+         * "No Items Available" after choosing both dates and times. The periods come from
+         * rbfw_get_inventory_booked_windows(), the same rules the availability check uses.
+         *
+         * Only periods, quantities and the stock figure are returned — nothing about the
+         * orders or customers behind them.
+         */
+        function rbfw_md_booked_windows(){
+            check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
+
+            $post_id   = rbfw_ajax_item_id( 'post_id' );
+            $rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+
+            // Multiple Day style items only: resort, single day, appointment and
+            // multiple items keep stock per room / slot / row.
+            if ( in_array( $rent_type, array( 'resort', 'bike_car_sd', 'appointment', 'multiple_items' ), true ) ) {
+                wp_send_json_success( array( 'stock' => 0, 'windows' => array() ) );
+            }
+
+            // Stock exactly as rbfw_get_multiple_date_available_qty() counts it.
+            $stock = ( get_post_meta( $post_id, 'rbfw_enable_variations', true ) == 'yes' )
+                ? (int) rbfw_get_variations_stock( $post_id )
+                : (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+
+            // Past periods cannot affect a future booking; keep the payload small.
+            $from    = new DateTime( current_time( 'Y-m-d' ) . ' 00:00' );
+            $windows = array();
+            foreach ( rbfw_get_inventory_booked_windows( $post_id ) as $window ) {
+                if ( $window['qty'] > 0 && $window['end'] >= $from ) {
+                    $windows[] = array(
+                        'start' => $window['start']->format( 'Y-m-d H:i' ),
+                        'end'   => $window['end']->format( 'Y-m-d H:i' ),
+                        'qty'   => (int) $window['qty'],
+                    );
+                }
+            }
+
+            wp_send_json_success( array( 'stock' => $stock, 'windows' => $windows ) );
         }
 
 
