@@ -284,10 +284,17 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             rbfw_refresh_calendar_with_inventory_check();
         },
 
-        onChangeMonthYear: function (year, month) {
-            if(rbfw_enable_time_slot=='no'){
-                loadDisabledDates(post_id, year, month);
+        // Time-slot items have no month inventory in the page, so fetch the shown
+        // month's fully booked days; the server only lists days with no free hour.
+        beforeShow: function () {
+            if (rbfw_enable_time_slot == 'yes') {
+                var shown = $picker.datepicker('getDate') || new Date();
+                loadDisabledDates(post_id, shown.getFullYear(), shown.getMonth() + 1);
             }
+        },
+
+        onChangeMonthYear: function (year, month) {
+            loadDisabledDates(post_id, year, month);
         }
     });
 
