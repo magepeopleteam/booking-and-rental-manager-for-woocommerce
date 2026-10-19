@@ -4066,7 +4066,46 @@ if ( ! function_exists( 'rbfw_md_hourly_rollover_applies' ) ) {
 	}
 }
 
+/**
+ * Multi-day duration price (the rental only: no services, fees or deposit).
+ *
+ * Every caller (live form total, add to cart, search results, variation
+ * surcharges) goes through here, so add-ons that price by rental length can
+ * adjust the result in one place with the `rbfw_md_duration_price_info` filter.
+ *
+ * @return array duration_price, total_days and, per pricing path, duration /
+ *               actual_days / hours / pricing_applied.
+ */
 function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, $dropoff_datetime = 0, $start_date = '', $end_date = '', $star_time = '', $end_time = '', $rbfw_enable_time_slot = '') {
+    $info = rbfw_md_duration_price_calculation_raw( $post_id, $pickup_datetime, $dropoff_datetime, $start_date, $end_date, $star_time, $end_time, $rbfw_enable_time_slot );
+
+    /**
+     * Filters a multi-day item's duration price.
+     *
+     * @param array $info    Result of the core calculation. `total_days` is the
+     *                       billed day count; a `duration` key means the
+     *                       weekly/monthly path priced it.
+     * @param int   $post_id rbfw_item id.
+     * @param array $args    pickup_datetime, dropoff_datetime, start_date,
+     *                       end_date, start_time, end_time, enable_time_slot.
+     */
+    return apply_filters(
+        'rbfw_md_duration_price_info',
+        $info,
+        $post_id,
+        array(
+            'pickup_datetime'  => $pickup_datetime,
+            'dropoff_datetime' => $dropoff_datetime,
+            'start_date'       => $start_date,
+            'end_date'         => $end_date,
+            'start_time'       => $star_time,
+            'end_time'         => $end_time,
+            'enable_time_slot' => $rbfw_enable_time_slot,
+        )
+    );
+}
+
+function rbfw_md_duration_price_calculation_raw($post_id = 0, $pickup_datetime = 0, $dropoff_datetime = 0, $start_date = '', $end_date = '', $star_time = '', $end_time = '', $rbfw_enable_time_slot = '') {
     global $rbfw;
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);
