@@ -459,6 +459,10 @@ CSS for Single Page Template
     position: absolute;
     width: 100%;
     max-width: 420px;
+    /* A long list must scroll inside the popup, not run off the form/window. */
+    max-height: min(80vh, calc(100% - 24px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     border-radius: 14px;
     background-color: #fff;
     padding: 18px 18px 16px;
@@ -482,10 +486,13 @@ CSS for Single Page Template
     width: 100%;
     height: 100%;
 }
+/* Pinned to the popup's top-right while its content scrolls. */
 .close-price-container{
-    position: absolute;
-    right: 14px;
-    top: 14px;
+    position: sticky;
+    top: 0;
+    float: right;
+    margin: -4px -4px 0 10px;
+    z-index: 3;
     display: inline-flex;
     align-items: center;
     justify-content: center;

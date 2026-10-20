@@ -4626,13 +4626,44 @@
             var $summaryRows = $preview.find('.rbfw-me-fp-summary-rows').empty();
             summaryLine($summaryRows, 'Duration', durationLabel);
 
-            var tierAddLine = function (label, amount) { summaryLine($summaryRows, label, money(amount)); };
+            // Duration lines are collected first so a pricing add-on can replace them.
+            var durationLines = [];
+            var tierAddLine = function (label, amount) { durationLines.push({ label: label, amount: amount }); };
             var breakdown = computeWholeDayBreakdown(tierAddLine, wholeDays, start);
             var total = breakdown.total;
+            var missingDaily = breakdown.missingDaily;
 
             if (timePickerOn) {
                 total += computeLeftoverHours(tierAddLine, leftoverHours, wholeDays);
-            } else if (breakdown.missingDaily) {
+            }
+
+            /*
+             * Add-ons that price by rental length (e.g. Tiered Pricing) can return
+             * { total: Number, lines: [ { label, amount } ] } to replace the duration
+             * price, or nothing to keep it. Same role as the PHP filter
+             * rbfw_md_duration_price_info. billedDays counts a part day as a day.
+             */
+            var durationOverride = $wrap.triggerHandler('rbfw_me_preview_md_duration', [{
+                startDate: startVal,
+                endDate: endVal,
+                totalDays: totalDays,
+                wholeDays: wholeDays,
+                leftoverHours: leftoverHours,
+                billedDays: timePickerOn ? Math.max(1, wholeDays + (leftoverHours > 0 ? 1 : 0)) : totalDays,
+                timePickerOn: timePickerOn,
+                total: total,
+                lines: durationLines.slice(),
+                money: money
+            }]);
+            if (durationOverride && isFinite(durationOverride.total) && $.isArray(durationOverride.lines)) {
+                clearWarning(); // The add-on prices every day, leftover hours included.
+                total = Math.max(0, Number(durationOverride.total));
+                durationLines = durationOverride.lines;
+                missingDaily = false;
+            }
+            durationLines.forEach(function (line) { summaryLine($summaryRows, line.label, money(line.amount)); });
+
+            if (! timePickerOn && missingDaily) {
                 showWarning('No Daily Price enabled for the remaining ' + breakdown.remaining + ' day(s) of this booking.');
             }
 
@@ -5163,6 +5194,9 @@
             else if (isPreviewingMi()) { recalcMi(); }
             else if (isPreviewingMd()) { recalc(); }
         }
+        // Add-ons with their own pricing fields ask for a refresh with
+        // $('.rbfw-me-wrap').trigger('rbfw_me_preview_refresh').
+        $wrap.on('rbfw_me_preview_refresh', recalcCurrent);
 
         // The global Time Slots Configuration chips (admin side) that the
         // preview's own Pickup/Return Time chips are populated from.

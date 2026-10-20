@@ -209,6 +209,20 @@ jQuery(document).on('click', '.pricing-info-view', function (e) {
     jQuery(this).closest('.rbfw-pricing-info-heading').toggleClass('open');
     jQuery(this).closest('.mp_rbfw_ticket_form').toggleClass('overlay');
     jQuery('.price-item-container').stop(true, true).toggleClass('open').fadeToggle();
+    // Keep the whole popup inside the window. The booking sidebar is often
+    // sticky, so page scrolling cannot reveal a popup that sticks out.
+    var popup = jQuery(this).closest('.mp_rbfw_ticket_form').find('.price-item-container').get(0);
+    if (popup) {
+        setTimeout(function () {
+            popup.style.marginTop = '';
+            popup.scrollTop = 0;
+            if (!jQuery(popup).is(':visible')) { return; }
+            var gap = 12, r = popup.getBoundingClientRect(), shift = 0;
+            if (r.bottom > window.innerHeight - gap) { shift = (window.innerHeight - gap) - r.bottom; }
+            if (r.top + shift < gap) { shift = gap - r.top; }
+            if (shift) { popup.style.marginTop = Math.round(shift) + 'px'; }
+        }, 30);
+    }
 });
 jQuery(document).on('click', '.pricing-content-container .close-price-container', function (e) {
     e.preventDefault();
