@@ -1903,13 +1903,27 @@ function rbfwMdRangeSoldOut(from, to) {
     if (!rbfwMdBooked.loaded || rbfwMdBooked.stock <= 0) {
         return false;
     }
-    var booked = 0;
-    rbfwMdBooked.windows.forEach(function (w) {
-        if (w.start <= to && from <= w.end) {
-            booked += w.qty;
-        }
+    // Units out at the busiest moment of [from, to], not every booking touching it added
+    // up: three one-unit bookings on different days still leave a 3-unit item a unit for
+    // the whole stretch. The count can only rise where a booking starts, so the range
+    // start and those minutes cover it. Same rule as rbfw_overlap_peak_qty() on the server.
+    var live = rbfwMdBooked.windows.filter(function (w) {
+        return w.start <= to && from <= w.end;
     });
-    return booked >= rbfwMdBooked.stock;
+    var peak = 0;
+    [from].concat(live.map(function (w) { return w.start; })).forEach(function (t) {
+        if (t < from || t > to) {
+            return;
+        }
+        var booked = 0;
+        live.forEach(function (w) {
+            if (w.start <= t && t <= w.end) {
+                booked += w.qty;
+            }
+        });
+        peak = Math.max(peak, booked);
+    });
+    return peak >= rbfwMdBooked.stock;
 }
 
 function rbfwMdLoadBookedWindows(done) {
