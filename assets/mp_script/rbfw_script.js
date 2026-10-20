@@ -264,6 +264,122 @@ function rbfw_site_now(){
     return new Date(site.getUTCFullYear(), site.getUTCMonth(), site.getUTCDate(), site.getUTCHours(), site.getUTCMinutes(), site.getUTCSeconds());
 }
 
+/* ── Remaining units under each calendar day ("3 left") ───────────────────────
+ * Global setting "Show remaining stock on calendar". The form prints
+ * #rbfw_calendar_stock (value yes, data-post = item id) when it applies. Each month's
+ * figures come from rbfw_calendar_day_stock (rbfw_calendar_day_stock_map() on the
+ * server): { 'Y-m-d': { n: units left, p: '' | 'am' | 'pm' | 'mid' } }. A day with no
+ * unit free all day but free hours ('p') is drawn split: the taken half greyed, the
+ * day still clickable. Shared by every booking calendar (Multiple Day, Multiple Items,
+ * Resort, Single Day / Appointment); each wraps its beforeShowDay result with
+ * rbfwDayStockWrap().
+ */
+var rbfwDayStock = { map: {}, months: {}, timer: null };
+
+function rbfwDayStockOn() {
+    return jQuery('#rbfw_calendar_stock').val() === 'yes';
+}
+
+function rbfwDayStockKey(y, m, d) {
+    return y + '-' + ('0' + m).slice(-2) + (d ? '-' + ('0' + d).slice(-2) : '');
+}
+
+function rbfwDayStockLoad(year, month) {
+    var key = rbfwDayStockKey(year, month);
+    if (rbfwDayStock.months[key] || typeof rbfw_ajax_front === 'undefined') {
+        return;
+    }
+    rbfwDayStock.months[key] = true; // Once per month, even if it fails.
+    jQuery.ajax({
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            action: 'rbfw_calendar_day_stock',
+            post_id: jQuery('#rbfw_calendar_stock').data('post'),
+            year: year,
+            month: month,
+            nonce: rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
+        }
+    }).done(function (res) {
+        if (res && res.success && res.data) {
+            jQuery.extend(rbfwDayStock.map, res.data);
+            rbfwDayStockRefresh();
+        }
+    });
+}
+
+// Repaint only calendars that are on screen: jQuery UI draws every popup picker into one
+// shared popup, so refreshing a closed one would paint its days over the open one.
+function rbfwDayStockRefresh() {
+    var dp = jQuery.datepicker;
+    if (dp && dp._datepickerShowing && dp._lastInput) {
+        jQuery(dp._lastInput).datepicker('refresh');
+    }
+    jQuery('div.hasDatepicker').datepicker('refresh'); // Inline calendars (Single Day).
+}
+
+/**
+ * Wrap a calendar's beforeShowDay result: tag bookable days that have a figure so
+ * rbfwDayStockPaint() can write it, and mark part-booked days. Whether a day can be
+ * picked is never changed here.
+ */
+function rbfwDayStockWrap(date, result) {
+    if (!Array.isArray(result) || !result[0] || !rbfwDayStockOn()) {
+        return result;
+    }
+    rbfwDayStockLoad(date.getFullYear(), date.getMonth() + 1);
+    var day = rbfwDayStock.map[rbfwDayStockKey(date.getFullYear(), date.getMonth() + 1, date.getDate())];
+    if (day && (day.n > 0 || day.p)) {
+        result = result.slice();
+        var cls = (result[1] || '') + ' rbfw-has-day-stock';
+        if (!(day.n > 0) && day.p) {
+            cls += ' rbfw-day-part rbfw-day-part-' + day.p;
+            if (!result[2] && typeof rbfw_translation !== 'undefined' && rbfw_translation.day_part_title) {
+                result[2] = rbfw_translation.day_part_title;
+            }
+        }
+        result[1] = cls.trim();
+    }
+    // Days are generated before the calendar is in the DOM; paint once it is.
+    if (!rbfwDayStock.timer) {
+        rbfwDayStock.timer = setTimeout(rbfwDayStockPaint, 0);
+    }
+    return result;
+}
+
+function rbfwDayStockPaint() {
+    rbfwDayStock.timer = null;
+    var t = (typeof rbfw_translation !== 'undefined') ? rbfw_translation : {};
+    var leftTpl = t.day_stock_left || '%d left';
+    var partTxt = t.day_part_free || 'Part free';
+    jQuery('.ui-datepicker-calendar td.rbfw-has-day-stock').each(function () {
+        var $td = jQuery(this);
+        if ($td.children('.rbfw-day-stock').length) {
+            return;
+        }
+        var d = parseInt($td.children('a').text(), 10);
+        var m = parseInt($td.attr('data-month'), 10);
+        var y = $td.attr('data-year');
+        if (isNaN(d) || isNaN(m) || !y) {
+            return;
+        }
+        var day = rbfwDayStock.map[rbfwDayStockKey(y, m + 1, d)];
+        if (!day) {
+            return;
+        }
+        var text = day.n > 0 ? leftTpl.replace('%d', day.n) : (day.p ? partTxt : '');
+        if (!text) {
+            return;
+        }
+        // Next to the link, never inside it: jQuery UI reads the day number from the <a>'s HTML on select.
+        var badge = document.createElement('span');
+        badge.className = 'rbfw-day-stock' + (day.n > 0 ? '' : ' rbfw-day-stock--part');
+        badge.textContent = text;
+        this.appendChild(badge);
+    });
+}
+
 function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 

@@ -739,6 +739,7 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="multiple_items">
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
+                <input type="hidden" id="rbfw_calendar_stock" value="<?php echo esc_attr( rbfw_show_calendar_remaining_stock( $rbfw_id ) ? 'yes' : 'no' ); ?>" data-post="<?php echo esc_attr( $rbfw_id ); ?>">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
                 <input type="hidden" name="total_days" id="rbfw_total_days">
 

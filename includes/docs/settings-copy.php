@@ -83,8 +83,8 @@ return array(
 		'where' => 'Availability checks and search results.',
 	),
 	'rbfw_calendar_remaining_stock' => array(
-		'what'  => 'Shows how many units are still free under each date of the booking calendar, for example "3 left", so customers see availability before they pick. Only for Multiple Day items booked by date only; items with the time picker on are skipped because their stock changes during the day. For items with variations the figure is the best-stocked option.',
-		'where' => 'The pick-up and return date calendars on the rental item page.',
+		'what'  => 'Shows how many units are still free under each date of the booking calendar, for example "3 left", so customers see availability before they pick. Multiple Day items show the units left that day (with the time picker on, the units free for the whole day); Single Day and Appointment items add all their options together; Resort items show the rooms left for that night; Multiple Items bundles show the item that runs out first. When every unit is taken for part of a day but some hours are still free, the day is drawn split — the taken half greyed — and can still be picked. For items with variations the figure is the best-stocked option.',
+		'where' => 'Every booking calendar on the rental item page: pick-up and return, check-in and check-out, and the Single Day calendar.',
 	),
 	'rbfw_share_section_enable' => array(
 		'what'  => 'Shows social sharing buttons so visitors can share an item with others.',

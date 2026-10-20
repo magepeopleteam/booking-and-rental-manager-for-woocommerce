@@ -775,9 +775,8 @@ function rbfw_multi_items_day_available_qty( $post_id, $date, $multiple_items_in
 /**
  * Whether the booking calendar shows each day's remaining units ("3 left").
  *
- * Global setting rbfw_calendar_remaining_stock, limited to Multiple Day items booked by
- * date only: with the time picker on, a day's stock changes hour by hour, so a single
- * per-day figure would be wrong for most of the day.
+ * Global setting rbfw_calendar_remaining_stock; every rent type. What a day's number
+ * means per type is documented on rbfw_calendar_day_stock_map().
  *
  * @param int $post_id Rental item ID.
  * @return bool
@@ -786,10 +785,341 @@ function rbfw_show_calendar_remaining_stock( $post_id ) {
     if ( 'yes' !== rbfw_get_option( 'rbfw_calendar_remaining_stock', 'rbfw_basic_gen_settings', 'no' ) ) {
         return false;
     }
-    if ( in_array( get_post_meta( $post_id, 'rbfw_item_type', true ), array( 'resort', 'bike_car_sd', 'appointment', 'multiple_items' ), true ) ) {
+    return in_array(
+        get_post_meta( $post_id, 'rbfw_item_type', true ),
+        array( 'bike_car_md', 'dress', 'equipment', 'others', 'bike_car_sd', 'appointment', 'resort', 'multiple_items' ),
+        true
+    );
+}
+
+add_action( 'wp_ajax_rbfw_calendar_day_stock', 'rbfw_calendar_day_stock_ajax' );
+add_action( 'wp_ajax_nopriv_rbfw_calendar_day_stock', 'rbfw_calendar_day_stock_ajax' );
+
+/**
+ * One month of rbfw_calendar_day_stock_map() for the booking calendars.
+ * Empty when the setting is off, so no stock figures leave the server then.
+ */
+function rbfw_calendar_day_stock_ajax() {
+    check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
+
+    // The nonce only proves the request came from one of our pages; authorise the item itself.
+    $post_id = rbfw_ajax_item_id( 'post_id' );
+    $month   = isset( $_POST['month'] ) ? absint( wp_unslash( $_POST['month'] ) ) : 0;
+    $year    = isset( $_POST['year'] ) ? absint( wp_unslash( $_POST['year'] ) ) : 0;
+    if ( $month < 1 || $month > 12 || $year < 1970 || $year > 2100 ) {
+        wp_send_json_error( array( 'message' => esc_html__( 'Invalid date requested.', 'booking-and-rental-manager-for-woocommerce' ) ), 400 );
+    }
+    if ( ! rbfw_show_calendar_remaining_stock( $post_id ) ) {
+        wp_send_json_success( new stdClass() );
+    }
+    wp_send_json_success( (object) rbfw_calendar_day_stock_map( $post_id, $year, $month ) );
+}
+
+/**
+ * Whether an inventory entry holds stock, by the rules the availability checks use:
+ * Inventory Managed Order Statuses, picked, returned when stock is held until return,
+ * deposit-only orders skipped when stock is reduced on the full payment, and a Woo
+ * order that is gone, trashed or cancelled holds nothing.
+ */
+function rbfw_calendar_entry_holds( $booking_id, $entry ) {
+    static $rules = null;
+    if ( null === $rules ) {
+        // Raw option: rbfw_get_option() returns nothing under WP-CLI.
+        $gen     = get_option( 'rbfw_basic_gen_settings', array() );
+        $managed = ( is_array( $gen ) && ! empty( $gen['inventory_managed_order_status'] ) && is_array( $gen['inventory_managed_order_status'] ) )
+            ? $gen['inventory_managed_order_status']
+            : array( 'processing' => 'processing', 'completed' => 'completed' );
+        $rules   = array(
+            'managed' => $managed,
+            'return'  => is_array( $gen ) && isset( $gen['inventory_based_on_return'] ) && 'yes' === $gen['inventory_based_on_return'],
+            'deposit' => 'deposit' === get_option( 'mepp_reduce_stock', 'full' ),
+        );
+    }
+    if ( ! is_array( $entry ) ) {
         return false;
     }
-    return 'yes' !== get_post_meta( $post_id, 'rbfw_enable_time_picker', true );
+    $status = isset( $entry['rbfw_order_status'] ) ? (string) $entry['rbfw_order_status'] : '';
+    if ( 'partially-paid' === $status && $rules['deposit'] ) {
+        return false;
+    }
+    if ( ! ( in_array( $status, $rules['managed'], true ) || 'picked' === $status || ( $rules['return'] && 'returned' === $status ) ) ) {
+        return false;
+    }
+    if ( 'rbfw_booking' !== get_post_type( $booking_id ) && function_exists( 'wc_get_order' ) ) {
+        $order = wc_get_order( $booking_id );
+        if ( ! $order || in_array( $order->get_status(), array( 'trash', 'cancelled' ), true ) ) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Fewest and most units booked at any minute of [from, to] (Unix seconds).
+ *
+ * Windows are inclusive at both ends, like the availability checks. The count can
+ * only rise at a window's start and only fall just after a window's end, so those
+ * minutes plus the range start cover every case.
+ *
+ * @param array[] $windows { start:int, end:int, qty:int }
+ * @return int[] [ min, max ]
+ */
+function rbfw_calendar_booked_extremes( $windows, $from, $to ) {
+    $rise = array( $from );
+    $fall = array( $from );
+    $live = array();
+    foreach ( $windows as $w ) {
+        if ( $w['end'] < $from || $w['start'] > $to ) {
+            continue;
+        }
+        $live[] = $w;
+        if ( $w['start'] > $from ) {
+            $rise[] = $w['start'];
+        }
+        if ( $w['end'] + 60 <= $to ) {
+            $fall[] = $w['end'] + 60;
+        }
+    }
+    if ( ! $live ) {
+        return array( 0, 0 );
+    }
+    $at = static function ( $t ) use ( $live ) {
+        $n = 0;
+        foreach ( $live as $w ) {
+            if ( $w['start'] <= $t && $t <= $w['end'] ) {
+                $n += $w['qty'];
+            }
+        }
+        return $n;
+    };
+    return array( min( array_map( $at, $fall ) ), max( array_map( $at, $rise ) ) );
+}
+
+/**
+ * A day's figures from timed bookings.
+ *
+ * n — units free the whole day (summed over the pools, e.g. several options).
+ * p — only when n is 0 but some time is still free: which half of the day is taken.
+ *     'pm' = only the morning has fully booked time (the afternoon is free),
+ *     'am' = only the afternoon has, 'mid' = both halves have some. Measured as time
+ *     during which no pool has a free unit, so the empty hours around a booking
+ *     (e.g. before opening) do not make an 08:00–11:00 booking look like "midday".
+ *
+ * @param array[] $pools [ { stock:int, windows:array[] } ]
+ * @return array{n:int,p:string}
+ */
+function rbfw_calendar_timed_day( $pools, $date_ymd ) {
+    $day   = strtotime( $date_ymd . ' 00:00' );
+    $noon  = $day + 12 * HOUR_IN_SECONDS;
+    $stop  = $day + DAY_IN_SECONDS; // Exclusive.
+    $whole = 0;
+    $cuts  = array( $day, $noon, $stop );
+    foreach ( $pools as $pool ) {
+        list( , $max ) = rbfw_calendar_booked_extremes( $pool['windows'], $day, $stop - 60 );
+        $whole        += max( 0, $pool['stock'] - $max );
+        foreach ( $pool['windows'] as $w ) {
+            foreach ( array( $w['start'], $w['end'] + 60 ) as $t ) { // Windows are inclusive to the minute.
+                if ( $t > $day && $t < $stop ) {
+                    $cuts[] = $t;
+                }
+            }
+        }
+    }
+    if ( $whole > 0 ) {
+        return array( 'n' => $whole, 'p' => '' );
+    }
+
+    // Between two cut points the bookings do not change, so test each stretch once.
+    $cuts = array_values( array_unique( $cuts ) );
+    sort( $cuts );
+    $taken = array( 'am' => 0, 'pm' => 0 );
+    $free  = false;
+    for ( $i = 0, $last = count( $cuts ) - 1; $i < $last; $i++ ) {
+        $t    = $cuts[ $i ];
+        $full = true;
+        foreach ( $pools as $pool ) {
+            $booked = 0;
+            foreach ( $pool['windows'] as $w ) {
+                if ( $w['start'] <= $t && $t <= $w['end'] ) {
+                    $booked += $w['qty'];
+                }
+            }
+            if ( $booked < $pool['stock'] ) {
+                $full = false;
+                break;
+            }
+        }
+        if ( $full ) {
+            $taken[ $t < $noon ? 'am' : 'pm' ] += $cuts[ $i + 1 ] - $t;
+        } else {
+            $free = true;
+        }
+    }
+    if ( ! $free ) {
+        return array( 'n' => 0, 'p' => '' ); // Fully booked: the sold-out mark covers it.
+    }
+    $part = ( $taken['am'] && $taken['pm'] ) ? 'mid' : ( $taken['am'] ? 'pm' : 'am' );
+    return array( 'n' => 0, 'p' => $part );
+}
+
+/**
+ * Per-day figures for the booking calendar of one month.
+ *
+ *  Multiple Day (date only)     units left that day — the figure the sold-out marks use.
+ *  Multiple Day (time picker)   units free the whole day; a day with free hours but no
+ *                               unit free all day is marked part-booked ('p').
+ *  Single Day / Appointment     all options added up, free the whole day; part-booked
+ *                               days as above.
+ *  Resort                       rooms of all types left for that night.
+ *  Multiple Items               the bundle item that runs out first.
+ *
+ * Days without a figure (nothing tracks stock) are left out.
+ *
+ * @return array<string,array{n:int,p:string}> Keyed Y-m-d.
+ */
+function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
+    $type   = (string) get_post_meta( $post_id, 'rbfw_item_type', true );
+    $days   = function_exists( 'cal_days_in_month' ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : (int) gmdate( 't', mktime( 0, 0, 0, $month, 1, $year ) );
+    $prefix = $year . '-' . str_pad( $month, 2, '0', STR_PAD_LEFT ) . '-';
+    $inv    = get_post_meta( $post_id, 'rbfw_inventory', true );
+    $inv    = is_array( $inv ) ? $inv : array();
+    $map    = array();
+
+    $bundles = static function ( $ymd ) use ( $post_id ) {
+        return function_exists( 'rbfw_mi_bundle_units_on_date' ) ? (int) rbfw_mi_bundle_units_on_date( $post_id, $ymd ) : 0;
+    };
+
+    if ( in_array( $type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true ) ) {
+        if ( 'yes' !== get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ) {
+            foreach ( (array) rbfw_day_wise_sold_out_check_by_month( $post_id, $year, $month, $days ) as $dmy => $left ) {
+                if ( is_numeric( $left ) ) {
+                    $map[ gmdate( 'Y-m-d', strtotime( $dmy ) ) ] = array( 'n' => max( 0, (int) $left ), 'p' => '' );
+                }
+            }
+            return $map;
+        }
+        $stock = ( 'yes' === get_post_meta( $post_id, 'rbfw_enable_variations', true ) ) ? (int) rbfw_get_variations_stock( $post_id ) : (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+        $win   = array();
+        foreach ( rbfw_get_inventory_booked_windows( $post_id, $inv ) as $w ) {
+            $win[] = array( 'start' => $w['start']->getTimestamp(), 'end' => $w['end']->getTimestamp(), 'qty' => (int) $w['qty'] );
+        }
+        // Both sides read the stored local times in PHP's default zone (UTC under
+        // WordPress), so these timestamps line up with strtotime() below.
+        for ( $i = 1; $i <= $days; $i++ ) {
+            $ymd         = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
+            $map[ $ymd ] = rbfw_calendar_timed_day( array( array( 'stock' => max( 0, $stock - $bundles( $ymd ) ), 'windows' => $win ) ), $ymd );
+        }
+        return $map;
+    }
+
+    if ( 'bike_car_sd' === $type || 'appointment' === $type ) {
+        $pools = array();
+        $rows  = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+        foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+            $name = isset( $row['rent_type'] ) ? (string) $row['rent_type'] : '';
+            $qty  = isset( $row['qty'] ) ? trim( (string) $row['qty'] ) : '';
+            if ( '' !== $name && '' !== $qty ) { // A blank quantity does not track stock.
+                $pools[ $name ] = array( 'stock' => max( 0, (int) $qty ), 'windows' => array() );
+            }
+        }
+        if ( ! $pools ) {
+            return $map;
+        }
+        foreach ( $inv as $booking_id => $entry ) {
+            if ( empty( $entry['rbfw_start_date_ymd'] ) || empty( $entry['rbfw_type_info'] ) || ! is_array( $entry['rbfw_type_info'] ) || ! rbfw_calendar_entry_holds( $booking_id, $entry ) ) {
+                continue;
+            }
+            $s_date = substr( $entry['rbfw_start_date_ymd'], 0, 10 );
+            $e_date = ! empty( $entry['rbfw_end_date_ymd'] ) ? substr( $entry['rbfw_end_date_ymd'], 0, 10 ) : $s_date;
+            $s_time = ! empty( $entry['rbfw_start_time_24'] ) ? $entry['rbfw_start_time_24'] : ( ! empty( $entry['rbfw_start_time'] ) ? $entry['rbfw_start_time'] : '' );
+            $e_time = ! empty( $entry['rbfw_end_time_24'] ) ? $entry['rbfw_end_time_24'] : ( ! empty( $entry['rbfw_end_time'] ) ? $entry['rbfw_end_time'] : '' );
+            $start  = strtotime( $s_date . ' ' . ( '' !== $s_time ? $s_time : '00:00' ) );
+            // No end time: a slot records only its start; a date-only booking takes the whole day.
+            $end    = '' !== $e_time ? strtotime( $e_date . ' ' . $e_time ) : ( '' !== $s_time ? $start : strtotime( $e_date . ' 23:59' ) );
+            if ( ! $start || ! $end ) {
+                continue;
+            }
+            foreach ( $entry['rbfw_type_info'] as $name => $qty ) {
+                if ( isset( $pools[ $name ] ) && (int) $qty > 0 ) {
+                    $pools[ $name ]['windows'][] = array( 'start' => $start, 'end' => max( $start, $end ), 'qty' => (int) $qty );
+                }
+            }
+        }
+        for ( $i = 1; $i <= $days; $i++ ) {
+            $ymd         = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
+            $map[ $ymd ] = rbfw_calendar_timed_day( array_values( $pools ), $ymd );
+        }
+        return $map;
+    }
+
+    if ( 'resort' === $type ) {
+        $rooms = array();
+        $rows  = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+        foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+            if ( ! empty( $row['room_type'] ) && '' !== trim( (string) ( isset( $row['rbfw_room_available_qty'] ) ? $row['rbfw_room_available_qty'] : '' ) ) ) {
+                $rooms[ (string) $row['room_type'] ] = max( 0, (int) $row['rbfw_room_available_qty'] );
+            }
+        }
+        if ( ! $rooms ) {
+            return $map;
+        }
+        $stays = array();
+        foreach ( $inv as $booking_id => $entry ) {
+            if ( ! empty( $entry['rbfw_start_date_ymd'] ) && ! empty( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) && rbfw_calendar_entry_holds( $booking_id, $entry ) ) {
+                $stays[] = $entry;
+            }
+        }
+        for ( $i = 1; $i <= $days; $i++ ) {
+            $ymd  = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
+            $left = 0;
+            foreach ( $rooms as $room => $qty ) {
+                $taken = 0;
+                foreach ( $stays as $stay ) {
+                    $in  = substr( $stay['rbfw_start_date_ymd'], 0, 10 );
+                    $out = ! empty( $stay['rbfw_end_date_ymd'] ) ? substr( $stay['rbfw_end_date_ymd'], 0, 10 ) : $in;
+                    // A stay holds the nights from check-in up to (not including) check-out; a day-long stay holds its own day.
+                    $holds = ( $in === $out ) ? ( $ymd === $in ) : ( $in <= $ymd && $ymd < $out );
+                    if ( $holds && isset( $stay['rbfw_type_info'][ $room ] ) ) {
+                        $taken += (int) $stay['rbfw_type_info'][ $room ];
+                    }
+                }
+                $left += max( 0, $qty - $taken );
+            }
+            $map[ $ymd ] = array( 'n' => $left, 'p' => '' );
+        }
+        return $map;
+    }
+
+    if ( 'multiple_items' === $type ) {
+        $rows   = get_post_meta( $post_id, 'multiple_items_info', true );
+        $rows   = is_array( $rows ) ? $rows : array();
+        $return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+        for ( $i = 1; $i <= $days; $i++ ) {
+            $ymd    = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
+            $lowest = null;
+            foreach ( $rows as $row ) {
+                if ( ! is_array( $row ) || empty( $row['item_name'] ) ) {
+                    continue;
+                }
+                // Same per-row figure as rbfw_multi_items_day_available_qty(), which keeps the best row.
+                $left = function_exists( 'rbfw_mi_row_available_qty' ) ? rbfw_mi_row_available_qty( $post_id, $row, $ymd . ' 00:00', $ymd . ' 23:59' ) : null;
+                if ( null === $left ) {
+                    $left = rbfw_service_remaining_stock(
+                        isset( $row['available_qty'] ) ? $row['available_qty'] : '',
+                        total_multi_items_quantity( $row['item_name'], gmdate( 'd-m-Y', strtotime( $ymd ) ), $inv, $return )
+                    );
+                }
+                if ( null !== $left ) {
+                    $lowest = null === $lowest ? (int) $left : min( $lowest, (int) $left );
+                }
+            }
+            if ( null !== $lowest ) {
+                $map[ $ymd ] = array( 'n' => max( 0, $lowest ), 'p' => '' );
+            }
+        }
+    }
+
+    return $map;
 }
 
 function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_days){
