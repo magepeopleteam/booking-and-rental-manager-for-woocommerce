@@ -232,6 +232,18 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             ),
 
             array(
+                'name' => 'rbfw_calendar_remaining_stock',
+                'label' => esc_html__( 'Show remaining stock on calendar', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( 'Show how many units are still available under each date of the booking calendar (for example "3 left"). Works for Multiple Day items booked by date only (time picker off).', 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+
+            array(
                 'name' => 'rbfw_share_section_enable',
                 'label' => esc_html__( 'Enable Share Section', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to display the social media share section on rental item pages, then enable it.", 'booking-and-rental-manager-for-woocommerce' ),

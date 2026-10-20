@@ -82,6 +82,10 @@ return array(
 		'what'  => 'Releases an item for the next customer based on when it is returned rather than blocking the whole day, so back-to-back hires are possible.',
 		'where' => 'Availability checks and search results.',
 	),
+	'rbfw_calendar_remaining_stock' => array(
+		'what'  => 'Shows how many units are still free under each date of the booking calendar, for example "3 left", so customers see availability before they pick. Only for Multiple Day items booked by date only; items with the time picker on are skipped because their stock changes during the day. For items with variations the figure is the best-stocked option.',
+		'where' => 'The pick-up and return date calendars on the rental item page.',
+	),
 	'rbfw_share_section_enable' => array(
 		'what'  => 'Shows social sharing buttons so visitors can share an item with others.',
 		'where' => 'The rental item page.',

@@ -424,6 +424,8 @@ if (! class_exists('RBFW_Dependencies')) {
 				'past_time' => __('Past Time', 'booking-and-rental-manager-for-woocommerce'),
 				'not_available' => __('Not available', 'booking-and-rental-manager-for-woocommerce'),
 				'sold_out' => __('Sold Out', 'booking-and-rental-manager-for-woocommerce'),
+				/* translators: %d: number of units still available on that date */
+				'day_stock_left' => __('%d left', 'booking-and-rental-manager-for-woocommerce'),
 				'off_label' => __('Off', 'booking-and-rental-manager-for-woocommerce'),
 				'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
 				'max_available' => __('Max available', 'booking-and-rental-manager-for-woocommerce'),
