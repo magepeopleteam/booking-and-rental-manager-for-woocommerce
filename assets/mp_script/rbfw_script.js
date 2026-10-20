@@ -352,13 +352,18 @@ function rbfwDayStockPaint() {
     rbfwDayStock.timer = null;
     var t = (typeof rbfw_translation !== 'undefined') ? rbfw_translation : {};
     var leftTpl = t.day_stock_left || '%d left';
-    var partTxt = t.day_part_free || 'Part free';
+    var partTxt = t.day_part_free || 'Partial';
     jQuery('.ui-datepicker-calendar td.rbfw-has-day-stock').each(function () {
         var $td = jQuery(this);
-        if ($td.children('.rbfw-day-stock').length) {
+        if ($td.find('.rbfw-day-stock').length) {
             return;
         }
-        var d = parseInt($td.children('a').text(), 10);
+        var link = $td.children('a').get(0);
+        // jQuery UI 1.13+ (WordPress ships 1.14) reads the picked day from data-date, so the
+        // label can sit inside the date box and every cell keeps one size. Older versions
+        // read the link's HTML; there it stays under the box.
+        var inside = !!(link && link.hasAttribute('data-date'));
+        var d = parseInt(inside ? link.getAttribute('data-date') : $td.children('a').text(), 10);
         var m = parseInt($td.attr('data-month'), 10);
         var y = $td.attr('data-year');
         if (isNaN(d) || isNaN(m) || !y) {
@@ -372,11 +377,15 @@ function rbfwDayStockPaint() {
         if (!text) {
             return;
         }
-        // Next to the link, never inside it: jQuery UI reads the day number from the <a>'s HTML on select.
         var badge = document.createElement('span');
         badge.className = 'rbfw-day-stock' + (day.n > 0 ? '' : ' rbfw-day-stock--part');
         badge.textContent = text;
-        this.appendChild(badge);
+        if (inside) {
+            $td.addClass('rbfw-day-stock-in');
+            link.appendChild(badge);
+        } else {
+            this.appendChild(badge);
+        }
     });
 }
 
