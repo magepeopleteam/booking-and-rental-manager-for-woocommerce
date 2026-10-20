@@ -85,99 +85,6 @@ function rbfwIsSoldOut(stock) {
 // Holds sold-out dates returned from loadDisabledDates
 var disabledDates = [];
 
-/* ── Remaining units under each calendar day ("3 left") ───────────────────────
- * Global setting "Show remaining stock on calendar", date-only Multiple Day items
- * (the form prints #rbfw_calendar_stock = yes). Counts come from the same per-day
- * engine that marks days sold out: the current month is printed in the page
- * (#rbfw_month_wise_inventory), other months arrive with loadDisabledDates().
- */
-var rbfwMdDayStock = {};        // 'Y-m-d' => units left
-var rbfwMdDayStockMonths = {};  // 'Y-m' => requested or loaded
-var rbfwMdDayStockSeeded = false;
-var rbfwMdDayStockTimer = null;
-
-function rbfwMdDayStockOn() {
-    return jQuery('#rbfw_calendar_stock').val() === 'yes';
-}
-
-function rbfwMdSeedDayStock() {
-    if (rbfwMdDayStockSeeded) {
-        return;
-    }
-    rbfwMdDayStockSeeded = true;
-    var month = {};
-    try { month = JSON.parse(jQuery('#rbfw_month_wise_inventory').val() || '{}') || {}; } catch (e) {}
-    jQuery.each(month, function (dmy, left) {
-        var p = String(dmy).split('-'); // d-m-Y
-        if (p.length === 3 && !isNaN(parseInt(left, 10))) {
-            rbfwMdDayStock[p[2] + '-' + p[1] + '-' + p[0]] = Math.max(0, parseInt(left, 10));
-            rbfwMdDayStockMonths[p[2] + '-' + p[1]] = true;
-        }
-    });
-}
-
-/**
- * beforeShowDay wrapper for the booking form's pick-up / return calendars: tags the
- * bookable days that have a count so rbfwMdPaintDayStock() can write it under them.
- * The result itself (selectable, title) is passed through untouched.
- */
-function rbfwMdWithDayStock(date, result) {
-    if (!Array.isArray(result) || !result[0] || !rbfwMdDayStockOn()) {
-        return result;
-    }
-    rbfwMdSeedDayStock();
-    var iso = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-    if (rbfwMdDayStock[iso] > 0) {
-        result = result.slice();
-        result[1] = ((result[1] || '') + ' rbfw-has-day-stock').trim();
-    }
-    // Days are generated before the popup is in the DOM; paint once it is.
-    if (!rbfwMdDayStockTimer) {
-        rbfwMdDayStockTimer = setTimeout(rbfwMdPaintDayStock, 0);
-    }
-    return result;
-}
-
-function rbfwMdPaintDayStock() {
-    rbfwMdDayStockTimer = null;
-    var dp = jQuery.datepicker;
-    if (!dp || !dp.dpDiv) {
-        return;
-    }
-
-    // A month opened without counts (e.g. the return calendar starting in a later
-    // month) is fetched once; loadDisabledDates() repaints when it arrives.
-    var inst = dp._lastInput ? jQuery.data(dp._lastInput, 'datepicker') : null;
-    if (inst && typeof inst.drawYear === 'number') {
-        var ym = inst.drawYear + '-' + ('0' + (inst.drawMonth + 1)).slice(-2);
-        if (!rbfwMdDayStockMonths[ym]) {
-            loadDisabledDates(jQuery('#rbfw_post_id').val(), inst.drawYear, inst.drawMonth + 1);
-        }
-    }
-
-    var template = (typeof rbfw_translation !== 'undefined' && rbfw_translation.day_stock_left) ? rbfw_translation.day_stock_left : '%d left';
-    dp.dpDiv.find('td.rbfw-has-day-stock').each(function () {
-        var $td = jQuery(this);
-        if ($td.children('.rbfw-day-stock').length) {
-            return;
-        }
-        var day = parseInt($td.children('a').text(), 10);
-        var month = parseInt($td.attr('data-month'), 10);
-        var year = $td.attr('data-year');
-        if (isNaN(day) || isNaN(month) || !year) {
-            return;
-        }
-        var left = rbfwMdDayStock[year + '-' + ('0' + (month + 1)).slice(-2) + '-' + ('0' + day).slice(-2)];
-        if (left > 0) {
-            // Next to the link, never inside it: jQuery UI reads the day number from the <a>'s HTML on select.
-            var badge = document.createElement('span');
-            badge.className = 'rbfw-day-stock';
-            badge.textContent = template.replace('%d', left);
-            this.appendChild(badge);
-        }
-    });
-}
-
 // Date-wise Min/Max (Min & Max Booking Day addon): resolve the effective
 // min/max for a selected pickup date — the first configured date range that
 // contains it, otherwise the global values. The ranges are rendered into
@@ -336,7 +243,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         beforeShowDay: function(date)
         {
             // Use enhanced inventory checking that considers return date
-            return rbfwMdWithDayStock(date, rbfw_enhanced_pickup_beforeShowDay(date));
+            return rbfwDayStockWrap(date, rbfw_enhanced_pickup_beforeShowDay(date));
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -457,7 +364,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         beforeShowDay: function(date)
         {
             // Return calendar: pickup checks + block ranges spanning off days (rule 3)
-            return rbfwMdWithDayStock(date, rbfw_enhanced_dropoff_beforeShowDay(date));
+            return rbfwDayStockWrap(date, rbfw_enhanced_dropoff_beforeShowDay(date));
         },
         onChangeMonthYear: function (year, month) {
             loadDisabledDates(post_id, year, month);
@@ -2603,9 +2510,6 @@ function wc_price_rbfw(price) {
 }
 
 function loadDisabledDates(post_id, year, month) {
-    if (rbfwMdDayStockOn()) {
-        rbfwMdDayStockMonths[year + '-' + ('0' + month).slice(-2)] = true;
-    }
     jQuery.ajax({
         url: rbfw_ajax_front.rbfw_ajaxurl,
         type: 'POST',
@@ -2615,7 +2519,6 @@ function loadDisabledDates(post_id, year, month) {
             'post_id': post_id,
             'year': year,
             'month': month,
-            'with_stock': rbfwMdDayStockOn() ? 1 : 0,
             'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
         },
 
@@ -2631,11 +2534,6 @@ function loadDisabledDates(post_id, year, month) {
             jQuery('.ui-datepicker i.fa-spinner').remove();
 
 
-            // With with_stock the server sends { sold_out: [...], stock: { 'Y-m-d': n } }.
-            if (response && Array.isArray(response.sold_out)) {
-                jQuery.extend(rbfwMdDayStock, response.stock || {});
-                response = response.sold_out;
-            }
             disabledDates = Array.isArray(response) ? response : [];
 
             // Refresh datepicker

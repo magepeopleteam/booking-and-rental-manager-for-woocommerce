@@ -33,7 +33,7 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
         minDate: 0,
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable());
+            return rbfwDayStockWrap(date, rbfw_off_day_dates(date,'md',rbfw_today_booking_enable()));
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -105,7 +105,7 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
                 var offLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.off_label) ? rbfw_translation.off_label : 'Off';
                 return [false, 'notav', offLabel];
             }
-            return base;
+            return rbfwDayStockWrap(date, base);
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);

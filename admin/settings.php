@@ -234,7 +234,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             array(
                 'name' => 'rbfw_calendar_remaining_stock',
                 'label' => esc_html__( 'Show remaining stock on calendar', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc' => esc_html__( 'Show how many units are still available under each date of the booking calendar (for example "3 left"). Works for Multiple Day items booked by date only (time picker off).', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( 'Show how many units are still available under each date of the booking calendar (for example "3 left"). Multiple Day: units left that day (with the time picker on, units free the whole day). Single Day / Appointment: all options added up. Resort: rooms left that night. Multiple Items: the item that runs out first. A day with free hours but no unit free all day is drawn split, half greyed.', 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => 'select',
                 'default' => 'no',
                 'options' => array(

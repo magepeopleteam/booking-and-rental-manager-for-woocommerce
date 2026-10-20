@@ -9227,8 +9227,10 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     font-size: 8px;
 }
 
-/* "3 left" under a bookable day (setting: Show remaining stock on calendar) */
-#ui-datepicker-div td .rbfw-day-stock {
+/* "3 left" under a bookable day (setting: Show remaining stock on calendar) —
+   popup pickers and the inline Single Day calendar. */
+#ui-datepicker-div td .rbfw-day-stock,
+.ui-datepicker-inline td .rbfw-day-stock {
     display: block;
     margin-top: 2px;
     font-size: 9px;
@@ -9239,6 +9241,33 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     white-space: nowrap;
     pointer-events: none;
 }
+#ui-datepicker-div td .rbfw-day-stock--part,
+.ui-datepicker-inline td .rbfw-day-stock--part {
+    color: #b45309;
+}
+
+/* Part-booked day: no unit is free all day but some hours are. The taken half is
+   greyed on the diagonal (am = free in the morning, pm = free in the afternoon,
+   mid = free at both ends); the day stays clickable. Two IDs so the weekend tint
+   and the "background: none" resets (one ID + !important) never hide it; hover and
+   the selected day keep their own look. */
+#ui-datepicker-div#ui-datepicker-div td.rbfw-day-part a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover),
+#rbfw-bikecarsd-calendar#rbfw-bikecarsd-calendar td.rbfw-day-part a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover) {
+    border-color: #cbd5e1 !important;
+}
+#ui-datepicker-div#ui-datepicker-div td.rbfw-day-part-pm a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover),
+#rbfw-bikecarsd-calendar#rbfw-bikecarsd-calendar td.rbfw-day-part-pm a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover) {
+    background: linear-gradient(135deg, #e2e8f0 50%, #ffffff 50%) !important;
+}
+#ui-datepicker-div#ui-datepicker-div td.rbfw-day-part-am a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover),
+#rbfw-bikecarsd-calendar#rbfw-bikecarsd-calendar td.rbfw-day-part-am a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover) {
+    background: linear-gradient(135deg, #ffffff 50%, #e2e8f0 50%) !important;
+}
+#ui-datepicker-div#ui-datepicker-div td.rbfw-day-part-mid a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover),
+#rbfw-bikecarsd-calendar#rbfw-bikecarsd-calendar td.rbfw-day-part-mid a.ui-state-default:not(.ui-state-active):not(.ui-state-hover):not(:hover) {
+    background: linear-gradient(135deg, #ffffff 30%, #e2e8f0 30%, #e2e8f0 70%, #ffffff 70%) !important;
+}
+
 select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2 {
     border: 1px solid #dedede;
     background: #f5f5f5;

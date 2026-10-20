@@ -572,6 +572,7 @@
                 <input type="hidden" name="rbfw_buffer_time" id="rbfw_buffer_time"  value='<?php echo esc_attr($rbfw_buffer_time); ?>'>
 
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id" class="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
+                <input type="hidden" id="rbfw_calendar_stock" value="<?php echo esc_attr( rbfw_show_calendar_remaining_stock( $rbfw_id ) ? 'yes' : 'no' ); ?>" data-post="<?php echo esc_attr( $rbfw_id ); ?>">
 
 
 

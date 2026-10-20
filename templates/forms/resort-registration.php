@@ -255,6 +255,7 @@
 
 
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($post_id); ?>">
+                <input type="hidden" id="rbfw_calendar_stock" value="<?php echo esc_attr( rbfw_show_calendar_remaining_stock( $post_id ) ? 'yes' : 'no' ); ?>" data-post="<?php echo esc_attr( $post_id ); ?>">
                 <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
 				<input type="hidden" id="rbfw_global_offday_range" value='<?php echo esc_attr( rbfw_global_off_dates() ); ?>'>
