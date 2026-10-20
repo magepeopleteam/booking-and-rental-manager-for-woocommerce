@@ -458,19 +458,27 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         $start_date_time = new DateTime( (string) $pickup_datetime );
         $end_date_time   = new DateTime( (string) $dropoff_datetime );
     }
+    $hits = array();
     foreach ( rbfw_get_inventory_booked_windows( $post_id, $rbfw_inventory ) as $window ) {
         if ( $window['start'] <= $end_date_time && $start_date_time <= $window['end'] ) {
+            $qty = 0;
             if ( $rent_type == 'resort' ) {
                 foreach ( $window['type_info'] as $type_name => $type_qty ) {
                     if ( $type_name == $type ) {
-                        $total_booked += $type_qty;
+                        $qty += (int) $type_qty;
                     }
                 }
             } else {
-                $total_booked += $window['qty'];
+                $qty = (int) $window['qty'];
+            }
+            if ( $qty > 0 ) {
+                $hits[] = array( 'start' => $window['start']->getTimestamp(), 'end' => $window['end']->getTimestamp(), 'qty' => $qty );
             }
         }
     }
+    // Units out at the busiest moment, not every overlapping booking added up
+    // (see rbfw_overlap_peak_qty()).
+    $total_booked = rbfw_overlap_peak_qty( $hits, $start_date_time->getTimestamp(), $end_date_time->getTimestamp() );
 
 
 
@@ -4130,6 +4138,7 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 	}
 
 	$total_booked = 0;
+	$hits         = array();
 
 	foreach ( $inventory as $order_id => $entry ) {
 		if ( ! is_array( $entry ) ) {
@@ -4198,20 +4207,42 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 		if ( $inv_start <= $req_end && $req_start <= $inv_end ) {
 			if ( '' !== $type_key ) {
 				$type_info = isset( $entry['rbfw_type_info'] ) && is_array( $entry['rbfw_type_info'] ) ? $entry['rbfw_type_info'] : array();
-				if ( isset( $type_info[ $type_key ] ) ) {
-					$total_booked += max( 0, (int) $type_info[ $type_key ] );
-				}
+				$qty       = isset( $type_info[ $type_key ] ) ? (int) $type_info[ $type_key ] : 0;
 			} elseif ( '' !== $variation_value ) {
 				// Per-value qty steppers: count only this size's units, not the whole line.
-				$total_booked += rbfw_inventory_entry_variation_qty( $entry, $variation_value );
+				$qty = (int) rbfw_inventory_entry_variation_qty( $entry, $variation_value );
 			} else {
 				$qty = isset( $entry['rbfw_item_quantity'] ) ? (int) $entry['rbfw_item_quantity'] : 0;
-				$total_booked += max( 0, $qty );
+			}
+			if ( $qty > 0 ) {
+				$hits[] = array( 'start' => $inv_start->getTimestamp(), 'end' => $inv_end->getTimestamp(), 'qty' => $qty );
 			}
 		}
 	}
 
+	// Units out at the busiest moment of the request, not every booking touching it
+	// added up: three one-unit bookings on different days leave a 3-unit item with a
+	// unit free for the whole week.
+	$total_booked = rbfw_overlap_peak_qty( $hits, $req_start->getTimestamp(), $req_end->getTimestamp() );
+
 	return $total_booked + $shared_booked;
+}
+
+/**
+ * Most units booked at any one moment of [from, to] (Unix seconds).
+ *
+ * A stretch is bookable when its busiest moment leaves enough units: units are
+ * interchangeable, so bookings that never overlap each other can share one unit.
+ *
+ * @param array[] $hits { start:int, end:int, qty:int } Inclusive windows.
+ * @return int
+ */
+function rbfw_overlap_peak_qty( $hits, $from, $to ) {
+    if ( empty( $hits ) ) {
+        return 0;
+    }
+    list( , $peak ) = rbfw_calendar_booked_extremes( $hits, $from, $to );
+    return (int) $peak;
 }
 
 /**
