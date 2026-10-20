@@ -122,11 +122,24 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $day_wise_imventory = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
 
             $result = [];
+            $stock  = [];
 
             foreach ( (array) $day_wise_imventory as $date => $value ) {
                 if ($value == 0) {
                     $result[] = date('Y-m-d', strtotime($date));
                 }
+                if ( is_numeric( $value ) ) {
+                    $stock[ date( 'Y-m-d', strtotime( $date ) ) ] = max( 0, (int) $value );
+                }
+            }
+
+            // Calendars showing "N left" ask for the counts too. Only they get the object
+            // shape; every other caller keeps the plain list of sold-out dates.
+            if ( ! empty( $_POST['with_stock'] ) && rbfw_show_calendar_remaining_stock( $post_id ) ) {
+                $result = array(
+                    'sold_out' => $result,
+                    'stock'    => $stock,
+                );
             }
 
             echo wp_json_encode($result);

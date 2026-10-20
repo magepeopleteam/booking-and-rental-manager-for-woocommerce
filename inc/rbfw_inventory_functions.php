@@ -772,6 +772,26 @@ function rbfw_multi_items_day_available_qty( $post_id, $date, $multiple_items_in
 
 
 
+/**
+ * Whether the booking calendar shows each day's remaining units ("3 left").
+ *
+ * Global setting rbfw_calendar_remaining_stock, limited to Multiple Day items booked by
+ * date only: with the time picker on, a day's stock changes hour by hour, so a single
+ * per-day figure would be wrong for most of the day.
+ *
+ * @param int $post_id Rental item ID.
+ * @return bool
+ */
+function rbfw_show_calendar_remaining_stock( $post_id ) {
+    if ( 'yes' !== rbfw_get_option( 'rbfw_calendar_remaining_stock', 'rbfw_basic_gen_settings', 'no' ) ) {
+        return false;
+    }
+    if ( in_array( get_post_meta( $post_id, 'rbfw_item_type', true ), array( 'resort', 'bike_car_sd', 'appointment', 'multiple_items' ), true ) ) {
+        return false;
+    }
+    return 'yes' !== get_post_meta( $post_id, 'rbfw_enable_time_picker', true );
+}
+
 function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_days){
 
 
