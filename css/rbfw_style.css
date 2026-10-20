@@ -9246,6 +9246,36 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     color: #b45309;
 }
 
+/* Label inside the date box (jQuery UI 1.13+): number on top, "3 left" under it,
+   the box keeps its size so bookable and disabled days stay on one line. */
+#ui-datepicker-div td.rbfw-day-stock-in a.ui-state-default,
+.ui-datepicker-inline td.rbfw-day-stock-in a.ui-state-default {
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 1px;
+    line-height: 1 !important; /* The inline calendar sets 34px, which pushed the label out. */
+    vertical-align: middle;
+    overflow: visible;
+}
+#ui-datepicker-div td.rbfw-day-stock-in .rbfw-day-stock,
+.ui-datepicker-inline td.rbfw-day-stock-in .rbfw-day-stock {
+    margin-top: 0;
+    font-size: 8px;
+    line-height: 1;
+    letter-spacing: -.01em;
+}
+/* On hover and on the picked day the box turns the brand colour: follow its text colour. */
+#ui-datepicker-div td.rbfw-day-stock-in a.ui-state-default:hover .rbfw-day-stock,
+#ui-datepicker-div td.rbfw-day-stock-in a.ui-state-hover .rbfw-day-stock,
+#ui-datepicker-div td.rbfw-day-stock-in a.ui-state-active .rbfw-day-stock,
+.ui-datepicker-inline td.rbfw-day-stock-in a.ui-state-default:hover .rbfw-day-stock,
+.ui-datepicker-inline td.rbfw-day-stock-in a.ui-state-hover .rbfw-day-stock,
+.ui-datepicker-inline td.rbfw-day-stock-in a.ui-state-active .rbfw-day-stock {
+    color: inherit;
+    opacity: .9;
+}
+
 /* Part-booked day: no unit is free all day but some hours are. The taken half is
    greyed on the diagonal (am = free in the morning, pm = free in the afternoon,
    mid = free at both ends); the day stays clickable. Two IDs so the weekend tint
