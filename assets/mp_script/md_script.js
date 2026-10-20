@@ -284,10 +284,17 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             rbfw_refresh_calendar_with_inventory_check();
         },
 
-        onChangeMonthYear: function (year, month) {
-            if(rbfw_enable_time_slot=='no'){
-                loadDisabledDates(post_id, year, month);
+        // Time-slot items have no month inventory in the page, so fetch the shown
+        // month's fully booked days; the server only lists days with no free hour.
+        beforeShow: function () {
+            if (rbfw_enable_time_slot == 'yes') {
+                var shown = $picker.datepicker('getDate') || new Date();
+                loadDisabledDates(post_id, shown.getFullYear(), shown.getMonth() + 1);
             }
+        },
+
+        onChangeMonthYear: function (year, month) {
+            loadDisabledDates(post_id, year, month);
         }
     });
 
@@ -1769,12 +1776,21 @@ function rbfw_refresh_calendar_with_inventory_check() {
         return;
     }
 
-    window.requestAnimationFrame(function() {
-        jQuery('.pickup_date').datepicker('refresh');
-        jQuery('.dropoff_date').datepicker('refresh');
-        jQuery('.pickup_date_search').datepicker('refresh');
-        jQuery('.dropoff_date_search').datepicker('refresh');
-    });
+    window.requestAnimationFrame(rbfwMdRefreshShownCalendar);
+}
+
+/**
+ * Repaint only the date picker whose popup is open. jQuery UI draws every picker
+ * into one shared popup, so refreshing a closed picker painted its days (and its
+ * click handler) over the open one: the pick-up calendar then showed the return
+ * calendar's "Sold Out" days once a pick-up date was set. A closed picker re-runs
+ * beforeShowDay when it opens, so it needs no refresh.
+ */
+function rbfwMdRefreshShownCalendar() {
+    var dp = jQuery.datepicker;
+    if (dp && dp._datepickerShowing && dp._lastInput) {
+        jQuery(dp._lastInput).datepicker('refresh');
+    }
 }
 
 /**
@@ -2507,8 +2523,7 @@ function loadDisabledDates(post_id, year, month) {
             disabledDates = Array.isArray(response) ? response : [];
 
             // Refresh datepicker
-            jQuery(".pickup_date").datepicker("refresh");
-            jQuery(".dropoff_date").datepicker("refresh");
+            rbfwMdRefreshShownCalendar();
         },
         error: function () {
             console.error("Failed to load disabled dates");

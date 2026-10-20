@@ -355,6 +355,52 @@ function rbfw_get_inventory_booked_windows( $post_id, $inventory = null ) {
     return $windows;
 }
 
+/**
+ * Fewest units the booked periods hold at any minute of one day.
+ *
+ * Time-slot items are booked by the minute, so a day a booking only starts or ends on
+ * still has free hours. The day counts as sold out only when no minute of it has a unit
+ * left. The count can only drop just after a period ends, so the day's start plus each
+ * minute after an end that falls inside the day covers every case. Same inclusive
+ * overlap rule as rbfw_get_multiple_date_available_qty() and the time pickers.
+ *
+ * @param array[] $windows  From rbfw_get_inventory_booked_windows().
+ * @param string  $date_ymd Day to test, Y-m-d.
+ * @return int Units booked at the day's least-booked minute.
+ */
+function rbfw_md_day_min_booked( $windows, $date_ymd ) {
+    if ( empty( $windows ) ) {
+        return 0;
+    }
+    $day_start = new DateTime( $date_ymd . ' 00:00' );
+    $day_end   = new DateTime( $date_ymd . ' 23:59' );
+
+    $points = array( $day_start );
+    foreach ( $windows as $window ) {
+        $after = clone $window['end'];
+        $after->modify( '+1 minute' );
+        if ( $after > $day_start && $after <= $day_end ) {
+            $points[] = $after;
+        }
+    }
+
+    $min_booked = null;
+    foreach ( $points as $point ) {
+        $booked = 0;
+        foreach ( $windows as $window ) {
+            if ( $window['start'] <= $point && $point <= $window['end'] ) {
+                $booked += $window['qty'];
+            }
+        }
+        $min_booked = ( null === $min_booked ) ? $booked : min( $min_booked, $booked );
+        if ( 0 === $min_booked ) {
+            break;
+        }
+    }
+
+    return (int) $min_booked;
+}
+
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null,$rbfw_enable_time_slot='off'){
 
 
@@ -761,6 +807,16 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     $rbfw_variations_data     = $rbfw_variations_data_raw ? $rbfw_variations_data_raw : [];
     $multiple_items_info      = ( 'multiple_items' === $rent_type ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
+    /* Time-slot Multiple Day items: every date a booking touched used to count as fully
+       booked, so the pick-up and return days of a booking showed "Sold Out" although
+       their other hours were free (and the return calendar then closed every later day
+       too). Use the booked periods instead; the time pickers grey out the booked hours. */
+    $md_booked_windows = null;
+    if ( 'yes' === get_post_meta( $post_id, 'rbfw_enable_time_picker', true )
+        && ! in_array( $rent_type, array( 'resort', 'bike_car_sd', 'appointment', 'multiple_items' ), true ) ) {
+        $md_booked_windows = rbfw_get_inventory_booked_windows( $post_id, is_array( $rbfw_inventory ) ? $rbfw_inventory : null );
+    }
+
     // Pre-compute base stock (same value for every day in the month)
     $base_total_stock = 0;
     if ( $rent_type == 'resort' ) {
@@ -809,7 +865,9 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
 
 
-        if(is_array($rbfw_inventory)){
+        if ( null !== $md_booked_windows ) {
+            $total_booked = rbfw_md_day_min_booked( $md_booked_windows, $year . '-' . str_pad( $month, 2, '0', STR_PAD_LEFT ) . '-' . str_pad( $i, 2, '0', STR_PAD_LEFT ) );
+        } elseif(is_array($rbfw_inventory)){
             foreach ($rbfw_inventory as $wc_order_id => $inventory) {
 
                 $order = wc_get_order($wc_order_id);
