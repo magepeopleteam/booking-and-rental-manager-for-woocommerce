@@ -404,6 +404,7 @@
 									<table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one">
 										<thead>
 										<tr>
+											<th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 											<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 											<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 											<th><?php echo wp_kses_post( 'Price <b class="required">*</b>' ); ?></th>
@@ -430,8 +431,18 @@
 													$service_qty   = array_key_exists( 'service_qty', $field ) ? esc_attr( $field['service_qty'] ) : '';
 													?>
 													<tr>
-														<td style="display:none">
-															<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
+														<td>
+															<div class="rbfw_service_image_wrap text-center">
+																<div class="rbfw_service_image_preview">
+																	<?php if ( $img_url ) : ?>
+																		<img src="<?php echo esc_url( $img_url ); ?>">
+																	<?php endif; ?>
+																</div>
+																<div class="service_image_add_remove">
+																	<a class="rbfw_service_image_btn button" title="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-image"></i></a><a class="rbfw_remove_service_image_btn button" title="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></a>
+																	<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
+																</div>
+															</div>
 														</td>
 														<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $service_name ); ?>"/></td>
 														<td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_attr( $service_desc ); ?>"/></td>
@@ -457,8 +468,14 @@
 												foreach ( $rbfw_default_extra_services as $rbfw_default_es ) :
 													?>
 													<tr>
-														<td style="display:none">
-															<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+														<td>
+															<div class="rbfw_service_image_wrap text-center">
+																<div class="rbfw_service_image_preview"></div>
+																<div class="service_image_add_remove">
+																	<a class="rbfw_service_image_btn button" title="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-image"></i></a><a class="rbfw_remove_service_image_btn button" title="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></a>
+																	<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+																</div>
+															</div>
 														</td>
 														<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $rbfw_default_es['name'] ); ?>"/></td>
 														<td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value=""/></td>
@@ -475,8 +492,14 @@
 											<?php endif; ?>
 										<!-- empty hidden one for jQuery -->
 										<tr class="empty-row screen-reader-text">
-											<td style="display:none">
-												<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+											<td>
+												<div class="rbfw_service_image_wrap text-center">
+													<div class="rbfw_service_image_preview"></div>
+													<div class="service_image_add_remove">
+														<a class="rbfw_service_image_btn button" title="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-image"></i></a><a class="rbfw_remove_service_image_btn button" title="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></a>
+														<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+													</div>
+												</div>
 											</td>
 											<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
 											<td><input type="text" class="mp_formControl " name="service_desc[]" placeholder="Service Description" value=""/></td>
