@@ -464,13 +464,14 @@ function rbfw_booking_search_results_ajax() {
 					$end,
 					'12:00 am',
 					'12:00 am',
-					'off'
+					'no' // date-only, as the booking form opened from search; 'no' lets Count Extra Day bill the return day.
 				);
 				$range_price = is_array( $info ) && isset( $info['duration_price'] ) ? (float) $info['duration_price'] : 0;
 				if ( $range_price > 0 ) {
 					$price_html = wc_price( $range_price );
+					$card_days  = ! empty( $info['total_days'] ) ? (int) $info['total_days'] : $total_days;
 					/* translators: %d: number of days */
-					$price_note = sprintf( _n( 'total for %d day', 'total for %d days', $total_days, 'booking-and-rental-manager-for-woocommerce' ), $total_days );
+					$price_note = sprintf( _n( 'total for %d day', 'total for %d days', $card_days, 'booking-and-rental-manager-for-woocommerce' ), $card_days );
 				}
 			}
 			if ( '' === $price_html ) {
@@ -710,7 +711,7 @@ function rbfw_booking_quick_add_ajax() {
 	$_POST['rbfw_pickup_start_time'] = '12:00 am';
 	$_POST['rbfw_pickup_end_time']   = '12:00 am';
 	$_POST['rbfw_item_quantity']     = $qty;
-	$_POST['rbfw_enable_time_slot']  = 'off';
+	$_POST['rbfw_enable_time_slot']  = 'no'; // date-only; the price engine adds the Count Extra Day return day only for 'no'.
 	if ( '' !== $location ) {
 		$_POST['rbfw_pickup_point'] = $location;
 	}
