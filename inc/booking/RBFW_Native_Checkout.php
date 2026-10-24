@@ -137,6 +137,20 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			if ( is_wp_error( $quote ) ) {
 				wp_send_json_error( array( 'message' => $quote->get_error_message() ) );
 			}
+
+			// Revalidate the authoritative quote against committed inventory. The public form's
+			// availability display is not a security boundary, and a pending booking also holds
+			// stock, so an identical guest request must not reserve an already-sold-out range.
+			$availability_checks = rbfw_check_rental_availability( $item_id, $quote['cart_data'], array(), array() );
+			foreach ( $availability_checks as $availability_check ) {
+				if ( empty( $availability_check['ok'] ) ) {
+					$message = ! empty( $availability_check['message'] )
+						? $availability_check['message']
+						: esc_html__( 'The selected rental is no longer available for these dates. Please reduce the quantity or choose different dates.', 'booking-and-rental-manager-for-woocommerce' );
+					wp_send_json_error( array( 'message' => esc_html( $message ) ) );
+				}
+			}
+
 			$subtotal = $quote['subtotal'];
 
 			// Everything downstream — the coupon context, add-on pricing filters, and the copy of
