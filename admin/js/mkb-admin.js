@@ -35,6 +35,11 @@
      * Category 2 (.additional-service-item-price):
      *   bike_car_md, resort
      *
+     * Exception: a bike_car_md / resort item that still has rows in Category 1
+     * (rbfw_extra_service_data, set up before 2.7.2) shows both. Those rows are
+     * still offered on the booking form and priced in the cart, so hiding them
+     * left them bookable but impossible to see, edit or remove.
+     *
      * @param {string} itemType  Current rbfw_item_type value.
      * @param {jQuery} [$context] Optional DOM root (defaults to document).
      */
@@ -42,8 +47,9 @@
         var $root = ($context && $context.length) ? $context : jQuery(document);
         var $category1 = $root.find('.rbfw_es_price_config_wrapper');
         var $category2 = $root.find('.additional-service-item-price');
+        var hasLegacyRows = !!parseInt($category1.data('has-legacy-data'), 10);
 
-        // Always hide both first so they are never visible together.
+        // Hide both first, then show what this rent type uses.
         $category1.hide();
         $category2.hide();
 
@@ -54,6 +60,9 @@
             $category1.show();
         } else if (showCategory2.indexOf(itemType) !== -1) {
             $category2.show();
+            if (hasLegacyRows) {
+                $category1.show();
+            }
         }
     };
 
