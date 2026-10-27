@@ -2275,19 +2275,23 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             /*extra service */
 
+            /* Keyed by the row's index in rbfw_extra_service_data. Rows carry it as
+               data-es-key because the form skips unnamed rows, so DOM position
+               alone can point a row at another service's stock. */
             var extra_service_instock = max_qty_data.extra_service_instock || [];
+            var rbfwEsKey = function(el, index) {
+                var key = jQuery(el).data('es-key');
+                return (key === undefined || key === '') ? index : key;
+            };
             jQuery(".rbfw_bikecarmd_es_qty").each(function(index, value) {
-                rbfwApplyStockMax(jQuery(this), extra_service_instock[index]);
+                rbfwApplyStockMax(jQuery(this), extra_service_instock[rbfwEsKey(this, index)]);
             });
             jQuery(".es_stock").each(function(index, value) {
-                if(rbfwIsSoldOut(extra_service_instock[index])){
-                    jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
-                    jQuery(this).find(".rbfw-checkbox").hide();
-                }
-                jQuery(this).text(rbfwHasStock(extra_service_instock[index]) ? extra_service_instock[index] : '');
+                var stock = extra_service_instock[rbfwEsKey(this, index)];
+                jQuery(this).text(rbfwHasStock(stock) ? stock : '');
             });
             jQuery(".rbfw_bikecarmd_es_hidden_input_box").each(function(index, value) {
-                if(rbfwIsSoldOut(extra_service_instock[index])){
+                if(rbfwIsSoldOut(extra_service_instock[rbfwEsKey(this, index)])){
                     jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                 }else{

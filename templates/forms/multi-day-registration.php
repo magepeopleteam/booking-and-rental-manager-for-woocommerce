@@ -693,8 +693,72 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? rbfw_s
                         </div>
                     <?php } ?>
 
-
-
+                    <?php
+                    // Extra services saved in the Extra Services table (rbfw_extra_service_data). Items set up
+                    // before 2.7.2 still carry them, and pricing / cart / stock still honour them, so they stay
+                    // bookable here. Rows keep their stored index: the stock refresh in md_script.js looks the
+                    // remaining stock up by that index (data-es-key).
+                    $rbfw_has_named_extra = false;
+                    if ( ! empty( $extra_service_list ) && is_array( $extra_service_list ) ) {
+                        foreach ( $extra_service_list as $extra ) {
+                            if ( is_array( $extra ) && ! empty( $extra['service_name'] ) ) { $rbfw_has_named_extra = true; break; }
+                        }
+                    }
+                    ?>
+                    <?php if ( $rbfw_has_named_extra ) { ?>
+                        <div class="item rbfw_resourse_md">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
+                            </div>
+                            <div class="item-content rbfw-resource">
+                                <table class="rbfw_bikecarmd_es_table">
+                                    <tbody>
+                                    <?php foreach ( $extra_service_list as $key => $extra ) {
+                                        if ( ! is_array( $extra ) || empty( $extra['service_name'] ) ) { continue; }
+                                        $es_price = isset( $extra['service_price'] ) ? $extra['service_price'] : 0;
+                                        $es_stock = isset( $extra['service_qty'] ) ? $extra['service_qty'] : '';
+                                        ?>
+                                        <tr data-es-key="<?php echo esc_attr($key); ?>">
+                                            <td class="w_20 rbfw_bikecarmd_es_hidden_input_box" data-es-key="<?php echo esc_attr($key); ?>">
+                                                <div style="display: none" class="rbfw-sold-out">
+                                                    <?php esc_html_e('Sold Out', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                                </div>
+                                                <div class="label rbfw-checkbox">
+                                                    <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($key); ?>][service_name]" value="<?php echo esc_attr($extra['service_name']); ?>">
+                                                    <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($key); ?>][service_price]" value="<?php echo esc_attr($es_price); ?>">
+                                                    <label class="switch">
+                                                        <input type="checkbox" class="rbfw-resource-price key_value_<?php echo esc_attr($key+1); ?>" aria-label="<?php echo esc_attr($extra['service_name']); ?>" data-price="<?php echo esc_attr($es_price); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td class="resource-title-qty">
+                                                <?php echo esc_html($extra['service_name']); ?>
+                                                <?php if ( $available_qty_info_switch == 'yes' && '' !== trim( (string) $es_stock ) ) { ?>
+                                                    <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?>(<span class="es_stock" data-es-key="<?php echo esc_attr($key); ?>"><?php echo esc_html($es_stock); ?></span>)</i>
+                                                <?php } ?>
+                                            </td>
+                                            <td class="w_20">
+                                                <?php echo wp_kses(wc_price($es_price),rbfw_allowed_html()); ?>
+                                            </td>
+                                            <?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { ?>
+                                                <td class="rbfw_bikecarmd_es_input_box" style="display:none">
+                                                    <div class="rbfw_qty_input">
+                                                        <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-minus"></i></a>
+                                                        <input type="number" name="rbfw_service_info[<?php echo esc_attr($key); ?>][service_qty]" min="0" value="0" class="rbfw_bikecarmd_es_qty" data-es-key="<?php echo esc_attr($key); ?>" data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price="<?php echo esc_attr($es_price); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>"/>
+                                                        <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
+                                                    </div>
+                                                </td>
+                                            <?php } else { ?>
+                                                <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($key); ?>][service_qty]" value="0" class="rbfw_bikecarmd_es_qty" data-es-key="<?php echo esc_attr($key); ?>" data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price="<?php echo esc_attr($es_price); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>"/>
+                                            <?php } ?>
+                                        </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php } ?>
 
                     <?php $rbfw_fee_data = rbfw_get_enabled_fee_data( $post_id ); ?>
                     <?php if(!empty($rbfw_fee_data)){ ?>
