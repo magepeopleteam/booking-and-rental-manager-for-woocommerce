@@ -296,19 +296,27 @@ if (typeof rbfwStepMax !== 'function') {
             let service_type = jQuery(this).data('text');
             let service_price = jQuery(this).data('price');
 
-            // An item with variations (Color/Size steppers) gets an unselected
-            // placeholder first: the steppers stay locked (see
+            // A "Quantity first" item with variations (Color/Size steppers) gets an
+            // unselected placeholder first: the steppers stay locked (see
             // rbfwVariationGroupCap() in rbfw_script.js) until a real quantity is
             // chosen here, which then caps how much can be distributed across them.
-            // An item without variations keeps the old default-to-1 behavior.
-            var hasVariations = jQuery('.rbfw-variation-qty-input').length > 0;
-            var  quantity_options = hasVariations
-                ? '<option value="">Choose number of quantity</option>'
+            // A "Pick variations" item (the default) hides this row: its steppers
+            // set the quantity, limited to the units this duration has free
+            // (data-rbfw-limit). An item without variations keeps the old
+            // default-to-1 behavior.
+            var $variationInputs = jQuery('.rbfw-variation-qty-input');
+            var hasVariations = $variationInputs.length > 0;
+            var quantityFirst = hasVariations
+                && typeof window.rbfwVariationQtyMode === 'function'
+                && window.rbfwVariationQtyMode($variationInputs.first().closest('form')) === 'quantity';
+            var chooseQuantityLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.choose_quantity) ? rbfw_translation.choose_quantity : 'Choose number of quantity';
+            var  quantity_options = quantityFirst
+                ? '<option value="">' + jQuery('<div>').text(chooseQuantityLabel).html() + '</option>'
                 : '';
             for (let i = 1; i <= available_quantity; i++) {
                 quantity_options += "<option value="+i+">"+i+"</option>";
             }
-            jQuery('#rbfw_item_quantity').html(quantity_options);
+            jQuery('#rbfw_item_quantity').html(quantity_options).attr('data-rbfw-limit', parseInt(available_quantity, 10) || 0);
             jQuery('.rbfw_quantiry_area_sd .rbfw_sd_price_input').val(service_price);
             jQuery('.rbfw_quantiry_area_sd .rbfw_sd_price').text(wc_price_rbfw(service_price));
             jQuery(".rbfw_quantiry_area_sd").show();
@@ -331,6 +339,14 @@ if (typeof rbfwStepMax !== 'function') {
             jQuery('button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
             jQuery(' button.rbfw_bikecarsd_book_now_btn').removeClass('rbfw_disabled_button');
             rbfw_price_calculation_sd();
+
+            // With variations, the steppers decide the quantity, the price and the
+            // Book Now state: re-apply them to the rebuilt Quantity selector now
+            // instead of waiting for the next AJAX round-trip to do it.
+            if (hasVariations && typeof window.rbfwVariationRecalc === 'function') {
+                var $durationForm = $variationInputs.first().closest('form');
+                window.rbfwVariationRecalc($durationForm.length ? $durationForm : jQuery(document));
+            }
         });
 
         jQuery('body').on('change','#rbfw_item_quantity',function (e) {

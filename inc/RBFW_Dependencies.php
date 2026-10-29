@@ -206,6 +206,7 @@ if (! class_exists('RBFW_Dependencies')) {
                 'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
                 'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
                 'max_available' => __('Max available', 'booking-and-rental-manager-for-woocommerce'),
+                'choose_quantity' => __('Choose number of quantity', 'booking-and-rental-manager-for-woocommerce'),
                 'variation_name' => __('Value Name', 'booking-and-rental-manager-for-woocommerce'),
                 'stock_quantity' => __('Stock Quantity', 'booking-and-rental-manager-for-woocommerce'),
                 'is_default' => __('Is Default', 'booking-and-rental-manager-for-woocommerce'),

@@ -3998,6 +3998,45 @@ function rbfw_variations_multiply_base( $post_id ) {
 }
 
 /**
+ * How the booking form sets the quantity of an item with variations, when the
+ * form also has a Quantity selector (the Single Day time-based form always has
+ * one; Multiple Day has one when its Quantity dropdown is on).
+ *
+ * 'variations': the customer picks variation values and the quantity is their
+ * total. The Quantity selector is hidden and follows the steppers. This is how
+ * variations worked up to 2.8.0.
+ * 'quantity': the customer chooses a Quantity first, then assigns every unit to
+ * a variation value. The steppers stay locked until a quantity is chosen (2.8.1).
+ *
+ * Items saved before this setting existed keep a default that matches what they
+ * were built for: Multiple Day items with the Quantity dropdown on stay
+ * quantity-first, the case 2.8.1 was written for. Everything else, including the
+ * Single Day form, whose always-present Quantity row 2.8.1 swept in by accident,
+ * lets the variations set the quantity.
+ *
+ * @param int $post_id rbfw_item id.
+ * @return string 'variations' or 'quantity'.
+ */
+function rbfw_variation_qty_mode( $post_id ) {
+	$mode = get_post_meta( $post_id, 'rbfw_variation_qty_mode', true );
+	if ( ! in_array( $mode, array( 'variations', 'quantity' ), true ) ) {
+		$type = get_post_meta( $post_id, 'rbfw_item_type', true );
+		$mode = ( in_array( $type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true )
+			&& 'yes' === get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ) ? 'quantity' : 'variations';
+	}
+
+	/**
+	 * Filters how an item's booking form sets its quantity when it has variations.
+	 *
+	 * @param string $mode    'variations' or 'quantity'.
+	 * @param int    $post_id rbfw_item id.
+	 */
+	$mode = apply_filters( 'rbfw_variation_qty_mode', $mode, $post_id );
+
+	return 'quantity' === $mode ? 'quantity' : 'variations';
+}
+
+/**
  * Total units chosen across an item's variation values.
  *
  * Only values that exist in the item's own variation set are counted, so a
@@ -4418,9 +4457,14 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 	$date_range      = ( '' !== $selected_date_dmy ) ? array( $selected_date_dmy ) : array();
 	$selected_values = is_array( $selected_values ) ? $selected_values : array();
 
+	/* data-qty-mode tells rbfw_script.js whether the steppers set the quantity
+	   ('variations') or distribute a Quantity chosen first ('quantity'). */
+	$qty_mode    = function_exists( 'rbfw_variation_qty_mode' ) ? rbfw_variation_qty_mode( $post_id ) : 'variations';
+	$locked_hint = __( 'Choose a quantity first', 'booking-and-rental-manager-for-woocommerce' );
+
 	ob_start();
 	?>
-	<div class="rbfw-variations-content-wrapper rbfw-bikecarsd-variations">
+	<div class="rbfw-variations-content-wrapper rbfw-bikecarsd-variations" data-qty-mode="<?php echo esc_attr( $qty_mode ); ?>">
 		<?php foreach ( $variations_data as $data_arr_one ) {
 			$field_label  = isset( $data_arr_one['field_label'] ) ? $data_arr_one['field_label'] : '';
 			$field_id     = isset( $data_arr_one['field_id'] ) ? $data_arr_one['field_id'] : '';
@@ -4443,7 +4487,7 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 			?>
 			<div class="item rbfw-variation-group" data-field-id="<?php echo esc_attr( $field_id ); ?>" data-field-label="<?php echo esc_attr( $field_label ); ?>">
 				<div class="rbfw-single-right-heading"><?php esc_html_e( 'Item Variation', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-				<div class="item-content rbfw-p-relative rbfw-variation-steppers">
+				<div class="item-content rbfw-p-relative rbfw-variation-steppers" data-locked-hint="<?php echo esc_attr( $locked_hint ); ?>">
 					<?php if ( ! empty( $field_values ) ) {
 						foreach ( $field_values as $data_arr_two ) {
 							$variant_name = isset( $data_arr_two['name'] ) ? $data_arr_two['name'] : '';
