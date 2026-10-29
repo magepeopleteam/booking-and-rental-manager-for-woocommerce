@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.8.3
+Stable tag: 2.8.4
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
