@@ -418,9 +418,10 @@
         var $timelySection      = $wrap.find('.rbfw-me-inventory-card .rbfw_timely_stock_quantity_section');
         var $timelyStockInput   = $timelySection.find('#rbfw_item_stock_quantity_timely');
         var showTimelyStock     = isTimely && _meType === 'bike_car_sd';
-        // Variations draw stock from their own per-size table, so the single
-        // shared number here is moot (and disabled, see mkb-admin.js) whenever
-        // they're on — never require it in that state.
+        // Required whenever it shows, with or without item variations: the
+        // timely engine books against this shared pool, and per-size variation
+        // stock only caps each value on top of it (an empty pool sells out
+        // every slot). The disabled check only guards against old markup.
         var timelyStockRequired = showTimelyStock && ! $timelyStockInput.prop('disabled');
         $timelySection.toggle(showTimelyStock);
         $timelyStockInput.prop('required', timelyStockRequired);

@@ -1644,11 +1644,15 @@
     .rbfw-variation-soldout { opacity: 0.6; }
     .rbfw-variation-soldout .rbfw-variation-label { text-decoration: line-through; }
 
-    /* Locked until a standalone Quantity selector (above) has a real value picked
-       — see rbfwVariationGroupCap() in rbfw_script.js. */
+    /* Locked until a standalone Quantity selector has a real value picked
+       ("Quantity first" items) — see rbfwVariationGroupCap() in rbfw_script.js.
+       The selector sits above the steppers on Multiple Day but below them on
+       Single Day, so the hint names no direction; the translated text comes
+       from data-locked-hint (rbfw_render_sd_variation_field()). */
     .rbfw-variation-steppers-locked { opacity: 0.55; pointer-events: none; }
+    .rbfw-variation-steppers-locked[data-locked-hint]::before { content: attr(data-locked-hint); }
     .rbfw-variation-steppers-locked::before {
-        content: "Select a quantity above first";
+        content: "Choose a quantity first";
         display: block;
         order: -1;
         font-size: 12px;

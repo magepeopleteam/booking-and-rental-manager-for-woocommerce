@@ -169,7 +169,10 @@
 											// Brand-new items start with a few ready-made example values (editable/
 											// removable like any other chip) instead of one blank row, so there's
 											// something to see and tweak rather than an empty "+ Add New Value" loop.
-											$rbfw_default_variation_examples = array( 'Red', 'Green', 'Blue' );
+											// Only when variations were never saved: an admin who deleted every value
+											// must get an empty list back, not three examples that the next save would
+											// store as real "3 in stock" values.
+											$rbfw_default_variation_examples = metadata_exists( 'post', $post_id, 'rbfw_variations_data' ) ? array() : array( 'Red', 'Green', 'Blue' );
 											foreach ( $rbfw_default_variation_examples as $rbfw_default_c => $rbfw_default_name ) :
 												?>
                                                 <div class="rbfw_variations_value_table_row rbfw-var-chip" data-key="<?php echo esc_attr( $rbfw_default_c ); ?>">
@@ -272,12 +275,19 @@
                     <div>
                         <label>
 							<?php esc_html_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            <span class="rbfw-me-required-mark" title="<?php esc_attr_e( 'Required', 'booking-and-rental-manager-for-woocommerce' ); ?>"<?php echo ( $show_timely_stock && 'yes' !== $rbfw_enable_variations ) ? '' : ' style="display:none"'; ?>>*</span>
+                            <span class="rbfw-me-required-mark" title="<?php esc_attr_e( 'Required', 'booking-and-rental-manager-for-woocommerce' ); ?>"<?php echo $show_timely_stock ? '' : ' style="display:none"'; ?>>*</span>
                         </label>
                         <p><?php esc_html_e( 'Add stock quantity that you want allow to rent, add total stock', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
-                    <div class="item_stock_quantity<?php echo esc_attr( $rbfw_enable_variations === 'yes' ? ' is-stock-disabled' : '' ); ?>">
-                        <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity_timely" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ); ?>" placeholder="<?php esc_attr_e( 'Ex: 10', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label="<?php esc_attr_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_variations === 'yes' ) ? 'disabled' : ''; ?> <?php echo ( $show_timely_stock && 'yes' !== $rbfw_enable_variations ) ? 'required' : ''; ?>>
+                    <?php
+                    /* Stays editable with Item variation on: the shared time-based pool is
+                       what rbfw_timely_available_quantity_updated() books against (an empty
+                       one reads as 0, every slot sold out), and per-variation stock only caps
+                       each value on top of it. Disabling it here (2.8.1) while the save
+                       requires it left such items impossible to save. */
+                    ?>
+                    <div class="item_stock_quantity">
+                        <input type="number" min="0" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity_timely" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ); ?>" placeholder="<?php esc_attr_e( 'Ex: 10', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-label="<?php esc_attr_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo $show_timely_stock ? 'required' : ''; ?>>
                     </div>
                 </section>
 				<?php
@@ -338,6 +348,50 @@
 			}
 
 			/**
+			 * "How customers choose the quantity" for items with variations.
+			 *
+			 * Shows the effective mode, so an item that never saved it displays the
+			 * default rbfw_variation_qty_mode() applies on the booking form.
+			 *
+			 * @param int $post_id rbfw_item id.
+			 * @return void
+			 */
+			public function variation_qty_mode_setting( $post_id ) {
+				$mode = function_exists( 'rbfw_variation_qty_mode' ) ? rbfw_variation_qty_mode( $post_id ) : 'variations';
+				?>
+                <section class="rbfw_variation_qty_mode_section">
+                    <div>
+                        <label for="rbfw_variation_qty_mode"><?php esc_html_e( 'How customers choose the quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <p><?php esc_html_e( 'Pick variations: the customer picks the variation values they want and the quantity is counted from them automatically. Quantity first: the customer chooses a quantity, then assigns each unit to a variation value. Applies when Item variation is enabled and the booking form shows a Quantity selector (Single Day with time slots, or Multiple Day with the Quantity dropdown).', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    </div>
+                    <select name="rbfw_variation_qty_mode" id="rbfw_variation_qty_mode">
+                        <option value="variations" <?php selected( $mode, 'variations' ); ?>><?php esc_html_e( 'Pick variations, quantity follows', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                        <option value="quantity" <?php selected( $mode, 'quantity' ); ?>><?php esc_html_e( 'Quantity first, then variations', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                    </select>
+                </section>
+				<?php
+			}
+
+			/**
+			 * Saves rbfw_variation_qty_mode from the posted form. An absent or unknown
+			 * value leaves the meta untouched, so the item keeps its default.
+			 *
+			 * @param int $post_id rbfw_item id.
+			 * @return void
+			 */
+			public static function save_variation_qty_mode( $post_id ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing -- both callers verify their own nonce first.
+				if ( ! isset( $_POST['rbfw_variation_qty_mode'] ) ) {
+					return;
+				}
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing
+				$mode = sanitize_key( wp_unslash( $_POST['rbfw_variation_qty_mode'] ) );
+				if ( in_array( $mode, array( 'variations', 'quantity' ), true ) ) {
+					update_post_meta( $post_id, 'rbfw_variation_qty_mode', $mode );
+				}
+			}
+
+			/**
 			 * Render the Inventory section for the modern editor.
 			 *
 			 * Mirrors the RBFW_Pricing / RBFW_Off_Day reuse pattern: the modern
@@ -357,6 +411,7 @@
 				$renderer->stock_settings( $post_id );
 				$renderer->quantity_box_toggle( $post_id );
 				$renderer->variation_table_switch_on_off( $post_id );
+				$renderer->variation_qty_mode_setting( $post_id );
 				$renderer->variation_multiply_base_toggle( $post_id );
 				$renderer->variation_settings( $post_id );
 			}
@@ -372,6 +427,7 @@
 					<?php $this->stock_settings( $post_id ); ?>
 					<?php $this->quantity_box_toggle( $post_id ); ?>
 					<?php $this->variation_table_switch_on_off( $post_id ); ?>
+					<?php $this->variation_qty_mode_setting( $post_id ); ?>
 					<?php $this->variation_multiply_base_toggle( $post_id ); ?>
 					<?php $this->variation_settings( $post_id ); ?>
                 </div>
@@ -403,6 +459,7 @@
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 					update_post_meta( $post_id, 'stock_manage_on_return_date', $stock_manage_on_return_date );
 					update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
+					self::save_variation_qty_mode( $post_id );
 				}
 			}
 		}

@@ -5577,8 +5577,19 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 input.rbfw_variation_value.rbfw-var-chip-name {
     text-align: center;
 }
+/* Name, stock and remove on the first line, the per-duration price list below
+   them. Beside the price list the name box was squeezed to 70px, cutting names
+   like "Ride1Up (pedal-assist)" so they could not be read or edited. */
+.rbfw-me-inventory-card .rbfw-var-chip {
+    flex-wrap: wrap !important;
+}
+.rbfw-me-inventory-card .rbfw-var-chip .rbfw_variation_prices {
+    order: 1;
+    flex: 1 1 100%;
+}
 .rbfw-me-inventory-card .rbfw-var-chip-name {
-    width: 70px !important;
+    width: 180px !important;
+    max-width: 100% !important;
     height: auto !important;
     padding: 0 !important;
     border: none !important;

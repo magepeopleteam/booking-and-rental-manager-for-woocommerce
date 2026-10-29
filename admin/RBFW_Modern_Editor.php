@@ -890,6 +890,10 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$rbfw_variation_multiply_base = ( isset( $_POST['rbfw_variation_multiply_base'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['rbfw_variation_multiply_base'] ) ) ) ? 'yes' : 'no';
 			update_post_meta( $post_id, 'rbfw_variation_multiply_base', $rbfw_variation_multiply_base );
 
+			if ( class_exists( 'RBFW_Inventory' ) ) {
+				RBFW_Inventory::save_variation_qty_mode( $post_id );
+			}
+
 			$rbfw_variations_data = [];
 			if ( isset( $_POST['rbfw_variations_data'] ) && is_array( $_POST['rbfw_variations_data'] ) ) {
 				$rbfw_variations_data = rbfw_clean_variations_data( RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) ) );

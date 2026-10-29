@@ -15,6 +15,25 @@ function rbfwMdVariationUnits() {
     return units;
 }
 
+/**
+ * True when the Quantity dropdown is the gate the variation steppers distribute:
+ * the dropdown exists and the item is a "Quantity first" item
+ * (rbfw_variation_qty_mode()). A "Pick variations" item lets its steppers set the
+ * quantity, so the dropdown stays hidden and only carries their sum.
+ */
+function rbfwMdQuantityGatesVariations() {
+    var $qty = jQuery('#rbfw_item_quantity_md');
+    if (!$qty.length) return false;
+    if (!jQuery('.rbfw-variation-qty-input').length || typeof window.rbfwVariationQtyMode !== 'function') return true;
+    return window.rbfwVariationQtyMode($qty.closest('form')) === 'quantity';
+}
+
+// Show the Quantity row unless variation steppers own the quantity.
+function rbfwMdToggleQuantityRow() {
+    var stepperOwned = jQuery('#rbfw_item_quantity_md').length && !rbfwMdQuantityGatesVariations();
+    jQuery('.rbfw_quantity_md').toggle(!stepperOwned);
+}
+
 function rbfwMdDepositQuantity() {
     if (jQuery('#rbfw_security_deposit_per_quantity').val() !== 'yes') return 1;
     var variationUnits = rbfwMdVariationUnits();
@@ -1229,7 +1248,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             rbfwUpdateMultipleItemsDurationDates(response.start_date, response.end_date);
 
 
-            jQuery('.rbfw_quantity_md').show();
+            rbfwMdToggleQuantityRow();
 
             jQuery('.rbfw-variations-content-wrapper').show();
             jQuery('.rbfw_resourse_md').show();
@@ -2242,10 +2261,11 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             jQuery('#rbfw_item_quantity_md').html(quantity_options);
 
-            // The standalone Quantity dropdown now stays visible even with variations
-            // present: it is the gate the variation steppers are capped against
-            // (see rbfwVariationGroupCap() in rbfw_script.js), not something they replace.
-            jQuery('.rbfw_quantity_md').show();
+            // On a "Quantity first" item the standalone Quantity dropdown stays
+            // visible with variations present: it is the gate the variation steppers
+            // are capped against (see rbfwVariationGroupCap() in rbfw_script.js). On a
+            // "Pick variations" item the steppers set the quantity and it stays hidden.
+            rbfwMdToggleQuantityRow();
             jQuery('.multi-service-category-section').show();
             jQuery('.rbfw-variations-content-wrapper').show();
             jQuery('.rbfw_resourse_md').show();
@@ -2355,7 +2375,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                 // variant in EVERY independent group, not merely totalVariationQty
                 // > 0 summed across all of them.
                 var $mdQty = jQuery('#rbfw_item_quantity_md');
-                var mdQtyCap = $mdQty.length ? (parseInt($mdQty.val(), 10) || 0) : null;
+                var mdQtyCap = rbfwMdQuantityGatesVariations() ? (parseInt($mdQty.val(), 10) || 0) : null;
                 var variationsReady = (mdQtyCap !== null)
                     ? (mdQtyCap > 0 && rbfwMdGroupsAgree && totalVariationQty === mdQtyCap)
                     : (totalVariationQty > 0 && rbfwMdGroupsAgree);
