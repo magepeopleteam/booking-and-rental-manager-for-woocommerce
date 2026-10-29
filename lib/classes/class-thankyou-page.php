@@ -59,6 +59,42 @@
 			}
 
 			/**
+			 * The account a booking order belongs to: the customer of the linked
+			 * WooCommerce order (rbfw_user_id is copied from order postmeta, which
+			 * HPOS leaves empty), else the user saved by the old Mage Payment System.
+			 * 0 for a guest order.
+			 */
+			private function rbfw_order_customer_id( $order_id ) {
+				$wc_order_id = absint( get_post_meta( $order_id, 'rbfw_order_id', true ) );
+				if ( $wc_order_id && function_exists( 'wc_get_order' ) ) {
+					$wc_order = wc_get_order( $wc_order_id );
+					if ( $wc_order ) {
+						return (int) $wc_order->get_customer_id();
+					}
+				}
+
+				return absint( get_post_meta( $order_id, 'rbfw_user_id', true ) );
+			}
+
+			/**
+			 * Whether the visitor may see this booking on the Thank You page. Callers
+			 * have already matched the order's secret token or payment reference; on top
+			 * of that the record must be a booking order, and one placed from an account
+			 * opens only for that account or a site administrator.
+			 */
+			private function rbfw_can_view_order( $order_id ) {
+				if ( ! $order_id || 'rbfw_order' !== get_post_type( $order_id ) ) {
+					return false;
+				}
+				if ( current_user_can( 'manage_options' ) ) {
+					return true;
+				}
+				$customer_id = $this->rbfw_order_customer_id( $order_id );
+
+				return 0 === $customer_id || get_current_user_id() === $customer_id;
+			}
+
+			/**
 			 * Render the Order Received page: a success banner followed by
 			 * card sections (Order Information, Booking Details, Customer
 			 * Information, Price Summary) instead of nested HTML tables.
@@ -307,9 +343,8 @@
 					return;
 				}
 				// For Paypal and stripe Payment
-				if ( isset( $_GET['paymentId'] ) ) {
-					$payment_id = sanitize_text_field( wp_unslash( $_GET['paymentId'] ) );
-					$payer_id   = ! empty( $_GET['PayerID'] ) ? sanitize_text_field( wp_unslash( $_GET['PayerID'] ) ) : '';
+				$payment_id = isset( $_GET['paymentId'] ) && is_string( $_GET['paymentId'] ) ? sanitize_text_field( wp_unslash( $_GET['paymentId'] ) ) : '';
+				if ( '' !== $payment_id ) {
 					$args       = array(
 						'post_type'  => 'rbfw_order',
 						'meta_query' => array(
@@ -326,6 +361,10 @@
 							$the_query->the_post();
 							global $post;
 							$order_id        = $post->ID;
+							if ( ! $this->rbfw_can_view_order( $order_id ) ) {
+								wp_reset_postdata();
+								return;
+							}
 							$billing_name    = get_post_meta( $order_id, 'rbfw_billing_name', true );
 							$billing_email   = get_post_meta( $order_id, 'rbfw_billing_email', true );
 							$payment_method  = get_post_meta( $order_id, 'rbfw_payment_method', true );
@@ -350,15 +389,9 @@
 							// Recorded tax for this booking; empty string when the order carried none.
 							$tax_status = rbfw_booking_tax_note( $order_id );
 
-							if ( ! empty( $_GET['paymentStatus'] ) && empty( get_post_meta( $order_id, 'rbfw_payment_status', true ) ) ) {
-								$paymentStatus = sanitize_text_field( wp_unslash( $_GET['paymentStatus'] ) );
-							} else {
-								$paymentStatus = get_post_meta( $order_id, 'rbfw_payment_status', true );
-							}
-							update_post_meta( $order_id, 'rbfw_payment_id', $payment_id );
-							update_post_meta( $order_id, 'rbfw_payer_id', $payer_id );
-							update_post_meta( $order_id, 'rbfw_payment_status', $paymentStatus );
-							update_post_meta( $order_id, 'rbfw_order_status', 'processing' );
+							// Display only. Payment and order status belong to the gateway that
+							// verified the charge, never to the return URL (anyone can append
+							// paymentStatus=...).
 
 							$item_quantity = '';
 							if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
@@ -425,11 +458,13 @@
 					}
 				}
 				// For Offline Payment
-				if ( ! empty( $_GET['order_id'] ) && ! empty( $_GET['token'] ) ) {
-					$order_id      = sanitize_text_field( wp_unslash( $_GET['order_id'] ) );
-					$current_token = sanitize_text_field( wp_unslash( $_GET['token'] ) );
-					$origin_token  = get_post_meta( $order_id, 'rbfw_token', true );
-					if ( $current_token != $origin_token ) {
+				$order_id      = isset( $_GET['order_id'] ) && is_string( $_GET['order_id'] ) ? absint( wp_unslash( $_GET['order_id'] ) ) : 0;
+				$current_token = isset( $_GET['token'] ) && is_string( $_GET['token'] ) ? sanitize_text_field( wp_unslash( $_GET['token'] ) ) : '';
+				if ( $order_id && '' !== $current_token ) {
+					$origin_token = get_post_meta( $order_id, 'rbfw_token', true );
+					// Fail closed: only orders from the old Mage Payment System carry a
+					// token, so an empty stored token must never "match" an empty one.
+					if ( ! is_string( $origin_token ) || '' === $origin_token || ! hash_equals( $origin_token, $current_token ) || ! $this->rbfw_can_view_order( $order_id ) ) {
 						return;
 					}
 					$billing_name    = get_post_meta( $order_id, 'rbfw_billing_name', true );
