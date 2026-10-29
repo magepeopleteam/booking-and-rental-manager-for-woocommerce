@@ -159,8 +159,12 @@ if( ! class_exists('RBFW_Custom_Post')){
                     'filter_items_list'     => esc_html__('Filter Order list', 'booking-and-rental-manager-for-woocommerce'),
                 );
                 
+                // Private records: the title carries the customer's name. show_ui keeps
+                // the admin screens that 'public' used to imply.
                 $args = array(
-                'public'                => true,
+                'public'                => false,
+                'exclude_from_search'   => true,
+                'show_ui'               => true,
                 'show_in_nav_menus'     => false,
                 'show_in_menu'          => false,
                 'publicly_queryable'    => false,
@@ -207,7 +211,9 @@ if( ! class_exists('RBFW_Custom_Post')){
                 );
                 
                 $args = array(
-                'public'                => true,
+                'public'                => false,
+                'exclude_from_search'   => true,
+                'show_ui'               => true,
                 'show_in_nav_menus'     => false,
                 'show_in_menu'          => false,
                 'publicly_queryable'    => false,
