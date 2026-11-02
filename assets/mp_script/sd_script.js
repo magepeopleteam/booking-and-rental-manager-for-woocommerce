@@ -846,6 +846,8 @@ function rbfw_price_calculation_sd(){
     var rbfw_delivery_price = parseFloat(window.rbfwDeliveryTotal) || 0;
 
     var total_price = sub_total_price + rbfw_management_price + rbfw_delivery_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Add-on charges (e.g. PRO's last-minute fee); see rbfwSummaryCharges in md_script.js.
+    total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_bikecarsd_price_summary, .rbfw_bikecarsd_price_summary_only'));
 
     // Tax line (shared with every other booking type; see rbfwTaxLine in md_script.js).
     // The deposit is refundable, so it is never part of the taxable base.

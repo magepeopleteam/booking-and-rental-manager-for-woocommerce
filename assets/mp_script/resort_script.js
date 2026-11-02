@@ -365,6 +365,8 @@ function rbfwResortRenderSummary() {
     }
 
     var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
+    // Add-on charges (e.g. PRO's last-minute fee); see rbfwSummaryCharges in md_script.js.
+    total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_room_price_summary'));
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){

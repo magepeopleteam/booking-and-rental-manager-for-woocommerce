@@ -1242,7 +1242,7 @@ function rbfw_multi_items_ajax_price_calculation(){
                 jQuery('.security_deposit').hide();
             }
 
-            rbfwMdRenderTotal(rbfw_management_price + response.total_price);
+            rbfwMdRenderTotal(rbfw_management_price + response.total_price + rbfwSummaryCharges(rental_subtotal, jQuery('.rbfw_bikecarmd_price_result')));
 
             rbfwApplyMdDurationCostingResponse(response);
             rbfwUpdateMultipleItemsDurationDates(response.start_date, response.end_date);
@@ -1357,6 +1357,7 @@ function calculateAdditional() {
     // Multiple Items add-ons: discount per booking (quantity 1), as in the cart.
     var discount_price = rbfwMdDiscount(sub_total_price, 1);
     var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
+    total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_bikecarmd_price_result'));
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     if(rbfw_security_deposit_actual_amount){
@@ -1445,6 +1446,7 @@ function calculateTotalExtraService() {
     var discount_price = rbfwMdDiscount(sub_total_price, quantity);
 
     var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
+    total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_bikecarmd_price_result'));
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -1518,6 +1520,7 @@ function calculateTotalManagementPrice() {
     let discount_price = rbfwMdDiscount(sub_total_price, quantity);
 
     let total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
+    total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_bikecarmd_price_result'));
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
 
@@ -1627,6 +1630,7 @@ function calculateTotalSingleItem() {
         }
     }
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+    total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_bikecarmd_price_result'));
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -1780,6 +1784,7 @@ function calculateTotalMultipleItems(only_calculation=false) {
         // Multiple Items: a fixed discount is per booking (quantity 1), as in the cart.
         var discount_price = rbfwMdDiscount(sub_total_price, 1);
         var total_price = sub_total_price + rbfw_management_price - discount_price + parseFloat(rbfw_security_deposit_actual_amount);
+        total_price += rbfwSummaryCharges(sub_total_price, jQuery('.rbfw_bikecarmd_price_result'));
     // Tax line (shared helper; refundable deposit excluded from the taxable base).
     total_price += rbfwTaxLine(total_price - parseFloat(rbfw_security_deposit_actual_amount || 0));
 
@@ -2234,7 +2239,8 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                 jQuery('.security_deposit').hide();
             }
 
-            rbfwMdRenderTotal(rbfw_management_price + response.total_price);
+            let rbfw_rental_subtotal = (parseFloat(response.duration_price_number) || 0) + (parseFloat(response.service_cost) || 0) + rbfw_variation_price;
+            rbfwMdRenderTotal(rbfw_management_price + response.total_price + rbfwSummaryCharges(rbfw_rental_subtotal, jQuery('.rbfw_bikecarmd_price_result')));
             rbfwApplyMdDurationCostingResponse(response, $wrapper);
             jQuery('#rbfw_duration_price').val(response.duration_price);
 
@@ -2498,6 +2504,32 @@ window.rbfw_price_calculation_md = function () {
     }
     rbfwMdRenderTotal(rbfwMdTotalWithoutDelivery);
 };
+
+/**
+ * Add-on charges for the booking summary — one hook shared by every booking type.
+ *
+ * Each pricing script owns its total and rebuilds it from scratch on every date, quantity
+ * or add-on change, so an add-on cannot patch the rendered total afterwards: the next
+ * repaint would wipe it. Instead the scripts call this while they build the total. An
+ * add-on listens for 'rbfw_summary_charges', adds its amount to `charges.amount` and keeps
+ * its own line inside `charges.$summary` up to date (PRO's last-minute fee does this).
+ * The result goes into the taxable base, like the management fees.
+ *
+ * Display only: an add-on charges what it works out again on the server.
+ *
+ * @param {number} rental_subtotal The Subtotal row: rental + services + variations, before fees, discount and deposit.
+ * @param {jQuery} $summary        The summary box being repainted.
+ * @return {number} Amount to ADD to the total; 0 when no add-on charges anything.
+ */
+function rbfwSummaryCharges(rental_subtotal, $summary) {
+    var charges = {
+        subtotal: parseFloat(rental_subtotal) || 0,
+        $summary: ($summary && $summary.length) ? $summary : jQuery(),
+        amount: 0
+    };
+    jQuery(document.body).trigger('rbfw_summary_charges', [charges]);
+    return parseFloat(charges.amount) || 0;
+}
 
 /**
  * The booking summary's Tax line — one implementation shared by every booking type.
