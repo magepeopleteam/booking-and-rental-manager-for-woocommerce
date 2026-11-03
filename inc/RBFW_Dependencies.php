@@ -244,6 +244,13 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_style('select2.min', plugin_dir_url(__DIR__) . 'admin/css/select2.min.css');
 			wp_enqueue_style('rbfw-admin-style', plugin_dir_url(__DIR__) . 'admin/css/admin_style.css', array(), time());
 			wp_enqueue_style('rbfw-admin', plugin_dir_url(__DIR__) . 'assets/admin/css/admin.css', array(), time());
+			// Classic item editor only: the redesigned Pricing / Extra Service / Inventory / Fee
+			// Management sections are styled for the modern editor in rbfw-modern-editor.css;
+			// this carries those styles over to the classic meta box (see the file header).
+			$rbfw_screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+			if ( $rbfw_screen && 'post' === $rbfw_screen->base && 'rbfw_item' === $rbfw_screen->post_type ) {
+				wp_enqueue_style( 'rbfw-classic-editor', plugin_dir_url( __DIR__ ) . 'admin/css/rbfw-classic-editor.css', array( 'rbfw-admin-style', 'rbfw-admin' ), filemtime( RBFW_PLUGIN_DIR . '/admin/css/rbfw-classic-editor.css' ) );
+			}
 			wp_enqueue_style('rbfw-placeholder-loading', plugin_dir_url(__DIR__) . 'css/placeholder-loading.css');
 			wp_enqueue_style('smart_wizard_all', plugin_dir_url(__DIR__) . 'admin/css/smart_wizard_all.min.css');
 			// wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array());
