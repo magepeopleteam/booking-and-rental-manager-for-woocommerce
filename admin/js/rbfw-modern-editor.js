@@ -3242,10 +3242,16 @@
             return $wrap.find('.rbfw-me-panel.is-active').data('panel');
         }
 
-        function summaryLine($rows, label, value) {
+        // `note` (optional) is a short explanation shown under the label, e.g. how a fee was worked out.
+        function summaryLine($rows, label, value, note) {
+            var $label = $('<span></span>').text(label);
+            if (note) {
+                $label.append($('<small class="rbfw-me-fp-summary-note"></small>').text(note));
+            }
             $rows.append(
                 $('<div class="rbfw-me-fp-summary-row"></div>')
-                    .append($('<span></span>').text(label))
+                    .toggleClass('has-note', !! note)
+                    .append($label)
                     .append($('<span></span>').text(value))
             );
         }
@@ -3657,6 +3663,36 @@
                 summaryLine($summaryRows, label, money(amt));
             }
             return amt;
+        }
+
+        // Add-on charges (PRO's last-minute fee, for one) -- the editor's twin of
+        // rbfwSummaryCharges() on the booking forms. A listener of
+        // 'rbfw_me_preview_charges' on .rbfw-me-wrap reads its own (unsaved) fields,
+        // adds its amount to charges.amount and its rows to charges.lines as
+        // { label, amount, note }, and asks for a repaint with
+        // 'rbfw_me_preview_refresh' when those fields change.
+        //
+        // subtotal: rental + add-ons, before deposit and fees. startIso: the previewed
+        // start date (YYYY-MM-DD, '' when none is picked). today: the site's date
+        // (Settings -> General timezone), as siteNow() reads it.
+        function computeAddonCharges($summaryRows, subtotal, startIso) {
+            var charges = {
+                subtotal: subtotal,
+                startDate: startIso || '',
+                today: toIso(siteNow()),
+                itemType: currentRentType(),
+                money: money,
+                amount: 0,
+                lines: []
+            };
+            $wrap.trigger('rbfw_me_preview_charges', [charges]);
+            charges.lines.forEach(function (line) {
+                var amt = parseFloat(line.amount) || 0;
+                if (amt > 0) {
+                    summaryLine($summaryRows, line.label, money(amt), line.note);
+                }
+            });
+            return parseFloat(charges.amount) || 0;
         }
 
         /* ───────────── Extra services ───────────── */
@@ -4229,10 +4265,12 @@
                 total += extrasTotal(extraRows, extrasQty, 0);
             }
 
+            var rentalSubtotal = total;
             total += computeSecurityDeposit($summaryRows, total);
 
             var feesAmt = computeFees($summaryRows, total, 0, null);
             total += feesAmt;
+            total += computeAddonCharges($summaryRows, rentalSubtotal, selectedDateIso);
 
             $totalAmt.text(money(total));
         }
@@ -4357,10 +4395,12 @@
             summaryLine($summaryRows, 'Quantity', String(qty));
             summaryLine($summaryRows, row.label + ' @ ' + money(rate) + '/night × ' + totalDays, money(rate * totalDays));
 
+            var rentalSubtotal = total;
             total += computeSecurityDeposit($summaryRows, total);
 
             var feesAmt = computeFees($summaryRows, total, totalDays, start);
             total += feesAmt;
+            total += computeAddonCharges($summaryRows, rentalSubtotal, start ? toIso(start) : '');
             $totalAmt.text(money(total));
             $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', total <= 0);
         }
@@ -4720,10 +4760,12 @@
             // there are no fees configured.
             summaryLine($summaryRows, 'Subtotal', money(total));
 
+            var rentalSubtotal = total;
             total += computeSecurityDeposit($summaryRows, total);
 
             var feesAmt = computeFees($summaryRows, total, totalDays, start);
             total += feesAmt;
+            total += computeAddonCharges($summaryRows, rentalSubtotal, start ? toIso(start) : '');
 
             $totalAmt.text(money(total));
             $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', total <= 0);
@@ -5028,10 +5070,12 @@
                 total += extrasTotal(extraRows, extrasQty, 0);
             }
 
+            var rentalSubtotal = total;
             total += computeSecurityDeposit($summaryRows, total);
 
             var feesAmt = computeFees($summaryRows, total, 0, null);
             total += feesAmt;
+            total += computeAddonCharges($summaryRows, rentalSubtotal, start ? toIso(start) : '');
 
             $summary.show();
             $totalAmt.text(money(total));
