@@ -3448,6 +3448,10 @@ body.rtl.rbfw-modern-editor-screen .rbfw-me-step-nav {
 }
 .rbfw-me-fp-summary-row span:first-child { color: var(--me-muted); flex-shrink: 0; }
 .rbfw-me-fp-summary-row span:last-child { color: var(--me-text); font-weight: 600; text-align: right; }
+/* A row with an explanation under its label (e.g. how an add-on fee was worked out) may wrap. */
+.rbfw-me-fp-summary-row.has-note span:first-child { flex-shrink: 1; }
+.rbfw-me-fp-summary-row.has-note span:last-child { flex-shrink: 0; white-space: nowrap; }
+.rbfw-me-fp-summary-note { display: block; margin-top: 2px; font-size: 11px; line-height: 1.4; color: #94a3b8; }
 .rbfw-me-fp-summary-total {
     display: flex;
     align-items: baseline;
