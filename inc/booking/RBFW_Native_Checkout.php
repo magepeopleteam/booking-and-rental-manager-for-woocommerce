@@ -247,6 +247,15 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 				wp_send_json_error( array( 'message' => $result->get_error_message() ) );
 			}
 
+			// 7a0. Bind self-service reconfirmation to the browser that actually placed this
+			// booking: set a per-booking HttpOnly capability cookie. Only this customer (or a
+			// logged-in owner) can then request/verify an OTP for it — not any visitor who
+			// happens to know the booking reference. Must run before headers are sent, i.e.
+			// before wp_send_json_* below.
+			if ( ! empty( $result['booking_id'] ) && class_exists( 'RBFW_Booking_Reconfirm' ) ) {
+				RBFW_Booking_Reconfirm::grant_access( (int) $result['booking_id'] );
+			}
+
 			// 7a. Record the delivery choice as flat meta, so the bookings list, calendar,
 			// editor, PDF and emails can all read it without unpacking the raw payload.
 			if ( ! empty( $result['booking_id'] ) && function_exists( 'rbfw_delivery_save_booking_meta' ) ) {
