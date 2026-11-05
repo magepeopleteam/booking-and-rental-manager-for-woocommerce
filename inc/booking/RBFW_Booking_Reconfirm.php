@@ -12,6 +12,22 @@
  * flag (`rbfw_confirmed_by`) so the admin list can show it was the CUSTOMER who confirmed,
  * not staff. Controlled by Payments -> Custom Payment -> Offline Payment -> "Reconfirm
  * Booking Button" (default on) — RBFW_Function::offline_reconfirm_enabled().
+ *
+ * Authorization. The per-booking nonce is CSRF protection only: for a nopriv endpoint it is
+ * the same for every logged-out visitor and it is printed in the page, so it proves nothing
+ * about *who* is asking. Both AJAX endpoints therefore require, on top of the nonce, that
+ * the requester actually owns the booking — otherwise anyone who learned a booking reference
+ * could request a code for (and brute-force their way into confirming) someone else's
+ * booking. Ownership is one of:
+ *   - a logged-in user who owns the booking (by rbfw_user_id or by matching account email),
+ *     or an administrator; or
+ *   - possession of the per-booking HttpOnly capability cookie that grant_access() sets on
+ *     the browser that actually placed the booking during native checkout.
+ *
+ * Brute-force limit. The five-guess ceiling is enforced with a single atomic SQL claim
+ * (claim_attempt()), so no number of simultaneous verify requests can evaluate more than
+ * five codes — the earlier read-then-write counter let concurrent requests all read the same
+ * count and sail past the limit.
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	die;
@@ -28,6 +44,9 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 
 		/** Wrong-code attempts allowed per emailed code before a fresh one is required. */
 		const MAX_ATTEMPTS = 5;
+
+		/** How long the per-booking access cookie (set at checkout) stays valid. */
+		const ACCESS_TTL = 14 * DAY_IN_SECONDS;
 
 		public function __construct() {
 			add_action( 'wp_ajax_rbfw_reconfirm_send_otp', array( $this, 'ajax_send_otp' ) );
@@ -48,9 +67,124 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 		}
 
 		/**
-		 * Shared guard for both AJAX endpoints: booking exists, feature is on, and it is
-		 * still pending. Returns the booking id on success, or sends a JSON error and
-		 * returns null.
+		 * Name of the per-booking capability cookie.
+		 *
+		 * @param int $booking_id
+		 * @return string
+		 */
+		private static function cookie_name( $booking_id ) {
+			return 'rbfw_rc_' . absint( $booking_id );
+		}
+
+		/**
+		 * Secret capability token for a booking. Derived with wp_hash() from the site's
+		 * secret keys, so it cannot be forged or guessed from the (public) booking id, and
+		 * it is distinct per booking: holding one booking's token reveals nothing about any
+		 * other booking's.
+		 *
+		 * @param int $booking_id
+		 * @return string
+		 */
+		private static function access_token( $booking_id ) {
+			return wp_hash( 'rbfw_reconfirm_access|' . absint( $booking_id ) );
+		}
+
+		/**
+		 * Grant the current browser self-service rights for a booking by setting the
+		 * per-booking HttpOnly capability cookie. Called during native checkout for the
+		 * browser that actually placed the booking, so that later only that customer (or a
+		 * logged-in owner) can request/verify an OTP for it — not any visitor who happens to
+		 * know the booking reference.
+		 *
+		 * @param int $booking_id
+		 * @return void
+		 */
+		public static function grant_access( $booking_id ) {
+			$booking_id = absint( $booking_id );
+			if ( ! $booking_id || RBFW_Booking_Post_Type::POST_TYPE !== get_post_type( $booking_id ) ) {
+				return;
+			}
+			if ( headers_sent() ) {
+				return;
+			}
+
+			$token   = self::access_token( $booking_id );
+			$name    = self::cookie_name( $booking_id );
+			$expires = time() + self::ACCESS_TTL;
+			$path    = COOKIEPATH ? COOKIEPATH : '/';
+			$domain  = COOKIE_DOMAIN ? COOKIE_DOMAIN : '';
+
+			if ( PHP_VERSION_ID >= 70300 ) {
+				setcookie(
+					$name,
+					$token,
+					array(
+						'expires'  => $expires,
+						'path'     => $path,
+						'domain'   => $domain,
+						'secure'   => is_ssl(),
+						'httponly' => true,
+						'samesite' => 'Lax',
+					)
+				);
+			} else {
+				// PHP < 7.3 has no options array, so append SameSite to the path — the standard
+				// cross-version workaround. The plugin header declares Requires PHP: 7.0.
+				setcookie( $name, $token, $expires, $path . '; samesite=Lax', $domain, is_ssl(), true );
+			}
+
+			// Make it readable within this same request too (e.g. if anything reads it before
+			// the response completes); the browser uses the Set-Cookie header on later requests.
+			$_COOKIE[ $name ] = $token;
+		}
+
+		/**
+		 * Whether the current request carries a valid capability cookie for this booking.
+		 *
+		 * @param int $booking_id
+		 * @return bool
+		 */
+		private function has_access_cookie( $booking_id ) {
+			$name = self::cookie_name( $booking_id );
+			if ( empty( $_COOKIE[ $name ] ) ) {
+				return false;
+			}
+			$given = (string) wp_unslash( $_COOKIE[ $name ] );
+			return hash_equals( self::access_token( $booking_id ), $given );
+		}
+
+		/**
+		 * Whether the current requester is allowed to act on this booking. See the class
+		 * docblock: a logged-in owner (or admin), or the holder of the per-booking cookie.
+		 *
+		 * @param int $booking_id
+		 * @return bool
+		 */
+		private function requester_may_access( $booking_id ) {
+			if ( is_user_logged_in() ) {
+				$user = wp_get_current_user();
+				if ( user_can( $user, 'manage_options' ) ) {
+					return true;
+				}
+				$owner_id = absint( get_post_meta( $booking_id, 'rbfw_user_id', true ) );
+				if ( $owner_id && $owner_id === (int) $user->ID ) {
+					return true;
+				}
+				$booking_email = (string) get_post_meta( $booking_id, 'rbfw_customer_email', true );
+				if ( $booking_email && 0 === strcasecmp( $booking_email, (string) $user->user_email ) ) {
+					return true;
+				}
+				// A logged-in user who is not the owner may still hold the cookie from having
+				// placed the booking as a guest in this browser — fall through to that check.
+			}
+
+			return $this->has_access_cookie( $booking_id );
+		}
+
+		/**
+		 * Shared guard for both AJAX endpoints: booking exists, request is authentic (nonce),
+		 * the requester owns the booking, the feature is on, and it is still pending. Returns
+		 * the booking id on success, or sends a JSON error and returns null.
 		 *
 		 * @return int|null
 		 */
@@ -65,6 +199,12 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Security check failed. Please reload the page and try again.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 			if ( ! class_exists( 'RBFW_Function' ) || ! RBFW_Function::offline_reconfirm_enabled() ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Self-service confirmation is not available.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+			// Authorization: only the booking's own customer (or an admin) may act on it. The
+			// nonce above is CSRF protection, not proof of ownership. Use the same generic
+			// message as the feature-off case so this does not become a booking oracle.
+			if ( ! $this->requester_may_access( $booking_id ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'Self-service confirmation is not available.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 			// Re-check the REAL current status server-side — never trust that the page the
@@ -89,9 +229,16 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'No email address is on file for this booking.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 
-			$last_sent = (int) get_post_meta( $booking_id, 'rbfw_reconfirm_otp_sent_at', true );
-			$wait      = self::RESEND_COOLDOWN - ( time() - $last_sent );
-			if ( $last_sent && $wait > 0 ) {
+			// Atomically claim a send slot so two simultaneous requests can't both pass the
+			// cooldown and fire two emails / overwrite each other's code. The UPDATE only
+			// succeeds when the last send is older than the cooldown; InnoDB serializes
+			// concurrent UPDATEs on the row, so exactly one wins inside any cooldown window.
+			if ( ! $this->claim_send_slot( $booking_id ) ) {
+				$last = (int) get_post_meta( $booking_id, 'rbfw_reconfirm_otp_sent_at', true );
+				$wait = self::RESEND_COOLDOWN - ( time() - $last );
+				if ( $wait < 1 ) {
+					$wait = 1;
+				}
 				wp_send_json_error( array(
 					/* translators: %d: seconds to wait */
 					'message' => sprintf( esc_html__( 'Please wait %d seconds before requesting another code.', 'booking-and-rental-manager-for-woocommerce' ), $wait ),
@@ -104,7 +251,7 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 			update_post_meta( $booking_id, 'rbfw_reconfirm_otp_hash', wp_hash( $otp . '|' . $booking_id ) );
 			update_post_meta( $booking_id, 'rbfw_reconfirm_otp_expires', time() + self::OTP_TTL );
 			update_post_meta( $booking_id, 'rbfw_reconfirm_otp_attempts', 0 );
-			update_post_meta( $booking_id, 'rbfw_reconfirm_otp_sent_at', time() );
+			// rbfw_reconfirm_otp_sent_at was just set atomically by claim_send_slot().
 
 			$subject = esc_html__( 'Your booking confirmation code', 'booking-and-rental-manager-for-woocommerce' );
 			$body    = sprintf(
@@ -136,11 +283,6 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 
 			$otp = isset( $_POST['otp'] ) ? preg_replace( '/\D/', '', sanitize_text_field( wp_unslash( $_POST['otp'] ) ) ) : '';
 
-			$attempts = (int) get_post_meta( $booking_id, 'rbfw_reconfirm_otp_attempts', true );
-			if ( $attempts >= self::MAX_ATTEMPTS ) {
-				wp_send_json_error( array( 'message' => esc_html__( 'Too many incorrect attempts. Please request a new code.', 'booking-and-rental-manager-for-woocommerce' ) ) );
-			}
-
 			$expires = (int) get_post_meta( $booking_id, 'rbfw_reconfirm_otp_expires', true );
 			$hash    = get_post_meta( $booking_id, 'rbfw_reconfirm_otp_hash', true );
 
@@ -150,9 +292,18 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 			if ( time() > $expires ) {
 				wp_send_json_error( array( 'message' => esc_html__( 'This code has expired. Please request a new one.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
+
+			// Atomically claim one of the limited attempt slots BEFORE comparing the code. This
+			// is the race fix: because the claim both tests and increments the counter in one
+			// locked statement, no number of concurrent requests can ever evaluate more than
+			// MAX_ATTEMPTS codes against a single emailed code.
+			if ( ! $this->claim_attempt( $booking_id ) ) {
+				wp_send_json_error( array( 'message' => esc_html__( 'Too many incorrect attempts. Please request a new code.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+
 			if ( ! $otp || ! hash_equals( $hash, wp_hash( $otp . '|' . $booking_id ) ) ) {
-				update_post_meta( $booking_id, 'rbfw_reconfirm_otp_attempts', $attempts + 1 );
-				$left = max( 0, self::MAX_ATTEMPTS - ( $attempts + 1 ) );
+				$attempts = (int) get_post_meta( $booking_id, 'rbfw_reconfirm_otp_attempts', true );
+				$left     = max( 0, self::MAX_ATTEMPTS - $attempts );
 				wp_send_json_error( array(
 					/* translators: %d: attempts remaining */
 					'message' => sprintf( esc_html__( 'Incorrect code. %d attempt(s) remaining.', 'booking-and-rental-manager-for-woocommerce' ), $left ),
@@ -178,6 +329,73 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 			wp_send_json_success( array(
 				'message' => esc_html__( 'Thank you — your booking is now confirmed.', 'booking-and-rental-manager-for-woocommerce' ),
 			) );
+		}
+
+		/**
+		 * Atomically claim one wrong-attempt slot for the current code.
+		 *
+		 * A single conditional UPDATE increments the counter only while it is still below the
+		 * limit. InnoDB holds a row lock for the UPDATE, so concurrent verifies are serialized
+		 * and exactly MAX_ATTEMPTS of them can ever succeed; the rest match no row and are
+		 * rejected. Returns true when this request owns one of the slots.
+		 *
+		 * @param int $booking_id
+		 * @return bool
+		 */
+		private function claim_attempt( $booking_id ) {
+			global $wpdb;
+			$affected = $wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$wpdb->postmeta} SET meta_value = CAST(meta_value AS UNSIGNED) + 1 WHERE post_id = %d AND meta_key = %s AND CAST(meta_value AS UNSIGNED) < %d",
+					$booking_id,
+					'rbfw_reconfirm_otp_attempts',
+					self::MAX_ATTEMPTS
+				)
+			);
+			// The direct write bypasses the object cache, so drop the stale copy before the
+			// caller reads the counter back for the "attempts remaining" message.
+			wp_cache_delete( $booking_id, 'post_meta' );
+			return 1 === (int) $affected;
+		}
+
+		/**
+		 * Atomically claim the right to send a code, respecting the resend cooldown.
+		 *
+		 * The conditional UPDATE records "now" as the last-sent time only when the previous
+		 * send is older than the cooldown, so simultaneous requests can't both get through.
+		 * The very first send (no row yet) is handled by creating the row once.
+		 *
+		 * @param int $booking_id
+		 * @return bool True when this request may send; false while within the cooldown.
+		 */
+		private function claim_send_slot( $booking_id ) {
+			global $wpdb;
+			$now       = time();
+			$threshold = $now - self::RESEND_COOLDOWN;
+
+			$affected = $wpdb->query(
+				$wpdb->prepare(
+					"UPDATE {$wpdb->postmeta} SET meta_value = %d WHERE post_id = %d AND meta_key = %s AND CAST(meta_value AS UNSIGNED) <= %d",
+					$now,
+					$booking_id,
+					'rbfw_reconfirm_otp_sent_at',
+					$threshold
+				)
+			);
+			wp_cache_delete( $booking_id, 'post_meta' );
+
+			if ( 1 === (int) $affected ) {
+				return true;
+			}
+
+			// No row updated: either we're inside the cooldown, or there is no row yet because
+			// this is the first-ever send for the booking.
+			$last = get_post_meta( $booking_id, 'rbfw_reconfirm_otp_sent_at', true );
+			if ( '' === $last || null === $last ) {
+				update_post_meta( $booking_id, 'rbfw_reconfirm_otp_sent_at', $now );
+				return true;
+			}
+			return false;
 		}
 	}
 	new RBFW_Booking_Reconfirm();
