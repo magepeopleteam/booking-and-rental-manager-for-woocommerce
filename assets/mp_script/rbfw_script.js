@@ -523,10 +523,19 @@ function rbfwTimeToMinutes(t) {
 }
 
 // Morning / Afternoon / Evening bucket for a 24-hour "hours" value.
+// Returns the untranslated key; rbfwTimeSlotBucketLabel() gives the display text.
 function rbfwTimeSlotBucket(hours) {
     if (hours < 12) return 'Morning';
     if (hours < 18) return 'Afternoon';
     return 'Evening';
+}
+
+// Translated group heading for a rbfwTimeSlotBucket() key (strings are
+// localized in RBFW_Dependencies.php); English when they are unavailable.
+function rbfwTimeSlotBucketLabel(bucket) {
+    var keys = { Morning: 'time_group_morning', Afternoon: 'time_group_afternoon', Evening: 'time_group_evening' };
+    var text = (typeof rbfw_translation !== 'undefined' && keys[bucket]) ? rbfw_translation[keys[bucket]] : '';
+    return text || bucket;
 }
 
 // Lazily creates (once per getAvailableTimes() render pass) the row to
@@ -544,7 +553,7 @@ function rbfwGetTimeSlotGroup(wrap, groupEls, hours) {
 
     var heading = document.createElement('div');
     heading.className = 'rbfw_bikecarsd_time_group_label';
-    heading.textContent = label;
+    heading.textContent = rbfwTimeSlotBucketLabel(label);
     group.appendChild(heading);
 
     var row = document.createElement('div');
@@ -737,7 +746,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         span.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;;
 
                         a.appendChild(span);
-                        rbfwGetTimeSlotGroup(timeSelect, rbfwTimeGroupEls, hours).appendChild(a);
+                        rbfwGetTimeSlotGroup(timeSelect, rbfwTimeGroupEls, slot_time.hours).appendChild(a);
 
                     }else{
                         const option = document.createElement("option");
@@ -823,7 +832,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         span.textContent = formatTime(date, rbfw_js_variables.timeFormat);
 
                         a.appendChild(span);
-                        rbfwGetTimeSlotGroup(timeSelect, rbfwTimeGroupEls, hours).appendChild(a);
+                        rbfwGetTimeSlotGroup(timeSelect, rbfwTimeGroupEls, slot_time.hours).appendChild(a);
                     }else{
                         const option = document.createElement("option");
                         option.value = timeObj.time;
@@ -926,7 +935,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
     if (is_calendar === 'calendar' && timeSelect.children.length > 0) {
         var rbfwTimeHeading = document.createElement('div');
         rbfwTimeHeading.className = 'rbfw-single-right-heading';
-        rbfwTimeHeading.textContent = 'Select Time';
+        rbfwTimeHeading.textContent = (typeof rbfw_translation !== 'undefined' && rbfw_translation.select_time) ? rbfw_translation.select_time : 'Select Time';
         timeSelect.insertBefore(rbfwTimeHeading, timeSelect.firstChild);
     }
 
