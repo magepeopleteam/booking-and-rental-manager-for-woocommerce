@@ -201,6 +201,11 @@ if (! class_exists('RBFW_Dependencies')) {
                 'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
                 'past_time' => __('Past Time', 'booking-and-rental-manager-for-woocommerce'),
                 'not_available' => __('Not available', 'booking-and-rental-manager-for-woocommerce'),
+                // Time slot calendar headings (rbfw_script.js getAvailableTimes()).
+                'select_time' => __('Select Time', 'booking-and-rental-manager-for-woocommerce'),
+                'time_group_morning' => _x('Morning', 'time slot group heading', 'booking-and-rental-manager-for-woocommerce'),
+                'time_group_afternoon' => _x('Afternoon', 'time slot group heading', 'booking-and-rental-manager-for-woocommerce'),
+                'time_group_evening' => _x('Evening', 'time slot group heading', 'booking-and-rental-manager-for-woocommerce'),
                 'variation_price_options' => $rbfw_variation_price_options,
                 'any_duration' => __('Any duration', 'booking-and-rental-manager-for-woocommerce'),
                 'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
@@ -431,6 +436,11 @@ if (! class_exists('RBFW_Dependencies')) {
 				'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
 				'past_time' => __('Past Time', 'booking-and-rental-manager-for-woocommerce'),
 				'not_available' => __('Not available', 'booking-and-rental-manager-for-woocommerce'),
+				// Time slot calendar headings (rbfw_script.js getAvailableTimes()).
+				'select_time' => __('Select Time', 'booking-and-rental-manager-for-woocommerce'),
+				'time_group_morning' => _x('Morning', 'time slot group heading', 'booking-and-rental-manager-for-woocommerce'),
+				'time_group_afternoon' => _x('Afternoon', 'time slot group heading', 'booking-and-rental-manager-for-woocommerce'),
+				'time_group_evening' => _x('Evening', 'time slot group heading', 'booking-and-rental-manager-for-woocommerce'),
 				'sold_out' => __('Sold Out', 'booking-and-rental-manager-for-woocommerce'),
 				/* translators: %d: number of units still available on that date */
 				'day_stock_left' => __('%d left', 'booking-and-rental-manager-for-woocommerce'),
