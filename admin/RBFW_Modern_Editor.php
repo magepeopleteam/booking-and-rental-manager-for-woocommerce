@@ -759,7 +759,7 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$qtys        = $input['service_qty']   ?? [];
 			$imgs        = $input['service_img']   ?? [];
 			$new_extra   = [];
-			$count = count( $names );
+			$count = RBFW_Extra_Service::is_table_hidden( $post_id, $item_type ) ? 0 : count( $names );
 			for ( $i = 0; $i < $count; $i++ ) {
 				if ( ! empty( $names[ $i ] ) ) {
 					$row = [ 'service_name' => sanitize_text_field( $names[ $i ] ) ];
