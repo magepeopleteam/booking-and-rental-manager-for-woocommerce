@@ -978,18 +978,22 @@ function rbfw_calendar_timed_day( $pools, $date_ymd ) {
  *  Multiple Day (date only)     units left that day — the figure the sold-out marks use.
  *  Multiple Day (time picker)   units free the whole day; a day with free hours but no
  *                               unit free all day is marked part-booked ('p').
- *  Single Day / Appointment     all options added up, free the whole day; part-booked
- *                               days as above.
+ *  Single Day / Appointment     shared physical stock in timely mode, otherwise
+ *                               all options added up; part-booked days as above.
  *  Resort                       rooms of all types left for that night.
  *  Multiple Items               the bundle item that runs out first.
  *
  * Days without a figure (nothing tracks stock) are left out.
  *
+ * @param int $only_day Optional day of month for a single-day summary.
  * @return array<string,array{n:int,p:string}> Keyed Y-m-d.
  */
-function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
+function rbfw_calendar_day_stock_map( $post_id, $year, $month, $only_day = 0 ) {
     $type   = (string) get_post_meta( $post_id, 'rbfw_item_type', true );
     $days   = function_exists( 'cal_days_in_month' ) ? cal_days_in_month( CAL_GREGORIAN, $month, $year ) : (int) gmdate( 't', mktime( 0, 0, 0, $month, 1, $year ) );
+    $only_day = (int) $only_day;
+    $first_day = $only_day > 0 && $only_day <= $days ? $only_day : 1;
+    $last_day  = $only_day > 0 && $only_day <= $days ? $only_day : $days;
     $prefix = $year . '-' . str_pad( $month, 2, '0', STR_PAD_LEFT ) . '-';
     $inv    = get_post_meta( $post_id, 'rbfw_inventory', true );
     $inv    = is_array( $inv ) ? $inv : array();
@@ -1002,7 +1006,7 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
     if ( in_array( $type, array( 'bike_car_md', 'dress', 'equipment', 'others' ), true ) ) {
         if ( 'yes' !== get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ) {
             foreach ( (array) rbfw_day_wise_sold_out_check_by_month( $post_id, $year, $month, $days ) as $dmy => $left ) {
-                if ( is_numeric( $left ) ) {
+                if ( is_numeric( $left ) && ( $first_day === 1 && $last_day === $days || (int) gmdate( 'j', strtotime( $dmy ) ) === $first_day ) ) {
                     $map[ gmdate( 'Y-m-d', strtotime( $dmy ) ) ] = array( 'n' => max( 0, (int) $left ), 'p' => '' );
                 }
             }
@@ -1015,7 +1019,7 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
         }
         // Both sides read the stored local times in PHP's default zone (UTC under
         // WordPress), so these timestamps line up with strtotime() below.
-        for ( $i = 1; $i <= $days; $i++ ) {
+        for ( $i = $first_day; $i <= $last_day; $i++ ) {
             $ymd         = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
             $map[ $ymd ] = rbfw_calendar_timed_day( array( array( 'stock' => max( 0, $stock - $bundles( $ymd ) ), 'windows' => $win ) ), $ymd );
         }
@@ -1023,6 +1027,8 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
     }
 
     if ( 'bike_car_sd' === $type || 'appointment' === $type ) {
+        $timely = 'on' === get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+        $timely_buffer = max( 0, (int) get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) );
         $pools = array();
         $rows  = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
         foreach ( is_array( $rows ) ? $rows : array() as $row ) {
@@ -1032,11 +1038,15 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
                 $pools[ $name ] = array( 'stock' => max( 0, (int) $qty ), 'windows' => array() );
             }
         }
+        if ( $timely ) {
+            // Duration choices draw from one physical pool, not one pool per rate.
+            $pools = array( 'timely' => array( 'stock' => max( 0, (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) ), 'windows' => array() ) );
+        }
         if ( ! $pools ) {
             return $map;
         }
         foreach ( $inv as $booking_id => $entry ) {
-            if ( empty( $entry['rbfw_start_date_ymd'] ) || empty( $entry['rbfw_type_info'] ) || ! is_array( $entry['rbfw_type_info'] ) || ! rbfw_calendar_entry_holds( $booking_id, $entry ) ) {
+            if ( empty( $entry['rbfw_start_date_ymd'] ) || ( ! $timely && ( empty( $entry['rbfw_type_info'] ) || ! is_array( $entry['rbfw_type_info'] ) ) ) || ! rbfw_calendar_entry_holds( $booking_id, $entry ) ) {
                 continue;
             }
             $s_date = substr( $entry['rbfw_start_date_ymd'], 0, 10 );
@@ -1049,15 +1059,27 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
             if ( ! $start || ! $end ) {
                 continue;
             }
+            if ( $timely ) {
+                // The calendar uses inclusive minute windows; timely rentals use [start, end).
+                $end += $timely_buffer * HOUR_IN_SECONDS - MINUTE_IN_SECONDS;
+                if ( $end >= $start ) {
+                    $pools['timely']['windows'][] = array( 'start' => $start, 'end' => $end, 'qty' => max( 0, (int) ( $entry['rbfw_item_quantity'] ?? 0 ) ) );
+                }
+                continue;
+            }
             foreach ( $entry['rbfw_type_info'] as $name => $qty ) {
                 if ( isset( $pools[ $name ] ) && (int) $qty > 0 ) {
                     $pools[ $name ]['windows'][] = array( 'start' => $start, 'end' => max( $start, $end ), 'qty' => (int) $qty );
                 }
             }
         }
-        for ( $i = 1; $i <= $days; $i++ ) {
+        for ( $i = $first_day; $i <= $last_day; $i++ ) {
             $ymd         = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
-            $map[ $ymd ] = rbfw_calendar_timed_day( array_values( $pools ), $ymd );
+            $day_pools   = $pools;
+            if ( $timely ) {
+                $day_pools['timely']['stock'] = max( 0, $day_pools['timely']['stock'] - $bundles( $ymd ) );
+            }
+            $map[ $ymd ] = rbfw_calendar_timed_day( array_values( $day_pools ), $ymd );
         }
         return $map;
     }
@@ -1079,7 +1101,7 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
                 $stays[] = $entry;
             }
         }
-        for ( $i = 1; $i <= $days; $i++ ) {
+        for ( $i = $first_day; $i <= $last_day; $i++ ) {
             $ymd  = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
             $left = 0;
             foreach ( $rooms as $room => $qty ) {
@@ -1104,7 +1126,7 @@ function rbfw_calendar_day_stock_map( $post_id, $year, $month ) {
         $rows   = get_post_meta( $post_id, 'multiple_items_info', true );
         $rows   = is_array( $rows ) ? $rows : array();
         $return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
-        for ( $i = 1; $i <= $days; $i++ ) {
+        for ( $i = $first_day; $i <= $last_day; $i++ ) {
             $ymd    = $prefix . str_pad( $i, 2, '0', STR_PAD_LEFT );
             $lowest = null;
             foreach ( $rows as $row ) {

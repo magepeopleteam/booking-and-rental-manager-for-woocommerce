@@ -163,12 +163,22 @@ if ( ! function_exists( 'rbfw_fd_summary_badges' ) ) {
 		if ( $show_avail && function_exists( 'rbfw_is_off_day' ) && rbfw_is_off_day( $post_id ) ) {
 			$show_avail = false;
 		}
+		$today = current_time( 'Y-m-d' );
+		if ( $show_avail && function_exists( 'rbfw_pickup_date_error' ) && '' !== rbfw_pickup_date_error( $today, $post_id ) ) {
+			$show_avail = false;
+		}
+		if ( $show_avail && function_exists( 'rbfw_calendar_day_stock_map' ) ) {
+			$stock = rbfw_calendar_day_stock_map( $post_id, (int) substr( $today, 0, 4 ), (int) substr( $today, 5, 2 ), (int) substr( $today, 8, 2 ) );
+			if ( isset( $stock[ $today ] ) && 0 === (int) $stock[ $today ]['n'] && empty( $stock[ $today ]['p'] ) ) {
+				$show_avail = false;
+			}
+		}
 
 		/**
 		 * Filter whether the "Available Today" badge is shown.
 		 *
-		 * Lets a site widen the test — same-day booking being switched off, an item
-		 * being out of stock today — without replacing the template.
+		 * Lets a site customize the off-day, pickup-cutoff and stock checks
+		 * without replacing the template.
 		 *
 		 * @param bool $show_avail Whether to render the badge.
 		 * @param int  $post_id    rbfw_item id.
