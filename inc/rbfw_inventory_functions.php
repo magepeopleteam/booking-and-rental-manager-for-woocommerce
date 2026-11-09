@@ -288,17 +288,13 @@ function rbfw_get_inventory_booked_windows( $post_id, $inventory = null ) {
         return array();
     }
 
-    $inventory_based_on_return       = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
     $stock_manage_on_return_date_raw = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
     $stock_manage_on_return_date     = $stock_manage_on_return_date_raw ? $stock_manage_on_return_date_raw : 'no';
     $rbfw_buffer_time_after_raw      = get_post_meta( $post_id, 'rbfw_buffer_time_after', true );
     $rbfw_buffer_time_after          = $rbfw_buffer_time_after_raw ? $rbfw_buffer_time_after_raw : 0;
     $mepp_reduce_stock_multi         = get_option( 'mepp_reduce_stock', 'full' );
-    $inventory_managed_order_status  = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
-    $inventory_managed_order_status  = is_array( $inventory_managed_order_status ) ? $inventory_managed_order_status : [
-        'processing' => 'processing',
-        'completed'  => 'completed',
-    ];
+    // Same statuses the booking gate counts, so an on-hold or pending order keeps its units.
+    $blocking_statuses               = rbfw_get_blocking_order_statuses();
 
     $windows = array();
     foreach ( $inventory as $wc_order_id => $entry ) {
@@ -306,16 +302,20 @@ function rbfw_get_inventory_booked_windows( $post_id, $inventory = null ) {
             continue;
         }
 
-        $order = wc_get_order( $wc_order_id );
-        if ( ! $order || $order->get_status() == 'trash' || $order->get_status() == 'cancelled' ) {
-            continue;
+        /* Native (non-WooCommerce) bookings are keyed by their rbfw_booking id, which is
+           not an order: cancelling one removes its entry, so a present entry is live. */
+        if ( 'rbfw_booking' !== get_post_type( $wc_order_id ) ) {
+            $order = wc_get_order( $wc_order_id );
+            if ( ! $order || $order->get_status() == 'trash' || $order->get_status() == 'cancelled' ) {
+                continue;
+            }
         }
 
         $status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';
         if ( $status == 'partially-paid' && $mepp_reduce_stock_multi == 'deposit' ) {
             continue;
         }
-        if ( ! ( in_array( $status, $inventory_managed_order_status ) || $status == 'picked' || ( $inventory_based_on_return == 'yes' && $status == 'returned' ) ) ) {
+        if ( ! in_array( $status, $blocking_statuses, true ) ) {
             continue;
         }
 
@@ -825,9 +825,10 @@ function rbfw_calendar_day_stock_ajax() {
 
 /**
  * Whether an inventory entry holds stock, by the rules the availability checks use:
- * Inventory Managed Order Statuses, picked, returned when stock is held until return,
- * deposit-only orders skipped when stock is reduced on the full payment, and a Woo
- * order that is gone, trashed or cancelled holds nothing.
+ * the booking gate's statuses (rbfw_get_blocking_order_statuses(): Inventory Managed
+ * Order Statuses, picked, on-hold and pending), returned when stock is held until
+ * return, deposit-only orders skipped when stock is reduced on the full payment, and a
+ * Woo order that is gone, trashed or cancelled holds nothing.
  */
 function rbfw_calendar_entry_holds( $booking_id, $entry ) {
     static $rules = null;
@@ -838,9 +839,10 @@ function rbfw_calendar_entry_holds( $booking_id, $entry ) {
             ? $gen['inventory_managed_order_status']
             : array( 'processing' => 'processing', 'completed' => 'completed' );
         $rules   = array(
-            'managed' => $managed,
-            'return'  => is_array( $gen ) && isset( $gen['inventory_based_on_return'] ) && 'yes' === $gen['inventory_based_on_return'],
-            'deposit' => 'deposit' === get_option( 'mepp_reduce_stock', 'full' ),
+            'managed'  => $managed,
+            'blocking' => rbfw_get_blocking_order_statuses(),
+            'return'   => is_array( $gen ) && isset( $gen['inventory_based_on_return'] ) && 'yes' === $gen['inventory_based_on_return'],
+            'deposit'  => 'deposit' === get_option( 'mepp_reduce_stock', 'full' ),
         );
     }
     if ( ! is_array( $entry ) ) {
@@ -850,7 +852,7 @@ function rbfw_calendar_entry_holds( $booking_id, $entry ) {
     if ( 'partially-paid' === $status && $rules['deposit'] ) {
         return false;
     }
-    if ( ! ( in_array( $status, $rules['managed'], true ) || 'picked' === $status || ( $rules['return'] && 'returned' === $status ) ) ) {
+    if ( ! ( in_array( $status, $rules['blocking'], true ) || in_array( $status, $rules['managed'], true ) || ( $rules['return'] && 'returned' === $status ) ) ) {
         return false;
     }
     if ( 'rbfw_booking' !== get_post_type( $booking_id ) && function_exists( 'wc_get_order' ) ) {
@@ -1156,11 +1158,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     $stock_manage_on_return_date_raw = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
     $stock_manage_on_return_date     = $stock_manage_on_return_date_raw ? $stock_manage_on_return_date_raw : 'no';
     $mepp_reduce_stock               = get_option( 'mepp_reduce_stock', 'full' );
-    $inventory_managed_order_status  = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
-    $inventory_managed_order_status  = is_array( $inventory_managed_order_status ) ? $inventory_managed_order_status : [
-        'processing' => 'processing',
-        'completed'  => 'completed',
-    ];
+    // Same statuses the booking gate counts, so an on-hold or pending order keeps the day booked.
+    $blocking_statuses               = rbfw_get_blocking_order_statuses();
     $rbfw_variations_data_raw = get_post_meta( $post_id, 'rbfw_variations_data', true );
     $rbfw_variations_data     = $rbfw_variations_data_raw ? $rbfw_variations_data_raw : [];
     $multiple_items_info      = ( 'multiple_items' === $rent_type ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
@@ -1228,7 +1227,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         } elseif(is_array($rbfw_inventory)){
             foreach ($rbfw_inventory as $wc_order_id => $inventory) {
 
-                $order = wc_get_order($wc_order_id);
+                // Native bookings are keyed by their rbfw_booking id, not by a WooCommerce order.
+                $order = ( 'rbfw_booking' === get_post_type( $wc_order_id ) ) ? true : wc_get_order($wc_order_id);
 
                 if($order){
                     $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
@@ -1240,7 +1240,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
                     $checkValues = $inventory['rbfw_order_status'];
 
-                    if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
+                    if ( in_array( $checkValues, $blocking_statuses, true ) && $partial_stock ) {
 
 
                         $booked_dates = is_array($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
@@ -1506,13 +1506,15 @@ function rbfw_sd_timely_date_has_availability( $post_id, $date_ymd, $sd_data ) {
 }
 function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return,$start_time = null, $end_time = null){
     $total_single_service = 0;
+    // Same statuses the booking gate counts (incl. on-hold / pending orders).
+    $blocking_statuses = rbfw_get_blocking_order_statuses();
 
     if(is_array($inventory)){
         foreach($inventory as $item){
 
             $booked_dates = !empty($item['booked_dates']) ? $item['booked_dates'] : [];
 
-            if(in_array($date,$item['booked_dates']) && array_key_exists($paraent,$item['rbfw_service_infos']) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
+            if(in_array($date,$item['booked_dates']) && array_key_exists($paraent,$item['rbfw_service_infos']) && ( in_array( $item['rbfw_order_status'], $blocking_statuses, true ) || ( 'yes' === $inventory_based_on_return && 'returned' === $item['rbfw_order_status'] ) )){
                 $inventory_start_date = $booked_dates[0];
                 $inventory_end_date = end($booked_dates);
                 $inventory_start_time = $item['rbfw_start_time'];
@@ -1551,9 +1553,11 @@ function total_service_quantity($paraent,$service,$date,$inventory,$inventory_ba
 
 function total_extra_service_quantity($service,$date,$inventory,$inventory_based_on_return){
     $total_single_service = 0;
+    // Same statuses the booking gate counts (incl. on-hold / pending orders).
+    $blocking_statuses = rbfw_get_blocking_order_statuses();
     if(!empty($inventory)){
         foreach($inventory as $item){
-            if(in_array($date,$item['booked_dates'])  && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'') ) && isset($item['rbfw_service_info'][$service])){
+            if(in_array($date,$item['booked_dates'])  && ( in_array( $item['rbfw_order_status'], $blocking_statuses, true ) || ( 'yes' === $inventory_based_on_return && 'returned' === $item['rbfw_order_status'] ) ) && isset($item['rbfw_service_info'][$service])){
                 $total_single_service += $item['rbfw_service_info'][$service];
             }
         }
@@ -1565,11 +1569,13 @@ function total_extra_service_quantity($service,$date,$inventory,$inventory_based
 function total_variant_quantity($field_label,$variation,$date,$inventory,$inventory_based_on_return){
 
     $total_single_service = 0;
+    // Same statuses the booking gate counts (incl. on-hold / pending orders).
+    $blocking_statuses = rbfw_get_blocking_order_statuses();
     if(is_array($inventory)){
         foreach($inventory as $item){
             if(!empty($item['rbfw_variation_info'])){
                 foreach ($item['rbfw_variation_info'] as $key=>$single){
-                    if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
+                    if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ( in_array( $item['rbfw_order_status'], $blocking_statuses, true ) || ( 'yes' === $inventory_based_on_return && 'returned' === $item['rbfw_order_status'] ) )){
                         $total_single_service += $item['rbfw_item_quantity'];
                     }
                 }
@@ -2205,6 +2211,8 @@ function rbfw_check_available_by_specific_date_md($post_id, $specific_date = nul
         'processing' => 'processing',
         'completed'  => 'completed',
     ];
+    // Plus the statuses the booking gate counts (on-hold / pending), so this matches it.
+    $inventory_managed_order_status = array_merge( array_values( $inventory_managed_order_status ), rbfw_get_blocking_order_statuses() );
 
     $remaining_item_stock = $rbfw_item_stock_quantity;
     $sold_item_qty = 0;
@@ -2261,6 +2269,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
             'processing' => 'processing',
             'completed'  => 'completed',
         ];
+        // Plus the statuses the booking gate counts (on-hold / pending), so this matches it.
+        $tbl_inv_managed_order_status  = array_merge( array_values( $tbl_inv_managed_order_status ), rbfw_get_blocking_order_statuses() );
         if ( $query->have_posts() ) {
             while ( $query->have_posts() ) {
                 $query->the_post();
@@ -2608,6 +2618,8 @@ function rbfw_get_stock_details(){
                         'processing' => 'processing',
                         'completed'  => 'completed',
                     ];
+                    // Plus the statuses the booking gate counts (on-hold / pending), so this matches it.
+                    $inv_managed_order_status_closing = array_merge( array_values( $inv_managed_order_status_closing ), rbfw_get_blocking_order_statuses() );
 
                     foreach ($rbfw_inventory as $key => $inventory) {
 
@@ -3058,6 +3070,8 @@ function rbfw_get_stock_details(){
 
                         $md_managed = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
                         $md_managed = is_array( $md_managed ) ? $md_managed : array( 'processing' => 'processing', 'completed' => 'completed' );
+                        // Plus the statuses the booking gate counts (on-hold / pending), so this matches it.
+                        $md_managed = array_merge( array_values( $md_managed ), rbfw_get_blocking_order_statuses() );
                         $md_reduce_stock = get_option( 'mepp_reduce_stock', 'full' );
 
                         $md_rows = array();
