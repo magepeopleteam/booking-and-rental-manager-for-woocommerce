@@ -7,6 +7,9 @@
 	}
 	if ( ! class_exists( 'RBFW_Extra_Service' ) ) {
 		class RBFW_Extra_Service {
+			// Rent types that only show the Extra Service table when it already has rows.
+			const TYPES_WITHOUT_TABLE = [ 'bike_car_md', 'resort', 'equipment', 'dress', 'others' ];
+
 			public function __construct() {
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
@@ -381,7 +384,7 @@
 				$rbfw_extra_service_data       = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 
 				?>
-				<div class="rbfw_es_price_config_wrapper" data-has-legacy-data="<?php echo ! empty( $rbfw_extra_service_data ) ? '1' : '0'; ?>" <?php if ( ! empty( $GLOBALS['rbfw_modern_editor_rendering'] ) && empty( $rbfw_extra_service_data ) && in_array( $rbfw_item_type, [ 'bike_car_md', 'resort', 'equipment', 'dress', 'others' ] ) ) { echo 'style="display:none"'; } ?>>
+				<div class="rbfw_es_price_config_wrapper" data-has-legacy-data="<?php echo ! empty( $rbfw_extra_service_data ) ? '1' : '0'; ?>" <?php if ( ! empty( $GLOBALS['rbfw_modern_editor_rendering'] ) && empty( $rbfw_extra_service_data ) && in_array( $rbfw_item_type, self::TYPES_WITHOUT_TABLE ) ) { echo 'style="display:none"'; } ?>>
 					<?php $this->show_extra_service( $post_id ) ?>
 				</div>
 				<?php
@@ -457,41 +460,8 @@
 													</tr>
 													<?php
 												}
-											elseif ( 'auto-draft' === get_post_status( $post_id ) ) :
-												// Only a brand-new, never-saved item starts with 2 ready-made example
-												// extra services (name + price filled in, editable/removable like any
-												// other row). They are live inputs, so printing them for a saved item
-												// whose list is empty would write them back on its next save and the
-												// merchant could never remove them for good.
-												$rbfw_default_extra_services = array(
-													array( 'name' => 'Insurance Coverage', 'price' => '15', 'qty' => '50' ),
-													array( 'name' => 'Extra Cleaning Fee', 'price' => '10', 'qty' => '50' ),
-												);
-												foreach ( $rbfw_default_extra_services as $rbfw_default_es ) :
-													?>
-													<tr class="rbfw-es-example-row">
-														<td>
-															<div class="rbfw_service_image_wrap text-center">
-																<div class="rbfw_service_image_preview"></div>
-																<div class="service_image_add_remove">
-																	<a class="rbfw_service_image_btn button" title="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Upload image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-image"></i></a><a class="rbfw_remove_service_image_btn button" title="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>" aria-label="<?php esc_attr_e( 'Remove image', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></a>
-																	<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
-																</div>
-															</div>
-														</td>
-														<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $rbfw_default_es['name'] ); ?>"/></td>
-														<td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value=""/></td>
-														<td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_attr( $rbfw_default_es['price'] ); ?>"/></td>
-														<td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_attr( $rbfw_default_es['qty'] ); ?>"/></td>
-														<td>
-															<div class="mp_event_remove_move">
-																<button class="button remove-row" type="button"><i class="fas fa-trash-can"></i></button>
-																<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
-															</div>
-														</td>
-													</tr>
-												<?php endforeach; ?>
-											<?php endif; ?>
+											endif;
+											?>
 										<!-- empty hidden one for jQuery -->
 										<tr class="empty-row screen-reader-text">
 											<td>
@@ -524,6 +494,18 @@
 						</section>
 				<?php
 			}
+			/**
+			 * Whether the Extra Service table is hidden for this item. Hidden inputs
+			 * still submit, so what they send is not the merchant's input. An item
+			 * with stored rows shows the table, so those rows stay editable.
+			 *
+			 * @param int    $post_id   Rent item ID.
+			 * @param string $item_type Submitted rent type; empty falls back to the stored one.
+			 */
+			public static function is_table_hidden( int $post_id, string $item_type ): bool {
+				$item_type = $item_type ? $item_type : (string) get_post_meta( $post_id, 'rbfw_item_type', true );
+				return in_array( $item_type, self::TYPES_WITHOUT_TABLE, true ) && empty( get_post_meta( $post_id, 'rbfw_extra_service_data', true ) );
+			}
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
@@ -549,7 +531,8 @@
 					$service_desc      = isset( $input_data_sabitized['service_desc'] ) ? $input_data_sabitized['service_desc'] : array();
 					$qty               = isset( $input_data_sabitized['service_qty'] ) ? $input_data_sabitized['service_qty'] : array();
 					$qty_type          = ! empty( $input_data_sabitized['service_qty_type'] ) ? $input_data_sabitized['service_qty_type'] : array();
-					$count = count( $names );
+					$posted_item_type = isset( $input_data_sabitized['rbfw_item_type'] ) ? (string) $input_data_sabitized['rbfw_item_type'] : '';
+					$count = self::is_table_hidden( $post_id, $posted_item_type ) ? 0 : count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( ! empty( $service_img[ $i ] ) ) :
 							$new_extra_service[ $i ]['service_img'] = stripslashes( wp_strip_all_tags( $service_img[ $i ] ) );
