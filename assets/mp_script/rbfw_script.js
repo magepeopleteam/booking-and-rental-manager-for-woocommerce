@@ -588,6 +588,23 @@ function rbfwParseTimeParts(t) {
     return { hours: h, minutes: m };
 }
 
+// Both editors save time slots as [{id, time, status}], but the demo import and
+// older saves store plain strings (["10:00", "11:00"]) until the item is saved
+// again. A plain string has no status, so every such slot was skipped and the
+// time picker stayed empty. Treat it as an enabled slot.
+function rbfwNormalizeSlotList(list) {
+    var out = [];
+    (Array.isArray(list) ? list : []).forEach(function (slot) {
+        if (typeof slot === 'string' || typeof slot === 'number') {
+            var t = String(slot).trim();
+            if (t) { out.push({ time: t, status: 'enabled' }); }
+        } else if (slot && typeof slot === 'object') {
+            out.push(slot);
+        }
+    });
+    return out;
+}
+
 function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
     // Fall back to 0 when the buffer field is absent/empty: NaN here would make
@@ -625,6 +642,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
     } catch (e) {
         rdfw_available_timeJson = [];
     }
+    rdfw_available_timeJson = rbfwNormalizeSlotList(rdfw_available_timeJson);
     // Order the general available times clock-wise.
     rdfw_available_timeJson.sort(function (a, b) {
         return rbfwTimeToMinutes(a && a.time) - rbfwTimeToMinutes(b && b.time);
@@ -677,6 +695,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
             } catch (e) {
                 specific_available_time = [];
             }
+            specific_available_time = rbfwNormalizeSlotList(specific_available_time);
 
             // Order the date-specific available times clock-wise.
             specific_available_time.sort(function (a, b) {
