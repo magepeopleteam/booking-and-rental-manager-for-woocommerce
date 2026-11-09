@@ -457,17 +457,19 @@
 													</tr>
 													<?php
 												}
-											else :
-												// Brand-new items start with 2 ready-made example extra services
-												// (name + price filled in, editable/removable like any other row)
-												// instead of a completely empty table.
+											elseif ( 'auto-draft' === get_post_status( $post_id ) ) :
+												// Only a brand-new, never-saved item starts with 2 ready-made example
+												// extra services (name + price filled in, editable/removable like any
+												// other row). They are live inputs, so printing them for a saved item
+												// whose list is empty would write them back on its next save and the
+												// merchant could never remove them for good.
 												$rbfw_default_extra_services = array(
 													array( 'name' => 'Insurance Coverage', 'price' => '15', 'qty' => '50' ),
 													array( 'name' => 'Extra Cleaning Fee', 'price' => '10', 'qty' => '50' ),
 												);
 												foreach ( $rbfw_default_extra_services as $rbfw_default_es ) :
 													?>
-													<tr>
+													<tr class="rbfw-es-example-row">
 														<td>
 															<div class="rbfw_service_image_wrap text-center">
 																<div class="rbfw_service_image_preview"></div>

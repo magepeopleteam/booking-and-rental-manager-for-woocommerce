@@ -56,6 +56,12 @@
         var showCategory1 = ['bike_car_sd', 'appointment', 'multiple_items'];
         var showCategory2 = ['bike_car_md', 'resort'];
 
+        // Hidden inputs are still submitted: a new item's example rows must
+        // not be saved as real add-ons on a rent type that doesn't show them.
+        if (showCategory1.indexOf(itemType) === -1) {
+            $category1.find('tr.rbfw-es-example-row').remove();
+        }
+
         if (showCategory1.indexOf(itemType) !== -1) {
             $category1.show();
         } else if (showCategory2.indexOf(itemType) !== -1) {
