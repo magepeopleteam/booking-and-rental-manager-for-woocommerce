@@ -180,7 +180,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             array(
                 'name'    => 'inventory_managed_order_status',
                 'label'   => __( 'Inventory Managed Order Status', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc'    => __( 'Please Select which order status Will be Managed Inventory', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc'    => __( 'Pending, On Hold, Processing and Completed orders reserve inventory to prevent duplicate bookings.', 'booking-and-rental-manager-for-woocommerce' ),
                 'type'    => 'multicheck',
                 'default' => array( 'processing' => 'processing', 'completed' => 'completed' ),
                 'options' => array(

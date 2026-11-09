@@ -648,10 +648,23 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
         return rbfwTimeToMinutes(a && a.time) - rbfwTimeToMinutes(b && b.time);
     });
     let  sapecific_date_time = false;
-    let  time_enable = false;
-    let past_time = ''
-
     const selectedDate = new Date(givenDate);
+    if (isNaN(selectedDate.getTime())) { return; }
+    const current_date_time = rbfw_site_now();
+    const earliest_pickup = new Date(current_date_time);
+    earliest_pickup.setHours(earliest_pickup.getHours() + rbfw_buffer_time);
+
+    // Compare complete site-local datetimes. Comparing just the cutoff's date
+    // freed today's past slots whenever the pickup buffer crossed midnight.
+    function slotState(slot_time) {
+        const slot_date = new Date(givenDate + 'T00:00:00');
+        slot_date.setHours(slot_time.hours, slot_time.minutes, 0, 0);
+        const blocked = slot_date <= earliest_pickup;
+        return {
+            blocked: blocked,
+            label: blocked ? (slot_date <= current_date_time ? rbfw_past_time_label : rbfw_buffer_time_label) : ''
+        };
+    }
 
     const timeSelect = document.getElementById(pickup_time_particular);
 
@@ -711,34 +724,9 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                     var slot_time = rbfwParseTimeParts(timeObj.time);
                     if (!slot_time) { return; }
 
-                    // Live site clock, not the render-time rbfw_js_variables.currentDateTime: a page
-                    // served from a page cache carries the clock of when it was cached, which left
-                    // started slots bookable (and the server then refused them at add-to-cart).
-                    let current_date_time = rbfw_site_now();
-                    let actual_booking_date_time_format = new Date(current_date_time);
-                    actual_booking_date_time_format.setHours(current_date_time.getHours() + rbfw_buffer_time);
-
-                    let actual_booking_date_time = new Date(actual_booking_date_time_format);
-                    let actual_booking_date = actual_booking_date_time.toLocaleDateString('en-CA');
-
-                    let selectedDateStr = selectedDate.toISOString().split("T")[0];
-
-                    if (selectedDateStr === actual_booking_date) {
-                        // Compare against the slot time (already parsed to 24h above)
-                        actual_booking_date_time_format.setHours(slot_time.hours, slot_time.minutes, 0, 0);
-
-                        console.log('actual_booking_date_time_format',actual_booking_date_time_format);
-                        // console.log('timeDate',timeDate);
-
-                        if (actual_booking_date_time >= actual_booking_date_time_format) {
-                            time_enable = true;
-                            // Already started = past; still ahead but inside the buffer window = not bookable yet.
-                            past_time = (current_date_time >= actual_booking_date_time_format) ? rbfw_past_time_label : rbfw_buffer_time_label;
-                        }else{
-                            time_enable = false;
-                            past_time = '';
-                        }
-                    }
+                    const state = slotState(slot_time);
+                    const time_enable = state.blocked;
+                    const past_time = state.label;
 
 
                     // Create a JS Date object for formatting
@@ -792,34 +780,9 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                 var slot_time = rbfwParseTimeParts(timeObj.time);
                 if (!slot_time) { return; }
 
-                // Live site clock, not the render-time rbfw_js_variables.currentDateTime: a page
-                // served from a page cache carries the clock of when it was cached, which left
-                // started slots bookable (and the server then refused them at add-to-cart).
-                let current_date_time = rbfw_site_now();
-                let actual_booking_date_time_format = new Date(current_date_time);
-                actual_booking_date_time_format.setHours(current_date_time.getHours() + rbfw_buffer_time);
-
-                let actual_booking_date_time = new Date(actual_booking_date_time_format);
-                let actual_booking_date = actual_booking_date_time.toLocaleDateString('en-CA');
-
-                let selectedDateStr = selectedDate.toISOString().split("T")[0];
-
-                if (selectedDateStr === actual_booking_date) {
-                    // Compare against the slot time (already parsed to 24h above)
-                    actual_booking_date_time_format.setHours(slot_time.hours, slot_time.minutes, 0, 0);
-
-                    console.log('actual_booking_date_time_format',actual_booking_date_time_format);
-                   // console.log('timeDate',timeDate);
-
-                    if (actual_booking_date_time >= actual_booking_date_time_format) {
-                        time_enable = true;
-                        // Already started = past; still ahead but inside the buffer window = not bookable yet.
-                        past_time = (current_date_time >= actual_booking_date_time_format) ? rbfw_past_time_label : rbfw_buffer_time_label;
-                    }else{
-                        time_enable = false;
-                        past_time = '';
-                    }
-                }
+                const state = slotState(slot_time);
+                const time_enable = state.blocked;
+                const past_time = state.label;
 
 
                 let date = new Date();

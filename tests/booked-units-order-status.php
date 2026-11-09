@@ -30,6 +30,14 @@ $assert = static function ( $condition, $message ) use ( &$checks ) {
 $saved_rbfw      = $GLOBALS['rbfw'] ?? null;
 $GLOBALS['rbfw'] = $saved_rbfw ?: ( new ReflectionClass( 'MageRBFWClass' ) )->newInstanceWithoutConstructor();
 add_filter( 'pre_wp_mail', '__return_false' ); // order status changes send emails.
+// Status changes also run PRO's email callback. Its missing CLI content must not
+// reach html_entity_decode() as null on PHP 8.1+.
+set_error_handler( static function ( $severity, $message, $file, $line ) {
+	if ( ( error_reporting() & $severity ) && false !== strpos( $file, '/booking-and-rental-manager-for-woocommerce-pro/inc/rbfw_pdf.php' ) ) {
+		throw new ErrorException( $message, 0, $severity, $file, $line );
+	}
+	return false;
+} );
 
 $items  = array();
 $orders = array();
@@ -280,4 +288,5 @@ try {
 	}
 	remove_filter( 'pre_wp_mail', '__return_false' );
 	$GLOBALS['rbfw'] = $saved_rbfw;
+	restore_error_handler();
 }
