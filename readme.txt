@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.8.4
+Stable tag: 2.8.5
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -195,6 +195,18 @@ Appneck SDK *does not gather any data by default.* The SDK only starts gathering
 Learn more about how [Appsero collects and uses data](https://appneck.com/privacy-policy/).
 
 == Changelog ==
+= 2.8.5 =
+* Security: Improved security hardening.
+* Improvement: Let add-ons add their own charge line to every booking summary.
+* Improvement: Let add-ons add their own charge line to the editor's Frontend Preview.
+* Improvement: Classic editor: style the redesigned Pricing, Extra Service, Inventory and Fee sections.
+* Improvement: Show time slots again on the calendar time picker and make its labels translatable.
+* Improvement: Keep rented units booked while the order is on hold or pending.
+* Improvement: Show plain-string time slots on the booking form again.
+* Fix: Keep removed extra services from coming back.
+* Fix: Stop pre-filling examples and saving a hidden table.
+* Fix: Align rental calendars, badges and time slots.
+
 = 2.8.1 =
 * **Fixed: The Seasonal Pricing, Discount Over X Days and Min & Max Booking Day addons were saved in the editor but ignored, or priced inconsistently, on the booking forms themselves (Resort, Multiple Items and Multi Day).** Resort room pricing wasn't reading seasonal rates at all; a Resort booking with more than one room type could total the wrong amount under seasonal/tiered pricing; a blank seasonal rate billed a free night; Discount Over X Days never showed on the Resort summary; "Sessional pricing applied" could leak between visitors; a sold-out room could block the cart from reading rooms listed after it; and a Multiple Items discount badge could show without the discount actually being applied. Booking totals on tax-inclusive shops could also save as empty. All of these now price the same way on the booking form as they do in the cart.
 * Updated the bundled Appneck SDK to the latest version.
