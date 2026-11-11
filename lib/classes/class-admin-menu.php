@@ -639,7 +639,7 @@
                         document.querySelectorAll('.pro-overlay').forEach(function (button) {
                             button.addEventListener('click', function (event) {
                                 event.preventDefault();
-                                window.open('<?php echo esc_js( esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ) ); ?>', '_blank');
+                                window.open('<?php echo esc_js( esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing' ) ); ?>', '_blank');
                             });
                         });
                     </script>
@@ -719,7 +719,7 @@
 									<div class="rbfw-gs-card-icon"><i class="fas fa-crown"></i></div>
 									<h4><?php esc_html_e( 'Upgrade to Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></h4>
 									<p><?php esc_html_e( 'Unlock advanced pricing, security deposits, PDF invoices, backend orders, and priority support.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-									<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-pro"><?php esc_html_e( 'Get Pro Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+									<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing" target="_blank" rel="noopener" class="rbfw-gs-btn rbfw-gs-btn-pro"><?php esc_html_e( 'Get Pro Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 								</div>
 							<?php endif; ?>
 							<div class="rbfw-gs-card">
