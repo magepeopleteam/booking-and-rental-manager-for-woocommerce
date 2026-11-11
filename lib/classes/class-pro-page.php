@@ -121,7 +121,7 @@ if (!class_exists('RBFWProPage')) {
 					<h1><?php esc_html_e( 'Booking and Rental Manager for WooCommerce — Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
 					<p><?php esc_html_e( 'Everything the free plugin gives you to build the booking flow, plus the back office to actually run the business: payments, receipts, custom forms, reporting and calendar sync.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 					<div class="rbfw_gopro_hero_actions">
-						<a href="<?php echo esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_primary" target="_blank" rel="noopener"><?php esc_html_e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+						<a href="<?php echo esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_primary" target="_blank" rel="noopener"><?php esc_html_e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 						<a href="<?php echo esc_url( 'https://www.wprently.com/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_ghost_light" target="_blank" rel="noopener"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 						<a href="<?php echo esc_url( 'https://docs.mage-people.com/docs/wprently/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_ghost_light" target="_blank" rel="noopener"><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 					</div>
@@ -177,7 +177,7 @@ if (!class_exists('RBFWProPage')) {
 				<!-- Final CTA -->
 				<div class="rbfw_gopro_cta">
 					<h2><?php esc_html_e( 'Ready to run bookings like a business?', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-					<a href="<?php echo esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_primary" target="_blank" rel="noopener"><?php esc_html_e( 'Download PRO Version Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+					<a href="<?php echo esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing' ); ?>" class="rbfw_gopro_btn rbfw_gopro_btn_primary" target="_blank" rel="noopener"><?php esc_html_e( 'Download PRO Version Now', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 				</div>
 
 			</div>

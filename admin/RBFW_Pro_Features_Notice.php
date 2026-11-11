@@ -27,8 +27,8 @@ if ( ! class_exists( 'RBFW_Pro_Features_Notice' ) ) {
 
 	class RBFW_Pro_Features_Notice {
 
-		/** Where "Buy Pro Version" goes — unchanged from the row this replaces. */
-		const PRO_URL = 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/';
+		/** Where "Buy Pro Version" goes: the Pro product page, scrolled to its pricing table. */
+		const PRO_URL = 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing';
 
 		public function __construct() {
 			add_action( 'rbfw_modern_editor_pro_links', array( $this, 'render' ) );

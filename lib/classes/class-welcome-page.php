@@ -47,7 +47,7 @@
                             <span class="dashicons dashicons-book"></span>
                             <?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </a>
-                        <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/" target="_blank" rel="noopener" class="rbfw_welcome_btn rbfw_welcome_btn_outline_light">
+                        <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing" target="_blank" rel="noopener" class="rbfw_welcome_btn rbfw_welcome_btn_outline_light">
                             <span class="dashicons dashicons-cart"></span>
                             <?php esc_html_e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </a>
@@ -197,7 +197,7 @@
                             <h2><?php esc_html_e( 'Ready to unlock the full feature set?', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
                             <p><?php esc_html_e( 'Get Pro and the available addons to enable PayPal/Stripe checkout, branded PDF receipts, custom forms, reporting and more.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
-                        <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/" target="_blank" rel="noopener" class="rbfw_welcome_btn rbfw_welcome_btn_primary">
+                        <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/#pricing" target="_blank" rel="noopener" class="rbfw_welcome_btn rbfw_welcome_btn_primary">
                             <span class="dashicons dashicons-cart"></span>
                             <?php esc_html_e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </a>
