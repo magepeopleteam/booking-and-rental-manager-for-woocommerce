@@ -2,7 +2,7 @@
 /**
  * Rental Docs — admin documentation module (renderer + menu).
  *
- * Read-only. Registers a top-level "Rental Docs" menu with 7 sub-pages that
+ * Read-only. Registers a top-level "Rental Docs" menu with 8 sub-pages that
  * render entirely from includes/docs/docs-data.php. Assets load only on these
  * pages. Every page renders the full document so the live search covers all
  * entries regardless of which sub-page is open.
@@ -53,6 +53,7 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 					'fields'          => array( __( 'Fields & Post Types', self::TD ), 'dashicons-database' ),
 					'shortcodes'      => array( __( 'Shortcodes & Blocks', self::TD ), 'dashicons-shortcode' ),
 					'woocommerce'     => array( __( 'WooCommerce Integration', self::TD ), 'dashicons-cart' ),
+					'calendar-sync'   => array( __( 'Calendar Sync (Airbnb, Booking.com…)', self::TD ), 'dashicons-calendar-alt' ),
 					'free-pro'        => array( __( 'Free vs Pro', self::TD ), 'dashicons-star-filled' ),
 					'faq'             => array( __( 'Troubleshooting / FAQ', self::TD ), 'dashicons-editor-help' ),
 				);
@@ -74,7 +75,7 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 
 		public function register_menu() {
 			// A single "Documentation" page under the main plugin (Rent Item)
-			// menu. The whole documentation lives on this one page — the 7
+			// menu. The whole documentation lives on this one page — the 8
 			// sections, the in-page section nav and the live search are all
 			// rendered together, so nothing needs its own submenu.
 			$this->hooks[] = add_submenu_page(
@@ -268,6 +269,7 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 						$this->section_fields( $d );
 						$this->section_shortcodes( $d );
 						$this->section_woocommerce( $d );
+						$this->section_calendar_sync( $d );
 						$this->section_free_pro( $d );
 						$this->section_faq( $d );
 						?>
@@ -523,7 +525,110 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 			$this->close_section();
 		}
 
-		/* ---- 6. Free vs Pro ---- */
+		/* ---- 6. Calendar Sync (Pro) ---- */
+		private function section_calendar_sync( $d ) {
+			$cs = isset( $d['calendar_sync'] ) ? $d['calendar_sync'] : array();
+			$this->open_section( 'calendar-sync' );
+			if ( ! empty( $cs['intro'] ) ) {
+				echo '<p class="rbfw-doc-lead">' . $this->badge( 'pro' ) . ' ' . $this->t( $cs['intro'] ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			}
+
+			// Short answers first: what is (and is not) needed.
+			if ( ! empty( $cs['basics'] ) ) {
+				echo '<div class="rbfw-doc-cards">';
+				foreach ( (array) $cs['basics'] as $card ) {
+					echo '<div' . $this->entry_attrs( $card['title'] . ' ' . $card['body'], 'rbfw-doc-card' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<div class="rbfw-doc-card-head">' . $this->t( $card['title'] ) . '</div><p>' . $this->t( $card['body'] ) . '</p>';
+					echo '</div>';
+				}
+				echo '</div>';
+			}
+
+			// Setup, in order.
+			if ( ! empty( $cs['steps'] ) ) {
+				echo '<h3 class="rbfw-doc-h3">' . esc_html__( 'Set it up, step by step', self::TD ) . '</h3>';
+				echo '<ol class="rbfw-doc-flow">';
+				$n = 0;
+				foreach ( (array) $cs['steps'] as $step ) {
+					$n++;
+					echo '<li' . $this->entry_attrs( $step['title'] . ' ' . $step['body'], 'rbfw-doc-step' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<span class="rbfw-doc-step-num">' . esc_html( $n ) . '</span>';
+					echo '<div class="rbfw-doc-step-body"><h3>' . $this->t( $step['title'] ) . '</h3><p>' . $this->t( $step['body'] ) . '</p>';
+					if ( ! empty( $step['url'] ) ) {
+						echo '<a class="rbfw-doc-openlink" href="' . esc_url( admin_url( $step['url'] ) ) . '"><span class="dashicons dashicons-external"></span>' . esc_html__( 'Open screen', self::TD ) . '</a>';
+					}
+					echo '</div></li>';
+				}
+				echo '</ol>';
+			}
+
+			// Exact clicks on each platform.
+			if ( ! empty( $cs['channels'] ) ) {
+				echo '<h3 class="rbfw-doc-h3">' . esc_html__( 'Platform by platform', self::TD ) . '</h3>';
+				if ( ! empty( $cs['channels_note'] ) ) {
+					echo '<p class="rbfw-doc-muted">' . $this->t( $cs['channels_note'] ) . '</p>';
+				}
+				echo '<div class="rbfw-doc-cards">';
+				foreach ( (array) $cs['channels'] as $channel ) {
+					$to     = (array) ( isset( $channel['to_platform'] ) ? $channel['to_platform'] : array() );
+					$from   = (array) ( isset( $channel['from_platform'] ) ? $channel['from_platform'] : array() );
+					$note   = isset( $channel['note'] ) ? $channel['note'] : '';
+					$search = $channel['name'] . ' ' . implode( ' ', $to ) . ' ' . implode( ' ', $from ) . ' ' . $note;
+					echo '<div' . $this->entry_attrs( $search, 'rbfw-doc-card rbfw-doc-integration' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<div class="rbfw-doc-card-head">' . $this->t( $channel['name'] ) . '</div>';
+					$name   = html_entity_decode( $channel['name'], ENT_QUOTES, 'UTF-8' );
+					if ( $to ) {
+						/* translators: %s: platform name, e.g. Airbnb */
+						$heading = ! empty( $channel['to_title'] ) ? $channel['to_title'] : sprintf( __( 'Link 1 — your bookings to %s', self::TD ), $name );
+						echo '<p><strong>' . $this->t( $heading ) . '</strong></p><ol class="rbfw-doc-integration-reqs">';
+						foreach ( $to as $line ) {
+							echo '<li>' . $this->t( $line ) . '</li>';
+						}
+						echo '</ol>';
+					}
+					if ( $from ) {
+						/* translators: %s: platform name, e.g. Airbnb */
+						$heading = ! empty( $channel['from_title'] ) ? $channel['from_title'] : sprintf( __( 'Link 2 — %s bookings to your website', self::TD ), $name );
+						echo '<p><strong>' . $this->t( $heading ) . '</strong></p><ol class="rbfw-doc-integration-reqs">';
+						foreach ( $from as $line ) {
+							echo '<li>' . $this->t( $line ) . '</li>';
+						}
+						echo '</ol>';
+					}
+					if ( '' !== $note ) {
+						echo '<p class="rbfw-doc-muted">' . $this->t( $note ) . '</p>';
+					}
+					echo '</div>';
+				}
+				echo '</div>';
+			}
+
+			// What happens after setup.
+			if ( ! empty( $cs['behaviour'] ) ) {
+				echo '<h3 class="rbfw-doc-h3">' . esc_html__( 'How it works once connected', self::TD ) . '</h3>';
+				echo '<div class="rbfw-doc-cards">';
+				foreach ( (array) $cs['behaviour'] as $card ) {
+					echo '<div' . $this->entry_attrs( $card['title'] . ' ' . $card['body'], 'rbfw-doc-card' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<div class="rbfw-doc-card-head">' . $this->t( $card['title'] ) . '</div><p>' . $this->t( $card['body'] ) . '</p>';
+					echo '</div>';
+				}
+				echo '</div>';
+			}
+
+			// Problems and their fixes.
+			if ( ! empty( $cs['troubleshooting'] ) ) {
+				echo '<h3 class="rbfw-doc-h3">' . esc_html__( 'Calendar Sync troubleshooting', self::TD ) . '</h3>';
+				foreach ( (array) $cs['troubleshooting'] as $item ) {
+					echo '<div' . $this->entry_attrs( $item['q'] . ' ' . $item['a'], 'rbfw-doc-acc' ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					echo '<button type="button" class="rbfw-doc-acc-head" aria-expanded="false"><span class="rbfw-doc-acc-title"><span class="dashicons dashicons-editor-help"></span>' . $this->t( $item['q'] ) . '</span><span class="rbfw-doc-acc-meta"><span class="dashicons dashicons-arrow-down-alt2"></span></span></button>';
+					echo '<div class="rbfw-doc-acc-body"><p>' . $this->t( $item['a'] ) . '</p></div>';
+					echo '</div>';
+				}
+			}
+			$this->close_section();
+		}
+
+		/* ---- 7. Free vs Pro ---- */
 		private function section_free_pro( $d ) {
 			$this->open_section( 'free-pro' );
 			echo '<p class="rbfw-doc-lead">' . esc_html__( 'What each feature includes in Free versus Pro. Based on the actual code (which plugin registers the feature).', self::TD ) . '</p>';
@@ -550,7 +655,7 @@ if ( ! class_exists( 'RBFW_Docs_Page' ) ) {
 			return '<span class="rbfw-doc-partial">' . $this->t( $v ) . '</span>';
 		}
 
-		/* ---- 7. FAQ ---- */
+		/* ---- 8. FAQ ---- */
 		private function section_faq( $d ) {
 			$this->open_section( 'faq' );
 			echo '<p class="rbfw-doc-lead">' . esc_html__( 'Common issues surfaced during the audit, with the exact fix.', self::TD ) . '</p>';

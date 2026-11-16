@@ -8,7 +8,8 @@
  *
  * Returned array keys map to the documentation pages:
  *   meta, getting_started, menus, settings, item_types, editor_tabs,
- *   post_types, taxonomies, shortcodes, blocks, woocommerce, free_vs_pro, faq
+ *   post_types, taxonomies, shortcodes, blocks, woocommerce, calendar_sync,
+ *   free_vs_pro, faq
  *
  * @package Booking_And_Rental_Manager
  */
@@ -166,6 +167,7 @@ return array(
 		array( 'name' => 'Template',          'plan' => 'free', 'desc' => 'Layout/template choice for the single item page.' ),
 		array( 'name' => 'Coupon Settings',   'plan' => 'free', 'desc' => 'Enable coupons and restrict which coupons apply to this item.' ),
 		array( 'name' => 'Payment Settings',  'plan' => 'free', 'desc' => 'Per-item payment overrides used by the checkout.' ),
+		array( 'name' => 'Calendar Sync',     'plan' => 'pro',  'desc' => 'The item\'s Export link for Airbnb / Booking.com / Stayz / Vrbo, the platforms\' calendar links to import, Sync now, and the upcoming imported dates. Modern editor: Advanced step → Calendar Sync (PRO) card. See the Calendar Sync section of this page.' ),
 	),
 
 	/* ------------------------------------------------------------------ *
@@ -380,7 +382,215 @@ return array(
 		'automation' => array(
 			array( 'name' => 'Google Calendar sync', 'plan' => 'pro', 'desc' => 'Bookings sync to a Google Calendar via a service account. Runs on save and on a background cron (single events scheduled ~30s after a change).' ),
 			array( 'name' => 'License update check',  'plan' => 'pro', 'desc' => 'A daily cron checks for Pro updates via the bundled update checker.' ),
+			array( 'name' => 'Calendar Sync import',  'plan' => 'pro', 'desc' => 'Downloads every connected Airbnb / Booking.com / Stayz / Vrbo / iCal calendar at the Import Frequency (Settings → Calendar Sync, default every 30 minutes), plus once right after a new link is saved. One run at a time; items not reached in about 45 seconds continue on the next run. Needs WordPress scheduled tasks (site traffic or a real server cron for wp-cron.php).' ),
 			array( 'name' => 'Capabilities',          'plan' => 'free','desc' => 'No new roles are created. All admin screens require manage_options; override with the rbfw_bookings_capability filter to grant e.g. shop managers.' ),
+		),
+	),
+
+	/* ------------------------------------------------------------------ *
+	 * 5b. Calendar Sync (Pro) — Airbnb, Booking.com, Stayz, Vrbo, iCal
+	 * ------------------------------------------------------------------ */
+	'calendar_sync' => array(
+		'intro' => 'Keep each rental item\'s availability in step with Airbnb, Booking.com, Stayz, Vrbo, Google Calendar and any other platform that offers an iCal (.ics) calendar link. Dates booked on those platforms close the item on your website, and dates booked on your website are blocked on those platforms. It uses the calendar links every platform gives its hosts, so there is nothing to apply for and no account to connect.',
+		'basics' => array(
+			array(
+				'title' => 'Do I need an API key, listing ID or partner account?',
+				'body'  => 'No. You only copy links. Every platform shows an "export calendar" link for each listing, and your website shows an Export link for each rental item. The listing ID and a secret key are already inside those links, so there is nothing else to enter. Direct API connections to Airbnb or Booking.com are only open to approved channel managers; iCal links are what they offer every host.',
+			),
+			array(
+				'title' => 'What you need',
+				'body'  => 'Booking and Rental Manager Pro active, and Rent Item → Settings → Calendar Sync turned on (it is on by default). Your website must be reachable on the internet at its public address, because the platforms download your link: a local or office-network address (localhost, 192.168.x.x) or a password-protected / coming-soon site cannot be reached, so test on a live or staging site. WordPress scheduled tasks must run (normal visitor traffic is enough; a real server cron is better).',
+			),
+			array(
+				'title' => 'Two links per platform, per listing',
+				'body'  => 'Link 1 goes from your website to the platform: copy the item\'s Export link and paste it into the platform\'s "import calendar" field. Link 2 goes from the platform to your website: copy the platform\'s "export calendar" link and paste it into the item\'s Imported calendars. Do both for every platform the listing is on.',
+			),
+			array(
+				'title' => 'One rental item per listing',
+				'body'  => 'Dates imported from a platform close the whole rental item (every unit). Connect each Airbnb / Booking.com / Stayz listing to its own rental item. Three identical apartments listed separately = three rental items.',
+			),
+			array(
+				'title' => 'Where the settings are',
+				'body'  => 'Shop-wide: Rent Item → Settings → Calendar Sync. Per item: edit the rental item — Classic editor: the Calendar Sync tab; Modern editor: the Advanced step → Calendar Sync (PRO) card.',
+			),
+		),
+		'steps' => array(
+			array(
+				'title' => 'Turn on Calendar Sync',
+				'body'  => 'Rent Item → Settings → Calendar Sync. Keep "Calendar Sync" ticked, choose the Import Frequency (every 30 minutes is a good default) and save. Leave "Share Imported Dates" off unless you read "Share Imported Dates (hub mode)" below.',
+				'url'   => $rbfw_item_base . '&page=rbfw_settings_page',
+			),
+			array(
+				'title' => 'Open the rental item that matches the listing',
+				'body'  => 'Edit the rental item for the property (one item per listing) and open its Calendar Sync tab (Classic editor) or the Advanced step → Calendar Sync (PRO) card (Modern editor).',
+				'url'   => $rbfw_item_base,
+			),
+			array(
+				'title' => 'Copy the item\'s Export link',
+				'body'  => 'Under "Export link (this site → channels)" click Copy. It looks like https://your-site.com/?rbfw_ical=123-AbCd…xyz.ics. Keep it private: anyone with it can see which dates are booked (no guest details).',
+			),
+			array(
+				'title' => 'Paste it into each platform (Link 1)',
+				'body'  => 'On Airbnb, Booking.com, Stayz or Vrbo, open the listing\'s calendar sync / import calendar screen, paste the Export link and give it a name such as "My website". The exact clicks for each platform are listed under "Platform by platform" below.',
+			),
+			array(
+				'title' => 'Copy each platform\'s export link (Link 2)',
+				'body'  => 'On the same platform screen, copy its "export calendar" link. It is a long address that usually ends in .ics — not the address of the listing page.',
+			),
+			array(
+				'title' => 'Add it to the rental item',
+				'body'  => 'Back in the item, click "Add calendar", choose the Channel (Airbnb, Booking.com, Stayz, Vrbo, Google Calendar or Other) and paste the link. Add one row per platform (up to 10 per item).',
+			),
+			array(
+				'title' => 'Save the item, then click Sync now',
+				'body'  => 'Save / Update the item. New links are downloaded in the background within a few minutes; click "Sync now" to do it at once. Each row then shows "Synced … ago · N upcoming booked periods", and the dates are listed under "Upcoming imported dates".',
+			),
+			array(
+				'title' => 'Check that it works',
+				'body'  => 'Open the item on your website: the platform\'s booked nights are greyed out in the booking calendar. Open your Export link in a private browser window: it downloads a file that starts with BEGIN:VCALENDAR. On the platform, the imported calendar shows as connected (the first import can take a few hours there).',
+			),
+		),
+		'channels_note' => 'Platforms rename their menus from time to time. On any platform, look for "Sync calendars", "Connect calendars", "Import calendar", "Export calendar" or "iCal".',
+		'channels' => array(
+			array(
+				'name'          => 'Airbnb',
+				'to_platform'   => array(
+					'Airbnb → Listings → choose the listing → Availability (calendar settings).',
+					'Under "Connect calendars" (calendar sync), choose "Connect to another website".',
+					'Paste the item\'s Export link, name it (e.g. "My website") and click Connect.',
+				),
+				'from_platform' => array(
+					'Same screen → "Export calendar".',
+					'Copy the link shown (it ends in .ics).',
+					'In the rental item: Add calendar → Channel "Airbnb" → paste → save the item → Sync now.',
+				),
+				'note'          => 'Airbnb downloads your link on its own schedule, usually every few hours. Its export contains reservations and the nights you block by hand ("Airbnb (Not available)"); both block the item here.',
+			),
+			array(
+				'name'          => 'Booking.com',
+				'to_platform'   => array(
+					'Extranet → Rates & Availability → Sync calendars.',
+					'Choose the room / unit and click "Add calendar connection" (import a calendar).',
+					'Paste the item\'s Export link, give it a name and save.',
+				),
+				'from_platform' => array(
+					'Same screen → export calendar.',
+					'Copy the link.',
+					'In the rental item: Add calendar → Channel "Booking.com" → paste → save the item → Sync now.',
+				),
+				'note'          => 'Connect each Booking.com room / unit to its own rental item. Booking.com offers calendar sync mainly for homes and apartments, and hides it when the property already uses a channel manager.',
+			),
+			array(
+				'name'          => 'Stayz / Vrbo',
+				'to_platform'   => array(
+					'Owner dashboard → Calendar → Import & export (Stayz runs on the Vrbo platform, so the screens are the same).',
+					'Choose "Import calendar".',
+					'Paste the item\'s Export link, name it and save.',
+				),
+				'from_platform' => array(
+					'Calendar → Import & export → "Export calendar".',
+					'Copy the link.',
+					'In the rental item: Add calendar → Channel "Stayz" or "Vrbo" → paste → save the item → Sync now.',
+				),
+				'note'          => 'Imported calendars are refreshed by Stayz / Vrbo on their own schedule.',
+			),
+			array(
+				'name'          => 'Google Calendar',
+				'to_title'      => 'Link 1 — your bookings into Google Calendar',
+				'from_title'    => 'Link 2 — busy events in Google block your website',
+				'to_platform'   => array(
+					'To see the item\'s bookings in Google: Google Calendar → Other calendars → + → From URL.',
+					'Paste the item\'s Export link and click Add calendar.',
+				),
+				'from_platform' => array(
+					'To block dates from Google: Google Calendar → Settings → choose the calendar → Integrate calendar.',
+					'Copy "Secret address in iCal format".',
+					'In the rental item: Add calendar → Channel "Google Calendar" → paste → save the item → Sync now.',
+				),
+				'note'          => 'Only events shown as Busy block dates; events marked Free do not. Google refreshes calendars added from a URL slowly (it can take many hours).',
+			),
+			array(
+				'name'          => 'Any other platform (iCal)',
+				'to_title'      => 'Link 1 — your bookings to the platform',
+				'from_title'    => 'Link 2 — the platform\'s bookings to your website',
+				'to_platform'   => array(
+					'Find the listing\'s "import calendar", "iCal" or "calendar sync" option.',
+					'Paste the item\'s Export link and save.',
+				),
+				'from_platform' => array(
+					'Copy the platform\'s export / iCal (.ics) link for the listing.',
+					'In the rental item: Add calendar → Channel "Other (iCal link)" → paste → save the item → Sync now.',
+				),
+				'note'          => 'Any platform or calendar app that publishes a standard iCal (.ics) link works the same way.',
+			),
+		),
+		'behaviour' => array(
+			array(
+				'title' => 'Which dates are blocked on your website',
+				'body'  => 'Every booking and every blocked date in a connected calendar, except cancelled events and events marked as free time. A stay from the 20th to the 23rd blocks the nights of the 20th, 21st and 22nd; the 23rd (check-out day) stays bookable so a new guest can arrive that day. Blocked dates are greyed out in the booking calendar, the item is left out of search results when the searched pickup date is blocked, and a pickup-to-return range that crosses blocked dates cannot be chosen.',
+			),
+			array(
+				'title' => 'Where a clashing booking is refused',
+				'body'  => 'Even on a cached page, the booking is refused when it is added to the cart, again in the cart and at checkout (a rental already in a cart is stopped if the dates were imported meanwhile), in the Standalone checkout and for booking requests. The customer is told which dates are taken. Bookings you create yourself in the admin (Backend Orders add-on) are not blocked, so you can still override.',
+			),
+			array(
+				'title' => 'What the Export link sends',
+				'body'  => 'The nights the item cannot take another booking: when every unit is booked (paid, processing, on-hold and pending orders all count, as in the stock rules). An item with several units is closed on the platforms only when the last unit is gone. By default it also sends the item\'s Off Day date ranges and the global off dates as "Not available" (Export Closed Dates); weekly off days are not sent. It covers the next 12 months (Export Period). It contains dates only — no names, emails, phone numbers or order numbers.',
+			),
+			array(
+				'title' => 'How fast it syncs',
+				'body'  => 'Your website downloads the connected calendars every 15 minutes, 30 minutes, hour or 3 hours (Import Frequency), right after a new link is saved, and whenever you click Sync now. The platforms download your Export link on their own schedule — often every one to a few hours — which you cannot speed up. No iCal sync is instant, so the same dates can occasionally be booked on two sites within that short window; keep the Import Frequency short to narrow it.',
+			),
+			array(
+				'title' => 'If a platform cannot be reached',
+				'body'  => 'If a calendar cannot be downloaded (the platform is down, or the link was removed), the dates from the last successful download stay in force, so booked dates never reopen by accident. The calendar row shows the error in red until a sync succeeds again.',
+			),
+			array(
+				'title' => 'Share Imported Dates (hub mode)',
+				'body'  => 'Off by default: the Export link only sends bookings made on your website, so connect the platforms to each other as well (for example Airbnb ↔ Booking.com). Turn it on in Settings → Calendar Sync to make your website the hub instead: each imported calendar row then shows its own "Export link for this channel" — paste that link, not the general one, into that platform. It sends every other platform\'s dates but never the platform\'s own, so bookings cannot bounce back. Use either hub mode or direct platform-to-platform links, not both.',
+			),
+			array(
+				'title' => 'Changing, removing or resetting links',
+				'body'  => 'Delete a row (bin icon) or change its link and save the item: the old calendar\'s dates stop blocking at once. If the Export link was shared by mistake, click Reset link and paste the new link into every platform — the old one stops working immediately.',
+			),
+		),
+		'troubleshooting' => array(
+			array(
+				'q' => 'Do I need to enter an Airbnb / Booking.com ID, API key or password anywhere?',
+				'a' => 'No. Only the links are exchanged. The platform\'s export link already identifies the listing, and your Export link already identifies the rental item (with a secret key).',
+			),
+			array(
+				'q' => 'The platform says it cannot read or import my calendar link.',
+				'a' => 'Open the Export link in a private browser window. It must download text that starts with BEGIN:VCALENDAR. "Not found" means the link was reset or the item is in the trash — copy the current link from the item. If the site cannot be opened from outside your network (localhost, 192.168.x.x, a password-protected or coming-soon site), the platform cannot reach it either. Security / firewall rules (bot protection) and page-cache plugins must let addresses containing ?rbfw_ical= through and must not cache them.',
+			),
+			array(
+				'q' => 'The calendar row says "The link did not return a calendar (.ics) file".',
+				'a' => 'The pasted address is a web page (usually the listing page), not the calendar. Copy the platform\'s export / iCal link instead; it usually ends in .ics.',
+			),
+			array(
+				'q' => 'The calendar row says "The calendar link answered with HTTP 404" (or 403 / 410).',
+				'a' => 'The platform no longer accepts that link: it was regenerated or the calendar connection was removed there. Copy a fresh export link from the platform, replace it in the item and save.',
+			),
+			array(
+				'q' => 'The calendar row says "Could not download the calendar".',
+				'a' => 'The platform did not answer in time or the address could not be reached. It retries automatically at the next sync, and the previous dates stay in force meanwhile. For security, links pointing to private or local network addresses are refused.',
+			),
+			array(
+				'q' => 'Dates booked on Airbnb (or another platform) are still open on my website.',
+				'a' => 'Open the item and click Sync now, then read the row status. Check that Rent Item → Settings → Calendar Sync is ticked. If the status is fine but a page still shows the old calendar, clear your page cache — the booking is refused at add to cart anyway. If syncs only happen when you click Sync now, WordPress scheduled tasks are not running: the site needs visitors or a real server cron job for wp-cron.php.',
+			),
+			array(
+				'q' => 'A booking made on my website does not show on Airbnb / Booking.com.',
+				'a' => 'The platform downloads your link on its own schedule (often every few hours). The Export link only lists nights where no unit is left, so an item with 2 units and 1 booking stays open; cancelled orders are not sent. Check that the platform shows your calendar as connected.',
+			),
+			array(
+				'q' => 'Imported dates are one day off.',
+				'a' => 'Check Settings → General → Timezone in WordPress: it must be the time zone of the property. Times from the platforms are converted to that time zone.',
+			),
+			array(
+				'q' => 'Can I see the guest\'s name for an imported booking?',
+				'a' => 'Only what the platform writes into its calendar (for example Airbnb shows "Reserved", Booking.com "CLOSED - Not available"). Guest details stay on the platform. Imported periods are listed under "Upcoming imported dates" in the item.',
+			),
 		),
 	),
 
@@ -403,6 +613,7 @@ return array(
 		array( 'feature' => 'Booking Form Builder + conditional logic', 'free' => false, 'pro' => true ),
 		array( 'feature' => 'Review system (submit & moderate)',        'free' => 'Display toggle only', 'pro' => true ),
 		array( 'feature' => 'Booking Calendar + Google Calendar sync',  'free' => false, 'pro' => true ),
+		array( 'feature' => 'Calendar Sync with Airbnb, Booking.com, Stayz, Vrbo (iCal)', 'free' => false, 'pro' => true ),
 		array( 'feature' => 'Customer Portal (login, bookings, invoices)', 'free' => false, 'pro' => true ),
 		array( 'feature' => 'Reports / attendee dashboard',             'free' => false, 'pro' => true ),
 	),
@@ -411,6 +622,10 @@ return array(
 	 * 7. Troubleshooting / FAQ
 	 * ------------------------------------------------------------------ */
 	'faq' => array(
+		array(
+			'q' => 'How do I sync availability with Airbnb, Booking.com, Stayz or Vrbo?',
+			'a' => 'Use Calendar Sync (Pro). No API key or ID is needed: you exchange iCal links between each rental item and each platform listing. Follow the step-by-step guide in the Calendar Sync section of this page.',
+		),
 		array(
 			'q' => 'I changed the CPT slug and now item pages 404.',
 			'a' => 'After changing CPT Slug (Settings → General) you must flush permalinks: go to Settings → Permalinks and click Save Changes once.',

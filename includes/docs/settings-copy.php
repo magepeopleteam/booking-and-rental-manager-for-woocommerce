@@ -424,4 +424,25 @@ return array(
 		'what'  => 'The wording shown in the location box of the search form before a customer chooses — for example "Pickup Location".',
 		'where' => 'Search forms.',
 	),
+	/* ---------------- Calendar Sync (Pro) ---------------- */
+	'rbfw_cs_enable' => array(
+		'what'  => 'Master switch for syncing rental availability with Airbnb, Booking.com, Stayz, Vrbo and other iCal calendars. When it is off, nothing is downloaded, imported dates stop blocking, and the items\' Export links answer "Not found". Connecting a listing is done in each rental item — see the Calendar Sync section of this page.',
+		'where' => 'Each rental item\'s Calendar Sync tab (Classic editor) or Advanced → Calendar Sync (PRO) card (Modern editor); the booking calendars, cart and checkout.',
+	),
+	'rbfw_cs_interval' => array(
+		'what'  => 'How often your website downloads the platforms\' calendars again. Shorter means a booking made on Airbnb closes the dates here sooner. It relies on WordPress scheduled tasks; for exact timing set up a real server cron job for wp-cron.php. The platforms download your Export link on their own schedule, which this setting cannot change.',
+		'where' => 'Background only. "Sync now" in an item downloads at once.',
+	),
+	'rbfw_cs_export_months' => array(
+		'what'  => 'How far ahead the Export link lists the nights an item is fully booked, from 1 to 36 months.',
+		'where' => 'What Airbnb, Booking.com and the other platforms receive from your Export link.',
+	),
+	'rbfw_cs_export_closed' => array(
+		'what'  => 'Also sends the item\'s Off Day date ranges and the global off dates as "Not available", so the platforms are closed on dates you closed here. Weekly off days (for example every Sunday) are not sent.',
+		'where' => 'What the platforms receive from your Export link.',
+	),
+	'rbfw_cs_hub_mode' => array(
+		'what'  => 'Makes your website the hub between the platforms: dates imported from one platform are also sent to the others. Each imported calendar row then gets its own "Export link for this channel", which leaves that platform\'s own dates out so bookings cannot bounce back. Leave it off if the platforms are already connected to each other directly.',
+		'where' => 'The per-channel export links in each rental item\'s Calendar Sync settings.',
+	),
 );

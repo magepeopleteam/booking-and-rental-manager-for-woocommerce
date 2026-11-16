@@ -191,6 +191,19 @@ return array(
 		'fields'  => array(
 		),
 	),
+	'rbfw_pro_calendar_sync_settings' => array(
+		'title'   => 'Calendar Sync',
+		'plan'    => 'pro',
+		'purpose' => 'Two-way availability sync with Airbnb, Booking.com, Stayz, Vrbo, Google Calendar and other iCal calendars. Per-item links are set in each rental item (see the Calendar Sync section).',
+		'path'    => 'Rent Item → Settings',
+		'fields'  => array(
+			array('name'=>'rbfw_cs_enable','label'=>'Calendar Sync','type'=>'checkbox','default'=>'on','desc'=>'Keep availability in step with Airbnb, Booking.com, Stayz, Vrbo, Google Calendar and any other calendar that offers an iCal (.ics) link.','options'=>'','plan'=>'pro'),
+			array('name'=>'rbfw_cs_interval','label'=>'Import Frequency','type'=>'select','default'=>'30min','desc'=>'How often the connected calendars are downloaded again.','options'=>'15min=Every 15 minutes|30min=Every 30 minutes|hourly=Every hour|3hours=Every 3 hours','plan'=>'pro'),
+			array('name'=>'rbfw_cs_export_months','label'=>'Export Period (months)','type'=>'number','default'=>'12','desc'=>'How many months ahead the export link lists booked dates (1–36).','options'=>'','plan'=>'pro'),
+			array('name'=>'rbfw_cs_export_closed','label'=>'Export Closed Dates','type'=>'checkbox','default'=>'on','desc'=>'Also send the item&#039;s off-date ranges and the global off dates to the channels as unavailable. Weekly off days are not sent.','options'=>'','plan'=>'pro'),
+			array('name'=>'rbfw_cs_hub_mode','label'=>'Share Imported Dates','type'=>'checkbox','default'=>'off','desc'=>'Also send the dates imported from one channel to the item&#039;s other channels, so this site is the hub between them.','options'=>'','plan'=>'pro'),
+		),
+	),
 	'rbfw_status_page_settings' => array(
 		'title'   => 'Status',
 		'plan'    => 'free',
