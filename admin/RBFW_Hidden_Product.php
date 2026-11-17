@@ -20,6 +20,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
             add_action('add_option_rbfw_basic_payment_settings', array($this, 'flush_backfill_flag'));
             add_action('parse_query', array($this, 'hide_wc_hidden_product_from_product_list'));
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
+            add_filter('woocommerce_is_purchasable', array($this, 'purchasable_only_while_item_viewable'), 20, 2);
             //******************//
             add_action('wp_head', [$this, 'url_exclude_search_engine']);
             // add_action('init', [$this, 'get_all_hidden_product_id']);
@@ -558,6 +559,33 @@ if (!class_exists('RBFW_Hidden_Product')) {
 		        $query->set( 'tax_query', $tax_query );
 	        }
         }
+        /**
+         * A backing product can be bought only while its rental item is publicly viewable.
+         *
+         * The backing product stays published when the item is set to draft, pending or
+         * private (or trashed), and hiding it from the catalog does not stop an add to
+         * cart by product ID. WooCommerce checks this on every add to cart (classic,
+         * AJAX, Store API) and again when it loads a saved cart, so a line added while
+         * the item was public is removed once the item is unpublished. Editors who can
+         * read the item, and admin-created orders, are unaffected.
+         *
+         * @param bool       $purchasable Current result.
+         * @param WC_Product $product     Product being checked.
+         * @return bool
+         */
+        public function purchasable_only_while_item_viewable( $purchasable, $product ) {
+            if ( ! $purchasable || ! is_object( $product ) || ! method_exists( $product, 'get_id' ) ) {
+                return $purchasable;
+            }
+
+            $item_id = absint( get_post_meta( $product->get_id(), 'link_rbfw_id', true ) );
+            if ( ! $item_id || ! function_exists( 'rbfw_can_view_item' ) ) {
+                return $purchasable; // not a rental's backing product
+            }
+
+            return rbfw_can_view_item( $item_id );
+        }
+
         public function hide_hidden_wc_product_from_frontend() {
             global $post, $wp_query;
 
