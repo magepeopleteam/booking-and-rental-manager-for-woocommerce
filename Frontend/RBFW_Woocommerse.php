@@ -12,6 +12,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 return;
             }
 
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_item_viewable'), 3, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_booking_nonce'), 4, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_block_add_to_cart_when_standalone'), 5, 2 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
@@ -55,6 +56,41 @@ if (!class_exists('RBFW_Woocommerce')) {
             /* Self-healing: rebuild booking records for paid orders placed before this fix
                (e.g. redirect-gateway orders that never triggered the thank-you page). */
             add_action( 'admin_init', array($this ,  'rbfw_backfill_missing_order_mirrors') );
+        }
+
+        /**
+         * Refuse a rental add-to-cart when the rental item is not publicly viewable
+         * (draft, pending, private, trashed or deleted).
+         *
+         * The booking nonce is printed on public pages, so it proves nothing about
+         * the item: the backing product's ID is enough to post an add-to-cart for an
+         * item the shop has since unpublished. This is the same object-level check
+         * the quick-add and standalone checkout endpoints already make. Editors who
+         * can read the item (previewing a draft) keep working.
+         *
+         * @param bool $passed     Validation result so far.
+         * @param int  $product_id Product being added.
+         * @return bool
+         */
+        public function rbfw_validate_item_viewable( $passed, $product_id ) {
+            if ( ! $passed ) {
+                return $passed;
+            }
+
+            $linked_rbfw_id = absint( get_post_meta( $product_id, 'link_rbfw_id', true ) );
+            if ( ! $linked_rbfw_id && get_post_type( $product_id ) !== 'rbfw_item' ) {
+                return $passed; // an ordinary product, not a rental
+            }
+
+            $rbfw_id = $linked_rbfw_id ? $linked_rbfw_id : absint( $product_id );
+
+            if ( rbfw_can_view_item( $rbfw_id ) ) {
+                return $passed;
+            }
+
+            wc_add_notice( esc_html__( 'Sorry, this rental item is not available.', 'booking-and-rental-manager-for-woocommerce' ), 'error' );
+
+            return false;
         }
 
         /**
