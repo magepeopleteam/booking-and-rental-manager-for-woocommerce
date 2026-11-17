@@ -186,10 +186,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 return html_entity_decode( wp_strip_all_tags( wc_price( $amount ) ), ENT_QUOTES, 'UTF-8' );
             };
 
-            // Note: the multiplier must apply to the whole ternary result. The old
-            // code (`isset(...) ? floatval(...) : '' * $qty`) fataled on PHP 8
-            // ("int * string") whenever rbfw_service_price was not posted.
-            $rbfw_service_price = ( isset($_POST['rbfw_service_price']) ? floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))) : 0 ) * $item_quantity;
+            // The posted service total is already price x service qty (x days); each
+            // service has its own quantity, so it is not multiplied by the item quantity
+            // (the cart charges it the same way).
+            $rbfw_service_price = isset($_POST['rbfw_service_price']) ? floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))) : 0;
             $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):0;
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'no';

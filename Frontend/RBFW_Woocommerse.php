@@ -1593,7 +1593,13 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
                 $rbfw_service_infos = $rbfw_service_infos_new;
-                $rbfw_service_price = $rbfw_service_price * $rbfw_item_quantity;
+                /*
+                 * Not multiplied by the item quantity: each service row has its own quantity
+                 * stepper, so "2 x Child Seat" on 2 bikes is 2 seats, not 4. The form total,
+                 * the cart/order breakdown ("price x qty x days") and the service stock
+                 * already count it that way; multiplying here charged every service once
+                 * per booked unit on top.
+                 */
                 /* service price end for multiple days */
                 $rbfw_extra_service_price = 0;
                 $rbfw_duration_price      = $duration_price;
