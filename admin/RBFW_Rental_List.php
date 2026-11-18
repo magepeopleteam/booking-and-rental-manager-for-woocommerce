@@ -443,23 +443,20 @@ if (!class_exists('RBFW_Rental_List')) {
 
         private function get_price_label($pid): string
         {
-            $daily  = RBFW_Function::get_post_info($pid, 'rbfw_daily_rate');
-            $hourly = RBFW_Function::get_post_info($pid, 'rbfw_hourly_rate');
-            $amount = '';
-            $suffix = '';
-            if ($daily !== '' && (float) $daily > 0) {
-                $amount = $daily;
-                $suffix = esc_html__('/day', 'booking-and-rental-manager-for-woocommerce');
-            } elseif ($hourly !== '' && (float) $hourly > 0) {
-                $amount = $hourly;
-                $suffix = esc_html__('/hour', 'booking-and-rental-manager-for-woocommerce');
-            }
-            if ($amount === '') {
+            // Same rule as the storefront cards: read the price the item's own
+            // booking engine charges, so an Appointment / Single-day service is
+            // not listed at the placeholder daily rate the Pricing screen saves.
+            $starting = function_exists('rbfw_get_item_starting_price')
+                ? rbfw_get_item_starting_price($pid)
+                : array('price' => 0, 'label' => '');
+            $amount = isset($starting['price']) ? (float) $starting['price'] : 0;
+            if ($amount <= 0) {
                 return '';
             }
-            $formatted = function_exists('wc_price') ? wp_strip_all_tags(wc_price($amount)) : number_format_i18n((float) $amount, 2);
+            $suffix = isset($starting['label']) ? (string) $starting['label'] : '';
+            $formatted = function_exists('wc_price') ? wp_strip_all_tags(wc_price($amount)) : number_format_i18n($amount, 2);
 
-            return $formatted . ' ' . $suffix;
+            return trim($formatted . ' ' . $suffix);
         }
 
         private function initials($name): string

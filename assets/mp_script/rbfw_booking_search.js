@@ -103,6 +103,7 @@
                 show: $wrap.data('show') || 24,
                 show_stock: $wrap.data('show-stock') || 'yes',
                 show_qty: $wrap.data('show-qty') || 'yes',
+                show_price: $wrap.data('show-price') || 'yes',
                 button_text: $wrap.data('button-text') || '',
                 style: currentView($wrap)
             }).done(function (res) {

@@ -63,7 +63,11 @@ try {
             update_post_meta( $id, 'rbfw_item_type', $type );
             foreach ( array( 'list', 'grid' ) as $style ) {
                 $html = rbfw_rent_list_shortcode_func( array( 'style' => $style ) );
-                $assert( false !== strpos( wp_strip_all_tags( $html ), wp_strip_all_tags( wc_price( 100 ) ) ) && false === strpos( $html, '9,223,372' ), $type . ' ' . $style . ' catalog uses the base rental price' );
+                // Compare the visible text: kses re-encodes the currency entity
+                // ("&#36;" vs "&#036;"), so raw string comparison is too brittle.
+                $visible = html_entity_decode( wp_strip_all_tags( $html ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+                $expect  = html_entity_decode( wp_strip_all_tags( wc_price( 100 ) ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+                $assert( false !== strpos( $visible, $expect ) && false === strpos( $html, '9,223,372' ), $type . ' ' . $style . ' catalog uses the base rental price' );
             }
         }
     } finally {

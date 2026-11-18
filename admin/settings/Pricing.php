@@ -2514,12 +2514,27 @@
                     }
 
 
+                    /*
+                     * The multi-day rate inputs sit inside the hidden multi-day panel, so
+                     * they still submit their UI defaults (daily = 10) when an Appointment
+                     * or Single-day item is saved. Writing those defaults stores a rate the
+                     * item never charges — listings then advertise it. Only multi-day item
+                     * types own these rates; every other type keeps whatever it already
+                     * had, so switching types back and forth is lossless.
+                     */
+                    $rbfw_md_rate_types  = array( 'bike_car_md', 'equipment', 'dress', 'others' );
+                    $rbfw_saves_md_rates = in_array( $rbfw_item_type, $rbfw_md_rate_types, true );
+
                     update_post_meta( $post_id, 'rbfw_enable_monthly_rate', $rbfw_enable_monthly_rate );
-                    update_post_meta( $post_id, 'rbfw_monthly_rate', $rbfw_monthly_rate );
+                    if ( $rbfw_saves_md_rates ) {
+                        update_post_meta( $post_id, 'rbfw_monthly_rate', $rbfw_monthly_rate );
+                    }
                     update_post_meta( $post_id, 'rbfw_enable_day_threshold_for_monthly', $rbfw_enable_day_threshold_for_monthly );
                     update_post_meta( $post_id, 'rbfw_day_threshold_for_monthly', $rbfw_day_threshold_for_monthly );
                     update_post_meta( $post_id, 'rbfw_enable_weekly_rate', $rbfw_enable_weekly_rate );
-                    update_post_meta( $post_id, 'rbfw_weekly_rate', $rbfw_weekly_rate );
+                    if ( $rbfw_saves_md_rates ) {
+                        update_post_meta( $post_id, 'rbfw_weekly_rate', $rbfw_weekly_rate );
+                    }
                     update_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', $rbfw_enable_day_threshold_for_weekly );
                     update_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', $rbfw_day_threshold_for_weekly );
 
@@ -2527,7 +2542,9 @@
                     update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
 
                     update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
-					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
+                    if ( $rbfw_saves_md_rates ) {
+                        update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
+                    }
 
 					update_post_meta( $post_id, 'rbfw_enable_time_picker', $rbfw_enable_time_picker );
                     update_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', $rbfw_mi_hourly_to_half_day_pivot );
@@ -2540,11 +2557,15 @@
 
 
                     update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
-                    update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
+                    if ( $rbfw_saves_md_rates ) {
+                        update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
+                    }
 
 
                     update_post_meta( $post_id, 'rbfw_enable_half_day_rate', $rbfw_enable_half_day_rate );
-                    update_post_meta( $post_id, 'rbfw_half_day_rate', $rbfw_half_day_rate );
+                    if ( $rbfw_saves_md_rates ) {
+                        update_post_meta( $post_id, 'rbfw_half_day_rate', $rbfw_half_day_rate );
+                    }
                     update_post_meta( $post_id, 'half_day_hour_threshold_start', $half_day_hour_threshold_start );
                     update_post_meta( $post_id, 'half_day_hour_threshold_end', $half_day_hour_threshold_end );
 
