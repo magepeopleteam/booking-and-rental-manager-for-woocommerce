@@ -227,6 +227,7 @@ function rbfw_booking_search_shortcode( $atts = null ) {
 			'columns'       => '3',
 			'show'          => '24',    // max results
 			'button_text'   => '',
+			'show_price'    => 'yes',   // list the auto "starting price" on each card
 			'show_stock'    => 'yes',
 			'show_qty'      => 'yes',
 			'style'         => 'grid',  // initial results layout: grid | list
@@ -278,6 +279,7 @@ function rbfw_booking_search_shortcode( $atts = null ) {
 		data-location="<?php echo esc_attr( $fixed_loc ); ?>"
 		data-show-stock="<?php echo esc_attr( $a['show_stock'] ); ?>"
 		data-show-qty="<?php echo esc_attr( $a['show_qty'] ); ?>"
+		data-show-price="<?php echo esc_attr( 'no' === $a['show_price'] ? 'no' : 'yes' ); ?>"
 		data-button-text="<?php echo esc_attr( $button_text ); ?>"
 		data-style="<?php echo esc_attr( 'list' === $a['style'] ? 'list' : 'grid' ); ?>">
 
@@ -368,6 +370,90 @@ function rbfw_booking_search_shortcode( $atts = null ) {
 	return ob_get_clean();
 }
 
+/**
+ * Price block for one search result card.
+ *
+ * Quick types (multi-day rentals) are quoted for the searched range. Every other
+ * type — Appointment, Single-day, Resort, bundles — shows the item's own
+ * starting price, because a per-day rate does not describe those items and
+ * `rbfw_daily_rate` carries a placeholder on them.
+ *
+ * @param int    $rbfw_id    Item ID.
+ * @param string $start      Pickup date (Y-m-d).
+ * @param string $end        Drop-off date (Y-m-d).
+ * @param int    $total_days Days in the searched range, used when the engine
+ *                           reports no day count.
+ *
+ * @return array{html: string, note: string} Empty html = show no price.
+ */
+function rbfw_booking_search_card_price( $rbfw_id, $start, $end, $total_days = 1 ) {
+	$price_html = '';
+	$price_note = '';
+
+	$item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+	$is_quick  = in_array( $item_type, rbfw_booking_search_quick_types(), true );
+
+	if ( $is_quick && function_exists( 'rbfw_md_duration_price_calculation' ) ) {
+		$info = rbfw_md_duration_price_calculation(
+			$rbfw_id,
+			gmdate( 'Y-m-d H:i', strtotime( $start . ' 12:00 am' ) ),
+			gmdate( 'Y-m-d H:i', strtotime( $end . ' 12:00 am' ) ),
+			$start,
+			$end,
+			'12:00 am',
+			'12:00 am',
+			'no' // date-only, as the booking form opened from search; 'no' lets Count Extra Day bill the return day.
+		);
+		$range_price = is_array( $info ) && isset( $info['duration_price'] ) ? (float) $info['duration_price'] : 0;
+		if ( $range_price > 0 ) {
+			$price_html = wc_price( $range_price );
+			$card_days  = ! empty( $info['total_days'] ) ? (int) $info['total_days'] : (int) $total_days;
+			/* translators: %d: number of days */
+			$price_note = sprintf( _n( 'total for %d day', 'total for %d days', $card_days, 'booking-and-rental-manager-for-woocommerce' ), $card_days );
+		}
+	}
+
+	if ( '' === $price_html ) {
+		/*
+		 * Starting price. Read the meta this item type is actually charged from:
+		 * rbfw_daily_rate only describes multi-day items — the Pricing screen
+		 * leaves a placeholder 10 on every other type, which used to advertise an
+		 * Appointment service at "10.00 per day".
+		 */
+		$starting   = function_exists( 'rbfw_get_item_starting_price' )
+			? rbfw_get_item_starting_price( $rbfw_id )
+			: array(
+				'price' => 0.0,
+				'label' => '',
+			);
+		$start_from = isset( $starting['price'] ) ? (float) $starting['price'] : 0.0;
+		if ( $start_from > 0 ) {
+			$price_html = wc_price( $start_from );
+			$price_note = isset( $starting['label'] ) ? $starting['label'] : '';
+		}
+	}
+
+	/**
+	 * Filter the price block of one search result card, so a site can show a
+	 * different price (or none) without touching the plugin.
+	 *
+	 * @param array  $display array( 'html' => string, 'note' => string ).
+	 * @param int    $rbfw_id Item ID.
+	 * @param string $start   Searched pickup date (Y-m-d).
+	 * @param string $end     Searched drop-off date (Y-m-d).
+	 */
+	return apply_filters(
+		'rbfw_booking_search_card_price',
+		array(
+			'html' => $price_html,
+			'note' => $price_note,
+		),
+		$rbfw_id,
+		$start,
+		$end
+	);
+}
+
 /******************************
  * AJAX: search results
  ******************************/
@@ -428,6 +514,7 @@ function rbfw_booking_search_results_ajax() {
 
 	$show_stock  = isset( $_POST['show_stock'] ) && 'no' === $_POST['show_stock'] ? false : true;
 	$show_qty    = isset( $_POST['show_qty'] ) && 'no' === $_POST['show_qty'] ? false : true;
+	$show_price  = ! ( isset( $_POST['show_price'] ) && 'no' === sanitize_text_field( wp_unslash( $_POST['show_price'] ) ) );
 	$button_text = isset( $_POST['button_text'] ) && '' !== trim( sanitize_text_field( wp_unslash( $_POST['button_text'] ) ) )
 		? sanitize_text_field( wp_unslash( $_POST['button_text'] ) )
 		: __( 'Add to booking', 'booking-and-rental-manager-for-woocommerce' );
@@ -452,35 +539,9 @@ function rbfw_booking_search_results_ajax() {
 			$is_quick  = in_array( $item_type, $quick_types, true );
 			$remaining = $is_quick ? rbfw_booking_search_remaining_stock( $rbfw_id, $start, $end, $location ) : null;
 
-			/* Price for the searched range (quick types share the md engine). */
-			$price_html = '';
-			$price_note = '';
-			if ( $is_quick && function_exists( 'rbfw_md_duration_price_calculation' ) ) {
-				$info = rbfw_md_duration_price_calculation(
-					$rbfw_id,
-					gmdate( 'Y-m-d H:i', strtotime( $start . ' 12:00 am' ) ),
-					gmdate( 'Y-m-d H:i', strtotime( $end . ' 12:00 am' ) ),
-					$start,
-					$end,
-					'12:00 am',
-					'12:00 am',
-					'no' // date-only, as the booking form opened from search; 'no' lets Count Extra Day bill the return day.
-				);
-				$range_price = is_array( $info ) && isset( $info['duration_price'] ) ? (float) $info['duration_price'] : 0;
-				if ( $range_price > 0 ) {
-					$price_html = wc_price( $range_price );
-					$card_days  = ! empty( $info['total_days'] ) ? (int) $info['total_days'] : $total_days;
-					/* translators: %d: number of days */
-					$price_note = sprintf( _n( 'total for %d day', 'total for %d days', $card_days, 'booking-and-rental-manager-for-woocommerce' ), $card_days );
-				}
-			}
-			if ( '' === $price_html ) {
-				$daily = (float) get_post_meta( $rbfw_id, 'rbfw_daily_rate', true );
-				if ( $daily > 0 ) {
-					$price_html = wc_price( $daily );
-					$price_note = __( 'per day', 'booking-and-rental-manager-for-woocommerce' );
-				}
-			}
+			$price_display = rbfw_booking_search_card_price( $rbfw_id, $start, $end, $total_days );
+			$price_html    = $show_price && is_array( $price_display ) && isset( $price_display['html'] ) ? $price_display['html'] : '';
+			$price_note    = is_array( $price_display ) && isset( $price_display['note'] ) ? $price_display['note'] : '';
 
 			/* Location surcharge preview (charged as fee at cart level). */
 			$loc_charge = 0;
@@ -602,15 +663,17 @@ function rbfw_booking_search_render_cards( $cards, $start, $end, $location, $but
 					<p class="rbfw_bsearch_desc"><?php echo esc_html( $card['excerpt'] ); ?></p>
 				<?php endif; ?>
 
-				<div class="rbfw_bsearch_price">
-					<?php if ( '' !== $card['price_html'] ) : ?>
-						<span class="rbfw_bsearch_amount"><?php echo wp_kses_post( $card['price_html'] ); ?></span>
-						<small><?php echo esc_html( $card['price_note'] ); ?></small>
-					<?php endif; ?>
-					<?php if ( $card['loc_charge'] > 0 ) : ?>
-						<small class="rbfw_bsearch_loc_fee">+ <?php echo wp_kses_post( wc_price( $card['loc_charge'] ) ); ?> <?php esc_html_e( 'location charge', 'booking-and-rental-manager-for-woocommerce' ); ?></small>
-					<?php endif; ?>
-				</div>
+				<?php if ( '' !== $card['price_html'] || $card['loc_charge'] > 0 ) : ?>
+					<div class="rbfw_bsearch_price">
+						<?php if ( '' !== $card['price_html'] ) : ?>
+							<span class="rbfw_bsearch_amount"><?php echo wp_kses_post( $card['price_html'] ); ?></span>
+							<small><?php echo esc_html( $card['price_note'] ); ?></small>
+						<?php endif; ?>
+						<?php if ( $card['loc_charge'] > 0 ) : ?>
+							<small class="rbfw_bsearch_loc_fee">+ <?php echo wp_kses_post( wc_price( $card['loc_charge'] ) ); ?> <?php esc_html_e( 'location charge', 'booking-and-rental-manager-for-woocommerce' ); ?></small>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 
 				<?php if ( $card['is_quick'] && ! $sold_out ) : ?>
 					<div class="rbfw_bsearch_actions">

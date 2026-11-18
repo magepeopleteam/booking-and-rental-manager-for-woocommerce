@@ -5857,6 +5857,239 @@ function findMinimumPrice( $items, $pricing_display_for_listing = '' ) {
 
 
 /**
+ * Lowest bookable price for one item, for listing and search cards.
+ *
+ * Listing surfaces must never fall back to `rbfw_daily_rate` for item types that
+ * do not price by a daily rate: the Pricing screen seeds that meta with a
+ * placeholder value (10) on every new item, so an Appointment or Single-day
+ * service — priced per rental option — would advertise "10.00 per day" while
+ * its real price starts at its cheapest rental option. Each type therefore
+ * reads the meta its own booking engine charges from.
+ *
+ * @param int   $post_id Item ID. Defaults to the current post.
+ * @param array $args    {
+ *     Optional. Listing preferences.
+ *
+ *     @type string $display Rate the listing prefers: hourly|daily|weekly|monthly.
+ *                          Defaults to the "Pricing display for listing" setting.
+ * }
+ *
+ * @return array{price: float, label: string, source: string} A 0 price means
+ *                                                           there is nothing to show.
+ */
+function rbfw_get_item_starting_price( $post_id = 0, $args = array() ) {
+	$post_id         = $post_id ? absint( $post_id ) : absint( get_the_ID() );
+	$default_display = function_exists( 'rbfw_get_option' )
+		? rbfw_get_option( 'pricing_display_for_listing', 'rbfw_basic_gen_settings' )
+		: 'daily';
+	$args            = wp_parse_args( $args, array( 'display' => $default_display ) );
+	$display         = in_array( $args['display'], array( 'hourly', 'daily', 'weekly', 'monthly' ), true )
+		? $args['display']
+		: 'daily';
+
+	$result = array(
+		'price'  => 0.0,
+		'label'  => '',
+		'source' => '',
+	);
+
+	if ( ! $post_id ) {
+		return $result;
+	}
+
+	$rate_labels    = array(
+		'hourly'  => __( 'per hour', 'booking-and-rental-manager-for-woocommerce' ),
+		'daily'   => __( 'per day', 'booking-and-rental-manager-for-woocommerce' ),
+		'weekly'  => __( 'per week', 'booking-and-rental-manager-for-woocommerce' ),
+		'monthly' => __( 'per month', 'booking-and-rental-manager-for-woocommerce' ),
+	);
+	$starting_label = __( 'starting price', 'booking-and-rental-manager-for-woocommerce' );
+	$item_type      = get_post_meta( $post_id, 'rbfw_item_type', true );
+
+	if ( 'resort' === $item_type ) {
+		/*
+		 * Rooms are priced day-long or day-night; a stay starts at the cheapest
+		 * rate of the cheapest room.
+		 */
+		$room_prices = array();
+		$rooms       = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+		if ( is_array( $rooms ) ) {
+			foreach ( $rooms as $room ) {
+				if ( ! is_array( $room ) ) {
+					continue;
+				}
+				foreach ( array( 'rbfw_room_daylong_rate', 'rbfw_room_daynight_rate' ) as $rate_key ) {
+					if ( isset( $room[ $rate_key ] ) && is_numeric( $room[ $rate_key ] ) && (float) $room[ $rate_key ] > 0 ) {
+						$room_prices[] = (float) $room[ $rate_key ];
+					}
+				}
+			}
+		}
+		if ( $room_prices ) {
+			$result = array(
+				'price'  => min( $room_prices ),
+				'label'  => $starting_label,
+				'source' => 'resort_rooms',
+			);
+		}
+	} elseif ( 'multiple_items' === $item_type ) {
+		$bundle = get_post_meta( $post_id, 'multiple_items_info', true );
+		$bundle = is_array( $bundle ) ? $bundle : array();
+		if ( $bundle && function_exists( 'findMinimumPrice' ) ) {
+			$cheapest = findMinimumPrice( $bundle, $display );
+			if ( ! empty( $cheapest['price'] ) ) {
+				$price_type = isset( $cheapest['price_type'] ) ? str_replace( '_price', '', $cheapest['price_type'] ) : '';
+				$result     = array(
+					'price'  => (float) $cheapest['price'],
+					'label'  => isset( $rate_labels[ $price_type ] ) ? $rate_labels[ $price_type ] : $starting_label,
+					'source' => 'bundle_items',
+				);
+			}
+		}
+	} elseif ( 'bike_car_sd' === $item_type || 'appointment' === $item_type ) {
+		$result = rbfw_get_rental_option_starting_price( $post_id, $starting_label );
+	} else {
+		/*
+		 * Multi-day types (bike_car_md / equipment / dress / others) and items with
+		 * a legacy or empty type: build the rates the booking form would charge,
+		 * then take the preferred listing duration that is switched on.
+		 */
+		$time_picker = 'yes' === get_post_meta( $post_id, 'rbfw_enable_time_picker', true );
+		$rates       = array(
+			'hourly'  => (float) get_post_meta( $post_id, 'rbfw_hourly_rate', true ),
+			'daily'   => (float) get_post_meta( $post_id, 'rbfw_daily_rate', true ),
+			'weekly'  => (float) get_post_meta( $post_id, 'rbfw_weekly_rate', true ),
+			'monthly' => (float) get_post_meta( $post_id, 'rbfw_monthly_rate', true ),
+		);
+		$daily_on    = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true );
+		$enabled     = array(
+			// Hourly rates only ever apply while the time picker is on.
+			'hourly'  => 'yes' === get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) && $time_picker,
+			// Daily is the multi-day default, so an unset toggle counts as on.
+			'daily'   => 'no' !== ( $daily_on ? $daily_on : 'yes' ),
+			'weekly'  => 'yes' === get_post_meta( $post_id, 'rbfw_enable_weekly_rate', true ),
+			'monthly' => 'yes' === get_post_meta( $post_id, 'rbfw_enable_monthly_rate', true ),
+		);
+
+		// Day-wise prices replace the matching rate for today; an active season
+		// then replaces both — the same order the booking form prices a date.
+		if ( 'yes' === get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ) {
+			$day_slugs = array(
+				'Sun' => 'sun',
+				'Mon' => 'mon',
+				'Tue' => 'tue',
+				'Wed' => 'wed',
+				'Thu' => 'thu',
+				'Fri' => 'fri',
+				'Sat' => 'sat',
+			);
+			$today     = gmdate( 'D' );
+			if ( isset( $day_slugs[ $today ] ) ) {
+				$day_slug = $day_slugs[ $today ];
+				$day_on   = get_post_meta( $post_id, 'rbfw_enable_' . $day_slug . '_day', true );
+				$day_on   = ( 'yes' === $day_on || 'no' === $day_on ) ? $day_on : 'yes';
+				if ( 'yes' === $day_on ) {
+					foreach ( array( 'hourly', 'daily' ) as $rate_type ) {
+						$day_rate = (float) get_post_meta( $post_id, 'rbfw_' . $day_slug . '_' . $rate_type . '_rate', true );
+						if ( $day_rate > 0 ) {
+							$rates[ $rate_type ] = $day_rate;
+						}
+					}
+				}
+			}
+		}
+		$seasonal = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
+		if ( is_array( $seasonal ) && $seasonal ) {
+			$today_ts = strtotime( gmdate( 'Y-m-d' ) );
+			foreach ( $seasonal as $season ) {
+				if ( ! is_array( $season ) || empty( $season['rbfw_sp_start_date'] ) || empty( $season['rbfw_sp_end_date'] ) ) {
+					continue;
+				}
+				$season_start = strtotime( $season['rbfw_sp_start_date'] );
+				$season_end   = strtotime( $season['rbfw_sp_end_date'] );
+				if ( ! $season_start || ! $season_end || $today_ts < $season_start || $today_ts > $season_end ) {
+					continue;
+				}
+				$season_hourly = isset( $season['rbfw_sp_price_h'] ) ? (float) $season['rbfw_sp_price_h'] : 0;
+				$season_daily  = isset( $season['rbfw_sp_price_d'] ) ? (float) $season['rbfw_sp_price_d'] : 0;
+				if ( $season_hourly > 0 ) {
+					$rates['hourly'] = $season_hourly;
+				}
+				if ( $season_daily > 0 ) {
+					$rates['daily'] = $season_daily;
+				}
+			}
+		}
+
+		// Preferred duration first, then any rate the item can be booked at, so a
+		// card never ends up blank just because the display preference is off.
+		$rate_order = array( $display );
+		foreach ( array( 'daily', 'hourly', 'weekly', 'monthly' ) as $rate_type ) {
+			if ( ! in_array( $rate_type, $rate_order, true ) ) {
+				$rate_order[] = $rate_type;
+			}
+		}
+		foreach ( $rate_order as $rate_type ) {
+			if ( empty( $enabled[ $rate_type ] ) || $rates[ $rate_type ] <= 0 ) {
+				continue;
+			}
+			$result = array(
+				'price'  => $rates[ $rate_type ],
+				'label'  => $rate_labels[ $rate_type ],
+				'source' => 'rate_' . $rate_type,
+			);
+			break;
+		}
+
+		if ( $result['price'] <= 0 ) {
+			// A type switched in the editor that kept its rolled-over rental options.
+			$result = rbfw_get_rental_option_starting_price( $post_id, $starting_label );
+		}
+
+	}
+
+	/**
+	 * Filter the price a listing shows for an item.
+	 *
+	 * @param array $result  price / label / source.
+	 * @param int   $post_id Item ID.
+	 * @param array $args    Listing arguments.
+	 */
+	return apply_filters( 'rbfw_item_starting_price', $result, $post_id, $args );
+}
+
+/**
+ * Cheapest enabled rental option (Single-day / Appointment rows) for an item.
+ *
+ * @param int    $post_id Item ID.
+ * @param string $label   Note shown next to the price.
+ *
+ * @return array{price: float, label: string, source: string}
+ */
+function rbfw_get_rental_option_starting_price( $post_id, $label = '' ) {
+	$result = array(
+		'price'  => 0.0,
+		'label'  => $label,
+		'source' => '',
+	);
+	$rows   = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+	$prices = array();
+	if ( is_array( $rows ) ) {
+		foreach ( $rows as $row ) {
+			if ( is_array( $row ) && isset( $row['price'] ) && is_numeric( $row['price'] ) && (float) $row['price'] > 0 ) {
+				$prices[] = (float) $row['price'];
+			}
+		}
+	}
+	if ( $prices ) {
+		$result['price']  = min( $prices );
+		$result['source'] = 'rental_options';
+	}
+
+	return $result;
+}
+
+/**
  * RBFW Reset Orders - AJAX Handler
  * Handles the cancellation of all rental orders for a specific item
  */

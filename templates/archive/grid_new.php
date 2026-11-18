@@ -26,6 +26,12 @@
         $rbfw_rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
 
         $pricing_display_for_listing = rbfw_get_option( 'pricing_display_for_listing', 'rbfw_basic_gen_settings' );
+        if ( ! in_array( $pricing_display_for_listing, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ) {
+            // The setting is absent on fresh installs, and every multi-day branch
+            // below compares against it — an unset value would leave the card with
+            // no price at all. Daily is the rate multi-day items always have.
+            $pricing_display_for_listing = 'daily';
+        }
 
         $price = 0;
         $price_label = $prices_start_at;
