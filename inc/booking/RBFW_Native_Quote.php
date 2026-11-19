@@ -309,6 +309,35 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 		}
 
 		/**
+		 * The stock-relevant part of a server-built quote, for a booking's inventory entry.
+		 *
+		 * The same keys a WooCommerce order records (chosen options / rooms, variations,
+		 * services, pickup location), so a Custom Payment booking holds the same stock.
+		 * Multiple Items lines are not included: the checkout rebuilds them itself.
+		 *
+		 * @param array $cart_data The `cart_data` of a build() result.
+		 * @return array
+		 */
+		public static function booking_inventory_info( $cart_data ) {
+			$info = array();
+			if ( ! is_array( $cart_data ) ) {
+				return $info;
+			}
+			foreach ( array( 'rbfw_type_info', 'rbfw_variation_info', 'rbfw_service_info', 'rbfw_service_infos', 'rbfw_category_wise_info' ) as $key ) {
+				if ( isset( $cart_data[ $key ] ) && is_array( $cart_data[ $key ] ) ) {
+					$info[ $key ] = $cart_data[ $key ];
+				}
+			}
+			foreach ( array( 'rbfw_pickup_point', 'rbfw_dropoff_point' ) as $key ) {
+				if ( isset( $cart_data[ $key ] ) && is_scalar( $cart_data[ $key ] ) ) {
+					$info[ $key ] = (string) $cart_data[ $key ];
+				}
+			}
+
+			return $info;
+		}
+
+		/**
 		 * Whether a flat selection map contains at least one positive quantity.
 		 *
 		 * @param array $quantities Quantity map.

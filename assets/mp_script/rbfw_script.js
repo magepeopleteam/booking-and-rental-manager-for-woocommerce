@@ -426,10 +426,18 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
     var rbfw_global_offday_range = [];
     try { rbfw_global_offday_range = JSON.parse(jQuery("#rbfw_global_offday_range").val()) || []; } catch (e) {}
 
+    // Appointment items open only on their "Appointment days" (when any are set);
+    // the server refuses the other weekdays (rbfw_booking_off_day_error()).
+    var rbfw_appointment_closed = false;
+    if (jQuery("#rbfw_rent_type").val() === 'appointment') {
+        var rbfw_appointment_days = [];
+        try { rbfw_appointment_days = JSON.parse(jQuery("#appointment_days").val() || '[]') || []; } catch (e) {}
+        if (Array.isArray(rbfw_appointment_days) && rbfw_appointment_days.length) {
+            rbfw_appointment_closed = rbfw_appointment_days.map(function (d) { return String(d).toLowerCase(); }).indexOf(day_in) < 0;
+        }
+    }
 
-
-
-    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || jQuery.inArray( date_in, rbfw_global_offday_range )>= 0 || (date <  date_today) ){
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || jQuery.inArray( date_in, rbfw_global_offday_range )>= 0 || rbfw_appointment_closed || (date <  date_today) ){
 
         if(type=='md'){
             if((date <  date_today)){

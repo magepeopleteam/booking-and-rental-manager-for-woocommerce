@@ -3695,15 +3695,30 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 	 * @return int Peak booked units at that location within the range.
 	 */
 	function rbfw_location_sold_qty( $post_id, $location, $start_date = '', $end_date = '' ) {
+		$range = rbfw_location_daily_sold( $post_id, $location, $start_date, $end_date );
+
+		return $range ? max( $range ) : 0;
+	}
+
+	/**
+	 * Units booked at one pickup location on each day of a date range.
+	 *
+	 * @param int    $post_id    Rental item ID.
+	 * @param string $location   Pickup-location slug.
+	 * @param string $start_date Y-m-d (defaults to today).
+	 * @param string $end_date   Y-m-d (defaults to $start_date).
+	 * @return array<string,int> d-m-Y => booked units ([] when nothing applies).
+	 */
+	function rbfw_location_daily_sold( $post_id, $location, $start_date = '', $end_date = '' ) {
 		$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
 		if ( ! is_array( $inventory ) || empty( $inventory ) || '' === $location ) {
-			return 0;
+			return array();
 		}
 
 		$start = strtotime( $start_date ?: current_time( 'Y-m-d' ) );
 		$end   = strtotime( $end_date ?: ( $start_date ?: current_time( 'Y-m-d' ) ) );
 		if ( ! $start || ! $end || $end < $start ) {
-			return 0;
+			return array();
 		}
 		$range = array();
 		for ( $t = $start, $guard = 0; $t <= $end && $guard < 366; $t += DAY_IN_SECONDS, $guard++ ) {
@@ -3733,7 +3748,7 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 			}
 		}
 
-		return $range ? max( $range ) : 0;
+		return $range;
 	}
 
 	/**
@@ -3748,6 +3763,82 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 			return null;
 		}
 		return max( 0, $conf[ $location ]['stock'] - rbfw_location_sold_qty( $post_id, $location, $start_date, $end_date ) );
+	}
+
+	/**
+	 * Location-inventory gate for one booking line, shared by the WooCommerce cart, its
+	 * checkout re-check and the Custom Payment checkout.
+	 *
+	 * Runs only for items with Location Inventory on: the pickup location must be one of
+	 * the item's locations, and the units booked may not exceed what that location has
+	 * left on any day of the booking, counting committed bookings AND the other cart
+	 * lines for the same location.
+	 *
+	 * @param int    $rbfw_id       Rental item ID.
+	 * @param string $pickup_point  Pickup-location slug.
+	 * @param string $start_date    Booking start (any strtotime() format).
+	 * @param string $end_date      Booking end ('' = the start date).
+	 * @param int    $qty           Units booked.
+	 * @param array  $sibling_lines Other booking lines already in the cart / checked before.
+	 * @return string Customer-facing reason, or '' when the booking may proceed.
+	 */
+	function rbfw_location_stock_error( $rbfw_id, $pickup_point, $start_date, $end_date, $qty, $sibling_lines = array() ) {
+		$conf = rbfw_get_location_inventory( $rbfw_id );
+		if ( empty( $conf ) ) {
+			return '';
+		}
+		$pickup_point = is_scalar( $pickup_point ) ? (string) $pickup_point : '';
+		if ( '' === $pickup_point || ! isset( $conf[ $pickup_point ] ) ) {
+			return __( 'Please choose a location before booking.', 'booking-and-rental-manager-for-woocommerce' );
+		}
+		$start_ts = strtotime( (string) $start_date );
+		$end_ts   = '' !== (string) $end_date ? strtotime( (string) $end_date ) : $start_ts;
+		if ( ! $start_ts || ! $end_ts ) {
+			return '';
+		}
+		$start = gmdate( 'Y-m-d', $start_ts );
+		$end   = gmdate( 'Y-m-d', max( $start_ts, $end_ts ) );
+
+		$used = array();
+		for ( $t = strtotime( $start ), $guard = 0; $t <= strtotime( $end ) && $guard < 366; $t += DAY_IN_SECONDS, $guard++ ) {
+			$used[ gmdate( 'd-m-Y', $t ) ] = 0;
+		}
+		foreach ( rbfw_location_daily_sold( $rbfw_id, $pickup_point, $start, $end ) as $sold_day => $sold_qty ) {
+			if ( isset( $used[ $sold_day ] ) ) {
+				$used[ $sold_day ] += (int) $sold_qty;
+			}
+		}
+		foreach ( (array) $sibling_lines as $line ) {
+			if ( ! is_array( $line ) || (int) ( $line['rbfw_id'] ?? 0 ) !== (int) $rbfw_id || ( $line['rbfw_pickup_point'] ?? '' ) !== $pickup_point ) {
+				continue;
+			}
+			$line_start = strtotime( (string) ( $line['rbfw_start_date'] ?? '' ) );
+			$line_end   = ! empty( $line['rbfw_end_date'] ) ? strtotime( (string) $line['rbfw_end_date'] ) : $line_start;
+			if ( ! $line_start || ! $line_end ) {
+				continue;
+			}
+			$line_qty = max( 1, (int) ( $line['rbfw_item_quantity'] ?? 1 ) );
+			for ( $t = strtotime( gmdate( 'Y-m-d', $line_start ) ), $guard = 0; $t <= $line_end && $guard < 366; $t += DAY_IN_SECONDS, $guard++ ) {
+				$key = gmdate( 'd-m-Y', $t );
+				if ( array_key_exists( $key, $used ) ) {
+					$used[ $key ] += $line_qty;
+				}
+			}
+		}
+
+		$remaining = max( 0, $conf[ $pickup_point ]['stock'] - ( $used ? max( $used ) : 0 ) );
+		if ( max( 1, (int) $qty ) <= $remaining ) {
+			return '';
+		}
+		$term = get_term_by( 'slug', $pickup_point, 'rbfw_item_location' );
+		$name = $term && ! is_wp_error( $term ) ? $term->name : ucwords( str_replace( '-', ' ', $pickup_point ) );
+
+		return sprintf(
+			/* translators: 1: location name, 2: remaining units */
+			__( 'Only %2$d unit(s) are available at %1$s for the selected dates.', 'booking-and-rental-manager-for-woocommerce' ),
+			$name,
+			$remaining
+		);
 	}
 
 	/**
@@ -3982,6 +4073,72 @@ if ( ! function_exists( 'rbfw_is_off_day' ) ) {
 		}
 
 		return false;
+	}
+}
+
+if ( ! function_exists( 'rbfw_booking_off_day_error' ) ) {
+	/**
+	 * Why a booking's dates fall on days the item is closed, or '' when they do not.
+	 *
+	 * Server twin of the booking calendars, which grey these days out in the browser
+	 * only (rbfw_off_day_dates() / rbfw_range_contains_off_day() in rbfw_script.js):
+	 *  - the pickup date may not be an Off Day (weekly off day, off-date range or a
+	 *    global closure);
+	 *  - an Appointment must fall on one of its "Appointment days", when any are set;
+	 *  - Multi-day and Resort bookings may not return on an Off Day either, and with
+	 *    "Block Booking If Date Range Contains Off Days" on, no day in between may be one.
+	 * Items with a fixed rental period ("Enable start and end date" = No) are skipped, as
+	 * in rbfw_pickup_date_error(): their dates are set by the admin.
+	 *
+	 * @param int   $rbfw_id Rental item id.
+	 * @param array $values  Booking line built by the cart builder (rbfw_start_date, rbfw_end_date).
+	 * @return string Customer-facing reason, or ''.
+	 */
+	function rbfw_booking_off_day_error( $rbfw_id, $values ) {
+		$rbfw_id = (int) $rbfw_id;
+		if ( $rbfw_id < 1 || ! is_array( $values ) || 'no' === get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ) {
+			return '';
+		}
+		$day = static function ( $value ) {
+			$ts = ( is_scalar( $value ) && '' !== trim( (string) $value ) ) ? strtotime( (string) $value ) : false;
+			return $ts ? gmdate( 'Y-m-d', $ts ) : '';
+		};
+		$start = $day( isset( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '' );
+		$end   = $day( isset( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : '' );
+		if ( '' === $start ) {
+			return '';
+		}
+		$closed = __( 'The selected dates include a day this item is not available. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' );
+		$type   = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+
+		if ( rbfw_is_off_day( $rbfw_id, $start ) ) {
+			return $closed;
+		}
+
+		if ( 'appointment' === $type ) {
+			$on_days = get_post_meta( $rbfw_id, 'rbfw_sd_appointment_ondays', true );
+			$on_days = is_array( $on_days ) ? array_filter( array_map( 'strtolower', array_map( 'trim', array_filter( $on_days, 'is_scalar' ) ) ) ) : array();
+			if ( ! empty( $on_days ) && ! in_array( strtolower( gmdate( 'l', strtotime( $start ) ) ), $on_days, true ) ) {
+				return __( 'Appointments are not available on the selected day. Please choose another date.', 'booking-and-rental-manager-for-woocommerce' );
+			}
+		}
+
+		if ( '' === $end || $end <= $start || ! in_array( $type, array( 'bike_car_md', 'dress', 'equipment', 'others', 'resort' ), true ) ) {
+			return '';
+		}
+		if ( rbfw_is_off_day( $rbfw_id, $end ) ) {
+			return $closed;
+		}
+		if ( function_exists( 'rbfw_block_offday_range_booking' ) && 'on' === rbfw_block_offday_range_booking( $rbfw_id ) ) {
+			$guard = 0;
+			for ( $ts = strtotime( $start . ' +1 day' ); $ts < strtotime( $end ) && $guard < 1100; $ts = strtotime( '+1 day', $ts ), $guard++ ) {
+				if ( rbfw_is_off_day( $rbfw_id, gmdate( 'Y-m-d', $ts ) ) ) {
+					return $closed;
+				}
+			}
+		}
+
+		return '';
 	}
 }
 

@@ -581,69 +581,48 @@ if (!class_exists('RBFW_Woocommerce')) {
          * an additional, per-location cap.
          */
         public function rbfw_validate_location_stock( $passed, $product_id, $quantity = 1 ) {
-            if ( ! $passed || ! function_exists( 'rbfw_get_location_inventory' ) ) {
+            if ( ! $passed || ! function_exists( 'rbfw_get_location_inventory' ) || ! function_exists( 'rbfw_location_stock_error' ) ) {
                 return $passed;
             }
 
             $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
             $rbfw_id        = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
 
-            $conf = rbfw_get_location_inventory( $rbfw_id );
-            if ( empty( $conf ) ) {
+            if ( empty( rbfw_get_location_inventory( $rbfw_id ) ) ) {
                 return $passed;
             }
 
-            // phpcs:disable WordPress.Security.NonceVerification.Missing -- read-only look at the booking submit; nonce is enforced by the cart build.
-            $pickup_point = isset( $_POST['rbfw_pickup_point'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_point'] ) ) : '';
-            // Booked dates: md/multi-items post rbfw_pickup_(start|end)_date,
-            // resort posts rbfw_(start|end)_datetime, single-day posts
-            // rbfw_bikecarsd_selected_date.
-            $start_date   = isset( $_POST['rbfw_pickup_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_start_date'] ) ) : '';
-            if ( '' === $start_date && isset( $_POST['rbfw_start_datetime'] ) ) {
-                $start_date = sanitize_text_field( wp_unslash( $_POST['rbfw_start_datetime'] ) );
+            /* Dates and units as the cart build reads them: the end it derives, the units it
+               prices. A separately posted rbfw_item_quantity could differ from the units
+               actually booked (e.g. Single Day rows). A refused build is reported by the cart
+               build itself. */
+            $values = $this->rbfw_add_cart_item_func( array(), $rbfw_id );
+            if ( ! is_array( $values ) ) {
+                return $passed;
             }
-            if ( '' === $start_date && isset( $_POST['rbfw_bikecarsd_selected_date'] ) ) {
-                $start_date = sanitize_text_field( wp_unslash( $_POST['rbfw_bikecarsd_selected_date'] ) );
-            }
-            $end_date = isset( $_POST['rbfw_pickup_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_end_date'] ) ) : '';
-            if ( '' === $end_date && isset( $_POST['rbfw_end_datetime'] ) ) {
-                $end_date = sanitize_text_field( wp_unslash( $_POST['rbfw_end_datetime'] ) );
-            }
-            if ( '' === $end_date ) {
-                $end_date = $start_date;
-            }
-            /* Duration-based forms (multiple_items) post no end date — derive
-               it from durationType/durationQty, mirroring the cart build. */
-            if ( $end_date === $start_date && isset( $_POST['durationType'] ) && '' !== $start_date ) {
-                $d_type = sanitize_text_field( wp_unslash( $_POST['durationType'] ) );
-                $d_qty  = isset( $_POST['durationQty'] ) ? max( 1, absint( wp_unslash( $_POST['durationQty'] ) ) ) : 1;
-                $d_days = 'hourly' === $d_type ? 0 : ( 'daily' === $d_type ? $d_qty : ( 'weekly' === $d_type ? $d_qty * 7 : $d_qty * 30 ) );
-                $d_ts   = strtotime( $start_date );
-                if ( $d_ts && $d_days > 0 ) {
-                    $end_date = gmdate( 'Y-m-d', $d_ts + $d_days * DAY_IN_SECONDS );
+            // Resort lines carry no pickup point of their own: the posted choice is the one shown.
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing -- nonce verified by the cart build above.
+            $pickup_point = isset( $values['rbfw_pickup_point'] ) ? $values['rbfw_pickup_point'] : ( isset( $_POST['rbfw_pickup_point'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_point'] ) ) : '' );
+
+            $siblings = array();
+            if ( function_exists( 'WC' ) && WC()->cart ) {
+                foreach ( WC()->cart->get_cart() as $line ) {
+                    if ( isset( $line['rbfw_id'] ) && (int) $line['rbfw_id'] === (int) $rbfw_id ) {
+                        $siblings[] = $line;
+                    }
                 }
             }
-            $qty = isset( $_POST['rbfw_item_quantity'] ) ? max( 1, absint( wp_unslash( $_POST['rbfw_item_quantity'] ) ) ) : 1;
-            // phpcs:enable WordPress.Security.NonceVerification.Missing
 
-            if ( '' === $pickup_point || ! isset( $conf[ $pickup_point ] ) ) {
-                wc_add_notice( __( 'Please choose a location before booking.', 'booking-and-rental-manager-for-woocommerce' ), 'error' );
-                return false;
-            }
-
-            $remaining = rbfw_location_remaining_stock( $rbfw_id, $pickup_point, $start_date, $end_date );
-            if ( null !== $remaining && $qty > $remaining ) {
-                $term = get_term_by( 'slug', $pickup_point, 'rbfw_item_location' );
-                $name = $term && ! is_wp_error( $term ) ? $term->name : ucwords( str_replace( '-', ' ', $pickup_point ) );
-                wc_add_notice(
-                    sprintf(
-                        /* translators: 1: location name, 2: remaining units */
-                        __( 'Only %2$d unit(s) are available at %1$s for the selected dates.', 'booking-and-rental-manager-for-woocommerce' ),
-                        $name,
-                        $remaining
-                    ),
-                    'error'
-                );
+            $error = rbfw_location_stock_error(
+                $rbfw_id,
+                $pickup_point,
+                isset( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '',
+                isset( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : '',
+                isset( $values['rbfw_item_quantity'] ) ? (int) $values['rbfw_item_quantity'] : 1,
+                $siblings
+            );
+            if ( '' !== $error ) {
+                wc_add_notice( $error, 'error' );
                 return false;
             }
 
@@ -687,6 +666,21 @@ if (!class_exists('RBFW_Woocommerce')) {
                 foreach ( $checks as $check ) {
                     if ( empty( $check['ok'] ) ) {
                         wc_add_notice( $this->rbfw_availability_notice( $check ), 'error' );
+                    }
+                }
+
+                // Location Inventory, against the same running set of lines.
+                if ( isset( $values['rbfw_pickup_point'] ) && function_exists( 'rbfw_location_stock_error' ) ) {
+                    $location_error = rbfw_location_stock_error(
+                        $rbfw_id,
+                        $values['rbfw_pickup_point'],
+                        isset( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '',
+                        isset( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : '',
+                        isset( $values['rbfw_item_quantity'] ) ? (int) $values['rbfw_item_quantity'] : 1,
+                        $siblings
+                    );
+                    if ( '' !== $location_error ) {
+                        wc_add_notice( $location_error, 'error' );
                     }
                 }
 
@@ -750,6 +744,54 @@ if (!class_exists('RBFW_Woocommerce')) {
             $cart_item_data['rbfw_id'] = $product_id;
 
             return $cart_item_data;
+        }
+
+        /**
+         * The number of units an item's variation choices describe, validated.
+         *
+         * Every variation group (Size, Colour, ...) re-describes the SAME units, so each group's
+         * chosen quantities must add up to the same total, and at least one unit must be
+         * assigned, which is what the booking form requires before it can be sent. Quantities
+         * must be whole numbers. Values the item does not have are ignored.
+         *
+         * @param int   $rbfw_id Rental item id.
+         * @param mixed $posted  Posted rbfw_variation_qty[field_id][value_name] = qty.
+         * @return int|WP_Error|null Units, a refusal, or null when the item has no variations.
+         */
+        private function rbfw_variation_choice_units( $rbfw_id, $posted ) {
+            if ( 'yes' !== get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) || ! function_exists( 'rbfw_variation_group_totals' ) ) {
+                return null;
+            }
+            $posted = is_array( $posted ) ? $posted : array();
+            foreach ( $posted as $rbfw_values ) {
+                foreach ( is_array( $rbfw_values ) ? $rbfw_values : array( $rbfw_values ) as $rbfw_qty ) {
+                    if ( null === RBFW_Function::parse_posted_quantity( $rbfw_qty ) ) {
+                        return new WP_Error( 'rbfw_invalid_quantity', esc_html__( 'Please enter a valid quantity.', 'booking-and-rental-manager-for-woocommerce' ) );
+                    }
+                }
+            }
+            $totals = rbfw_variation_group_totals( $rbfw_id, $posted );
+            if ( empty( $totals ) ) {
+                return null; // Variations switched on but none configured: nothing to choose.
+            }
+            $units = reset( $totals );
+            foreach ( $totals as $total ) {
+                if ( $total !== $units ) {
+                    return $this->rbfw_variation_choice_error();
+                }
+            }
+            if ( $units < 1 ) {
+                return $this->rbfw_variation_choice_error();
+            }
+
+            return $units;
+        }
+
+        /**
+         * @return WP_Error The refusal for incomplete or inconsistent variation choices.
+         */
+        private function rbfw_variation_choice_error() {
+            return new WP_Error( 'rbfw_variation_choice', esc_html__( 'Please choose an option in every variation (for example a size) for each unit you book.', 'booking-and-rental-manager-for-woocommerce' ) );
         }
 
         /**
@@ -1299,7 +1341,8 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 /* Single-day item variations: the per-value steppers REPLACE the standalone
                    Quantity selector (the booking script hides it while they are on screen),
-                   so the SUM of the selected quantities is how many units are being rented.
+                   so the units they describe (each group's own total; groups such as Size
+                   and Colour describe the same units) are how many units are being rented.
                    Derive the base quantity from them here, server-side, so the cart price is
                    authoritative and cannot be lowered — or raised — by the browser.
 
@@ -1308,21 +1351,12 @@ if (!class_exists('RBFW_Woocommerce')) {
                    decremented by a single unit, so the remaining units stayed bookable. The
                    per-value surcharge is still added separately below, and per-value stock is
                    still enforced from rbfw_variation_info, so neither is double counted. */
-                if ( get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes'
-                    && isset( $sd_input_data_sabitized['rbfw_variation_qty'] )
-                    && is_array( $sd_input_data_sabitized['rbfw_variation_qty'] ) ) {
-                    $rbfw_variation_total_qty = 0;
-                    foreach ( $sd_input_data_sabitized['rbfw_variation_qty'] as $rbfw_vq_values ) {
-                        if ( ! is_array( $rbfw_vq_values ) ) {
-                            continue;
-                        }
-                        foreach ( $rbfw_vq_values as $rbfw_vq ) {
-                            $rbfw_variation_total_qty += max( 0, (int) $rbfw_vq );
-                        }
-                    }
-                    if ( $rbfw_variation_total_qty > 0 ) {
-                        $rbfw_item_quantity = $rbfw_variation_total_qty;
-                    }
+                $rbfw_variation_units = $this->rbfw_variation_choice_units( $rbfw_id, isset( $sd_input_data_sabitized['rbfw_variation_qty'] ) ? $sd_input_data_sabitized['rbfw_variation_qty'] : array() );
+                if ( is_wp_error( $rbfw_variation_units ) ) {
+                    return $rbfw_variation_units;
+                }
+                if ( null !== $rbfw_variation_units ) {
+                    $rbfw_item_quantity = $rbfw_variation_units;
                 }
 
                 $rbfw_type_info_all = ( isset( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) && is_array( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) ) ? $sd_input_data_sabitized['rbfw_bikecarsd_info'] : [];
@@ -1359,10 +1393,14 @@ if (!class_exists('RBFW_Woocommerce')) {
                             $rbfw_type_info[ $rbfw_option_name ] = $rent_qty;
                         }
                     }
-                    /* The time-based stock counts rbfw_item_quantity units, so it has to be the
-                       number of units actually priced here, not a separately posted figure. */
-                    if ( $rbfw_sd_is_timely && ! empty( $rbfw_type_info ) ) {
+                    /* Stock (time-based stock and location stock) counts rbfw_item_quantity
+                       units, so it has to be the number of units priced here, not a separately
+                       posted figure. Chosen variations must describe those same units. */
+                    if ( ! empty( $rbfw_type_info ) ) {
                         $rbfw_item_quantity = array_sum( $rbfw_type_info );
+                        if ( null !== $rbfw_variation_units && $rbfw_variation_units !== $rbfw_item_quantity ) {
+                            return $this->rbfw_variation_choice_error();
+                        }
                     }
                 }
                 // Every booking form requires a rental option before it can be sent.
@@ -1683,11 +1721,14 @@ if (!class_exists('RBFW_Woocommerce')) {
                    units are rented. Derived here, server-side, so the cart price is
                    authoritative and cannot be lowered — or raised — by the browser. Left
                    alone (base billed once, variations as add-ons) unless the item opts in. */
-                if ( rbfw_variations_multiply_base( $rbfw_id ) ) {
-                    $rbfw_variation_units = rbfw_variation_units( $rbfw_id, isset( $sd_input_data_sabitized['rbfw_variation_qty'] ) ? $sd_input_data_sabitized['rbfw_variation_qty'] : array() );
-                    if ( $rbfw_variation_units > 0 ) {
-                        $rbfw_item_quantity = $rbfw_variation_units;
-                    }
+                $rbfw_variation_units = $this->rbfw_variation_choice_units( $rbfw_id, isset( $sd_input_data_sabitized['rbfw_variation_qty'] ) ? $sd_input_data_sabitized['rbfw_variation_qty'] : array() );
+                if ( is_wp_error( $rbfw_variation_units ) ) {
+                    return $rbfw_variation_units;
+                }
+                // Without the multiplier the variations are add-ons and the base is billed for
+                // the booked quantity as before; the choices themselves are still validated.
+                if ( null !== $rbfw_variation_units && rbfw_variations_multiply_base( $rbfw_id ) ) {
+                    $rbfw_item_quantity = $rbfw_variation_units;
                 }
                 // Multiplies the duration, service and fee prices below: a zero quantity would price
                 // the whole booking at nothing while still taking the dates.
