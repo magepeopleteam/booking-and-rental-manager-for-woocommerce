@@ -125,18 +125,20 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			$raw = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
 			unset( $raw['nonce'], $raw['action'] );
 
-			// 5. Dates / quantity / ticket_info per item type.
-			$item_type   = get_post_meta( $item_id, 'rbfw_item_type', true );
-			$dates       = $this->extract_dates( $item_type );
-			$quantity    = isset( $_POST['rbfw_item_quantity'] ) ? absint( wp_unslash( $_POST['rbfw_item_quantity'] ) ) : 1;
-			$ticket_info = $this->build_ticket_info( $item_type, $dates, $quantity, $item_id );
+			$item_type = get_post_meta( $item_id, 'rbfw_item_type', true );
 
-			// 6. Rebuild the rental price from the item's stored pricing configuration. The
+			// 5. Rebuild the rental price from the item's stored pricing configuration. The
 			// browser total is display-only and must never be used as a payment authority.
 			$quote = RBFW_Native_Quote::build( $item_id, $raw );
 			if ( is_wp_error( $quote ) ) {
 				wp_send_json_error( array( 'message' => $quote->get_error_message() ) );
 			}
+
+			// 6. Dates / quantity / ticket_info come from that same quote, so the booking and its
+			// stock hold always cover exactly the period and units that were priced.
+			$dates       = RBFW_Native_Quote::booking_dates( $quote['cart_data'] );
+			$quantity    = RBFW_Native_Quote::booking_quantity( $quote['cart_data'], isset( $_POST['rbfw_item_quantity'] ) ? absint( wp_unslash( $_POST['rbfw_item_quantity'] ) ) : 1 );
+			$ticket_info = $this->build_ticket_info( $item_type, $dates, $quantity, $item_id );
 
 			// Revalidate the authoritative quote against committed inventory. The public form's
 			// availability display is not a security boundary, and a pending booking also holds
@@ -311,33 +313,6 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			}
 
 			wp_send_json_success( $response );
-		}
-
-		/**
-		 * Resolve start/end date+time from the posted form, which differs by item type
-		 * (single-day uses rbfw_bikecarsd_selected_date; multi-day uses rbfw_pickup_*).
-		 */
-		private function extract_dates( $item_type ) {
-			$get = function ( $key ) {
-				return isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : '';
-			};
-
-			if ( $item_type === 'bike_car_sd' ) {
-				return array(
-					'start_date' => $get( 'rbfw_bikecarsd_selected_date' ),
-					'end_date'   => $get( 'rbfw_end_date' ) ? $get( 'rbfw_end_date' ) : $get( 'rbfw_bikecarsd_selected_date' ),
-					'start_time' => $get( 'rbfw_start_time' ),
-					'end_time'   => $get( 'rbfw_end_time' ),
-				);
-			}
-
-			// Multi-day / dress / equipment / others / multiple_items.
-			return array(
-				'start_date' => $get( 'rbfw_pickup_start_date' ),
-				'end_date'   => $get( 'rbfw_pickup_end_date' ),
-				'start_time' => $get( 'rbfw_pickup_start_time' ),
-				'end_time'   => $get( 'rbfw_pickup_end_time' ),
-			);
 		}
 
 		/**

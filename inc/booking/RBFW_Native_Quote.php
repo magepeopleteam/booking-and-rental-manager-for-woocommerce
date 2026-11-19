@@ -124,6 +124,11 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 				$_POST = $outer_post; // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage
 			}
 
+			// The builder's refusals (invalid quantity, unknown rental option, …) carry a
+			// customer-facing reason; pass it on rather than the generic message below.
+			if ( is_wp_error( $cart_data ) ) {
+				return $cart_data;
+			}
 			if ( ! is_array( $cart_data ) || ! isset( $cart_data['rbfw_tp'] ) || ! is_numeric( $cart_data['rbfw_tp'] ) ) {
 				return new WP_Error( 'rbfw_price_calculation_failed', esc_html__( 'Could not calculate the booking price. Please review your selection and try again.', 'booking-and-rental-manager-for-woocommerce' ) );
 			}
@@ -263,6 +268,44 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 			}
 
 			return isset( $cart_data['rbfw_item_quantity'] ) && absint( $cart_data['rbfw_item_quantity'] ) > 0;
+		}
+
+		/**
+		 * The booked period of a server-built quote, in the booking manager's `dates` shape.
+		 *
+		 * Store THESE values on a booking and its inventory rather than the posted end fields:
+		 * the cart builder works the end date/time out from the chosen option or duration.
+		 *
+		 * @param array $cart_data The `cart_data` of a build() result.
+		 * @return array{start_date:string,end_date:string,start_time:string,end_time:string}
+		 */
+		public static function booking_dates( $cart_data ) {
+			$read = static function ( $key ) use ( $cart_data ) {
+				return ( is_array( $cart_data ) && isset( $cart_data[ $key ] ) && is_scalar( $cart_data[ $key ] ) ) ? trim( (string) $cart_data[ $key ] ) : '';
+			};
+
+			return array(
+				'start_date' => $read( 'rbfw_start_date' ),
+				'end_date'   => $read( 'rbfw_end_date' ),
+				'start_time' => $read( 'rbfw_start_time' ),
+				'end_time'   => $read( 'rbfw_end_time' ),
+			);
+		}
+
+		/**
+		 * The unit count a server-built quote priced, or $posted for item types whose builder
+		 * keeps no unit count (resort rooms and Multiple Items lines carry their own).
+		 *
+		 * @param array $cart_data The `cart_data` of a build() result.
+		 * @param int   $posted    The posted rbfw_item_quantity.
+		 * @return int
+		 */
+		public static function booking_quantity( $cart_data, $posted ) {
+			if ( is_array( $cart_data ) && isset( $cart_data['rbfw_item_quantity'] ) && is_numeric( $cart_data['rbfw_item_quantity'] ) ) {
+				return absint( $cart_data['rbfw_item_quantity'] );
+			}
+
+			return absint( $posted );
 		}
 
 		/**

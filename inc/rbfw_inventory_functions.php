@@ -4598,6 +4598,75 @@ function rbfw_render_sd_variation_field( $post_id, $variations_data, $selected_d
 }
 
 /**
+ * Per-option stock checks for a single-day or appointment booking line.
+ *
+ * Each requested rental option is measured against its remaining stock on the booking
+ * date (for an appointment: in the booked session) minus the same option in other cart
+ * lines for that date (and session).
+ *
+ * @param int    $rbfw_id       Rental item id.
+ * @param array  $values        Booking line (rbfw_type_info, rbfw_start_date, rbfw_start_time).
+ * @param array  $sibling_lines Other cart lines for the same item.
+ * @param string $start_dt      Booking start, used when rbfw_start_date is missing.
+ * @return array|null Checks in the rbfw_check_rental_availability() shape, or null when the
+ *                    line requests no option.
+ */
+function rbfw_sd_rate_option_checks( $rbfw_id, $values, $sibling_lines, $start_dt ) {
+	$sd_opt_req = isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ? $values['rbfw_type_info'] : array();
+	$sd_opt_req = array_filter( array_map( 'intval', $sd_opt_req ) );
+	if ( empty( $sd_opt_req ) ) {
+		return null;
+	}
+
+	$checks         = array();
+	$item_name      = get_the_title( $rbfw_id );
+	$is_appointment = 'appointment' === get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+	$sd_start_date  = ! empty( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : gmdate( 'Y-m-d', strtotime( $start_dt ) );
+	$sd_start_time  = isset( $values['rbfw_start_time'] ) ? $values['rbfw_start_time'] : '';
+	$sd_date_dmy    = gmdate( 'd-m-Y', strtotime( $sd_start_date ) );
+	$show_opt_label = count( $sd_opt_req ) > 1;
+
+	foreach ( $sd_opt_req as $opt_type => $req_qty ) {
+		if ( $req_qty < 1 ) {
+			continue;
+		}
+		$remaining = rbfw_get_bike_car_sd_available_qty( $rbfw_id, $sd_start_date, $opt_type, $sd_start_time );
+		if ( null === $remaining ) {
+			continue; // unknown option -> fail open
+		}
+
+		// Other cart lines requesting the same option on the same date (appointment: same session).
+		$cart_used = 0;
+		foreach ( $sibling_lines as $line ) {
+			if ( ! is_array( $line ) || empty( $line['rbfw_type_info'] ) || ! is_array( $line['rbfw_type_info'] ) ) {
+				continue;
+			}
+			if ( ! isset( $line['rbfw_type_info'][ $opt_type ] ) ) {
+				continue;
+			}
+			$line_date = ! empty( $line['rbfw_start_date'] ) ? $line['rbfw_start_date'] : '';
+			if ( '' === $line_date || gmdate( 'd-m-Y', strtotime( $line_date ) ) !== $sd_date_dmy ) {
+				continue;
+			}
+			if ( $is_appointment && ( isset( $line['rbfw_start_time'] ) ? $line['rbfw_start_time'] : '' ) !== $sd_start_time ) {
+				continue;
+			}
+			$cart_used += max( 0, (int) $line['rbfw_type_info'][ $opt_type ] );
+		}
+
+		$available = max( 0, (int) $remaining - $cart_used );
+		$checks[]  = array(
+			'ok'        => ( $req_qty <= $available ),
+			'requested' => $req_qty,
+			'available' => $available,
+			'label'     => $show_opt_label ? $item_name . ' (' . $opt_type . ')' : $item_name,
+		);
+	}
+
+	return $checks;
+}
+
+/**
  * Evaluate availability for one rental request (cart line or add-to-cart POST).
  *
  * Returns a list of per-resource checks. Each check is:
@@ -4794,6 +4863,14 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	 * gate, which leaves single-day to its existing handling.
 	 */
 	if ( 'bike_car_sd' === $rent_type && get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) === 'yes' ) {
+		/* Per-size stock is IN ADDITION to the per-option stock, not instead of it, and the
+		   per-option stock applies whether or not a size was chosen. */
+		if ( 'on' !== get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true ) ) {
+			$option_checks = rbfw_sd_rate_option_checks( $rbfw_id, $values, $sibling_lines, $start_dt );
+			if ( is_array( $option_checks ) ) {
+				$checks = array_merge( $checks, $option_checks );
+			}
+		}
 		// Per-value quantity steppers: each rbfw_variation_info entry carries its own
 		// requested qty. Sum by value name so every size is validated against its own
 		// remaining stock (anti-oversell), not the whole-line quantity. Legacy
@@ -4816,8 +4893,8 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			}
 			$sd_req_map[ $vv ] = isset( $sd_req_map[ $vv ] ) ? $sd_req_map[ $vv ] + $rq : $rq;
 		}
-		// Variations enabled but no resolvable selection -> fail open (the per-rate
-		// stock still governs via the single-day time-table); never block a valid booking.
+		// No size chosen: only the per-option stock above applies (time-based stock items
+		// were checked in the timely block); never block a valid booking on size alone.
 		if ( empty( $sd_req_map ) ) {
 			return $checks;
 		}
@@ -4850,67 +4927,25 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 	}
 
 	/*
-	 * Single-day, plain Rental Options (no Timely Inventory, no Item Variations):
-	 * enforce the per-option "qty" stock entered on the Pricing tab. Reuses
-	 * rbfw_get_bike_car_sd_available_qty(), the same per-option remaining-stock
-	 * math already used to render the quantity steppers / "Sold Out" state, which
-	 * until now was never actually enforced at add-to-cart.
+	 * Single-day plain Rental Options (no Timely Inventory, no Item Variations) and
+	 * Appointment items: enforce the per-option stock (an appointment's per-session cap)
+	 * with rbfw_get_bike_car_sd_available_qty(), the same remaining-stock math that
+	 * renders the quantity steppers / "Sold Out" state (for appointments, per session).
 	 */
-	if ( 'bike_car_sd' === $rent_type
+	if ( ( 'bike_car_sd' === $rent_type
 		&& 'on' !== get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true )
-		&& get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) !== 'yes'
+		&& get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) !== 'yes' )
+		|| 'appointment' === $rent_type
 	) {
-		$sd_opt_req = isset( $values['rbfw_type_info'] ) && is_array( $values['rbfw_type_info'] ) ? $values['rbfw_type_info'] : array();
-		$sd_opt_req = array_filter( array_map( 'intval', $sd_opt_req ) );
-
-		if ( ! empty( $sd_opt_req ) ) {
-			$sd_start_date  = ! empty( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : gmdate( 'Y-m-d', strtotime( $start_dt ) );
-			$sd_start_time  = isset( $values['rbfw_start_time'] ) ? $values['rbfw_start_time'] : '';
-			$sd_date_dmy    = gmdate( 'd-m-Y', strtotime( $sd_start_date ) );
-			$show_opt_label = count( $sd_opt_req ) > 1;
-
-			foreach ( $sd_opt_req as $opt_type => $req_qty ) {
-				if ( $req_qty < 1 ) {
-					continue;
-				}
-				$remaining = rbfw_get_bike_car_sd_available_qty( $rbfw_id, $sd_start_date, $opt_type, $sd_start_time );
-				if ( null === $remaining ) {
-					continue; // unknown option -> fail open
-				}
-
-				// Other cart lines requesting the same option on the same date.
-				$cart_used = 0;
-				foreach ( $sibling_lines as $line ) {
-					if ( ! is_array( $line ) || empty( $line['rbfw_type_info'] ) || ! is_array( $line['rbfw_type_info'] ) ) {
-						continue;
-					}
-					if ( ! isset( $line['rbfw_type_info'][ $opt_type ] ) ) {
-						continue;
-					}
-					$line_date = ! empty( $line['rbfw_start_date'] ) ? $line['rbfw_start_date'] : '';
-					if ( '' === $line_date || gmdate( 'd-m-Y', strtotime( $line_date ) ) !== $sd_date_dmy ) {
-						continue;
-					}
-					$cart_used += max( 0, (int) $line['rbfw_type_info'][ $opt_type ] );
-				}
-
-				$available = max( 0, (int) $remaining - $cart_used );
-				$checks[]  = array(
-					'ok'        => ( $req_qty <= $available ),
-					'requested' => $req_qty,
-					'available' => $available,
-					'label'     => $show_opt_label ? $item_name . ' (' . $opt_type . ')' : $item_name,
-				);
-			}
-			return $checks;
+		$option_checks = rbfw_sd_rate_option_checks( $rbfw_id, $values, $sibling_lines, $start_dt );
+		if ( is_array( $option_checks ) ) {
+			return array_merge( $checks, $option_checks );
 		}
 	}
 
 	/*
 	 * Main single-unit date-range types: bike_car_md / dress / equipment / others.
-	 * Appointment types use a different stock model
-	 * (per-session / per-type capacity), so they are intentionally left to their
-	 * existing handling to avoid wrongly blocking valid time-slot bookings.
+	 * Single-day and appointment items are checked above (per option / per session).
 	 */
 	$supported_main_types = apply_filters(
 		'rbfw_availability_main_unit_types',
