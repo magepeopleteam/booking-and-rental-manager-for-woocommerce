@@ -4073,36 +4073,69 @@ function rbfw_variation_qty_mode( $post_id ) {
 }
 
 /**
- * Total units chosen across an item's variation values.
+ * Units chosen in each of an item's variation groups.
  *
- * Only values that exist in the item's own variation set are counted, so a
- * posted key that is not configured cannot inflate the unit count.
+ * Every group (Size, Colour, ...) re-describes the SAME units, so the groups are
+ * never added together: two dresses are "Red x2" for Colour AND "Small x2" for
+ * Size. Only groups with at least one named value are returned, and only values
+ * that exist in the item's own variation set are counted.
+ *
+ * @param int   $post_id rbfw_item id.
+ * @param mixed $posted  Posted rbfw_variation_qty[ field_id ][ value_name ] => qty.
+ * @return array<string,int> field_id => units chosen in that group.
+ */
+function rbfw_variation_group_totals( $post_id, $posted ) {
+	$variation_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
+	if ( ! is_array( $variation_data ) ) {
+		return array();
+	}
+	$posted = is_array( $posted ) ? $posted : array();
+
+	$totals = array();
+	foreach ( $variation_data as $field ) {
+		if ( ! is_array( $field ) || empty( $field['field_id'] ) || empty( $field['value'] ) || ! is_array( $field['value'] ) ) {
+			continue;
+		}
+		$qty_map = ( isset( $posted[ $field['field_id'] ] ) && is_array( $posted[ $field['field_id'] ] ) ) ? $posted[ $field['field_id'] ] : array();
+		$named   = false;
+		$units   = 0;
+		foreach ( $field['value'] as $value ) {
+			$name = ( is_array( $value ) && isset( $value['name'] ) ) ? (string) $value['name'] : '';
+			if ( '' === $name ) {
+				continue;
+			}
+			$named = true;
+			if ( isset( $qty_map[ $name ] ) ) {
+				$units += max( 0, (int) $qty_map[ $name ] );
+			}
+		}
+		if ( $named ) {
+			$totals[ (string) $field['field_id'] ] = $units;
+		}
+	}
+
+	return $totals;
+}
+
+/**
+ * Units chosen through an item's variation values.
+ *
+ * The first variation group's total, as the booking form counts it: groups are
+ * not added together (see rbfw_variation_group_totals()). Only values that exist
+ * in the item's own variation set are counted, so a posted key that is not
+ * configured cannot inflate the unit count.
  *
  * @param int   $post_id rbfw_item id.
  * @param mixed $posted  Posted rbfw_variation_qty[ field_id ][ value_name ] => qty.
  * @return int
  */
 function rbfw_variation_units( $post_id, $posted ) {
-	$variation_data = get_post_meta( $post_id, 'rbfw_variations_data', true );
-	if ( ! is_array( $posted ) || ! is_array( $variation_data ) ) {
+	if ( ! is_array( $posted ) ) {
 		return 0;
 	}
+	$totals = rbfw_variation_group_totals( $post_id, $posted );
 
-	$units = 0;
-	foreach ( $variation_data as $field ) {
-		if ( ! is_array( $field ) || empty( $field['field_id'] ) || empty( $field['value'] ) || ! is_array( $field['value'] ) ) {
-			continue;
-		}
-		$qty_map = ( isset( $posted[ $field['field_id'] ] ) && is_array( $posted[ $field['field_id'] ] ) ) ? $posted[ $field['field_id'] ] : array();
-		foreach ( $field['value'] as $value ) {
-			$name = isset( $value['name'] ) ? $value['name'] : '';
-			if ( '' !== $name && isset( $qty_map[ $name ] ) ) {
-				$units += max( 0, (int) $qty_map[ $name ] );
-			}
-		}
-	}
-
-	return $units;
+	return $totals ? (int) reset( $totals ) : 0;
 }
 
 /**
@@ -4703,6 +4736,20 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			'available' => 0,
 			'label'     => $item_name,
 			'message'   => __( 'The selected dates include a global off date. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+
+		return $checks;
+	}
+
+	// The item's own Off Days (and Appointment days): enforced here, not only in the calendar.
+	$off_day_error = function_exists( 'rbfw_booking_off_day_error' ) ? rbfw_booking_off_day_error( $rbfw_id, $values ) : '';
+	if ( '' !== $off_day_error ) {
+		$checks[] = array(
+			'ok'        => false,
+			'requested' => 1,
+			'available' => 0,
+			'label'     => $item_name,
+			'message'   => $off_day_error,
 		);
 
 		return $checks;

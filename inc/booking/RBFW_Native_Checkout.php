@@ -138,7 +138,7 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 			// stock hold always cover exactly the period and units that were priced.
 			$dates       = RBFW_Native_Quote::booking_dates( $quote['cart_data'] );
 			$quantity    = RBFW_Native_Quote::booking_quantity( $quote['cart_data'], isset( $_POST['rbfw_item_quantity'] ) ? absint( wp_unslash( $_POST['rbfw_item_quantity'] ) ) : 1 );
-			$ticket_info = $this->build_ticket_info( $item_type, $dates, $quantity, $item_id );
+			$ticket_info = array_merge( $this->build_ticket_info( $item_type, $dates, $quantity, $item_id ), RBFW_Native_Quote::booking_inventory_info( $quote['cart_data'] ) );
 
 			// Revalidate the authoritative quote against committed inventory. The public form's
 			// availability display is not a security boundary, and a pending booking also holds
@@ -150,6 +150,20 @@ if ( ! class_exists( 'RBFW_Native_Checkout' ) ) {
 						? $availability_check['message']
 						: esc_html__( 'The selected rental is no longer available for these dates. Please reduce the quantity or choose different dates.', 'booking-and-rental-manager-for-woocommerce' );
 					wp_send_json_error( array( 'message' => esc_html( $message ) ) );
+				}
+			}
+
+			// Location Inventory: the same per-location cap the WooCommerce cart applies.
+			if ( function_exists( 'rbfw_location_stock_error' ) ) {
+				$location_error = rbfw_location_stock_error(
+					$item_id,
+					isset( $quote['cart_data']['rbfw_pickup_point'] ) ? $quote['cart_data']['rbfw_pickup_point'] : ( isset( $raw['rbfw_pickup_point'] ) ? $raw['rbfw_pickup_point'] : '' ),
+					$dates['start_date'],
+					$dates['end_date'],
+					$quantity
+				);
+				if ( '' !== $location_error ) {
+					wp_send_json_error( array( 'message' => esc_html( $location_error ) ) );
 				}
 			}
 

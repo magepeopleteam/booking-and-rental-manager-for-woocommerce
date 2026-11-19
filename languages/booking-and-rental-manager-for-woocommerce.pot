@@ -3,13 +3,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment 2.8.5\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/booking-and-rental-manager-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/rbfw-gaps\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-11-16T09:08:08+00:00\n"
+"POT-Creation-Date: 2026-11-19T08:53:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: booking-and-rental-manager-for-woocommerce\n"
@@ -40,8 +40,8 @@ msgid "https://www.mage-people.com/"
 msgstr ""
 
 #: admin/custom_post.php:17
-#: admin/RBFW_Rental_List.php:695
-#: admin/RBFW_Rental_List.php:722
+#: admin/RBFW_Rental_List.php:692
+#: admin/RBFW_Rental_List.php:719
 #: templates/rental_lists.php:198
 msgid "Price Type"
 msgstr ""
@@ -380,7 +380,7 @@ msgstr ""
 #: admin/RBFW_Category_Manager.php:67
 #: admin/RBFW_Category_Manager.php:202
 #: admin/RBFW_Category_Manager.php:225
-#: admin/RBFW_Rental_List.php:568
+#: admin/RBFW_Rental_List.php:565
 msgid "Categories"
 msgstr ""
 
@@ -499,8 +499,8 @@ msgstr ""
 #. translators: %d: total number of categories.
 #. translators: %d: total number of items.
 #: admin/RBFW_Category_Manager.php:288
-#: admin/RBFW_Rental_List.php:575
-#: admin/RBFW_Rental_List.php:583
+#: admin/RBFW_Rental_List.php:572
+#: admin/RBFW_Rental_List.php:580
 #: templates/rental_lists.php:164
 #, php-format
 msgid "All (%d)"
@@ -547,20 +547,20 @@ msgid "Layout"
 msgstr ""
 
 #: admin/RBFW_Category_Manager.php:327
-#: admin/RBFW_Rental_List.php:606
-#: inc/rbfw_booking_search.php:551
+#: admin/RBFW_Rental_List.php:603
+#: inc/rbfw_booking_search.php:612
 msgid "Grid view"
 msgstr ""
 
 #: admin/RBFW_Category_Manager.php:331
-#: admin/RBFW_Rental_List.php:609
-#: inc/rbfw_booking_search.php:554
+#: admin/RBFW_Rental_List.php:606
+#: inc/rbfw_booking_search.php:615
 msgid "List view"
 msgstr ""
 
 #. translators: %d: number of items in this category.
 #: admin/RBFW_Category_Manager.php:412
-#: admin/RBFW_Rental_List.php:535
+#: admin/RBFW_Rental_List.php:532
 #, php-format
 msgid "%d item"
 msgid_plural "%d items"
@@ -570,8 +570,8 @@ msgstr[1] ""
 #: admin/RBFW_Category_Manager.php:429
 #: admin/RBFW_Modern_Editor.php:366
 #: admin/RBFW_Modern_Editor.php:558
-#: admin/RBFW_Rental_List.php:659
-#: admin/RBFW_Rental_List.php:781
+#: admin/RBFW_Rental_List.php:656
+#: admin/RBFW_Rental_List.php:778
 #: admin/settings/Faq.php:378
 #: admin/settings/General_Info.php:339
 #: admin/settings/Terms.php:65
@@ -624,8 +624,8 @@ msgstr ""
 #: admin/settings/RBFW_Payment_Settings.php:302
 #: inc/booking/RBFW_Booking_List_Table.php:325
 #: inc/coupon/RBFW_Coupon_Admin.php:713
-#: inc/rbfw_booking_search.php:334
-#: inc/rbfw_booking_search.php:345
+#: inc/rbfw_booking_search.php:336
+#: inc/rbfw_booking_search.php:347
 #: inc/rbfw_functions.php:1322
 #: inc/rbfw_inventory_functions.php:2827
 #: inc/rbfw_inventory_functions.php:3350
@@ -639,8 +639,8 @@ msgid "Close"
 msgstr ""
 
 #: admin/RBFW_Category_Manager.php:494
-#: admin/RBFW_Rental_List.php:694
-#: admin/RBFW_Rental_List.php:718
+#: admin/RBFW_Rental_List.php:691
+#: admin/RBFW_Rental_List.php:715
 #: admin/settings/Extra_Service.php:411
 #: inc/booking/RBFW_Booking_Actions.php:458
 #: inc/rbfw_inventory_functions.php:3189
@@ -980,7 +980,7 @@ msgstr ""
 #: admin/taxonomy_register.php:43
 #: admin/taxonomy_register.php:44
 #: admin/taxonomy_register.php:45
-#: inc/rbfw_booking_search.php:298
+#: inc/rbfw_booking_search.php:300
 #: support/elementor/widget/rbfw-rent-list.php:129
 #: support/blocks/js/blocks.build.js:157
 msgid "Location"
@@ -1201,8 +1201,8 @@ msgstr ""
 #: inc/booking/RBFW_Native_Quote.php:98
 #: inc/booking/RBFW_Standalone_Booking_Service.php:39
 #: inc/coupon/RBFW_Coupon_Native.php:53
-#: inc/rbfw_booking_search.php:666
-#: inc/rbfw_booking_search.php:779
+#: inc/rbfw_booking_search.php:729
+#: inc/rbfw_booking_search.php:842
 msgid "Invalid rental item."
 msgstr ""
 
@@ -1532,32 +1532,24 @@ msgstr ""
 
 #. translators: %s: SEO plugin name
 #: admin/RBFW_Rental_List.php:276
-#: admin/RBFW_Rental_List.php:699
-#: admin/RBFW_Rental_List.php:725
+#: admin/RBFW_Rental_List.php:696
+#: admin/RBFW_Rental_List.php:722
 msgid "SEO"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:452
-msgid "/day"
-msgstr ""
-
-#: admin/RBFW_Rental_List.php:455
-msgid "/hour"
-msgstr ""
-
-#: admin/RBFW_Rental_List.php:482
-#: admin/RBFW_Rental_List.php:556
+#: admin/RBFW_Rental_List.php:479
+#: admin/RBFW_Rental_List.php:553
 #: admin/views/rbfw-modern-editor.php:1075
 msgid "Published"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:484
-#: admin/RBFW_Rental_List.php:562
+#: admin/RBFW_Rental_List.php:481
+#: admin/RBFW_Rental_List.php:559
 #: admin/views/rbfw-modern-editor.php:1074
 msgid "Draft"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:486
+#: admin/RBFW_Rental_List.php:483
 #: inc/booking/RBFW_Booking_Actions.php:39
 #: inc/booking/RBFW_Booking_List_Table.php:215
 #: inc/booking/RBFW_Booking_Normalizer.php:123
@@ -1565,124 +1557,124 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:488
+#: admin/RBFW_Rental_List.php:485
 #: admin/views/rbfw-modern-editor.php:1076
 msgid "Private"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:534
+#: admin/RBFW_Rental_List.php:531
 msgid "Lists"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:540
+#: admin/RBFW_Rental_List.php:537
 #, php-format
 msgid "Add New %s"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:550
+#: admin/RBFW_Rental_List.php:547
 #, php-format
 msgid "Total %s"
 msgstr ""
 
 #. translators: %d: number of published items.
-#: admin/RBFW_Rental_List.php:576
-#: admin/RBFW_Rental_List.php:584
+#: admin/RBFW_Rental_List.php:573
+#: admin/RBFW_Rental_List.php:581
 #: templates/rental_lists.php:168
 #, php-format
 msgid "Published (%d)"
 msgstr ""
 
 #. translators: %d: number of draft items.
-#: admin/RBFW_Rental_List.php:577
-#: admin/RBFW_Rental_List.php:585
+#: admin/RBFW_Rental_List.php:574
+#: admin/RBFW_Rental_List.php:582
 #: templates/rental_lists.php:172
 #, php-format
 msgid "Draft (%d)"
 msgstr ""
 
 #. translators: %d: number of trashed items.
-#: admin/RBFW_Rental_List.php:580
-#: admin/RBFW_Rental_List.php:588
+#: admin/RBFW_Rental_List.php:577
+#: admin/RBFW_Rental_List.php:585
 #: templates/rental_lists.php:176
 #, php-format
 msgid "Trash (%d)"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:586
+#: admin/RBFW_Rental_List.php:583
 msgid "View trashed items"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:594
+#: admin/RBFW_Rental_List.php:591
 msgid "Search items..."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:595
+#: admin/RBFW_Rental_List.php:592
 msgid "Clear search"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:600
+#: admin/RBFW_Rental_List.php:597
 msgid "All Types"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:618
+#: admin/RBFW_Rental_List.php:615
 msgid "Trash is empty."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:619
+#: admin/RBFW_Rental_List.php:616
 msgid "Back to list"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:621
+#: admin/RBFW_Rental_List.php:618
 #, php-format
 msgid "No %s items found yet."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:622
+#: admin/RBFW_Rental_List.php:619
 #, php-format
 msgid "Add your first %s"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:647
-#: admin/RBFW_Rental_List.php:771
+#: admin/RBFW_Rental_List.php:644
+#: admin/RBFW_Rental_List.php:768
 msgid "Restore"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:650
-#: admin/RBFW_Rental_List.php:774
+#: admin/RBFW_Rental_List.php:647
+#: admin/RBFW_Rental_List.php:771
 msgid "Delete Permanently"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:650
-#: admin/RBFW_Rental_List.php:774
+#: admin/RBFW_Rental_List.php:647
+#: admin/RBFW_Rental_List.php:771
 msgid "Permanently delete this item? This cannot be undone."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:655
-#: admin/RBFW_Rental_List.php:778
+#: admin/RBFW_Rental_List.php:652
+#: admin/RBFW_Rental_List.php:775
 msgid "View on frontend"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:662
-#: admin/RBFW_Rental_List.php:784
+#: admin/RBFW_Rental_List.php:659
+#: admin/RBFW_Rental_List.php:781
 #: admin/settings/Fee_Management.php:449
 #: admin/settings/Fee_Management.php:546
 #: rent-manager.php:87
 msgid "Duplicate"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:665
-#: admin/RBFW_Rental_List.php:787
+#: admin/RBFW_Rental_List.php:662
+#: admin/RBFW_Rental_List.php:784
 #: lib/classes/class-admin-menu.php:541
 msgid "Move to Trash"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:665
-#: admin/RBFW_Rental_List.php:787
+#: admin/RBFW_Rental_List.php:662
+#: admin/RBFW_Rental_List.php:784
 msgid "Move this item to Trash?"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:693
-#: admin/RBFW_Rental_List.php:708
+#: admin/RBFW_Rental_List.php:690
+#: admin/RBFW_Rental_List.php:705
 #: admin/settings/Extra_Service.php:410
 #: admin/settings/Pricing.php:1181
 #: templates/rental_lists.php:194
@@ -1691,8 +1683,8 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:696
-#: admin/RBFW_Rental_List.php:723
+#: admin/RBFW_Rental_List.php:693
+#: admin/RBFW_Rental_List.php:720
 #: admin/settings/Extra_Service.php:268
 #: admin/settings/Extra_Service.php:331
 #: admin/settings/Inventory.php:72
@@ -1729,13 +1721,13 @@ msgid "Price"
 msgstr ""
 
 #. translators: %s: SEO plugin name
-#: admin/RBFW_Rental_List.php:699
+#: admin/RBFW_Rental_List.php:696
 #, php-format
 msgid "SEO score from %s"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:701
-#: admin/RBFW_Rental_List.php:767
+#: admin/RBFW_Rental_List.php:698
+#: admin/RBFW_Rental_List.php:764
 #: admin/settings.php:521
 #: admin/views/rbfw-modern-editor.php:1064
 #: inc/booking/RBFW_Booking_List_Table.php:181
@@ -1753,8 +1745,8 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:702
-#: admin/RBFW_Rental_List.php:768
+#: admin/RBFW_Rental_List.php:699
+#: admin/RBFW_Rental_List.php:765
 #: admin/settings/Fee_Management.php:330
 #: inc/booking/RBFW_Booking_List_Table.php:183
 #: inc/coupon/RBFW_Coupon_Admin.php:567
@@ -1762,53 +1754,53 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:728
+#: admin/RBFW_Rental_List.php:725
 msgid "Not analysed yet — open the item and set a focus keyword."
 msgstr ""
 
 #. translators: 1: score 0-100, 2: SEO plugin name
-#: admin/RBFW_Rental_List.php:730
+#: admin/RBFW_Rental_List.php:727
 #, php-format
 msgid "SEO score %1$s/100 (%2$s)"
 msgstr ""
 
 #. translators: %s: score 0-100
-#: admin/RBFW_Rental_List.php:736
+#: admin/RBFW_Rental_List.php:733
 #, php-format
 msgid "Readability %s/100"
 msgstr ""
 
 #. translators: %s: focus keyword
-#: admin/RBFW_Rental_List.php:748
+#: admin/RBFW_Rental_List.php:745
 #, php-format
 msgid "Focus keyword: %s"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:750
+#: admin/RBFW_Rental_List.php:747
 msgid "No focus keyword set — the plugin cannot score this item."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:750
+#: admin/RBFW_Rental_List.php:747
 msgid "No focus keyword"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:755
+#: admin/RBFW_Rental_List.php:752
 msgid "No meta description — search engines will invent one."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:755
+#: admin/RBFW_Rental_List.php:752
 msgid "No meta description"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:760
+#: admin/RBFW_Rental_List.php:757
 msgid "Excluded from search engines (noindex)."
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:760
+#: admin/RBFW_Rental_List.php:757
 msgid "Excluded from search engines"
 msgstr ""
 
-#: admin/RBFW_Rental_List.php:798
+#: admin/RBFW_Rental_List.php:795
 msgid "No items found matching your search."
 msgstr ""
 
@@ -1818,7 +1810,7 @@ msgid "Saved!"
 msgstr ""
 
 #: admin/RBFW_WC_Payment_Manager.php:88
-#: inc/rbfw_functions.php:6021
+#: inc/rbfw_functions.php:6411
 msgid "An error occurred. Please try again."
 msgstr ""
 
@@ -2461,7 +2453,7 @@ msgstr ""
 
 #: admin/settings/Faq.php:257
 #: admin/settings/Terms.php:412
-#: inc/rbfw_functions.php:5872
+#: inc/rbfw_functions.php:6262
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -3014,9 +3006,9 @@ msgstr ""
 
 #: admin/settings/Location.php:305
 #: admin/views/rbfw-modern-editor.php:764
-#: Frontend/RBFW_Woocommerse.php:2260
-#: Frontend/RBFW_Woocommerse.php:2469
-#: Frontend/RBFW_Woocommerse.php:2662
+#: Frontend/RBFW_Woocommerse.php:2499
+#: Frontend/RBFW_Woocommerse.php:2708
+#: Frontend/RBFW_Woocommerse.php:2901
 #: inc/rbfw_order_meta.php:980
 #: inc/rbfw_order_meta.php:1722
 #: templates/forms/multi-day-registration.php:471
@@ -3426,8 +3418,8 @@ msgstr ""
 
 #: admin/settings/Pricing.php:524
 #: inc/rbfw_inventory_functions.php:3825
-#: templates/archive/grid_new.php:268
-#: templates/archive/list_new.php:267
+#: templates/archive/grid_new.php:274
+#: templates/archive/list_new.php:273
 #: templates/forms/multi-day-registration.php:221
 #: templates/forms/multi-items-registration.php:308
 #: templates/forms/multi-items-registration.php:322
@@ -3440,8 +3432,8 @@ msgstr ""
 
 #: admin/settings/Pricing.php:532
 #: inc/rbfw_inventory_functions.php:3827
-#: templates/archive/grid_new.php:269
-#: templates/archive/list_new.php:268
+#: templates/archive/grid_new.php:275
+#: templates/archive/list_new.php:274
 #: templates/forms/multi-day-registration.php:203
 #: templates/forms/multi-items-registration.php:311
 #: templates/forms/multi-items-registration.php:325
@@ -3454,8 +3446,8 @@ msgstr ""
 
 #: admin/settings/Pricing.php:540
 #: inc/rbfw_inventory_functions.php:3828
-#: templates/archive/grid_new.php:270
-#: templates/archive/list_new.php:269
+#: templates/archive/grid_new.php:276
+#: templates/archive/list_new.php:275
 #: templates/forms/multi-items-registration.php:314
 #: templates/forms/multi-items-registration.php:328
 msgid "Weekly"
@@ -3467,8 +3459,8 @@ msgstr ""
 
 #: admin/settings/Pricing.php:548
 #: inc/rbfw_inventory_functions.php:3829
-#: templates/archive/grid_new.php:271
-#: templates/archive/list_new.php:270
+#: templates/archive/grid_new.php:277
+#: templates/archive/list_new.php:276
 #: templates/forms/multi-items-registration.php:317
 #: templates/forms/multi-items-registration.php:331
 msgid "Monthly"
@@ -4875,7 +4867,7 @@ msgid "Cart"
 msgstr ""
 
 #: admin/settings/RBFW_Payment_Settings.php:614
-#: inc/rbfw_booking_search.php:362
+#: inc/rbfw_booking_search.php:364
 msgid "Checkout"
 msgstr ""
 
@@ -5463,7 +5455,7 @@ msgstr ""
 
 #: admin/settings/Settings.php:161
 #: admin/settings/Settings.php:271
-#: inc/rbfw_functions.php:6020
+#: inc/rbfw_functions.php:6410
 #: inc/rbfw_inventory_functions.php:1968
 #: inc/rbfw_inventory_functions.php:2006
 #: lib/classes/class-admin-menu.php:331
@@ -5480,8 +5472,8 @@ msgid "Select shipping class"
 msgstr ""
 
 #: admin/settings/Tax.php:18
-#: inc/rbfw_functions.php:4990
-#: inc/rbfw_functions.php:5191
+#: inc/rbfw_functions.php:5147
+#: inc/rbfw_functions.php:5348
 #: inc/rbfw_order_meta.php:1468
 #: inc/rbfw_order_meta.php:2014
 #: inc/woocommerce/class-meta.php:54
@@ -5909,11 +5901,11 @@ msgid "Secure payment"
 msgstr ""
 
 #: admin/views/rbfw-modern-editor.php:760
-#: Frontend/RBFW_Woocommerse.php:2257
-#: Frontend/RBFW_Woocommerse.php:2466
-#: Frontend/RBFW_Woocommerse.php:2659
+#: Frontend/RBFW_Woocommerse.php:2496
+#: Frontend/RBFW_Woocommerse.php:2705
+#: Frontend/RBFW_Woocommerse.php:2898
 #: inc/rbfw_frontend_display.php:54
-#: inc/rbfw_functions.php:5668
+#: inc/rbfw_functions.php:5825
 #: inc/rbfw_order_meta.php:973
 #: inc/rbfw_order_meta.php:1715
 #: inc/rbfw_shortcodes.php:737
@@ -6193,126 +6185,146 @@ msgstr ""
 msgid "Stripe authorization holds for fixed security deposits (3.4.11+)"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:100
-#: Frontend/RBFW_Woocommerse.php:709
+#: Frontend/RBFW_Woocommerse.php:91
+#: inc/rbfw_security.php:133
+msgid "Sorry, this rental item is not available."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:136
+#: Frontend/RBFW_Woocommerse.php:739
 msgid "Your booking session has expired. Please reload the page and select your dates again."
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:138
+#: Frontend/RBFW_Woocommerse.php:174
 msgid "This booking is handled through the site's own checkout, not the WooCommerce cart. Please use the \"Book Now\" button to complete your booking."
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:219
+#: Frontend/RBFW_Woocommerse.php:255
 msgid "This product is already in your cart."
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:226
-#: inc/rbfw_booking_search.php:361
+#: Frontend/RBFW_Woocommerse.php:262
+#: inc/rbfw_booking_search.php:363
 msgid "View Cart"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:249
+#: Frontend/RBFW_Woocommerse.php:285
 #, php-format
 msgid "This product is already in your cart. <a href=\"%s\" class=\"wc-forward\">View Cart</a>"
 msgstr ""
 
 #. translators: 1: rental item name, 2: cutoff message
-#: Frontend/RBFW_Woocommerse.php:335
+#: Frontend/RBFW_Woocommerse.php:371
 #, php-format
 msgid "%1$s: %2$s Please remove it from your cart and choose another date."
 msgstr ""
 
 #. translators: 1: item name, 2: selected pickup date and time
-#: Frontend/RBFW_Woocommerse.php:439
+#: Frontend/RBFW_Woocommerse.php:475
 #, php-format
 msgid "%1$s: the selected pickup time (%2$s) has already passed. Please choose a later time or another date."
 msgstr ""
 
 #. translators: 1: item name, 2: buffer hours, 3: earliest pickup date and time
-#: Frontend/RBFW_Woocommerse.php:457
+#: Frontend/RBFW_Woocommerse.php:493
 #, php-format
 msgid "%1$s needs at least %2$s hour of notice. The earliest available pickup is %3$s."
 msgid_plural "%1$s needs at least %2$s hours of notice. The earliest available pickup is %3$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: Frontend/RBFW_Woocommerse.php:594
-msgid "Please choose a location before booking."
-msgstr ""
-
-#. translators: 1: location name, 2: remaining units
-#: Frontend/RBFW_Woocommerse.php:605
-#, php-format
-msgid "Only %2$d unit(s) are available at %1$s for the selected dates."
-msgstr ""
-
-#: Frontend/RBFW_Woocommerse.php:673
+#: Frontend/RBFW_Woocommerse.php:703
 msgid "This rental"
 msgstr ""
 
 #. translators: 1: item name, 2: available quantity
-#: Frontend/RBFW_Woocommerse.php:679
+#: Frontend/RBFW_Woocommerse.php:709
 #, php-format
 msgid "Sorry, \"%1$s\" is no longer available for the selected dates. Only %2$d left for those dates — please reduce the quantity or choose different dates."
 msgstr ""
 
 #. translators: %s: item name
-#: Frontend/RBFW_Woocommerse.php:687
+#: Frontend/RBFW_Woocommerse.php:717
 #, php-format
 msgid "Sorry, \"%s\" is already booked for the selected dates. Please choose different dates."
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:732
+#: Frontend/RBFW_Woocommerse.php:769
+#: Frontend/RBFW_Woocommerse.php:913
 msgid "Please enter a valid quantity."
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:1824
-#: Frontend/RBFW_Woocommerse.php:1825
-#: Frontend/RBFW_Woocommerse.php:2276
-#: Frontend/RBFW_Woocommerse.php:2679
+#: Frontend/RBFW_Woocommerse.php:794
+msgid "Please choose an option in every variation (for example a size) for each unit you book."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:1324
+msgid "Please choose a valid rental date."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:1328
+msgid "Please choose a valid pickup time."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:1365
+msgid "The selected rental option is not available for this item. Please reload the page and choose again."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:1407
+msgid "Please choose a rental option."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:1471
+msgid "This rental option could not be priced. Please reload the page and try again."
+msgstr ""
+
+#: Frontend/RBFW_Woocommerse.php:2063
+#: Frontend/RBFW_Woocommerse.php:2064
+#: Frontend/RBFW_Woocommerse.php:2515
+#: Frontend/RBFW_Woocommerse.php:2918
 msgid "Variation Information"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:1960
+#: Frontend/RBFW_Woocommerse.php:2199
 #: templates/cart_page.php:87
 msgid "Check-In Date:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:1972
+#: Frontend/RBFW_Woocommerse.php:2211
 msgid "Check-Out Date:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:1985
+#: Frontend/RBFW_Woocommerse.php:2224
 msgid "Package:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2024
+#: Frontend/RBFW_Woocommerse.php:2263
 msgid "Room Information:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2063
+#: Frontend/RBFW_Woocommerse.php:2302
 #: inc/rbfw_order_meta.php:1855
 msgid "Service Information:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2106
-#: Frontend/RBFW_Woocommerse.php:2359
-#: Frontend/RBFW_Woocommerse.php:2610
-#: Frontend/RBFW_Woocommerse.php:2749
+#: Frontend/RBFW_Woocommerse.php:2345
+#: Frontend/RBFW_Woocommerse.php:2598
+#: Frontend/RBFW_Woocommerse.php:2849
+#: Frontend/RBFW_Woocommerse.php:2988
 msgid "Fee Management Info:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2118
+#: Frontend/RBFW_Woocommerse.php:2357
 #: templates/cart_page.php:738
 msgid "Duration Cost:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2130
+#: Frontend/RBFW_Woocommerse.php:2369
 msgid "Resource Cost:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2158
-#: Frontend/RBFW_Woocommerse.php:2761
+#: Frontend/RBFW_Woocommerse.php:2397
+#: Frontend/RBFW_Woocommerse.php:3000
 #: inc/booking/RBFW_Booking_Actions.php:471
 #: inc/class-resort-function.php:394
 #: inc/coupon/RBFW_Coupon_Admin.php:562
@@ -6330,42 +6342,42 @@ msgstr ""
 msgid "Discount"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2210
-#: Frontend/RBFW_Woocommerse.php:2419
+#: Frontend/RBFW_Woocommerse.php:2449
+#: Frontend/RBFW_Woocommerse.php:2658
 msgid "Start Date and Time:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2222
-#: Frontend/RBFW_Woocommerse.php:2431
+#: Frontend/RBFW_Woocommerse.php:2461
+#: Frontend/RBFW_Woocommerse.php:2670
 msgid "Start Date:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2236
-#: Frontend/RBFW_Woocommerse.php:2445
+#: Frontend/RBFW_Woocommerse.php:2475
+#: Frontend/RBFW_Woocommerse.php:2684
 msgid "End Date and Time:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2248
-#: Frontend/RBFW_Woocommerse.php:2457
+#: Frontend/RBFW_Woocommerse.php:2487
+#: Frontend/RBFW_Woocommerse.php:2696
 msgid "End Date:"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2305
+#: Frontend/RBFW_Woocommerse.php:2544
 #: inc/rbfw_order_meta.php:1017
 #: inc/rbfw_order_meta.php:1756
 #: lib/classes/class-thankyou-page.php:203
 msgid "Rent Information"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2336
-#: Frontend/RBFW_Woocommerse.php:2726
+#: Frontend/RBFW_Woocommerse.php:2575
+#: Frontend/RBFW_Woocommerse.php:2965
 #: inc/rbfw_order_meta.php:1069
 #: lib/classes/class-thankyou-page.php:218
 msgid "Extra Service Information"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2367
-#: Frontend/RBFW_Woocommerse.php:2756
+#: Frontend/RBFW_Woocommerse.php:2606
+#: Frontend/RBFW_Woocommerse.php:2995
 #: inc/class-bike-car-sd-function.php:513
 #: inc/class-resort-function.php:356
 #: inc/rbfw_order_export.php:98
@@ -6384,8 +6396,8 @@ msgstr ""
 msgid "Duration Cost"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2369
-#: Frontend/RBFW_Woocommerse.php:2758
+#: Frontend/RBFW_Woocommerse.php:2608
+#: Frontend/RBFW_Woocommerse.php:2997
 #: inc/class-bike-car-sd-function.php:521
 #: inc/class-resort-function.php:362
 #: inc/rbfw_order_meta.php:633
@@ -6403,22 +6415,22 @@ msgstr ""
 msgid "Resource Cost"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2372
-#: Frontend/RBFW_Woocommerse.php:2617
-#: Frontend/RBFW_Woocommerse.php:2765
+#: Frontend/RBFW_Woocommerse.php:2611
+#: Frontend/RBFW_Woocommerse.php:2856
+#: Frontend/RBFW_Woocommerse.php:3004
 #: inc/rbfw_order_meta.php:1417
 msgid "Fee Management Cost"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2541
+#: Frontend/RBFW_Woocommerse.php:2780
 msgid "Items Informations"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2589
+#: Frontend/RBFW_Woocommerse.php:2828
 msgid "Additional Informations"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2656
+#: Frontend/RBFW_Woocommerse.php:2895
 #: inc/rbfw_order_meta.php:1378
 #: inc/rbfw_order_meta.php:1915
 #: lib/classes/class-thankyou-page.php:231
@@ -6427,7 +6439,7 @@ msgstr ""
 msgid "Start Date and Time"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2657
+#: Frontend/RBFW_Woocommerse.php:2896
 #: inc/rbfw_order_meta.php:1386
 #: inc/rbfw_order_meta.php:1920
 #: lib/classes/class-thankyou-page.php:235
@@ -6436,15 +6448,15 @@ msgstr ""
 msgid "End Date and Time"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2681
+#: Frontend/RBFW_Woocommerse.php:2920
 msgid "Item Quantity"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2703
+#: Frontend/RBFW_Woocommerse.php:2942
 msgid "Service Info"
 msgstr ""
 
-#: Frontend/RBFW_Woocommerse.php:2820
+#: Frontend/RBFW_Woocommerse.php:3059
 #: inc/rbfw_order_meta.php:1294
 #: inc/rbfw_order_meta.php:1889
 #: lib/classes/class-thankyou-page.php:272
@@ -6915,20 +6927,20 @@ msgstr ""
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: inc/booking/RBFW_Native_Checkout.php:149
+#: inc/booking/RBFW_Native_Checkout.php:151
 msgid "The selected rental is no longer available for these dates. Please reduce the quantity or choose different dates."
 msgstr ""
 
-#: inc/booking/RBFW_Native_Checkout.php:277
+#: inc/booking/RBFW_Native_Checkout.php:293
 msgid "Booking received! Please follow up with payment to confirm your reservation."
 msgstr ""
 
-#: inc/booking/RBFW_Native_Checkout.php:303
+#: inc/booking/RBFW_Native_Checkout.php:319
 msgid "Your booking has been received"
 msgstr ""
 
 #. translators: 1: item name, 2: booking reference
-#: inc/booking/RBFW_Native_Checkout.php:306
+#: inc/booking/RBFW_Native_Checkout.php:322
 #, php-format
 msgid "Thank you. Your booking for \"%1$s\" has been received. Reference: %2$s. We will follow up with payment details."
 msgstr ""
@@ -6937,16 +6949,16 @@ msgstr ""
 msgid "Could not calculate the booking price. Please refresh and try again."
 msgstr ""
 
-#: inc/booking/RBFW_Native_Quote.php:128
+#: inc/booking/RBFW_Native_Quote.php:133
 msgid "Could not calculate the booking price. Please review your selection and try again."
 msgstr ""
 
-#: inc/booking/RBFW_Native_Quote.php:131
+#: inc/booking/RBFW_Native_Quote.php:136
 msgid "Please choose valid rental dates and quantities before booking."
 msgstr ""
 
-#: inc/booking/RBFW_Native_Quote.php:138
-#: inc/rbfw_inventory_functions.php:4636
+#: inc/booking/RBFW_Native_Quote.php:143
+#: inc/rbfw_inventory_functions.php:4738
 msgid "The selected dates include a global off date. Please choose different dates."
 msgstr ""
 
@@ -7743,17 +7755,17 @@ msgstr ""
 msgid "Field %s"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:261
-#: inc/rbfw_booking_search.php:433
+#: inc/rbfw_booking_search.php:262
+#: inc/rbfw_booking_search.php:520
 msgid "Add to booking"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:289
+#: inc/rbfw_booking_search.php:291
 msgid "Pickup date"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:290
-#: inc/rbfw_booking_search.php:294
+#: inc/rbfw_booking_search.php:292
+#: inc/rbfw_booking_search.php:296
 #: templates/forms/multi-day-registration.php:500
 #: templates/forms/multi-day-registration.php:503
 #: templates/forms/multi-day-registration.php:528
@@ -7761,25 +7773,25 @@ msgstr ""
 msgid "Select date"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:293
+#: inc/rbfw_booking_search.php:295
 msgid "Drop-off date"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:300
+#: inc/rbfw_booking_search.php:302
 msgid "Any location"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:309
+#: inc/rbfw_booking_search.php:311
 #: inc/rbfw_frontend_display.php:53
-#: inc/rbfw_functions.php:5656
+#: inc/rbfw_functions.php:5813
 msgid "Rental Type"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:311
+#: inc/rbfw_booking_search.php:313
 msgid "All types"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:320
+#: inc/rbfw_booking_search.php:322
 #: inc/rbfw_item_search.php:58
 #: inc/rbfw_shortcodes.php:746
 #: inc/rbfw_shortcodes.php:860
@@ -7787,120 +7799,116 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:344
+#: inc/rbfw_booking_search.php:346
 msgid "Your Booking"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:351
+#: inc/rbfw_booking_search.php:353
 msgid "item(s) in your booking"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:355
+#: inc/rbfw_booking_search.php:357
 msgid "View booking details"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:358
+#: inc/rbfw_booking_search.php:360
 msgid "Empty booking"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:388
-#: inc/rbfw_booking_search.php:677
-msgid "Please select a valid date range."
-msgstr ""
-
 #. translators: %d: number of days
-#: inc/rbfw_booking_search.php:474
+#: inc/rbfw_booking_search.php:412
 #, php-format
 msgid "total for %d day"
 msgid_plural "total for %d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/rbfw_booking_search.php:481
-msgid "per day"
+#: inc/rbfw_booking_search.php:474
+#: inc/rbfw_booking_search.php:740
+msgid "Please select a valid date range."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:535
+#: inc/rbfw_booking_search.php:596
 msgid "Sorry, nothing is available for the selected dates. Please try different dates or another location."
 msgstr ""
 
 #. translators: %d: number of results
-#: inc/rbfw_booking_search.php:547
+#: inc/rbfw_booking_search.php:608
 #, php-format
 msgid "%d rental available"
 msgid_plural "%d rentals available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/rbfw_booking_search.php:550
+#: inc/rbfw_booking_search.php:611
 msgid "Results layout"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:589
+#: inc/rbfw_booking_search.php:650
 msgid "Sold out for these dates"
 msgstr ""
 
 #. translators: %d: units available
-#: inc/rbfw_booking_search.php:594
+#: inc/rbfw_booking_search.php:655
 #, php-format
 msgid "%d unit available"
 msgid_plural "%d units available"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/rbfw_booking_search.php:611
+#: inc/rbfw_booking_search.php:673
 msgid "location charge"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:619
+#: inc/rbfw_booking_search.php:682
 msgid "Decrease quantity"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:621
+#: inc/rbfw_booking_search.php:684
 msgid "Increase quantity"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:637
+#: inc/rbfw_booking_search.php:700
 msgid "Select options"
 msgstr ""
 
-#: inc/rbfw_booking_search.php:671
+#: inc/rbfw_booking_search.php:734
 msgid "This rental needs extra options — please book it from its page."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:683
+#: inc/rbfw_booking_search.php:746
 msgid "The selected dates include an off day for this rental."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:693
-#: inc/rbfw_booking_search.php:820
-#: inc/rbfw_booking_search.php:886
-#: inc/rbfw_booking_search.php:927
-#: inc/rbfw_booking_search.php:957
+#: inc/rbfw_booking_search.php:756
+#: inc/rbfw_booking_search.php:883
+#: inc/rbfw_booking_search.php:949
+#: inc/rbfw_booking_search.php:990
+#: inc/rbfw_booking_search.php:1020
 msgid "The cart is unavailable right now. Please try again."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:743
+#: inc/rbfw_booking_search.php:806
 msgid "This rental could not be added. Please try again."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:810
+#: inc/rbfw_booking_search.php:873
 msgid "Invalid booking submission."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:847
+#: inc/rbfw_booking_search.php:910
 msgid "This rental could not be added. Please review your selections and try again."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:894
+#: inc/rbfw_booking_search.php:957
 msgid "Your booking is empty. Add a rental first."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:908
+#: inc/rbfw_booking_search.php:971
 msgid "Checkout is unavailable right now. Please open the full checkout page."
 msgstr ""
 
-#: inc/rbfw_booking_search.php:964
+#: inc/rbfw_booking_search.php:1027
 msgid "Your booking is empty."
 msgstr ""
 
@@ -8125,7 +8133,7 @@ msgstr ""
 #. translators: %d: number of units still available on that date
 #. translators: %d: number of units left in stock for this variation on the selected date.
 #: inc/RBFW_Dependencies.php:446
-#: inc/rbfw_inventory_functions.php:4580
+#: inc/rbfw_inventory_functions.php:4613
 #, php-format
 msgid "%d left"
 msgid_plural "%d left"
@@ -8450,9 +8458,9 @@ msgstr ""
 #: inc/rbfw_functions.php:2805
 #: lib/classes/class-search-page.php:417
 #: templates/archive/grid.php:14
-#: templates/archive/grid_new.php:35
+#: templates/archive/grid_new.php:41
 #: templates/archive/list.php:19
-#: templates/archive/list_new.php:34
+#: templates/archive/list_new.php:40
 msgid "Hourly rate"
 msgstr ""
 
@@ -8479,9 +8487,9 @@ msgstr ""
 #: inc/rbfw_functions.php:2827
 #: lib/classes/class-search-page.php:420
 #: templates/archive/grid.php:15
-#: templates/archive/grid_new.php:36
+#: templates/archive/grid_new.php:42
 #: templates/archive/list.php:20
-#: templates/archive/list_new.php:35
+#: templates/archive/list_new.php:41
 msgid "Daily rate"
 msgstr ""
 
@@ -8799,14 +8807,32 @@ msgstr ""
 msgid "View More"
 msgstr ""
 
+#: inc/rbfw_functions.php:3792
+msgid "Please choose a location before booking."
+msgstr ""
+
+#. translators: 1: location name, 2: remaining units
+#: inc/rbfw_functions.php:3838
+#, php-format
+msgid "Only %2$d unit(s) are available at %1$s for the selected dates."
+msgstr ""
+
 #. translators: %s: pickup location name
-#: inc/rbfw_functions.php:3799
+#: inc/rbfw_functions.php:3890
 #, php-format
 msgid "Location charge (%s)"
 msgstr ""
 
+#: inc/rbfw_functions.php:4111
+msgid "The selected dates include a day this item is not available. Please choose different dates."
+msgstr ""
+
+#: inc/rbfw_functions.php:4122
+msgid "Appointments are not available on the selected day. Please choose another date."
+msgstr ""
+
 #. translators: %s: number of months.
-#: inc/rbfw_functions.php:4025
+#: inc/rbfw_functions.php:4182
 #, php-format
 msgid "%s month"
 msgid_plural "%s months"
@@ -8814,7 +8840,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of weeks.
-#: inc/rbfw_functions.php:4028
+#: inc/rbfw_functions.php:4185
 #, php-format
 msgid "%s week"
 msgid_plural "%s weeks"
@@ -8822,7 +8848,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of days.
-#: inc/rbfw_functions.php:4031
+#: inc/rbfw_functions.php:4188
 #, php-format
 msgid "%s day"
 msgid_plural "%s days"
@@ -8830,7 +8856,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of hours.
-#: inc/rbfw_functions.php:4034
+#: inc/rbfw_functions.php:4191
 #, php-format
 msgid "%s hour"
 msgid_plural "%s hours"
@@ -8838,77 +8864,97 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: tax label, 2: rate percentage
-#: inc/rbfw_functions.php:5017
+#: inc/rbfw_functions.php:5174
 #, php-format
 msgid "%1$s (incl. %2$s%%)"
 msgstr ""
 
 #. translators: 1: tax label, 2: rate percentage
-#: inc/rbfw_functions.php:5019
+#: inc/rbfw_functions.php:5176
 #, php-format
 msgid "%1$s (%2$s%%)"
 msgstr ""
 
-#: inc/rbfw_functions.php:5201
+#: inc/rbfw_functions.php:5358
 #, php-format
 msgid "(incl. %1$s %2$s)"
 msgstr ""
 
-#: inc/rbfw_functions.php:5280
+#: inc/rbfw_functions.php:5437
 #: inc/rbfw_order_meta.php:1545
 msgid "Picked"
 msgstr ""
 
-#: inc/rbfw_functions.php:5281
+#: inc/rbfw_functions.php:5438
 #: inc/rbfw_order_meta.php:1546
 msgid "Returned"
 msgstr ""
 
-#: inc/rbfw_functions.php:5867
+#: inc/rbfw_functions.php:6058
+msgid "per hour"
+msgstr ""
+
+#: inc/rbfw_functions.php:6059
+msgid "per day"
+msgstr ""
+
+#: inc/rbfw_functions.php:6060
+msgid "per week"
+msgstr ""
+
+#: inc/rbfw_functions.php:6061
+msgid "per month"
+msgstr ""
+
+#: inc/rbfw_functions.php:6063
+msgid "starting price"
+msgstr ""
+
+#: inc/rbfw_functions.php:6257
 msgid "Security check failed."
 msgstr ""
 
-#: inc/rbfw_functions.php:5878
-#: inc/rbfw_functions.php:6022
+#: inc/rbfw_functions.php:6268
+#: inc/rbfw_functions.php:6412
 msgid "Invalid item ID."
 msgstr ""
 
-#: inc/rbfw_functions.php:5908
+#: inc/rbfw_functions.php:6298
 msgid "Order cancelled via rental reset function."
 msgstr ""
 
-#: inc/rbfw_functions.php:5927
+#: inc/rbfw_functions.php:6317
 #, php-format
 msgid "Successfully cancelled %d order."
 msgid_plural "Successfully cancelled %d orders."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/rbfw_functions.php:5938
+#: inc/rbfw_functions.php:6328
 #, php-format
 msgid "%d order could not be cancelled."
 msgid_plural "%d orders could not be cancelled."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/rbfw_functions.php:5950
+#: inc/rbfw_functions.php:6340
 msgid "No orders found to cancel or all orders are already cancelled."
 msgstr ""
 
-#: inc/rbfw_functions.php:6018
+#: inc/rbfw_functions.php:6408
 msgid "Are you sure you want to cancel all rental orders for this item? This action cannot be undone."
 msgstr ""
 
-#: inc/rbfw_functions.php:6019
+#: inc/rbfw_functions.php:6409
 msgid "Processing..."
 msgstr ""
 
-#: inc/rbfw_functions.php:6023
+#: inc/rbfw_functions.php:6413
 msgid "An unknown error occurred."
 msgstr ""
 
-#: inc/rbfw_functions.php:6103
-#: inc/rbfw_inventory_functions.php:4525
+#: inc/rbfw_functions.php:6493
+#: inc/rbfw_inventory_functions.php:4558
 msgid "Item Variation"
 msgstr ""
 
@@ -9361,21 +9407,21 @@ msgstr ""
 msgid "Half Day"
 msgstr ""
 
-#: inc/rbfw_inventory_functions.php:4499
+#: inc/rbfw_inventory_functions.php:4532
 msgid "Choose a quantity first"
 msgstr ""
 
-#: inc/rbfw_inventory_functions.php:4577
+#: inc/rbfw_inventory_functions.php:4610
 #: templates/forms/location-cards.php:30
 #: templates/forms/location-cards.php:62
 msgid "Sold out"
 msgstr ""
 
-#: inc/rbfw_inventory_functions.php:4584
+#: inc/rbfw_inventory_functions.php:4617
 msgid "Decrease"
 msgstr ""
 
-#: inc/rbfw_inventory_functions.php:4586
+#: inc/rbfw_inventory_functions.php:4619
 msgid "Increase"
 msgstr ""
 
@@ -9909,10 +9955,6 @@ msgstr ""
 #: inc/RBFW_SecureHold_Compat.php:577
 #, php-format
 msgid "%1$s: %2$s is held on your card at checkout. It is not added to the amount you pay."
-msgstr ""
-
-#: inc/rbfw_security.php:133
-msgid "Sorry, this rental item is not available."
 msgstr ""
 
 #: inc/rbfw_shared_inventory.php:193
@@ -16056,8 +16098,8 @@ msgid "No, not good enough"
 msgstr ""
 
 #: lib/classes/class-search-page.php:641
-#: templates/archive/grid_new.php:343
-#: templates/archive/list_new.php:342
+#: templates/archive/grid_new.php:349
+#: templates/archive/list_new.php:348
 msgid "See more"
 msgstr ""
 
@@ -16588,13 +16630,13 @@ msgstr ""
 msgid "Rent Filter Form"
 msgstr ""
 
-#: templates/archive/grid_new.php:37
-#: templates/archive/list_new.php:36
+#: templates/archive/grid_new.php:43
+#: templates/archive/list_new.php:42
 msgid "Weekly rate"
 msgstr ""
 
-#: templates/archive/grid_new.php:38
-#: templates/archive/list_new.php:37
+#: templates/archive/grid_new.php:44
+#: templates/archive/list_new.php:43
 msgid "Monthly rate"
 msgstr ""
 
