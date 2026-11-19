@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.8.5
+Stable tag: 2.8.6
 Tested up to: 7.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -195,6 +195,14 @@ Appneck SDK *does not gather any data by default.* The SDK only starts gathering
 Learn more about how [Appsero collects and uses data](https://appneck.com/privacy-policy/).
 
 == Changelog ==
+= 2.8.6 =
+* Improvement: Regenerate POT so the time slot labels can be translated.
+* Improvement: Refuse add to cart for rental items that are not publicly viewable.
+* Improvement: Multi-day services: stop charging each service once per booked unit.
+* Improvement: Single-day bookings: validate the rental option server-side.
+* Fix: "Buy Pro" links that sold Seasonal Pricing instead of Pro.
+* Fix: Price each item type from the rate its booking engine charges.
+
 = 2.8.5 =
 * Security: Improved security hardening.
 * Improvement: Let add-ons add their own charge line to every booking summary.
