@@ -753,6 +753,109 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
 
         /**
+         * A single-day / appointment item's rental options, keyed by option name.
+         *
+         * When two rows share a name the first one wins, as the duration lookup always did.
+         *
+         * @param int $rbfw_id Rental item id.
+         * @return array<string, array> Option name => configured row.
+         */
+        private function rbfw_sd_rental_options( $rbfw_id ) {
+            $rows    = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true );
+            $options = array();
+            foreach ( is_array( $rows ) ? $rows : array() as $row ) {
+                if ( ! is_array( $row ) || ! isset( $row['rent_type'] ) || ! is_scalar( $row['rent_type'] ) ) {
+                    continue;
+                }
+                $name = (string) $row['rent_type'];
+                if ( '' !== trim( $name ) && ! isset( $options[ $name ] ) ) {
+                    $options[ $name ] = $row;
+                }
+            }
+
+            return $options;
+        }
+
+        /**
+         * The configured option a posted rental option name refers to, or null.
+         *
+         * Posted names have been through sanitize_text_field(), so a configured name is also
+         * compared in that form (e.g. a name holding a double space). The configured name is
+         * returned, because pricing, stock and inventory are all keyed by it.
+         *
+         * @param array<string, array> $options     From rbfw_sd_rental_options().
+         * @param mixed                $posted_name Posted option name.
+         * @return string|null
+         */
+        private function rbfw_sd_match_option( $options, $posted_name ) {
+            if ( ! is_string( $posted_name ) || '' === $posted_name ) {
+                return null;
+            }
+            if ( isset( $options[ $posted_name ] ) ) {
+                return $posted_name;
+            }
+            foreach ( array_keys( $options ) as $name ) {
+                if ( sanitize_text_field( (string) $name ) === $posted_name ) {
+                    return (string) $name;
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Whether a posted single-day booking date is a real calendar date in Y-m-d form.
+         *
+         * @param mixed $date Posted date.
+         * @return bool
+         */
+        private function rbfw_sd_is_valid_date( $date ) {
+            if ( ! is_string( $date ) || ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $parts ) ) {
+                return false;
+            }
+
+            return checkdate( (int) $parts[2], (int) $parts[3], (int) $parts[1] );
+        }
+
+        /**
+         * A posted pickup time as "H:i:s", '' when none was posted, or null when malformed.
+         *
+         * Accepts the slot formats the booking forms post: "H:i", "H:i:s" and "h:i AM/PM".
+         *
+         * @param mixed $time Posted time.
+         * @return string|null
+         */
+        private function rbfw_sd_clock( $time ) {
+            if ( ! is_string( $time ) ) {
+                return null;
+            }
+            $time = trim( $time );
+            if ( '' === $time ) {
+                return '';
+            }
+            if ( ! preg_match( '/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*([AaPp][Mm])?$/', $time, $m ) ) {
+                return null;
+            }
+            $hour     = (int) $m[1];
+            $minute   = (int) $m[2];
+            $second   = isset( $m[3] ) && '' !== $m[3] ? (int) $m[3] : 0;
+            $meridiem = isset( $m[4] ) ? strtoupper( $m[4] ) : '';
+            if ( $minute > 59 || $second > 59 ) {
+                return null;
+            }
+            if ( '' !== $meridiem ) {
+                if ( $hour < 1 || $hour > 12 ) {
+                    return null;
+                }
+                $hour = ( 12 === $hour ? 0 : $hour ) + ( 'PM' === $meridiem ? 12 : 0 );
+            } elseif ( $hour > 23 ) {
+                return null;
+            }
+
+            return sprintf( '%02d:%02d:%02d', $hour, $minute, $second );
+        }
+
+        /**
          * A posted quantity as a whole number, or a customer-facing rejection.
          *
          * Quantities multiply straight into the booking price, so a negative, fractional or
@@ -1171,11 +1274,27 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_bikecarsd_selected_date = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $bikecarsd_selected_date      = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $rbfw_bikecarsd_selected_time = isset( $sd_input_data_sabitized['rbfw_start_time'] ) ? $sd_input_data_sabitized['rbfw_start_time'] : '';
-                $end_date = isset( $sd_input_data_sabitized['rbfw_end_date'] ) ? sanitize_text_field( $sd_input_data_sabitized['rbfw_end_date'] ) : '';
-                $end_time = isset( $sd_input_data_sabitized['rbfw_end_time'] ) ? sanitize_text_field( $sd_input_data_sabitized['rbfw_end_time'] ) : '';
-                if ( ! ( $end_date && $end_time ) ) {
-                    $end_date = $bikecarsd_selected_date;
+
+                /* The booking forms post the date as Y-m-d and the pickup time as one of the
+                   item's slot values ("H:i" or "h:i A"). Anything else is refused, so the
+                   availability check and the end time always work from a real date and time. */
+                if ( ! $this->rbfw_sd_is_valid_date( $bikecarsd_selected_date ) ) {
+                    return new WP_Error( 'rbfw_invalid_date', esc_html__( 'Please choose a valid rental date.', 'booking-and-rental-manager-for-woocommerce' ) );
                 }
+                $rbfw_sd_start_clock = $this->rbfw_sd_clock( $rbfw_bikecarsd_selected_time );
+                if ( null === $rbfw_sd_start_clock ) {
+                    return new WP_Error( 'rbfw_invalid_time', esc_html__( 'Please choose a valid pickup time.', 'booking-and-rental-manager-for-woocommerce' ) );
+                }
+
+                /* The end date/time is always worked out on the server below, from the chosen
+                   option; the posted rbfw_end_date / rbfw_end_time are not used. */
+                $end_date = $bikecarsd_selected_date;
+                $end_time = '';
+
+                // Single-day items with the time-based shared stock count units per booking window.
+                $rbfw_sd_is_timely   = ( 'bike_car_sd' === $rbfw_rent_type && 'on' === get_post_meta( $rbfw_id, 'manage_inventory_as_timely', true ) );
+                // The item's own rental options, keyed by name: the only names a booking may use.
+                $rbfw_sd_options     = $this->rbfw_sd_rental_options( $rbfw_id );
                 $rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
 
                 /* Single-day item variations: the per-value steppers REPLACE the standalone
@@ -1206,8 +1325,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
-                $rbfw_type_info_all = isset( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_info'] : [];
+                $rbfw_type_info_all = ( isset( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) && is_array( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) ) ? $sd_input_data_sabitized['rbfw_bikecarsd_info'] : [];
                 $rbfw_type_info = array();
+                /* The chosen rental option arrives by NAME and picks both the price and the
+                   duration, so it must be one of this item's own options. */
+                $rbfw_unknown_option = new WP_Error( 'rbfw_invalid_rental_option', esc_html__( 'The selected rental option is not available for this item. Please reload the page and choose again.', 'booking-and-rental-manager-for-woocommerce' ) );
                 if ( isset( $sd_input_data_sabitized['service_type'] ) ) {
                     // The chosen service/duration is booked once per unit: at least one unit, and
                     // after any variation-derived quantity above has had its say.
@@ -1215,67 +1337,102 @@ if (!class_exists('RBFW_Woocommerce')) {
                     if ( is_wp_error( $rbfw_item_quantity ) ) {
                         return $rbfw_item_quantity;
                     }
-                    $rbfw_type_info[ $sd_input_data_sabitized['service_type'] ] = $rbfw_item_quantity;
-                } else {
-                    $a = 1;
-                    foreach ( $rbfw_type_info_all as $key => $value ) {
-                        if ( ! empty( $rbfw_type_info_all[ $a ]['rent_type'] ) ) {
-                            $rent_type = $rbfw_type_info_all[ $a ]['rent_type'];
-                            $rent_qty  = $this->rbfw_posted_quantity( isset( $rbfw_type_info_all[ $a ]['qty'] ) ? $rbfw_type_info_all[ $a ]['qty'] : 0 );
-                            if ( is_wp_error( $rent_qty ) ) {
-                                return $rent_qty;
-                            }
-                            if ( $rent_qty > 0 ) {
-                                $rbfw_type_info[ $rent_type ] = $rent_qty;
-                            }
-                        }
-                        $a ++;
+                    $rbfw_option_name = $this->rbfw_sd_match_option( $rbfw_sd_options, $sd_input_data_sabitized['service_type'] );
+                    if ( null === $rbfw_option_name ) {
+                        return $rbfw_unknown_option;
                     }
+                    $rbfw_type_info[ $rbfw_option_name ] = $rbfw_item_quantity;
+                } else {
+                    foreach ( $rbfw_type_info_all as $rbfw_type_row ) {
+                        if ( ! is_array( $rbfw_type_row ) || empty( $rbfw_type_row['rent_type'] ) ) {
+                            continue;
+                        }
+                        $rent_qty = $this->rbfw_posted_quantity( isset( $rbfw_type_row['qty'] ) ? $rbfw_type_row['qty'] : 0 );
+                        if ( is_wp_error( $rent_qty ) ) {
+                            return $rent_qty;
+                        }
+                        if ( $rent_qty > 0 ) {
+                            $rbfw_option_name = $this->rbfw_sd_match_option( $rbfw_sd_options, $rbfw_type_row['rent_type'] );
+                            if ( null === $rbfw_option_name ) {
+                                return $rbfw_unknown_option;
+                            }
+                            $rbfw_type_info[ $rbfw_option_name ] = $rent_qty;
+                        }
+                    }
+                    /* The time-based stock counts rbfw_item_quantity units, so it has to be the
+                       number of units actually priced here, not a separately posted figure. */
+                    if ( $rbfw_sd_is_timely && ! empty( $rbfw_type_info ) ) {
+                        $rbfw_item_quantity = array_sum( $rbfw_type_info );
+                    }
+                }
+                // Every booking form requires a rental option before it can be sent.
+                if ( empty( $rbfw_type_info ) ) {
+                    return new WP_Error( 'rbfw_no_rental_option', esc_html__( 'Please choose a rental option.', 'booking-and-rental-manager-for-woocommerce' ) );
                 }
 
-                // Authoritatively derive the end date/time from the selected rent
-                // type's duration on the SERVER for duration-based single-day rentals.
-                // The browser posts rbfw_end_time, but it parsed a 12-hour pickup time
-                // as 24-hour (e.g. 1:00 PM + 1h → "02:00" instead of "14:00"), which
-                // both displayed as 2:00 am AND made the stored booking interval run
-                // backwards — silently defeating rbfw_timely_available_quantity_updated()
-                // so a fully-booked slot still showed as available. PHP's DateTime parses
-                // the pickup time correctly. Specific-duration items keep their fixed
-                // configured clock times (posted from the rate's data attributes).
-                $rbfw_sd_specific_duration = get_post_meta( $rbfw_id, 'enable_specific_duration', true );
-                if ( 'on' !== $rbfw_sd_specific_duration && ! empty( $rbfw_type_info ) ) {
-                    $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
-                    $selected_rent_type    = '';
-                    foreach ( $rbfw_type_info as $type_name => $type_qty ) {
-                        $selected_rent_type = $type_name;
-                        break;
-                    }
-                    foreach ( $rbfw_bike_car_sd_data as $rent_row ) {
-                        if ( ! empty( $rent_row['rent_type'] ) && $rent_row['rent_type'] === $selected_rent_type ) {
-                            $duration   = ! empty( $rent_row['duration'] ) ? (int) $rent_row['duration'] : 0;
-                            $d_type     = ! empty( $rent_row['d_type'] ) ? $rent_row['d_type'] : 'Days';
-                            $start_time = $rbfw_bikecarsd_selected_time ? $rbfw_bikecarsd_selected_time : '00:00';
-                            if ( $duration > 0 ) {
-                                try {
-                                    $start_date_time = new DateTime( $bikecarsd_selected_date . ' ' . $start_time );
-                                } catch ( Exception $e ) {
-                                    $start_date_time = new DateTime();
-                                }
-                                $total_hours     = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? $duration * 24 : ( $d_type == 'Weeks' ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
-                                $start_date_time->modify( "+$total_hours hours" );
-                                $end_date = $start_date_time->format( 'Y-m-d' );
-                                $end_time = $start_date_time->format( 'H:i:s' );
+                /* Derive the end date/time from the selected option on the SERVER. The browser
+                   used to post it (and once parsed a 12-hour pickup time as 24-hour, which made
+                   the stored interval run backwards and defeated the timely stock check).
+                   - Duration options end at start + the configured duration.
+                   - "Specific duration" options (time-based stock) run between the option's own
+                     configured clock times; an end before the start rolls over to the next day.
+                   - Without either, the booking ends on its start date, as the forms always did. */
+                $rbfw_type_names      = array_keys( $rbfw_type_info );
+                $rbfw_selected_option = $rbfw_sd_options[ $rbfw_type_names[0] ];
+                if ( 'on' === get_post_meta( $rbfw_id, 'enable_specific_duration', true ) ) {
+                    if ( $rbfw_sd_is_timely ) {
+                        $rbfw_slot_start = isset( $rbfw_selected_option['start_time'] ) && is_scalar( $rbfw_selected_option['start_time'] ) ? trim( (string) $rbfw_selected_option['start_time'] ) : '';
+                        $rbfw_slot_end   = isset( $rbfw_selected_option['end_time'] ) && is_scalar( $rbfw_selected_option['end_time'] ) ? trim( (string) $rbfw_selected_option['end_time'] ) : '';
+                        if ( '' !== $rbfw_slot_start && null !== $this->rbfw_sd_clock( $rbfw_slot_start ) ) {
+                            $rbfw_bikecarsd_selected_time = $rbfw_slot_start;
+                            $rbfw_sd_start_clock          = $this->rbfw_sd_clock( $rbfw_slot_start );
+                        }
+                        if ( '' !== $rbfw_slot_end && null !== $this->rbfw_sd_clock( $rbfw_slot_end ) ) {
+                            $end_time = $rbfw_slot_end;
+                            if ( '' !== $rbfw_sd_start_clock && $this->rbfw_sd_clock( $rbfw_slot_end ) < $rbfw_sd_start_clock ) {
+                                $end_date = gmdate( 'Y-m-d', strtotime( $bikecarsd_selected_date . ' +1 day' ) );
                             }
-                            break;
                         }
                     }
-                }
-                if ( ! ( $end_date && $end_time ) ) {
-                    $end_date = $bikecarsd_selected_date;
+                } else {
+                    $duration = isset( $rbfw_selected_option['duration'] ) ? (int) $rbfw_selected_option['duration'] : 0;
+                    $d_type   = ! empty( $rbfw_selected_option['d_type'] ) ? $rbfw_selected_option['d_type'] : 'Days';
+                    if ( $duration > 0 ) {
+                        // Both parts were validated above, so this cannot throw.
+                        $start_date_time = new DateTime( $bikecarsd_selected_date . ' ' . ( '' !== $rbfw_sd_start_clock ? $rbfw_sd_start_clock : '00:00:00' ) );
+                        $total_hours     = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? $duration * 24 : ( $d_type == 'Weeks' ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
+                        $start_date_time->modify( "+$total_hours hours" );
+                        $end_date = $start_date_time->format( 'Y-m-d' );
+                        $end_time = $start_date_time->format( 'H:i:s' );
+                    } elseif ( $rbfw_sd_is_timely ) {
+                        // No configured duration: the form ended the booking where it started.
+                        $end_time = '' !== $rbfw_sd_start_clock ? $rbfw_sd_start_clock : '00:00:00';
+                    }
                 }
 
                 $rbfw_bikecarsd_duration_price                   = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_duration_price' , $bikecarsd_selected_date);
                 $rbfw_bikecarsd_service_price                    = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_service_price' );
+
+                /* Defence in depth: options with a positive configured price must produce a
+                   rental charge; a computed 0.00 for them is refused. Options priced at 0
+                   (including a seasonal price of 0, resolved exactly as
+                   rbfw_bikecarsd_price_calculation() does) stay free. */
+                $rbfw_sp_prices = ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) )
+                    ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data_sp', true ) : '';
+                $rbfw_configured_rent = 0.0;
+                foreach ( $rbfw_type_info as $rbfw_option_name => $rbfw_option_qty ) {
+                    $rbfw_unit_price = isset( $rbfw_sd_options[ $rbfw_option_name ]['price'] ) ? (float) $rbfw_sd_options[ $rbfw_option_name ]['price'] : 0.0;
+                    if ( $rbfw_sp_prices && is_array( $rbfw_sp_prices ) ) {
+                        $rbfw_season_price = check_seasonal_price_sd( $bikecarsd_selected_date, $rbfw_sp_prices, $rbfw_option_name );
+                        if ( $rbfw_season_price ) {
+                            $rbfw_unit_price = (float) $rbfw_season_price;
+                        }
+                    }
+                    $rbfw_configured_rent += $rbfw_unit_price * (int) $rbfw_option_qty;
+                }
+                if ( $rbfw_configured_rent > 0 && (float) $rbfw_bikecarsd_duration_price <= 0 ) {
+                    return new WP_Error( 'rbfw_unpriced_rental', esc_html__( 'This rental option could not be priced. Please reload the page and try again.', 'booking-and-rental-manager-for-woocommerce' ) );
+                }
 
 
 
