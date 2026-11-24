@@ -595,6 +595,110 @@
                 return $item_type;
             }
 
+			/**
+			 * Validate a time string against allowed slot formats (e.g. 09:00, 9:00 AM, 14:30).
+			 *
+			 * @param mixed $time
+			 * @return bool
+			 */
+			public static function is_valid_time_slot_string( $time ): bool {
+				if ( ! is_string( $time ) ) {
+					return false;
+				}
+				$time = trim( $time );
+				if ( ! preg_match( '/^(\d{1,2}):(\d{2})(?::(\d{2}))?( ?[AP]M)?$/i', $time, $matches ) ) {
+					return false;
+				}
+				$hour   = (int) $matches[1];
+				$minute = (int) $matches[2];
+				$second = isset( $matches[3] ) && '' !== $matches[3] ? (int) $matches[3] : 0;
+				$ampm   = isset( $matches[4] ) ? strtoupper( trim( $matches[4] ) ) : '';
+
+				if ( $minute < 0 || $minute > 59 || $second < 0 || $second > 59 ) {
+					return false;
+				}
+				if ( '' !== $ampm ) {
+					if ( $hour < 1 || $hour > 12 ) {
+						return false;
+					}
+				} else {
+					if ( $hour < 0 || $hour > 23 ) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			/**
+			 * Sanitize and validate an array of available time slots.
+			 *
+			 * @param mixed $slots
+			 * @return array
+			 */
+			public static function sanitize_time_slots( $slots ): array {
+				if ( ! is_array( $slots ) ) {
+					return array();
+				}
+				$clean = array();
+				foreach ( $slots as $key => $slot ) {
+					if ( is_array( $slot ) ) {
+						$time = isset( $slot['time'] ) ? trim( (string) $slot['time'] ) : '';
+						if ( ! self::is_valid_time_slot_string( $time ) ) {
+							continue;
+						}
+						$status = isset( $slot['status'] ) && in_array( $slot['status'], array( 'enabled', 'disabled' ), true )
+							? $slot['status']
+							: 'enabled';
+						$id = isset( $slot['id'] ) ? absint( $slot['id'] ) : count( $clean );
+						$clean[] = array(
+							'id'     => (string) $id,
+							'time'   => $time,
+							'status' => $status,
+						);
+					} elseif ( is_string( $slot ) ) {
+						$time = trim( $slot );
+						if ( self::is_valid_time_slot_string( $time ) ) {
+							$clean[] = $time;
+						}
+					}
+				}
+				return $clean;
+			}
+
+			/**
+			 * Sanitize and validate particular dates time slot rows.
+			 *
+			 * @param mixed $particulars
+			 * @return array
+			 */
+			public static function sanitize_particulars_data( $particulars ): array {
+				if ( ! is_array( $particulars ) ) {
+					return array();
+				}
+				$clean = array();
+				foreach ( $particulars as $idx => $row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+					$start_date = isset( $row['start_date'] ) ? sanitize_text_field( $row['start_date'] ) : '';
+					$end_date   = isset( $row['end_date'] ) ? sanitize_text_field( $row['end_date'] ) : '';
+
+					if ( empty( $start_date ) || empty( $end_date ) || false === strtotime( $start_date ) || false === strtotime( $end_date ) ) {
+						continue;
+					}
+
+					$slots      = isset( $row['available_time'] ) ? self::sanitize_time_slots( $row['available_time'] ) : array();
+
+					$clean[] = array(
+						'start_date'     => $start_date,
+						'end_date'       => $end_date,
+						'available_time' => $slots,
+					);
+				}
+				return $clean;
+			}
+
 			//****************feture lists***********//
 		}
 	}

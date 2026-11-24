@@ -310,6 +310,14 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 				) );
 			}
 
+			// Re-verify availability against current inventory before confirming.
+			$avail = RBFW_Booking_Normalizer::check_booking_availability( $booking_id );
+			if ( is_wp_error( $avail ) ) {
+				wp_send_json_error( array(
+					'message' => $avail->get_error_message(),
+				) );
+			}
+
 			// Correct — consume the code so it can't be reused, then confirm the booking
 			// exactly as an admin doing it manually would (same email/inventory side
 			// effects), and leave a clear trail that it was the CUSTOMER who did it.
@@ -324,7 +332,12 @@ if ( ! class_exists( 'RBFW_Booking_Reconfirm' ) ) {
 			if ( class_exists( 'RBFW_Booking_Actions' ) ) {
 				RBFW_Booking_Actions::add_note( $booking_id, esc_html__( 'Booking confirmed by the customer themselves via an emailed one-time code.', 'booking-and-rental-manager-for-woocommerce' ) );
 			}
-			RBFW_Booking_Normalizer::update_status( $booking_id, 'confirmed' );
+			$res = RBFW_Booking_Normalizer::update_status( $booking_id, 'confirmed' );
+			if ( is_wp_error( $res ) ) {
+				wp_send_json_error( array(
+					'message' => $res->get_error_message(),
+				) );
+			}
 
 			wp_send_json_success( array(
 				'message' => esc_html__( 'Thank you — your booking is now confirmed.', 'booking-and-rental-manager-for-woocommerce' ),

@@ -1901,7 +1901,7 @@ function rbfw_url_exclude_search_engine() {
 
 		return $remaining_stock;
 	}
-function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time ) {
+function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time, $exclude_order_id = 0 ) {
     if ( empty( $post_id ) ) {
         return;
     }
@@ -1937,6 +1937,9 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 
     if ( ! empty( $rbfw_inventory ) ) {
         foreach ( $rbfw_inventory as $key => $inventory ) {
+            if ( $exclude_order_id && (int) $key === (int) $exclude_order_id ) {
+                continue;
+            }
             $rbfw_item_quantity = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
 
             $partial_stock = true;
@@ -2002,7 +2005,8 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         $total_booked += rbfw_mi_bundle_booked_units(
             $post_id,
             $start_date . ' ' . $start_time,
-            $end_date . ' ' . $end_time
+            $end_date . ' ' . $end_time,
+            array( 'exclude_order_id' => $exclude_order_id )
         );
     }
 

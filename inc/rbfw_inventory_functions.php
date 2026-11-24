@@ -875,6 +875,11 @@ function rbfw_calendar_entry_holds( $booking_id, $entry ) {
  * @return int[] [ min, max ]
  */
 function rbfw_calendar_booked_extremes( $windows, $from, $to ) {
+    if ( $from > $to ) {
+        $tmp  = $from;
+        $from = $to;
+        $to   = $tmp;
+    }
     $rise = array( $from );
     $fall = array( $from );
     $live = array();
@@ -4245,6 +4250,12 @@ function rbfw_count_overlapping_booked_qty( $post_id, $req_start_datetime, $req_
 		return 0;
 	}
 
+	if ( $req_start > $req_end ) {
+		$tmp       = $req_start;
+		$req_start = $req_end;
+		$req_end   = $tmp;
+	}
+
 	$total_booked = 0;
 	$hits         = array();
 
@@ -4377,6 +4388,12 @@ function rbfw_count_overlapping_cart_qty( $sibling_lines, $req_start_datetime, $
 		$req_end   = new DateTime( $req_end_datetime );
 	} catch ( Exception $e ) {
 		return 0;
+	}
+
+	if ( $req_start > $req_end ) {
+		$tmp       = $req_start;
+		$req_start = $req_end;
+		$req_end   = $tmp;
 	}
 
 	$used = 0;
@@ -4728,6 +4745,40 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 		return $checks; // can't evaluate -> fail open
 	}
 
+	$ts_start = strtotime( $start_dt );
+	$ts_end   = strtotime( $end_dt );
+	if ( false === $ts_start || false === $ts_end || $ts_start > $ts_end ) {
+		$checks[] = array(
+			'ok'        => false,
+			'requested' => 1,
+			'available' => 0,
+			'label'     => get_the_title( $rbfw_id ),
+			'message'   => __( 'Return date/time cannot be earlier than pickup date/time.', 'booking-and-rental-manager-for-woocommerce' ),
+		);
+		return $checks;
+	}
+	$s_date = ! empty( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : '';
+	$e_date = ! empty( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : '';
+	if ( ! empty( $s_date ) && ! empty( $e_date ) ) {
+		$ts_sdate = strtotime( $s_date );
+		$ts_edate = strtotime( $e_date );
+		if ( false === $ts_sdate || false === $ts_edate || $ts_sdate > $ts_edate ) {
+			$checks[] = array(
+				'ok'        => false,
+				'requested' => 1,
+				'available' => 0,
+				'label'     => get_the_title( $rbfw_id ),
+				'message'   => __( 'Return date/time cannot be earlier than pickup date/time.', 'booking-and-rental-manager-for-woocommerce' ),
+			);
+			return $checks;
+		}
+	}
+
+	$exclude_order_id = ! empty( $values['exclude_order_id'] ) ? (int) $values['exclude_order_id'] : ( ! empty( $values['rbfw_order_id'] ) ? (int) $values['rbfw_order_id'] : 0 );
+	if ( $exclude_order_id ) {
+		$shared_args['exclude_order_id'] = $exclude_order_id;
+	}
+
 	$item_name = get_the_title( $rbfw_id );
 	if ( function_exists( 'rbfw_global_off_dates_overlap' ) && rbfw_global_off_dates_overlap( $start_dt, $end_dt ) ) {
 		$checks[] = array(
@@ -4764,7 +4815,7 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 		$requested  = isset( $values['rbfw_item_quantity'] ) ? max( 1, (int) $values['rbfw_item_quantity'] ) : 1;
 
 		if ( '' !== $start_date && '' !== $end_date && '' !== $end_time ) {
-			$remaining = (int) rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $end_date, $end_time );
+			$remaining = (int) rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $end_date, $end_time, $exclude_order_id );
 			try {
 				$req_start = new DateTime( $start_date . ' ' . $start_time );
 				$req_end   = new DateTime( $end_date . ' ' . $end_time );
@@ -4841,7 +4892,7 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			if ( $req_qty < 1 || ! isset( $stock_map[ $room_type ] ) ) {
 				continue;
 			}
-			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'type_key' => $room_type ) );
+			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'type_key' => $room_type, 'exclude_order_id' => $exclude_order_id ) );
 			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'type_key' => $room_type ) );
 			$available = $stock_map[ $room_type ] - $booked - $used;
 			$checks[]  = array(
@@ -4886,7 +4937,7 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 				if ( null === $stock ) {
 					continue; // unknown -> fail open
 				}
-				$booked    = rbfw_count_overlapping_multi_item_qty( $rbfw_id, $start_dt, $end_dt, $li['item_name'] );
+				$booked    = rbfw_count_overlapping_multi_item_qty( $rbfw_id, $start_dt, $end_dt, $li['item_name'], $exclude_order_id );
 				$available = $stock - $booked;
 			}
 
@@ -5039,7 +5090,7 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 			if ( null === $stock ) {
 				continue; // unknown variation stock -> fail open for this value
 			}
-			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
+			$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'variation_value' => $vv, 'exclude_order_id' => $exclude_order_id ) );
 			$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt, array( 'variation_value' => $vv ) );
 			$available = $stock - $booked - $used;
 			$checks[]  = array(
@@ -5054,7 +5105,7 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
 
 	// Plain single-unit stock (blank treated as 1).
 	$stock     = rbfw_get_effective_item_stock( $rbfw_id );
-	$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt );
+	$booked    = rbfw_count_overlapping_booked_qty( $rbfw_id, $start_dt, $end_dt, array( 'exclude_order_id' => $exclude_order_id ) );
 	$used      = rbfw_count_overlapping_cart_qty( $sibling_lines, $start_dt, $end_dt );
 	/* Packages sharing this item's stock: $booked already covers their orders,
 	   so only their still-pending cart lines are added. */
@@ -5086,7 +5137,7 @@ function rbfw_check_rental_availability( $rbfw_id, $values, $sibling_lines = arr
  * @param string $item_name Sub-item name.
  * @return int
  */
-function rbfw_count_overlapping_multi_item_qty( $post_id, $start_dt, $end_dt, $item_name ) {
+function rbfw_count_overlapping_multi_item_qty( $post_id, $start_dt, $end_dt, $item_name, $exclude_order_id = 0 ) {
 	$inventory = get_post_meta( $post_id, 'rbfw_inventory', true );
 	if ( empty( $inventory ) || ! is_array( $inventory ) ) {
 		return 0;
@@ -5100,9 +5151,18 @@ function rbfw_count_overlapping_multi_item_qty( $post_id, $start_dt, $end_dt, $i
 		return 0;
 	}
 
+	if ( $req_start > $req_end ) {
+		$tmp       = $req_start;
+		$req_start = $req_end;
+		$req_end   = $tmp;
+	}
+
 	$booked = 0;
-	foreach ( $inventory as $entry ) {
+	foreach ( $inventory as $order_id => $entry ) {
 		if ( ! is_array( $entry ) ) {
+			continue;
+		}
+		if ( $exclude_order_id && (int) $order_id === (int) $exclude_order_id ) {
 			continue;
 		}
 		$status = isset( $entry['rbfw_order_status'] ) ? $entry['rbfw_order_status'] : '';

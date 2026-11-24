@@ -1232,6 +1232,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_resort              = new RBFW_Resort_Function();
                 $rbfw_checkin_datetime    = isset( $sd_input_data_sabitized['rbfw_start_datetime'] ) ? wp_strip_all_tags( $sd_input_data_sabitized['rbfw_start_datetime'] ) : '';
                 $rbfw_checkout_datetime   = isset( $sd_input_data_sabitized['rbfw_end_datetime'] ) ? wp_strip_all_tags( $sd_input_data_sabitized['rbfw_end_datetime'] ) : '';
+                if ( empty( $rbfw_checkin_datetime ) || empty( $rbfw_checkout_datetime ) || false === strtotime( $rbfw_checkin_datetime ) || false === strtotime( $rbfw_checkout_datetime ) || strtotime( $rbfw_checkin_datetime ) > strtotime( $rbfw_checkout_datetime ) ) {
+                    return new WP_Error( 'rbfw_invalid_dates', esc_html__( 'Check-out date/time cannot be earlier than check-in date/time.', 'booking-and-rental-manager-for-woocommerce' ) );
+                }
                 /* Day-long or day-night follows from the dates, exactly as the booking
                    form decides it (resort_info.php) — never from the posted field, which
                    could otherwise ask for the cheaper day-long rate on a multi-night stay. */
@@ -1752,6 +1755,9 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
                 $dropoff_datetime          = gmdate( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
+                if ( empty( $start_date ) || empty( $end_date ) || false === strtotime( $start_date ) || false === strtotime( $end_date ) || strtotime( $pickup_datetime ) > strtotime( $dropoff_datetime ) || strtotime( $start_date ) > strtotime( $end_date ) ) {
+                    return new WP_Error( 'rbfw_invalid_dates', esc_html__( 'Return date/time cannot be earlier than pickup date/time.', 'booking-and-rental-manager-for-woocommerce' ) );
+                }
                 $rbfw_pickup_point         = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';

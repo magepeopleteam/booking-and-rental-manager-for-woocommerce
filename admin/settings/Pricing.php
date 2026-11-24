@@ -1896,24 +1896,24 @@
                             $i = 0;
                             foreach ($rdfw_available_time as $key => $item) { if(is_array($item)){
                                 ?>
-                                <div class="time-slot time-slot-indicator <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                <div class="time-slot time-slot-indicator <?php echo esc_attr( $item['status'] ); ?>" data-id="<?php echo esc_attr( $i ); ?>">
 
-                                    <span class="time-slot-time"><?php echo $item['time'] ?></span>
+                                    <span class="time-slot-time"><?php echo esc_html( $item['time'] ); ?></span>
                                     <?php if($type=='md'){ ?>
-                                        <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
-                                        <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
-                                        <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                        <input type="hidden" name="rdfw_available_time[<?php echo esc_attr( $i ); ?>][id]" value="<?php echo esc_attr( $i ); ?>">
+                                        <input type="hidden" name="rdfw_available_time[<?php echo esc_attr( $i ); ?>][time]" value="<?php echo esc_attr( $item['time'] ); ?>">
+                                        <input type="hidden" name="rdfw_available_time[<?php echo esc_attr( $i ); ?>][status]" value="<?php echo esc_attr( $item['status'] ); ?>">
                                     <?php }elseif($type=='mi'){ ?>
-                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo $i ?>][id]" value="<?php echo $i ?>">
-                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
-                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo esc_attr( $i ); ?>][id]" value="<?php echo esc_attr( $i ); ?>">
+                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo esc_attr( $i ); ?>][time]" value="<?php echo esc_attr( $item['time'] ); ?>">
+                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo esc_attr( $i ); ?>][status]" value="<?php echo esc_attr( $item['status'] ); ?>">
                                     <?php }else{ ?>
-                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][id]" value="<?php echo $i ?>">
-                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
-                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo esc_attr( $i ); ?>][id]" value="<?php echo esc_attr( $i ); ?>">
+                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo esc_attr( $i ); ?>][time]" value="<?php echo esc_attr( $item['time'] ); ?>">
+                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo esc_attr( $i ); ?>][status]" value="<?php echo esc_attr( $item['status'] ); ?>">
                                     <?php } ?>
 
-                                    <div class="time-slot-remove" title="Remove time slot">×</div>
+                                    <div class="time-slot-remove" title="<?php echo esc_attr__( 'Remove time slot', 'booking-and-rental-manager-for-woocommerce' ); ?>">×</div>
                                 </div>
                                 <?php $i++; } } ?>
                         </div>
@@ -2454,16 +2454,18 @@
                     $rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
 
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
-                        $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
-                        $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
+                        $rdfw_available_time              = isset( $_POST['rdfw_available_time'] ) ? wp_unslash( $_POST['rdfw_available_time'] ) : [];
+                        $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? wp_unslash( $_POST['rbfw_particulars'] ) : [];
                     }elseif ($rbfw_item_type=='multiple_items'){
-                        $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time_mi'] ) ? $input_data_sabitized['rdfw_available_time_mi'] : [];
-                        $particulars_data           = isset( $_POST['rbfw_particulars_mi'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars_mi'] ) : [];
+                        $rdfw_available_time              = isset( $_POST['rdfw_available_time_mi'] ) ? wp_unslash( $_POST['rdfw_available_time_mi'] ) : [];
+                        $particulars_data           = isset( $_POST['rbfw_particulars_mi'] ) ? wp_unslash( $_POST['rbfw_particulars_mi'] ) : [];
                     }
                     else{
-                        $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time_sd'] ) ? $input_data_sabitized['rdfw_available_time_sd'] : [];
-                        $particulars_data           = isset( $_POST['rbfw_particulars_sd'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars_sd'] ) : [];
+                        $rdfw_available_time              = isset( $_POST['rdfw_available_time_sd'] ) ? wp_unslash( $_POST['rdfw_available_time_sd'] ) : [];
+                        $particulars_data           = isset( $_POST['rbfw_particulars_sd'] ) ? wp_unslash( $_POST['rbfw_particulars_sd'] ) : [];
                     }
+                    $rdfw_available_time = RBFW_Function::sanitize_time_slots( $rdfw_available_time );
+                    $particulars_data    = RBFW_Function::sanitize_particulars_data( $particulars_data );
 
                     $rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
 
