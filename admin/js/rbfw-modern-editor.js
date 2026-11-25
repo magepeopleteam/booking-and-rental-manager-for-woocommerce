@@ -4402,7 +4402,8 @@
             total += feesAmt;
             total += computeAddonCharges($summaryRows, rentalSubtotal, start ? toIso(start) : '');
             $totalAmt.text(money(total));
-            $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', total <= 0);
+            // Allow legitimately zero-priced resort bookings in preview.
+            $preview.find('.rbfw-me-fp-book-btn').removeClass('is-disabled');
         }
 
         /* ───────────── Multiple Day / Equipment / Dress / Others ───────────── */
@@ -4768,7 +4769,11 @@
             total += computeAddonCharges($summaryRows, rentalSubtotal, start ? toIso(start) : '');
 
             $totalAmt.text(money(total));
-            $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', total <= 0);
+            // Disable Book Now only when no rate covers the booking (missingDaily
+            // already set a warning above). A legitimately zero-priced item (e.g.
+            // a free lending library) must still allow the button to be clicked,
+            // matching what the real frontend does.
+            $preview.find('.rbfw-me-fp-book-btn').toggleClass('is-disabled', missingDaily);
         }
 
         /* ───────────── Multiple Items ─────────────
