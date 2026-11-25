@@ -951,6 +951,103 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 		 * ================================================================== */
 
 		/**
+		 * Check whether the requested rental units for an existing booking are still
+		 * available in inventory, excluding the booking itself so it does not count
+		 * against its own reservation.
+		 *
+		 * @param int $post_id Booking id (rbfw_booking or rbfw_order).
+		 * @return true|WP_Error
+		 */
+		public static function check_booking_availability( $post_id ) {
+			$post_id = absint( $post_id );
+			if ( ! $post_id ) {
+				return true;
+			}
+			$source = self::detect_source( $post_id );
+
+			if ( self::SOURCE_CUSTOM === $source ) {
+				$item_id = absint( get_post_meta( $post_id, 'rbfw_item_id', true ) );
+				if ( ! $item_id ) {
+					return true;
+				}
+				$raw    = get_post_meta( $post_id, 'rbfw_booking_data', true );
+				$values = is_array( $raw ) ? $raw : array();
+
+				$start_date = (string) get_post_meta( $post_id, 'rbfw_start_date', true );
+				$end_date   = (string) get_post_meta( $post_id, 'rbfw_end_date', true );
+				$start_time = (string) get_post_meta( $post_id, 'rbfw_start_time', true );
+				$end_time   = (string) get_post_meta( $post_id, 'rbfw_end_time', true );
+				$qty        = max( 1, absint( get_post_meta( $post_id, 'rbfw_quantity', true ) ) );
+
+				if ( empty( $values['rbfw_start_date'] ) && $start_date ) {
+					$values['rbfw_start_date'] = $start_date;
+				}
+				if ( empty( $values['rbfw_end_date'] ) && $end_date ) {
+					$values['rbfw_end_date'] = $end_date;
+				}
+				if ( empty( $values['rbfw_start_time'] ) && $start_time ) {
+					$values['rbfw_start_time'] = $start_time;
+				}
+				if ( empty( $values['rbfw_end_time'] ) && $end_time ) {
+					$values['rbfw_end_time'] = $end_time;
+				}
+				if ( empty( $values['rbfw_item_quantity'] ) && $qty ) {
+					$values['rbfw_item_quantity'] = $qty;
+				}
+
+				$s_d = ! empty( $values['rbfw_start_date'] ) ? $values['rbfw_start_date'] : $start_date;
+				$e_d = ! empty( $values['rbfw_end_date'] ) ? $values['rbfw_end_date'] : $end_date;
+				$s_t = ! empty( $values['rbfw_start_time'] ) ? $values['rbfw_start_time'] : ( $start_time ? $start_time : '00:00' );
+				$e_t = ! empty( $values['rbfw_end_time'] ) ? $values['rbfw_end_time'] : ( $end_time ? $end_time : '00:00' );
+
+				if ( empty( $values['rbfw_start_datetime'] ) && $s_d ) {
+					$values['rbfw_start_datetime'] = $s_d . ( $s_t ? ' ' . $s_t : '' );
+				}
+				if ( empty( $values['rbfw_end_datetime'] ) && $e_d ) {
+					$values['rbfw_end_datetime'] = $e_d . ( $e_t ? ' ' . $e_t : '' );
+				}
+
+				$values['exclude_order_id'] = $post_id;
+
+				if ( function_exists( 'rbfw_check_rental_availability' ) ) {
+					$checks = rbfw_check_rental_availability( $item_id, $values );
+					foreach ( $checks as $chk ) {
+						if ( isset( $chk['ok'] ) && ! $chk['ok'] ) {
+							$msg = ! empty( $chk['message'] ) ? $chk['message'] : esc_html__( 'Requested rental item is no longer available for the selected dates.', 'booking-and-rental-manager-for-woocommerce' );
+							return new WP_Error( 'rbfw_out_of_stock', $msg );
+						}
+					}
+				}
+				return true;
+			}
+
+			// WooCommerce order mirror
+			$wc_order_id = absint( get_post_meta( $post_id, 'rbfw_order_id', true ) );
+			$raw_tickets = get_post_meta( $post_id, 'rbfw_ticket_info', true );
+			if ( is_string( $raw_tickets ) && '' !== $raw_tickets && function_exists( 'rbfw_safe_unserialize' ) ) {
+				$raw_tickets = rbfw_safe_unserialize( $raw_tickets );
+			}
+			if ( is_array( $raw_tickets ) && ! empty( $raw_tickets ) && function_exists( 'rbfw_check_rental_availability' ) ) {
+				foreach ( $raw_tickets as $ticket ) {
+					if ( ! is_array( $ticket ) || empty( $ticket['rbfw_id'] ) ) {
+						continue;
+					}
+					$item_id                    = absint( $ticket['rbfw_id'] );
+					$ticket['exclude_order_id'] = $wc_order_id ? $wc_order_id : $post_id;
+					$checks                     = rbfw_check_rental_availability( $item_id, $ticket );
+					foreach ( $checks as $chk ) {
+						if ( isset( $chk['ok'] ) && ! $chk['ok'] ) {
+							$msg = ! empty( $chk['message'] ) ? $chk['message'] : esc_html__( 'Requested rental item is no longer available for the selected dates.', 'booking-and-rental-manager-for-woocommerce' );
+							return new WP_Error( 'rbfw_out_of_stock', $msg );
+						}
+					}
+				}
+			}
+
+			return true;
+		}
+
+		/**
 		 * Change a booking's status, writing to the right place for its source:
 		 *   - WooCommerce rows → update the REAL WC order (fires WC emails/hooks) and
 		 *     mirror the new status into `rbfw_order_status`.
@@ -965,6 +1062,21 @@ if ( ! class_exists( 'RBFW_Booking_Normalizer' ) ) {
 			$post_id    = absint( $post_id );
 			$new_status = self::normalize_status( $new_status );
 			$source     = self::detect_source( $post_id );
+
+			$current_status = '';
+			if ( self::SOURCE_WOO === $source ) {
+				$current_status = self::normalize_status( get_post_meta( $post_id, 'rbfw_order_status', true ) );
+			} else {
+				$current_status = self::normalize_status( get_post_meta( $post_id, 'rbfw_status', true ) );
+			}
+
+			if ( in_array( $new_status, array( 'confirmed', 'processing', 'completed' ), true )
+				&& ! in_array( $current_status, array( 'confirmed', 'processing', 'completed' ), true ) ) {
+				$avail = self::check_booking_availability( $post_id );
+				if ( is_wp_error( $avail ) ) {
+					return $avail;
+				}
+			}
 
 			if ( self::SOURCE_WOO === $source ) {
 				if ( ! self::wc_active() ) {

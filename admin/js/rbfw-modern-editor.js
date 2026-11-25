@@ -2625,11 +2625,16 @@
             var j = 0;
             $pickerWrap.find('.slotchip-pick.active').each(function () {
                 var t = $(this).text();
-                $hidden.append(
-                    '<input type="hidden" class="rbfw-particular-slot-time" name="' + baseName + '[' + particularId + '][available_time][' + j + '][id]" value="' + j + '">' +
-                    '<input type="hidden" name="' + baseName + '[' + particularId + '][available_time][' + j + '][time]" value="' + t + '">' +
-                    '<input type="hidden" name="' + baseName + '[' + particularId + '][available_time][' + j + '][status]" value="enabled">'
-                );
+                var $idInput = $('<input type="hidden" class="rbfw-particular-slot-time">')
+                    .attr('name', baseName + '[' + particularId + '][available_time][' + j + '][id]')
+                    .val(j);
+                var $timeInput = $('<input type="hidden">')
+                    .attr('name', baseName + '[' + particularId + '][available_time][' + j + '][time]')
+                    .val(t);
+                var $statusInput = $('<input type="hidden">')
+                    .attr('name', baseName + '[' + particularId + '][available_time][' + j + '][status]')
+                    .val('enabled');
+                $hidden.append($idInput).append($timeInput).append($statusInput);
                 j++;
             });
             $pickerWrap.find('.rbfw-slot-picker-empty').toggle(j === 0);
@@ -2704,15 +2709,13 @@
             var exists = $globalSlots.find('.time-slot-time').filter(function () { return $(this).text() === time; }).length > 0;
             if (! exists) {
                 var index = $globalSlots.children('.time-slot').length;
-                $globalSlots.append(
-                    '<div class="time-slot enabled" data-id="' + index + '">' +
-                    '<span class="time-slot-time">' + time + '</span>' +
-                    '<input type="hidden" name="rdfw_available_time[' + index + '][id]" value="' + index + '">' +
-                    '<input type="hidden" name="rdfw_available_time[' + index + '][time]" value="' + time + '">' +
-                    '<input type="hidden" name="rdfw_available_time[' + index + '][status]" value="enabled">' +
-                    '<div class="time-slot-remove" title="Remove time slot">×</div>' +
-                    '</div>'
-                );
+                var $slot = $('<div class="time-slot enabled"></div>').attr('data-id', index);
+                $slot.append($('<span class="time-slot-time"></span>').text(time));
+                $slot.append($('<input type="hidden">').attr('name', 'rdfw_available_time[' + index + '][id]').val(index));
+                $slot.append($('<input type="hidden">').attr('name', 'rdfw_available_time[' + index + '][time]').val(time));
+                $slot.append($('<input type="hidden">').attr('name', 'rdfw_available_time[' + index + '][status]').val('enabled'));
+                $slot.append($('<div class="time-slot-remove" title="Remove time slot">×</div>'));
+                $globalSlots.append($slot);
             }
             refreshSection($section);
             $pickerWrap.find('.rbfw-slot-picker .slotchip-pick').filter(function () { return $(this).text() === time; }).addClass('active');
@@ -3072,21 +3075,19 @@
 
             var index = $slotsContainer.children('.time-slot').length;
 
-            var newSlot = '';
+            var $newSlot = null;
             if (nameAttr === 'rdfw_available_time' && rentType === 'md') {
-                newSlot =
-                    '<div class="time-slot enabled" data-id="' + index + '">' +
-                    '<span class="time-slot-time">' + time + '</span>' +
-                    '<input type="hidden" name="rdfw_available_time[' + index + '][id]" value="' + index + '">' +
-                    '<input type="hidden" name="rdfw_available_time[' + index + '][time]" value="' + time + '">' +
-                    '<input type="hidden" name="rdfw_available_time[' + index + '][status]" value="enabled">' +
-                    '<div class="time-slot-remove" title="' + (rbfwModernEditor_i18n('Remove time slot') || 'Remove time slot') + '">×</div>' +
-                    '</div>';
+                $newSlot = $('<div class="time-slot enabled"></div>').attr('data-id', index);
+                $newSlot.append($('<span class="time-slot-time"></span>').text(time));
+                $newSlot.append($('<input type="hidden">').attr('name', 'rdfw_available_time[' + index + '][id]').val(index));
+                $newSlot.append($('<input type="hidden">').attr('name', 'rdfw_available_time[' + index + '][time]').val(time));
+                $newSlot.append($('<input type="hidden">').attr('name', 'rdfw_available_time[' + index + '][status]').val('enabled'));
+                $newSlot.append($('<div class="time-slot-remove">×</div>').attr('title', rbfwModernEditor_i18n('Remove time slot') || 'Remove time slot'));
             }
 
-            if (!newSlot) return;
+            if (! $newSlot) return;
 
-            $slotsContainer.append(newSlot);
+            $slotsContainer.append($newSlot);
 
             var $slots = $slotsContainer.children('.time-slot');
             $slots.sort(function (a, b) {

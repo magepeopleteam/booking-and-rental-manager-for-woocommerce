@@ -137,6 +137,13 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 			}
 			$start_datetime = isset( $cart_data['rbfw_start_datetime'] ) ? $cart_data['rbfw_start_datetime'] : '';
 			$end_datetime   = isset( $cart_data['rbfw_end_datetime'] ) ? $cart_data['rbfw_end_datetime'] : '';
+			if ( $start_datetime && $end_datetime ) {
+				$ts_start = strtotime( $start_datetime );
+				$ts_end   = strtotime( $end_datetime );
+				if ( false !== $ts_start && false !== $ts_end && $ts_start > $ts_end ) {
+					return new WP_Error( 'rbfw_invalid_dates', esc_html__( 'Return date/time cannot be earlier than pickup date/time.', 'booking-and-rental-manager-for-woocommerce' ) );
+				}
+			}
 			if ( function_exists( 'rbfw_global_off_dates_overlap' )
 				&& $start_datetime
 				&& rbfw_global_off_dates_overlap( $start_datetime, $end_datetime ) ) {
@@ -249,6 +256,18 @@ if ( ! class_exists( 'RBFW_Native_Quote' ) ) {
 			$end_date   = isset( $cart_data['rbfw_end_date'] ) ? (string) $cart_data['rbfw_end_date'] : '';
 			if ( '' === trim( $start_date ) || '' === trim( $end_date ) || false === strtotime( $start_date ) || false === strtotime( $end_date ) ) {
 				return false;
+			}
+			if ( strtotime( $start_date ) > strtotime( $end_date ) ) {
+				return false;
+			}
+			$start_dt = isset( $cart_data['rbfw_start_datetime'] ) ? (string) $cart_data['rbfw_start_datetime'] : '';
+			$end_dt   = isset( $cart_data['rbfw_end_datetime'] ) ? (string) $cart_data['rbfw_end_datetime'] : '';
+			if ( '' !== trim( $start_dt ) && '' !== trim( $end_dt ) ) {
+				$ts_start = strtotime( $start_dt );
+				$ts_end   = strtotime( $end_dt );
+				if ( false !== $ts_start && false !== $ts_end && $ts_start > $ts_end ) {
+					return false;
+				}
 			}
 
 			if ( in_array( $item_type, array( 'bike_car_sd', 'appointment' ), true ) ) {

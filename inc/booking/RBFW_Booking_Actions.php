@@ -89,10 +89,16 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 				$this->redirect_back( 0 );
 			}
 
-			$old_status = get_post_meta( $booking_id, 'rbfw_status', true );
-
-			update_post_meta( $booking_id, 'rbfw_status', $new_status );
-			self::apply_transition( $booking_id, $new_status, $old_status );
+			if ( class_exists( 'RBFW_Booking_Normalizer' ) ) {
+				$res = RBFW_Booking_Normalizer::update_status( $booking_id, $new_status );
+				if ( is_wp_error( $res ) ) {
+					$this->redirect_back( 0 );
+				}
+			} else {
+				$old_status = get_post_meta( $booking_id, 'rbfw_status', true );
+				update_post_meta( $booking_id, 'rbfw_status', $new_status );
+				self::apply_transition( $booking_id, $new_status, $old_status );
+			}
 
 			$this->redirect_back( 1 );
 		}
@@ -120,6 +126,7 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 			self::log_status_change( $booking_id, $new_status, $old_status );
 
 			if ( in_array( $new_status, array( 'confirmed', 'processing', 'completed' ), true ) ) {
+				self::restore_inventory( $booking_id, $new_status );
 				self::notify_customer( $booking_id, $new_status, true );
 			} elseif ( in_array( $new_status, array( 'cancelled', 'refunded' ), true ) ) {
 				self::notify_customer( $booking_id, $new_status, false );
@@ -524,6 +531,49 @@ if ( ! class_exists( 'RBFW_Booking_Actions' ) ) {
 			}
 
 			return file_exists( $path ) ? $path : '';
+		}
+
+		/**
+		 * Restore or update inventory reserved for this booking when moving to a
+		 * confirmed / processing / completed status.
+		 */
+		private static function restore_inventory( $booking_id, $status ) {
+			$item_id = absint( get_post_meta( $booking_id, 'rbfw_item_id', true ) );
+			if ( ! $item_id ) {
+				return;
+			}
+
+			$inventory = get_post_meta( $item_id, 'rbfw_inventory', true );
+			$inventory = is_array( $inventory ) ? $inventory : array();
+
+			if ( ! isset( $inventory[ $booking_id ] ) ) {
+				$dates = array(
+					'start_date' => get_post_meta( $booking_id, 'rbfw_start_date', true ),
+					'end_date'   => get_post_meta( $booking_id, 'rbfw_end_date', true ),
+					'start_time' => get_post_meta( $booking_id, 'rbfw_start_time', true ),
+					'end_time'   => get_post_meta( $booking_id, 'rbfw_end_time', true ),
+				);
+				$raw = get_post_meta( $booking_id, 'rbfw_booking_data', true );
+				$raw = is_array( $raw ) ? $raw : array();
+				$ticket_info = array(
+					'rbfw_id'             => $item_id,
+					'rbfw_item_quantity'  => max( 1, absint( get_post_meta( $booking_id, 'rbfw_quantity', true ) ) ),
+					'rbfw_start_date'     => $dates['start_date'],
+					'rbfw_end_date'       => $dates['end_date'],
+					'rbfw_start_time'     => $dates['start_time'],
+					'rbfw_end_time'       => $dates['end_time'],
+					'rbfw_room_info'      => isset( $raw['rbfw_room_info'] ) ? $raw['rbfw_room_info'] : array(),
+					'multiple_items_info' => isset( $raw['multiple_items_info'] ) ? $raw['multiple_items_info'] : array(),
+					'rbfw_variation_info' => isset( $raw['rbfw_variation_info'] ) ? $raw['rbfw_variation_info'] : array(),
+					'rbfw_type_info'      => isset( $raw['rbfw_type_info'] ) ? $raw['rbfw_type_info'] : array(),
+				);
+				if ( function_exists( 'rbfw_create_inventory_meta' ) ) {
+					rbfw_create_inventory_meta( $ticket_info, $item_id, $booking_id, $status );
+				}
+			} else {
+				$inventory[ $booking_id ]['rbfw_order_status'] = $status;
+				update_post_meta( $item_id, 'rbfw_inventory', $inventory );
+			}
 		}
 
 		/**

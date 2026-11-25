@@ -814,17 +814,18 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			}
 
 			/* ── Time slots and particulars (type-specific field names) ── */
-			$input_data_sanitized = RBFW_Function::data_sanitize( wp_unslash( $_POST ) );
 			if ( in_array( $item_type, [ 'bike_car_md', 'equipment', 'dress', 'others' ], true ) ) {
-				$rdfw_available_time = isset( $input_data_sanitized['rdfw_available_time'] ) ? $input_data_sanitized['rdfw_available_time'] : [];
-				$particulars_data    = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_particulars'] ) ) : [];
+				$rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? wp_unslash( $_POST['rdfw_available_time'] ) : [];
+				$particulars_data    = isset( $_POST['rbfw_particulars'] ) ? wp_unslash( $_POST['rbfw_particulars'] ) : [];
 			} elseif ( $item_type === 'multiple_items' ) {
-				$rdfw_available_time = isset( $input_data_sanitized['rdfw_available_time_mi'] ) ? $input_data_sanitized['rdfw_available_time_mi'] : [];
-				$particulars_data    = isset( $_POST['rbfw_particulars_mi'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_particulars_mi'] ) ) : [];
+				$rdfw_available_time = isset( $_POST['rdfw_available_time_mi'] ) ? wp_unslash( $_POST['rdfw_available_time_mi'] ) : [];
+				$particulars_data    = isset( $_POST['rbfw_particulars_mi'] ) ? wp_unslash( $_POST['rbfw_particulars_mi'] ) : [];
 			} else {
-				$rdfw_available_time = isset( $input_data_sanitized['rdfw_available_time_sd'] ) ? $input_data_sanitized['rdfw_available_time_sd'] : [];
-				$particulars_data    = isset( $_POST['rbfw_particulars_sd'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_particulars_sd'] ) ) : [];
+				$rdfw_available_time = isset( $_POST['rdfw_available_time_sd'] ) ? wp_unslash( $_POST['rdfw_available_time_sd'] ) : [];
+				$particulars_data    = isset( $_POST['rbfw_particulars_sd'] ) ? wp_unslash( $_POST['rbfw_particulars_sd'] ) : [];
 			}
+			$rdfw_available_time = RBFW_Function::sanitize_time_slots( $rdfw_available_time );
+			$particulars_data    = RBFW_Function::sanitize_particulars_data( $particulars_data );
 			update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
 			update_post_meta( $post_id, 'rbfw_particulars_data', $particulars_data );
 

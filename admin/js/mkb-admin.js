@@ -2019,88 +2019,28 @@
         const index = $timeSlotsContainer.children('.time-slot').length;
         const dataId = $('.rbfw_pdwt_insert').children('.time-slot').length; // Use your actual ID logic here
 
-        // Build time slot HTML
-        let newSlot = '';
+        // Build time slot HTML safely
+        let $newSlot;
         if(name_attr == 'rdfw_available_time'){
-
-            if(rent_type=='md'){
-                newSlot = `
-        <div class="time-slot enabled" data-id="${index}">
-          <span class="time-slot-time">${time}</span>
-          <input type="hidden" name="${name_attr}[${index}][id]" value="${dataId}">
-          <input type="hidden" name="${name_attr}[${index}][time]" value="${time}">
-          <input type="hidden" name="${name_attr}[${index}][status]" value="enabled">
-
-          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
-        </div>
-      `;
-            }else if(rent_type=='mi'){
-                newSlot = `
-        <div class="time-slot enabled" data-id="${index}">
-          <span class="time-slot-time">${time}</span>
-          <input type="hidden" name="rdfw_available_time_mi[${index}][id]" value="${dataId}">
-          <input type="hidden" name="rdfw_available_time_mi[${index}][time]" value="${time}">
-          <input type="hidden" name="rdfw_available_time_mi[${index}][status]" value="enabled">
-
-          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
-        </div>
-      `;
-            }else{
-                newSlot = `
-        <div class="time-slot enabled" data-id="${index}">
-          <span class="time-slot-time">${time}</span>
-          <input type="hidden" name="rdfw_available_time_sd[${index}][id]" value="${dataId}">
-          <input type="hidden" name="rdfw_available_time_sd[${index}][time]" value="${time}">
-          <input type="hidden" name="rdfw_available_time_sd[${index}][status]" value="enabled">
-
-          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
-        </div>
-      `;
-            }
-
-
-
-
+            let inputName = (rent_type === 'mi') ? 'rdfw_available_time_mi' : ((rent_type === 'md') ? name_attr : 'rdfw_available_time_sd');
+            $newSlot = $('<div class="time-slot enabled"></div>').attr('data-id', index);
+            $newSlot.append($('<span class="time-slot-time"></span>').text(time));
+            $newSlot.append($('<input type="hidden">').attr('name', inputName + '[' + index + '][id]').val(dataId));
+            $newSlot.append($('<input type="hidden">').attr('name', inputName + '[' + index + '][time]').val(time));
+            $newSlot.append($('<input type="hidden">').attr('name', inputName + '[' + index + '][status]').val('enabled'));
+            $newSlot.append($('<div class="time-slot-remove">×</div>').attr('title', rbfw_admin_i18n('remove_time_slot', 'Remove time slot')));
         }else{
             const dataId = $(this).data('particular_id');
-            if(rent_type=='md'){
-                newSlot = `
-        <div class="time-slot enabled" data-id="${dataId}">
-          <span class="time-slot-time">${time}</span>
-          <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][id]" value="${dataId}">
-          <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][time]" value="${time}">
-          <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][status]" value="enabled">
-
-          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
-        </div>
-           `;
-            }else if(rent_type=='mi'){
-                newSlot = `
-        <div class="time-slot enabled" data-id="${dataId}">
-          <span class="time-slot-time">${time}</span>
-          <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][id]" value="${dataId}">
-          <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][time]" value="${time}">
-          <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][status]" value="enabled">
-
-          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
-        </div>
-           `;
-            }else{
-                newSlot = `
-        <div class="time-slot enabled" data-id="${dataId}">
-          <span class="time-slot-time">${time}</span>
-          <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][id]" value="${dataId}">
-          <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][time]" value="${time}">
-          <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][status]" value="enabled">
-
-          <div class="time-slot-remove" title="${rbfw_admin_i18n('remove_time_slot', 'Remove time slot')}">×</div>
-        </div>
-           `;
-            }
-
+            let inputName = (rent_type === 'mi') ? 'rbfw_particulars_mi' : ((rent_type === 'md') ? name_attr : 'rbfw_particulars_sd');
+            $newSlot = $('<div class="time-slot enabled"></div>').attr('data-id', dataId);
+            $newSlot.append($('<span class="time-slot-time"></span>').text(time));
+            $newSlot.append($('<input type="hidden">').attr('name', inputName + '[' + dataId + '][available_time][' + index + '][id]').val(dataId));
+            $newSlot.append($('<input type="hidden">').attr('name', inputName + '[' + dataId + '][available_time][' + index + '][time]').val(time));
+            $newSlot.append($('<input type="hidden">').attr('name', inputName + '[' + dataId + '][available_time][' + index + '][status]').val('enabled'));
+            $newSlot.append($('<div class="time-slot-remove">×</div>').attr('title', rbfw_admin_i18n('remove_time_slot', 'Remove time slot')));
         }
         // Append to container
-        $timeSlotsContainer.append(newSlot);
+        $timeSlotsContainer.append($newSlot);
 
 
 
