@@ -4772,6 +4772,9 @@ function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date,
     if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily)) !== 'not_found') {
         return (float) $sp_price;
     }
+    if ( $enable_daily === 'no' ) {
+        return 0.0;
+    }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
     // Empty day-wise field falls back to the global daily rate; explicit 0 kept.

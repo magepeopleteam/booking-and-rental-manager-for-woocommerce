@@ -308,8 +308,8 @@
 											// row) instead of one blank one, so there's something to see and
 											// tweak right away.
 											$rbfw_default_sd_examples = array(
-												array( 'rent_type' => '1 Hour Rental', 'price' => '10', 'qty' => '10' ),
-												array( 'rent_type' => 'Full Day Rental', 'price' => '50', 'qty' => '10' ),
+												array( 'rent_type' => '1 Hour Rental', 'price' => '', 'qty' => '10' ),
+												array( 'rent_type' => 'Full Day Rental', 'price' => '', 'qty' => '10' ),
 											);
 											foreach ( $rbfw_default_sd_examples as $rbfw_default_sd_i => $rbfw_default_sd_row ) :
 												?>
@@ -355,8 +355,8 @@
 											// Brand-new Appointment items start with 2 ready-made example
 											// session rows (name + price filled in) instead of one blank one.
 											$rbfw_default_appt_examples = array(
-												array( 'rent_type' => '30 Minute Consultation', 'price' => '50' ),
-												array( 'rent_type' => '1 Hour Consultation', 'price' => '90' ),
+												array( 'rent_type' => '30 Minute Consultation', 'price' => '' ),
+												array( 'rent_type' => '1 Hour Consultation', 'price' => '' ),
 											);
 											foreach ( $rbfw_default_appt_examples as $rbfw_default_appt_i => $rbfw_default_appt_row ) :
 												?>
@@ -485,16 +485,16 @@
                     [
                         'item_name'     => 'Standard Item',
                         'available_qty' => 5,
-                        'hourly_price'  => '5',
-                        'daily_price'   => '20',
+                        'hourly_price'  => '',
+                        'daily_price'   => '',
                         'weekly_price'  => '',
                         'monthly_price' => '',
                     ],
                     [
                         'item_name'     => 'Premium Item',
                         'available_qty' => 3,
-                        'hourly_price'  => '8',
-                        'daily_price'   => '35',
+                        'hourly_price'  => '',
+                        'daily_price'   => '',
                         'weekly_price'  => '',
                         'monthly_price' => '',
                     ],
@@ -1230,15 +1230,15 @@
 											$rbfw_default_room_examples = array(
 												array(
 													'room_type'  => 'Deluxe Room',
-													'daylong'    => '80.00',
-													'daynight'   => '120.00',
+													'daylong'    => '',
+													'daynight'   => '',
 													'desc'       => 'Spacious room with modern amenities and a scenic view',
 													'qty'        => '5',
 												),
 												array(
 													'room_type'  => 'Standard Room',
-													'daylong'    => '50.00',
-													'daynight'   => '80.00',
+													'daylong'    => '',
+													'daynight'   => '',
 													'desc'       => 'Comfortable room with all essential amenities',
 													'qty'        => '8',
 												),
@@ -1485,8 +1485,8 @@
 
 
 
-                $rbfw_daily_rate           = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 10;
-                $rbfw_enable_daily_rate    = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) : 'yes';
+                $rbfw_daily_rate           = ( get_post_meta( $post_id, 'rbfw_daily_rate', true ) !== '' && get_post_meta( $post_id, 'rbfw_daily_rate', true ) !== false ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 0;
+                $rbfw_enable_daily_rate    = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) : 'no';
 
                 $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'no';
                 $rbfw_enable_hourly_rate   = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
