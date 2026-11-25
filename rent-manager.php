@@ -19,7 +19,7 @@
 	require_once __DIR__ . '/vendor/appneck/wordpress-sdk/appneck-wordpress-sdk/appneck-sdk.php';
 	appneck_sdk_load_latest();
 
-	$GLOBALS['my_plugin_sdk'] = \Appneck\Sdk\Sdk::bootstrap(
+	$GLOBALS['booking_and_rental_manager_for_woocommerce_appneck_sdk'] = \Appneck\Sdk\Sdk::bootstrap(
 		'pk_BkKzs8oaNFMMbwT6LF0lkQFcuGU6ndaB',  // your API key
 		'sk_Qm4yEAlSpZ2AMpR9RkfRKnh1GCxm6OJEb3Y0OGEsT3fVkVOk', // your product secret
 		'https://appneck.com',                  // the Appneck server URL
